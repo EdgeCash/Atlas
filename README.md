@@ -27,6 +27,7 @@ no dashboard. It produces a warehouse, a measurement, and a recommendation.
 | Threshold freeze report | [`reports/threshold_freeze_report.md`](reports/threshold_freeze_report.md) |
 | Bootstrap signal report | [`reports/bootstrap_signal_report.md`](reports/bootstrap_signal_report.md) |
 | Pre-registered criteria | [`docs/SIGNAL_PREREGISTRATION.md`](docs/SIGNAL_PREREGISTRATION.md) |
+| **Phase 2: Velocity edge decomposition** | [`reports/velocity_edge_decomposition.md`](reports/velocity_edge_decomposition.md) |
 | Supporting tables (CSV/JSON) | `reports/tables/` |
 | Alpha model recommendation | [`docs/ATLAS_ALPHA_SPEC.md`](docs/ATLAS_ALPHA_SPEC.md) |
 | Point-in-time methodology | [`docs/POINT_IN_TIME.md`](docs/POINT_IN_TIME.md) |
@@ -72,6 +73,33 @@ favourable honest reading available, lands 0.02% from break-even and nets
 **Recommendation: terminate Atlas Alpha.** Four phases have found every
 variable Atlas can reach already priced into the closing line. That is a real
 finding, and it is worth more than a model that would have lost money slowly.
+
+### Phase 2: benchmarking against Velocity
+
+[Velocity](https://github.com/EdgeCash/Velocity) runs a nightly card across
+four sports. Phase 2 asked why, given Atlas concluded the market is efficient.
+
+**The two projects agree wherever they have measured the same thing.**
+Velocity's own edge research opens with "the closing line of a liquid market is
+nearly unbeatable with public data"; its intelligence-layer backtest measures a
+null on matchup/form/rest "because the closing line already prices them"; and
+it excludes NCAAF spreads on 50.1% ATS over 9,518 games. Atlas read 49.7%.
+
+The difference is not information. Velocity prices a far larger surface — five
+game markets, props, DFS, two prediction exchanges — so *something* clears an
+EV gate every night. Its own strategy review reports 60% of the NCAAF card's
+stake sits in moneylines that "have never been backtested in this repo", and
+that the record chain has **zero settled rows**.
+
+Atlas's one independent contribution: **selecting the biggest model-market
+disagreements makes things worse.** The top 1% of Atlas's totals disagreements
+hit 40.7%; the curve is non-monotone. That replicates Velocity's own
+adverse-selection finding (`corr(stake, CLV) = −0.35`) on completely different
+data.
+
+Worth borrowing, in order: the publish gate's **edge ceiling**, **market
+anchoring**, **CLV as the grading metric**, **constitutional staking caps**,
+and **per-market evidence gating**. None of them is a football insight.
 
 ### Phase 1C: the search for unpriced information
 
@@ -138,6 +166,7 @@ python -m atlas.research.phase1b_report   # stage 5: Phase 1B reports
 make qb-data                              # research-only QB extraction
 python -m atlas.research.phase1c_report   # stage 6: Phase 1C reports
 python -m atlas.research.validation_report # stage 7: signal validation
+python -m atlas.research.velocity_report   # stage 8: Velocity benchmark
 ```
 
 The quarterback-of-record extraction writes nothing into the warehouse, and
@@ -194,7 +223,7 @@ atlas/
 scripts/
   check_reproducible.py       builds twice, asserts byte-identical output
   research_qb_availability.py QB feasibility probe (research only)
-tests/                 offline suite: 116 tests, no network
+tests/                 offline suite: 124 tests, no network
 ```
 
 ## Data sources

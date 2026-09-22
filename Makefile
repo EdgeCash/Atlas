@@ -12,6 +12,7 @@ help:
 	@echo "  make phase1b    opponent-adjustment, weather and QB reports"
 	@echo "  make phase1c    information-edge tracks and synthesis"
 	@echo "  make validate   signal validation: holdout, bootstrap, final verdict"
+	@echo "  make velocity   Phase 2: decompose where Velocity's edge comes from"
 	@echo "  make qb-data    extract the QB of record (research only, ~1 GB transient)"
 	@echo "  make all        ingest -> warehouse -> research -> phase1b -> phase1c"
 	@echo "  make test       run the offline test suite"
@@ -50,7 +51,10 @@ phase1c: qb-data
 validate:
 	$(PYTHON) -m atlas.research.validation_report
 
-all: ingest warehouse research phase1b phase1c validate
+velocity:
+	$(PYTHON) -m atlas.research.velocity_report
+
+all: ingest warehouse research phase1b phase1c validate velocity
 
 test:
 	$(PYTHON) -m pytest -q

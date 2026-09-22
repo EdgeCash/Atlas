@@ -1,0 +1,6 @@
+market,bets,units,share_of_stake,backtested,policy
+Moneyline,66,218.0,0.6,no - never tested; committed closes carry no moneyline column,"raw model, min_edge 0.02, no anchoring, no shrink"
+Total,27,99.0,0.27,"yes - 53.0% at >=6 pts on 4,398; 50.6% in 2025 alone","disagreement gate at 6 points, raw model"
+Spread,0,0.0,0.0,"yes - 50.1% ATS on 9,518; no cut at any threshold",excluded
+Team totals,0,0.0,0.0,partial - no cut clears 52.4% on derived numbers,"paper; EV gate only, disagreement gate off"
+Exchange rungs,92,246.0,0.0,no,paper; off in cron

@@ -1,0 +1,6 @@
+league,market,measure,model,close,model_wins,note
+NFL,Spread,Brier,0.2205,0.2109,False,"48.6% ATS on 1,280 games"
+MLB,Moneyline,Brier,0.24475,0.24319,False,raw model worse than the close; anchored blend beats it by 0.00018
+NCAAF,Spread,ATS win rate,0.501,0.5238,False,"9,518 games; no cut at any threshold"
+NCAAF,Total,O/U win rate at >=6,0.53,0.5238,True,"4,398 bets all-history; 50.6% in 2025 alone"
+WNBA,Spread,ATS win rate,0.542,0.5238,True,568 closes; 0.86 sigma above break-even; staked at zero
