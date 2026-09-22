@@ -383,6 +383,9 @@ h3 { margin: 0 0 6px; }
                letter-spacing: -.02em; font-variant-numeric: tabular-nums;
                white-space: nowrap; }
 .feature-foot { margin: 10px 0 0; }
+/* The one-line version of the same three numbers, for a phone. A featured
+   card that is 400px tall means a reader never reaches the board. */
+.feature-line { display: none; }
 
 /* ------------------------------------------------------------ banner ---- */
 
@@ -464,7 +467,7 @@ footer { display: grid; gap: 4px; }
 }
 
 .crest { width: 42px; height: 42px; object-fit: contain; flex: none; }
-.crest.small { width: 26px; height: 26px; }
+.crest.small { width: 30px; height: 30px; }
 .crest.tiny { width: 20px; height: 20px; }
 .crest-fallback {
   display: inline-block; border-radius: 9px; background: var(--team-away);
@@ -620,14 +623,26 @@ footer { display: grid; gap: 4px; }
   .wide-only { display: none; }
   .narrow-only { display: inline; }
 
-  .hero-teams { grid-template-columns: 1fr; gap: 0; }
-  .hero-team { padding: 7px 0; }
-  .hero-team.home { flex-direction: row; text-align: left; }
-  .hero-team.home .hero-name { justify-content: flex-start; }
-  .hero-team + .hero-at + .hero-team { border-top: 1px solid var(--border); }
-  .hero-at { display: none; }
-  .hero-name { font-size: 18px; }
-  .crest { width: 34px; height: 34px; }
+  /* Head to head, not a stacked list. Two crests either side of "at" is the
+     shape of a matchup, and a reader identifies the game from the marks
+     before they read either name - which is the whole point of putting the
+     marks there. The stacked version read as a table of two teams. */
+  .hero-teams { grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: start; }
+  .hero-team { flex-direction: column; align-items: center; text-align: center;
+               gap: 8px; padding: 2px 0; }
+  .hero-team.home { flex-direction: column; text-align: center; }
+  .hero-team.home .hero-name { justify-content: center; }
+  .hero-names { text-align: center; }
+  .hero-at { display: block; align-self: start; padding-top: 18px;
+             font-size: 12px; }
+  .hero-name { font-size: 17px; justify-content: center; }
+  .crest { width: 52px; height: 52px; }
+
+  /* Two columns, not three: at 358px the name and the value were each taking
+     two lines and the row read as four lines of nothing. Name over value,
+     with the crest beside the name where it identifies the team. */
+  .why-row { grid-template-columns: 20px 1fr; gap: 9px; align-items: center; }
+  .why-val { grid-column: 2; text-align: left; margin-top: 1px; }
 
   .answer-cell { padding: 11px 9px; }
   /* "MIA −41.5" is the longest value this cell ever holds; at 17px it fits a
@@ -646,10 +661,21 @@ footer { display: grid; gap: 4px; }
   .featured { grid-template-columns: 1fr; gap: 8px; }
   .feature { padding: 12px 13px; }
   .feature-title { font-size: 15.5px; margin: 8px 0 1px; }
+  /* The crests carry the identity on a board row, but not at the cost of
+     wrapping the team names underneath them. */
+  .row-crests .crest { width: 25px; height: 25px; }
+  .game-teams { font-size: 14px; }
+  .game-line { font-size: 12.5px; }
+  .game-right { gap: 8px; }
+
   .feature-meta { margin-bottom: 9px; }
-  .feature-nums { padding-top: 8px; gap: 6px; }
-  .feature-num { font-size: 15px; }
-  .feature-foot { margin-top: 8px; font-size: 12px; }
+  .feature-nums, .feature-foot { display: none; }
+  .feature-line {
+    display: flex; align-items: baseline; gap: 8px; margin: 9px 0 0;
+    padding-top: 9px; border-top: 1px solid var(--border);
+    font-size: 14px; font-weight: 620; font-variant-numeric: tabular-nums;
+  }
+  .feature-line-diff { margin-left: auto; font-weight: 500; color: var(--ink-3); }
 }
 
 .crest.large { width: 46px; height: 46px; }

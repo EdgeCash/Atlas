@@ -129,7 +129,6 @@ def wide(card: Card) -> str:
     W, H = 1200, 675
     title_lines = _wrap(card.title, 26)
     difference = card.total_difference
-    driver = card.drivers[0] if card.drivers else None
 
     # One cursor down the canvas, as in `square`. The earlier version placed
     # the kickoff line and the MARKET label from two different expressions and
@@ -137,7 +136,7 @@ def wide(card: Card) -> str:
     crests = (_crest(card.away, 72, 150, 72)
               + _crest(card.home, 160, 150, 72))
     step = 64
-    y = 280
+    y = 292
     title = "".join(
         f'<text x="72" y="{y + i * step}" {_font(58, 700, INK, -2.0)}>{esc(line)}</text>'
         for i, line in enumerate(title_lines)
@@ -155,16 +154,20 @@ def wide(card: Card) -> str:
         if card.grade else ""
     )
 
-    # The driver is the first thing to go. "One game, one idea" means the
-    # numbers and the grade always fit; a two-line title takes the room the
-    # driver would have used, and a cramped card is worse than a quieter one.
-    driver_block = ""
-    if driver and row_y + 44 < H - 176:
-        driver_block = (
-            f'<text x="72" y="{H - 168}" {_font(13, 640, INK_3, 1.2)}>'
-            "WHAT THE MODEL IS READING</text>"
-            f'<text x="72" y="{H - 132}" {_font(26, 620, INK, -0.6)}>'
-            f"{esc(driver.name)} · {esc(driver.magnitude)}</text>"
+    # A screenshot has to explain itself, so the wide card spends its last
+    # block on a sentence rather than on a fourth statistic. The drivers are
+    # the square card's job; this one's job is what the numbers mean.
+    read_lines = _wrap(_read(card), 78)[:2]
+    read_block = ""
+    if read_lines and row_y + 44 < H - 201:
+        read_block = (
+            f'<text x="72" y="{H - 193}" {_font(13, 640, INK_3, 1.2)}>'
+            "WHAT THIS MEANS</text>"
+            + "".join(
+                f'<text x="72" y="{H - 161 + i * 32}" {_font(24, 500, INK_2, -0.3)}>'
+                f"{esc(line)}</text>"
+                for i, line in enumerate(read_lines)
+            )
         )
 
     return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}"
@@ -190,16 +193,52 @@ def wide(card: Card) -> str:
   <text x="430" y="{row_y + 44}" {_font(17, 400, INK_3)}>projected total</text>
 
   <text x="700" y="{row_y - 34}" {_font(13, 640, INK_3, 1.2)}>DIFFERENCE</text>
-  <text x="700" y="{row_y + 14}" {_font(44, 700, "#2a78d6" if (difference or 0) > 0 else "#e34948", -1.6)}>{signed(difference)}</text>
+  <text x="700" y="{row_y + 14}" {_font(44, 700, _diff_colour(difference), -1.6)}>{signed(difference)}</text>
   <text x="700" y="{row_y + 44}" {_font(17, 400, INK_3)}>on the total</text>
 
   {grade_block}{grade_label}
-  {driver_block}
+  {read_block}
 
   <line x1="72" y1="{H - 96}" x2="{W - 72}" y2="{H - 96}" stroke="{BORDER}"/>
   <text x="72" y="{H - 56}" {_font(18, 620, INK_2)}>{SITE}/{esc(card.slug)}</text>
   <text x="{W - 72}" y="{H - 56}" text-anchor="end" {_font(16, 400, INK_3)}>Grade = information quality, not a recommendation</text>
 </svg>"""
+
+
+#: Matches `render.DIFFERENCE_FLOOR`. Below a point, Atlas and the market are
+#: indistinguishable out of sample, so the number is not worth a colour.
+DIFFERENCE_FLOOR = 1.0
+
+
+def _diff_colour(value: float | None) -> str:
+    if value is None or abs(value) < DIFFERENCE_FLOOR:
+        return INK
+    return "#2a78d6" if value > 0 else "#e34948"
+
+
+def _read(card: Card) -> str:
+    """The card in one plain sentence, for someone who arrived from a repost.
+
+    It is written from the numbers already on the graphic, so a reader who
+    only ever sees the image still leaves with the right impression - and the
+    right impression on a badly graded card is "do not lean on this".
+    """
+    difference = card.total_difference
+    band = card.grade.band if card.grade else None
+    if difference is None or band is None:
+        return ("Atlas publishes a projection and a grade for how much that "
+                "projection has historically been worth.")
+    direction = "above" if difference > 0 else "below"
+    if abs(difference) < 1.0:
+        return ("Atlas and the market land on the same number - which is where "
+                "this model has been most reliable, and where it adds least.")
+    if card.grade and card.grade.low:
+        return (f"Atlas projects {abs(difference):.1f} points {direction} the "
+                f"market. Cards this far out claimed {band.claimed:.0%} accuracy "
+                f"over seven seasons and delivered {band.realised:.0%}.")
+    return (f"Atlas projects {abs(difference):.1f} points {direction} the "
+            f"market. Cards in that range claimed {band.claimed:.0%} accuracy "
+            f"and delivered {band.realised:.0%}.")
 
 
 def _grade_word(card: Card) -> str:

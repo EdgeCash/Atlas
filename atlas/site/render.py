@@ -1057,6 +1057,8 @@ def _featured_cell(card: Card) -> str:
       <span class="feature-num">{num(card.anchored_total)}</span></div>
   </div>
   <p class="note feature-foot">Difference {signed(difference)} on the total</p>
+  <p class="feature-line">{esc(card.spread_text)} · total {num(card.total.current)}
+    <span class="feature-line-diff">Atlas {signed(difference)}</span></p>
 </a>"""
 
 
