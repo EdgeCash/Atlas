@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-22T15:50:30+00:00",
+  "generated_at": "2026-09-22T17:27:52+00:00",
   "atlas_version": "0.1.0",
   "seasons_requested": [
     2018,
@@ -35,7 +35,7 @@
     },
     "games": {
       "rows": 21328,
-      "columns": 28
+      "columns": 29
     },
     "ratings": {
       "rows": 21328,

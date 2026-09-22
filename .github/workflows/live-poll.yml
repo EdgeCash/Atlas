@@ -1,0 +1,62 @@
+name: live CLV poll
+
+# The cheap half of the tracker. Captures the book's current number for every
+# upcoming game, forms an opinion on the ones Atlas has not already called,
+# grades anything that has kicked off, and rewrites the public scorecard.
+#
+# Needs no warehouse: Atlas's numbers come from tracking/numbers.csv, which the
+# weekly refresh publishes.
+#
+# Scheduled workflows only run on the repository's default branch, so this is
+# dormant until the branch is merged. Until then, `make live-run` does the same
+# work by hand.
+
+on:
+  schedule:
+    # Hourly through the college football season (August to early January).
+    - cron: "17 * * 8-12,1 *"
+  workflow_dispatch:
+
+concurrency:
+  group: live-clv
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+
+      - name: Poll, grade and report
+        run: python -m atlas.live run
+
+      - name: Commit the record
+        run: |
+          git config user.name "atlas-tracker"
+          git config user.email "noreply@anthropic.com"
+          git add tracking reports/live_clv_tracking.md
+          if git diff --cached --quiet; then
+            echo "nothing changed"
+            exit 0
+          fi
+          git commit -m "live: poll $(date -u +%Y-%m-%dT%H:%MZ)"
+          # Another poll may have landed while this one ran.
+          for i in 1 2 3 4; do
+            git pull --rebase origin "${GITHUB_REF_NAME}" && \
+              git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            sleep $((2 ** i))
+          done
+          exit 1

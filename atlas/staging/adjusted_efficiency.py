@@ -72,12 +72,22 @@ def all_adjusted_columns() -> list[str]:
     return [c for method in METHODS for c in adjusted_columns(method)]
 
 
-def build_adjusted(raw: Path, staging: Path, *, methods: tuple[str, ...] = METHODS) -> pd.DataFrame:
+def build_adjusted(
+    raw: Path,
+    staging: Path,
+    *,
+    methods: tuple[str, ...] = METHODS,
+    include_scheduled: bool = False,
+) -> pd.DataFrame:
     eff = efficiency_stage.load(staging)
     long = games_stage.load_long(staging)
     base = long[["game_id", "season", "week", "kickoff", "team_id", "opponent_id", "is_home"]]
 
     result = base[["game_id", "season", "week", "team_id"]].copy()
+    # A week whose games have not kicked off yet contributes no observations,
+    # so it would otherwise never be solved for and every scheduled game would
+    # come back with a null rating.
+    extra_weeks = base[["season", "week"]].drop_duplicates() if include_scheduled else None
     strengths = []
     for stream in STREAMS:
         obs = _observations(base, eff, stream)
@@ -85,7 +95,7 @@ def build_adjusted(raw: Path, staging: Path, *, methods: tuple[str, ...] = METHO
             LOG.warning("stream %s has no observations", stream.name)
             continue
         for method in methods:
-            ratings = point_in_time_ratings(obs, method=method)
+            ratings = point_in_time_ratings(obs, method=method, extra_weeks=extra_weeks)
             suffix = "" if method == PRIMARY_METHOD else f"_{method}"
             renamed = ratings.rename(
                 columns={

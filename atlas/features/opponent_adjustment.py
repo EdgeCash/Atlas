@@ -300,6 +300,7 @@ def point_in_time_ratings(
     *,
     method: str = "network",
     ridge: float = DEFAULT_RIDGE,
+    extra_weeks: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
     """Ratings as they stood before each week of each season.
 
@@ -308,6 +309,12 @@ def point_in_time_ratings(
     Week boundaries are the unit of time because every game in a week can
     kick off before any other - solving per week cannot see sideways.
 
+    ``extra_weeks`` (columns ``season``, ``week``) asks for a rating row at
+    weeks that carry no observations of their own - which is what a week whose
+    games have not kicked off yet looks like. The fit is identical: strictly
+    prior weeks only. It is used by the live tracker and left unset by the
+    research build, whose weeks all contain played games.
+
     Returns one row per (season, week, team_id).
     """
     required = {"season", "week", "team_id", "opponent_id", "value"}
@@ -315,11 +322,16 @@ def point_in_time_ratings(
     if missing:
         raise KeyError(f"observations missing columns: {sorted(missing)}")
 
+    wanted: dict[int, set[int]] = {}
+    if extra_weeks is not None and not extra_weeks.empty:
+        for season, week in extra_weeks[["season", "week"]].drop_duplicates().to_numpy():
+            wanted.setdefault(int(season), set()).add(int(week))
+
     frames = []
     prior = Prior()
-    for season in sorted(obs["season"].unique()):
+    for season in sorted(set(obs["season"].unique()) | set(wanted)):
         season_obs = obs[obs["season"] == season]
-        weeks = sorted(season_obs["week"].unique())
+        weeks = sorted(set(season_obs["week"].unique()) | wanted.get(int(season), set()))
         for week in weeks:
             window = season_obs[season_obs["week"] < week]
             result = fit(window, method=method, ridge=ridge, prior=prior)
@@ -328,6 +340,8 @@ def point_in_time_ratings(
             block["week"] = week
             block["n_prior_observations"] = result.n_observations
             frames.append(block)
+        if season_obs.empty:
+            continue
         # End-of-season fit becomes next season's prior, trimmed to teams that
         # actually played. Without the trim the team index grows every season
         # and the network solve slows to a crawl on teams that no longer exist.

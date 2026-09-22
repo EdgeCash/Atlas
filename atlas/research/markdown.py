@@ -17,6 +17,7 @@ COUNT_COLUMNS = {
     "opponents", "rank", "with_weather", "distinct_qbs", "n_prior_observations",
     "graded", "pushes", "clv_graded", "moved_games", "bets", "bets_to_detect",
     "bets_per_season", "games_in_sample", "games_with_opener", "games_multi_book",
+    "signals", "flagged", "quotes", "snapshots",
     "games_opened", "books_posting_openers",
 }
 

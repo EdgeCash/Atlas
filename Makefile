@@ -1,6 +1,7 @@
 PYTHON ?= python3
 
-.PHONY: help install ingest warehouse research all test lint clean-data
+.PHONY: help install ingest warehouse research all test lint clean-data \
+	live-refresh live-run live-report
 
 help:
 	@echo "Atlas Phase 1A - research warehouse"
@@ -15,6 +16,9 @@ help:
 	@echo "  make velocity   Phase 2: decompose where Velocity's edge comes from"
 	@echo "  make beta       Phase 3: market-aware framework and the beta report"
 	@echo "  make gamma      Phase 4: can the line-movement signal be executed?"
+	@echo ""
+	@echo "  make live-refresh  Phase 5: rebuild with scheduled games, publish numbers"
+	@echo "  make live-run      Phase 5: poll lines, form signals, grade, report"
 	@echo "  make qb-data    extract the QB of record (research only, ~1 GB transient)"
 	@echo "  make all        ingest -> warehouse -> research -> phase1b -> phase1c"
 	@echo "  make test       run the offline test suite"
@@ -67,6 +71,22 @@ beta:
 # just the warehouse.
 gamma:
 	$(PYTHON) -m atlas.research.gamma_report
+
+# ---------------------------------------------------------------------------
+# Phase 5: the live tracker. Atlas generates opinions, not bets.
+# ---------------------------------------------------------------------------
+
+# Expensive, weekly: needs the whole warehouse including scheduled games.
+live-refresh:
+	$(PYTHON) -m atlas.ingest
+	$(PYTHON) -m atlas.live refresh
+
+# Cheap, hourly: reads tracking/numbers.csv, never touches the warehouse.
+live-run:
+	$(PYTHON) -m atlas.live run
+
+live-report:
+	$(PYTHON) -m atlas.live report
 
 all: ingest warehouse research phase1b phase1c validate velocity beta gamma
 

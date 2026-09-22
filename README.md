@@ -30,6 +30,9 @@ no dashboard. It produces a warehouse, a measurement, and a recommendation.
 | **Phase 2: Velocity edge decomposition** | [`reports/velocity_edge_decomposition.md`](reports/velocity_edge_decomposition.md) |
 | **Phase 3: market-aware beta framework** | [`reports/atlas_beta_framework.md`](reports/atlas_beta_framework.md) |
 | **Phase 4: gamma assessment (monetization)** | [`reports/atlas_gamma_assessment.md`](reports/atlas_gamma_assessment.md) |
+| **Phase 5: live CLV tracking (updated continuously)** | [`reports/live_clv_tracking.md`](reports/live_clv_tracking.md) |
+| Phase 5 operations manual | [`docs/LIVE_TRACKING.md`](docs/LIVE_TRACKING.md) |
+| Phase 5 raw record (CSV, committed) | `tracking/` |
 | Phase 4 opening-line feasibility | [`reports/opening_line_feasibility.md`](reports/opening_line_feasibility.md) |
 | Phase 4 CLV economics | [`reports/clv_economics.md`](reports/clv_economics.md) |
 | Supporting tables (CSV/JSON) | `reports/tables/` |
@@ -104,6 +107,35 @@ data.
 Worth borrowing, in order: the publish gate's **edge ceiling**, **market
 anchoring**, **CLV as the grading metric**, **constitutional staking caps**,
 and **per-market evidence gating**. None of them is a football insight.
+
+### Phase 5: the live tracker
+
+History is finished. Atlas is now a live validation project with one job:
+**record an opinion about a line, record what the market then does, and grade
+the two against each other.**
+
+> Atlas generates opinions. Atlas does not generate bets. Nothing in
+> `atlas/live/` computes a stake, expected profit, ROI or a Kelly fraction, and
+> a test tokenises the package on every CI run to keep it that way.
+
+The system splits by cost: a **weekly refresh** rebuilds the warehouse with
+scheduled games and publishes Atlas's number for each one; an **hourly poll**
+captures the current quote, forms an opinion on games it has not already
+called, grades anything that has kicked off, and rewrites the scorecard. The
+poll never touches the warehouse, so it runs in seconds.
+
+Every signal stores two numbers: what the book *opened* on, and what it was
+quoting when Atlas spoke. **CLV is graded against the second one** — crediting
+Atlas with movement that happened before it had an opinion is exactly the
+failure Gamma's third kill criterion exists to catch.
+
+The three kill criteria are transcribed from Phase 4 and pinned by a test:
+beat rate ≥ **55%**, mean CLV ≥ **0.49 points**, and fewer than half of signals
+flagged for a closed execution window. Nothing is called decided until **124
+graded primary signals** have accumulated. They are checked, never tuned.
+
+Two complete seasons, then one of two recommendations and no middle ground.
+Operations manual: [`docs/LIVE_TRACKING.md`](docs/LIVE_TRACKING.md).
 
 ### Phase 4: can the movement signal be executed?
 
@@ -235,6 +267,9 @@ python -m atlas.research.validation_report # stage 7: signal validation
 python -m atlas.research.velocity_report   # stage 8: Velocity benchmark
 python -m atlas.research.beta_report       # stage 9: Phase 3 market-aware framework
 python -m atlas.research.gamma_report      # stage 10: Phase 4 execution research
+
+python -m atlas.live refresh               # Phase 5: publish Atlas's numbers (weekly)
+python -m atlas.live run                   # Phase 5: poll, grade, report (hourly)
 ```
 
 The quarterback-of-record extraction writes nothing into the warehouse, and

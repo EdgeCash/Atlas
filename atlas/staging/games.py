@@ -44,10 +44,23 @@ GAME_COLUMNS = [
     "venue",
     "home_pregame_elo",
     "away_pregame_elo",
+    "completed",
 ]
 
 
-def build_games(raw: Path, staging: Path, seasons: list[int]) -> pd.DataFrame:
+def build_games(
+    raw: Path, staging: Path, seasons: list[int], *, include_scheduled: bool = False
+) -> pd.DataFrame:
+    """Canonical game table.
+
+    ``include_scheduled`` keeps games that have not been played yet, with null
+    scores. It is **off** for the research build - a warehouse of completed
+    games is what every phase measured and its rebuild must stay byte-stable -
+    and **on** for the live tracker, which needs a feature row for a game that
+    kicks off tomorrow. Point-in-time construction is unaffected either way: a
+    scheduled row contributes no metrics to anyone's prior history because its
+    metrics are null.
+    """
     frames = []
     for season in seasons:
         path = sdv.schedules_path(raw, season)
@@ -58,7 +71,7 @@ def build_games(raw: Path, staging: Path, seasons: list[int]) -> pd.DataFrame:
     if not frames:
         raise FileNotFoundError("no schedules found - run atlas.ingest first")
     raw_games = pd.concat(frames, ignore_index=True)
-    games = _normalise(raw_games)
+    games = _normalise(raw_games, include_scheduled=include_scheduled)
     write_parquet(games, staging / "games.parquet")
 
     long = to_long(games)
@@ -66,11 +79,16 @@ def build_games(raw: Path, staging: Path, seasons: list[int]) -> pd.DataFrame:
     return games
 
 
-def _normalise(df: pd.DataFrame) -> pd.DataFrame:
+def _normalise(df: pd.DataFrame, *, include_scheduled: bool = False) -> pd.DataFrame:
     out = df.copy()
     out = out[out["season_type"].isin(config.SEASON_TYPES)]
-    out = out[out["completed"].fillna(False).astype(bool)]
-    out = out.dropna(subset=["home_points", "away_points", "start_date"])
+    completed = out["completed"].fillna(False).astype(bool)
+    scored = out["home_points"].notna() & out["away_points"].notna()
+    if include_scheduled:
+        out = out[(completed & scored) | ~completed]
+    else:
+        out = out[completed & scored]
+    out = out.dropna(subset=["start_date"])
 
     out["game_id"] = out["game_id"].astype("int64")
     out["season"] = out["season"].astype("int64")
@@ -78,11 +96,19 @@ def _normalise(df: pd.DataFrame) -> pd.DataFrame:
     out["kickoff"] = pd.to_datetime(out["start_date"], utc=True, format="ISO8601")
     out["date"] = out["kickoff"].dt.date.astype("string")
 
-    out["home_score"] = out["home_points"].astype("int64")
-    out["away_score"] = out["away_points"].astype("int64")
+    # Scheduled games have no score. They need nullable integers; the research
+    # build has none of them and keeps the plain dtypes every earlier phase was
+    # measured on, so its tables stay byte-identical.
+    score_dtype = "Int64" if include_scheduled else "int64"
+    out["home_score"] = out["home_points"].astype(score_dtype)
+    out["away_score"] = out["away_points"].astype(score_dtype)
     out["margin"] = out["home_score"] - out["away_score"]
     out["total_points"] = out["home_score"] + out["away_score"]
-    out["home_win"] = (out["margin"] > 0).astype("int8")
+    if include_scheduled:
+        out["home_win"] = (out["margin"] > 0).astype("Int8").where(out["margin"].notna())
+    else:
+        out["home_win"] = (out["margin"] > 0).astype("int8")
+    out["completed"] = completed.loc[out.index].to_numpy()
 
     out["home_team_id"] = out["home_id"].astype("int64")
     out["away_team_id"] = out["away_id"].astype("int64")

@@ -35,13 +35,19 @@ from atlas.warehouse import schema
 LOG = get_logger(__name__)
 
 
-def build_staging(paths: config.Paths, seasons: list[int]) -> dict[str, pd.DataFrame]:
-    games = games_stage.build_games(paths.raw, paths.staging, seasons)
+def build_staging(
+    paths: config.Paths, seasons: list[int], *, include_scheduled: bool = False
+) -> dict[str, pd.DataFrame]:
+    games = games_stage.build_games(
+        paths.raw, paths.staging, seasons, include_scheduled=include_scheduled
+    )
     teams = teams_stage.build_teams(paths.raw, paths.staging, seasons)
     team_games = games_stage.load_long(paths.staging)
     lines = market_stage.build_market_lines(paths.raw, paths.staging, seasons)
     eff = efficiency_stage.build_efficiency(paths.raw, paths.staging, seasons)
-    adjusted = adjusted_stage.build_adjusted(paths.raw, paths.staging)
+    adjusted = adjusted_stage.build_adjusted(
+        paths.raw, paths.staging, include_scheduled=include_scheduled
+    )
     ratings = ratings_stage.build_ratings(paths.raw, paths.staging, games, teams)
     talent = talent_stage.build_talent(paths.raw, paths.staging, games, teams)
     weather = weather_stage.build_weather(paths.raw, paths.staging, games, teams)
@@ -62,12 +68,27 @@ def build_staging(paths: config.Paths, seasons: list[int]) -> dict[str, pd.DataF
     }
 
 
-def build(seasons: list[int] | None = None, *, rebuild_staging: bool = True) -> dict[str, pd.DataFrame]:
+def build(
+    seasons: list[int] | None = None,
+    *,
+    rebuild_staging: bool = True,
+    include_scheduled: bool = False,
+) -> dict[str, pd.DataFrame]:
+    """Assemble the warehouse.
+
+    ``include_scheduled`` carries games that have not kicked off yet, with null
+    outcomes, so the live tracker can compute a feature row for a game it wants
+    an opinion on. Research entry points all go through
+    :func:`atlas.research.dataset.research_sample`, which drops any row without
+    a result, so a warehouse built this way answers every research question
+    identically - but it is not byte-identical to one built without the flag,
+    and the research build never passes it.
+    """
     paths = config.paths().ensure()
     seasons = seasons or config.seasons()
 
     if rebuild_staging:
-        stage = build_staging(paths, seasons)
+        stage = build_staging(paths, seasons, include_scheduled=include_scheduled)
     else:
         stage = {
             "games": games_stage.load(paths.staging),
@@ -127,18 +148,20 @@ def _outcomes_table(games: pd.DataFrame, market: pd.DataFrame) -> pd.DataFrame:
         market[["game_id", "closing_spread", "closing_total"]], on="game_id", how="left"
     )
     out = pd.DataFrame({"game_id": df["game_id"]})
-    out["actual_margin"] = df["margin"].astype("float64")
-    out["actual_total"] = df["total_points"].astype("float64")
+    # float64, not a nullable integer: a scheduled game has no result, and NA
+    # propagating into the comparisons below raises rather than yielding null.
+    out["actual_margin"] = pd.to_numeric(df["margin"], errors="coerce").astype("float64")
+    out["actual_total"] = pd.to_numeric(df["total_points"], errors="coerce").astype("float64")
 
     # closing_spread is home-oriented (negative = home favoured), so the home
     # side covers when margin + closing_spread > 0. Exact zero is a push and
     # is recorded as null rather than a loss.
-    ats = df["margin"] + df["closing_spread"]
+    ats = out["actual_margin"] + df["closing_spread"]
     out["home_cover"] = np.where(ats > 0, 1.0, np.where(ats < 0, 0.0, np.nan))
     out.loc[df["closing_spread"].isna(), "home_cover"] = np.nan
     out["ats_margin"] = ats
 
-    ou = df["total_points"] - df["closing_total"]
+    ou = out["actual_total"] - df["closing_total"]
     out["over_hit"] = np.where(ou > 0, 1.0, np.where(ou < 0, 0.0, np.nan))
     out.loc[df["closing_total"].isna(), "over_hit"] = np.nan
     out["total_error"] = ou
@@ -308,8 +331,17 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="Atlas stage 3: build the warehouse")
     ap.add_argument("--seasons", type=int, nargs="*", default=None)
     ap.add_argument("--no-restage", action="store_true", help="reuse existing staging tables")
+    ap.add_argument(
+        "--include-scheduled",
+        action="store_true",
+        help="also carry games that have not kicked off yet (live tracker only)",
+    )
     args = ap.parse_args()
-    build(args.seasons, rebuild_staging=not args.no_restage)
+    build(
+        args.seasons,
+        rebuild_staging=not args.no_restage,
+        include_scheduled=args.include_scheduled,
+    )
 
 
 if __name__ == "__main__":
