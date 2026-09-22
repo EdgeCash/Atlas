@@ -1,0 +1,57 @@
+{
+  "generated_at": "2026-09-22T13:32:17+00:00",
+  "atlas_version": "0.1.0",
+  "seasons_requested": [
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+  ],
+  "seasons_present": [
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+  ],
+  "cfbd_enrichment": false,
+  "tables": {
+    "market_lines": {
+      "rows": 21328,
+      "columns": 11
+    },
+    "outcomes": {
+      "rows": 21328,
+      "columns": 7
+    },
+    "games": {
+      "rows": 21328,
+      "columns": 28
+    },
+    "ratings": {
+      "rows": 21328,
+      "columns": 14
+    },
+    "efficiency_metrics": {
+      "rows": 21328,
+      "columns": 36
+    },
+    "talent": {
+      "rows": 21328,
+      "columns": 13
+    },
+    "context": {
+      "rows": 21328,
+      "columns": 15
+    }
+  }
+}

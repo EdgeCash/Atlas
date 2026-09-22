@@ -1,0 +1,18 @@
+benchmark,target,picks,hit_rate
+Market Only,margin,5671,0.49268206665491093
+Market Only,total,5708,0.5171688857743518
+FPI Only,margin,5671,0.48933168753306294
+FPI Only,total,5708,0.5197967764540995
+SP+ + FPI,margin,5671,0.48933168753306294
+SP+ + FPI,total,5708,0.5197967764540995
+Elo Only,margin,5671,0.49550343854699347
+Elo Only,total,5708,0.5192711983181499
+FPI Game Projection,margin,5671,0.5013225180744136
+Efficiency Only,margin,5671,0.494974431317228
+Efficiency Only,total,5708,0.5147161878065872
+Ratings + Efficiency (no market),margin,5671,0.4919767236818903
+Ratings + Efficiency (no market),total,5708,0.5185704274702172
+Market + Efficiency,margin,5671,0.5078469405748546
+Market + Efficiency,total,5708,0.5152417659425368
+Market + Everything,margin,5671,0.5030858755069653
+Market + Everything,total,5708,0.5157673440784863
