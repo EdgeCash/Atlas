@@ -1,6 +1,6 @@
 # Atlas Research Report V1
 
-*Generated 2026-09-22 13:38 UTC from `data/warehouse/atlas.duckdb`. Every figure in this
+*Generated 2026-09-22 13:49 UTC from `data/warehouse/atlas.duckdb`. Every figure in this
 document is produced by `python -m atlas.research.report`; none is hand-entered.*
 
 Atlas Phase 1A asks one question: **which variables actually predict college
@@ -155,53 +155,55 @@ current view of the same matchup.
 `Standalone gain` is MAE removed from a constant baseline by that variable
 alone. `Gain over market` is MAE removed **on top of** the closing spread -
 the only column that says whether a variable carries information the market
-has not already priced.
+has not already priced. It is a paired per-game comparison, so it comes with a
+t-statistic; `Material?` is `yes` only when t > 2, because over ~5,700 games a
+gain of 0.01 MAE is indistinguishable from zero.
 
-| # | Variable | Available | Standalone MAE | Standalone gain | Gain over market |
-|---|---|---|---|---|---|
-| 1 | Market Spread | yes | 12.2265 | 3.9881 | n/a |
-| 2 | FPI Game Projection | yes | 12.9241 | 3.2906 | -0.0091 |
-| 3 | Elo | yes | 13.1047 | 3.1099 | -0.0055 |
-| 4 | Success Rate | yes | 14.0985 | 2.1162 | -0.0050 |
-| 5 | FPI | yes | 14.1031 | 2.1116 | -0.0006 |
-| 6 | EPA | yes | 14.1545 | 2.0602 | -0.0019 |
-| 7 | Finishing Drives | yes | 15.2052 | 1.0095 | -0.0011 |
-| 8 | Havoc | yes | 15.8203 | 0.3944 | -0.0008 |
-| 9 | Explosiveness | yes | 16.1208 | 0.0939 | -0.0023 |
-| 10 | Market Total | yes | 16.2128 | 0.0019 | n/a |
-| 11 | Neutral Site | yes | 16.2130 | 0.0017 | 0.0000 |
-| 12 | Pace | yes | 16.2139 | 0.0008 | -0.0024 |
-| 13 | Travel | yes | 16.2188 | -0.0041 | -0.0013 |
-| 14 | Rest | yes | 16.2221 | -0.0074 | -0.0038 |
-| 15 | Line Movement | yes | 16.2716 | -0.0569 | -0.0006 |
-| n/a | SP+ | no | n/a | n/a | n/a |
-| n/a | Recruiting | no | n/a | n/a | n/a |
-| n/a | Returning Production | no | n/a | n/a | n/a |
-| n/a | Weather | no | n/a | n/a | n/a |
+| # | Variable | Available | Standalone MAE | Standalone gain | Gain over market | t | Material? |
+|---|---|---|---|---|---|---|---|
+| 1 | Market Spread | yes | 12.2265 | 3.9881 | n/a | n/a | n/a |
+| 2 | FPI Game Projection | yes | 12.9241 | 3.2906 | -0.0091 | -1.8367 | no |
+| 3 | Elo | yes | 13.1047 | 3.1099 | -0.0055 | -2.1164 | no |
+| 4 | Success Rate | yes | 14.0985 | 2.1162 | -0.0050 | -3.2470 | no |
+| 5 | FPI | yes | 14.1031 | 2.1116 | -0.0006 | -1.0567 | no |
+| 6 | EPA | yes | 14.1545 | 2.0602 | -0.0019 | -0.5787 | no |
+| 7 | Finishing Drives | yes | 15.2052 | 1.0095 | -0.0011 | -1.7174 | no |
+| 8 | Havoc | yes | 15.8203 | 0.3944 | -0.0008 | -0.5059 | no |
+| 9 | Explosiveness | yes | 16.1208 | 0.0939 | -0.0023 | -0.5042 | no |
+| 10 | Market Total | yes | 16.2128 | 0.0019 | n/a | n/a | n/a |
+| 11 | Neutral Site | yes | 16.2130 | 0.0017 | 0.0000 | 0.1537 | no |
+| 12 | Pace | yes | 16.2139 | 0.0008 | -0.0024 | -0.5600 | no |
+| 13 | Travel | yes | 16.2188 | -0.0041 | -0.0013 | -0.2265 | no |
+| 14 | Rest | yes | 16.2221 | -0.0074 | -0.0038 | -2.3141 | no |
+| 15 | Line Movement | yes | 16.2716 | -0.0569 | -0.0006 | -0.2330 | no |
+| n/a | SP+ | no | n/a | n/a | n/a | n/a | no |
+| n/a | Recruiting | no | n/a | n/a | n/a | n/a | no |
+| n/a | Returning Production | no | n/a | n/a | n/a | n/a | no |
+| n/a | Weather | no | n/a | n/a | n/a | n/a | no |
 
 ### Ranked variables - total
 
-| # | Variable | Available | Standalone MAE | Standalone gain | Gain over market |
-|---|---|---|---|---|---|
-| 1 | Market Total | yes | 12.7029 | 1.1431 | n/a |
-| 2 | EPA | yes | 13.5146 | 0.3314 | -0.0029 |
-| 3 | Pace | yes | 13.5266 | 0.3193 | 0.0029 |
-| 4 | Success Rate | yes | 13.5695 | 0.2765 | -0.0014 |
-| 5 | Line Movement | yes | 13.6836 | 0.1623 | 0.0098 |
-| 6 | Explosiveness | yes | 13.6890 | 0.1569 | -0.0012 |
-| 7 | Finishing Drives | yes | 13.7870 | 0.0589 | -0.0011 |
-| 8 | Market Spread | yes | 13.8216 | 0.0244 | n/a |
-| 9 | Neutral Site | yes | 13.8363 | 0.0096 | 0.0032 |
-| 10 | Rest | yes | 13.8459 | 0.0000 | -0.0047 |
-| 11 | Havoc | yes | 13.8473 | -0.0013 | -0.0018 |
-| 12 | Travel | yes | 13.8473 | -0.0014 | -0.0007 |
-| 13 | FPI | yes | 13.8477 | -0.0017 | -0.0009 |
-| 14 | Elo | yes | 13.8502 | -0.0043 | 0.0025 |
-| n/a | SP+ | no | n/a | n/a | n/a |
-| n/a | FPI Game Projection | no | n/a | n/a | n/a |
-| n/a | Recruiting | no | n/a | n/a | n/a |
-| n/a | Returning Production | no | n/a | n/a | n/a |
-| n/a | Weather | no | n/a | n/a | n/a |
+| # | Variable | Available | Standalone MAE | Standalone gain | Gain over market | t | Material? |
+|---|---|---|---|---|---|---|---|
+| 1 | Market Total | yes | 12.7029 | 1.1431 | n/a | n/a | n/a |
+| 2 | EPA | yes | 13.5146 | 0.3314 | -0.0029 | -0.6712 | no |
+| 3 | Pace | yes | 13.5266 | 0.3193 | 0.0029 | 0.3689 | no |
+| 4 | Success Rate | yes | 13.5695 | 0.2765 | -0.0014 | -0.3259 | no |
+| 5 | Line Movement | yes | 13.6836 | 0.1623 | 0.0098 | 1.2323 | no |
+| 6 | Explosiveness | yes | 13.6890 | 0.1569 | -0.0012 | -1.0826 | no |
+| 7 | Finishing Drives | yes | 13.7870 | 0.0589 | -0.0011 | -0.2673 | no |
+| 8 | Market Spread | yes | 13.8216 | 0.0244 | n/a | n/a | n/a |
+| 9 | Neutral Site | yes | 13.8363 | 0.0096 | 0.0032 | 0.6513 | no |
+| 10 | Rest | yes | 13.8459 | 0.0000 | -0.0047 | -2.5787 | no |
+| 11 | Havoc | yes | 13.8473 | -0.0013 | -0.0018 | -1.6657 | no |
+| 12 | Travel | yes | 13.8473 | -0.0014 | -0.0007 | -0.4498 | no |
+| 13 | FPI | yes | 13.8477 | -0.0017 | -0.0009 | -0.2191 | no |
+| 14 | Elo | yes | 13.8502 | -0.0043 | 0.0025 | 0.5407 | no |
+| n/a | SP+ | no | n/a | n/a | n/a | n/a | no |
+| n/a | FPI Game Projection | no | n/a | n/a | n/a | n/a | no |
+| n/a | Recruiting | no | n/a | n/a | n/a | n/a | no |
+| n/a | Returning Production | no | n/a | n/a | n/a | n/a | no |
+| n/a | Weather | no | n/a | n/a | n/a | n/a | no |
 
 ### Permutation importance inside one model - margin
 
@@ -323,15 +325,17 @@ number:
 
 ### Does anything beat the market?
 
-On margin, the best marginal gain over the closing spread was **0.0000 MAE** (Neutral Site); on totals **0.0098 MAE** (Line Movement).
+On margin, the largest marginal gain over the closing spread was **0.0000 MAE** (Neutral Site); on totals **0.0098 MAE** (Line Movement). Both are point estimates; what matters is whether either clears its own error bar.
 
-At least one variable removed error on top of the closing line. That is a candidate edge and should be the first thing Phase 2 tries to break.
+**No candidate variable improved on the closing line by more than its own noise.** The largest point estimates are a small fraction of a point of MAE and none reaches a paired t-statistic of 2; most marginal gains are outright negative. The closing spread and closing total already contain everything these public variables know. Atlas should treat the market as the prior it must justify departing from, not as one input among many.
 
 Outcome classification is consistent with that: ATS accuracy with the full feature set was **0.5011** and totals **0.5137**, against a 52.4% break-even.
 
 ### What is not yet measured
 
-These candidate variables could not be evaluated in this build because their only source is the CollegeFootballData API: **FPI Game Projection, Recruiting, Returning Production, SP+, Weather**. They are wired end-to-end; they need `CFBD_API_KEY` and a rebuild.
+These candidate variables could not be evaluated at all in this build, because their only source is the CollegeFootballData API: **Recruiting, Returning Production, SP+, Weather**. They are wired end-to-end; they need `CFBD_API_KEY` and a rebuild.
+
+Measured for one target but not the other (no meaningful form exists on the other side): **FPI Game Projection**.
 
 SP+ in particular is the one required benchmark this build cannot report, and it is the most likely of the missing variables to matter, since it is an efficiency-based rating rather than a résumé rating.
 

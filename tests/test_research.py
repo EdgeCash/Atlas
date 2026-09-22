@@ -111,3 +111,43 @@ def test_report_renders_end_to_end(synthetic_build, research_frame):
     tables = path.parent / "tables"
     assert (tables / "benchmarks.csv").exists()
     assert (tables / "ranking.csv").exists()
+
+
+def test_marginal_gain_carries_an_error_bar(research_frame):
+    out = importance.marginal_over_market(research_frame)
+    usable = out[out["available"]]
+    assert {"gain_se", "gain_t", "material"}.issubset(out.columns)
+    assert (usable["gain_se"] > 0).all()
+    # Materiality must agree with the t-statistic it is derived from.
+    assert (
+        usable["material"] == (usable["gain_t"] > importance.MATERIAL_T)
+    ).all()
+
+
+def test_paired_gain_is_zero_when_a_model_is_compared_to_itself(research_frame):
+    fold = models.leave_one_season_out(research_frame, ["closing_spread"], "actual_margin")
+    paired = models.paired_mae_gain(fold, fold)
+    assert paired["mae_gain"] == 0.0
+    assert paired["n_paired"] == len(fold.y_true)
+
+
+def test_a_known_signal_is_detected_as_material():
+    """The materiality test must fire when a real signal is present."""
+    rng = np.random.default_rng(3)
+    n = 3000
+    season = rng.choice([2019, 2020, 2021, 2022], size=n)
+    line = rng.normal(0, 14, n)
+    hidden = rng.normal(0, 6, n)
+    df = pd.DataFrame(
+        {
+            "season": season,
+            "closing_spread": -line,
+            "hidden": hidden,
+            "actual_margin": line + hidden + rng.normal(0, 8, n),
+            "neutral_site_flag": 0.0,
+        }
+    )
+    base = models.leave_one_season_out(df, ["closing_spread"], "actual_margin")
+    better = models.leave_one_season_out(df, ["closing_spread", "hidden"], "actual_margin")
+    paired = models.paired_mae_gain(base, better)
+    assert paired["gain_t"] > importance.MATERIAL_T

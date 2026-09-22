@@ -324,13 +324,15 @@ current view of the same matchup.
 `Standalone gain` is MAE removed from a constant baseline by that variable
 alone. `Gain over market` is MAE removed **on top of** the closing spread -
 the only column that says whether a variable carries information the market
-has not already priced.
+has not already priced. It is a paired per-game comparison, so it comes with a
+t-statistic; `Material?` is `yes` only when t > 2, because over ~5,700 games a
+gain of 0.01 MAE is indistinguishable from zero.
 
-{_table(rank_margin, ['rank_standalone', 'variable', 'available', 'standalone_mae', 'standalone_gain', 'gain_over_market'], ['#', 'Variable', 'Available', 'Standalone MAE', 'Standalone gain', 'Gain over market'], digits=4)}
+{_table(rank_margin, ['rank_standalone', 'variable', 'available', 'standalone_mae', 'standalone_gain', 'gain_over_market', 'gain_t', 'material'], ['#', 'Variable', 'Available', 'Standalone MAE', 'Standalone gain', 'Gain over market', 't', 'Material?'], digits=4)}
 
 ### Ranked variables - total
 
-{_table(rank_total, ['rank_standalone', 'variable', 'available', 'standalone_mae', 'standalone_gain', 'gain_over_market'], ['#', 'Variable', 'Available', 'Standalone MAE', 'Standalone gain', 'Gain over market'], digits=4)}
+{_table(rank_total, ['rank_standalone', 'variable', 'available', 'standalone_mae', 'standalone_gain', 'gain_over_market', 'gain_t', 'material'], ['#', 'Variable', 'Available', 'Standalone MAE', 'Standalone gain', 'Gain over market', 't', 'Material?'], digits=4)}
 
 ### Permutation importance inside one model - margin
 
@@ -435,14 +437,25 @@ def _conclusions(df: pd.DataFrame, art: dict, sp_available: bool) -> str:
         if total["gain_over_market"].notna().any()
         else "none"
     )
+    material = rank[rank["material"].fillna(False).astype(bool)]
 
     ats = art["ats"]["all features (incl. market)"]
     ou = art["ou"]["all features (incl. market)"]
 
-    beats_market_margin = np.isfinite(best_margin_edge) and best_margin_edge > 0
-    beats_market_total = np.isfinite(best_total_edge) and best_total_edge > 0
+    # A variable only "beats the market" if its paired gain clears its own
+    # noise; a positive point estimate on its own proves nothing.
+    beats_market = not material.empty
 
-    missing = [v for v in rank[~rank["available"]]["variable"].unique()]
+    # A variable counts as unmeasured only if it was unavailable for *every*
+    # target. Something available for margin but not totals is a coverage note,
+    # not a missing variable.
+    per_variable = rank.groupby("variable")["available"].any()
+    missing = sorted(per_variable[~per_variable].index)
+    partial = sorted(
+        rank[
+            rank["variable"].isin(per_variable[per_variable].index) & ~rank["available"]
+        ]["variable"].unique()
+    )
 
     lines = [
         "### What predicts margin",
@@ -466,23 +479,31 @@ def _conclusions(df: pd.DataFrame, art: dict, sp_available: bool) -> str:
         "",
         "### Does anything beat the market?",
         "",
-        f"On margin, the best marginal gain over the closing spread was "
+        f"On margin, the largest marginal gain over the closing spread was "
         f"**{_fmt(best_margin_edge, 4)} MAE** ({edge_margin_var}); on totals "
-        f"**{_fmt(best_total_edge, 4)} MAE** ({edge_total_var}).",
+        f"**{_fmt(best_total_edge, 4)} MAE** ({edge_total_var}). Both are point "
+        f"estimates; what matters is whether either clears its own error bar.",
         "",
     ]
-    if beats_market_margin or beats_market_total:
+    if beats_market:
+        names = ", ".join(
+            f"{r['variable']} ({r['target']}, t={_fmt(r['gain_t'], 2)})"
+            for _, r in material.iterrows()
+        )
         lines.append(
-            "At least one variable removed error on top of the closing line. That is a "
-            "candidate edge and should be the first thing Phase 2 tries to break."
+            f"**{len(material)} variable(s) cleared the significance bar** (paired "
+            f"per-game t > {importance.MATERIAL_T:g}): {names}. That is a candidate edge "
+            "and should be the first thing Phase 2 tries to break."
         )
     else:
         lines.append(
-            "**No candidate variable improved on the closing line out-of-sample.** Every "
-            "marginal gain was zero or negative. The closing spread and closing total "
-            "already contain everything these public variables know. Atlas should treat "
-            "the market as the prior it must justify departing from, not as one input "
-            "among many."
+            "**No candidate variable improved on the closing line by more than its own "
+            "noise.** The largest point estimates are a small fraction of a point of MAE "
+            "and none reaches a paired t-statistic of "
+            f"{importance.MATERIAL_T:g}; most marginal gains are outright negative. The "
+            "closing spread and closing total already contain everything these public "
+            "variables know. Atlas should treat the market as the prior it must justify "
+            "departing from, not as one input among many."
         )
     lines += [
         "",
@@ -495,13 +516,18 @@ def _conclusions(df: pd.DataFrame, art: dict, sp_available: bool) -> str:
     ]
     if missing:
         lines.append(
-            "These candidate variables could not be evaluated in this build because their "
-            "only source is the CollegeFootballData API: **"
-            + ", ".join(sorted(missing))
+            "These candidate variables could not be evaluated at all in this build, "
+            "because their only source is the CollegeFootballData API: **"
+            + ", ".join(missing)
             + "**. They are wired end-to-end; they need `CFBD_API_KEY` and a rebuild."
         )
     else:
         lines.append("Every candidate variable in the mission brief was measurable.")
+    if partial:
+        lines.append(
+            "\nMeasured for one target but not the other (no meaningful form exists on "
+            "the other side): **" + ", ".join(partial) + "**."
+        )
     if not sp_available:
         lines.append(
             "\nSP+ in particular is the one required benchmark this build cannot report, "

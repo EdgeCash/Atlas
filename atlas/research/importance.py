@@ -83,7 +83,19 @@ def standalone_power(df: pd.DataFrame) -> pd.DataFrame:
     return out.sort_values(["target", "mae_gain"], ascending=[True, False], na_position="last")
 
 
+#: A gain must clear this |t| on a paired per-game comparison before Atlas
+#: will call it anything other than noise.
+MATERIAL_T = 2.0
+
+
 def marginal_over_market(df: pd.DataFrame) -> pd.DataFrame:
+    """Does a variable add anything the closing line does not already know?
+
+    Each candidate is compared to the market-only fit game-by-game, so the
+    gain comes with a standard error. Over ~5,700 games a "gain" of 0.01 MAE
+    is indistinguishable from zero, and reporting it without the error bar is
+    how a research warehouse talks itself into an edge it does not have.
+    """
     rows = []
     for target, target_col in TARGETS.items():
         market = available_features(df, MARKET[target])
@@ -98,13 +110,20 @@ def marginal_over_market(df: pd.DataFrame) -> pd.DataFrame:
                 rows.append({
                     "variable": cand.name, "target": target, "available": False,
                     "market_mae": base_mae, "combined_mae": np.nan, "mae_gain": np.nan,
+                    "gain_se": np.nan, "gain_t": np.nan, "material": False,
                 })
                 continue
             fold = models.leave_one_season_out(df, market + struct + usable, target_col)
             mae = models.metrics(fold)["mae"]
+            paired = models.paired_mae_gain(base_fold, fold)
             rows.append({
                 "variable": cand.name, "target": target, "available": True,
-                "market_mae": base_mae, "combined_mae": mae, "mae_gain": base_mae - mae,
+                "market_mae": base_mae, "combined_mae": mae,
+                "mae_gain": paired["mae_gain"], "gain_se": paired["gain_se"],
+                "gain_t": paired["gain_t"],
+                "material": bool(
+                    np.isfinite(paired["gain_t"]) and paired["gain_t"] > MATERIAL_T
+                ),
             })
     return pd.DataFrame(rows).sort_values(
         ["target", "mae_gain"], ascending=[True, False], na_position="last"
@@ -212,7 +231,8 @@ def rank_variables(df: pd.DataFrame) -> pd.DataFrame:
         columns={"mae_gain": "gain_over_market", "combined_mae": "market_plus_mae"}
     )
     merged = standalone.merge(
-        marginal[["variable", "target", "gain_over_market", "market_plus_mae"]],
+        marginal[["variable", "target", "gain_over_market", "market_plus_mae",
+                  "gain_se", "gain_t", "material"]],
         on=["variable", "target"],
         how="left",
     )

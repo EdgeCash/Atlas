@@ -43,6 +43,13 @@ class FoldPredictions:
     y_pred: np.ndarray
     season: np.ndarray
     features: list[str]
+    #: Positional indices of the rows kept, so two runs over the same frame
+    #: can be paired game-by-game for a significance test.
+    index: np.ndarray | None = None
+
+    @property
+    def abs_error(self) -> np.ndarray:
+        return np.abs(self.y_pred - self.y_true)
 
 
 def leave_one_season_out(
@@ -56,9 +63,12 @@ def leave_one_season_out(
     y = pd.to_numeric(df[target], errors="coerce").to_numpy(dtype=float)
     X, used = feature_matrix(df, features)
     seasons = df["season"].to_numpy()
+    positions = np.arange(len(df))
     valid = np.isfinite(y)
     if not used or valid.sum() == 0:
-        return FoldPredictions(y[valid], np.full(valid.sum(), np.nan), seasons[valid], used)
+        return FoldPredictions(
+            y[valid], np.full(valid.sum(), np.nan), seasons[valid], used, positions[valid]
+        )
 
     preds = np.full(len(df), np.nan)
     for season in np.unique(seasons):
@@ -71,7 +81,7 @@ def leave_one_season_out(
         preds[test] = model.predict(X[test])
 
     keep = valid & np.isfinite(preds)
-    return FoldPredictions(y[keep], preds[keep], seasons[keep], used)
+    return FoldPredictions(y[keep], preds[keep], seasons[keep], used, positions[keep])
 
 
 def metrics(fold: FoldPredictions) -> dict[str, float]:
@@ -94,7 +104,9 @@ def season_metrics(fold: FoldPredictions) -> pd.DataFrame:
     rows = []
     for season in np.unique(fold.season):
         mask = fold.season == season
-        sub = FoldPredictions(fold.y_true[mask], fold.y_pred[mask], fold.season[mask], fold.features)
+        sub = FoldPredictions(
+            fold.y_true[mask], fold.y_pred[mask], fold.season[mask], fold.features
+        )
         rows.append({"season": int(season), **metrics(sub)})
     return pd.DataFrame(rows)
 
@@ -116,3 +128,29 @@ def directional_accuracy(
         return {"picks": 0, "hit_rate": float("nan")}
     hits = (pred_side[live] == true_side[live]).mean()
     return {"picks": int(live.sum()), "hit_rate": float(hits if higher_is_over else 1 - hits)}
+
+
+def paired_mae_gain(base: FoldPredictions, other: FoldPredictions) -> dict[str, float]:
+    """Per-game paired comparison of two out-of-sample fits.
+
+    Reports how much MAE ``other`` removes relative to ``base`` on the games
+    both scored, together with the standard error of that difference and its
+    t-statistic. A gain smaller than its own noise is not a finding, and the
+    only honest way to say so is to carry the error bar alongside it.
+    """
+    if base.index is None or other.index is None:
+        return {"mae_gain": float("nan"), "gain_se": float("nan"), "gain_t": float("nan"),
+                "n_paired": 0}
+    common, a_pos, b_pos = np.intersect1d(base.index, other.index, return_indices=True)
+    if len(common) < 50:
+        return {"mae_gain": float("nan"), "gain_se": float("nan"), "gain_t": float("nan"),
+                "n_paired": int(len(common))}
+    diff = base.abs_error[a_pos] - other.abs_error[b_pos]
+    gain = float(diff.mean())
+    se = float(diff.std(ddof=1) / np.sqrt(len(diff)))
+    return {
+        "mae_gain": gain,
+        "gain_se": se,
+        "gain_t": float(gain / se) if se > 0 else float("nan"),
+        "n_paired": int(len(diff)),
+    }
