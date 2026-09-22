@@ -36,7 +36,11 @@ jobs:
 
       - name: Test
         # The suite builds a complete warehouse from a synthetic league and
-        # runs the full research pipeline over it, with no network access.
+        # runs the full research pipeline over it. ATLAS_OFFLINE makes any
+        # accidental network call fail loudly instead of downloading a
+        # gigabyte of real data in CI.
+        env:
+          ATLAS_OFFLINE: "1"
         run: python -m pytest -q
 
   reproducibility:
@@ -52,4 +56,6 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -e ".[dev]"
       - name: Build twice from the same synthetic sources and compare
+        env:
+          ATLAS_OFFLINE: "1"
         run: python scripts/check_reproducible.py

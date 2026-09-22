@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-22T14:09:19+00:00",
+  "generated_at": "2026-09-22T14:48:26+00:00",
   "atlas_version": "0.1.0",
   "seasons_requested": [
     2018,
@@ -45,13 +45,17 @@
       "rows": 21328,
       "columns": 36
     },
+    "adjusted_efficiency_metrics": {
+      "rows": 21328,
+      "columns": 111
+    },
     "talent": {
       "rows": 21328,
       "columns": 13
     },
     "context": {
       "rows": 21328,
-      "columns": 15
+      "columns": 22
     }
   }
 }

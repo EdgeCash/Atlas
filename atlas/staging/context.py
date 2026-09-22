@@ -37,6 +37,7 @@ def build_context(
     games: pd.DataFrame,
     team_games: pd.DataFrame,
     teams: pd.DataFrame,
+    weather: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
     out = games[["game_id", "season", "home_team_id", "away_team_id", "neutral_site"]].copy()
 
@@ -48,7 +49,7 @@ def build_context(
     out["rest_diff"] = out["home_days_rest"] - out["away_days_rest"]
 
     out = _add_travel(out, games, teams)
-    out = _add_weather(raw, out)
+    out = _add_weather(raw, out, weather)
 
     write_parquet(out, staging / "context.parquet")
     return out
@@ -88,7 +89,19 @@ def _add_travel(out: pd.DataFrame, games: pd.DataFrame, teams: pd.DataFrame) -> 
     return out.merge(g[keep], on="game_id", how="left")
 
 
-def _add_weather(raw: Path, out: pd.DataFrame) -> pd.DataFrame:
+def _add_weather(
+    raw: Path, out: pd.DataFrame, weather: pd.DataFrame | None = None
+) -> pd.DataFrame:
+    """Prefer the free station observations; fall back to CFBD if present.
+
+    Phase 1A could not measure weather at all - CFBD's endpoint needs a paid
+    tier. Phase 1B replaces it with Meteostat bulk station data, which is free
+    and unmetered, so the CFBD path is now only a fallback.
+    """
+    if weather is not None and not weather.empty and weather["weather_temp"].notna().any():
+        columns = [c for c in weather.columns if c != "game_id"]
+        return out.merge(weather[["game_id", *columns]], on="game_id", how="left")
+
     frames = []
     for path in sorted((raw / "cfbd").glob("weather_*.parquet")) if (raw / "cfbd").exists() else []:
         df = pd.read_parquet(path)

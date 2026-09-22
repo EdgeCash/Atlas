@@ -12,7 +12,6 @@ import json
 from datetime import UTC, datetime
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 
 from atlas import config
@@ -23,6 +22,8 @@ from atlas.research.dataset import (
     load_research_frame,
     research_sample,
 )
+from atlas.research.markdown import fmt as _fmt
+from atlas.research.markdown import table as _table
 from atlas.sources import cfbd
 from atlas.util import get_logger
 
@@ -31,6 +32,9 @@ LOG = get_logger(__name__)
 BREAK_EVEN = 0.5238  # -110 juice
 
 CFBD_DATASETS = ("sp_plus", "talent", "recruiting", "returning", "weather")
+
+#: Datasets Atlas no longer needs CFBD for. Their absence is not a gap.
+SUPERSEDED = ("weather",)
 
 #: Candidate variable -> the CFBD dataset that would populate it, so the
 #: report can name the exact reason a variable is missing instead of always
@@ -47,6 +51,8 @@ def _missing_reason(variable: str) -> str:
     dataset = VARIABLE_TO_CFBD.get(variable)
     if dataset is None:
         return "no source wired up"
+    if dataset in SUPERSEDED:
+        return "superseded by the free Meteostat weather collector (Phase 1B)"
     reason = cfbd.unavailable_reason(config.paths().raw, dataset)
     if reason:
         return reason
@@ -70,6 +76,8 @@ def _cfbd_note() -> str:
         populated = any(len(pd.read_parquet(f)) > 0 for f in files)
         if populated:
             present.append(dataset)
+        elif dataset in SUPERSEDED:
+            continue
         else:
             reason = cfbd.unavailable_reason(raw, dataset) or "no rows returned"
             missing.append(f"`{dataset}` ({reason})")
@@ -78,42 +86,13 @@ def _cfbd_note() -> str:
         note += ": " + ", ".join(f"`{d}`" for d in present) + " are populated"
     if missing:
         note += ". Still missing: " + "; ".join(missing)
-    return note + "."
-
-
-def _fmt(value: float | None, digits: int = 3, dash: str = "n/a") -> str:
-    if value is None or (isinstance(value, float) and not np.isfinite(value)):
-        return dash
-    return f"{value:.{digits}f}"
-
-
-#: Columns that are conceptually counts and should never render as 1234.000.
-COUNT_COLUMNS = {"season", "games", "n", "n_features", "picks", "with_spread", "with_total",
-                 "with_efficiency", "with_fpi", "rank_standalone", "rank_over_market"}
-
-
-def _table(df: pd.DataFrame, columns: list[str], headers: list[str], digits: int = 3) -> str:
-    headers = [h.replace("|", "\\|") for h in headers]
-    lines = ["| " + " | ".join(headers) + " |", "|" + "|".join(["---"] * len(headers)) + "|"]
-    for _, row in df.iterrows():
-        cells = []
-        for col in columns:
-            value = row.get(col)
-            if isinstance(value, (bool, np.bool_)):
-                cells.append("yes" if value else "no")
-            elif isinstance(value, (int, np.integer)):
-                cells.append(f"{int(value):,}")
-            elif isinstance(value, (float, np.floating)):
-                if not np.isfinite(value):
-                    cells.append("n/a")
-                elif col in COUNT_COLUMNS:
-                    cells.append(f"{int(round(value)):,}" if col != "season" else str(int(value)))
-                else:
-                    cells.append(_fmt(float(value), digits))
-            else:
-                cells.append("" if value is None else str(value))
-        lines.append("| " + " | ".join(cells) + " |")
-    return "\n".join(lines)
+    note += "."
+    if "weather" in SUPERSEDED:
+        note += (
+            " Kickoff weather no longer comes from CFBD at all - Phase 1B replaced the"
+            " paid endpoint with free Meteostat station observations."
+        )
+    return note
 
 
 def build_artifacts(df: pd.DataFrame) -> dict[str, pd.DataFrame | dict]:
@@ -257,13 +236,14 @@ warehouse in which no feature attached to a game was unknown at its kickoff.
 | Results, venue, schedule | CFBD games mirror | Outcome only; never used as a feature |
 | Closing / opening lines, moneyline | Historical sportsbook feed | Posted before kickoff |
 | Efficiency (EPA, success rate, explosiveness, havoc, finishing drives, pace) | Play-by-play, aggregated per game | A game's feature averages that team's **strictly earlier** games, shrunk toward its **previous season** mean |
+| Opponent-adjusted efficiency | Same play-by-play, solved as a schedule graph | Solved per week from games in **strictly earlier weeks** only, shrunk toward the previous season's final ratings |
 | FPI (rating) | ESPN | **Previous season's** final rating only |
 | FPI game projection | ESPN pre-game predictor | Published before kickoff |
 | Elo | CFBD pre-game Elo | Pre-game by construction |
 | SP+ | CFBD | **Previous season's** rating only |
 | Recruiting, returning production | CFBD | Fixed before the season starts |
 | Rest, travel, neutral site | Schedule + venue geography | Known when the schedule is published |
-| Weather | CFBD kickoff observation | Kickoff conditions, not a result |
+| Weather | Meteostat station observation at the kickoff hour | Kickoff conditions, not a result |
 
 The vectorised point-in-time implementation is checked row-by-row against a
 brute-force recomputation in the test suite, and a correlation scan flags any

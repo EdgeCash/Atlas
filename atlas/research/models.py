@@ -154,3 +154,31 @@ def paired_mae_gain(base: FoldPredictions, other: FoldPredictions) -> dict[str, 
         "gain_t": float(gain / se) if se > 0 else float("nan"),
         "n_paired": int(len(diff)),
     }
+
+
+def null_fold(df: pd.DataFrame, target: str, *, constant: float | None = None) -> FoldPredictions:
+    """The do-nothing model, folded the same way as everything else.
+
+    With ``constant=None`` each season is predicted by the other seasons' mean,
+    which is the right baseline for margin and total. With ``constant=0`` the
+    prediction is "the market is exactly right", which is the right baseline
+    for a residual target - and the one Phase 1B has to beat.
+    """
+    y = pd.to_numeric(df[target], errors="coerce").to_numpy(dtype=float)
+    seasons = df["season"].to_numpy()
+    positions = np.arange(len(df))
+    valid = np.isfinite(y)
+
+    preds = np.full(len(df), np.nan)
+    if constant is not None:
+        preds[valid] = constant
+    else:
+        for season in np.unique(seasons):
+            train = valid & (seasons != season)
+            test = valid & (seasons == season)
+            if train.sum() == 0 or test.sum() == 0:
+                continue
+            preds[test] = y[train].mean()
+
+    keep = valid & np.isfinite(preds)
+    return FoldPredictions(y[keep], preds[keep], seasons[keep], ["<null>"], positions[keep])

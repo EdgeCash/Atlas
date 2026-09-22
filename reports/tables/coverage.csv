@@ -44,6 +44,6 @@ talent_sum,True,0.9961924541363794
 total_movement,True,0.9117341640706127
 travel_distance,True,0.9415022499134649
 travel_distance_diff,True,0.9415022499134649
-weather_precip,True,0.0
-weather_temp,True,0.0
-weather_wind,True,0.0
+weather_precip,True,0.919349255797854
+weather_temp,True,0.919349255797854
+weather_wind,True,0.9184839044652129

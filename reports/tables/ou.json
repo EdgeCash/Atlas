@@ -1,14 +1,14 @@
 {
   "all features (incl. market)": {
     "n": 5708,
-    "accuracy": 0.5126138752627891,
-    "log_loss": 0.6943801300821221,
+    "accuracy": 0.51156271899089,
+    "log_loss": 0.6945807685847075,
     "base_rate": 0.49369306236860544
   },
   "non-market features only": {
     "n": 5708,
-    "accuracy": 0.5106867554309741,
-    "log_loss": 0.6949018104372803,
+    "accuracy": 0.5110371408549405,
+    "log_loss": 0.6951428734159452,
     "base_rate": 0.49369306236860544
   },
   "market line only": {

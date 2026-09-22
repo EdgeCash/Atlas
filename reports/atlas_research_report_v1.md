@@ -1,6 +1,6 @@
 # Atlas Research Report V1
 
-*Generated 2026-09-22 14:08 UTC from `data/warehouse/atlas.duckdb`. Every figure in this
+*Generated 2026-09-22 14:46 UTC from `data/warehouse/atlas.duckdb`. Every figure in this
 document is produced by `python -m atlas.research.report`; none is hand-entered.*
 
 Atlas Phase 1A asks one question: **which variables actually predict college
@@ -8,7 +8,7 @@ football games?** It does not project, simulate or wager. The answer below is
 measured out-of-sample, leave-one-season-out, on a point-in-time-correct
 warehouse in which no feature attached to a game was unknown at its kickoff.
 
-CFBD enrichment was **enabled** for this build: `sp_plus`, `talent`, `recruiting`, `returning` are populated. Still missing: `weather` (/games/weather: Unauthorized. This endpoint requires a Patreon subscription at Tier 1 or higher.).
+CFBD enrichment was **enabled** for this build: `sp_plus`, `talent`, `recruiting`, `returning` are populated. Kickoff weather no longer comes from CFBD at all - Phase 1B replaced the paid endpoint with free Meteostat station observations.
 
 ---
 
@@ -34,13 +34,14 @@ Research sample: **5,778 FBS-vs-FBS games** across **8 seasons (2018-2025)**, dr
 | Results, venue, schedule | CFBD games mirror | Outcome only; never used as a feature |
 | Closing / opening lines, moneyline | Historical sportsbook feed | Posted before kickoff |
 | Efficiency (EPA, success rate, explosiveness, havoc, finishing drives, pace) | Play-by-play, aggregated per game | A game's feature averages that team's **strictly earlier** games, shrunk toward its **previous season** mean |
+| Opponent-adjusted efficiency | Same play-by-play, solved as a schedule graph | Solved per week from games in **strictly earlier weeks** only, shrunk toward the previous season's final ratings |
 | FPI (rating) | ESPN | **Previous season's** final rating only |
 | FPI game projection | ESPN pre-game predictor | Published before kickoff |
 | Elo | CFBD pre-game Elo | Pre-game by construction |
 | SP+ | CFBD | **Previous season's** rating only |
 | Recruiting, returning production | CFBD | Fixed before the season starts |
 | Rest, travel, neutral site | Schedule + venue geography | Known when the schedule is published |
-| Weather | CFBD kickoff observation | Kickoff conditions, not a result |
+| Weather | Meteostat station observation at the kickoff hour | Kickoff conditions, not a result |
 
 The vectorised point-in-time implementation is checked row-by-row against a
 brute-force recomputation in the test suite, and a correlation scan flags any
@@ -126,7 +127,7 @@ current view of the same matchup.
 | Market Closing Line (raw, unfitted) | yes | 5,778 | 12.224 | 15.455 | 0.443 |  |
 | Market Only | yes | 5,778 | 12.227 | 15.461 | 0.443 |  |
 | Market + Efficiency | yes | 5,778 | 12.232 | 15.462 | 0.443 |  |
-| Market + Everything | yes | 5,778 | 12.242 | 15.468 | 0.443 | weather_temp, weather_wind, weather_precip |
+| Market + Everything | yes | 5,778 | 12.252 | 15.478 | 0.442 |  |
 | FPI Game Projection | yes | 5,778 | 12.924 | 16.205 | 0.388 |  |
 | Ratings + Efficiency (no market) | yes | 5,778 | 13.085 | 16.459 | 0.369 |  |
 | Elo Only | yes | 5,778 | 13.105 | 16.496 | 0.366 |  |
@@ -142,7 +143,7 @@ current view of the same matchup.
 | Market Only | yes | 5,778 | 12.703 | 16.027 | 0.158 |  |
 | Market Closing Line (raw, unfitted) | yes | 5,778 | 12.705 | 16.043 | 0.156 |  |
 | Market + Efficiency | yes | 5,778 | 12.714 | 16.039 | 0.156 |  |
-| Market + Everything | yes | 5,778 | 12.729 | 16.059 | 0.154 | weather_temp, weather_wind, weather_precip |
+| Market + Everything | yes | 5,778 | 12.734 | 16.071 | 0.153 |  |
 | Ratings + Efficiency (no market) | yes | 5,778 | 13.148 | 16.601 | 0.096 |  |
 | Efficiency Only | yes | 5,778 | 13.153 | 16.597 | 0.097 |  |
 | SP+ Only | yes | 5,778 | 13.570 | 17.168 | 0.034 |  |
@@ -173,13 +174,13 @@ gain of 0.01 MAE is indistinguishable from zero.
 | 10 | Havoc | yes | 15.8203 | 0.3944 | -0.0008 | -0.5059 | no |
 | 11 | Explosiveness | yes | 16.1208 | 0.0939 | -0.0023 | -0.5042 | no |
 | 12 | Returning Production | yes | 16.1277 | 0.0870 | 0.0056 | 1.0500 | no |
-| 13 | Market Total | yes | 16.2128 | 0.0019 | n/a | n/a | n/a |
-| 14 | Neutral Site | yes | 16.2130 | 0.0017 | 0.0000 | 0.1537 | no |
-| 15 | Pace | yes | 16.2139 | 0.0008 | -0.0024 | -0.5600 | no |
-| 16 | Travel | yes | 16.2188 | -0.0041 | -0.0013 | -0.2265 | no |
-| 17 | Rest | yes | 16.2221 | -0.0074 | -0.0038 | -2.3141 | no |
-| 18 | Line Movement | yes | 16.2716 | -0.0569 | -0.0006 | -0.2330 | no |
-| n/a | Weather | no | n/a | n/a | n/a | n/a | no |
+| 13 | Weather | yes | 16.2055 | 0.0091 | -0.0099 | -2.3209 | no |
+| 14 | Market Total | yes | 16.2128 | 0.0019 | n/a | n/a | n/a |
+| 15 | Neutral Site | yes | 16.2130 | 0.0017 | 0.0000 | 0.1537 | no |
+| 16 | Pace | yes | 16.2139 | 0.0008 | -0.0024 | -0.5600 | no |
+| 17 | Travel | yes | 16.2188 | -0.0041 | -0.0013 | -0.2265 | no |
+| 18 | Rest | yes | 16.2221 | -0.0074 | -0.0038 | -2.3141 | no |
+| 19 | Line Movement | yes | 16.2716 | -0.0569 | -0.0006 | -0.2330 | no |
 
 ### Ranked variables - total
 
@@ -195,72 +196,72 @@ gain of 0.01 MAE is indistinguishable from zero.
 | 8 | Finishing Drives | yes | 13.7870 | 0.0589 | -0.0011 | -0.2673 | no |
 | 9 | Market Spread | yes | 13.8216 | 0.0244 | n/a | n/a | n/a |
 | 10 | Neutral Site | yes | 13.8363 | 0.0096 | 0.0032 | 0.6513 | no |
-| 11 | Rest | yes | 13.8459 | 0.0000 | -0.0047 | -2.5787 | no |
-| 12 | Havoc | yes | 13.8473 | -0.0013 | -0.0018 | -1.6657 | no |
-| 13 | Travel | yes | 13.8473 | -0.0014 | -0.0007 | -0.4498 | no |
-| 14 | FPI | yes | 13.8477 | -0.0017 | -0.0009 | -0.2191 | no |
-| 15 | Elo | yes | 13.8502 | -0.0043 | 0.0025 | 0.5407 | no |
-| 16 | Recruiting | yes | 13.8593 | -0.0133 | -0.0032 | -3.0269 | no |
-| 17 | Returning Production | yes | 13.8597 | -0.0138 | -0.0041 | -0.7851 | no |
+| 11 | Weather | yes | 13.8389 | 0.0071 | 0.0006 | 0.1522 | no |
+| 12 | Rest | yes | 13.8459 | 0.0000 | -0.0047 | -2.5787 | no |
+| 13 | Havoc | yes | 13.8473 | -0.0013 | -0.0018 | -1.6657 | no |
+| 14 | Travel | yes | 13.8473 | -0.0014 | -0.0007 | -0.4498 | no |
+| 15 | FPI | yes | 13.8477 | -0.0017 | -0.0009 | -0.2191 | no |
+| 16 | Elo | yes | 13.8502 | -0.0043 | 0.0025 | 0.5407 | no |
+| 17 | Recruiting | yes | 13.8593 | -0.0133 | -0.0032 | -3.0269 | no |
+| 18 | Returning Production | yes | 13.8597 | -0.0138 | -0.0041 | -0.7851 | no |
 | n/a | FPI Game Projection | no | n/a | n/a | n/a | n/a | no |
-| n/a | Weather | no | n/a | n/a | n/a | n/a | no |
 
 ### Permutation importance inside one model - margin
 
 | Feature | MAE increase when shuffled |
 |---|---|
-| closing_spread | 5.2855 |
-| fpi_home_win_prob | 0.1406 |
-| elo_diff | 0.0330 |
-| pace_diff | 0.0205 |
-| talent_diff | 0.0179 |
-| returning_production_diff | 0.0171 |
-| def_epa_diff | 0.0168 |
-| explosiveness_diff | 0.0138 |
-| travel_distance | 0.0138 |
-| havoc_diff | 0.0131 |
-| success_rate_diff | 0.0122 |
-| rest_diff | 0.0093 |
-| def_explosiveness_diff | 0.0090 |
-| spread_movement | 0.0088 |
-| off_epa_diff | 0.0036 |
+| closing_spread | 5.2460 |
+| fpi_home_win_prob | 0.1315 |
+| elo_diff | 0.0365 |
+| pace_diff | 0.0182 |
+| success_rate_diff | 0.0175 |
+| havoc_diff | 0.0135 |
+| explosiveness_diff | 0.0122 |
+| def_epa_diff | 0.0109 |
+| talent_diff | 0.0074 |
+| returning_production_diff | 0.0073 |
+| travel_distance | 0.0072 |
+| rest_diff | 0.0053 |
+| def_success_rate_diff | 0.0050 |
+| off_epa_diff | 0.0048 |
+| spread_movement | 0.0047 |
 
 ### Permutation importance inside one model - total
 
 | Feature | MAE increase when shuffled |
 |---|---|
-| closing_total | 1.6771 |
-| success_rate_sum | 0.0209 |
-| finishing_drives_sum | 0.0139 |
-| talent_sum | 0.0120 |
-| elo_sum | 0.0114 |
-| sp_plus_def_sum | 0.0107 |
-| def_explosiveness_sum | 0.0095 |
-| sp_plus_off_sum | 0.0074 |
-| total_movement | 0.0071 |
-| pace_sum | 0.0058 |
-| explosiveness_sum | 0.0032 |
-| fpi_sum | -0.0002 |
-| def_success_rate_sum | -0.0033 |
-| rest_abs | -0.0059 |
-| plays_per_game_sum | -0.0062 |
+| closing_total | 1.6370 |
+| pace_sum | 0.0381 |
+| finishing_drives_sum | 0.0329 |
+| weather_temp | 0.0245 |
+| talent_sum | 0.0218 |
+| elo_sum | 0.0176 |
+| def_explosiveness_sum | 0.0157 |
+| sp_plus_def_sum | 0.0141 |
+| success_rate_sum | 0.0092 |
+| sp_plus_off_sum | 0.0057 |
+| weather_wind | 0.0053 |
+| travel_distance | 0.0050 |
+| total_movement | 0.0049 |
+| plays_per_game_sum | 0.0047 |
+| returning_production_sum | 0.0014 |
 
 ### Direction of effect (standardised ridge coefficients, margin)
 
 | Feature | Std. coefficient |
 |---|---|
-| closing_spread | -12.578 |
-| sp_plus_diff | 3.741 |
-| sp_plus_def_diff | 2.391 |
-| sp_plus_off_diff | -2.328 |
+| closing_spread | -12.540 |
+| sp_plus_diff | 3.759 |
+| sp_plus_def_diff | 2.383 |
+| sp_plus_off_diff | -2.331 |
 | def_epa_diff | 2.255 |
-| def_success_rate_diff | -1.732 |
-| fpi_home_win_prob | 0.907 |
-| def_explosiveness_diff | -0.781 |
-| elo_diff | 0.763 |
-| returning_production_diff | 0.455 |
-| havoc_diff | 0.428 |
-| off_epa_diff | -0.414 |
+| def_success_rate_diff | -1.737 |
+| fpi_home_win_prob | 0.920 |
+| def_explosiveness_diff | -0.783 |
+| elo_diff | 0.779 |
+| returning_production_diff | 0.451 |
+| off_epa_diff | -0.429 |
+| havoc_diff | 0.422 |
 
 ### ATS and totals outcomes
 
@@ -270,16 +271,16 @@ Break-even at -110 is **52.4%**.
 
 | Feature set | n | Accuracy | Log loss | Base rate |
 |---|---|---|---|---|
-| all features (incl. market) | 5,671 | 0.5013 | 0.6950 | 0.5020 |
-| non-market features only | 5,671 | 0.4997 | 0.6948 | 0.5020 |
+| all features (incl. market) | 5,671 | 0.4992 | 0.6956 | 0.5020 |
+| non-market features only | 5,671 | 0.4990 | 0.6954 | 0.5020 |
 | market line only | 5,671 | 0.4916 | 0.6934 | 0.5020 |
 
 **Totals (over hit)**
 
 | Feature set | n | Accuracy | Log loss | Base rate |
 |---|---|---|---|---|
-| all features (incl. market) | 5,708 | 0.5126 | 0.6944 | 0.4937 |
-| non-market features only | 5,708 | 0.5107 | 0.6949 | 0.4937 |
+| all features (incl. market) | 5,708 | 0.5116 | 0.6946 | 0.4937 |
+| non-market features only | 5,708 | 0.5110 | 0.6951 | 0.4937 |
 | market line only | 5,708 | 0.5179 | 0.6924 | 0.4937 |
 
 ### Beating the closing line
@@ -306,8 +307,8 @@ number:
 | Ratings + Efficiency (no market) | total | 5,708 | 0.5163 |
 | Market + Efficiency | margin | 5,671 | 0.5078 |
 | Market + Efficiency | total | 5,708 | 0.5152 |
-| Market + Everything | margin | 5,671 | 0.5101 |
-| Market + Everything | total | 5,708 | 0.5124 |
+| Market + Everything | margin | 5,671 | 0.5124 |
+| Market + Everything | total | 5,708 | 0.5100 |
 
 ---
 
@@ -331,13 +332,11 @@ On margin, the largest marginal gain over the closing spread was **0.0056 MAE** 
 
 **No candidate variable improved on the closing line by more than its own noise.** The largest point estimates are a small fraction of a point of MAE and none reaches a paired t-statistic of 2; most marginal gains are outright negative. The closing spread and closing total already contain everything these public variables know. Atlas should treat the market as the prior it must justify departing from, not as one input among many.
 
-Outcome classification is consistent with that: ATS accuracy with the full feature set was **0.5013** and totals **0.5126**, against a 52.4% break-even.
+Outcome classification is consistent with that: ATS accuracy with the full feature set was **0.4992** and totals **0.5116**, against a 52.4% break-even.
 
 ### What is not yet measured
 
-These candidate variables could not be evaluated at all in this build. They are wired end-to-end; each is blocked on its source:
-
-* **Weather** - /games/weather: Unauthorized. This endpoint requires a Patreon subscription at Tier 1 or higher.
+Every candidate variable in the mission brief was measurable.
 
 Measured for one target but not the other (no meaningful form exists on the other side): **FPI Game Projection**.
 
@@ -390,11 +389,11 @@ Measured for one target but not the other (no meaningful form exists on the othe
 | travel_distance_diff | yes | 0.942 |
 | rest_diff | yes | 0.930 |
 | rest_abs | yes | 0.930 |
+| weather_temp | yes | 0.919 |
+| weather_precip | yes | 0.919 |
+| weather_wind | yes | 0.918 |
 | total_movement | yes | 0.912 |
 | spread_movement | yes | 0.911 |
-| weather_precip | yes | 0.000 |
-| weather_temp | yes | 0.000 |
-| weather_wind | yes | 0.000 |
 
 ## Appendix B - Leakage scan
 

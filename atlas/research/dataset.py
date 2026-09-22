@@ -22,6 +22,25 @@ from atlas.util import get_logger
 
 LOG = get_logger(__name__)
 
+ADJUSTED_METRICS = [
+    "adj_off_epa",
+    "adj_def_epa",
+    "adj_success_rate",
+    "adj_def_success_rate",
+    "adj_explosiveness",
+    "adj_def_explosiveness",
+    "adj_havoc",
+    "adj_havoc_allowed",
+    "adj_finishing_drives",
+    "adj_def_finishing_drives",
+    "adj_pace",
+    "adj_def_pace",
+]
+
+#: The non-primary adjustment methods, carried so the report can price the
+#: choice of method rather than asserting one.
+ALTERNATE_METHODS = ("simple", "iterative")
+
 EFFICIENCY_METRICS = [
     "off_epa",
     "def_epa",
@@ -102,7 +121,11 @@ def add_derived_features(df: pd.DataFrame) -> pd.DataFrame:
     out["closing_spread_abs"] = out["closing_spread"].abs()
     out["rest_abs"] = out["rest_diff"].abs()
 
-    for metric in EFFICIENCY_METRICS:
+    adjusted_variants = [
+        *ADJUSTED_METRICS,
+        *(f"{m}_{method}" for method in ALTERNATE_METHODS for m in ADJUSTED_METRICS),
+    ]
+    for metric in [*EFFICIENCY_METRICS, *adjusted_variants]:
         home, away = f"home_{metric}", f"away_{metric}"
         if home in out.columns and away in out.columns:
             out[f"{metric}_sum"] = out[home] + out[away]
@@ -120,6 +143,24 @@ def add_derived_features(df: pd.DataFrame) -> pd.DataFrame:
     # Market-implied margin: the closing spread is home-oriented, so the
     # market's point estimate of the home margin is its negation.
     out["market_margin"] = -out["closing_spread"]
+
+    # Phase 1B's central targets. A model that predicts margin well has mostly
+    # rediscovered the closing line; a model that predicts the *residual* has
+    # found something the line does not know.
+    out["market_residual_margin"] = out["actual_margin"] - out["market_margin"]
+    out["market_residual_total"] = out["actual_total"] - out["closing_total"]
+
+    # Net team strength in one number, raw and adjusted, for like-for-like
+    # comparison (defensive metrics are "allowed", so they subtract).
+    if {"off_epa_diff", "def_epa_diff"}.issubset(out.columns):
+        out["net_epa_diff"] = out["off_epa_diff"] - out["def_epa_diff"]
+    if {"adj_off_epa_diff", "adj_def_epa_diff"}.issubset(out.columns):
+        out["adj_net_epa_diff"] = out["adj_off_epa_diff"] - out["adj_def_epa_diff"]
+
+    # Weather: a dome has no wind whatever the station says, and wind is the
+    # channel with a documented effect on scoring.
+    if "weather_wind_effective" in out.columns:
+        out["weather_wind_sq"] = out["weather_wind_effective"] ** 2
     return out
 
 

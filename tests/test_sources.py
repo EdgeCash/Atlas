@@ -9,7 +9,7 @@ import requests
 from atlas.sources import cfbd, espn
 from atlas.sources import sportsdataverse as sdv
 from atlas.testing.synthetic import write_synthetic_raw
-from atlas.util import http_get
+from atlas.util import OfflineError, download, http_get
 
 
 def test_synthetic_tree_matches_expected_source_paths(tmp_path):
@@ -78,6 +78,7 @@ def test_a_plain_401_is_not_treated_as_a_tier_problem():
 
 def test_settled_http_statuses_are_not_retried(monkeypatch):
     """A 401 must fail immediately; retrying it wastes a minute per season."""
+    monkeypatch.delenv("ATLAS_OFFLINE", raising=False)
     calls = {"n": 0}
 
     class _Session:
@@ -93,6 +94,7 @@ def test_settled_http_statuses_are_not_retried(monkeypatch):
 
 
 def test_retryable_statuses_are_retried(monkeypatch):
+    monkeypatch.delenv("ATLAS_OFFLINE", raising=False)
     calls = {"n": 0}
     monkeypatch.setattr("atlas.util.time.sleep", lambda _s: None)
 
@@ -112,3 +114,19 @@ def test_status_file_records_why_a_dataset_is_missing(tmp_path):
     cfbd.record_status(tmp_path, "weather", "needs a paid tier")
     assert cfbd.unavailable_reason(tmp_path, "weather") == "needs a paid tier"
     assert cfbd.unavailable_reason(tmp_path, "sp_plus") is None
+
+
+def test_offline_mode_blocks_every_network_call(monkeypatch, tmp_path):
+    """The suite must fail loudly rather than quietly downloading real data."""
+    monkeypatch.setenv("ATLAS_OFFLINE", "1")
+    with pytest.raises(OfflineError):
+        http_get("https://example.invalid/x")
+    with pytest.raises(OfflineError):
+        download("https://example.invalid/x", tmp_path / "x.parquet")
+
+
+def test_offline_mode_still_serves_cached_files(monkeypatch, tmp_path):
+    monkeypatch.setenv("ATLAS_OFFLINE", "1")
+    cached = tmp_path / "cached.bin"
+    cached.write_bytes(b"already here")
+    assert download("https://example.invalid/x", cached) == cached

@@ -87,6 +87,35 @@ A scrimmage play is a rush or pass not wiped out by penalty. Garbage-time
 plays are excluded (per-quarter margin thresholds 38/28/22/16; overtime is
 never garbage time).
 
+## `adjusted_efficiency_metrics`
+
+Added in Phase 1B. Same `home_*` / `away_*` / `*_diff` shape as
+`efficiency_metrics`, but every value is **opponent-adjusted**: the rating a
+team held before that week kicked off, solved from the schedule graph rather
+than averaged blind. See
+[`reports/opponent_adjustment_report.md`](../reports/opponent_adjustment_report.md).
+
+| Metric | Meaning |
+|---|---|
+| `adj_off_epa` | EPA per play this team produces **against an average defence** |
+| `adj_def_epa` | EPA per play it allows **to an average offence**. Lower is better |
+| `adj_success_rate` / `adj_def_success_rate` | Same, for success rate |
+| `adj_explosiveness` / `adj_def_explosiveness` | Same, for EPA on successful plays |
+| `adj_havoc` / `adj_havoc_allowed` | Havoc a defence generates / an offence concedes. Here the **defence is the actor** |
+| `adj_finishing_drives` / `adj_def_finishing_drives` | Points per scoring opportunity, produced and allowed |
+| `adj_pace` / `adj_def_pace` | Seconds per play, own and forced |
+
+Each name above appears three times, once per adjustment method: unsuffixed is
+the primary **network** solve (Method C, Massey/SRS ridge least squares),
+`_iterative` is Method B (Gauss-Seidel), `_simple` is Method A (one-pass
+schedule-strength subtraction). Methods B and C agree to four decimals;
+Method A under-corrects and is kept only so the report can show the cost of
+choosing it.
+
+Extras: `home_prior_games`, `away_prior_games` are carried on
+`efficiency_metrics`; the adjusted table's own history indicator is
+`n_prior_observations` in `staging/adjusted_efficiency.parquet`.
+
 ## `talent`
 
 | Column | Type | Meaning |
@@ -107,9 +136,14 @@ are fixed before the season starts.
 | `game_id` | int64 | |
 | `rest_diff` | float | Home days rest minus away days rest |
 | `travel_distance` | float | Great-circle miles travelled by the **visiting** side |
-| `weather_temp`, `weather_wind`, `weather_precip` | float | Kickoff conditions. CFBD `/games/weather`, which requires a **paid** CFBD Patreon tier - a free key is not enough |
+| `weather_temp`, `weather_wind`, `weather_precip` | float | Kickoff conditions in °F, mph and inches, from the nearest Meteostat station (free, no key). CFBD `/games/weather` remains a fallback but needs a paid tier |
 | `neutral_site` | bool | |
-| *additions* | | `home_days_rest`, `away_days_rest`, `home_travel_distance`, `away_travel_distance`, `travel_distance_diff` |
+| *additions* | | `home_days_rest`, `away_days_rest`, `home_travel_distance`, `away_travel_distance`, `travel_distance_diff`, `weather_humidity`, `weather_temp_effective`, `weather_wind_effective`, `weather_precip_effective`, `venue_dome`, `weather_station_id`, `weather_station_miles` |
+
+The `_effective` weather columns model what players experience rather than
+what the sky is doing: indoors they are room temperature, no wind and no rain.
+`weather_station_miles` is how far the observing station sits from the
+stadium - the median is about five miles.
 
 `home_travel_distance` is zero at a true home game and non-zero at a neutral
 site, which is the point of carrying both.
@@ -153,7 +187,8 @@ GROUP BY 1 ORDER BY 1;
 | sportsdataverse `cfbfastR_cfb_pbp` release | no | play-by-play with EPA and success |
 | ESPN public endpoints | no | FPI season ratings, pre-game matchup projections |
 | CollegeFootballData API | **yes**, free key | SP+ (overall, offence, defence), recruiting rankings, roster talent, returning production |
-| CollegeFootballData API | **yes**, paid tier | kickoff weather (`/games/weather`) |
+| Meteostat bulk files | no | hourly station weather - free, unmetered, used for all kickoff conditions |
+| CollegeFootballData API | **yes**, paid tier | kickoff weather (`/games/weather`) - superseded by Meteostat |
 
 Without a CFBD key the warehouse still builds completely; the CFBD-only
 columns are present and null, and the research report reports them as

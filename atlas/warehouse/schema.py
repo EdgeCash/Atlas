@@ -85,6 +85,30 @@ REQUIRED: dict[str, list[str]] = {
         "weather_precip",
         "neutral_site",
     ],
+    "adjusted_efficiency_metrics": [
+        "game_id",
+        "home_adj_off_epa",
+        "away_adj_off_epa",
+        "adj_off_epa_diff",
+        "home_adj_def_epa",
+        "away_adj_def_epa",
+        "adj_def_epa_diff",
+        "home_adj_success_rate",
+        "away_adj_success_rate",
+        "adj_success_rate_diff",
+        "home_adj_explosiveness",
+        "away_adj_explosiveness",
+        "adj_explosiveness_diff",
+        "home_adj_havoc",
+        "away_adj_havoc",
+        "adj_havoc_diff",
+        "home_adj_finishing_drives",
+        "away_adj_finishing_drives",
+        "adj_finishing_drives_diff",
+        "home_adj_pace",
+        "away_adj_pace",
+        "adj_pace_diff",
+    ],
     "outcomes": [
         "game_id",
         "actual_margin",
@@ -95,6 +119,25 @@ REQUIRED: dict[str, list[str]] = {
 }
 
 TABLES = tuple(REQUIRED)
+
+#: Metrics from the opponent-adjustment solve that get a home/away/diff triple.
+#: The unsuffixed names are the primary (network / Massey) method; the other
+#: two methods are carried alongside so the report can price the choice.
+ADJUSTED_METRICS = [
+    "adj_off_epa",
+    "adj_def_epa",
+    "adj_success_rate",
+    "adj_def_success_rate",
+    "adj_explosiveness",
+    "adj_def_explosiveness",
+    "adj_havoc",
+    "adj_havoc_allowed",
+    "adj_finishing_drives",
+    "adj_def_finishing_drives",
+    "adj_pace",
+    "adj_def_pace",
+]
+
 
 #: Efficiency metrics that get a home/away/diff triple in the warehouse.
 EFFICIENCY_METRICS = [

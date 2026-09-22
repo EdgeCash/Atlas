@@ -37,7 +37,9 @@ def _teams(seed: int) -> pd.DataFrame:
             "latitude": 30.0 + rng.uniform(0, 12, TEAM_COUNT).round(4),
             "longitude": -100.0 + rng.uniform(0, 25, TEAM_COUNT).round(4),
             "elevation": rng.uniform(5, 1500, TEAM_COUNT).round(1),
-            "dome": [False] * TEAM_COUNT,
+            # Two indoor venues, so the dome handling is exercised rather
+            # than skipped.
+            "dome": [i % 8 == 0 for i in range(TEAM_COUNT)],
             "strength": rng.normal(0, 9, TEAM_COUNT).round(3),
         }
     )
@@ -271,8 +273,62 @@ def write_synthetic_raw(
         ).to_parquet(fpi_path, index=False)
         written["espn_fpi"].append(fpi_path)
 
+    _write_weather(raw, teams, seasons, rng)
+
     odds_path = raw / "odds" / "cfb_line_odds.parquet"
     odds_path.parent.mkdir(parents=True, exist_ok=True)
     pd.concat(odds_frames, ignore_index=True).to_parquet(odds_path, index=False)
     written["odds"].append(odds_path)
+    written["weather"] = sorted((raw / "weather").rglob("*.parquet"))
     return written
+
+
+def _write_weather(
+    raw: Path, teams: pd.DataFrame, seasons: list[int], rng: np.random.Generator
+) -> None:
+    """A station catalogue and hourly history, in the collector's own layout.
+
+    Writing these as cached files means the weather stage runs its real code
+    end to end in tests without touching the network.
+    """
+    stations = pd.DataFrame(
+        {
+            "station_id": [f"SYN{i:02d}" for i in range(len(teams))],
+            "name": [f"Station {i:02d}" for i in range(len(teams))],
+            "country": "US",
+            "region": "ZZ",
+            # A few miles from each stadium, so nearest-station mapping is
+            # exercised rather than bypassed.
+            "latitude": teams["latitude"] + 0.03,
+            "longitude": teams["longitude"] - 0.03,
+            "elevation": teams["elevation"],
+            "hourly_start": pd.Timestamp(f"{min(seasons) - 2}-01-01"),
+            "hourly_end": pd.Timestamp(f"{max(seasons) + 2}-12-31"),
+        }
+    )
+    path = raw / "weather" / "stations.parquet"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    stations.to_parquet(path, index=False)
+
+    hours = pd.date_range(
+        f"{min(seasons)}-08-01", f"{max(seasons)}-12-31", freq="h", tz="UTC"
+    )
+    for station_id in stations["station_id"]:
+        frame = pd.DataFrame(
+            {
+                "station_id": station_id,
+                "observed_at": hours,
+                "temp_f": 70 + 15 * np.sin(np.arange(len(hours)) / 2000)
+                + rng.normal(0, 3, len(hours)).round(2),
+                "humidity_pct": np.clip(55 + rng.normal(0, 12, len(hours)), 5, 100).round(),
+                "precip_in": np.where(rng.random(len(hours)) < 0.04,
+                                      rng.random(len(hours)) * 0.2, 0.0).round(3),
+                "wind_mph": np.clip(rng.gamma(3, 2.5, len(hours)), 0, 45).round(2),
+                "wind_gust_mph": np.nan,
+                "pressure_hpa": 1013.0,
+                "condition_code": 1,
+            }
+        )
+        out = raw / "weather" / "hourly" / f"{station_id}.parquet"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        frame.to_parquet(out, index=False)

@@ -19,6 +19,8 @@ def synthetic_build(tmp_path_factory) -> dict:
     write_synthetic_raw(base / "raw", SEASONS)
 
     os.environ["ATLAS_DATA_DIR"] = str(base)
+    # Any network call from here is a bug in a fixture, not a slow test.
+    os.environ["ATLAS_OFFLINE"] = "1"
     from atlas import config
     from atlas.warehouse import build as build_mod
 

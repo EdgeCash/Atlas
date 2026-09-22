@@ -28,6 +28,24 @@ LOG = get_logger(__name__)
 
 USER_AGENT = "atlas-research/0.1 (+https://github.com/EdgeCash/Atlas)"
 
+
+class OfflineError(RuntimeError):
+    """A collector tried to use the network while ATLAS_OFFLINE is set."""
+
+
+def offline() -> bool:
+    """Whether network access is forbidden for this run.
+
+    The test suite sets this so a missing fixture fails loudly and instantly
+    instead of quietly downloading a gigabyte of real data in CI.
+    """
+    return os.environ.get("ATLAS_OFFLINE", "").strip() not in ("", "0", "false", "False")
+
+
+def _guard_offline(url: str) -> None:
+    if offline():
+        raise OfflineError(f"ATLAS_OFFLINE is set; refusing to fetch {url}")
+
 #: Statuses worth retrying. Everything else is an answer, not a hiccup.
 RETRYABLE_STATUS = frozenset({429, 500, 502, 503, 504})
 
@@ -49,6 +67,7 @@ def http_get(
     backoff: float = 2.0,
 ) -> requests.Response:
     """GET with exponential backoff. Raises on final failure."""
+    _guard_offline(url)
     sess = sess or session()
     last: Exception | None = None
     for attempt in range(retries + 1):
@@ -88,6 +107,7 @@ def download(url: str, dest: Path, *, retries: int = 4, backoff: float = 2.0) ->
     if dest.exists() and dest.stat().st_size > 0:
         LOG.debug("cached %s", dest.name)
         return dest
+    _guard_offline(url)
     tmp = dest.with_suffix(dest.suffix + ".part")
     sess = session()
     last: Exception | None = None

@@ -1,9 +1,32 @@
 # Atlas Alpha Model - Specification
 
-**Status:** recommendation, Phase 1A output. Nothing here has been built.
-**Evidence:** [`reports/atlas_research_report_v1.md`](../reports/atlas_research_report_v1.md)
-and the CSV tables beside it, generated from 5,778 FBS-vs-FBS games, 2018-2025,
-measured leave-one-season-out.
+**Status:** recommendation, amended after Phase 1B. Nothing here has been built.
+**Evidence:** [`reports/atlas_research_report_v1.md`](../reports/atlas_research_report_v1.md),
+[`reports/opponent_adjustment_report.md`](../reports/opponent_adjustment_report.md),
+[`reports/weather_data_report.md`](../reports/weather_data_report.md),
+[`reports/qb_availability_report.md`](../reports/qb_availability_report.md)
+and the CSV tables beside them, generated from 5,778 FBS-vs-FBS games,
+2018-2025, measured leave-one-season-out.
+
+> ### Phase 1B amendment
+>
+> Phase 1A's top recommendation was to opponent-adjust the efficiency metrics.
+> Phase 1B did it, and the result splits in two:
+>
+> * **Against Atlas's own metrics and the public ratings: a decisive win.**
+>   Adjusted efficiency removes 0.53 points of margin MAE against raw
+>   (t = 7.3) and now beats SP+ (14.19) and FPI (14.10) outright at 13.42.
+> * **Against the closing line: still exactly nothing.** Every residual model
+>   lands on the baseline, adjusted no better than raw.
+>
+> Two further hypotheses were tested. **Weather is now measured** from a free
+> source and is priced by the market - no feature set clears its error bar.
+> **Quarterback availability is not**, and a retrospective probe shows a team
+> starting a different quarterback than the week before underperforms the
+> closing line by roughly 2.3 points, significant in 6 of 8 seasons. That is
+> the only non-zero signal either phase has produced.
+>
+> Changes below are marked **[1B]**.
 
 ---
 
@@ -67,18 +90,18 @@ Reasons this and not a from-scratch margin model:
 | Variable | Use it? | Role |
 |---|---|---|
 | **Market spread / total** | **Yes - as the anchor** | Not a feature. The origin the model predicts deviations from. |
-| **EPA (offense and defense)** | **Yes - core state** | The primary description of team strength. Strongest efficiency family for totals (standalone gain 0.331), near-strongest for margin (2.060). Use opponent-adjusted (see §4). |
-| **Success Rate** | **Yes - core state** | The best single efficiency variable for margin (standalone gain 2.116, ahead of EPA). Keep both: success rate is the frequency component, EPA the value component, and they disagree often enough to be worth separating. |
-| **Pace** | **Totals only** | Standalone gain 0.319 on totals - third best non-market variable - and 0.001 on margin, i.e. nothing. Use as a possession-count term in the total model. Never as a strength term in the margin model. |
-| **FPI** | **Yes, but only the game projection** | ESPN's pre-game *matchup* projection is the best non-market margin predictor in the study (MAE 12.92). The *season rating* used as a prior-season value is much weaker (MAE 14.10). Role: an independent second opinion for disagreement detection, not a feature in the primary fit. |
-| **SP+** | **Yes - preseason prior for margin, real feature for totals** | Measured. As a prior-season rating it is the *weakest* margin benchmark tested (MAE 14.18, behind FPI's 14.10 and Elo's 13.11), so on margin it belongs as a week-0 prior that decays as in-season efficiency accumulates. On **totals** it is the best non-market rating in the study (MAE 13.57 vs FPI 13.85 and Elo 13.85), and that edge comes entirely from its offence/defence split - a sum of two *overall* ratings says nothing about a scoring environment. Use `sp_plus_off` and `sp_plus_def` in the totals model, not `sp_plus`. |
+| **EPA (offense and defense)** | **Yes - core state, adjusted [1B]** | The primary description of team strength. Use `adj_off_epa` / `adj_def_epa`: adjustment removes 0.57 points of margin MAE over raw EPA (t = 7.7). |
+| **Success Rate** | **Yes - core state, adjusted [1B]** | The best single metric for margin in both forms, and `adj_success_rate` is now the single best of all 21 metrics ranked (gain 1.72). Keep both success rate and EPA: frequency and value components disagree often enough to be worth separating. |
+| **Pace** | **Totals only - and keep it RAW [1B]** | Standalone gain 0.319 on totals, ~0 on margin. Adjustment makes pace measurably *worse* on both targets (t = -2.5 margin, -2.8 total): a slow team's low play count is a property of that team, not a distortion to correct. Use raw `pace` and `plays_per_game` in the totals model only. |
+| **FPI** | **Only the game projection - drop the rating [1B]** | ESPN's pre-game *matchup* projection is still the best non-market margin predictor (MAE 12.92). The season rating (14.10) is now beaten by Atlas's own adjusted efficiency (13.42) and adds nothing on top of it, so drop it as a feature. Keep the game projection as an independent second opinion for disagreement detection. |
+| **SP+** | **Preseason prior only - demoted [1B]** | Measured. Weakest margin benchmark tested (14.18), and adding it to adjusted efficiency moves margin MAE from 13.39 to 13.34 - within noise. It was standing in for the opponent adjustment Atlas was missing; now that Atlas does the adjustment itself, SP+ is redundant as a standing feature. Keep `sp_plus_off` / `sp_plus_def` as a **week-0 prior** for the totals model, where its offence/defence split still carries real information (13.57, best non-market totals rating). |
 | **Elo (pre-game)** | **Yes - as the cold-start prior** | MAE 13.11 standalone, and it is genuinely pre-game with no staleness. Best available week-1-to-4 stand-in before efficiency stabilises. |
-| **Explosiveness** | **Fold into EPA, do not use standalone** | Standalone gain 0.094 on margin. It is mostly the tail of EPA. Keep it as a diagnostic, not a feature. |
-| **Finishing Drives** | **Weak yes, with suspicion** | Standalone gain 1.010 on margin, but it is heavily red-zone-luck driven and should be expected to regress. Use only if it survives a stability test across seasons. |
-| **Havoc** | **No** | Standalone gain 0.394, negative marginal value over market, and it is largely a byproduct of opponent pass rate. |
+| **Explosiveness** | **Fold into EPA, do not use standalone** | Standalone gain 0.094 raw, 0.134 adjusted. Mostly the tail of EPA either way. Diagnostic, not a feature. |
+| **Finishing Drives** | **Yes, adjusted [1B]** | Adjustment nearly doubles it: standalone gain 1.010 raw to 1.158 adjusted, and the paired improvement is the second largest of any metric (t = 11.3). The red-zone-luck concern stands, so still subject to a stability check, but it is no longer a marginal call. |
+| **Havoc** | **Promoted to a weak yes, adjusted [1B]** | Phase 1A rejected raw havoc at gain 0.394. Adjusted havoc gains 0.503 and the raw-to-adjusted improvement is the *largest* of any metric (t = 11.5) - havoc was the metric most distorted by schedule, which is what you would expect from something so dependent on opponent pass rate. Include `adj_havoc` and `adj_havoc_allowed` in the margin model; both still contribute nothing over the market. |
 | **Recruiting** | **Preseason prior only** | Measured. Standalone gain 1.245 on margin - a genuinely informative variable, ahead of havoc and explosiveness - but its marginal value over the closing line is **negative** (t = -2.12) and it is negative for totals too. It knows roughly what the market already knows about a roster. Role: a week-0 prior, decaying to zero by ~week 5, never a standing feature. |
 | **Returning Production** | **No** | Measured. Standalone gain 0.087 on margin, essentially nothing, and **-0.014 on totals**. Its one positive marginal number (+0.0056 on margin, t = 1.05) does not clear its own noise. Exclude from v1. |
-| **Weather** | **Still unmeasured - prioritise** | `/games/weather` requires a **paid** CFBD Patreon tier; a free key is not enough. Wind is the one variable in the brief with a well-documented totals effect that this build could not test, so this remains the highest-value missing measurement. Remedies: a CFBD Tier 1 subscription, or a free historical weather archive (Open-Meteo) keyed on the venue coordinates Atlas already stores. |
+| **Weather** | **Measured, and excluded [1B]** | Solved with free Meteostat station data - 89% coverage, median station 5 miles from the stadium, no API key. Scoring does fall about three points from calm to 15-20 mph wind, **and the closing total falls with it**: no wind band's over rate is two standard errors from 50%, and no weather feature set clears its error bar on any target. The market prices weather. Keep the data, give it no role in v1. |
 | **Rest** | **No** | Standalone gain **-0.007** on margin. Negative. |
 | **Travel** | **No** | Standalone gain **-0.004** on margin. Negative. |
 | **Neutral site** | **Structural control only** | Needed so home-field advantage is applied correctly. Not a predictor. |
@@ -86,11 +109,14 @@ Reasons this and not a from-scratch margin model:
 
 ### 2.3 Explicitly excluded from Alpha v1
 
-Rest, travel, havoc, returning production, neutral site as a predictor,
-open-to-close line movement as a scalar, season-level SP+/FPI ratings as
-standing margin features, and explosiveness as an independent input. Each
-either measured negative, failed to clear its own noise, or was subsumed by a
-variable already in the set.
+Rest, travel, returning production, weather **[1B]**, neutral site as a
+predictor, open-to-close line movement as a scalar, season-level SP+/FPI
+ratings as standing margin features **[1B]**, adjusted pace **[1B]**, and
+explosiveness as an independent input. Each either measured negative, failed
+to clear its own noise, or was subsumed by a variable already in the set.
+
+Havoc and finishing drives move **out** of this list in their adjusted forms
+**[1B]**.
 
 ---
 
@@ -100,24 +126,31 @@ variable already in the set.
 
 ```
 target      = actual_margin - market_margin
-features    = opponent-adjusted EPA diff, success rate diff,
+features    = adj_off_epa_diff, adj_def_epa_diff,
+              adj_success_rate_diff, adj_def_success_rate_diff,
+              adj_havoc_diff, adj_finishing_drives_diff,
               (FPI game projection - market_margin), Elo diff residual,
-              preseason prior residual (SP+ / recruiting / returning), 
-              structural: neutral site
+              preseason prior residual (SP+ / recruiting)
 estimator   = ridge or a depth-2 GBM, strongly regularised
 output gate = emit an opinion only when |adjustment| exceeds a threshold
               calibrated so the emission rate is single-digit percent
 ```
 
+No `neutral_site` term: the closing line already prices home advantage, so a
+residual model must not refit it. **[1B]**
+
 **Total**
 
 ```
 target      = actual_total - closing_total
-features    = EPA sum, success rate sum, pace / plays-per-game sum,
-              explosiveness sum, SP+ offence sum and SP+ defence sum,
-              weather (wind, temperature, precipitation)
+features    = adj_off_epa_sum, adj_def_epa_sum, adj_success_rate_sum,
+              RAW pace_sum and plays_per_game_sum,
+              sp_plus_off_sum and sp_plus_def_sum as a week-0 prior
 estimator   = same
 ```
+
+Pace stays raw and weather is out. **[1B]** Adjustment hurts pace on both
+targets, and weather did not clear its error bar anywhere.
 
 Totals deserve their own model with sum-form features, not difference-form
 ones. This study shows why twice over: pace is the third most informative
@@ -133,39 +166,49 @@ until features are built in sum form.
 Phase 1A tested the variables in the brief. None of them beat the line. The
 work that follows should go where this study did **not** look:
 
-1. **Opponent adjustment.** Every efficiency feature here is a raw average of
-   a team's prior games. It does not know that one team played three top-10
-   defences and the other played three bottom-20 ones. SP+ and FPI both do
-   adjust, and both beat raw efficiency in this study. Opponent-adjusting the
-   Atlas efficiency features is the single highest-expected-value change, and
-   it needs no new data.
-2. **Roster availability.** Quarterback status is the largest single
-   information asymmetry in college football and appears nowhere in this
-   warehouse. Nothing in the current feature set can represent it.
-3. **Weather, properly.** Wind is the one brief variable with a well-attested
-   totals effect and it is the one this build could not measure at all -
-   `/games/weather` sits behind a paid CFBD tier. Either subscribe, or pull a
-   free historical weather archive against the venue latitude/longitude the
-   warehouse already carries.
+1. ~~**Opponent adjustment.**~~ **Done in Phase 1B, and settled.** It was the
+   right call for Atlas's own accuracy - 0.53 points of margin MAE, and Atlas
+   now beats SP+ and FPI rather than trailing them - and it moved the market
+   residual by nothing. The hypothesis that raw metrics were why Phase 1A
+   found no edge is now **rejected**.
+2. **Roster availability.** Now the clear leader. Quarterback status is the
+   largest single information asymmetry in college football, it appears
+   nowhere in this warehouse, and Phase 1B measured its value: a team starting
+   a different quarterback than the week before underperforms the closing line
+   by ~2.3 points, significant in 6 of 8 seasons. That is an upper bound on
+   perfect pre-kickoff knowledge, not an achievable edge - but it is the only
+   number in this programme that is not zero.
+3. ~~**Weather, properly.**~~ **Done in Phase 1B, and priced.** Free, 89%
+   coverage, no material effect on any target once the closing total is
+   accounted for.
 
 A fourth, lower-confidence avenue: line *path* rather than line movement -
 which book moved first, how far the market disagreed with itself, and when.
-The scalar open-to-close move measured negative; that does not clear the
-path.
+The scalar open-to-close move measured negative; that does not clear the path.
+
+**What Phase 1B rules out.** Three independent families of team-quality
+measurement - raw efficiency, Atlas's adjusted efficiency, and the published
+adjusted ratings - all land on the same residual baseline. Measuring team
+quality more precisely is no longer a promising direction. The next hypothesis
+has to concern information the market does not have.
 
 ---
 
 ## 5. What would make Alpha ready to build
 
 - [x] Re-run Phase 1A with `CFBD_API_KEY` set - SP+, roster talent, recruiting
-      and returning production are now measured. Weather still is not: it needs
-      a paid CFBD tier or a substitute source.
-- [ ] Measure weather, especially wind against totals.
-- [ ] Add opponent adjustment to the efficiency features and re-measure the
-      `gain over market` column. If it is still zero, no feature-level work on
-      this data will produce an edge.
-- [ ] Establish a roster/QB availability source.
+      and returning production measured.
+- [x] **Measure weather, especially wind against totals.** Done with free
+      Meteostat data. The market prices it.
+- [x] **Add opponent adjustment and re-measure the `gain over market` column.**
+      Done. It is still zero. The conditional in the Phase 1A version of this
+      line - *"if it is still zero, no feature-level work on this data will
+      produce an edge"* - has now fired.
+- [ ] **Establish a pre-kickoff roster / QB availability source.** Now the
+      only open item that could change the answer. Commercial feeds are the
+      only route with history; start capturing announced starters weekly in
+      parallel, since that archive only becomes valuable with age.
 - [ ] Only then: build the residual model, and hold it to beating the market's
       MAE on held-out seasons before any wagering logic is discussed.
 
-Until those are done, the correct output of Atlas is the closing line.
+Until that is done, the correct output of Atlas is the closing line.

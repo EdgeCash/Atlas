@@ -30,6 +30,7 @@ one - and paying that cost honestly is the point of the warehouse.
 | Scores, margin, total | After the game | **Outcomes only.** Never used as a feature. |
 | Closing / opening spread, total, moneyline | Posted before kickoff | Used as-is. The closing line is the last number posted, so it is pre-kickoff by definition. |
 | Efficiency: EPA, success rate, explosiveness, havoc, finishing drives, pace | Derived from plays in past games | Rebuilt as a **prior-games-only** average (§3). |
+| Opponent-adjusted efficiency (`adj_*`) | Same plays, solved as a schedule graph | Solved **per week** from strictly earlier weeks only (§3a). |
 | FPI season rating | End of season | Only the **previous** season's value is joined. |
 | FPI game projection | Published before kickoff | Used as-is. |
 | CFBD pre-game Elo | Carried on the schedule, pre-game | Used as-is. |
@@ -37,7 +38,7 @@ one - and paying that cost honestly is the point of the warehouse.
 | Recruiting rank, roster talent, returning production | Fixed before the season starts | Same-season value is safe and is used. |
 | Days rest | From the schedule | Gap since that team's own previous game. |
 | Travel distance, neutral site, venue | Known when the schedule is published | Used as-is. |
-| Weather | Kickoff observation | Kickoff conditions, not an outcome. Used as-is. |
+| Weather | Nearest station's observation at the kickoff hour | Kickoff conditions, not an outcome. Used as-is. |
 
 ---
 
@@ -64,6 +65,31 @@ week 1 exactly as it does for week 12. `n_prior_games` is carried alongside
 every feature so a consumer can see how much of a value is history and how
 much is prior.
 
+### 3a. The opponent-adjusted variant
+
+Opponent adjustment cannot be done one game at a time - it solves all teams
+simultaneously - so it uses a slightly coarser clock. For season *S* week *w*,
+the solve uses **only games from season *S* in weeks strictly before *w***,
+shrunk toward season *S-1*'s final ratings by the same ridge weight (4 games).
+
+Week is the right unit because any game in a week can kick off before any
+other. Solving per week therefore cannot see sideways within a week, at the
+cost of ignoring the Tuesday game when rating the Saturday one. That is
+conservative in the safe direction.
+
+Two details that would break the guarantee if got wrong, and are tested:
+
+* **Weights must be normalised.** Observations are weighted by play count so a
+  40-play game counts less than an 80-play one. Play counts average ~56, so
+  leaving them raw would make a "4 game" prior worth 0.07 of a game and hand
+  back a near-unshrunk, wildly noisy week-1 rating. Weights are normalised to
+  mean 1 so the ridge stays in units of games - the same units the raw
+  features' shrinkage uses, which is also what makes raw-vs-adjusted a fair
+  comparison.
+* **The prior is trimmed to teams that actually played.** Otherwise the team
+  index grows every season and the solve slowly fills with teams that no
+  longer exist.
+
 Two more choices worth stating because they change the numbers:
 
 * **Garbage time is dropped** before aggregation, using the standard
@@ -79,10 +105,11 @@ Two more choices worth stating because they change the numbers:
 
 Stated plainly, because it matters for interpreting the report:
 
-* **No opponent adjustment.** A team's EPA average does not know the quality
-  of the defences it faced. This is a weakness, not a leak - and it is the
-  most likely reason the raw efficiency features underperform SP+/FPI-style
-  adjusted ratings.
+* ~~**No opponent adjustment.**~~ **Fixed in Phase 1B.** The raw metrics are
+  still carried unchanged, and the `adj_*` family now sits beside them. The
+  prediction that this was why raw efficiency trailed SP+/FPI turned out to be
+  right for margin - adjusted efficiency now beats both - and irrelevant for
+  the market residual, which it did not move at all.
 * **No in-season rating archive.** Atlas has no weekly SP+ or FPI history, so
   the only leak-free way to use those ratings is the previous season's value.
   The ESPN pre-game game projection is the exception and is used directly.
@@ -111,8 +138,21 @@ Four independent checks, all in CI:
    is measured and anything above 0.98 fails. A synthetic "outcome in
    disguise" feature is injected in the test suite to prove the scan fires
    (`tests/test_research.py::test_leakage_scan_catches_an_outcome_in_disguise`).
+5. **Adjustment tamper test.** Inflating every observation from week 6 onward
+   must leave the week-1-to-6 ratings bit-identical
+   (`tests/test_opponent_adjustment.py::test_point_in_time_ratings_never_use_the_current_week`),
+   with a companion check that week 1 is fitted on zero in-season
+   observations.
 
 The scan's live output is Appendix B of the research report.
+
+### One thing deliberately left outside the warehouse
+
+The quarterback-of-record series in
+`scripts/research_qb_availability.py` is knowable only at kickoff, so it is
+**not** a warehouse column. It lives in a research script precisely so it
+cannot be picked up by accident as a feature. See
+[`reports/qb_availability_report.md`](../reports/qb_availability_report.md).
 
 ---
 

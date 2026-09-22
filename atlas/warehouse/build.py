@@ -20,6 +20,7 @@ import pandas as pd
 from atlas import config
 from atlas.features.point_in_time import add_point_in_time_features, to_matchup
 from atlas.sources import cfbd
+from atlas.staging import adjusted_efficiency as adjusted_stage
 from atlas.staging import context as context_stage
 from atlas.staging import efficiency as efficiency_stage
 from atlas.staging import games as games_stage
@@ -27,6 +28,7 @@ from atlas.staging import market as market_stage
 from atlas.staging import ratings as ratings_stage
 from atlas.staging import talent as talent_stage
 from atlas.staging import teams as teams_stage
+from atlas.staging import weather as weather_stage
 from atlas.util import get_logger, write_parquet
 from atlas.warehouse import schema
 
@@ -39,17 +41,23 @@ def build_staging(paths: config.Paths, seasons: list[int]) -> dict[str, pd.DataF
     team_games = games_stage.load_long(paths.staging)
     lines = market_stage.build_market_lines(paths.raw, paths.staging, seasons)
     eff = efficiency_stage.build_efficiency(paths.raw, paths.staging, seasons)
+    adjusted = adjusted_stage.build_adjusted(paths.raw, paths.staging)
     ratings = ratings_stage.build_ratings(paths.raw, paths.staging, games, teams)
     talent = talent_stage.build_talent(paths.raw, paths.staging, games, teams)
-    ctx = context_stage.build_context(paths.raw, paths.staging, games, team_games, teams)
+    weather = weather_stage.build_weather(paths.raw, paths.staging, games, teams)
+    ctx = context_stage.build_context(
+        paths.raw, paths.staging, games, team_games, teams, weather
+    )
     return {
         "games": games,
         "teams": teams,
         "team_games": team_games,
         "market_lines": lines,
         "efficiency": eff,
+        "adjusted": adjusted,
         "ratings": ratings,
         "talent": talent,
+        "weather": weather,
         "context": ctx,
     }
 
@@ -67,6 +75,7 @@ def build(seasons: list[int] | None = None, *, rebuild_staging: bool = True) -> 
             "team_games": games_stage.load_long(paths.staging),
             "market_lines": market_stage.load(paths.staging),
             "efficiency": efficiency_stage.load(paths.staging),
+            "adjusted": adjusted_stage.load(paths.staging),
             "ratings": ratings_stage.load(paths.staging),
             "talent": talent_stage.load(paths.staging),
             "context": context_stage.load(paths.staging),
@@ -83,6 +92,7 @@ def build(seasons: list[int] | None = None, *, rebuild_staging: bool = True) -> 
     tables["efficiency_metrics"] = _efficiency_table(
         games, stage["team_games"], stage["efficiency"]
     )
+    tables["adjusted_efficiency_metrics"] = _adjusted_table(games, stage["adjusted"])
     tables["talent"] = _talent_table(stage["talent"])
     tables["context"] = _context_table(stage["context"], games)
 
@@ -197,6 +207,22 @@ def _efficiency_table(
     return matchup[[*ordered, *extra]]
 
 
+def _adjusted_table(games: pd.DataFrame, adjusted: pd.DataFrame) -> pd.DataFrame:
+    """Pivot the opponent-adjusted ratings onto one row per game.
+
+    No point-in-time work happens here: the rating attached to a team-game is
+    already the one that stood before that week, so this is a plain pivot.
+    """
+    metrics = [c for c in adjusted.columns if c.startswith("adj_")]
+    matchup = to_matchup(adjusted, games, metrics)
+    for col in schema.REQUIRED["adjusted_efficiency_metrics"]:
+        if col not in matchup.columns:
+            matchup[col] = np.nan
+    ordered = schema.REQUIRED["adjusted_efficiency_metrics"]
+    extra = [c for c in matchup.columns if c not in ordered]
+    return matchup[[*ordered, *extra]]
+
+
 def _talent_table(talent: pd.DataFrame) -> pd.DataFrame:
     out = talent.copy()
     for col in schema.REQUIRED["talent"]:
@@ -248,6 +274,7 @@ SELECT
     m.moneyline_home, m.moneyline_away, m.spread_movement, m.total_movement,
     r.* EXCLUDE (game_id, season, home_team_id, away_team_id),
     e.* EXCLUDE (game_id),
+    a.* EXCLUDE (game_id, home_team_id, away_team_id),
     t.* EXCLUDE (game_id, season, home_team_id, away_team_id),
     c.* EXCLUDE (game_id, season, home_team_id, away_team_id, neutral_site),
     o.actual_margin, o.actual_total, o.over_hit AS outcome_over_hit, o.ats_margin
@@ -255,6 +282,7 @@ FROM games g
 LEFT JOIN market_lines m USING (game_id)
 LEFT JOIN ratings r USING (game_id)
 LEFT JOIN efficiency_metrics e USING (game_id)
+LEFT JOIN adjusted_efficiency_metrics a USING (game_id)
 LEFT JOIN talent t USING (game_id)
 LEFT JOIN context c USING (game_id)
 LEFT JOIN outcomes o USING (game_id)
