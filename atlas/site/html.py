@@ -8,7 +8,39 @@ static documents would be a cost with no return.
 
 from __future__ import annotations
 
+from datetime import datetime
 from html import escape as _escape
+from zoneinfo import ZoneInfo
+
+#: Every kickoff on the board is a US college game, and every reader of it
+#: thinks in Eastern. ESPN hands kickoffs over in UTC, which is correct for
+#: storage and unreadable on a card: "19:30 UTC" is a unit conversion, not a
+#: time, and a card that asks a sports fan to do arithmetic has already lost
+#: the five seconds it had. Eastern is the league's own clock, so it is the
+#: one the product prints, always labelled.
+EASTERN = ZoneInfo("America/New_York")
+
+
+def eastern(when: datetime) -> datetime:
+    return when.astimezone(EASTERN)
+
+
+def clock(when: datetime) -> str:
+    """"3:30 PM ET" - the time alone, for a row that already has the date."""
+    local = eastern(when)
+    return f"{local.strftime('%-I:%M %p')} ET"
+
+
+def day_and_clock(when: datetime) -> str:
+    """"Sat 26 Sep · 3:30 PM ET" - the whole thing, for a card header."""
+    local = eastern(when)
+    return f"{local.strftime('%a %-d %b')} · {clock(when)}"
+
+
+def day_clock(when: datetime) -> str:
+    """"Sat 3:30 PM ET" - the board's compact form."""
+    local = eastern(when)
+    return f"{local.strftime('%a')} {clock(when)}"
 
 
 def esc(value: object) -> str:

@@ -127,6 +127,7 @@ def _side(side: dict) -> dict:
         "location": team.get("location"),
         "abbr": team.get("abbreviation"),
         "colour": f"#{team['color']}" if team.get("color") else None,
+        "logo": team.get("logo"),
         "alt_colour": f"#{team['alternateColor']}" if team.get("alternateColor") else None,
         "record": records.get("overall"),
         # ESPN uses 99 for "unranked", which would otherwise print as #99.
@@ -137,3 +138,40 @@ def _side(side: dict) -> dict:
 def days_ahead(horizon: int = 8) -> list[date]:
     today = datetime.now().date()
     return [today + timedelta(days=i) for i in range(horizon)]
+
+
+# ---------------------------------------------------------------------------
+# Logos
+# ---------------------------------------------------------------------------
+
+#: Humans read a logo faster than a team name, so the board leans on them.
+#: They are downloaded once and served from the site rather than hot-linked:
+#: a card that waits on a third-party CDN is not a fast card.
+LOGO_SIZE = 200
+
+
+def cache_logos(records: dict[int, dict], out: Path) -> dict[int, str]:
+    """Download each team's logo into ``out``. Returns team id -> filename."""
+    out.mkdir(parents=True, exist_ok=True)
+    wanted: dict[int, str] = {}
+    for record in records.values():
+        for side in ("home", "away"):
+            team = record.get(side) or {}
+            if team.get("id") and team.get("logo"):
+                wanted[int(team["id"])] = team["logo"]
+
+    sess = session()
+    saved: dict[int, str] = {}
+    for team_id, url in sorted(wanted.items()):
+        name = f"{team_id}.png"
+        path = out / name
+        if not path.exists():
+            try:
+                _guard_offline(url)
+                path.write_bytes(http_get(url, sess=sess, timeout=20).content)
+            except Exception as error:  # noqa: BLE001 - a logo is never fatal
+                LOG.warning("logo %s unavailable: %s", team_id, error)
+                continue
+        saved[team_id] = name
+    LOG.info("logos: %d cached in %s", len(saved), out)
+    return saved

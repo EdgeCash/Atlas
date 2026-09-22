@@ -49,6 +49,7 @@ class Side:
     short: str
     abbr: str
     colour: str
+    logo: str | None = None
     record: str | None = None
     rank: int | None = None
     team_id: int | None = None
@@ -100,6 +101,7 @@ class Card:
     drivers: list = field(default_factory=list)
     completeness: float = 1.0
     missing: list[str] = field(default_factory=list)
+    cautions: list[str] = field(default_factory=list)
 
     # -- derived -----------------------------------------------------------
 
@@ -332,6 +334,7 @@ def _card(row, info, numbers, snapshots, pool, bands) -> Card | None:
     home = Side(
         key="home", name=home_meta["name"], short=home_meta["short"] or home_meta["name"],
         abbr=home_meta["abbr"] or "", colour=home_meta["colour"] or "#3d4652",
+        logo=home_meta.get("logo"),
         record=home_meta["record"], rank=home_meta["rank"], team_id=home_meta["id"],
         conference=row.get("home_conference"), rest_days=_num(row.get("home_days_rest")),
         travel_miles=_num(row.get("home_travel_distance")), metrics=metrics_home,
@@ -339,6 +342,7 @@ def _card(row, info, numbers, snapshots, pool, bands) -> Card | None:
     away = Side(
         key="away", name=away_meta["name"], short=away_meta["short"] or away_meta["name"],
         abbr=away_meta["abbr"] or "", colour=away_meta["colour"] or "#9aa1aa",
+        logo=away_meta.get("logo"),
         record=away_meta["record"], rank=away_meta["rank"], team_id=away_meta["id"],
         conference=row.get("away_conference"), rest_days=_num(row.get("away_days_rest")),
         travel_miles=_num(row.get("away_travel_distance")), metrics=metrics_away,
@@ -375,7 +379,53 @@ def _card(row, info, numbers, snapshots, pool, bands) -> Card | None:
         if band is not None:
             card.grade = grading.compute(difference, band, completeness)
     card.drivers = driving.select(card, pool)
+    card.cautions = cautions(card)
     return card
+
+
+def cautions(card: Card) -> list[str]:
+    """Design rule 5, question 5: what should make a reader careful here?
+
+    Specific to this game and computed, not a boilerplate warning. A card with
+    nothing to flag says so rather than inventing a worry, because a caution
+    that appears on every card is read as decoration within a week.
+    """
+    out: list[str] = []
+    band = card.grade.band if card.grade else None
+    difference = card.total_difference
+
+    if band and difference is not None and abs(difference) >= 6:
+        out.append(
+            f"Atlas sits {abs(difference):.1f} points from the market. Cards in "
+            f"the {band.label} band have claimed {band.claimed:.0%} accuracy and "
+            f"delivered {band.realised:.0%}."
+        )
+    if card.books <= 1:
+        out.append(
+            "One book is quoting this game, so the market number has no depth "
+            "behind it and may move sharply."
+        )
+    if card.spread.current is not None and abs(card.spread.current) >= 24:
+        out.append(
+            f"A {abs(card.spread.current):.0f}-point spread. Lopsided games have "
+            "the widest range of outcomes and the least useful history."
+        )
+    # Deliberately not here: "it is week 4". That is true of every card on the
+    # board this week, and a caution that appears on every card is read as
+    # decoration within a week. It belongs once, on the board.
+    if card.completeness < 1.0:
+        missing = int(round((1 - card.completeness) * len(REQUIRED_FEATURES)))
+        out.append(
+            f"{missing} of {len(REQUIRED_FEATURES)} team metrics are missing, "
+            "which lowers the data-completeness component of the grade."
+        )
+    total_move, model_direction = card.total.movement, difference
+    if total_move and model_direction and (total_move > 0) != (model_direction > 0):
+        out.append(
+            "Atlas and the market have moved opposite ways on the total since "
+            "it opened."
+        )
+    return out[:3]
 
 
 def generated_at() -> str:

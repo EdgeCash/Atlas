@@ -11,10 +11,12 @@ filled without one of those would be a broken template.
 
 from __future__ import annotations
 
+import base64
 from pathlib import Path
 
+from atlas import config
 from atlas.site.data import Card
-from atlas.site.html import esc, num, pct, signed
+from atlas.site.html import day_and_clock, esc, num, signed
 from atlas.util import get_logger
 
 LOG = get_logger(__name__)
@@ -85,6 +87,24 @@ def _grade_mark(x: float, y: float, size: float, card: Card) -> str:
         {_font(size * 0.13, 640, colour, 1.0)}>{card.grade.score:.0f}</text>"""
 
 
+def _crest(side, x: float, y: float, size: float) -> str:
+    """A team mark, embedded.
+
+    Base64 rather than a file reference: the SVG is handed to whoever wants it
+    and has to render the same everywhere, including in tools that will not
+    follow a relative path.
+    """
+    if not side.logo:
+        return ""
+    path = config.paths().data / "site" / "logos" / side.logo
+    if not path.exists():
+        return ""
+    data = base64.b64encode(path.read_bytes()).decode()
+    return (f'<image x="{x}" y="{y}" width="{size}" height="{size}" '
+            f'href="data:image/png;base64,{data}" '
+            f'preserveAspectRatio="xMidYMid meet"/>')
+
+
 def _accent(card: Card, width: float) -> str:
     from atlas.site.render import accents
 
@@ -99,65 +119,94 @@ def _accent(card: Card, width: float) -> str:
 
 
 def wide(card: Card) -> str:
+    """One game, one idea.
+
+    The earlier version carried three stat cells, three drivers and a
+    three-line note, and read as a dashboard someone had screenshotted. A post
+    gets one glance: the teams, three numbers, the grade, and the single thing
+    the model is reading.
+    """
     W, H = 1200, 675
-    title_lines = _wrap(card.title, 30)
+    title_lines = _wrap(card.title, 26)
+    difference = card.total_difference
+    driver = card.drivers[0] if card.drivers else None
+
+    # One cursor down the canvas, as in `square`. The earlier version placed
+    # the kickoff line and the MARKET label from two different expressions and
+    # they landed on top of each other whenever the title fitted on one line.
+    crests = (_crest(card.away, 72, 150, 72)
+              + _crest(card.home, 160, 150, 72))
+    step = 64
+    y = 280
     title = "".join(
-        f'<text x="56" y="{196 + i * 52}" {_font(46, 700, INK, -1.6)}>{esc(line)}</text>'
+        f'<text x="72" y="{y + i * step}" {_font(58, 700, INK, -2.0)}>{esc(line)}</text>'
         for i, line in enumerate(title_lines)
     )
-    meta = " · ".join(filter(None, [
-        card.kickoff.strftime("%a %-d %b · %H:%M UTC"), card.tv, card.venue,
-    ]))
-    top = 196 + len(title_lines) * 52
-    difference = card.total_difference
-    headline = _wrap(_short_note(card), 58)[:2]
-    # Two drivers, not three: the third collides with the footer rule, and a
-    # social card that has to be squinted at has already failed.
-    drivers = card.drivers[:2]
-    driver_y = top + 200
-    driver_block = (
-        f'<text x="56" y="{driver_y}" {_font(13, 640, INK_3, 1.1)}>'
-        "WHAT THE MODEL IS READING</text>"
-        + "".join(
-            f'<text x="56" y="{driver_y + 34 + i * 34}" {_font(18, 620, INK)}>'
-            f"{esc(d.name)}</text>"
-            f'<text x="{W - 56}" y="{driver_y + 34 + i * 34}" text-anchor="end" '
-            f"{_font(18, 400, INK_2)}>{esc(d.magnitude)}</text>"
-            for i, d in enumerate(drivers)
+    y += (len(title_lines) - 1) * step
+    meta = " · ".join(filter(None, [day_and_clock(card.kickoff), card.tv]))
+    meta_y = y + 44
+    row_y = meta_y + 88
+
+    grade_colour = TONE_COLOUR[card.grade.tone] if card.grade else INK_3
+    grade_block = _grade_mark(W - 72 - 128, row_y - 72, 128, card) if card.grade else ""
+    grade_label = (
+        f'<text x="{W - 72 - 64}" y="{row_y + 86}" text-anchor="middle" '
+        f'{_font(15, 620, grade_colour, 0.6)}>{esc(_grade_word(card))}</text>'
+        if card.grade else ""
+    )
+
+    # The driver is the first thing to go. "One game, one idea" means the
+    # numbers and the grade always fit; a two-line title takes the room the
+    # driver would have used, and a cramped card is worse than a quieter one.
+    driver_block = ""
+    if driver and row_y + 44 < H - 176:
+        driver_block = (
+            f'<text x="72" y="{H - 168}" {_font(13, 640, INK_3, 1.2)}>'
+            "WHAT THE MODEL IS READING</text>"
+            f'<text x="72" y="{H - 132}" {_font(26, 620, INK, -0.6)}>'
+            f"{esc(driver.name)} · {esc(driver.magnitude)}</text>"
         )
-    ) if drivers else ""
 
     return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}"
      viewBox="0 0 {W} {H}" role="img"
-     aria-label="{esc(card.title)}: market {esc(card.spread_text)}, total {num(card.total.current)}. Atlas projects {num(card.anchored_total)}.">
+     aria-label="{esc(card.title)}: market {esc(card.spread_text)}, total {num(card.total.current)}. Atlas projects {num(card.anchored_total)} and grades this card {esc(card.grade.letter if card.grade else "ungraded")}.">
   <rect width="{W}" height="{H}" fill="{BG}"/>
   {_accent(card, W)}
-  <text x="56" y="84" {_font(21, 680, INK, -0.4)}>Atlas</text>
-  <text x="122" y="84" {_font(21, 500, INK_3, -0.4)}>Sports Intelligence</text>
-  <text x="{W - 56}" y="84" text-anchor="end" {_font(14, 600, INK_3, 2.4)}>{TAGLINE}</text>
-  <line x1="56" y1="108" x2="{W - 56}" y2="108" stroke="{BORDER}"/>
+  <text x="72" y="92" {_font(23, 680, INK, -0.4)}>Atlas</text>
+  <text x="147" y="92" {_font(23, 500, INK_3, -0.4)}>Sports Intelligence</text>
+  <text x="{W - 72}" y="92" text-anchor="end" {_font(14, 600, INK_3, 2.6)}>{TAGLINE}</text>
+  <line x1="72" y1="120" x2="{W - 72}" y2="120" stroke="{BORDER}"/>
 
+  {crests}
   {title}
-  <text x="56" y="{top + 8}" {_font(18, 400, INK_3)}>{esc(meta)}</text>
+  <text x="72" y="{meta_y}" {_font(19, 400, INK_3)}>{esc(meta)}</text>
 
-  {_cell(56, top + 36, 340, 126, "Market", card.spread_text,
-         f"total {num(card.total.current)} · opened {num(card.total.open_line)}")}
-  {_cell(430, top + 36, 340, 126, "Atlas projects",
-         f"{card.projected_away:.0f} – {card.projected_home:.0f}" if card.projected_home is not None else "—",
-         f"total {num(card.anchored_total)} · {esc(card.home.short)} {pct(_capped(card.home_win_probability), 0)}")}
-  {_cell(804, top + 36, 340, 126, "Difference", signed(difference),
-         "on the total, unanchored",
-         value_fill="#2a78d6" if (difference or 0) > 0 else "#e34948")}
+  <text x="72" y="{row_y - 34}" {_font(13, 640, INK_3, 1.2)}>MARKET</text>
+  <text x="72" y="{row_y + 14}" {_font(44, 700, INK, -1.6)}>{esc(card.spread_text)}</text>
+  <text x="72" y="{row_y + 44}" {_font(17, 400, INK_3)}>total {num(card.total.current)}</text>
 
+  <text x="430" y="{row_y - 34}" {_font(13, 640, INK_3, 1.2)}>ATLAS</text>
+  <text x="430" y="{row_y + 14}" {_font(44, 700, INK, -1.6)}>{num(card.anchored_total)}</text>
+  <text x="430" y="{row_y + 44}" {_font(17, 400, INK_3)}>projected total</text>
+
+  <text x="700" y="{row_y - 34}" {_font(13, 640, INK_3, 1.2)}>DIFFERENCE</text>
+  <text x="700" y="{row_y + 14}" {_font(44, 700, "#2a78d6" if (difference or 0) > 0 else "#e34948", -1.6)}>{signed(difference)}</text>
+  <text x="700" y="{row_y + 44}" {_font(17, 400, INK_3)}>on the total</text>
+
+  {grade_block}{grade_label}
   {driver_block}
 
-  <line x1="56" y1="{H - 132}" x2="{W - 56}" y2="{H - 132}" stroke="{BORDER}"/>
-  {_grade_mark(56, H - 112, 86, card)}
-  <text x="168" y="{H - 78}" {_font(17, 620, INK, -0.3)}>{esc(_grade_title(card))}</text>
-  {"".join(f'<text x="168" y="{H - 56 + i * 20}" {_font(14, 400, INK_3)}>{esc(line)}</text>' for i, line in enumerate(headline))}
-  <text x="{W - 56}" y="{H - 62}" text-anchor="end" {_font(15, 600, INK_2)}>{SITE}/{esc(card.slug)}</text>
-  <text x="{W - 56}" y="{H - 40}" text-anchor="end" {_font(13, 400, INK_3)}>full card · drivers · reliability record</text>
+  <line x1="72" y1="{H - 96}" x2="{W - 72}" y2="{H - 96}" stroke="{BORDER}"/>
+  <text x="72" y="{H - 56}" {_font(18, 620, INK_2)}>{SITE}/{esc(card.slug)}</text>
+  <text x="{W - 72}" y="{H - 56}" text-anchor="end" {_font(16, 400, INK_3)}>Grade = information quality, not a recommendation</text>
 </svg>"""
+
+
+def _grade_word(card: Card) -> str:
+    if card.grade is None:
+        return ""
+    return {"A+": "VERY HIGH", "A": "HIGH", "B": "SOLID",
+            "C": "MIXED", "D": "LOW", "F": "LOW"}[card.grade.letter]
 
 
 def _short_note(card: Card) -> str:
@@ -203,14 +252,17 @@ def square(card: Card) -> str:
     # One cursor down the canvas. The previous version computed each block's
     # position from the one before it in a single expression and the blocks
     # overlapped; a cursor is harder to get wrong and easier to read.
-    y = 210
+    # The crests occupy 152..228; the title clears them rather than sharing
+    # the band, which is what the first cursor version still got wrong.
+    y = 296
+    crests = _crest(card.away, 56, 152, 76) + _crest(card.home, 148, 152, 76)
     title = "".join(
         f'<text x="56" y="{y + i * 60}" {_font(52, 700, INK, -1.8)}>{esc(line)}</text>'
         for i, line in enumerate(title_lines)
     )
-    y += len(title_lines) * 60
+    y += (len(title_lines) - 1) * 60 + 44
 
-    meta = card.kickoff.strftime("%a %-d %b · %H:%M UTC") + (f" · {card.tv}" if card.tv else "")
+    meta = day_and_clock(card.kickoff) + (f" · {card.tv}" if card.tv else "")
     meta_line = f'<text x="56" y="{y}" {_font(19, 400, INK_3)}>{esc(meta)}</text>'
     y += 38
 
@@ -232,7 +284,11 @@ def square(card: Card) -> str:
         )
     y += 30 + len(drivers) * 48 + 34
 
+    # The grade is the conclusion, so it sits on the footer rule rather than
+    # wherever the drivers happened to end - otherwise the slack in the layout
+    # collects underneath it and the card reads as unfinished.
     box_h = 60 + len(note_lines) * 26
+    y = max(y, H - 92 - 44 - box_h)
     box = (f'<rect x="56" y="{y}" width="{W - 112}" height="{box_h}" rx="16" '
            f'fill="{SURFACE}" stroke="{colour}"/>'
            + _grade_mark(84, y + (box_h - 96) / 2, 96, card)
@@ -251,6 +307,7 @@ def square(card: Card) -> str:
   <text x="56" y="92" {_font(22, 680, INK, -0.4)}>Atlas</text>
   <text x="126" y="92" {_font(22, 500, INK_3, -0.4)}>Sports Intelligence</text>
   <line x1="56" y1="118" x2="{W - 56}" y2="118" stroke="{BORDER}"/>
+  {crests}
   {title}
   {meta_line}
   {cells}

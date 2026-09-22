@@ -15,6 +15,7 @@ from pathlib import Path
 
 from atlas import config
 from atlas.site import grade as grading
+from atlas.site import meta as espn_meta
 from atlas.site import render, social
 from atlas.site.data import build_cards, percentile_pool
 from atlas.util import get_logger
@@ -50,6 +51,18 @@ def build(out: Path | None = None, *, social_cards: bool = True,
 
     assets_src = Path(__file__).resolve().parent / "assets"
     shutil.copytree(assets_src, out / "assets")
+
+    # Logos are served from the site, not hot-linked: a card that waits on a
+    # third-party CDN is not a fast card.
+    logos = espn_meta.cache_logos(
+        espn_meta.fetch(espn_meta.days_ahead(horizon)),
+        config.paths().data / "site" / "logos",
+    )
+    if logos:
+        shutil.copytree(config.paths().data / "site" / "logos", out / "assets" / "logos")
+    for card in cards:
+        for side in (card.home, card.away):
+            side.logo = logos.get(side.team_id)
 
     (out / "index.html").write_text(render.homepage(cards, bands=bands))
     (out / "research.html").write_text(

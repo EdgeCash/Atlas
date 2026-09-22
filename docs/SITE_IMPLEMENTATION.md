@@ -1,7 +1,12 @@
 # Atlas Sports Intelligence — Implementation Notes
 
-Phase 1 of the product, built to the approved specification. NCAAF only; NFL
-staged. Nothing was redesigned.
+Phase 1 of the product, built to the approved specification, plus the
+refinement sprint's five design rules. NCAAF only; NFL staged. Nothing was
+redesigned — the sprint changed what is visible first, not what exists.
+
+The sprint's own documents are `UX_REVIEW.md`, `HOMEPAGE_REDESIGN.md`,
+`SOCIAL_CARD_REDESIGN.md`, `COMPETITOR_ANALYSIS.md` and
+`GRADE_REWORK_OPTIONS.md` (research only — not implemented).
 
 ```bash
 python -m atlas.warehouse.build --include-scheduled   # features for upcoming games
@@ -10,7 +15,11 @@ python -m atlas.live run                              # capture the current mark
 make site                                             # build site/
 ```
 
-Build time: **6.6 seconds** for 58 cards, 116 team pages and 24 social images.
+```bash
+python scripts/shoot_site.py        # design/screens/site/, real viewports
+```
+
+Build time: **6.9 seconds** for 58 cards, 116 team pages and 24 social images.
 
 ---
 
@@ -21,13 +30,16 @@ card is a document, and a document loads instantly on a phone on a stadium
 network. The only JavaScript is 40 lines of filtering on the homepage, and the
 page is complete before it loads.
 
+The card's progressive disclosure is native `<details>`, not script: tier 2
+opens without JavaScript, survives find-in-page, and prints.
+
 ```
 atlas/site/
   meta.py      ESPN scoreboard: venue, broadcast, records, ranks, team colours
   grade.py     the rubric from ATLAS_CARD_SPEC §5, and the calibration bands
   data.py      joins warehouse + tracking + ESPN into one Card per game
   drivers.py   ranks the drivers and writes their sentences
-  render.py    the eight sections, and the other four page types
+  render.py    the three card tiers, and the other four page types
   social.py    1200×675 and 1080×1080, SVG rasterised to PNG at 2×
   build.py     orchestration and the CLI
   html.py      escaping and number formatting
@@ -92,6 +104,10 @@ move as seasons accumulate:
 
 ### 1. Grades cluster at A — the one thing that needs a decision
 
+**This is now researched in full in `GRADE_REWORK_OPTIONS.md`**, which measures
+three rework options against the real slate and recommends one. The summary
+below is what the build itself reports.
+
 The approved rubric, applied to a real 58-game slate:
 
 | Grade | Cards | Share |
@@ -122,20 +138,16 @@ A+ is arithmetically unreachable: with stability capped near 0.71 and a
 realistic calibration score, the ceiling is about 88. D is nearly unreachable
 because the 8–10 band still scores around 60.
 
-**I implemented the rubric exactly as approved and did not adjust it.** Three
-options for the review, in order of how much I would recommend them:
+**I implemented the rubric exactly as approved and did not adjust it**, and the
+refinement sprint did not adjust it either. `GRADE_REWORK_OPTIONS.md` now shows
+why the first instinct — grading on a curve — is the wrong fix: the score is a
+step function of the disagreement band, so a percentile cut falls *inside* a
+cluster of cards that carry identical evidence. The recommendation there is to
+re-cut the absolute letter boundaries into the gaps between clusters, and to
+give the rubric a component that varies card to card.
 
-1. **Grade on the curve of the season's own distribution** — A+ = top 5%, A =
-   next 15%, and so on. Keeps the rubric, makes every letter mean something,
-   and preserves the property that matters (loudest cards grade lowest).
-2. **Rescale the components** so a realistic best card scores near 100:
-   divide by the observed maximum rather than a theoretical one.
-3. **Accept it** and say so on the research page: most cards *are* reliable,
-   because most cards sit near the market, and the letter is a filter for the
-   minority that do not.
-
-Option 1 is what I would do. It needs approval because it changes what a grade
-means, and that is not an implementation decision.
+It needs approval because it changes what a grade means, and that is not an
+implementation decision.
 
 ### 2. One book quoting, on every card
 
@@ -170,9 +182,14 @@ Most readers arrive from a link. The card is designed at 390px and expands:
 - the wordmark's second half is hidden below 420px, where it cost three lines
   of the navigation bar;
 - every number is tabular, so columns do not jitter;
-- a D or F card puts its grade banner above the projection, so the most
-  important thing on the page is visible without scrolling;
+- the grade is in tier 1 on every card, so the most important thing on the page
+  is visible without scrolling whatever the letter is;
+- the board's filter row wraps rather than scrolling sideways — a scrolling
+  strip hides its own right-hand end;
 - 44px hit targets; the whole game row is the link.
+
+Kickoffs print in Eastern, labelled. Every game on the board is a US college
+game and "19:30 UTC" is a unit conversion, not a time.
 
 ---
 

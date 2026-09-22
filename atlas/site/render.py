@@ -9,7 +9,19 @@ from `docs/BRAND_GUIDE.md`.
 from __future__ import annotations
 
 from atlas.site.data import MARKET_WEIGHT, Card
-from atlas.site.html import esc, minus, num, pct, price, signed, table
+from atlas.site.html import (
+    clock,
+    day_and_clock,
+    day_clock,
+    eastern,
+    esc,
+    minus,
+    num,
+    pct,
+    price,
+    signed,
+    table,
+)
 from atlas.util import get_logger
 
 LOG = get_logger(__name__)
@@ -136,8 +148,8 @@ def grade_pill(card: Card, *, size: str = "") -> str:
 
 
 def kickoff_line(card: Card) -> str:
-    local = card.kickoff
-    bits = [f'<span><b>{local.strftime("%a %-d %b")}</b> · {local.strftime("%H:%M")} UTC</span>']
+    local = eastern(card.kickoff)
+    bits = [f'<span><b>{local.strftime("%a %-d %b")}</b> · {clock(card.kickoff)}</span>']
     if card.venue:
         place = card.venue + (f", {card.city}" if card.city else "")
         bits.append(f"<span>{esc(place)}</span>")
@@ -169,20 +181,30 @@ def team_block(side, *, align: str) -> str:
 
 
 def card_page(card: Card, *, bands: dict, overall_band) -> str:
+    """The card, in three tiers.
+
+    Tier 1 is everything a reader needs in five seconds and is always visible:
+    the game, the market, Atlas's number, the difference, the grade and the
+    short reason. Tier 2 and 3 are the same information the research build
+    always carried, behind native ``<details>`` — no JavaScript, no layout
+    shift, and open by keyboard.
+    """
     home_accent, away_accent = accents(card)
-    sections = [
-        _s1_header(card, home_accent, away_accent),
-        _grade_banner(card),
-        _s2_market(card),
-        _s3_projection(card),
-        _s4_difference(card),
-        _s5_grade(card),
-        _s6_drivers(card),
-        _s7_market_intelligence(card),
-        _s8_reliability(card, bands, overall_band),
+    body = "\n".join(filter(None, [
+        _hero(card, home_accent, away_accent),
+        _answer(card),
+        _why_brief(card),
+        _caution(card),
+        '<div class="tier2">',
+        _open_market(card),
+        _open_projection(card),
+        _open_grade(card),
+        _open_drivers(card),
+        _open_movement(card),
+        _open_reliability(card, bands, overall_band),
+        "</div>",
         f'<div class="disclosure card-foot">{CARD_DISCLOSURE}</div>',
-    ]
-    body = "\n".join(s for s in sections if s)
+    ]))
     description = (
         f"{card.title}: market {card.spread_text}, total "
         f"{num(card.total.current)}. Atlas projects {num(card.anchored_total)} "
@@ -195,31 +217,215 @@ def card_page(card: Card, *, bands: dict, overall_band) -> str:
     )
 
 
-def _s1_header(card: Card, home_accent: str, away_accent: str) -> str:
-    return f"""<div class="card game-head" style="--team-home:{esc(home_accent)};--team-away:{esc(away_accent)}">
-  <div class="teams">
-    {team_block(card.away, align="away")}
-    <div class="at">at</div>
-    {team_block(card.home, align="home")}
+# ---------------------------------------------------------------------------
+# Tier 1 — the five-second view
+# ---------------------------------------------------------------------------
+
+
+def _logo(side, *, size: str = "", root: str = "../") -> str:
+    """A logo, or the team's colour as a fallback chip.
+
+    Humans read a mark faster than a name, so the identity is the logo where
+    one exists and never a coloured square pretending to be one. ``root`` is
+    the path back to the site root, which differs between the board and a
+    card; getting it wrong renders a broken-image icon on every row.
+    """
+    cls = f"crest {size}".strip()
+    if side.logo:
+        return (f'<img class="{cls}" src="{root}assets/logos/{esc(side.logo)}" '
+                f'alt="" width="56" height="56" loading="lazy">')
+    return f'<span class="{cls} crest-fallback" aria-hidden="true"></span>'
+
+
+def _team_column(side, *, align: str) -> str:
+    rank = f'<span class="rank">#{side.rank}</span>' if side.rank else ""
+    meta = " · ".join(x for x in [side.conference, side.record] if x)
+    return f"""<div class="hero-team {align}">
+  {_logo(side)}
+  <div class="hero-names">
+    <div class="hero-name">{rank}{esc(side.short)}</div>
+    <div class="hero-meta">{esc(meta)}</div>
   </div>
-  {kickoff_line(card)}
 </div>"""
 
 
-def _grade_banner(card: Card) -> str:
-    """A D or F card says so before anything else. Spec §5."""
-    if card.grade is None or not card.grade.low:
+def _hero(card: Card, home_accent: str, away_accent: str) -> str:
+    bits = [day_and_clock(card.kickoff)]
+    if card.tv:
+        bits.append(card.tv)
+    if card.venue:
+        bits.append(card.venue)
+    return f"""<div class="card hero" style="--team-home:{esc(home_accent)};--team-away:{esc(away_accent)}">
+  <div class="hero-teams">
+    {_team_column(card.away, align="away")}
+    <div class="hero-at">at</div>
+    {_team_column(card.home, align="home")}
+  </div>
+  <div class="hero-meta-row">{esc(" · ".join(bits))}</div>
+</div>"""
+
+
+def _answer(card: Card) -> str:
+    """Market, Atlas, difference — and the grade, which dominates."""
+    difference = card.total_difference
+    grade_block = _grade_hero(card)
+    return f"""<div class="answer">
+  <div class="card answer-nums">
+    <div class="answer-cell">
+      <div class="stat-label"><span class="wide-only">Market</span><span class="narrow-only">Mkt</span></div>
+      <div class="answer-value">{esc(card.spread_text)}</div>
+      <div class="stat-note">total {num(card.total.current)}</div>
+    </div>
+    <div class="answer-cell">
+      <div class="stat-label"><span class="wide-only">Atlas projects</span><span class="narrow-only">Atlas</span></div>
+      <div class="answer-value">{_projected_score(card)}</div>
+      <div class="stat-note">{esc(card.away.abbr)}–{esc(card.home.abbr)} ·
+        total {num(card.anchored_total)}</div>
+    </div>
+    <div class="answer-cell">
+      <div class="stat-label"><span class="wide-only">Difference</span><span class="narrow-only">Diff</span></div>
+      <div class="answer-value {_diff_class(difference)}">{signed(difference)}</div>
+      <div class="stat-note">on the total</div>
+    </div>
+  </div>
+  {grade_block}
+</div>"""
+
+
+def _projected_score(card: Card) -> str:
+    """Away first, as the title reads. The note names both abbreviations,
+    because "15-29" on its own is a pair of numbers, not a scoreline."""
+    if card.projected_home is None:
+        return "—"
+    return f"{card.projected_away:.0f}–{card.projected_home:.0f}"
+
+
+#: Below this the difference is not a disagreement. The 0-1 band is where
+#: Atlas and the market are indistinguishable out of sample, so colouring a
+#: 0.3-point difference red says "look at this" about nothing.
+DIFFERENCE_FLOOR = 1.0
+
+
+def _diff_class(value: float | None) -> str:
+    if value is None or abs(value) < DIFFERENCE_FLOOR:
+        return "flat"
+    return "move-up" if value > 0 else "move-down"
+
+
+def _grade_hero(card: Card) -> str:
+    """Rule 4: the grade is the centrepiece, not the spread."""
+    if card.grade is None:
+        return """<div class="card grade-hero none">
+  <div class="grade-mark">–</div>
+  <div class="grade-words"><div class="grade-title">Not graded</div>
+    <p class="grade-line">Not enough history to grade this card.</p></div>
+</div>"""
+    g = card.grade
+    title = {"A+": "Very high confidence", "A": "High confidence",
+             "B": "Solid confidence", "C": "Mixed confidence",
+             "D": "Low confidence", "F": "Low confidence"}[g.letter]
+    return f"""<div class="card grade-hero {g.tone}">
+  <div class="grade-mark">{g.letter}<small>{g.score:.0f}<span>/100</span></small></div>
+  <div class="grade-words">
+    <div class="grade-title">{esc(title)}</div>
+    <p class="grade-line">How much weight this card's information deserves —
+      not a recommendation.</p>
+    <div class="grade-bar"><span style="width:{g.score:.0f}%"></span></div>
+  </div>
+</div>"""
+
+
+def _why_brief(card: Card) -> str:
+    """Rule 1: the reason, in three lines, before anything expands."""
+    if not card.drivers:
         return ""
-    return f"""<div class="card card-pad banner-low">
-  <div class="banner-row">
-    <span class="badge crit">✕ Grade {card.grade.letter}</span>
-    <p class="note banner-text"><b>Atlas is marking its own card down.</b>
-      {esc(card.grade.headline)}</p>
+    def mark(driver) -> str:
+        if driver.favours == "home":
+            return _logo(card.home, size="tiny")
+        if driver.favours == "away":
+            return _logo(card.away, size="tiny")
+        return '<span class="why-dot" aria-hidden="true"></span>'
+
+    rows = "".join(
+        f"""<li class="why-row">
+  {mark(d)}
+  <span class="why-name">{esc(d.name)}</span>
+  <span class="why-val">{esc(d.magnitude)}</span>
+</li>"""
+        for d in card.drivers[:3]
+    )
+    return f"""<section class="section tight">
+  <div class="section-head"><h2>Why</h2>
+    <span class="note">what the model is reading</span></div>
+  <ul class="card card-pad why-list">{rows}</ul>
+</section>"""
+
+
+def _caution(card: Card) -> str:
+    """Rule 5, question 5: what should make a reader careful."""
+    if not card.cautions:
+        return ""
+    tone = "crit" if card.grade and card.grade.low else "mute"
+    items = "".join(f"<li>{esc(text)}</li>" for text in card.cautions)
+    return f"""<section class="section tight">
+  <div class="section-head"><h2>Be careful about</h2></div>
+  <div class="card card-pad caution {tone}">
+    <ul class="caution-list">{items}</ul>
   </div>
-</div>"""
+</section>"""
 
 
-def _s2_market(card: Card) -> str:
+# ---------------------------------------------------------------------------
+# Tier 2 — one tap
+# ---------------------------------------------------------------------------
+
+
+def _panel_card(bare: bool) -> str:
+    """Inside a disclosure the panel already draws the border."""
+    return "panel-inner" if bare else "card card-pad"
+
+
+def _panel(summary: str, hint: str, body: str, *, open_: bool = False) -> str:
+    return f"""<details class="panel"{" open" if open_ else ""}>
+  <summary><span class="panel-title">{esc(summary)}</span>
+    <span class="panel-hint">{esc(hint)}</span></summary>
+  <div class="panel-body">{body}</div>
+</details>"""
+
+
+def _open_market(card: Card) -> str:
+    hint = "open, current, movement, moneyline"
+    return _panel("Market detail", hint, _s2_market(card, bare=True))
+
+
+def _open_projection(card: Card) -> str:
+    return _panel("Projection detail",
+                  "score, win probability, the unanchored model",
+                  _s3_projection(card, bare=True) + _s4_difference(card, bare=True))
+
+
+def _open_grade(card: Card) -> str:
+    return _panel("How this grade was computed",
+                  "four components, one hundred points",
+                  _s5_grade(card, bare=True))
+
+
+def _open_drivers(card: Card) -> str:
+    return _panel("All drivers", f"{len(card.drivers)} measured, with percentiles",
+                  _s6_drivers(card, bare=True))
+
+
+def _open_movement(card: Card) -> str:
+    return _panel("Market movement", "how this number has moved since it opened",
+                  _s7_market_intelligence(card, bare=True))
+
+
+def _open_reliability(card: Card, bands: dict, overall_band) -> str:
+    return _panel("Reliability record", "seven seasons, out of sample",
+                  _s8_reliability(card, bands, overall_band, bare=True))
+
+
+def _s2_market(card: Card, *, bare: bool = False) -> str:
     spread, total = card.spread, card.total
     fav, dog = card.favourite, (card.home if card.favourite is card.away else card.away)
     spread_rows = []
@@ -268,14 +474,17 @@ def _s2_market(card: Card) -> str:
     right = (table(["Total", "Open", "Current", "Move"], total_rows)
              if total_rows else '<p class="note">No total posted.</p>')
 
+    inner = f"""<div class="grid-2">
+    <div class="{_panel_card(bare)}">{left}
+      <p class="note top-gap">{_movement_sentence(card)}</p></div>
+    <div class="{_panel_card(bare)}">{right}{ml_block}</div>
+  </div>"""
+    if bare:
+        return inner + f'<p class="note top-gap">{esc(_book_label(card))}</p>'
     return f"""<section class="section">
   <div class="section-head"><h2>Market snapshot</h2>
     <span class="note">{esc(_book_label(card))}</span></div>
-  <div class="grid-2">
-    <div class="card card-pad">{left}
-      <p class="note top-gap">{_movement_sentence(card)}</p></div>
-    <div class="card card-pad">{right}{ml_block}</div>
-  </div>
+  {inner}
 </section>"""
 
 
@@ -310,7 +519,7 @@ def _movement_sentence(card: Card) -> str:
     return " and ".join(parts) + " since the open."
 
 
-def _s3_projection(card: Card) -> str:
+def _s3_projection(card: Card, *, bare: bool = False) -> str:
     if card.anchored_total is None and card.anchored_margin is None:
         return ""
     fav = card.favourite
@@ -324,10 +533,7 @@ def _s3_projection(card: Card) -> str:
     if win is not None and win < 0.5:
         win_side, win_value = card.away, 1 - win
 
-    return f"""<section class="section">
-  <div class="section-head"><h2>Atlas projection</h2>
-    <span class="note">market-anchored · out-of-sample model</span></div>
-  <div class="card">
+    inner = f"""<div class="{_panel_card(bare)}">
     <div class="grid-3">
       <div class="stat"><div class="stat-label">Projected score</div>
         <div class="stat-value">{score}</div>
@@ -358,11 +564,17 @@ def _s3_projection(card: Card) -> str:
     not chosen: across 5,778 games the model's own contribution to a spread was
     statistically indistinguishable from zero. A projection that ignored the
     market would be less accurate, and Atlas publishes the accurate one.
-  </div>
+  </div>"""
+    if bare:
+        return inner
+    return f"""<section class="section">
+  <div class="section-head"><h2>Atlas projection</h2>
+    <span class="note">market-anchored · out-of-sample model</span></div>
+  {inner}
 </section>"""
 
 
-def _s4_difference(card: Card) -> str:
+def _s4_difference(card: Card, *, bare: bool = False) -> str:
     if card.total_difference is None and card.margin_difference is None:
         return ""
     model_prob = card.model_win_probability
@@ -387,17 +599,21 @@ def _s4_difference(card: Card) -> str:
         f"{pct(band.realised, 0)} across {band.games:,} games."
         if band else "No band statistics are available for this card."
     )
-    return f"""<section class="section">
-  <div class="section-head"><h2>Atlas difference</h2>
-    <span class="note">model minus market, before anchoring</span></div>
-  <div class="card card-pad">
+    inner = f"""<div class="{_panel_card(bare)}">
+    <h3 class="top-gap">Atlas difference</h3>
     {table(["Measure", "Atlas model (unanchored)", "Market", "Difference"], rows_)}
     <div class="disclosure top-gap">
       <b>A difference is not an edge.</b> Atlas has measured what happens at
       every size of disagreement, and the gap between what the model claims and
       what it delivers widens as the disagreement grows. {detail}
     </div>
-  </div>
+  </div>"""
+    if bare:
+        return inner
+    return f"""<section class="section">
+  <div class="section-head"><h2>Atlas difference</h2>
+    <span class="note">model minus market, before anchoring</span></div>
+  {inner}
 </section>"""
 
 
@@ -410,7 +626,7 @@ def _diff_cell(value: float | None, unit: str = "") -> str:
     return f'<span class="{cls}">{signed(value)}{unit}</span>'
 
 
-def _s5_grade(card: Card) -> str:
+def _s5_grade(card: Card, *, bare: bool = False) -> str:
     if card.grade is None:
         return ""
     g = card.grade
@@ -426,10 +642,7 @@ def _s5_grade(card: Card) -> str:
     title = {"A+": "High-reliability card", "A": "High-reliability card",
              "B": "Solid card", "C": "Mixed card",
              "D": "Low-reliability card", "F": "Low-reliability card"}[g.letter]
-    return f"""<section class="section" id="grade">
-  <div class="section-head"><h2>Atlas grade</h2>
-    <span class="note">information quality — not a recommendation</span></div>
-  <div class="card">
+    inner = f"""  <div class="{_panel_card(bare)}">
     <div class="grade-wrap">
       <div class="grade {g.tone}">{g.letter}<small>{g.score:.0f}</small></div>
       <div><h3>{esc(title)}</h3>
@@ -442,11 +655,17 @@ def _s5_grade(card: Card) -> str:
         anyone should take, and Atlas does not publish that.
         <a href="../research.html#grades">How grades are computed</a>.</p>
     </div>
-  </div>
+  </div>"""
+    if bare:
+        return inner
+    return f"""<section class="section" id="grade">
+  <div class="section-head"><h2>Atlas grade</h2>
+    <span class="note">information quality — not a recommendation</span></div>
+  {inner}
 </section>"""
 
 
-def _s6_drivers(card: Card) -> str:
+def _s6_drivers(card: Card, *, bare: bool = False) -> str:
     if not card.drivers:
         return ""
     items = []
@@ -470,14 +689,17 @@ def _s6_drivers(card: Card) -> str:
   number is where the model struggles on mismatches this large — there are few
   historical games like it, and the ones that exist behave inconsistently.
 </div>"""
+    inner = f'<div class="{_panel_card(bare)}">{"".join(items)}{extra}</div>'
+    if bare:
+        return inner
     return f"""<section class="section">
   <div class="section-head"><h2>Why Atlas sees it this way</h2>
     <span class="note">{len(card.drivers)} drivers · opponent-adjusted, pre-kickoff</span></div>
-  <div class="card card-pad">{"".join(items)}{extra}</div>
+  {inner}
 </section>"""
 
 
-def _s7_market_intelligence(card: Card) -> str:
+def _s7_market_intelligence(card: Card, *, bare: bool = False) -> str:
     total = card.total
     if total.current is None:
         return ""
@@ -504,11 +726,8 @@ def _s7_market_intelligence(card: Card) -> str:
         ["Atlas direction", f'<span class="lead {"move-up" if atlas_direction == "up" else "move-down"}">'
                             f'{esc(atlas_direction)}</span>'],
     ]
-    return f"""<section class="section">
-  <div class="section-head"><h2>Market intelligence</h2>
-    <span class="note">how this number has moved</span></div>
-  <div class="grid-2">
-    <div class="card card-pad">
+    inner = f"""<div class="grid-2">
+    <div class="{_panel_card(bare)}">
       <h3>Total, open to current</h3>
       {chart}
       {table(["Measure", "Value"], rows_)}
@@ -529,7 +748,13 @@ def _s7_market_intelligence(card: Card) -> str:
         <a href="../research.html#clv">closing-line record</a> and is
         deliberately kept out of the grade.</p>
     </div>
-  </div>
+  </div>"""
+    if bare:
+        return inner
+    return f"""<section class="section">
+  <div class="section-head"><h2>Market intelligence</h2>
+    <span class="note">how this number has moved</span></div>
+  {inner}
 </section>"""
 
 
@@ -577,7 +802,7 @@ def _movement_chart(card: Card) -> str:
 </svg>"""
 
 
-def _s8_reliability(card: Card, bands: dict, overall_band) -> str:
+def _s8_reliability(card: Card, bands: dict, overall_band, *, bare: bool = False) -> str:
     if card.grade is None:
         return ""
     band = card.grade.band
@@ -595,10 +820,7 @@ def _s8_reliability(card: Card, bands: dict, overall_band) -> str:
         ["Games measured", f'<span class="lead">{band.games:,}</span>',
          f'<span class="flat">{overall_band.games:,}</span>'],
     ]
-    return f"""<section class="section" id="reliability">
-  <div class="section-head"><h2>Reliability</h2>
-    <span class="note">how Atlas has performed on cards like this one</span></div>
-  <div class="card card-pad">
+    inner = f"""<div class="{_panel_card(bare)}">
     <div class="grid-2 wide-gap">
       <div>
         <h3>Calibration by disagreement band</h3>
@@ -618,7 +840,13 @@ def _s8_reliability(card: Card, bands: dict, overall_band) -> str:
         </div>
       </div>
     </div>
-  </div>
+  </div>"""
+    if bare:
+        return inner
+    return f"""<section class="section" id="reliability">
+  <div class="section-head"><h2>Reliability</h2>
+    <span class="note">how Atlas has performed on cards like this one</span></div>
+  {inner}
 </section>"""
 
 
@@ -682,104 +910,98 @@ def _calibration_chart(bands: dict, active: str) -> str:
 
 
 def homepage(cards: list[Card], *, bands: dict) -> str:
+    """Rule 2: cards before navigation.
+
+    The board is the first thing on the page. No hero, no marketing, no
+    summary tiles above the fold — a reader who came for a game sees games,
+    and the filters sit in a compact bar that stays with them as they scroll.
+    """
     graded = [c for c in cards if c.grade]
     strong = sum(1 for c in graded if c.grade.letter in ("A+", "A"))
     weak = sum(1 for c in graded if c.grade.low)
 
     featured = sorted(
-        [c for c in graded if c.grade.letter in ("A+", "A")],
+        graded,
         key=lambda c: (-(c.home.rank is not None) - (c.away.rank is not None),
                        -c.grade.score),
     )[:3]
-
-    by_day: dict[str, list[Card]] = {}
-    for card in cards:
-        by_day.setdefault(card.kickoff.strftime("%A, %-d %B"), []).append(card)
 
     conferences = sorted({
         conf for card in cards for conf in (card.home.conference, card.away.conference) if conf
     })
     conf_options = "".join(f'<option value="{esc(c)}">{esc(c)}</option>' for c in conferences)
 
-    day_blocks = []
-    for day, day_cards in by_day.items():
-        rows_ = "".join(_game_row(c) for c in day_cards)
-        day_blocks.append(f"""<section class="section">
+    by_day: dict[str, list[Card]] = {}
+    for card in cards:
+        by_day.setdefault(eastern(card.kickoff).strftime("%A, %-d %B"), []).append(card)
+    day_blocks = "".join(
+        f"""<section class="section tight">
   <div class="section-head"><h2>{esc(day)}</h2>
-    <span class="note">{len(day_cards)} games</span></div>
-  <div class="card game-list">{rows_}</div>
-</section>""")
+    <span class="note">{_plural(len(day_cards), "game")}</span></div>
+  <div class="card game-list">{"".join(_game_row(c) for c in day_cards)}</div>
+</section>"""
+        for day, day_cards in by_day.items()
+    )
 
     featured_block = ""
     if featured:
-        cells = "".join(_featured_cell(c) for c in featured)
-        featured_block = f"""<section class="section">
-  <div class="section-head"><h2>Featured matchups</h2>
-    <span class="note">highest-grade cards on the board</span></div>
-  <div class="featured">{cells}</div>
+        featured_block = f"""<section class="section tight">
+  <div class="section-head"><h2>Featured</h2>
+    <span class="note">ranked matchups, highest-grade cards</span></div>
+  <div class="featured">{"".join(_featured_cell(c) for c in featured)}</div>
 </section>"""
 
-    body = f"""<header class="page-head">
-  <h1>College football, {cards[0].kickoff.strftime("week of %-d %B") if cards else "this week"}</h1>
-  <p class="sub">Research, analytics and market context for every game with a
-    market. Atlas does not publish selections.</p>
-</header>
+    week = eastern(cards[0].kickoff).strftime("Week of %-d %B") if cards else "This week"
 
-<div class="card card-pad board-summary">
-  <div class="grid-3">
-    <div class="stat"><div class="stat-label">Cards published</div>
-      <div class="stat-value">{len(cards)}</div>
-      <div class="stat-note">every FBS game Atlas can price</div></div>
-    <div class="stat"><div class="stat-label">Graded A or better</div>
-      <div class="stat-value">{strong}</div>
-      <div class="stat-note">{strong / len(graded) * 100 if graded else 0:.0f}% of graded cards</div></div>
-    <div class="stat"><div class="stat-label">Graded D or F</div>
-      <div class="stat-value">{weak}</div>
-      <div class="stat-note">published, and marked down</div></div>
-  </div>
+    body = f"""<div class="board-head">
+  <h1>{esc(week)}</h1>
+  <span class="board-note">{len(cards)} cards · {strong} graded A or better ·
+    {weak} marked down</span>
 </div>
+
+<div class="board-bar" id="controls">
+  <input class="search" type="search" id="q" placeholder="Search a team or conference"
+         aria-label="Search games" autocomplete="off">
+  <select id="conf" class="select" aria-label="Filter by conference">
+    <option value="">All conferences</option>{conf_options}
+  </select>
+  <button class="filter" data-grade="" aria-pressed="true">All</button>
+  <button class="filter" data-grade="A" aria-pressed="false">A &amp; up</button>
+  <button class="filter" data-grade="B" aria-pressed="false">B &amp; up</button>
+  <button class="filter" data-grade="low" aria-pressed="false">Marked down</button>
+</div>
+<p class="note board-count" id="count" aria-live="polite"></p>
 
 {featured_block}
 
-<div class="controls" id="controls">
-  <input class="search" type="search" id="q" placeholder="Search a team or conference"
-         aria-label="Search games" autocomplete="off">
-  <div class="control-row">
-    <select id="conf" class="select" aria-label="Filter by conference">
-      <option value="">All conferences</option>{conf_options}
-    </select>
-    <div class="filters" role="group" aria-label="Filter by grade">
-      <button class="filter" data-grade="" aria-pressed="true">All grades</button>
-      <button class="filter" data-grade="A" aria-pressed="false">A &amp; above</button>
-      <button class="filter" data-grade="B" aria-pressed="false">B &amp; above</button>
-      <button class="filter" data-grade="low" aria-pressed="false">D &amp; F</button>
-    </div>
-  </div>
-  <p class="note" id="count" aria-live="polite"></p>
-</div>
-
-{"".join(day_blocks)}
+{day_blocks}
 
 <div class="card card-pad nfl-strip">
   <div class="banner-row">
     <span class="badge mute">NFL · calibration in progress</span>
     <p class="note banner-text">Atlas's model is built and validated on college
       football. NFL cards do not publish until the model has been fitted and
-      back-tested on NFL seasons to the same standard.
-      <a href="nfl.html">What that involves</a>.</p>
+      back-tested to the same standard. <a href="nfl.html">What that involves</a>.</p>
   </div>
 </div>
 
 <div class="disclosure top-gap">
-  <b>What Atlas publishes.</b> Research, analytics, projections, market context
-  and a reliability record. Atlas does not publish selections, does not size
-  anything and does not project returns.
+  <b>About this week's numbers.</b> It is week {cards[0].week if cards else ""},
+  so team profiles are still shrunk toward last season and efficiency figures
+  move a lot between games. Atlas publishes research, analytics and market
+  context; it does not publish selections, does not size anything and does not
+  project returns.
 </div>
 
 <script src="assets/atlas.js" defer></script>"""
 
     return layout(title="Atlas Sports Intelligence — college football cards",
                   body=body, active="today")
+
+
+def _row_crests(card: Card, root: str = "") -> str:
+    return (f'<span class="row-crests">{_logo(card.away, size="small", root=root)}'
+            f'{_logo(card.home, size="small", root=root)}</span>')
 
 
 def _game_row(card: Card) -> str:
@@ -792,16 +1014,18 @@ def _game_row(card: Card) -> str:
     ])).lower()
     confs = "|".join(filter(None, [card.home.conference, card.away.conference]))
     difference = card.total_difference
-    diff_text = (f"Atlas {signed(difference)} total" if difference is not None
-                 else "no Atlas number yet")
-    meta = " · ".join(filter(None, [
-        card.kickoff.strftime("%H:%M UTC"), card.tv,
-        card.home.conference if card.conference_game else None,
-    ]))
+    diff_text = (f"Atlas {signed(difference)}" if difference is not None
+                 else "no Atlas number")
+    ranks = "".join(
+        f'<span class="rank">#{side.rank}</span>'
+        for side in (card.away, card.home) if side.rank
+    )
+    meta = " · ".join(filter(None, [clock(card.kickoff), card.tv]))
     return f"""<a class="game-row" href="{esc(card.path)}"
    data-search="{esc(haystack)}" data-conf="{esc(confs)}" data-grade="{esc(grade_key)}">
   <div class="game-main">
-    <div class="game-teams">{esc(card.title)}</div>
+    <div class="row-teams">{_row_crests(card)}
+      <span class="game-teams">{esc(card.title)}</span>{ranks}</div>
     <div class="game-meta">{esc(meta)}</div>
   </div>
   <div class="game-right">
@@ -814,13 +1038,16 @@ def _game_row(card: Card) -> str:
 </a>"""
 
 
+def _plural(count: int, noun: str) -> str:
+    return f"{count} {noun}" if count == 1 else f"{count} {noun}s"
+
+
 def _featured_cell(card: Card) -> str:
     difference = card.total_difference
     return f"""<a class="card card-pad feature" href="{esc(card.path)}">
-  <div class="feature-head">{grade_pill(card)}
-    <span class="note">{esc(card.kickoff.strftime("%a %H:%M UTC"))}</span></div>
+  <div class="feature-head">{_row_crests(card)}{grade_pill(card)}</div>
   <h3 class="feature-title">{esc(card.title)}</h3>
-  <p class="note feature-meta">{esc(card.venue or "")}</p>
+  <p class="note feature-meta">{esc(day_clock(card.kickoff))}{esc(" · " + card.tv if card.tv else "")}</p>
   <div class="feature-nums">
     <div><span class="stat-label">Market</span>
       <span class="feature-num">{esc(card.spread_text)}</span></div>
@@ -854,7 +1081,7 @@ def team_page(team, *, cards: list[Card], pool: dict) -> str:
         opponent = card.away if card.home.team_id == team.team_id else card.home
         prefix = "vs" if card.home.team_id == team.team_id else "at"
         schedule_rows.append([
-            esc(card.kickoff.strftime("%-d %b")),
+            esc(eastern(card.kickoff).strftime("%-d %b")),
             f"{prefix} {esc(opponent.short)}",
             esc(card.spread_text),
             num(card.total.current),
@@ -863,7 +1090,7 @@ def team_page(team, *, cards: list[Card], pool: dict) -> str:
 
     body = f"""<div class="card game-head" style="--team-home:{esc(team.colour)};--team-away:#9aa1aa">
   <div class="team-head">
-    <span class="chip large"></span>
+    {_logo(team, size="large", root="../")}
     <div>
       <h1>{esc(team.name)}</h1>
       <p class="sub">{esc(" · ".join(filter(None, [team.conference, team.record])))}</p>

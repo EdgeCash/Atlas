@@ -29,6 +29,11 @@ class Driver:
     toward_home: bool
     scale_left: str
     scale_right: str
+    #: Which side this driver favours, or None where it favours neither -
+    #: pace belongs to the game, not to a team. The brief view shows the
+    #: favoured team's mark, because three identical dots read as three
+    #: negatives and colour alone may never carry meaning.
+    favours: str | None = None
 
 
 def _ordinal(value: float | None) -> str:
@@ -70,6 +75,7 @@ def select(card, pool: dict) -> list[Driver]:
             share=min(0.48, abs(gap) * 1.6),
             toward_home=gap > 0,
             scale_left=away.short, scale_right=home.short,
+            favours=leader.key,
         ))
 
     # --- success rate ----------------------------------------------------
@@ -89,6 +95,7 @@ def select(card, pool: dict) -> list[Driver]:
             share=min(0.48, abs(gap) * 2.4),
             toward_home=gap > 0,
             scale_left=away.short, scale_right=home.short,
+            favours=leader.key,
         ))
 
     # --- defence ---------------------------------------------------------
@@ -109,6 +116,7 @@ def select(card, pool: dict) -> list[Driver]:
             share=min(0.48, abs(gap) * 2.4),
             toward_home=gap > 0,
             scale_left=away.short, scale_right=home.short,
+            favours=leader.key,
         ))
 
     # --- pace and possessions -------------------------------------------
@@ -154,6 +162,7 @@ def select(card, pool: dict) -> list[Driver]:
             share=min(0.48, abs(gap) * 0.9),
             toward_home=gap > 0,
             scale_left=away.short, scale_right=home.short,
+            favours=leader.key,
         ))
 
     candidates.sort(key=lambda pair: pair[0], reverse=True)

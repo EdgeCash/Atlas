@@ -13,9 +13,9 @@ from datetime import UTC, datetime, timedelta
 import numpy as np
 import pytest
 
+from atlas.site import data, render, social
 from atlas.site import drivers as driving
 from atlas.site import grade as grading
-from atlas.site import render, social
 from atlas.site.data import Card, Line, Side
 
 #: A synthetic percentile pool, so drivers render without a warehouse.
@@ -79,6 +79,7 @@ def _card(*, model_total=50.7, market_total=48.5, grade=True) -> Card:
         difference = card.total_difference
         card.grade = grading.compute(difference, _band(grading.band_label(difference)), 1.0)
     card.drivers = driving.select(card, _POOL)
+    card.cautions = data.cautions(card)
     return card
 
 
@@ -148,13 +149,38 @@ def _page(card: Card) -> str:
     return render.card_page(card, bands=bands, overall_band=_band("2-4"))
 
 
-def test_the_card_carries_all_eight_sections():
+def test_tier_one_is_visible_without_opening_anything():
+    """The five-second view. Everything here must be in the page before a
+    reader taps anything: game, market, Atlas, difference, grade, why."""
     page = _page(_card())
-    for heading in ("Market snapshot", "Atlas projection", "Atlas difference",
-                    "Atlas grade", "Why Atlas sees it this way",
-                    "Market intelligence", "Reliability"):
-        assert f">{heading}</h2>" in page, f"missing section: {heading}"
-    assert "Jack Trice Stadium" in page  # §1 game header
+    tier1 = page.split('<div class="tier2">')[0]
+    assert "Jack Trice Stadium" in tier1          # game
+    assert "Market" in tier1 and "48.5" in tier1  # market
+    assert "Atlas projects" in tier1              # projection
+    assert "Difference" in tier1                  # difference
+    assert 'class="grade-mark"' in tier1          # grade, dominant
+    assert ">Why</h2>" in tier1                   # why
+    assert "Be careful about" in tier1            # rule 5, question 5
+
+
+def test_every_section_is_still_on_the_page_behind_a_panel():
+    """Rule 1 is hide, not remove. A reader who wants the detail must be one
+    tap away from all of it, and it must be in the DOM for search and print."""
+    page = _page(_card())
+    for summary in ("Market detail", "Projection detail",
+                    "How this grade was computed", "All drivers",
+                    "Market movement", "Reliability record"):
+        assert summary in page, f"missing panel: {summary}"
+    # The detail itself, not just the summary.
+    assert "Unanchored model" in page
+    assert "A difference is not an edge" in page
+    assert "Calibration by disagreement band" in page
+
+
+def test_the_panels_are_native_and_need_no_javascript():
+    page = _page(_card())
+    assert page.count("<details") >= 6
+    assert "<script" not in page
 
 
 def test_the_projection_is_anchored_and_the_raw_model_is_shown_beside_it():
@@ -175,20 +201,37 @@ def test_the_spread_projection_equals_the_market():
     assert card.anchored_margin == card.spread.current
 
 
-def test_a_low_grade_card_says_so_before_the_projection():
+def test_a_low_grade_card_leads_with_its_low_confidence():
+    """Rule 4: the grade is the centrepiece, and on a weak card it has to be
+    the first thing a reader takes in."""
     card = _card(model_total=60.0)
     assert card.grade.low
     page = _page(card)
-    assert page.index("marking its own card down") < page.index("Atlas projection")
+    tier1 = page.split('<div class="tier2">')[0]
+    assert "Low confidence" in tier1
+    assert 'class="card grade-hero f"' in tier1 or 'class="card grade-hero d"' in tier1
+    assert tier1.index("grade-mark") < tier1.index("Be careful about")
+
+
+def test_cautions_are_specific_to_the_card():
+    """Rule 5, question 5. A caution that appears on every card is read as
+    decoration, so the wide-disagreement one must only fire when it applies."""
+    loud = _card(model_total=62.0)
+    quiet = _card(model_total=49.0)
+    assert any("points from the market" in c for c in loud.cautions)
+    assert not any("points from the market" in c for c in quiet.cautions)
+    assert len(loud.cautions) <= 3
 
 
 def test_a_card_with_no_market_still_publishes():
     card = _card(grade=False)
     card.total = Line("total", None, None, None, None)
     card.spread = Line("margin", None, None, None, None)
+    card.cautions = []
     page = _page(card)
     assert "Atlas Sports Intelligence" in page
     assert "No spread posted" in page or "no market posted" in page
+    assert "Not graded" in page
 
 
 def test_a_missing_moneyline_is_never_derived():
@@ -267,8 +310,9 @@ def test_every_card_repeats_the_difference_disclaimer():
 
 def test_the_grade_is_labelled_as_information_quality():
     page = _page(_card())
-    assert "not a recommendation" in page
     flat = " ".join(page.split())
+    assert "not a recommendation" in flat
+    assert "How much weight this card's information deserves" in flat
     assert "says nothing about which side of a market anyone should take" in flat
 
 

@@ -37,10 +37,11 @@
         section.hidden = !list.querySelector(".game-row:not([hidden])");
       }
     });
-    count.textContent =
-      shown === rows.length
-        ? shown + " games"
-        : shown + " of " + rows.length + " games";
+    /* Silent when nothing is filtered. "58 games" under a heading that
+       already says "58 cards" is a line of chrome above the first card. */
+    var filtered = shown !== rows.length;
+    count.textContent = filtered ? shown + " of " + rows.length + " games" : "";
+    count.hidden = !filtered;
   }
 
   q.addEventListener("input", apply);
