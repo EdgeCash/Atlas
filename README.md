@@ -1,4 +1,4 @@
-# Atlas - Phase 1A Research Warehouse
+# Atlas - NCAAF Research Warehouse
 
 A point-in-time-correct historical database for NCAAF (2018-present) and the
 research needed to answer one question: **which variables actually predict
@@ -28,6 +28,7 @@ no dashboard. It produces a warehouse, a measurement, and a recommendation.
 | Bootstrap signal report | [`reports/bootstrap_signal_report.md`](reports/bootstrap_signal_report.md) |
 | Pre-registered criteria | [`docs/SIGNAL_PREREGISTRATION.md`](docs/SIGNAL_PREREGISTRATION.md) |
 | **Phase 2: Velocity edge decomposition** | [`reports/velocity_edge_decomposition.md`](reports/velocity_edge_decomposition.md) |
+| **Phase 3: market-aware beta framework** | [`reports/atlas_beta_framework.md`](reports/atlas_beta_framework.md) |
 | Supporting tables (CSV/JSON) | `reports/tables/` |
 | Alpha model recommendation | [`docs/ATLAS_ALPHA_SPEC.md`](docs/ATLAS_ALPHA_SPEC.md) |
 | Point-in-time methodology | [`docs/POINT_IN_TIME.md`](docs/POINT_IN_TIME.md) |
@@ -101,6 +102,37 @@ Worth borrowing, in order: the publish gate's **edge ceiling**, **market
 anchoring**, **CLV as the grading metric**, **constitutional staking caps**,
 and **per-market evidence gating**. None of them is a football insight.
 
+### Phase 3: the market as the prior
+
+Phases 1 and 2 asked whether Atlas could beat the closing line. Phase 3 changed
+the question, treating the market as the prior rather than the benchmark, and
+found that Atlas is good at something nobody had measured: **predicting which
+way the line will move.**
+
+| Market | Beats the close (open → close) | z | Picks winners |
+|---|---|---|---|
+| Margin | **54.4%** of 3,963 graded games | +5.5 | 49.8% |
+| Total | **58.3%** of 4,175 graded games | +10.7 | 52.2% |
+
+Positive in six seasons out of six in both markets, and it survives the
+falsification that matters: a constant lean, a within-season shuffle of the
+predictions and a coin-flip side all score **at or below 50%**. Games where the
+line never moved are CLV pushes, not CLV losses - grading them as losses
+understated every beat rate by roughly six points and hid this result
+entirely.
+
+It is still not obviously a bet. One point of line is worth ~2.4% of win
+probability, so the movement Atlas anticipates is worth **1.0% on totals and
+0.7% on margins** - under the vig. Discarding the quarter of the slate where
+the model disagrees most with the close (the single most valuable rule found in
+five phases) roughly doubles it to 1.9% and 1.6%, which clears **-105 and
+nothing worse**.
+
+The fitted market weight is **0.98 on margins and 0.89 on totals**, and the
+unanchored model's Brier score is *worse than declaring every game a coin
+flip*. Full framework, including when not to bet:
+[`reports/atlas_beta_framework.md`](reports/atlas_beta_framework.md).
+
 ### Phase 1C: the search for unpriced information
 
 Phase 1C stopped measuring team quality and went looking for information the
@@ -167,6 +199,7 @@ make qb-data                              # research-only QB extraction
 python -m atlas.research.phase1c_report   # stage 6: Phase 1C reports
 python -m atlas.research.validation_report # stage 7: signal validation
 python -m atlas.research.velocity_report   # stage 8: Velocity benchmark
+python -m atlas.research.beta_report       # stage 9: Phase 3 market-aware framework
 ```
 
 The quarterback-of-record extraction writes nothing into the warehouse, and

@@ -16,6 +16,15 @@
 > reached, not as a build specification. The feature-role table in §2 remains
 > accurate about what predicts football; it is simply no longer relevant,
 > because none of it beats the closing line.
+>
+> **Phase 3 replaces this document's premise rather than its verdict.** It
+> treats the market as the prior instead of the benchmark and asks what Atlas
+> is for under that assumption. See
+> [`reports/atlas_beta_framework.md`](../reports/atlas_beta_framework.md),
+> which fits the market weight (0.98 margins, 0.89 totals), shows the raw
+> model's probabilities are an anti-signal, and finds the one thing Atlas
+> predicts better than chance: the direction the line moves between open and
+> close.
 
 **Status:** recommendation, amended after Phase 1B. Nothing here has been built.
 **Evidence:** [`reports/atlas_research_report_v1.md`](../reports/atlas_research_report_v1.md),

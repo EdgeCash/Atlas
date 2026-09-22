@@ -1,0 +1,7 @@
+policy,atlas_test,before,after,metric,improves
+Market anchoring,blend at w=1.00 vs pure model,0.1159944610174616,0.004118947156921848,expected calibration error,True
+Market anchoring,blend at w=1.00 vs pure model,13.277656109718892,12.203165056201932,mean absolute error,True
+Edge ceiling,"calibration gap, 0-1 vs 10+ points",-0.0333964403698534,-0.3096648255788112,claimed minus realised,True
+Publish gate (edge band),confidence in 0.03-0.12 over 0.5,0.4984930681133213,0.5016393442622951,win rate,True
+CLV monitoring,disagreement -> CLV vs disagreement -> outcome,1.012788732855543,71.11377076797702,|t| of the relationship,True
+Staking caps,not testable without a wagering simulation (out of scope),,,n/a,

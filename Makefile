@@ -13,6 +13,7 @@ help:
 	@echo "  make phase1c    information-edge tracks and synthesis"
 	@echo "  make validate   signal validation: holdout, bootstrap, final verdict"
 	@echo "  make velocity   Phase 2: decompose where Velocity's edge comes from"
+	@echo "  make beta       Phase 3: market-aware framework and the beta report"
 	@echo "  make qb-data    extract the QB of record (research only, ~1 GB transient)"
 	@echo "  make all        ingest -> warehouse -> research -> phase1b -> phase1c"
 	@echo "  make test       run the offline test suite"
@@ -54,7 +55,13 @@ validate:
 velocity:
 	$(PYTHON) -m atlas.research.velocity_report
 
-all: ingest warehouse research phase1b phase1c validate velocity
+# Phase 3 treats the market as the prior rather than the benchmark. The CLV
+# measurements it produces are graded at the OPEN, so they depend on the
+# opening lines staged by `make warehouse`, not just the closing ones.
+beta:
+	$(PYTHON) -m atlas.research.beta_report
+
+all: ingest warehouse research phase1b phase1c validate velocity beta
 
 test:
 	$(PYTHON) -m pytest -q

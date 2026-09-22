@@ -15,12 +15,13 @@ COUNT_COLUMNS = {
     "with_efficiency", "with_fpi", "rank_standalone", "rank_over_market",
     "n_paired", "teams", "team_games", "with_qb", "changes", "settled",
     "opponents", "rank", "with_weather", "distinct_qbs", "n_prior_observations",
+    "graded", "pushes", "clv_graded", "moved_games", "bets", "bets_to_detect",
 }
 
 
 #: Columns rendered with %g - values like a 4-point threshold should read "4",
 #: not "4.0000", but may legitimately be fractional.
-COMPACT_COLUMNS = {"threshold", "price", "quantile"}
+COMPACT_COLUMNS = {"threshold", "price", "quantile", "market_weight"}
 
 
 def fmt(value: float | None, digits: int = 3, dash: str = "n/a") -> str:
@@ -52,5 +53,6 @@ def table(df: pd.DataFrame, columns: list[str], headers: list[str], digits: int 
                     cells.append(fmt(float(value), digits))
             else:
                 cells.append("" if value is None else str(value))
-        lines.append("| " + " | ".join(cells) + " |")
+        # A stray pipe in a cell splits the row and silently mangles the table.
+        lines.append("| " + " | ".join(c.replace("|", "\\|") for c in cells) + " |")
     return "\n".join(lines)

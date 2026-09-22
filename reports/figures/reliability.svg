@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="660" height="470" viewBox="0 0 660 470" role="img" aria-label="Reliability diagram: Atlas claimed confidence against realised win rate for margin and totals. Every point sits below the diagonal, and the gap widens as claimed confidence rises.">
+<rect width="660" height="470" fill="#fcfcfb"/>
+<text x="66" y="24" font-family="system-ui,sans-serif" font-size="15" font-weight="600" fill="#0b0b0b">Atlas is overconfident, and it worsens with confidence</text>
+<text x="66" y="41" font-family="system-ui,sans-serif" font-size="11.5" fill="#52514e">Pure model, no market anchoring. Points below the diagonal claim more than they deliver.</text>
+<line x1="66" y1="395.3" x2="570" y2="395.3" stroke="#dcdcd8" stroke-width="1"/>
+<text x="56" y="399.3" text-anchor="end" font-family="system-ui,sans-serif" font-size="11" fill="#52514e">45%</text>
+<text x="84.0" y="426.0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#52514e">45%</text>
+<line x1="66" y1="331.7" x2="570" y2="331.7" stroke="#dcdcd8" stroke-width="1"/>
+<text x="56" y="335.7" text-anchor="end" font-family="system-ui,sans-serif" font-size="11" fill="#52514e">50%</text>
+<text x="174.0" y="426.0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#52514e">50%</text>
+<line x1="66" y1="268.1" x2="570" y2="268.1" stroke="#dcdcd8" stroke-width="1"/>
+<text x="56" y="272.1" text-anchor="end" font-family="system-ui,sans-serif" font-size="11" fill="#52514e">55%</text>
+<text x="264.0" y="426.0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#52514e">55%</text>
+<line x1="66" y1="204.6" x2="570" y2="204.6" stroke="#dcdcd8" stroke-width="1"/>
+<text x="56" y="208.6" text-anchor="end" font-family="system-ui,sans-serif" font-size="11" fill="#52514e">60%</text>
+<text x="354.0" y="426.0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#52514e">60%</text>
+<line x1="66" y1="141.0" x2="570" y2="141.0" stroke="#dcdcd8" stroke-width="1"/>
+<text x="56" y="145.0" text-anchor="end" font-family="system-ui,sans-serif" font-size="11" fill="#52514e">65%</text>
+<text x="444.0" y="426.0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#52514e">65%</text>
+<line x1="66" y1="77.4" x2="570" y2="77.4" stroke="#dcdcd8" stroke-width="1"/>
+<text x="56" y="81.4" text-anchor="end" font-family="system-ui,sans-serif" font-size="11" fill="#52514e">70%</text>
+<text x="534.0" y="426.0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#52514e">70%</text>
+<line x1="66.0" y1="408.0" x2="570.0" y2="52.0" stroke="#52514e" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text transform="translate(327.0,204.6) rotate(-45)" font-family="system-ui,sans-serif" font-size="11" fill="#52514e">perfect calibration</text>
+<path d="M183.3,368.6 L201.0,393.7 L218.8,250.7 L237.1,346.1 L255.0,310.6 L273.1,408.0 L290.8,290.8 L308.5,248.6 L335.1,367.6 L508.6,328.8" fill="none" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round" opacity="0.75"/>
+<circle cx="183.3" cy="368.6" r="6.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="201.0" cy="393.7" r="6.4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="218.8" cy="250.7" r="6.3" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="237.1" cy="346.1" r="6.3" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="255.0" cy="310.6" r="6.3" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="273.1" cy="408.0" r="6.3" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="290.8" cy="290.8" r="6.2" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="308.5" cy="248.6" r="6.2" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="335.1" cy="367.6" r="7.1" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="508.6" cy="328.8" r="11.0" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="526.6" y="332.8" font-family="system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#52514e">margin</text>
+<rect x="76" y="56" width="10" height="10" rx="2" fill="#2a78d6"/>
+<text x="92" y="65" font-family="system-ui,sans-serif" font-size="11.5" fill="#52514e">margin</text>
+<path d="M183.7,333.8 L201.7,282.5 L218.7,264.7 L237.4,324.6 L255.0,331.7 L272.9,225.8 L290.5,287.1 L308.4,324.6 L335.4,339.6 L486.7,301.3" fill="none" stroke="#eb6834" stroke-width="2" stroke-linejoin="round" opacity="0.75"/>
+<circle cx="183.7" cy="333.8" r="6.6" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="201.7" cy="282.5" r="6.7" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="218.7" cy="264.7" r="6.7" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="237.4" cy="324.6" r="6.9" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="255.0" cy="331.7" r="6.6" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="272.9" cy="225.8" r="6.5" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="290.5" cy="287.1" r="6.5" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="308.4" cy="324.6" r="6.5" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="335.4" cy="339.6" r="7.4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="486.7" cy="301.3" r="11.0" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="504.7" y="305.3" font-family="system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#52514e">total</text>
+<rect x="76" y="74" width="10" height="10" rx="2" fill="#eb6834"/>
+<text x="92" y="83" font-family="system-ui,sans-serif" font-size="11.5" fill="#52514e">total</text>
+<text x="318.0" y="440" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#52514e">Claimed confidence</text>
+<text transform="translate(18,230.0) rotate(-90)" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#52514e">Realised win rate</text>
+<text x="66" y="460" font-family="system-ui,sans-serif" font-size="10.5" fill="#52514e">Marker area is proportional to the games in each bucket.</text>
+</svg>
