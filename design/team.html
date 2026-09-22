@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Utah — Atlas Team Page</title>
+<link rel="stylesheet" href="atlas.css">
+<style>
+  .game-head { --team-home: #CC0000; --team-away: #6b7480; }
+  .form { display: flex; gap: 5px; }
+  .form span {
+    width: 26px; height: 26px; border-radius: 7px; display: grid;
+    place-items: center; font-size: 11.5px; font-weight: 680; color: #fff;
+  }
+  .form .w { background: var(--data-pos); }
+  .form .l { background: var(--data-neg); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="logo">Atlas <span>Sports Intelligence</span></div>
+    <div class="nav-links">
+      <a href="homepage.html">Today</a>
+      <a href="#">NCAAF</a>
+      <a href="#">NFL</a>
+      <a href="#" aria-current="page">Teams</a>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <div class="card game-head" style="margin-top:16px">
+    <div style="display:flex;align-items:center;gap:13px">
+      <span class="chip" style="width:38px;height:38px;border-radius:10px;background:var(--team-home)"></span>
+      <div>
+        <h1 style="margin:0">Utah Utes</h1>
+        <p class="sub" style="margin:2px 0 0">Big 12 · 3–1 · SP+ 22.2 (11th) ·
+          FPI 20.1 (13th)</p>
+      </div>
+      <div style="margin-left:auto" class="form" aria-label="Last four results">
+        <span class="w">W</span><span class="w">W</span><span class="l">L</span><span class="w">W</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ------------------------------------------------------ season stats -- -->
+  <section class="section">
+    <div class="section-head">
+      <h2>Season profile</h2>
+      <span class="note">opponent-adjusted · percentile of FBS</span>
+    </div>
+
+    <div class="card">
+      <div class="grid-3">
+        <div class="stat">
+          <div class="stat-label">Offensive EPA / play</div>
+          <div class="stat-value">+0.28</div>
+          <div class="stat-note">95th percentile</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Success rate</div>
+          <div class="stat-value">49.9%</div>
+          <div class="stat-note">82nd percentile</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Explosiveness</div>
+          <div class="stat-value">1.28</div>
+          <div class="stat-note">69th percentile</div>
+        </div>
+      </div>
+      <div class="grid-3" style="border-top:1px solid var(--border)">
+        <div class="stat">
+          <div class="stat-label">Defensive success allowed</div>
+          <div class="stat-value">32.0%</div>
+          <div class="stat-note">10th percentile — elite</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Pace</div>
+          <div class="stat-value">27.5s</div>
+          <div class="stat-note">per play · 46th percentile</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Plays per game</div>
+          <div class="stat-value">48.1</div>
+          <div class="stat-note">14th percentile</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="note" style="margin-top:9px">Every figure is opponent-adjusted
+      and point-in-time: it uses only games played before the date shown, so a
+      team's profile in week 4 is what was knowable in week 4.</p>
+  </section>
+
+  <!-- ------------------------------------------------------- recent form -- -->
+  <section class="section">
+    <div class="section-head">
+      <h2>Recent form</h2>
+      <span class="note">efficiency by game, not score</span>
+    </div>
+
+    <div class="card card-pad">
+      <svg viewBox="0 0 640 150" class="plot" role="img"
+           aria-label="Utah offensive EPA per play by game, against the FBS median. Above the dashed line is above median.">
+        <line x1="44" y1="24"  x2="628" y2="24"  class="grid"/>
+        <line x1="44" y1="62"  x2="628" y2="62"  class="grid"/>
+        <line x1="44" y1="100" x2="628" y2="100" class="grid"/>
+        <text x="38" y="28"  class="axis" text-anchor="end">+0.40</text>
+        <text x="38" y="66"  class="axis" text-anchor="end">+0.20</text>
+        <text x="38" y="104" class="axis" text-anchor="end">0.00</text>
+        <line x1="44" y1="81" x2="628" y2="81" class="rule"/>
+        <text x="48" y="76" class="axis">FBS median</text>
+
+        <rect x="76"  y="40" width="66" height="60" rx="4" fill="var(--data-pos)"/>
+        <rect x="192" y="30" width="66" height="70" rx="4" fill="var(--data-pos)"/>
+        <rect x="308" y="86" width="66" height="14" rx="4" fill="var(--data-neg)"/>
+        <rect x="424" y="36" width="66" height="64" rx="4" fill="var(--data-pos)"/>
+        <rect x="540" y="52" width="66" height="48" rx="4" fill="var(--data-neutral)"/>
+
+        <text x="109" y="122" class="axis" text-anchor="middle">vs UCLA</text>
+        <text x="225" y="122" class="axis" text-anchor="middle">at Wyo</text>
+        <text x="341" y="122" class="axis" text-anchor="middle">vs TTU</text>
+        <text x="457" y="122" class="axis" text-anchor="middle">at BYU</text>
+        <text x="573" y="122" class="axis" text-anchor="middle">at ISU</text>
+        <text x="109" y="137" class="axis" text-anchor="middle">W 43–10</text>
+        <text x="225" y="137" class="axis" text-anchor="middle">W 31–14</text>
+        <text x="341" y="137" class="axis" text-anchor="middle">L 17–24</text>
+        <text x="457" y="137" class="axis" text-anchor="middle">W 27–20</text>
+        <text x="573" y="137" class="axis" text-anchor="middle">Sat</text>
+        <text x="573" y="46" class="label" text-anchor="middle">projected</text>
+      </svg>
+      <p class="note" style="margin:8px 0 0">
+        One series — offensive EPA per play — so no legend is needed. The grey
+        bar is Saturday's projection; the red bar is the one game where Utah
+        finished below the FBS median.
+      </p>
+    </div>
+  </section>
+
+  <!-- --------------------------------------------------------- schedule -- -->
+  <section class="section">
+    <div class="section-head">
+      <h2>Schedule</h2>
+      <span class="badge premium">Premium · full history</span>
+    </div>
+
+    <div class="card card-pad">
+      <table class="rows">
+        <thead><tr><th>Date</th><th>Opponent</th><th>Result</th><th>Market</th><th>Card</th></tr></thead>
+        <tbody>
+          <tr><td>30 Aug</td><td>vs UCLA</td><td class="lead">W 43–10</td><td>−7.0</td>
+              <td><span class="grade-pill" style="color:var(--good);display:inline-grid">A</span></td></tr>
+          <tr><td>6 Sep</td><td>at Wyoming</td><td class="lead">W 31–14</td><td>−10.5</td>
+              <td><span class="grade-pill" style="color:var(--data-pos);display:inline-grid">B</span></td></tr>
+          <tr><td>13 Sep</td><td>vs Texas Tech</td><td class="lead">L 17–24</td><td>−2.5</td>
+              <td><span class="grade-pill" style="color:var(--warning);display:inline-grid">C</span></td></tr>
+          <tr><td>20 Sep</td><td>at BYU</td><td class="lead">W 27–20</td><td>+1.5</td>
+              <td><span class="grade-pill" style="color:var(--good);display:inline-grid">A</span></td></tr>
+          <tr><td>26 Sep</td><td>at Iowa State</td><td class="flat">—</td><td>−7.5</td>
+              <td><a href="matchup.html"><span class="grade-pill" style="color:var(--good);display:inline-grid">A</span></a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="disclosure" style="margin-top:22px">
+    <b>Player pages are reserved and not implemented.</b> Atlas has no
+    player-level model, and a page that looked like one would imply research
+    that does not exist.
+  </div>
+
+  <footer>
+    Atlas Sports Intelligence · Research. Analytics. Context.<br>
+    Team profile computed 22 Sep 2026 · point-in-time through week 4
+  </footer>
+
+</main>
+</body>
+</html>

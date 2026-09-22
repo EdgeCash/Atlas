@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Today — Atlas Sports Intelligence</title>
+<link rel="stylesheet" href="atlas.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="logo">Atlas <span>Sports Intelligence</span></div>
+    <div class="nav-links">
+      <a href="#" aria-current="page">Today</a>
+      <a href="#">NCAAF</a>
+      <a href="#">NFL</a>
+      <a href="team.html">Teams</a>
+      <a href="#">Research</a>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <header style="margin:26px 0 4px">
+    <h1>Saturday, 26 September</h1>
+    <p class="sub">Research, analytics and market context for every game on the
+      board. Atlas does not publish selections.</p>
+  </header>
+
+  <div style="margin:18px 0 6px">
+    <input class="search" type="search" placeholder="Search a team, conference or matchup"
+           aria-label="Search games">
+  </div>
+
+  <div class="filters" role="group" aria-label="League">
+    <button class="filter" aria-pressed="true">NCAAF · 53</button>
+    <button class="filter" aria-pressed="false">NFL · 0</button>
+    <button class="filter" aria-pressed="false">Grade A &amp; above</button>
+    <button class="filter" aria-pressed="false">Ranked matchups</button>
+    <button class="filter" aria-pressed="false">Largest differences</button>
+  </div>
+
+  <!-- ---------------------------------------------------- board summary -- -->
+  <div class="card" style="margin-top:14px">
+    <div class="grid-3">
+      <div class="stat">
+        <div class="stat-label">Cards published</div>
+        <div class="stat-value">53</div>
+        <div class="stat-note">every FBS game with a market</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Grade A or better</div>
+        <div class="stat-value">9</div>
+        <div class="stat-note">17% of the board</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Graded D or F</div>
+        <div class="stat-value">11</div>
+        <div class="stat-note">shown, and marked down</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- --------------------------------------------------------- the board -- -->
+  <section class="section">
+    <div class="section-head">
+      <h2>Early window · 12:00–3:30 ET</h2>
+      <span class="note">grades update as markets move</span>
+    </div>
+
+    <div class="card">
+      <a class="game-row" href="matchup.html">
+        <div>
+          <div class="game-teams">Utah at Iowa State</div>
+          <div class="game-meta">2:30 PM CT · FOX · Big 12 · Jack Trice Stadium</div>
+        </div>
+        <div class="game-right">
+          <div>
+            <div class="game-line">UTAH −7.5 · 48.5</div>
+            <div class="game-meta">Atlas +2.2 total</div>
+          </div>
+          <span class="grade-pill" style="color:var(--good)">A</span>
+        </div>
+      </a>
+
+      <a class="game-row" href="#">
+        <div>
+          <div class="game-teams">Sam Houston at Texas Tech</div>
+          <div class="game-meta">11:00 AM CT · ESPN+ · Non-conference</div>
+        </div>
+        <div class="game-right">
+          <div>
+            <div class="game-line">TTU −38.5 · 55.5</div>
+            <div class="game-meta">Atlas −3.4 total</div>
+          </div>
+          <span class="grade-pill" style="color:var(--data-pos)">B</span>
+        </div>
+      </a>
+
+      <a class="game-row" href="#">
+        <div>
+          <div class="game-teams">Nebraska at Michigan State</div>
+          <div class="game-meta">4:00 PM ET · BTN · Big Ten</div>
+        </div>
+        <div class="game-right">
+          <div>
+            <div class="game-line">MSU +3.5 · 48.5</div>
+            <div class="game-meta">Atlas +3.8 total</div>
+          </div>
+          <span class="grade-pill" style="color:var(--data-pos)">B</span>
+        </div>
+      </a>
+
+      <a class="game-row" href="#">
+        <div>
+          <div class="game-teams">UCLA at Maryland</div>
+          <div class="game-meta">1:30 PM ET · FS1 · Big Ten</div>
+        </div>
+        <div class="game-right">
+          <div>
+            <div class="game-line">UMD −2.5 · 56.5</div>
+            <div class="game-meta">Atlas +3.5 total</div>
+          </div>
+          <span class="grade-pill" style="color:var(--warning)">C</span>
+        </div>
+      </a>
+
+      <a class="game-row" href="matchup-low-grade.html">
+        <div>
+          <div class="game-teams">Central Michigan at Miami</div>
+          <div class="game-meta">6:30 PM ET · ACC Network · Non-conference</div>
+        </div>
+        <div class="game-right">
+          <div>
+            <div class="game-line">MIA −41.5 · 53.5</div>
+            <div class="game-meta">Atlas −11.2 total</div>
+          </div>
+          <span class="grade-pill" style="color:var(--critical)">F</span>
+        </div>
+      </a>
+
+      <a class="game-row" href="#">
+        <div>
+          <div class="game-teams">Texas at Tennessee</div>
+          <div class="game-meta">12:00 PM ET · ABC · SEC · #7 vs #11</div>
+        </div>
+        <div class="game-right">
+          <div>
+            <div class="game-line">TEX −5.5 · 55.5</div>
+            <div class="game-meta">Atlas −1.7 total</div>
+          </div>
+          <span class="grade-pill" style="color:var(--good)">A</span>
+        </div>
+      </a>
+    </div>
+
+    <p class="note" style="margin-top:10px">
+      Sorted by kickoff. The number beside each grade is how far Atlas's
+      unanchored model sits from the market — a measure of disagreement, not of
+      opportunity. <a href="#" style="color:var(--ink-2)">How grades work</a>.
+    </p>
+  </section>
+
+  <!-- ------------------------------------------------------------ NFL ---- -->
+  <section class="section">
+    <div class="section-head">
+      <h2>NFL</h2>
+      <span class="badge mute">Week 4 · cards not yet published</span>
+    </div>
+    <div class="card card-pad">
+      <p class="note" style="margin:0">
+        Atlas's model is built and validated on college football. The NFL card
+        uses the same eight sections and the same grade framework, and it does
+        not publish until the model has been fitted and back-tested on NFL
+        seasons to the same standard. Schedules, scores and team pages are
+        live now; projections and grades are not.
+      </p>
+      <div class="filters" style="margin-bottom:0">
+        <button class="filter">NFL schedule</button>
+        <button class="filter">NFL team pages</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="disclosure" style="margin-top:24px">
+    <b>What Atlas publishes.</b> Research, analytics, projections, market
+    context and a reliability record. Atlas does not publish selections, does
+    not size anything and does not project returns. Every number on the site is
+    computed out of sample from a point-in-time database.
+  </div>
+
+  <footer>
+    Atlas Sports Intelligence · Research. Analytics. Context.<br>
+    NCAAF cards from 2018 · NFL in development ·
+    <a href="#" style="color:var(--ink-2)">methodology</a> ·
+    <a href="#" style="color:var(--ink-2)">reliability record</a>
+  </footer>
+
+</main>
+</body>
+</html>

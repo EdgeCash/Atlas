@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atlas — Social Card Templates</title>
+<link rel="stylesheet" href="atlas.css">
+<style>
+  /* Fixed-pixel templates. These are rendered at 2× and posted as images, so
+     they are sized in px rather than relative units — the only place in the
+     system where that is correct. */
+  body { background: var(--surface-sunk); }
+  .sheet { max-width: 1280px; margin: 0 auto; padding: 28px 16px 60px; }
+  .spec { font-size: 12.5px; color: var(--ink-3); margin: 26px 0 9px; }
+  .spec b { color: var(--ink); }
+
+  .sc {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden; position: relative;
+    font-family: var(--font); color: var(--ink);
+  }
+  .sc-wide { width: 1200px; height: 675px; }
+  .sc-square { width: 1080px; height: 1080px; }
+  .scale-wide { transform: scale(.62); transform-origin: top left; }
+  .scale-square { transform: scale(.52); transform-origin: top left; }
+  .holder-wide { height: 420px; overflow: hidden; }
+  .holder-square { height: 562px; overflow: hidden; }
+
+  .sc-accent { position: absolute; inset: 0 0 auto 0; height: 8px;
+               background: linear-gradient(90deg, var(--a-away) 0 50%, var(--a-home) 50% 100%); }
+  .sc-pad { padding: 52px 56px; }
+  .sc-brand { display: flex; align-items: center; gap: 12px; font-size: 21px;
+              font-weight: 680; letter-spacing: -.02em; }
+  .sc-brand span { color: var(--ink-3); font-weight: 500; }
+  .sc-tag { margin-left: auto; font-size: 15px; color: var(--ink-3);
+            letter-spacing: .12em; text-transform: uppercase; font-weight: 600; }
+  .sc-teams { font-size: 46px; font-weight: 700; letter-spacing: -.035em;
+              margin: 30px 0 4px; }
+  .sc-meta { font-size: 18px; color: var(--ink-3); }
+  .sc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+             margin-top: 34px; }
+  .sc-cell { background: var(--surface); border: 1px solid var(--border);
+             border-radius: 14px; padding: 20px 22px; }
+  .sc-label { font-size: 13px; font-weight: 640; letter-spacing: .08em;
+              text-transform: uppercase; color: var(--ink-3); }
+  .sc-value { font-size: 40px; font-weight: 700; letter-spacing: -.035em;
+              margin: 6px 0 2px; font-variant-numeric: tabular-nums; }
+  .sc-note { font-size: 14px; color: var(--ink-3); }
+  .sc-foot { position: absolute; left: 56px; right: 56px; bottom: 40px;
+             display: flex; align-items: center; gap: 16px;
+             border-top: 1px solid var(--border); padding-top: 20px;
+             font-size: 15px; color: var(--ink-3); }
+  .sc-grade { width: 86px; height: 86px; border-radius: 22px; display: grid;
+              place-items: center; font-size: 42px; font-weight: 720;
+              border: 3px solid currentColor; letter-spacing: -.04em; }
+  .sc-grade small { display: block; font-size: 11px; letter-spacing: .1em; }
+  .sc-driver { display: flex; gap: 12px; align-items: baseline;
+               font-size: 19px; margin-top: 14px; }
+  .sc-driver b { font-weight: 640; }
+  .sc-driver .v { margin-left: auto; font-variant-numeric: tabular-nums;
+                  font-weight: 640; }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <h1 style="margin:0">Social card templates</h1>
+  <p class="sub">Rendered at 2× and posted as images. One game, one card, one
+    link. Nothing on these templates tells anyone what to do.</p>
+
+  <div class="disclosure" style="margin-top:16px">
+<!-- lang-lint: quoting -->
+    <b>Forbidden on every template:</b> bet, wager, lock, best bet, play,
+    hammer, smash, unit, and any figure that implies a return. The only verbs
+    are <em>projects</em>, <em>reads</em>, <em>moved</em> and <em>grades</em>.
+    A template that cannot be filled without one of the forbidden words is a
+    broken template.
+<!-- lang-lint: end -->
+  </div>
+
+  <!-- ============================================ 1200 × 675 ============= -->
+  <p class="spec"><b>Template A · 1200 × 675</b> — the default post. Timeline
+    preview crops to 1.91:1, so nothing lives in the outer 40px.</p>
+  <div class="holder-wide">
+    <div class="scale-wide">
+      <div class="sc sc-wide" style="--a-home:#C8102E;--a-away:#6b7480">
+        <div class="sc-accent"></div>
+        <div class="sc-pad">
+          <div class="sc-brand">Atlas <span>Sports Intelligence</span>
+            <span class="sc-tag">Research · Analytics · Context</span></div>
+
+          <div class="sc-teams">Utah at Iowa State</div>
+          <div class="sc-meta">Sat 2:30 PM CT · FOX · Big 12 · Jack Trice Stadium</div>
+
+          <div class="sc-grid">
+            <div class="sc-cell">
+              <div class="sc-label">Market</div>
+              <div class="sc-value">−7.5</div>
+              <div class="sc-note">total 48.5 · opened −11.5</div>
+            </div>
+            <div class="sc-cell">
+              <div class="sc-label">Atlas projects</div>
+              <div class="sc-value">28 – 21</div>
+              <div class="sc-note">total 48.7 · Utah 68.7%</div>
+            </div>
+            <div class="sc-cell">
+              <div class="sc-label">Difference</div>
+              <div class="sc-value" style="color:var(--data-pos)">+2.2</div>
+              <div class="sc-note">on the total, unanchored</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sc-foot">
+          <div class="sc-grade" style="color:var(--good)">A<small>84</small></div>
+          <div>
+            <div style="color:var(--ink);font-size:17px;font-weight:620">
+              High-reliability card</div>
+            <div>Grade reflects historical calibration, not a recommendation.</div>
+          </div>
+          <div style="margin-left:auto;text-align:right">
+            atlas.xyz/ncaaf/utah-iowa-state<br>
+            <span style="font-size:13px">full card · drivers · reliability record</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ 1080 × 1080 =========== -->
+  <p class="spec"><b>Template B · 1080 × 1080</b> — the drivers post. Used when
+    the story is <em>why</em>, not <em>what</em>.</p>
+  <div class="holder-square">
+    <div class="scale-square">
+      <div class="sc sc-square" style="--a-home:#F47321;--a-away:#6A0032">
+        <div class="sc-accent"></div>
+        <div class="sc-pad">
+          <div class="sc-brand">Atlas <span>Sports Intelligence</span></div>
+
+          <div class="sc-teams" style="font-size:52px">Central Michigan<br>at Miami</div>
+          <div class="sc-meta">Sat 6:30 PM ET · ACC Network</div>
+
+          <div class="sc-grid" style="grid-template-columns:1fr 1fr">
+            <div class="sc-cell">
+              <div class="sc-label">Market total</div>
+              <div class="sc-value">53.5</div>
+              <div class="sc-note">opened 54.5</div>
+            </div>
+            <div class="sc-cell">
+              <div class="sc-label">Atlas projects</div>
+              <div class="sc-value">52.3</div>
+              <div class="sc-note">unanchored model 42.3</div>
+            </div>
+          </div>
+
+          <div style="margin-top:38px">
+            <div class="sc-label">What the model is reading</div>
+            <div class="sc-driver"><b>Miami success rate</b>
+              <span class="v">99th pct</span></div>
+            <div class="sc-driver"><b>Central Michigan offence</b>
+              <span class="v">8th pct</span></div>
+            <div class="sc-driver"><b>Combined plays per game</b>
+              <span class="v">15th pct</span></div>
+          </div>
+
+          <div style="margin-top:34px;background:var(--surface);
+                      border:1px solid var(--critical);border-radius:14px;
+                      padding:22px 24px;display:flex;gap:18px;align-items:center">
+            <div class="sc-grade" style="color:var(--critical)">F<small>33</small></div>
+            <div style="font-size:18px;line-height:1.4">
+              <b style="color:var(--ink)">Atlas grades its own card down.</b><br>
+              Differences this large are the band where the model has been
+              least reliable across seven seasons.
+            </div>
+          </div>
+        </div>
+
+        <div class="sc-foot">
+          <div>atlas.xyz/ncaaf/central-michigan-miami</div>
+          <div style="margin-left:auto">Research. Analytics. Context.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ copy rules ============ -->
+  <p class="spec"><b>Post copy</b> — three approved shapes, one per card type.</p>
+  <div class="card card-pad">
+    <table class="rows">
+      <thead><tr><th>Shape</th><th style="text-align:left">Template</th></tr></thead>
+      <tbody>
+        <tr><td class="lead">Disagreement</td>
+            <td style="text-align:left">“Atlas projects {total} against a market
+              of {market}. The gap is {n} points, and here is what the model is
+              reading.”</td></tr>
+        <tr><td class="lead">Movement</td>
+            <td style="text-align:left">“{Team} opened {open} and is now
+              {current}. Atlas has moved the other way. Card: {link}”</td></tr>
+        <tr><td class="lead">Reliability</td>
+            <td style="text-align:left">“Every Atlas card carries a grade for
+              how much the information is worth. This one grades {grade}, and
+              the record behind that is public.”</td></tr>
+      </tbody>
+    </table>
+    <p class="note" style="margin:12px 0 0">
+<!-- lang-lint: quoting -->
+      No thread should ever contain a side, a number of units, or a record of
+      wins and losses. The reliability record Atlas publishes is calibration
+      and closing-line movement, and that is what gets quoted.
+<!-- lang-lint: end -->
+    </p>
+  </div>
+
+</div>
+</body>
+</html>

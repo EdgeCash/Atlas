@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Iowa State vs Utah — Atlas Matchup Card</title>
+<link rel="stylesheet" href="atlas.css">
+<style>
+  /* Team accent is chrome only: it tints the header rule and the logo chips.
+     It never encodes a value. */
+  /* Iowa State cardinal and Utah crimson are 4.1 ΔE apart — below the system's
+     collision threshold — so the away accent falls back to slate. The rule is
+     in docs/UI_SYSTEM.md; the point is that two cards must stay comparable. */
+  .game-head { --team-home: #C8102E; --team-away: #6b7480; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="logo">Atlas <span>Sports Intelligence</span></div>
+    <div class="nav-links">
+      <a href="homepage.html">Today</a>
+      <a href="#" aria-current="page">NCAAF</a>
+      <a href="#">NFL</a>
+      <a href="team.html">Teams</a>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ============================================ 1 · GAME HEADER ========= -->
+<div class="card game-head" style="margin-top:16px">
+  <div class="teams">
+    <div class="team away">
+      <span class="chip"></span>
+      <div class="team-name">Utah</div>
+      <div class="team-meta">Big 12 · 946 mi travel</div>
+    </div>
+    <div class="at">at</div>
+    <div class="team home">
+      <span class="chip"></span>
+      <div class="team-name">Iowa State</div>
+      <div class="team-meta">Big 12 · 7 days rest</div>
+    </div>
+  </div>
+  <div class="kick">
+    <span><b>Sat 26 Sep</b> · 2:30 PM CT</span>
+    <span>Jack Trice Stadium, Ames IA</span>
+    <span>Conference game</span>
+    <span>64°F, 8 mph W, no precip</span>
+    <span><b>FOX</b></span>
+  </div>
+</div>
+
+<!-- ======================================= 2 · MARKET SNAPSHOT ========== -->
+<section class="section">
+  <div class="section-head">
+    <h2>Market snapshot</h2>
+    <span class="note">DraftKings · updated 17:45 UTC</span>
+  </div>
+
+  <div class="grid-2">
+    <div class="card card-pad">
+      <table class="rows">
+        <thead><tr><th>Spread</th><th>Open</th><th>Current</th><th>Move</th></tr></thead>
+        <tbody>
+          <tr><td class="lead">Utah</td><td>−11.5</td><td class="lead">−7.5</td>
+              <td class="move-down num">+4.0</td></tr>
+          <tr><td class="lead">Iowa State</td><td>+11.5</td><td class="lead">+7.5</td>
+              <td class="move-up num">−4.0</td></tr>
+          <tr><td>Price</td><td>−110</td><td>−105</td><td class="flat">—</td></tr>
+        </tbody>
+      </table>
+      <p class="note" style="margin:10px 0 0">The market moved four points toward
+        Iowa State between open and now.</p>
+    </div>
+
+    <div class="card card-pad">
+      <table class="rows">
+        <thead><tr><th>Total</th><th>Open</th><th>Current</th><th>Move</th></tr></thead>
+        <tbody>
+          <tr><td class="lead">Game total</td><td>49.5</td><td class="lead">48.5</td>
+              <td class="move-down num">−1.0</td></tr>
+          <tr><td>Price (over)</td><td>−110</td><td>−105</td><td class="flat">—</td></tr>
+        </tbody>
+      </table>
+      <div class="ml">
+        <span class="ml-label">Moneyline · Utah</span>
+        <span class="ml-vals">−485 → <b>−340</b></span>
+        <span class="ml-label">Moneyline · Iowa State</span>
+        <span class="ml-vals">+370 → <b>+270</b></span>
+        <span class="ml-sub">De-vigged, the market gives Utah a 74.1% chance.
+          Books quoting: 1.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================== 3 · ATLAS PROJECTION =========== -->
+<section class="section">
+  <div class="section-head">
+    <h2>Atlas projection</h2>
+    <span class="note">market-anchored · out-of-sample model</span>
+  </div>
+
+  <div class="card">
+    <div class="grid-3">
+      <div class="stat">
+        <div class="stat-label">Projected score</div>
+        <div class="stat-value">28 – 21</div>
+        <div class="stat-note">Utah – Iowa State</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Projected spread</div>
+        <div class="stat-value">UTAH −7.5</div>
+        <div class="stat-note">market −7.5</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Projected total</div>
+        <div class="stat-value">48.7</div>
+        <div class="stat-note">market 48.5</div>
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--border)" class="grid-3">
+      <div class="stat">
+        <div class="stat-label">Utah win probability</div>
+        <div class="stat-value">68.7%</div>
+        <div class="stat-note">from the projected margin</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Over probability</div>
+        <div class="stat-value">50.6%</div>
+        <div class="stat-note">at the current total of 48.5</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Unanchored model</div>
+        <div class="stat-value">50.7</div>
+        <div class="stat-note">total, before market anchoring</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclosure" style="margin-top:10px">
+    <b>Why the projection sits close to the market.</b> Atlas weights the
+    market at <b>0.89</b> on totals and <b>1.00</b> on spreads. Those weights
+    were fitted, not chosen: across 5,778 games the model's own contribution to
+    a spread was statistically indistinguishable from zero. A projection that
+    ignored the market would be less accurate, and Atlas publishes the accurate
+    one.
+  </div>
+</section>
+
+<!-- ====================================== 4 · ATLAS DIFFERENCE ========== -->
+<section class="section">
+  <div class="section-head">
+    <h2>Atlas difference</h2>
+    <span class="note">model minus market, before anchoring</span>
+  </div>
+
+  <div class="card card-pad">
+    <table class="rows">
+      <thead><tr><th>Measure</th><th>Atlas model (unanchored)</th><th>Market</th><th>Difference</th></tr></thead>
+      <tbody>
+        <tr><td class="lead">Spread</td><td>UTAH −7.1</td><td>UTAH −7.5</td>
+            <td class="num flat">+0.4</td></tr>
+        <tr><td class="lead">Total</td><td>50.7</td><td>48.5</td>
+            <td class="num move-up">+2.2</td></tr>
+        <tr><td class="lead">Utah win probability</td><td>68.7%</td><td>74.1%</td>
+            <td class="num move-down">−5.4 pts</td></tr>
+      </tbody>
+    </table>
+
+    <div class="disclosure" style="margin-top:12px">
+      <b>A difference is not an edge.</b> Atlas has measured what happens at
+      every size of disagreement. Differences of 10+ points are the band where
+      the model has historically been <b>least</b> reliable, not most. This
+      game sits in the 2–4 band, where the model's claim and its realised
+      accuracy are closest together.
+    </div>
+  </div>
+</section>
+
+<!-- =========================================== 5 · ATLAS GRADE ========== -->
+<section class="section">
+  <div class="section-head">
+    <h2>Atlas grade</h2>
+    <span class="note">information quality — not a recommendation</span>
+  </div>
+
+  <div class="card">
+    <div class="grade-wrap">
+      <div class="grade a">A<small>84</small></div>
+      <div>
+        <h3>High-reliability card</h3>
+        <p class="note" style="margin:3px 0 0">Atlas and the market agree
+          closely, and this disagreement band has been the model's most
+          consistent across seven seasons.</p>
+      </div>
+    </div>
+
+    <div class="card-pad" style="border-top:1px solid var(--border);padding-top:12px">
+      <div class="meter">
+        <div class="meter-row">
+          <span class="meter-label">Calibration</span>
+          <span class="meter-track"><span class="meter-fill" style="width:85%"></span></span>
+          <span class="meter-val">34/40</span>
+        </div>
+        <div class="meter-row">
+          <span class="meter-label">Market agreement</span>
+          <span class="meter-track"><span class="meter-fill" style="width:82%"></span></span>
+          <span class="meter-val">20/25</span>
+        </div>
+        <div class="meter-row">
+          <span class="meter-label">Signal stability</span>
+          <span class="meter-track"><span class="meter-fill" style="width:71%"></span></span>
+          <span class="meter-val">14/20</span>
+        </div>
+        <div class="meter-row">
+          <span class="meter-label">Data completeness</span>
+          <span class="meter-track"><span class="meter-fill" style="width:100%"></span></span>
+          <span class="meter-val">15/15</span>
+        </div>
+      </div>
+      <p class="note" style="margin:10px 0 0">
+        The grade describes how much weight the information deserves. It says
+        nothing about which side of a market anyone should take, and Atlas does
+        not publish that.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- =============================== 6 · WHY ATLAS SEES IT THIS WAY ======= -->
+<section class="section">
+  <div class="section-head">
+    <h2>Why Atlas sees it this way</h2>
+    <span class="note">four drivers · opponent-adjusted, pre-kickoff</span>
+  </div>
+
+  <div class="card card-pad">
+
+    <div class="driver">
+      <div class="driver-head">
+        <span class="driver-name">Offensive efficiency</span>
+        <span class="driver-edge" style="color:var(--data-neg)">Utah +0.12 EPA/play</span>
+      </div>
+      <p class="driver-text">Utah's offence sits in the <b>95th percentile</b>
+        of FBS on opponent-adjusted EPA; Iowa State's is 62nd. The single
+        largest gap on the card.</p>
+      <div class="bar"><span class="bar-fill neg" style="width:34%"></span></div>
+      <div class="bar-scale"><span>Iowa State</span><span>Utah</span></div>
+    </div>
+
+    <div class="driver">
+      <div class="driver-head">
+        <span class="driver-name">Defensive success rate allowed</span>
+        <span class="driver-edge" style="color:var(--data-neg)">Utah −2.4 pts</span>
+      </div>
+      <p class="driver-text">Utah allows a successful play 32.0% of the time
+        (10th percentile — elite); Iowa State 34.4% (19th). Both defences are
+        strong, which is what holds the projected total down.</p>
+      <div class="bar"><span class="bar-fill neg" style="width:16%"></span></div>
+      <div class="bar-scale"><span>Iowa State</span><span>Utah</span></div>
+    </div>
+
+    <div class="driver">
+      <div class="driver-head">
+        <span class="driver-name">Pace and possessions</span>
+        <span class="driver-edge" style="color:var(--data-pos)">+2.2 on the total</span>
+      </div>
+      <p class="driver-text">Combined 101 plays per game sits in the
+        <b>19th percentile</b> — a slow game. Atlas still projects slightly
+        over the market because Utah's efficiency converts the few possessions
+        it gets.</p>
+      <div class="bar"><span class="bar-fill pos" style="width:22%"></span></div>
+      <div class="bar-scale"><span>fewer plays</span><span>more plays</span></div>
+    </div>
+
+    <div class="driver">
+      <div class="driver-head">
+        <span class="driver-name">Explosiveness</span>
+        <span class="driver-edge" style="color:var(--data-neg)">Utah +0.16</span>
+      </div>
+      <p class="driver-text">Utah's explosiveness is 69th percentile against
+        Iowa State's 19th. It is the smallest of the four drivers and the one
+        that moves least between weeks.</p>
+      <div class="bar"><span class="bar-fill neg" style="width:24%"></span></div>
+      <div class="bar-scale"><span>Iowa State</span><span>Utah</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ==================================== 7 · MARKET INTELLIGENCE ========= -->
+<section class="section">
+  <div class="section-head">
+    <h2>Market intelligence</h2>
+    <span class="note">how this number has moved</span>
+  </div>
+
+  <div class="grid-2">
+    <div class="card card-pad">
+      <h3 style="margin-bottom:8px">Total, open to current</h3>
+      <svg viewBox="0 0 320 120" class="plot" role="img"
+           aria-label="Game total moved from 49.5 at open to 48.5 now; Atlas projects 50.7 unanchored.">
+        <line x1="34" y1="20"  x2="310" y2="20"  class="grid"/>
+        <line x1="34" y1="55"  x2="310" y2="55"  class="grid"/>
+        <line x1="34" y1="90"  x2="310" y2="90"  class="grid"/>
+        <text x="28" y="24" class="axis" text-anchor="end">51</text>
+        <text x="28" y="59" class="axis" text-anchor="end">49.5</text>
+        <text x="28" y="94" class="axis" text-anchor="end">48</text>
+        <line x1="34" y1="28" x2="310" y2="28" class="rule"/>
+        <text x="310" y="15" class="label" text-anchor="end" fill="var(--data-pos)">Atlas 50.7</text>
+        <polyline points="60,55 150,55 230,78 290,78" fill="none"
+                  stroke="var(--data-neutral)" stroke-width="2.5"
+                  stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="60" cy="55" r="4.5" fill="var(--data-neutral)"/>
+        <circle cx="290" cy="78" r="5.5" fill="var(--ink-2)"/>
+        <text x="60" y="110" class="axis" text-anchor="middle">open</text>
+        <text x="290" y="110" class="axis" text-anchor="middle">now</text>
+        <text x="290" y="70" class="label" text-anchor="end">48.5</text>
+      </svg>
+      <table class="rows" style="margin-top:12px">
+        <tbody>
+          <tr><td>Opening number</td><td class="lead">49.5</td></tr>
+          <tr><td>Current number</td><td class="lead">48.5</td></tr>
+          <tr><td>Market direction</td><td class="lead">down 1.0</td></tr>
+          <tr><td>Atlas direction</td><td class="lead" style="color:var(--data-pos)">up</td></tr>
+        </tbody>
+      </table>
+      <p class="note" style="margin:8px 0 0">Atlas and the market have moved
+        opposite ways on this total. That is information, not a verdict.</p>
+    </div>
+
+    <div class="card card-pad">
+      <h3 style="margin-bottom:6px">Historically similar situations</h3>
+      <p class="note" style="margin:0 0 10px">Conference games, both defences
+        top-quartile, combined plays in the bottom third, Atlas 2–4 points over
+        the market. <b>n = 214</b> since 2018.</p>
+      <table class="rows">
+        <thead><tr><th>Outcome</th><th>Rate</th><th>Baseline</th></tr></thead>
+        <tbody>
+          <tr><td>Finished over the closing total</td><td class="lead">51.9%</td><td class="flat">49.5%</td></tr>
+          <tr><td>Total moved further down by close</td><td class="lead">44.9%</td><td class="flat">47.2%</td></tr>
+          <tr><td>Result inside ±7 of projection</td><td class="lead">38.3%</td><td class="flat">36.1%</td></tr>
+        </tbody>
+      </table>
+      <p class="note" style="margin:8px 0 0">None of these differences is
+        statistically significant at this sample size. They are shown with
+        their baselines so the reader can see that.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================== 8 · RELIABILITY ============= -->
+<section class="section">
+  <div class="section-head">
+    <h2>Reliability</h2>
+    <span class="note">how Atlas has performed on cards like this one</span>
+  </div>
+
+  <div class="card card-pad">
+    <div class="grid-2" style="gap:18px">
+      <div>
+        <h3 style="margin-bottom:8px">Calibration by disagreement band</h3>
+        <svg viewBox="0 0 320 150" class="plot" role="img"
+             aria-label="Claimed versus realised accuracy by disagreement band. The gap widens as disagreement grows; this card sits in the 2 to 4 band.">
+          <line x1="30" y1="18"  x2="312" y2="18"  class="grid"/>
+          <line x1="30" y1="56"  x2="312" y2="56"  class="grid"/>
+          <line x1="30" y1="94"  x2="312" y2="94"  class="grid"/>
+          <line x1="30" y1="118" x2="312" y2="118" class="grid"/>
+          <text x="25" y="22"  class="axis" text-anchor="end">80%</text>
+          <text x="25" y="60"  class="axis" text-anchor="end">65%</text>
+          <text x="25" y="98"  class="axis" text-anchor="end">50%</text>
+          <!-- claimed -->
+          <polyline points="48,93 90,87 132,76 174,64 216,53 258,42 300,25" fill="none"
+                    stroke="var(--data-neg)" stroke-width="2" stroke-linejoin="round"/>
+          <!-- realised -->
+          <polyline points="48,92 90,89 132,89 174,87 216,87 258,84 300,95" fill="none"
+                    stroke="var(--data-pos)" stroke-width="2" stroke-linejoin="round"/>
+          <circle cx="132" cy="76" r="5" fill="var(--data-neg)" stroke="var(--surface)" stroke-width="2"/>
+          <circle cx="132" cy="89" r="5" fill="var(--data-pos)" stroke="var(--surface)" stroke-width="2"/>
+          <text x="48"  y="134" class="axis" text-anchor="middle">0–1</text>
+          <text x="132" y="134" class="label" text-anchor="middle">this card</text>
+          <text x="216" y="134" class="axis" text-anchor="middle">6–8</text>
+          <text x="300" y="134" class="axis" text-anchor="middle">10+</text>
+          <text x="300" y="20"  class="label" text-anchor="end" fill="var(--data-neg)">claimed</text>
+          <text x="300" y="108" class="label" text-anchor="end" fill="var(--data-pos)">realised</text>
+        </svg>
+        <p class="note" style="margin:6px 0 0">Two series, labelled directly.
+          The widening gap is the reason Atlas grades large disagreements
+          <em>down</em>.</p>
+      </div>
+
+      <div>
+        <h3 style="margin-bottom:8px">This band, seven seasons</h3>
+        <table class="rows">
+          <thead><tr><th>Measure</th><th>This band</th><th>All cards</th></tr></thead>
+          <tbody>
+            <tr><td>Realised accuracy</td><td class="lead">51.9%</td><td class="flat">50.9%</td></tr>
+            <tr><td>Claimed accuracy</td><td class="lead">57.0%</td><td class="flat">60.1%</td></tr>
+            <tr><td>Calibration gap</td><td class="lead">−5.1 pts</td><td class="flat">−9.2 pts</td></tr>
+            <tr><td>Seasons above 50%</td><td class="lead">5 of 7</td><td class="flat">—</td></tr>
+            <tr><td>Season-to-season SD</td><td class="lead">5.7 pts</td><td class="flat">—</td></tr>
+            <tr><td>Games measured</td><td class="lead">1,262</td><td class="flat">5,071</td></tr>
+          </tbody>
+        </table>
+        <div class="disclosure" style="margin-top:12px">
+          <b>Read the gap, not the claim.</b> Atlas's raw confidence numbers
+          run high — a claimed 57% has historically delivered 52%. The grade
+          and the anchored projection both already correct for this. The claim
+          is shown so the correction is visible rather than hidden.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="disclosure" style="margin-top:22px">
+  <b>What this card is.</b> Research, analytics and market context. Atlas does
+  not publish selections, does not size anything, and does not project returns.
+  Figures are computed out of sample from a point-in-time database: every
+  number attached to this game uses only information that existed before
+  kickoff. Methodology: <b>/research/methodology</b>.
+</div>
+
+<footer class="wrap" style="padding:0">
+  Atlas Sports Intelligence · Research. Analytics. Context.<br>
+  Model version <span class="num">64a8b2aa5365</span> · card generated
+  22 Sep 2026 17:45 UTC · <a href="#" style="color:var(--ink-2)">how grades work</a>
+</footer>
+
+</main>
+</body>
+</html>

@@ -37,6 +37,12 @@ no dashboard. It produces a warehouse, a measurement, and a recommendation.
 | Data quality (Track 1) | [`reports/atlas_data_quality.md`](reports/atlas_data_quality.md) |
 | Drift monitoring (Tracks 3, 5, 6) | [`reports/atlas_drift_monitoring.md`](reports/atlas_drift_monitoring.md) |
 | Season dashboard (read-only) | [`reports/dashboard.html`](reports/dashboard.html) |
+| **Product vision** | [`docs/PRODUCT_VISION.md`](docs/PRODUCT_VISION.md) |
+| Brand guide | [`docs/BRAND_GUIDE.md`](docs/BRAND_GUIDE.md) |
+| UI system | [`docs/UI_SYSTEM.md`](docs/UI_SYSTEM.md) |
+| Matchup card specification | [`docs/ATLAS_CARD_SPEC.md`](docs/ATLAS_CARD_SPEC.md) |
+| Free / premium plan | [`docs/PREMIUM_PLAN.md`](docs/PREMIUM_PLAN.md) |
+| Wireframes and design system | [`design/index.html`](design/index.html) · renders in `design/screens/` |
 | Phase 4 opening-line feasibility | [`reports/opening_line_feasibility.md`](reports/opening_line_feasibility.md) |
 | Phase 4 CLV economics | [`reports/clv_economics.md`](reports/clv_economics.md) |
 | Supporting tables (CSV/JSON) | `reports/tables/` |
@@ -111,6 +117,40 @@ data.
 Worth borrowing, in order: the publish gate's **edge ceiling**, **market
 anchoring**, **CLV as the grading metric**, **constitutional staking caps**,
 and **per-market evidence gating**. None of them is a football insight.
+
+### Atlas Sports Intelligence — the product
+
+Research, analytics and market context for one game at a time. **Not a picks
+product**, and built so it cannot quietly become one.
+
+> Research. Analytics. Context.
+
+The positioning comes straight out of the research. Everyone in this category
+shouts loudest exactly where their model is weakest, because a big
+disagreement makes a compelling post. Atlas has measured the opposite and acts
+on it:
+
+* The published projection is **market-anchored** — weight 1.00 on spreads,
+  0.89 on totals, both fitted — because that is the accurate number. The
+  unanchored model sits beside it so the correction is visible.
+* Every card carries an **A–F grade for information quality**, not a
+  recommendation. A card where Atlas sits 11 points from the market grades
+  **F**, because that band claimed 77% accuracy and delivered 49.5%.
+* The **reliability record is free, forever**. Paywalling the caveat while
+  selling the claim is what a picks service does.
+
+Phase 1 is NFL and NCAAF only. Atlas has no NFL model yet, so the NFL section
+ships in stages with its stage stated on the page rather than shipping an
+untested model behind a grade framework whose credibility comes from having
+been tested.
+
+The language rules are enforced, not trusted:
+`tests/test_product_language.py` scans every product surface for the
+vocabulary the brand guide forbids.
+
+Specifications in `docs/`, wireframes in
+[`design/`](design/index.html) — populated with real data for games on
+26 September 2026, rendered at mobile and desktop in `design/screens/`.
 
 ### Operations: making the tracker hard to corrupt
 

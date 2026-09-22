@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atlas — Design Index</title>
+<link rel="stylesheet" href="atlas.css">
+<style>
+  .swatch { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .sw { width: 92px; }
+  .sw i { display: block; height: 44px; border-radius: 9px;
+          border: 1px solid var(--border); }
+  .sw b { display: block; font-size: 11px; font-weight: 620; margin-top: 5px; }
+  .sw span { font-size: 10.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .wire a { display: block; text-decoration: none; color: inherit; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="logo">Atlas <span>Design Index</span></div>
+    <div class="nav-links"><a href="#">Wireframes</a><a href="#">Tokens</a></div>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <header style="margin:26px 0 0">
+    <h1>Design index</h1>
+    <p class="sub">Reference implementation of the Atlas product specification.
+      Every wireframe below is populated with <b>real data</b> for games on
+      26 September 2026 — no placeholder numbers. These are designs for review,
+      not a built product.</p>
+  </header>
+
+  <section class="section">
+    <div class="section-head"><h2>Wireframes</h2></div>
+    <div class="card wire">
+      <a class="game-row" href="homepage.html">
+        <div>
+          <div class="game-teams">Homepage · Today's games</div>
+          <div class="game-meta">Board, search, filters, NFL staging notice · mobile + desktop</div>
+        </div>
+        <div class="game-right"><span class="game-line">homepage.html</span></div>
+      </a>
+      <a class="game-row" href="matchup.html">
+        <div>
+          <div class="game-teams">Matchup card · grade A</div>
+          <div class="game-meta">Utah at Iowa State · all eight sections · the well-calibrated case</div>
+        </div>
+        <div class="game-right"><span class="grade-pill" style="color:var(--good)">A</span></div>
+      </a>
+      <a class="game-row" href="matchup-low-grade.html">
+        <div>
+          <div class="game-teams">Matchup card · grade F</div>
+          <div class="game-meta">Central Michigan at Miami · the case where Atlas marks itself down</div>
+        </div>
+        <div class="game-right"><span class="grade-pill" style="color:var(--critical)">F</span></div>
+      </a>
+      <a class="game-row" href="team.html">
+        <div>
+          <div class="game-teams">Team page</div>
+          <div class="game-meta">Utah · season profile, recent form, schedule</div>
+        </div>
+        <div class="game-right"><span class="game-line">team.html</span></div>
+      </a>
+      <a class="game-row" href="social-card.html">
+        <div>
+          <div class="game-teams">Social card templates</div>
+          <div class="game-meta">1200 × 675 and 1080 × 1080, plus approved copy shapes</div>
+        </div>
+        <div class="game-right"><span class="game-line">social-card.html</span></div>
+      </a>
+    </div>
+    <p class="note" style="margin-top:9px">Every page is responsive from 390px.
+      Resize the window rather than looking for separate mobile files.</p>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Surfaces and ink</h2></div>
+    <div class="card card-pad">
+      <div class="swatch">
+        <div class="sw"><i style="background:#fbfaf8"></i><b>bg</b><span>#fbfaf8</span></div>
+        <div class="sw"><i style="background:#ffffff"></i><b>surface</b><span>#ffffff</span></div>
+        <div class="sw"><i style="background:#f4f3f0"></i><b>sunk</b><span>#f4f3f0</span></div>
+        <div class="sw"><i style="background:#e6e4df"></i><b>border</b><span>#e6e4df</span></div>
+        <div class="sw"><i style="background:#14181f"></i><b>ink</b><span>#14181f</span></div>
+        <div class="sw"><i style="background:#3d4652"></i><b>ink-2</b><span>#3d4652</span></div>
+        <div class="sw"><i style="background:#6b7480"></i><b>ink-3</b><span>#6b7480</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Data and status</h2>
+      <span class="note">validated · worst adjacent CVD ΔE 21.6</span>
+    </div>
+    <div class="card card-pad">
+      <div class="swatch">
+        <div class="sw"><i style="background:#2a78d6"></i><b>data-pos</b><span>#2a78d6</span></div>
+        <div class="sw"><i style="background:#e34948"></i><b>data-neg</b><span>#e34948</span></div>
+        <div class="sw"><i style="background:#9aa1aa"></i><b>market</b><span>#9aa1aa</span></div>
+        <div class="sw"><i style="background:#0ca30c"></i><b>good</b><span>#0ca30c</span></div>
+        <div class="sw"><i style="background:#fab219"></i><b>warning</b><span>#fab219</span></div>
+        <div class="sw"><i style="background:#ec835a"></i><b>serious</b><span>#ec835a</span></div>
+        <div class="sw"><i style="background:#d03b3b"></i><b>critical</b><span>#d03b3b</span></div>
+      </div>
+      <p class="note" style="margin:12px 0 0">The market is drawn in the
+        neutral because it is a reference, not a competing series — which is
+        why no chart in this product needs a legend box.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Grades</h2></div>
+    <div class="card card-pad">
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <div class="grade a" style="width:56px;height:56px;font-size:24px">A+</div>
+        <div class="grade a" style="width:56px;height:56px;font-size:24px">A</div>
+        <div class="grade b" style="width:56px;height:56px;font-size:24px">B</div>
+        <div class="grade c" style="width:56px;height:56px;font-size:24px">C</div>
+        <div class="grade d" style="width:56px;height:56px;font-size:24px">D</div>
+        <div class="grade f" style="width:56px;height:56px;font-size:24px">F</div>
+      </div>
+      <p class="note" style="margin:12px 0 0">B uses the data blue rather than
+        a status colour: B means "fine", and a status green for "fine" pushes A
+        toward meaninglessness.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Specification</h2></div>
+    <div class="card card-pad">
+      <table class="rows">
+        <tbody>
+          <tr><td class="lead">Product vision</td><td>positioning, scope, the NFL staging gate</td></tr>
+          <tr><td class="lead">Brand guide</td><td>voice, language rules and their enforcement</td></tr>
+          <tr><td class="lead">UI system</td><td>tokens, type, layout, charts, anti-patterns</td></tr>
+          <tr><td class="lead">Card spec</td><td>all eight sections, the grade rubric, empty states</td></tr>
+          <tr><td class="lead">Premium plan</td><td>what is free, what is paid, and why</td></tr>
+        </tbody>
+      </table>
+      <p class="note" style="margin:12px 0 0">In <code>docs/</code>.</p>
+    </div>
+  </section>
+
+  <footer>
+    Atlas Sports Intelligence · Research. Analytics. Context.<br>
+    Designs for review · nothing here is implemented
+  </footer>
+
+</main>
+</body>
+</html>

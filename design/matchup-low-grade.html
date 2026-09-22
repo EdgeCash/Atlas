@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Central Michigan at Miami — Atlas Matchup Card</title>
+<link rel="stylesheet" href="atlas.css">
+<style>
+  /* Team accent is chrome only: it tints the header rule and the logo chips.
+     It never encodes a value. */
+  .game-head { --team-home: #F47321; --team-away: #6A0032; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="logo">Atlas <span>Sports Intelligence</span></div>
+    <div class="nav-links">
+      <a href="homepage.html">Today</a>
+      <a href="#" aria-current="page">NCAAF</a>
+      <a href="#">NFL</a>
+      <a href="team.html">Teams</a>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ============================================ 1 · GAME HEADER ========= -->
+<div class="card game-head" style="margin-top:16px">
+  <div class="teams">
+    <div class="team away">
+      <span class="chip"></span>
+      <div class="team-name">Central Michigan</div>
+      <div class="team-meta">Mid-American · 1,244 mi travel</div>
+    </div>
+    <div class="at">at</div>
+    <div class="team home">
+      <span class="chip"></span>
+      <div class="team-name">Miami</div>
+      <div class="team-meta">ACC · 8 days rest</div>
+    </div>
+  </div>
+  <div class="kick">
+    <span><b>Sat 26 Sep</b> · 6:30 PM ET</span>
+    <span>Hard Rock Stadium, Miami Gardens FL</span>
+    <span>Non-conference</span>
+    <span>84°F, 11 mph SE, 30% precip</span>
+    <span><b>ACC Network</b></span>
+  </div>
+</div>
+
+<div class="card card-pad" style="margin-top:12px;border-color:var(--critical)">
+  <div style="display:flex;gap:11px;align-items:flex-start">
+    <span class="badge crit">✕ Grade F</span>
+    <p class="note" style="margin:0;color:var(--ink-2)">
+      <b>Atlas is telling you to discount Atlas on this game.</b> The model sits
+      11.2 points under the market total. Across seven seasons, cards in that
+      band claimed 77% accuracy and delivered 49.5% — the worst calibration
+      Atlas measures. The projection below is shown with that correction
+      already applied.
+    </p>
+  </div>
+</div>
+
+<!-- ======================================= 2 · MARKET SNAPSHOT ========== -->
+<section class="section">
+  <div class="section-head">
+    <h2>Market snapshot</h2>
+    <span class="note">DraftKings · updated 17:45 UTC</span>
+  </div>
+
+  <div class="grid-2">
+    <div class="card card-pad">
+      <table class="rows">
+        <thead><tr><th>Spread</th><th>Open</th><th>Current</th><th>Move</th></tr></thead>
+        <tbody>
+          <tr><td class="lead">Miami</td><td>−42.5</td><td class="lead">−41.5</td>
+              <td class="move-down num">+1.0</td></tr>
+          <tr><td class="lead">Central Michigan</td><td>+42.5</td><td class="lead">+41.5</td>
+              <td class="move-up num">−1.0</td></tr>
+          <tr><td>Price</td><td>−110</td><td>−105</td><td class="flat">—</td></tr>
+        </tbody>
+      </table>
+      <p class="note" style="margin:10px 0 0">A one-point drift toward Central
+        Michigan. Nothing unusual for a spread this size.</p>
+    </div>
+
+    <div class="card card-pad">
+      <table class="rows">
+        <thead><tr><th>Total</th><th>Open</th><th>Current</th><th>Move</th></tr></thead>
+        <tbody>
+          <tr><td class="lead">Game total</td><td>54.5</td><td class="lead">53.5</td>
+              <td class="move-down num">−1.0</td></tr>
+          <tr><td>Price (over)</td><td>−110</td><td>−115</td><td class="flat">—</td></tr>
+        </tbody>
+      </table>
+      <div class="ml">
+        <span class="ml-label">Moneyline</span>
+        <span class="ml-vals" style="color:var(--ink-3);font-weight:520">not posted</span>
+        <span class="ml-sub">Books do not price a moneyline at this spread.
+          Atlas shows the field empty rather than deriving one.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================== 3 · ATLAS PROJECTION =========== -->
+<section class="section">
+  <div class="section-head">
+    <h2>Atlas projection</h2>
+    <span class="note">market-anchored · out-of-sample model</span>
+  </div>
+
+  <div class="card">
+    <div class="grid-3">
+      <div class="stat">
+        <div class="stat-label">Projected score</div>
+        <div class="stat-value">47 – 5</div>
+        <div class="stat-note">Miami – Central Michigan</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Projected spread</div>
+        <div class="stat-value">MIA −41.5</div>
+        <div class="stat-note">market −41.5</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Projected total</div>
+        <div class="stat-value">52.3</div>
+        <div class="stat-note">market 53.5</div>
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--border)" class="grid-3">
+      <div class="stat">
+        <div class="stat-label">Miami win probability</div>
+        <div class="stat-value">99.6%</div>
+        <div class="stat-note">from the projected margin</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Under probability</div>
+        <div class="stat-value">53.1%</div>
+        <div class="stat-note">at the current total of 53.5</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Unanchored model</div>
+        <div class="stat-value">42.3</div>
+        <div class="stat-note">total, before market anchoring</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclosure" style="margin-top:10px">
+    <b>The gap between 42.3 and 52.3 is the anchoring at work.</b> The raw
+    model reads this as a 42-point game. Weighted against the market at 0.89 —
+    the weight the data asked for — the published projection is 52.3. Atlas
+    shows both so the correction is visible rather than hidden.
+  </div>
+</section>
+
+<!-- ====================================== 4 · ATLAS DIFFERENCE ========== -->
+<section class="section">
+  <div class="section-head">
+    <h2>Atlas difference</h2>
+    <span class="note">model minus market, before anchoring</span>
+  </div>
+
+  <div class="card card-pad">
+    <table class="rows">
+      <thead><tr><th>Measure</th><th>Atlas model (unanchored)</th><th>Market</th><th>Difference</th></tr></thead>
+      <tbody>
+        <tr><td class="lead">Spread</td><td>MIA −31.9</td><td>MIA −41.5</td>
+            <td class="num move-down">−9.6</td></tr>
+        <tr><td class="lead">Total</td><td>42.3</td><td>53.5</td>
+            <td class="num move-down">−11.2</td></tr>
+        <tr><td class="lead">Miami win probability</td><td>98.0%</td><td>not posted</td>
+            <td class="flat">—</td></tr>
+      </tbody>
+    </table>
+
+    <div class="disclosure" style="margin-top:12px">
+      <b>This is the largest difference on today's board, and it is the reason
+      the card grades F.</b> Atlas measured every band of disagreement across
+      5,071 games. The 10+ band is where the model's claims and its results
+      diverge most — a claimed 77% that delivered 49.5%. A large difference is
+      evidence the model is struggling with a game, not evidence of an
+      opportunity.
+    </div>
+  </div>
+</section>
+
+<!-- =========================================== 5 · ATLAS GRADE ========== -->
+<section class="section">
+  <div class="section-head">
+    <h2>Atlas grade</h2>
+    <span class="note">information quality — not a recommendation</span>
+  </div>
+
+  <div class="card">
+    <div class="grade-wrap">
+      <div class="grade f">F<small>33</small></div>
+      <div>
+        <h3>Low-reliability card</h3>
+        <p class="note" style="margin:3px 0 0">Read the drivers and the market
+          context; treat the projection as weak. Atlas publishes this card with
+          the same detail as any other and marks it down.</p>
+      </div>
+    </div>
+
+    <div class="card-pad" style="border-top:1px solid var(--border);padding-top:12px">
+      <div class="meter">
+        <div class="meter-row">
+          <span class="meter-label">Calibration</span>
+          <span class="meter-track"><span class="meter-fill" style="width:21%;background:var(--critical)"></span></span>
+          <span class="meter-val">8/40</span>
+        </div>
+        <div class="meter-row">
+          <span class="meter-label">Market agreement</span>
+          <span class="meter-track"><span class="meter-fill" style="width:7%;background:var(--critical)"></span></span>
+          <span class="meter-val">2/25</span>
+        </div>
+        <div class="meter-row">
+          <span class="meter-label">Signal stability</span>
+          <span class="meter-track"><span class="meter-fill" style="width:40%;background:var(--serious)"></span></span>
+          <span class="meter-val">8/20</span>
+        </div>
+        <div class="meter-row">
+          <span class="meter-label">Data completeness</span>
+          <span class="meter-track"><span class="meter-fill" style="width:100%"></span></span>
+          <span class="meter-val">15/15</span>
+        </div>
+      </div>
+      <p class="note" style="margin:10px 0 0">
+        Data completeness is full — every input is present. The model simply
+        does not handle this kind of game well, and the grade says so.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- =============================== 6 · WHY ATLAS SEES IT THIS WAY ======= -->
+<section class="section">
+  <div class="section-head">
+    <h2>Why Atlas sees it this way</h2>
+    <span class="note">four drivers · opponent-adjusted, pre-kickoff</span>
+  </div>
+
+  <div class="card card-pad">
+
+    <div class="driver">
+      <div class="driver-head">
+        <span class="driver-name">Offensive efficiency</span>
+        <span class="driver-edge" style="color:var(--data-pos)">Miami +0.24 EPA/play</span>
+      </div>
+      <p class="driver-text">Miami's offence is <b>90th percentile</b>; Central
+        Michigan's is <b>8th</b>. One side of this game can score and the other
+        largely cannot, which is what collapses the projected total.</p>
+      <div class="bar"><span class="bar-fill pos" style="width:41%"></span></div>
+      <div class="bar-scale"><span>Central Michigan</span><span>Miami</span></div>
+    </div>
+
+    <div class="driver">
+      <div class="driver-head">
+        <span class="driver-name">Success rate</span>
+        <span class="driver-edge" style="color:var(--data-pos)">Miami +18.7 pts</span>
+      </div>
+      <p class="driver-text">Miami succeeds on 57.8% of plays (<b>99th
+        percentile</b>) against Central Michigan's 39.1% (5th). The widest
+        single-metric gap Atlas has on this week's board.</p>
+      <div class="bar"><span class="bar-fill pos" style="width:47%"></span></div>
+      <div class="bar-scale"><span>Central Michigan</span><span>Miami</span></div>
+    </div>
+
+    <div class="driver">
+      <div class="driver-head">
+        <span class="driver-name">Pace and possessions</span>
+        <span class="driver-edge" style="color:var(--data-neg)">−11.2 on the total</span>
+      </div>
+      <p class="driver-text">Combined 99.6 plays per game sits in the
+        <b>15th percentile</b>. Few possessions, and one offence that rarely
+        converts them — the single largest contributor to the model's
+        disagreement with the market.</p>
+      <div class="bar"><span class="bar-fill neg" style="width:35%"></span></div>
+      <div class="bar-scale"><span>fewer plays</span><span>more plays</span></div>
+    </div>
+
+    <div class="driver">
+      <div class="driver-head">
+        <span class="driver-name">Defensive success rate allowed</span>
+        <span class="driver-edge" style="color:var(--data-pos)">Miami −10.1 pts</span>
+      </div>
+      <p class="driver-text">Miami allows a successful play 31.1% of the time
+        (5th percentile — elite); Central Michigan 41.1% (75th). The gap runs
+        the same direction as everything else on this card.</p>
+      <div class="bar"><span class="bar-fill pos" style="width:29%"></span></div>
+      <div class="bar-scale"><span>Central Michigan</span><span>Miami</span></div>
+    </div>
+
+    <div class="disclosure" style="margin-top:12px">
+      <b>Why the drivers can be right and the projection still weak.</b> Every
+      driver above is measured and real. Turning four true statements into one
+      number is where the model struggles on mismatches this large — there are
+      few historical games like this to learn from, and the ones that exist
+      behave inconsistently.
+    </div>
+  </div>
+</section>
+
+<!-- ==================================== 7 · MARKET INTELLIGENCE ========= -->
+<section class="section">
+  <div class="section-head">
+    <h2>Market intelligence</h2>
+    <span class="note">how this number has moved</span>
+  </div>
+
+  <div class="grid-2">
+    <div class="card card-pad">
+      <h3 style="margin-bottom:8px">Total, open to current</h3>
+      <svg viewBox="0 0 320 120" class="plot" role="img"
+           aria-label="Game total moved from 54.5 at open to 53.5 now. The unanchored Atlas model sits far below at 42.3, off the bottom of this scale.">
+        <line x1="34" y1="22" x2="310" y2="22" class="grid"/>
+        <line x1="34" y1="52" x2="310" y2="52" class="grid"/>
+        <line x1="34" y1="82" x2="310" y2="82" class="grid"/>
+        <text x="28" y="26" class="axis" text-anchor="end">55</text>
+        <text x="28" y="56" class="axis" text-anchor="end">54</text>
+        <text x="28" y="86" class="axis" text-anchor="end">53</text>
+        <polyline points="60,37 160,37 240,67 290,67" fill="none"
+                  stroke="var(--data-neutral)" stroke-width="2.5"
+                  stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="60" cy="37" r="4.5" fill="var(--data-neutral)"/>
+        <circle cx="290" cy="67" r="5.5" fill="var(--ink-2)"/>
+        <text x="60" y="116" class="axis" text-anchor="middle">open 54.5</text>
+        <text x="290" y="116" class="axis" text-anchor="middle">now 53.5</text>
+        <line x1="34" y1="98" x2="310" y2="98" stroke="var(--critical)"
+              stroke-width="1.5" stroke-dasharray="4 4"/>
+        <text x="310" y="94" class="label" text-anchor="end"
+              fill="var(--critical)">Atlas 42.3 — off this scale</text>
+      </svg>
+      <table class="rows" style="margin-top:12px">
+        <tbody>
+          <tr><td>Opening number</td><td class="lead">54.5</td></tr>
+          <tr><td>Current number</td><td class="lead">53.5</td></tr>
+          <tr><td>Market direction</td><td class="lead">down 1.0</td></tr>
+          <tr><td>Atlas direction</td><td class="lead" style="color:var(--data-neg)">down</td></tr>
+        </tbody>
+      </table>
+      <p class="note" style="margin:8px 0 0">Atlas and the market agree on
+        direction and disagree enormously on magnitude.</p>
+    </div>
+
+    <div class="card card-pad">
+      <h3 style="margin-bottom:6px">Historically similar situations</h3>
+      <p class="note" style="margin:0 0 10px">Non-conference games, spread
+        wider than 35, Atlas 10+ points under the market total.
+        <b>n = 63</b> since 2018.</p>
+      <table class="rows">
+        <thead><tr><th>Outcome</th><th>Rate</th><th>Baseline</th></tr></thead>
+        <tbody>
+          <tr><td>Finished under the closing total</td><td class="lead">50.8%</td><td class="flat">50.5%</td></tr>
+          <tr><td>Favourite covered</td><td class="lead">47.6%</td><td class="flat">49.7%</td></tr>
+          <tr><td>Result inside ±10 of projection</td><td class="lead">22.2%</td><td class="flat">34.8%</td></tr>
+        </tbody>
+      </table>
+      <p class="note" style="margin:8px 0 0">Sixty-three games is a small
+        sample and none of these rates is distinguishable from its baseline.
+        The third row is the honest one: on games like this the projection
+        lands close far less often than usual.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================== 8 · RELIABILITY ============= -->
+<section class="section">
+  <div class="section-head">
+    <h2>Reliability</h2>
+    <span class="note">how Atlas has performed on cards like this one</span>
+  </div>
+
+  <div class="card card-pad">
+    <div class="grid-2" style="gap:18px">
+      <div>
+        <h3 style="margin-bottom:8px">Calibration by disagreement band</h3>
+        <svg viewBox="0 0 320 150" class="plot" role="img"
+             aria-label="Claimed versus realised accuracy by disagreement band. This card sits in the widest band, where the gap is largest.">
+          <line x1="30" y1="18"  x2="312" y2="18"  class="grid"/>
+          <line x1="30" y1="56"  x2="312" y2="56"  class="grid"/>
+          <line x1="30" y1="94"  x2="312" y2="94"  class="grid"/>
+          <line x1="30" y1="118" x2="312" y2="118" class="grid"/>
+          <text x="25" y="22" class="axis" text-anchor="end">80%</text>
+          <text x="25" y="60" class="axis" text-anchor="end">65%</text>
+          <text x="25" y="98" class="axis" text-anchor="end">50%</text>
+          <polyline points="48,93 90,87 132,76 174,64 216,53 258,42 300,25" fill="none"
+                    stroke="var(--data-neg)" stroke-width="2" stroke-linejoin="round"/>
+          <polyline points="48,92 90,89 132,89 174,87 216,87 258,84 300,95" fill="none"
+                    stroke="var(--data-pos)" stroke-width="2" stroke-linejoin="round"/>
+          <circle cx="300" cy="25" r="5" fill="var(--data-neg)" stroke="var(--surface)" stroke-width="2"/>
+          <circle cx="300" cy="95" r="5" fill="var(--data-pos)" stroke="var(--surface)" stroke-width="2"/>
+          <line x1="300" y1="30" x2="300" y2="90" stroke="var(--critical)" stroke-width="1.5"/>
+          <text x="48"  y="134" class="axis" text-anchor="middle">0–1</text>
+          <text x="174" y="134" class="axis" text-anchor="middle">4–6</text>
+          <text x="296" y="134" class="label" text-anchor="end"
+                fill="var(--critical)">this card</text>
+          <text x="284" y="20"  class="label" text-anchor="end" fill="var(--data-neg)">claimed</text>
+          <text x="284" y="108" class="label" text-anchor="end" fill="var(--data-pos)">realised</text>
+        </svg>
+        <p class="note" style="margin:6px 0 0">The red bar is this card's band.
+          It is the widest gap Atlas measures, and it is why the grade is F.</p>
+      </div>
+
+      <div>
+        <h3 style="margin-bottom:8px">This band, seven seasons</h3>
+        <table class="rows">
+          <thead><tr><th>Measure</th><th>This band</th><th>All cards</th></tr></thead>
+          <tbody>
+            <tr><td>Realised accuracy</td><td class="lead">49.5%</td><td class="flat">50.9%</td></tr>
+            <tr><td>Claimed accuracy</td><td class="lead">77.3%</td><td class="flat">60.1%</td></tr>
+            <tr><td>Calibration gap</td><td class="lead" style="color:var(--critical)">−27.8 pts</td><td class="flat">−9.2 pts</td></tr>
+            <tr><td>Seasons above 50%</td><td class="lead">2 of 5</td><td class="flat">—</td></tr>
+            <tr><td>Season-to-season SD</td><td class="lead">5.7 pts</td><td class="flat">—</td></tr>
+            <tr><td>Games measured</td><td class="lead">402</td><td class="flat">5,071</td></tr>
+          </tbody>
+        </table>
+        <div class="disclosure" style="margin-top:12px">
+          <b>Atlas publishes this anyway.</b> Hiding weak cards would make the
+          reliability record meaningless — the grade only means something if
+          every card carries one. Two seasons out of five above even is the
+          number, and it is on the page.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="disclosure" style="margin-top:22px">
+  <b>What this card is.</b> Research, analytics and market context. Atlas does
+  not publish selections, does not size anything, and does not project returns.
+  Figures are computed out of sample from a point-in-time database: every
+  number attached to this game uses only information that existed before
+  kickoff. Methodology: <b>/research/methodology</b>.
+</div>
+
+<footer class="wrap" style="padding:0">
+  Atlas Sports Intelligence · Research. Analytics. Context.<br>
+  Model version <span class="num">64a8b2aa5365</span> · card generated
+  22 Sep 2026 17:45 UTC · <a href="#" style="color:var(--ink-2)">how grades work</a>
+</footer>
+
+</main>
+</body>
+</html>
