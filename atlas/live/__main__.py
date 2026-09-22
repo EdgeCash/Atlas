@@ -7,7 +7,8 @@ Two jobs, deliberately separated by cost:
 ``poll``     captures quotes, forms signals, grades what has kicked off and
              rewrites the report. Cheap; run it often.
 
-``run`` is poll plus report, which is what a scheduled job calls.
+``run`` is poll, checks and every report, which is what a scheduled job calls.
+``check`` runs the operations checks alone and needs no network.
 """
 
 from __future__ import annotations
@@ -17,6 +18,9 @@ from datetime import UTC, date, datetime, timedelta
 
 import pandas as pd
 
+from atlas.live import audit, ops_report, quality, reproduce
+from atlas.live import dashboard as dashboarding
+from atlas.live import drift as drifting
 from atlas.live import grade as grading
 from atlas.live import report as reporting
 from atlas.live import signals as signalling
@@ -69,6 +73,11 @@ def load_numbers(store: Store) -> pd.DataFrame:
     if not numbers.empty:
         numbers["prediction"] = pd.to_numeric(numbers["prediction"], errors="coerce")
         numbers["threshold"] = pd.to_numeric(numbers["threshold"], errors="coerce")
+        # The table keeps every model version so replays can find the number a
+        # past signal was formed from; a live poll wants only the newest.
+        numbers = numbers.sort_values("refreshed_at").drop_duplicates(
+            ["game_id", "market"], keep="last"
+        )
         return numbers.dropna(subset=["prediction"])
     LOG.warning("no numbers table - fitting models in process")
     return signalling.atlas_numbers(signalling.build_models())
@@ -76,28 +85,47 @@ def load_numbers(store: Store) -> pd.DataFrame:
 
 def poll(horizon: int = DEFAULT_HORIZON_DAYS, *, provider: str = "espn",
          sign: bool = True) -> dict:
+    """One capture pass, logged as a single auditable run.
+
+    Every step either completes or the run is recorded as failed and the
+    record is left as it was: a half-written record is worse than a missing
+    hour.
+    """
     store = Store.open()
-    now = datetime.now(UTC).replace(microsecond=0).isoformat()
-    quotes = get_provider(provider).fetch(_days(horizon))
-    if quotes.empty:
-        LOG.warning("no quotes returned")
-        return {"quotes": 0, "signals": 0, "graded": 0}
+    run = audit.Run(command="poll", provider=provider)
+    try:
+        now = datetime.now(UTC).replace(microsecond=0).isoformat()
+        quotes = get_provider(provider).fetch(_days(horizon))
+        run.quotes = len(quotes)
+        if quotes.empty:
+            run.finish(store, "empty", "provider returned no quotes")
+            LOG.warning("no quotes returned")
+            return {"quotes": 0, "signals": 0, "graded": 0, "run_id": run.run_id}
 
-    store.upsert("games", _games_frame(quotes, now))
-    # Append-on-change: a quote that has not moved does not earn a new row,
-    # which keeps the committed history readable and its diffs meaningful.
-    added = store.upsert("snapshots", _snapshot_frame(quotes, now))
+        store.upsert("games", _games_frame(quotes, now))
+        # Append-on-change: a quote that has not moved does not earn a new row,
+        # which keeps the committed history readable and its diffs meaningful.
+        run.snapshots_added = store.upsert("snapshots", _snapshot_frame(quotes, now))
 
-    new_signals = 0
-    if sign:
-        numbers = load_numbers(store)
-        formed = signalling.form_signals(numbers, quotes)
-        if not formed.empty:
-            new_signals = store.append_new_only("signals", formed)
+        if sign:
+            numbers = load_numbers(store)
+            formed = signalling.form_signals(numbers, quotes, run_id=run.run_id)
+            if not formed.empty:
+                run.signals_added = store.append_new_only("signals", formed)
 
-    graded = _grade(store)
-    return {"quotes": len(quotes), "snapshots": added,
-            "signals": new_signals, "graded": graded}
+        run.grades_added = _grade(store)
+        run.exceptions = len(quality.exceptions(store))
+        alerts = drifting.monitor(store)
+        run.alerts = int((alerts["severity"] != "ok").sum()) if not alerts.empty else 0
+    except Exception as error:  # noqa: BLE001 - the run log is the point
+        run.finish(store, "failed", f"{type(error).__name__}: {error}")
+        raise
+
+    run.finish(store, "ok")
+    return {"quotes": run.quotes, "snapshots": run.snapshots_added,
+            "signals": run.signals_added, "graded": run.grades_added,
+            "exceptions": run.exceptions, "alerts": run.alerts,
+            "run_id": run.run_id}
 
 
 def _grade(store: Store) -> int:
@@ -125,22 +153,44 @@ def refresh(seasons: list[int] | None = None, *, rebuild: bool = True) -> int:
     numbers = numbers.copy()
     numbers["refreshed_at"] = datetime.now(UTC).replace(microsecond=0).isoformat()
     store = Store.open()
-    # Replace wholesale: last week's numbers for a game that has since been
-    # played are noise, and a stale number is worse than no number.
-    store.write("numbers", numbers)
+    # Appended, not replaced: a signal formed last week must stay reproducible
+    # from the number that produced it, which a wholesale rewrite would erase.
+    store.upsert("numbers", numbers)
     LOG.info("published %d numbers", len(numbers))
     return len(numbers)
 
 
+def check(store: Store | None = None) -> dict:
+    """Every operations check, plus the three documents. No network."""
+    store = store or Store.open()
+    written = ops_report.write_all(store)
+    bundle = written["bundle"]
+    blocking = int((bundle["exceptions"]["severity"] == "blocking").sum()) \
+        if not bundle["exceptions"].empty else 0
+    firing = int((bundle["alerts"]["severity"] != "ok").sum()) \
+        if not bundle["alerts"].empty else 0
+    replays = bundle["replays"]
+    dirty = int((~replays["clean"]).sum()) if not replays.empty else 0
+    return {"blocking": blocking, "alerts": firing, "replays_failed": dirty}
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description="Atlas live CLV tracker")
-    ap.add_argument("command", choices=["poll", "grade", "report", "run", "refresh"])
+    ap.add_argument(
+        "command",
+        choices=["poll", "grade", "report", "run", "refresh", "check",
+                 "reproduce", "dashboard", "trace"],
+    )
     ap.add_argument("--horizon", type=int, default=DEFAULT_HORIZON_DAYS)
     ap.add_argument("--provider", default="espn")
     ap.add_argument("--no-sign", action="store_true",
                     help="capture lines without forming new opinions")
     ap.add_argument("--no-rebuild", action="store_true",
                     help="refresh the numbers without rebuilding the warehouse")
+    ap.add_argument("--sample", type=int, default=reproduce.REPLAY_SAMPLE
+                    if hasattr(reproduce, "REPLAY_SAMPLE") else 3,
+                    help="periods to replay for `reproduce`")
+    ap.add_argument("--signal-id", default="", help="signal to trace")
     args = ap.parse_args()
 
     if args.command == "refresh":
@@ -152,11 +202,34 @@ def main() -> None:
     if args.command == "report":
         reporting.write()
         return
+    if args.command == "dashboard":
+        dashboarding.write()
+        return
+    if args.command == "trace":
+        if not args.signal_id:
+            raise SystemExit("trace needs --signal-id")
+        found = audit.trace(Store.open(), args.signal_id)
+        if not found:
+            raise SystemExit(f"no signal {args.signal_id}")
+        print(pd.Series(found["signal"]).to_string())
+        print()
+        print(found["line_history"].to_string(index=False))
+        return
+    if args.command == "reproduce":
+        replays = reproduce.verify(Store.open(), sample=args.sample)
+        print(replays.to_string(index=False) if not replays.empty
+              else "nothing to replay")
+        raise SystemExit(0 if replays.empty or bool(replays["clean"].all()) else 1)
+    if args.command == "check":
+        LOG.info("check: %s", check())
+        return
 
     result = poll(args.horizon, provider=args.provider, sign=not args.no_sign)
     LOG.info("poll: %s", result)
     if args.command == "run":
         reporting.write()
+        LOG.info("check: %s", check())
+        dashboarding.write()
 
 
 if __name__ == "__main__":

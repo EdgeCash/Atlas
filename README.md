@@ -33,6 +33,10 @@ no dashboard. It produces a warehouse, a measurement, and a recommendation.
 | **Phase 5: live CLV tracking (updated continuously)** | [`reports/live_clv_tracking.md`](reports/live_clv_tracking.md) |
 | Phase 5 operations manual | [`docs/LIVE_TRACKING.md`](docs/LIVE_TRACKING.md) |
 | Phase 5 raw record (CSV, committed) | `tracking/` |
+| **Operations manual** | [`reports/atlas_operations_manual.md`](reports/atlas_operations_manual.md) |
+| Data quality (Track 1) | [`reports/atlas_data_quality.md`](reports/atlas_data_quality.md) |
+| Drift monitoring (Tracks 3, 5, 6) | [`reports/atlas_drift_monitoring.md`](reports/atlas_drift_monitoring.md) |
+| Season dashboard (read-only) | [`reports/dashboard.html`](reports/dashboard.html) |
 | Phase 4 opening-line feasibility | [`reports/opening_line_feasibility.md`](reports/opening_line_feasibility.md) |
 | Phase 4 CLV economics | [`reports/clv_economics.md`](reports/clv_economics.md) |
 | Supporting tables (CSV/JSON) | `reports/tables/` |
@@ -107,6 +111,30 @@ data.
 Worth borrowing, in order: the publish gate's **edge ceiling**, **market
 anchoring**, **CLV as the grading metric**, **constitutional staking caps**,
 and **per-market evidence gating**. None of them is a football insight.
+
+### Operations: making the tracker hard to corrupt
+
+Research is finished, so the remaining risk is not a wrong model — it is a
+record that quietly stops meaning what it says. Six guards, all running on
+every poll and all published:
+
+* **Data quality.** Sixteen checks over every signal and grade — the game
+  exists, the market exists, the lines exist, the arithmetic agrees with
+  itself. Nothing is ever repaired silently; exceptions are published and
+  fixing one is a human decision that leaves a trace.
+* **Auditability.** Every signal carries a deterministic UUID5, a timestamp,
+  a model version, a book and a market, plus the id of the run that wrote it.
+  `tracking/runs.csv` logs every invocation with the commit it ran at.
+* **Drift and anomalies.** Volume swings past ±50%, seven days of silence, a
+  single book, a single market, a model whose mean output moved more than 3
+  points, a disagreement distribution that changed shape.
+* **Reproducibility.** Every run replays randomly chosen past weeks and checks
+  the signals, grades and statistics rebuild from the stored inputs.
+* **A read-only dashboard** with no betting information on it, because there
+  is none in the system.
+* **Precedence.** A blocking data-quality exception outranks the kill
+  criteria: the dashboard reads `SUSPECT`, not a status derived from a record
+  it cannot trust.
 
 ### Phase 5: the live tracker
 

@@ -1,7 +1,7 @@
 PYTHON ?= python3
 
 .PHONY: help install ingest warehouse research all test lint clean-data \
-	live-refresh live-run live-report
+	live-refresh live-run live-report live-check live-reproduce
 
 help:
 	@echo "Atlas Phase 1A - research warehouse"
@@ -19,6 +19,8 @@ help:
 	@echo ""
 	@echo "  make live-refresh  Phase 5: rebuild with scheduled games, publish numbers"
 	@echo "  make live-run      Phase 5: poll lines, form signals, grade, report"
+	@echo "  make live-check    Ops: data quality, drift, anomalies, reproducibility"
+	@echo "  make live-reproduce  Ops: replay random periods and verify they match"
 	@echo "  make qb-data    extract the QB of record (research only, ~1 GB transient)"
 	@echo "  make all        ingest -> warehouse -> research -> phase1b -> phase1c"
 	@echo "  make test       run the offline test suite"
@@ -87,6 +89,13 @@ live-run:
 
 live-report:
 	$(PYTHON) -m atlas.live report
+
+# Operations checks: data quality, drift, anomalies, reproducibility. No network.
+live-check:
+	$(PYTHON) -m atlas.live check
+
+live-reproduce:
+	$(PYTHON) -m atlas.live reproduce --sample 5
 
 all: ingest warehouse research phase1b phase1c validate velocity beta gamma
 

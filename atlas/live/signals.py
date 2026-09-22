@@ -25,6 +25,7 @@ from datetime import UTC, datetime
 import numpy as np
 import pandas as pd
 
+from atlas.live.audit import signal_uuid
 from atlas.research import beta_report as beta
 from atlas.research import market_aware as ma
 from atlas.research import signal_validation as sv
@@ -156,7 +157,8 @@ def _fit_and_predict(combined: pd.DataFrame, model: Model, n_played: int):
     return pipeline.predict(matrix[n_played:])
 
 
-def form_signals(numbers: pd.DataFrame, quotes: pd.DataFrame) -> pd.DataFrame:
+def form_signals(numbers: pd.DataFrame, quotes: pd.DataFrame,
+                 *, run_id: str = "") -> pd.DataFrame:
     """Pair each Atlas number with the number a book is quoting right now."""
     if numbers.empty or quotes.empty:
         return pd.DataFrame()
@@ -169,6 +171,7 @@ def form_signals(numbers: pd.DataFrame, quotes: pd.DataFrame) -> pd.DataFrame:
 
     created = datetime.now(UTC).replace(microsecond=0).isoformat()
     merged["created_at"] = created
+    merged["run_id"] = run_id
     merged["atlas_number"] = merged["prediction"].astype(float)
     merged["entry_line"] = merged["line"].astype(float)
     merged["entry_price"] = merged["price"]
@@ -211,11 +214,7 @@ def _selection(row) -> str:
 def _signal_id(row) -> str:
     """One opinion per game, market and book - and no more, ever.
 
-    The id deliberately excludes the line, the time and the model version. A
-    second run must not create a second signal because the number moved half a
-    point, and a weekly refit must not let Atlas state a fresh opinion on a
-    game it has already called. The model version is recorded on the row; it
-    just does not get to mint a new signal.
+    See :func:`atlas.live.audit.signal_uuid` for why the id is a deterministic
+    UUID rather than a random one.
     """
-    payload = f"{row.game_id}|{row.market}|{row.book}"
-    return hashlib.sha256(payload.encode()).hexdigest()[:16]
+    return signal_uuid(row.game_id, row.market, row.book)

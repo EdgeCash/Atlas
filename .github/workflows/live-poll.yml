@@ -40,14 +40,23 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -e .
 
-      - name: Poll, grade and report
+      - name: Poll, grade, check and report
         run: python -m atlas.live run
+
+      # Advisory, not gating: a monitor that can stop the tracker is a worse
+      # problem than the drift it watches for. The run log and the reports
+      # carry the detail either way.
+      - name: Reproducibility replay
+        continue-on-error: true
+        run: python -m atlas.live reproduce --sample 3
 
       - name: Commit the record
         run: |
           git config user.name "atlas-tracker"
           git config user.email "noreply@anthropic.com"
-          git add tracking reports/live_clv_tracking.md
+          git add tracking reports/live_clv_tracking.md \
+            reports/atlas_data_quality.md reports/atlas_drift_monitoring.md \
+            reports/atlas_operations_manual.md reports/dashboard.html
           if git diff --cached --quiet; then
             echo "nothing changed"
             exit 0

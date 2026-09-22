@@ -105,9 +105,10 @@ that keeps only the signals it likes cannot be audited.
 
 ## Immutability
 
-An opinion, once stated, is never revised. `signal_id` is a hash of
-`(game_id, market, book)` and deliberately excludes the line, the timestamp
-and the model version — so a second poll does not create a second signal
+An opinion, once stated, is never revised. `signal_id` is a deterministic
+UUID5 over `(game_id, market, book)` — a real UUID, so it is unmistakably an
+identifier, and derivable, so a replay produces the same ids. It deliberately
+excludes the line, the timestamp and the model version — so a second poll does not create a second signal
 because the number moved half a point, and a weekly refit does not let Atlas
 state a fresh opinion on a game it has already called. The model version is
 recorded on the row; it just does not get to mint a new signal.
@@ -131,6 +132,31 @@ reports the numbers as a record, not as a result.
 
 **These are checked, never tuned.** A breach is the answer the project
 pre-registered, not a prompt to revisit the threshold.
+
+---
+
+## Operations
+
+The operations phase added the checks that keep the record trustworthy. They
+run on every `live-run` and are documented in
+[`reports/atlas_operations_manual.md`](../reports/atlas_operations_manual.md).
+
+```bash
+make live-check      # data quality, drift, anomalies, reproducibility
+make live-reproduce  # replay random periods and verify they match
+python -m atlas.live trace --signal-id <uuid>   # one signal, end to end
+```
+
+| Deliverable | What it holds |
+|---|---|
+| `reports/atlas_data_quality.md` | every check, fired or not, plus exceptions |
+| `reports/atlas_drift_monitoring.md` | every alarm, plus the replay results |
+| `reports/atlas_operations_manual.md` | how to run, audit, reproduce and stop it |
+| `reports/dashboard.html` | the read-only season dashboard |
+
+**A blocking data-quality exception outranks the kill criteria.** The
+dashboard reports `SUSPECT` rather than a status derived from a record it
+cannot trust.
 
 ---
 

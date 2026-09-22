@@ -9,6 +9,7 @@ diff.
 
 Tables
 ------
+``runs``       one append-only row per tracker invocation (Track 2)
 ``numbers``    Atlas's number for every scheduled game, refreshed weekly
 ``games``      one row per game Atlas has seen
 ``snapshots``  append-on-change line observations (Track 2)
@@ -35,6 +36,11 @@ LOG = get_logger(__name__)
 FLOAT_FORMAT = "%.3f"
 
 SCHEMA: dict[str, list[str]] = {
+    "runs": [
+        "run_id", "started_at", "finished_at", "command", "provider",
+        "code_version", "quotes", "snapshots_added", "signals_added",
+        "grades_added", "exceptions", "alerts", "status", "detail",
+    ],
     "numbers": [
         "game_id", "season", "week", "market", "prediction", "threshold",
         "model_version", "refreshed_at",
@@ -49,7 +55,7 @@ SCHEMA: dict[str, list[str]] = {
         "open_line", "open_price", "status", "last_seen_at",
     ],
     "signals": [
-        "signal_id", "created_at", "game_id", "season", "week", "market", "book",
+        "signal_id", "created_at", "run_id", "game_id", "season", "week", "market", "book",
         "open_line", "entry_line", "entry_price", "atlas_number", "disagreement",
         "direction", "selection", "model_version",
     ],
@@ -63,7 +69,11 @@ SCHEMA: dict[str, list[str]] = {
 #: The columns that identify a row. A second write with the same key updates
 #: the row rather than duplicating it.
 KEYS: dict[str, list[str]] = {
-    "numbers": ["game_id", "market"],
+    "runs": ["run_id"],
+    # Keyed by model version too, so a refit adds a row rather than
+    # overwriting the number a past signal was formed from. Without that
+    # history a historical replay silently uses today's model.
+    "numbers": ["game_id", "market", "model_version"],
     "games": ["game_id"],
     "snapshots": ["game_id", "book", "market", "line", "price"],
     "signals": ["signal_id"],
@@ -71,7 +81,8 @@ KEYS: dict[str, list[str]] = {
 }
 
 SORT: dict[str, list[str]] = {
-    "numbers": ["season", "week", "game_id", "market"],
+    "runs": ["started_at", "run_id"],
+    "numbers": ["season", "week", "game_id", "market", "model_version"],
     "games": ["kickoff", "game_id"],
     "snapshots": ["game_id", "market", "book", "captured_at"],
     "signals": ["created_at", "game_id", "market", "book"],

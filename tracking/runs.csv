@@ -1,0 +1,3 @@
+run_id,started_at,finished_at,command,provider,code_version,quotes,snapshots_added,signals_added,grades_added,exceptions,alerts,status,detail
+405dbe10-0343-4061-814a-56faf7e63b4f,2026-09-22T17:42:29+00:00,2026-09-22T17:42:31+00:00,poll,espn,12eefca,116,2,0,0,0,1,ok,
+f3c7fb22-dee8-477c-9056-501f62426374,2026-09-22T17:45:05+00:00,2026-09-22T17:45:06+00:00,poll,espn,12eefca,116,0,0,0,0,1,ok,
