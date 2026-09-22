@@ -179,6 +179,22 @@ GROUP BY 1 ORDER BY 1;
 
 ---
 
+---
+
+## Research-only data (deliberately outside the warehouse)
+
+Two datasets are collected but never become warehouse columns, because they
+are knowable only at kickoff or later:
+
+| Dataset | Where | Why it is excluded |
+|---|---|---|
+| Quarterback of record (`data/raw/qb/`) | `atlas/sources/qb_of_record.py` | Who actually threw the passes is a fact about a completed game. Phase 1C showed that treating it as information produces a large, entirely spurious signal. |
+| Derived QB events (change, backup, committee, planned change) | `atlas/research/qb_features.py` | Same, plus their lagged counterparts, which *are* pre-kickoff and measure zero. |
+
+`atlas.warehouse.build` never imports either module, and
+`tests/test_phase1c.py` asserts that no warehouse table carries a `qb_`
+column.
+
 ## Source provenance
 
 | Source | Needs a key | Provides |
@@ -186,7 +202,8 @@ GROUP BY 1 ORDER BY 1;
 | sportsdataverse `cfbfastR-data` (CFBD mirror) | no | schedules, results, team info and venue geography, historical sportsbook lines |
 | sportsdataverse `cfbfastR_cfb_pbp` release | no | play-by-play with EPA and success |
 | ESPN public endpoints | no | FPI season ratings, pre-game matchup projections |
-| CollegeFootballData API | **yes**, free key | SP+ (overall, offence, defence), recruiting rankings, roster talent, returning production |
+| CollegeFootballData API | **yes**, free key | SP+ (overall, offence, defence), recruiting rankings, roster talent, returning production, coaching staffs, weekly polls |
+| sportsdataverse rosters | no | season rosters - used to identify transfers and first-year players |
 | Meteostat bulk files | no | hourly station weather - free, unmetered, used for all kickoff conditions |
 | CollegeFootballData API | **yes**, paid tier | kickoff weather (`/games/weather`) - superseded by Meteostat |
 

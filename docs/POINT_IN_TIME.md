@@ -146,12 +146,46 @@ Four independent checks, all in CI:
 
 The scan's live output is Appendix B of the research report.
 
+### Point-in-time is necessary but not sufficient
+
+Phase 1C found a second way to fool yourself, one the rules above do not
+catch. A variable can be perfectly point-in-time *as computed* and still be
+worthless, because the thing it describes is **caused by** the outcome.
+
+The example that cost the programme a finding: "this team changed
+quarterback". Computed correctly from a completed game, it is a fact about
+that game - and it measures +2.1 points of market residual. It is also, mostly,
+a *consequence*: teams pull their quarterback because the game is going badly.
+The pre-kickoff-knowable subset (a replacement who then took every snap, so
+the decision was made in advance) measures -0.97 points and is not
+significant.
+
+So Atlas now applies a second test alongside the timing rule:
+
+> **Could this have been known before kickoff, or is it a description of what
+> happened?** If it is the second, it is an upper bound on the value of
+> information, never a feature.
+
+In practice that means every such variable is reported in two forms - the
+contemporaneous one and a **lagged** one built from the team's previous game -
+and only the lagged form is allowed to support a conclusion.
+
+### And one guard against finding things that are not there
+
+Phase 1C ran 50 pre-kickoff hypothesis tests. At p < 0.05 that yields about
+2.5 apparent findings from pure noise, so every p-value in the phase goes
+into **one pooled Benjamini-Hochberg correction** rather than being judged in
+its own table. Post-hoc tests are carried but excluded from the pool and
+labelled, because an artefact with t = 11 would otherwise both survive and
+inflate the correction for everything else.
+
 ### One thing deliberately left outside the warehouse
 
-The quarterback-of-record series in
-`scripts/research_qb_availability.py` is knowable only at kickoff, so it is
-**not** a warehouse column. It lives in a research script precisely so it
-cannot be picked up by accident as a feature. See
+The quarterback-of-record series (`atlas/sources/qb_of_record.py`) is knowable
+only at kickoff, so it is **not** a warehouse column. It lives in its own
+source module, is fetched into its own directory, and is never imported by
+`atlas.warehouse.build` - precisely so it cannot be picked up by accident as a
+feature. A test asserts both halves of that. See
 [`reports/qb_availability_report.md`](../reports/qb_availability_report.md).
 
 ---

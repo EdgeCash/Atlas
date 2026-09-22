@@ -92,6 +92,10 @@ def _consensus_spread(odds: pd.DataFrame) -> pd.DataFrame:
             "closing_spread": grp["lines"].median(),
             "opening_spread": grp["opening_lines"].median(),
             "spread_books": grp["book"].nunique(),
+            # Disagreement between sportsbooks at the close. The closest thing
+            # to a market-uncertainty reading Atlas can get without a
+            # timestamped line archive.
+            "closing_spread_sd": grp["lines"].std(),
         }
     )
 
@@ -104,6 +108,7 @@ def _consensus_total(odds: pd.DataFrame) -> pd.DataFrame:
             "closing_total": grp["lines"].median(),
             "opening_total": grp["opening_lines"].median(),
             "total_books": grp["book"].nunique(),
+            "closing_total_sd": grp["lines"].std(),
         }
     )
 

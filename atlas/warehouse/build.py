@@ -270,8 +270,7 @@ ANALYSIS_VIEW_SQL = """
 CREATE OR REPLACE VIEW research_games AS
 SELECT
     g.*,
-    m.closing_spread, m.closing_total, m.opening_spread, m.opening_total,
-    m.moneyline_home, m.moneyline_away, m.spread_movement, m.total_movement,
+    m.* EXCLUDE (game_id),
     r.* EXCLUDE (game_id, season, home_team_id, away_team_id),
     e.* EXCLUDE (game_id),
     a.* EXCLUDE (game_id, home_team_id, away_team_id),

@@ -1,0 +1,4 @@
+track,test,n,estimate,t,p,q,survives_fdr
+roster_continuity,QB change (reference),1509.0,2.1022200132538105,5.22896041286583,1.9438686876652625e-07,9.719343438326312e-06,True
+market_failure,Either team used a committee,,,4.3952717348683406,1.1063426816073088e-05,0.0002765856704018272,True
+roster_continuity,QB continuity edge (today's starter - post-hoc),5109.0,1.8743526349648771,4.008900042439475,6.187191470916334e-05,0.0010311985784860558,True

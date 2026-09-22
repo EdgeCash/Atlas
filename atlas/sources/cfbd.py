@@ -8,6 +8,7 @@ builds end-to-end without it from the open mirrors, and setting
 * SP+ ratings (``/ratings/sp``)
 * FPI ratings (``/ratings/fpi``) - a second opinion next to the ESPN feed
 * recruiting rankings (``/recruiting/teams``) and roster talent (``/talent``)
+* coaching staffs (``/coaches``) and weekly polls (``/rankings``)
 * returning production (``/player/returning``)
 * kickoff weather (``/games/weather``) - **paid CFBD tier only**
 
@@ -98,6 +99,38 @@ def fetch_fpi(raw: Path, season: int) -> Path:
     return _cached(raw, "fpi", season, "/ratings/fpi", {"year": season})
 
 
+def fetch_coaches(raw: Path, season: int) -> Path:
+    return _cached(raw, "coaches", season, "/coaches", {"year": season})
+
+
+def fetch_rankings(raw: Path, season: int) -> Path:
+    """Weekly polls. Used only to identify ranked matchups, never as a rating."""
+    dest = raw / "cfbd" / f"rankings_{season}.parquet"
+    if dest.exists():
+        return dest
+    rows: list[dict] = []
+    for season_type in ("regular", "postseason"):
+        try:
+            rows.extend(_get("/rankings", {"year": season, "seasonType": season_type}))
+        except Exception as exc:  # noqa: BLE001 - one season type may be empty
+            LOG.warning("CFBD rankings %s/%s: %s", season, season_type, exc)
+    flat = []
+    for entry in rows:
+        for poll in entry.get("polls", []):
+            for rank in poll.get("ranks", []):
+                flat.append(
+                    {
+                        "season": entry.get("season"),
+                        "week": entry.get("week"),
+                        "season_type": entry.get("seasonType"),
+                        "poll": poll.get("poll"),
+                        "rank": rank.get("rank"),
+                        "team": rank.get("school"),
+                    }
+                )
+    return write_parquet(pd.DataFrame(flat), dest)
+
+
 def fetch_talent(raw: Path, season: int) -> Path:
     return _cached(raw, "talent", season, "/talent", {"year": season})
 
@@ -157,6 +190,8 @@ FETCHERS = {
     "sp_plus": fetch_sp_plus,
     "fpi": fetch_fpi,
     "talent": fetch_talent,
+    "coaches": fetch_coaches,
+    "rankings": fetch_rankings,
     "recruiting": fetch_recruiting,
     "returning": fetch_returning_production,
     "weather": fetch_weather,

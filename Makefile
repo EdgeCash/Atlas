@@ -10,7 +10,9 @@ help:
 	@echo "  make warehouse  stage 2+3: staging tables and the DuckDB warehouse"
 	@echo "  make research   stage 4: benchmarks, importance, research report"
 	@echo "  make phase1b    opponent-adjustment, weather and QB reports"
-	@echo "  make all        ingest -> warehouse -> research -> phase1b"
+	@echo "  make phase1c    information-edge tracks and synthesis"
+	@echo "  make qb-data    extract the QB of record (research only, ~1 GB transient)"
+	@echo "  make all        ingest -> warehouse -> research -> phase1b -> phase1c"
 	@echo "  make test       run the offline test suite"
 	@echo "  make lint       ruff check"
 	@echo "  make clean-data remove generated data (sources are re-downloadable)"
@@ -30,12 +32,18 @@ research:
 phase1b:
 	$(PYTHON) -m atlas.research.phase1b_report
 
-# The quarterback probe re-downloads full play-by-play, so it is deliberately
-# not part of `make all`. Research only - it writes nothing to the warehouse.
+# Research only: the quarterback of record is post-kickoff data and is never
+# read by the warehouse build. Cached after the first run.
+qb-data:
+	$(PYTHON) -m atlas.ingest --with-qb --no-pbp --no-predictors --no-cfbd
+
 qb-research:
 	$(PYTHON) scripts/research_qb_availability.py
 
-all: ingest warehouse research phase1b
+phase1c: qb-data
+	$(PYTHON) -m atlas.research.phase1c_report
+
+all: ingest warehouse research phase1b phase1c
 
 test:
 	$(PYTHON) -m pytest -q

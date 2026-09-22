@@ -13,7 +13,7 @@ from pathlib import Path
 import pandas as pd
 
 from atlas import config
-from atlas.sources import cfbd, espn
+from atlas.sources import cfbd, espn, qb_of_record, rosters
 from atlas.sources import sportsdataverse as sdv
 from atlas.util import get_logger
 
@@ -26,6 +26,7 @@ def ingest(
     with_pbp: bool = True,
     with_predictors: bool = True,
     with_cfbd: bool = True,
+    with_qb: bool = False,
 ) -> dict:
     paths = config.paths().ensure()
     seasons = seasons or config.seasons()
@@ -82,6 +83,28 @@ def ingest(
                 LOG.warning("ESPN predictors failed for %s: %s", season, exc)
         manifest["sources"]["espn_predictor"] = got_pred
 
+    # Rosters carry class membership across seasons, which is how Phase 1C
+    # identifies transfers and first-year players.
+    got_rosters: list[int] = []
+    roster_seasons = list(range(min(seasons) - 4, max(seasons) + 1))
+    for season in roster_seasons:
+        try:
+            rosters.fetch(paths.raw, season)
+            got_rosters.append(season)
+        except Exception as exc:  # noqa: BLE001
+            LOG.warning("rosters unavailable for %s: %s", season, exc)
+    manifest["sources"]["rosters"] = got_rosters
+
+    if with_qb:
+        # Research-only: the quarterback of record is known at kickoff at the
+        # earliest, so it is fetched into its own directory and never read by
+        # the warehouse build.
+        qb = qb_of_record.build(paths.raw, got_schedule)
+        manifest["sources"]["qb_of_record"] = {
+            "team_games": int(len(qb)),
+            "warehouse_use": "none - post-kickoff data, research only",
+        }
+
     if with_cfbd:
         # Season-level ratings are joined from the *previous* season, so the
         # season before the first modelled one has to be fetched too.
@@ -113,12 +136,18 @@ def main() -> None:
     ap.add_argument("--no-pbp", action="store_true")
     ap.add_argument("--no-predictors", action="store_true")
     ap.add_argument("--no-cfbd", action="store_true")
+    ap.add_argument(
+        "--with-qb",
+        action="store_true",
+        help="also extract the quarterback of record (research only, ~1 GB transient)",
+    )
     args = ap.parse_args()
     ingest(
         args.seasons,
         with_pbp=not args.no_pbp,
         with_predictors=not args.no_predictors,
         with_cfbd=not args.no_cfbd,
+        with_qb=args.with_qb,
     )
 
 

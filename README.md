@@ -16,6 +16,13 @@ no dashboard. It produces a warehouse, a measurement, and a recommendation.
 | Phase 1B opponent-adjustment report | [`reports/opponent_adjustment_report.md`](reports/opponent_adjustment_report.md) |
 | Phase 1B weather report | [`reports/weather_data_report.md`](reports/weather_data_report.md) |
 | Phase 1B QB availability report | [`reports/qb_availability_report.md`](reports/qb_availability_report.md) |
+| **Phase 1C information edge report** | [`reports/atlas_information_edge_v1.md`](reports/atlas_information_edge_v1.md) |
+| Phase 1C QB value model | [`reports/qb_value_model_report.md`](reports/qb_value_model_report.md) |
+| Phase 1C market efficiency | [`reports/market_efficiency_report.md`](reports/market_efficiency_report.md) |
+| Phase 1C roster continuity | [`reports/roster_continuity_report.md`](reports/roster_continuity_report.md) |
+| Phase 1C situational edge | [`reports/situational_edge_report.md`](reports/situational_edge_report.md) |
+| Phase 1C market failure | [`reports/market_failure_report.md`](reports/market_failure_report.md) |
+| Phase 1C Velocity comparison | [`reports/velocity_comparison_report.md`](reports/velocity_comparison_report.md) |
 | Supporting tables (CSV/JSON) | `reports/tables/` |
 | Alpha model recommendation | [`docs/ATLAS_ALPHA_SPEC.md`](docs/ATLAS_ALPHA_SPEC.md) |
 | Point-in-time methodology | [`docs/POINT_IN_TIME.md`](docs/POINT_IN_TIME.md) |
@@ -39,6 +46,33 @@ No candidate variable improved on the closing line by more than its own noise,
 and no benchmark cleared the 52.38% break-even hit rate against it. Marginal
 value over the market is reported as a paired per-game comparison with a
 t-statistic, so a 0.01 MAE point estimate cannot be mistaken for an edge.
+
+### Phase 1C: the search for unpriced information
+
+Phase 1C stopped measuring team quality and went looking for information the
+market does not have. It ran **50 pre-kickoff hypothesis tests** across
+quarterback events, roster and staff continuity, situational angles,
+market-failure characteristics and line movement.
+
+**Zero survived a pooled Benjamini-Hochberg correction.**
+
+It also **withdrew Phase 1B's headline finding.** The 2.1-point "quarterback
+change" signal was reverse causation - teams pull their quarterback *because*
+the game is going badly:
+
+| | Games | Residual | t |
+|---|---|---|---|
+| QB changed *during* the game | 1,600 | **+4.81** | 11.7 |
+| New QB who took ~every snap (knowable pre-kickoff) | 870 | **-0.97** | -1.9 |
+
+The one live candidate is a **method, not a variable**: scoring a totals model
+by its hit rate on its biggest disagreements with the market rather than by
+mean error. Atlas reads 52.0% flat rising to 53.9% at an 8-point cut;
+[Velocity](https://github.com/EdgeCash/Velocity) independently reports 51.6%
+rising to 53.4%. Break-even is 52.38%, so this is a tie that might be an edge -
+and it is the only direction two independent models both point at.
+
+### Earlier findings
 
 Findings worth pulling out:
 
@@ -75,13 +109,14 @@ python -m atlas.ingest                    # stage 1: sources -> data/raw
 python -m atlas.warehouse.build           # stages 2-3: staging -> warehouse + DuckDB
 python -m atlas.research.report           # stage 4: Phase 1A report
 python -m atlas.research.phase1b_report   # stage 5: Phase 1B reports
-make qb-research                          # optional: QB feasibility probe
+make qb-data                              # research-only QB extraction
+python -m atlas.research.phase1c_report   # stage 6: Phase 1C reports
 ```
 
-`make qb-research` is deliberately outside `make all`: it re-downloads full
-play-by-play and it writes nothing into the warehouse, because a
-quarterback-of-record column is only knowable at kickoff and has no business
-sitting among point-in-time features.
+The quarterback-of-record extraction writes nothing into the warehouse, and
+`atlas.warehouse.build` never imports it. A column only knowable at kickoff
+has no business sitting among point-in-time features - Phase 1C is the
+demonstration of why, and a test enforces the boundary.
 
 A full rebuild downloads roughly 1 GB of play-by-play, which is trimmed to
 ~35 MB on disk, and takes a few minutes.
@@ -126,12 +161,13 @@ atlas/
   features/            the point-in-time engine + opponent adjustment
   warehouse/           schema + build into parquet and DuckDB
   research/            dataset, models, benchmarks, importance, validation,
-                       adjustment study, reports
+                       adjustment study, residual tools, QB features,
+                       Phase 1C tracks, reports
   testing/             deterministic synthetic league used by the test suite
 scripts/
   check_reproducible.py       builds twice, asserts byte-identical output
   research_qb_availability.py QB feasibility probe (research only)
-tests/                 offline suite: 85 tests, no network
+tests/                 offline suite: 99 tests, no network
 ```
 
 ## Data sources
@@ -142,7 +178,8 @@ tests/                 offline suite: 85 tests, no network
 | sportsdataverse `cfbfastR_cfb_pbp` | no | play-by-play with EPA and success |
 | ESPN public endpoints | no | FPI season ratings, pre-game matchup projections |
 | Meteostat bulk files | no | hourly station weather - kickoff temperature, wind, precipitation, humidity |
-| CollegeFootballData API | free key | SP+ (overall/offence/defence), recruiting, roster talent, returning production |
+| sportsdataverse rosters | no | season rosters - transfer and first-year identification |
+| CollegeFootballData API | free key | SP+ (overall/offence/defence), recruiting, roster talent, returning production, coaching staffs, weekly polls |
 
 ## Testing and CI
 
@@ -163,7 +200,20 @@ The suite sets `ATLAS_OFFLINE=1`, so any accidental network call fails loudly
 rather than quietly downloading a gigabyte of real data. Weather is exercised
 end to end against synthetic station files in the collector's own layout.
 
+## Two methodological rules, both learned the hard way
+
+1. **Point-in-time is necessary but not sufficient.** A variable can be
+   computed correctly from only prior information and still be worthless if
+   the thing it describes is *caused by* the outcome. Every such variable is
+   reported in both a contemporaneous and a lagged form, and only the lagged
+   form supports a conclusion.
+2. **Pool p-values and correct once.** Phase 1C ran 50 tests; at p < 0.05 that
+   is ~2.5 apparent findings from noise alone. Post-hoc tests are carried but
+   excluded from the pool and labelled.
+
+Phase 1B did neither, and it cost the programme a headline finding.
+
 ## Scope boundary
 
-Phases 1A and 1B stop here. No predictions, no simulations, no wagers, no
+Phases 1A, 1B and 1C stop here. No predictions, no simulations, no wagers, no
 dashboard, no Phase 2.
