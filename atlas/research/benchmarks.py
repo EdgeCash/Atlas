@@ -63,7 +63,7 @@ BENCHMARKS: dict[str, dict[str, list[str]]] = {
     },
     "SP+ Only": {
         "margin": ["sp_plus_diff"],
-        "total": ["sp_plus_sum"],
+        "total": ["sp_plus_off_sum", "sp_plus_def_sum"],
     },
     "FPI Only": {
         "margin": ["fpi_diff"],
@@ -71,7 +71,7 @@ BENCHMARKS: dict[str, dict[str, list[str]]] = {
     },
     "SP+ + FPI": {
         "margin": ["sp_plus_diff", "fpi_diff"],
-        "total": ["sp_plus_sum", "fpi_sum"],
+        "total": ["sp_plus_off_sum", "sp_plus_def_sum", "fpi_sum"],
     },
     # --- Atlas extensions beyond the four required benchmarks ---------------
     "Elo Only": {
@@ -88,7 +88,8 @@ BENCHMARKS: dict[str, dict[str, list[str]]] = {
     },
     "Ratings + Efficiency (no market)": {
         "margin": ["sp_plus_diff", "fpi_diff", "elo_diff", *EFFICIENCY_MARGIN],
-        "total": ["sp_plus_sum", "fpi_sum", "elo_sum", *EFFICIENCY_TOTAL],
+        "total": ["sp_plus_off_sum", "sp_plus_def_sum", "fpi_sum", "elo_sum",
+                  *EFFICIENCY_TOTAL],
     },
     "Market + Efficiency": {
         "margin": ["closing_spread", *EFFICIENCY_MARGIN],
@@ -99,6 +100,8 @@ BENCHMARKS: dict[str, dict[str, list[str]]] = {
             "closing_spread",
             "spread_movement",
             "sp_plus_diff",
+            "sp_plus_off_diff",
+            "sp_plus_def_diff",
             "fpi_diff",
             "fpi_home_win_prob",
             "elo_diff",
@@ -115,7 +118,8 @@ BENCHMARKS: dict[str, dict[str, list[str]]] = {
         "total": [
             "closing_total",
             "total_movement",
-            "sp_plus_sum",
+            "sp_plus_off_sum",
+            "sp_plus_def_sum",
             "fpi_sum",
             "elo_sum",
             *EFFICIENCY_TOTAL,

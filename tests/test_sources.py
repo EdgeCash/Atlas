@@ -4,10 +4,12 @@ from __future__ import annotations
 
 import pandas as pd
 import pytest
+import requests
 
 from atlas.sources import cfbd, espn
 from atlas.sources import sportsdataverse as sdv
 from atlas.testing.synthetic import write_synthetic_raw
+from atlas.util import http_get
 
 
 def test_synthetic_tree_matches_expected_source_paths(tmp_path):
@@ -47,3 +49,66 @@ def test_cfbd_is_disabled_without_a_key(monkeypatch, tmp_path):
     assert cfbd.fetch_all(tmp_path, [2021]) == {}
     with pytest.raises(RuntimeError, match="CFBD_API_KEY"):
         cfbd._get("/ratings/sp", {"year": 2021})
+
+
+class _FakeResponse:
+    def __init__(self, status_code: int, payload: dict):
+        self.status_code = status_code
+        self._payload = payload
+
+    def json(self):
+        return self._payload
+
+    def raise_for_status(self):
+        if self.status_code >= 400:
+            raise requests.HTTPError(str(self.status_code), response=self)
+
+
+def test_paid_tier_401_becomes_a_distinct_error():
+    resp = _FakeResponse(
+        401, {"message": "Unauthorized. This endpoint requires a Patreon subscription at Tier 1"}
+    )
+    with pytest.raises(cfbd.CfbdTierError):
+        cfbd._raise_for_tier(resp, "/games/weather")
+
+
+def test_a_plain_401_is_not_treated_as_a_tier_problem():
+    cfbd._raise_for_tier(_FakeResponse(401, {"message": "Unauthorized"}), "/ratings/sp")
+
+
+def test_settled_http_statuses_are_not_retried(monkeypatch):
+    """A 401 must fail immediately; retrying it wastes a minute per season."""
+    calls = {"n": 0}
+
+    class _Session:
+        headers: dict = {}
+
+        def get(self, *_a, **_k):
+            calls["n"] += 1
+            return _FakeResponse(401, {"message": "Unauthorized"})
+
+    with pytest.raises(requests.HTTPError):
+        http_get("https://example.invalid/x", sess=_Session(), retries=4)
+    assert calls["n"] == 1
+
+
+def test_retryable_statuses_are_retried(monkeypatch):
+    calls = {"n": 0}
+    monkeypatch.setattr("atlas.util.time.sleep", lambda _s: None)
+
+    class _Session:
+        headers: dict = {}
+
+        def get(self, *_a, **_k):
+            calls["n"] += 1
+            return _FakeResponse(503, {})
+
+    with pytest.raises(RuntimeError):
+        http_get("https://example.invalid/x", sess=_Session(), retries=2)
+    assert calls["n"] == 3
+
+
+def test_status_file_records_why_a_dataset_is_missing(tmp_path):
+    cfbd.record_status(tmp_path, "weather", "needs a paid tier")
+    assert cfbd.unavailable_reason(tmp_path, "weather") == "needs a paid tier"
+    assert cfbd.unavailable_reason(tmp_path, "sp_plus") is None

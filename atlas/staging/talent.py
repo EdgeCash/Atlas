@@ -16,6 +16,7 @@ from pathlib import Path
 import pandas as pd
 
 from atlas.sources import cfbd
+from atlas.staging import teams as teams_stage
 from atlas.util import get_logger, write_parquet
 
 LOG = get_logger(__name__)
@@ -34,8 +35,18 @@ def build_talent(raw: Path, staging: Path, games: pd.DataFrame, teams: pd.DataFr
     returning = _season_table(raw, teams, seasons, "returning", value_col="percentPPA")
     out = _attach(out, returning, "returning_production")
 
-    if not cfbd.available():
-        LOG.warning("talent/recruiting/returning-production are CFBD-only and will be null")
+    empty = [
+        name
+        for name, col in (
+            ("recruiting", "recruiting_rank_diff"),
+            ("talent", "talent_diff"),
+            ("returning production", "returning_production_diff"),
+        )
+        if out[col].isna().all()
+    ]
+    if empty:
+        hint = "" if cfbd.available() else " (set CFBD_API_KEY)"
+        LOG.warning("CFBD-only and null: %s%s", ", ".join(empty), hint)
 
     write_parquet(out, staging / "talent.parquet")
     return out
@@ -44,11 +55,7 @@ def build_talent(raw: Path, staging: Path, games: pd.DataFrame, teams: pd.DataFr
 def _season_table(
     raw: Path, teams: pd.DataFrame, seasons: list[int], name: str, *, value_col: str
 ) -> pd.DataFrame:
-    name_to_id = (
-        teams.dropna(subset=["school"])
-        .drop_duplicates(["season", "school"])
-        .set_index(["season", "school"])["team_id"]
-    )
+    resolve = teams_stage.name_resolver(teams)
     frames = []
     for season in seasons:
         path = raw / "cfbd" / f"{name}_{season}.parquet"
@@ -58,8 +65,7 @@ def _season_table(
         if df.empty or value_col not in df.columns or "team" not in df.columns:
             continue
         df = df.dropna(subset=["team"])
-        idx = pd.MultiIndex.from_arrays([[season] * len(df), df["team"]])
-        df["team_id"] = name_to_id.reindex(idx).to_numpy()
+        df["team_id"] = resolve(season, df["team"])
         df = df.dropna(subset=["team_id"])
         frames.append(
             pd.DataFrame(

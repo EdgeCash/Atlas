@@ -136,3 +136,21 @@ def test_venue_lookup_is_unique_per_venue(synthetic_build):
     t = teams.load(synthetic_build["paths"].staging)
     v = teams.venues(t)
     assert v["venue_id"].is_unique
+
+
+def test_name_resolver_falls_back_across_seasons():
+    """Ratings from the season before the warehouse starts must still resolve."""
+    ref = pd.DataFrame(
+        {
+            "season": [2021, 2022],
+            "team_id": [7, 7],
+            "school": ["Team 00", "Team 00"],
+        }
+    )
+    resolve = teams.name_resolver(ref)
+    exact = resolve(2021, pd.Series(["Team 00"]))
+    earlier = resolve(2017, pd.Series(["Team 00"]))  # season absent from the table
+    unknown = resolve(2021, pd.Series(["Nowhere State"]))
+    assert exact.iloc[0] == 7
+    assert earlier.iloc[0] == 7
+    assert pd.isna(unknown.iloc[0])

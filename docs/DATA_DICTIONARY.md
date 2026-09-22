@@ -55,9 +55,14 @@ in the play-by-play feed on 98-99% of games to within 3 points.
 | Column | Type | Meaning |
 |---|---|---|
 | `game_id` | int64 | |
-| `home_sp_plus`, `away_sp_plus`, `sp_plus_diff` | float | SP+, **previous season's** rating. Null unless `CFBD_API_KEY` is set |
+| `home_sp_plus`, `away_sp_plus`, `sp_plus_diff` | float | SP+ overall, **previous season's** rating. Null unless `CFBD_API_KEY` is set |
 | `home_fpi`, `away_fpi`, `fpi_diff` | float | ESPN FPI, **previous season's** rating, net-points scale |
-| *additions* | | `fpi_home_win_prob` (ESPN pre-game matchup projection), `home_pregame_elo`, `away_pregame_elo`, `elo_diff` |
+| *additions* | | `home_sp_plus_off` / `away_sp_plus_off` / `sp_plus_off_diff`, `home_sp_plus_def` / `away_sp_plus_def` / `sp_plus_def_diff`, `fpi_home_win_prob` (ESPN pre-game matchup projection), `home_pregame_elo`, `away_pregame_elo`, `elo_diff` |
+
+The SP+ offence/defence split matters: a sum of two *overall* ratings says
+nothing about a scoring environment, and carrying the components separately
+is what turns SP+ from the weakest margin rating in the study into the best
+non-market totals rating.
 
 `*_diff` is always home minus away.
 
@@ -102,7 +107,7 @@ are fixed before the season starts.
 | `game_id` | int64 | |
 | `rest_diff` | float | Home days rest minus away days rest |
 | `travel_distance` | float | Great-circle miles travelled by the **visiting** side |
-| `weather_temp`, `weather_wind`, `weather_precip` | float | Kickoff conditions. CFBD-only, null without a key |
+| `weather_temp`, `weather_wind`, `weather_precip` | float | Kickoff conditions. CFBD `/games/weather`, which requires a **paid** CFBD Patreon tier - a free key is not enough |
 | `neutral_site` | bool | |
 | *additions* | | `home_days_rest`, `away_days_rest`, `home_travel_distance`, `away_travel_distance`, `travel_distance_diff` |
 
@@ -147,7 +152,8 @@ GROUP BY 1 ORDER BY 1;
 | sportsdataverse `cfbfastR-data` (CFBD mirror) | no | schedules, results, team info and venue geography, historical sportsbook lines |
 | sportsdataverse `cfbfastR_cfb_pbp` release | no | play-by-play with EPA and success |
 | ESPN public endpoints | no | FPI season ratings, pre-game matchup projections |
-| CollegeFootballData API | **yes** | SP+, recruiting, roster talent, returning production, kickoff weather |
+| CollegeFootballData API | **yes**, free key | SP+ (overall, offence, defence), recruiting rankings, roster talent, returning production |
+| CollegeFootballData API | **yes**, paid tier | kickoff weather (`/games/weather`) |
 
 Without a CFBD key the warehouse still builds completely; the CFBD-only
 columns are present and null, and the research report reports them as

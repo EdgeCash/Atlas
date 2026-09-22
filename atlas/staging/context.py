@@ -96,8 +96,13 @@ def _add_weather(raw: Path, out: pd.DataFrame) -> pd.DataFrame:
             continue
         frames.append(df)
     if not frames:
-        if not cfbd.available():
+        reason = cfbd.unavailable_reason(raw, "weather")
+        if reason:
+            LOG.warning("weather columns will be null: %s", reason)
+        elif not cfbd.available():
             LOG.warning("weather is CFBD-only and will be null (set CFBD_API_KEY)")
+        else:
+            LOG.warning("weather columns will be null: no CFBD weather files on disk")
         out["weather_temp"] = pd.NA
         out["weather_wind"] = pd.NA
         out["weather_precip"] = pd.NA

@@ -53,7 +53,8 @@ def candidates() -> list[Candidate]:
                   "closing consensus, home-oriented"),
         Candidate("Market Total", ["closing_total"], ["closing_total"]),
         Candidate("Line Movement", ["spread_movement"], ["total_movement"]),
-        Candidate("SP+", ["sp_plus_diff"], ["sp_plus_sum"], "CFBD, previous season"),
+        Candidate("SP+", ["sp_plus_diff", "sp_plus_off_diff", "sp_plus_def_diff"],
+                  ["sp_plus_off_sum", "sp_plus_def_sum"], "CFBD, previous season"),
         Candidate("FPI", ["fpi_diff"], ["fpi_sum"], "ESPN, previous season"),
         Candidate("FPI Game Projection", ["fpi_home_win_prob"], [],
                   "ESPN pre-game matchup projection"),
@@ -106,7 +107,8 @@ def add_derived_features(df: pd.DataFrame) -> pd.DataFrame:
         if home in out.columns and away in out.columns:
             out[f"{metric}_sum"] = out[home] + out[away]
 
-    for name in ("sp_plus", "fpi", "talent", "returning_production"):
+    for name in ("sp_plus", "sp_plus_off", "sp_plus_def", "fpi", "talent",
+                 "returning_production"):
         home, away = f"home_{name}", f"away_{name}"
         if home in out.columns and away in out.columns:
             out[f"{name}_sum"] = pd.to_numeric(out[home], errors="coerce") + pd.to_numeric(

@@ -83,9 +83,11 @@ def ingest(
         manifest["sources"]["espn_predictor"] = got_pred
 
     if with_cfbd:
+        # Season-level ratings are joined from the *previous* season, so the
+        # season before the first modelled one has to be fetched too.
         manifest["sources"]["cfbd"] = {
             "enabled": cfbd.available(),
-            "datasets": sorted(cfbd.fetch_all(paths.raw, seasons)),
+            "datasets": sorted(cfbd.fetch_all(paths.raw, [min(seasons) - 1, *seasons])),
         }
 
     out = paths.raw / "MANIFEST.json"

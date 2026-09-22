@@ -1,6 +1,6 @@
 # Atlas Research Report V1
 
-*Generated 2026-09-22 13:49 UTC from `data/warehouse/atlas.duckdb`. Every figure in this
+*Generated 2026-09-22 14:08 UTC from `data/warehouse/atlas.duckdb`. Every figure in this
 document is produced by `python -m atlas.research.report`; none is hand-entered.*
 
 Atlas Phase 1A asks one question: **which variables actually predict college
@@ -8,7 +8,7 @@ football games?** It does not project, simulate or wager. The answer below is
 measured out-of-sample, leave-one-season-out, on a point-in-time-correct
 warehouse in which no feature attached to a game was unknown at its kickoff.
 
-CFBD enrichment was **not** enabled for this build (`CFBD_API_KEY` unset), so SP+, recruiting, returning production and kickoff weather are structurally present but empty. Every other result below is unaffected.
+CFBD enrichment was **enabled** for this build: `sp_plus`, `talent`, `recruiting`, `returning` are populated. Still missing: `weather` (/games/weather: Unauthorized. This endpoint requires a Patreon subscription at Tier 1 or higher.).
 
 ---
 
@@ -79,16 +79,16 @@ Per-season stability of the market margin benchmark:
 
 ## Section 3 - SP+ Performance
 
-**Not measurable in this build.** SP+ is published only through the
-CollegeFootballData API, which requires a free API key. Without `CFBD_API_KEY`
-the `ratings.home_sp_plus` / `away_sp_plus` / `sp_plus_diff` columns exist and
-are null, and the SP+ benchmark is reported as unavailable rather than being
-silently replaced by a proxy.
+| Metric | Value |
+|---|---|
+| Margin MAE | 14.177 |
+| Margin RMSE | 17.853 |
+| Total MAE | 13.570 |
+| Total RMSE | 17.168 |
+| Games | 5,778 |
 
-Set the key and re-run `make all` to fill this section in; nothing else about
-the pipeline changes. Atlas measures the next-best published rating, ESPN's
-FPI, in Section 4, and its own pre-game Elo and efficiency baselines in
-Section 5.
+SP+ is used as the **previous season's** rating, mapped to a margin by a
+leave-one-season-out fit that also carries home-field advantage.
 
 ---
 
@@ -126,14 +126,14 @@ current view of the same matchup.
 | Market Closing Line (raw, unfitted) | yes | 5,778 | 12.224 | 15.455 | 0.443 |  |
 | Market Only | yes | 5,778 | 12.227 | 15.461 | 0.443 |  |
 | Market + Efficiency | yes | 5,778 | 12.232 | 15.462 | 0.443 |  |
-| Market + Everything | yes | 5,778 | 12.246 | 15.463 | 0.443 | sp_plus_diff, recruiting_rank_diff, talent_diff, returning_production_diff, weather_temp, weather_wind, weather_precip |
+| Market + Everything | yes | 5,778 | 12.242 | 15.468 | 0.443 | weather_temp, weather_wind, weather_precip |
 | FPI Game Projection | yes | 5,778 | 12.924 | 16.205 | 0.388 |  |
-| Ratings + Efficiency (no market) | yes | 5,778 | 13.078 | 16.452 | 0.369 | sp_plus_diff |
+| Ratings + Efficiency (no market) | yes | 5,778 | 13.085 | 16.459 | 0.369 |  |
 | Elo Only | yes | 5,778 | 13.105 | 16.496 | 0.366 |  |
 | Efficiency Only | yes | 5,778 | 13.959 | 17.697 | 0.270 |  |
+| SP+ + FPI | yes | 5,778 | 14.094 | 17.772 | 0.264 |  |
 | FPI Only | yes | 5,778 | 14.103 | 17.810 | 0.261 |  |
-| SP+ + FPI | yes | 5,778 | 14.103 | 17.810 | 0.261 | sp_plus_diff |
-| SP+ Only | no | 0 | n/a | n/a | n/a | sp_plus_diff |
+| SP+ Only | yes | 5,778 | 14.177 | 17.853 | 0.257 |  |
 
 ### Full benchmark ladder - total
 
@@ -142,13 +142,13 @@ current view of the same matchup.
 | Market Only | yes | 5,778 | 12.703 | 16.027 | 0.158 |  |
 | Market Closing Line (raw, unfitted) | yes | 5,778 | 12.705 | 16.043 | 0.156 |  |
 | Market + Efficiency | yes | 5,778 | 12.714 | 16.039 | 0.156 |  |
-| Market + Everything | yes | 5,778 | 12.717 | 16.049 | 0.155 | sp_plus_sum, talent_sum, returning_production_sum, weather_temp, weather_wind, weather_precip |
-| Ratings + Efficiency (no market) | yes | 5,778 | 13.142 | 16.588 | 0.098 | sp_plus_sum |
+| Market + Everything | yes | 5,778 | 12.729 | 16.059 | 0.154 | weather_temp, weather_wind, weather_precip |
+| Ratings + Efficiency (no market) | yes | 5,778 | 13.148 | 16.601 | 0.096 |  |
 | Efficiency Only | yes | 5,778 | 13.153 | 16.597 | 0.097 |  |
+| SP+ Only | yes | 5,778 | 13.570 | 17.168 | 0.034 |  |
+| SP+ + FPI | yes | 5,778 | 13.579 | 17.178 | 0.032 |  |
 | FPI Only | yes | 5,778 | 13.848 | 17.488 | -0.003 |  |
-| SP+ + FPI | yes | 5,778 | 13.848 | 17.488 | -0.003 | sp_plus_sum |
 | Elo Only | yes | 5,778 | 13.850 | 17.490 | -0.003 |  |
-| SP+ Only | no | 0 | n/a | n/a | n/a | sp_plus_sum |
 
 ### Ranked variables - margin
 
@@ -167,18 +167,18 @@ gain of 0.01 MAE is indistinguishable from zero.
 | 4 | Success Rate | yes | 14.0985 | 2.1162 | -0.0050 | -3.2470 | no |
 | 5 | FPI | yes | 14.1031 | 2.1116 | -0.0006 | -1.0567 | no |
 | 6 | EPA | yes | 14.1545 | 2.0602 | -0.0019 | -0.5787 | no |
-| 7 | Finishing Drives | yes | 15.2052 | 1.0095 | -0.0011 | -1.7174 | no |
-| 8 | Havoc | yes | 15.8203 | 0.3944 | -0.0008 | -0.5059 | no |
-| 9 | Explosiveness | yes | 16.1208 | 0.0939 | -0.0023 | -0.5042 | no |
-| 10 | Market Total | yes | 16.2128 | 0.0019 | n/a | n/a | n/a |
-| 11 | Neutral Site | yes | 16.2130 | 0.0017 | 0.0000 | 0.1537 | no |
-| 12 | Pace | yes | 16.2139 | 0.0008 | -0.0024 | -0.5600 | no |
-| 13 | Travel | yes | 16.2188 | -0.0041 | -0.0013 | -0.2265 | no |
-| 14 | Rest | yes | 16.2221 | -0.0074 | -0.0038 | -2.3141 | no |
-| 15 | Line Movement | yes | 16.2716 | -0.0569 | -0.0006 | -0.2330 | no |
-| n/a | SP+ | no | n/a | n/a | n/a | n/a | no |
-| n/a | Recruiting | no | n/a | n/a | n/a | n/a | no |
-| n/a | Returning Production | no | n/a | n/a | n/a | n/a | no |
+| 7 | SP+ | yes | 14.1925 | 2.0222 | -0.0004 | -0.0769 | no |
+| 8 | Recruiting | yes | 14.9698 | 1.2449 | -0.0078 | -2.1202 | no |
+| 9 | Finishing Drives | yes | 15.2052 | 1.0095 | -0.0011 | -1.7174 | no |
+| 10 | Havoc | yes | 15.8203 | 0.3944 | -0.0008 | -0.5059 | no |
+| 11 | Explosiveness | yes | 16.1208 | 0.0939 | -0.0023 | -0.5042 | no |
+| 12 | Returning Production | yes | 16.1277 | 0.0870 | 0.0056 | 1.0500 | no |
+| 13 | Market Total | yes | 16.2128 | 0.0019 | n/a | n/a | n/a |
+| 14 | Neutral Site | yes | 16.2130 | 0.0017 | 0.0000 | 0.1537 | no |
+| 15 | Pace | yes | 16.2139 | 0.0008 | -0.0024 | -0.5600 | no |
+| 16 | Travel | yes | 16.2188 | -0.0041 | -0.0013 | -0.2265 | no |
+| 17 | Rest | yes | 16.2221 | -0.0074 | -0.0038 | -2.3141 | no |
+| 18 | Line Movement | yes | 16.2716 | -0.0569 | -0.0006 | -0.2330 | no |
 | n/a | Weather | no | n/a | n/a | n/a | n/a | no |
 
 ### Ranked variables - total
@@ -189,78 +189,78 @@ gain of 0.01 MAE is indistinguishable from zero.
 | 2 | EPA | yes | 13.5146 | 0.3314 | -0.0029 | -0.6712 | no |
 | 3 | Pace | yes | 13.5266 | 0.3193 | 0.0029 | 0.3689 | no |
 | 4 | Success Rate | yes | 13.5695 | 0.2765 | -0.0014 | -0.3259 | no |
-| 5 | Line Movement | yes | 13.6836 | 0.1623 | 0.0098 | 1.2323 | no |
-| 6 | Explosiveness | yes | 13.6890 | 0.1569 | -0.0012 | -1.0826 | no |
-| 7 | Finishing Drives | yes | 13.7870 | 0.0589 | -0.0011 | -0.2673 | no |
-| 8 | Market Spread | yes | 13.8216 | 0.0244 | n/a | n/a | n/a |
-| 9 | Neutral Site | yes | 13.8363 | 0.0096 | 0.0032 | 0.6513 | no |
-| 10 | Rest | yes | 13.8459 | 0.0000 | -0.0047 | -2.5787 | no |
-| 11 | Havoc | yes | 13.8473 | -0.0013 | -0.0018 | -1.6657 | no |
-| 12 | Travel | yes | 13.8473 | -0.0014 | -0.0007 | -0.4498 | no |
-| 13 | FPI | yes | 13.8477 | -0.0017 | -0.0009 | -0.2191 | no |
-| 14 | Elo | yes | 13.8502 | -0.0043 | 0.0025 | 0.5407 | no |
-| n/a | SP+ | no | n/a | n/a | n/a | n/a | no |
+| 5 | SP+ | yes | 13.5698 | 0.2761 | 0.0004 | 0.0679 | no |
+| 6 | Line Movement | yes | 13.6836 | 0.1623 | 0.0098 | 1.2323 | no |
+| 7 | Explosiveness | yes | 13.6890 | 0.1569 | -0.0012 | -1.0826 | no |
+| 8 | Finishing Drives | yes | 13.7870 | 0.0589 | -0.0011 | -0.2673 | no |
+| 9 | Market Spread | yes | 13.8216 | 0.0244 | n/a | n/a | n/a |
+| 10 | Neutral Site | yes | 13.8363 | 0.0096 | 0.0032 | 0.6513 | no |
+| 11 | Rest | yes | 13.8459 | 0.0000 | -0.0047 | -2.5787 | no |
+| 12 | Havoc | yes | 13.8473 | -0.0013 | -0.0018 | -1.6657 | no |
+| 13 | Travel | yes | 13.8473 | -0.0014 | -0.0007 | -0.4498 | no |
+| 14 | FPI | yes | 13.8477 | -0.0017 | -0.0009 | -0.2191 | no |
+| 15 | Elo | yes | 13.8502 | -0.0043 | 0.0025 | 0.5407 | no |
+| 16 | Recruiting | yes | 13.8593 | -0.0133 | -0.0032 | -3.0269 | no |
+| 17 | Returning Production | yes | 13.8597 | -0.0138 | -0.0041 | -0.7851 | no |
 | n/a | FPI Game Projection | no | n/a | n/a | n/a | n/a | no |
-| n/a | Recruiting | no | n/a | n/a | n/a | n/a | no |
-| n/a | Returning Production | no | n/a | n/a | n/a | n/a | no |
 | n/a | Weather | no | n/a | n/a | n/a | n/a | no |
 
 ### Permutation importance inside one model - margin
 
 | Feature | MAE increase when shuffled |
 |---|---|
-| closing_spread | 5.6256 |
-| fpi_home_win_prob | 0.1509 |
-| elo_diff | 0.0417 |
-| def_epa_diff | 0.0231 |
-| pace_diff | 0.0188 |
-| success_rate_diff | 0.0123 |
-| travel_distance | 0.0107 |
-| def_success_rate_diff | 0.0053 |
-| explosiveness_diff | 0.0040 |
-| off_epa_diff | 0.0027 |
-| spread_movement | 0.0013 |
-| finishing_drives_diff | 0.0008 |
-| havoc_diff | -0.0038 |
-| plays_per_game_diff | -0.0055 |
-| fpi_diff | -0.0096 |
+| closing_spread | 5.2855 |
+| fpi_home_win_prob | 0.1406 |
+| elo_diff | 0.0330 |
+| pace_diff | 0.0205 |
+| talent_diff | 0.0179 |
+| returning_production_diff | 0.0171 |
+| def_epa_diff | 0.0168 |
+| explosiveness_diff | 0.0138 |
+| travel_distance | 0.0138 |
+| havoc_diff | 0.0131 |
+| success_rate_diff | 0.0122 |
+| rest_diff | 0.0093 |
+| def_explosiveness_diff | 0.0090 |
+| spread_movement | 0.0088 |
+| off_epa_diff | 0.0036 |
 
 ### Permutation importance inside one model - total
 
 | Feature | MAE increase when shuffled |
 |---|---|
-| closing_total | 1.6807 |
-| elo_sum | 0.0429 |
-| pace_sum | 0.0183 |
-| finishing_drives_sum | 0.0174 |
-| fpi_sum | 0.0167 |
-| def_explosiveness_sum | 0.0114 |
-| def_success_rate_sum | 0.0081 |
-| travel_distance | 0.0059 |
-| success_rate_sum | 0.0044 |
-| rest_abs | -0.0005 |
-| plays_per_game_sum | -0.0033 |
-| havoc_sum | -0.0053 |
-| off_epa_sum | -0.0098 |
-| total_movement | -0.0129 |
-| explosiveness_sum | -0.0133 |
+| closing_total | 1.6771 |
+| success_rate_sum | 0.0209 |
+| finishing_drives_sum | 0.0139 |
+| talent_sum | 0.0120 |
+| elo_sum | 0.0114 |
+| sp_plus_def_sum | 0.0107 |
+| def_explosiveness_sum | 0.0095 |
+| sp_plus_off_sum | 0.0074 |
+| total_movement | 0.0071 |
+| pace_sum | 0.0058 |
+| explosiveness_sum | 0.0032 |
+| fpi_sum | -0.0002 |
+| def_success_rate_sum | -0.0033 |
+| rest_abs | -0.0059 |
+| plays_per_game_sum | -0.0062 |
 
 ### Direction of effect (standardised ridge coefficients, margin)
 
 | Feature | Std. coefficient |
 |---|---|
-| closing_spread | -12.808 |
-| def_epa_diff | 2.226 |
-| def_success_rate_diff | -1.682 |
-| fpi_home_win_prob | 0.880 |
-| def_explosiveness_diff | -0.756 |
-| elo_diff | 0.713 |
-| havoc_diff | 0.422 |
-| off_epa_diff | -0.375 |
-| travel_distance | 0.368 |
-| spread_movement | 0.317 |
-| success_rate_diff | 0.271 |
-| explosiveness_diff | -0.263 |
+| closing_spread | -12.578 |
+| sp_plus_diff | 3.741 |
+| sp_plus_def_diff | 2.391 |
+| sp_plus_off_diff | -2.328 |
+| def_epa_diff | 2.255 |
+| def_success_rate_diff | -1.732 |
+| fpi_home_win_prob | 0.907 |
+| def_explosiveness_diff | -0.781 |
+| elo_diff | 0.763 |
+| returning_production_diff | 0.455 |
+| havoc_diff | 0.428 |
+| off_epa_diff | -0.414 |
 
 ### ATS and totals outcomes
 
@@ -270,16 +270,16 @@ Break-even at -110 is **52.4%**.
 
 | Feature set | n | Accuracy | Log loss | Base rate |
 |---|---|---|---|---|
-| all features (incl. market) | 5,671 | 0.5011 | 0.6950 | 0.5020 |
-| non-market features only | 5,671 | 0.4983 | 0.6947 | 0.5020 |
+| all features (incl. market) | 5,671 | 0.5013 | 0.6950 | 0.5020 |
+| non-market features only | 5,671 | 0.4997 | 0.6948 | 0.5020 |
 | market line only | 5,671 | 0.4916 | 0.6934 | 0.5020 |
 
 **Totals (over hit)**
 
 | Feature set | n | Accuracy | Log loss | Base rate |
 |---|---|---|---|---|
-| all features (incl. market) | 5,708 | 0.5137 | 0.6939 | 0.4937 |
-| non-market features only | 5,708 | 0.5102 | 0.6946 | 0.4937 |
+| all features (incl. market) | 5,708 | 0.5126 | 0.6944 | 0.4937 |
+| non-market features only | 5,708 | 0.5107 | 0.6949 | 0.4937 |
 | market line only | 5,708 | 0.5179 | 0.6924 | 0.4937 |
 
 ### Beating the closing line
@@ -291,21 +291,23 @@ number:
 |---|---|---|---|
 | Market Only | margin | 5,671 | 0.4927 |
 | Market Only | total | 5,708 | 0.5172 |
+| SP+ Only | margin | 5,671 | 0.4950 |
+| SP+ Only | total | 5,708 | 0.5173 |
 | FPI Only | margin | 5,671 | 0.4893 |
 | FPI Only | total | 5,708 | 0.5198 |
-| SP+ + FPI | margin | 5,671 | 0.4893 |
-| SP+ + FPI | total | 5,708 | 0.5198 |
+| SP+ + FPI | margin | 5,671 | 0.4943 |
+| SP+ + FPI | total | 5,708 | 0.5180 |
 | Elo Only | margin | 5,671 | 0.4955 |
 | Elo Only | total | 5,708 | 0.5193 |
 | FPI Game Projection | margin | 5,671 | 0.5013 |
 | Efficiency Only | margin | 5,671 | 0.4950 |
 | Efficiency Only | total | 5,708 | 0.5147 |
-| Ratings + Efficiency (no market) | margin | 5,671 | 0.4920 |
-| Ratings + Efficiency (no market) | total | 5,708 | 0.5186 |
+| Ratings + Efficiency (no market) | margin | 5,671 | 0.4902 |
+| Ratings + Efficiency (no market) | total | 5,708 | 0.5163 |
 | Market + Efficiency | margin | 5,671 | 0.5078 |
 | Market + Efficiency | total | 5,708 | 0.5152 |
-| Market + Everything | margin | 5,671 | 0.5031 |
-| Market + Everything | total | 5,708 | 0.5158 |
+| Market + Everything | margin | 5,671 | 0.5101 |
+| Market + Everything | total | 5,708 | 0.5124 |
 
 ---
 
@@ -325,19 +327,19 @@ number:
 
 ### Does anything beat the market?
 
-On margin, the largest marginal gain over the closing spread was **0.0000 MAE** (Neutral Site); on totals **0.0098 MAE** (Line Movement). Both are point estimates; what matters is whether either clears its own error bar.
+On margin, the largest marginal gain over the closing spread was **0.0056 MAE** (Returning Production); on totals **0.0098 MAE** (Line Movement). Both are point estimates; what matters is whether either clears its own error bar.
 
 **No candidate variable improved on the closing line by more than its own noise.** The largest point estimates are a small fraction of a point of MAE and none reaches a paired t-statistic of 2; most marginal gains are outright negative. The closing spread and closing total already contain everything these public variables know. Atlas should treat the market as the prior it must justify departing from, not as one input among many.
 
-Outcome classification is consistent with that: ATS accuracy with the full feature set was **0.5011** and totals **0.5137**, against a 52.4% break-even.
+Outcome classification is consistent with that: ATS accuracy with the full feature set was **0.5013** and totals **0.5126**, against a 52.4% break-even.
 
 ### What is not yet measured
 
-These candidate variables could not be evaluated at all in this build, because their only source is the CollegeFootballData API: **Recruiting, Returning Production, SP+, Weather**. They are wired end-to-end; they need `CFBD_API_KEY` and a rebuild.
+These candidate variables could not be evaluated at all in this build. They are wired end-to-end; each is blocked on its source:
+
+* **Weather** - /games/weather: Unauthorized. This endpoint requires a Patreon subscription at Tier 1 or higher.
 
 Measured for one target but not the other (no meaningful form exists on the other side): **FPI Game Projection**.
-
-SP+ in particular is the one required benchmark this build cannot report, and it is the most likely of the missing variables to matter, since it is an efficiency-based rating rather than a résumé rating.
 
 ---
 
@@ -352,41 +354,44 @@ SP+ in particular is the one required benchmark this build cannot report, and it
 | elo_sum | yes | 1.000 |
 | neutral_site_flag | yes | 1.000 |
 | fpi_home_win_prob | yes | 1.000 |
+| recruiting_rank_diff | yes | 0.998 |
+| talent_sum | yes | 0.996 |
+| talent_diff | yes | 0.996 |
+| def_success_rate_sum | yes | 0.992 |
+| finishing_drives_diff | yes | 0.992 |
+| explosiveness_sum | yes | 0.992 |
+| def_success_rate_diff | yes | 0.992 |
 | def_epa_sum | yes | 0.992 |
 | def_epa_diff | yes | 0.992 |
-| explosiveness_diff | yes | 0.992 |
-| explosiveness_sum | yes | 0.992 |
-| def_success_rate_sum | yes | 0.992 |
-| def_success_rate_diff | yes | 0.992 |
 | plays_per_game_diff | yes | 0.992 |
+| pace_sum | yes | 0.992 |
 | plays_per_game_sum | yes | 0.992 |
 | finishing_drives_sum | yes | 0.992 |
-| finishing_drives_diff | yes | 0.992 |
-| havoc_sum | yes | 0.992 |
-| havoc_diff | yes | 0.992 |
-| off_epa_sum | yes | 0.992 |
+| explosiveness_diff | yes | 0.992 |
 | off_epa_diff | yes | 0.992 |
+| off_epa_sum | yes | 0.992 |
+| havoc_sum | yes | 0.992 |
 | success_rate_sum | yes | 0.992 |
 | success_rate_diff | yes | 0.992 |
 | pace_diff | yes | 0.992 |
-| pace_sum | yes | 0.992 |
-| def_explosiveness_sum | yes | 0.992 |
+| havoc_diff | yes | 0.992 |
 | def_explosiveness_diff | yes | 0.992 |
-| fpi_sum | yes | 0.981 |
+| def_explosiveness_sum | yes | 0.992 |
+| sp_plus_off_sum | yes | 0.984 |
+| sp_plus_off_diff | yes | 0.984 |
+| sp_plus_def_diff | yes | 0.984 |
+| sp_plus_diff | yes | 0.984 |
+| sp_plus_def_sum | yes | 0.984 |
+| returning_production_sum | yes | 0.983 |
+| returning_production_diff | yes | 0.983 |
 | fpi_diff | yes | 0.981 |
-| travel_distance_diff | yes | 0.942 |
+| fpi_sum | yes | 0.981 |
 | travel_distance | yes | 0.942 |
+| travel_distance_diff | yes | 0.942 |
 | rest_diff | yes | 0.930 |
 | rest_abs | yes | 0.930 |
 | total_movement | yes | 0.912 |
 | spread_movement | yes | 0.911 |
-| recruiting_rank_diff | yes | 0.000 |
-| sp_plus_diff | yes | 0.000 |
-| sp_plus_sum | yes | 0.000 |
-| returning_production_diff | yes | 0.000 |
-| returning_production_sum | yes | 0.000 |
-| talent_sum | yes | 0.000 |
-| talent_diff | yes | 0.000 |
 | weather_precip | yes | 0.000 |
 | weather_temp | yes | 0.000 |
 | weather_wind | yes | 0.000 |
@@ -402,14 +407,14 @@ Anything above 0.98 would be an outcome in disguise; nothing here is close.
 | actual_margin | fpi_home_win_prob | 5,776 | 0.6238 | no |
 | actual_margin | elo_diff | 5,778 | 0.6052 | no |
 | actual_margin | fpi_diff | 5,669 | 0.5166 | no |
+| actual_margin | sp_plus_diff | 5,684 | 0.5122 | no |
 | actual_margin | success_rate_diff | 5,733 | 0.4489 | no |
 | actual_margin | off_epa_diff | 5,733 | 0.4308 | no |
+| actual_margin | sp_plus_def_diff | 5,684 | -0.4082 | no |
 | actual_total | closing_total | 5,778 | 0.3990 | no |
 | actual_margin | def_success_rate_diff | 5,733 | -0.3941 | no |
+| actual_margin | sp_plus_off_diff | 5,684 | 0.3916 | no |
 | actual_margin | def_epa_diff | 5,733 | -0.3866 | no |
-| actual_margin | finishing_drives_diff | 5,733 | 0.3715 | no |
-| actual_margin | closing_spread_abs | 5,778 | 0.3023 | no |
-| actual_margin | havoc_diff | 5,733 | 0.2522 | no |
 
 ## Appendix C - Reproducing this report
 

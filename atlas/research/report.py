@@ -30,6 +30,56 @@ LOG = get_logger(__name__)
 
 BREAK_EVEN = 0.5238  # -110 juice
 
+CFBD_DATASETS = ("sp_plus", "talent", "recruiting", "returning", "weather")
+
+#: Candidate variable -> the CFBD dataset that would populate it, so the
+#: report can name the exact reason a variable is missing instead of always
+#: blaming a missing API key.
+VARIABLE_TO_CFBD = {
+    "SP+": "sp_plus",
+    "Recruiting": "recruiting",
+    "Returning Production": "returning",
+    "Weather": "weather",
+}
+
+
+def _missing_reason(variable: str) -> str:
+    dataset = VARIABLE_TO_CFBD.get(variable)
+    if dataset is None:
+        return "no source wired up"
+    reason = cfbd.unavailable_reason(config.paths().raw, dataset)
+    if reason:
+        return reason
+    if not cfbd.available():
+        return "needs CFBD_API_KEY"
+    return "no rows returned by CFBD"
+
+
+def _cfbd_note() -> str:
+    """State exactly which CFBD datasets this build has, and why any are missing."""
+    if not cfbd.available():
+        return (
+            "CFBD enrichment was **not** enabled for this build (`CFBD_API_KEY` unset), so "
+            "SP+, recruiting, roster talent, returning production and kickoff weather are "
+            "structurally present but empty. Every other result below is unaffected."
+        )
+    raw = config.paths().raw
+    present, missing = [], []
+    for dataset in CFBD_DATASETS:
+        files = sorted((raw / "cfbd").glob(f"{dataset}_*.parquet"))
+        populated = any(len(pd.read_parquet(f)) > 0 for f in files)
+        if populated:
+            present.append(dataset)
+        else:
+            reason = cfbd.unavailable_reason(raw, dataset) or "no rows returned"
+            missing.append(f"`{dataset}` ({reason})")
+    note = "CFBD enrichment was **enabled** for this build"
+    if present:
+        note += ": " + ", ".join(f"`{d}`" for d in present) + " are populated"
+    if missing:
+        note += ". Still missing: " + "; ".join(missing)
+    return note + "."
+
 
 def _fmt(value: float | None, digits: int = 3, dash: str = "n/a") -> str:
     if value is None or (isinstance(value, float) and not np.isfinite(value)):
@@ -178,15 +228,7 @@ def render(df: pd.DataFrame, raw_df: pd.DataFrame, art: dict) -> str:
     rank_total = rank[(rank["target"] == "total")]
 
     sp_available = bool(sp_margin is not None and sp_margin["available"])
-    cfbd_note = (
-        "CFBD enrichment was **enabled** for this build."
-        if cfbd.available()
-        else (
-            "CFBD enrichment was **not** enabled for this build (`CFBD_API_KEY` unset), so "
-            "SP+, recruiting, returning production and kickoff weather are structurally "
-            "present but empty. Every other result below is unaffected."
-        )
-    )
+    cfbd_note = _cfbd_note()
 
     generated = datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC")
     parts: list[str] = []
@@ -516,11 +558,12 @@ def _conclusions(df: pd.DataFrame, art: dict, sp_available: bool) -> str:
     ]
     if missing:
         lines.append(
-            "These candidate variables could not be evaluated at all in this build, "
-            "because their only source is the CollegeFootballData API: **"
-            + ", ".join(missing)
-            + "**. They are wired end-to-end; they need `CFBD_API_KEY` and a rebuild."
+            "These candidate variables could not be evaluated at all in this build. "
+            "They are wired end-to-end; each is blocked on its source:"
         )
+        lines.append("")
+        for variable in missing:
+            lines.append(f"* **{variable}** - {_missing_reason(variable)}")
     else:
         lines.append("Every candidate variable in the mission brief was measurable.")
     if partial:

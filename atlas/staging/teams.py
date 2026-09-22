@@ -77,3 +77,31 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+def name_resolver(teams: pd.DataFrame):
+    """Resolve a CFBD school name to a team id, tolerant of season gaps.
+
+    CFBD returns team *names*; everything else in Atlas is keyed on team id.
+    The per-season map is preferred, but ratings from the season *before* the
+    warehouse starts still have to resolve, and school names are stable, so a
+    season-agnostic map backs it up.
+    """
+    by_season = (
+        teams.dropna(subset=["school"])
+        .drop_duplicates(["season", "school"])
+        .set_index(["season", "school"])["team_id"]
+    )
+    overall = (
+        teams.dropna(subset=["school"])
+        .sort_values("season")
+        .drop_duplicates("school", keep="last")
+        .set_index("school")["team_id"]
+    )
+
+    def resolve(season: int, names: pd.Series) -> pd.Series:
+        idx = pd.MultiIndex.from_arrays([[season] * len(names), names])
+        exact = pd.Series(by_season.reindex(idx).to_numpy(), index=names.index)
+        return exact.fillna(pd.Series(overall.reindex(names).to_numpy(), index=names.index))
+
+    return resolve

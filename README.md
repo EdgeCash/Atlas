@@ -29,14 +29,24 @@ Measured on **5,778 FBS-vs-FBS games, 2018-2025**, leave-one-season-out:
 | CFBD pre-game Elo | 13.11 | 13.85 |
 | Atlas point-in-time efficiency | 13.96 | 13.15 |
 | ESPN FPI, previous-season rating | 14.10 | 13.85 |
+| SP+, previous-season rating | 14.18 | **13.57** |
 
-No candidate variable improved on the closing line out-of-sample, and no
-benchmark cleared the 52.38% break-even hit rate against it. Details, ranked
-variable list and conclusions are in the report.
+No candidate variable improved on the closing line by more than its own noise,
+and no benchmark cleared the 52.38% break-even hit rate against it. Marginal
+value over the market is reported as a paired per-game comparison with a
+t-statistic, so a 0.01 MAE point estimate cannot be mistaken for an edge.
 
-SP+ could not be measured in this build - it is published only through the
-CollegeFootballData API, which needs a free key. See
-[Enabling CFBD](#enabling-cfbd-optional).
+Two findings worth pulling out:
+
+* **In-season beats stale.** A system's current view of a matchup (ESPN's
+  pre-game FPI projection, 12.92) is far better than the same family's
+  previous-season rating (14.10).
+* **Totals need sum-form features.** SP+ is the *worst* margin rating tested
+  and the *best* non-market totals rating, purely because its offence and
+  defence components are carried separately.
+
+Kickoff weather is the one brief variable still unmeasured: CFBD's
+`/games/weather` requires a paid Patreon tier, not just a free key.
 
 ## Quick start
 
@@ -70,8 +80,9 @@ print(con.execute('SELECT season, count(*) FROM research_games GROUP BY 1 ORDER 
 
 Atlas builds end-to-end with no API key. A free
 [CollegeFootballData](https://collegefootballdata.com/key) key adds the fields
-that exist nowhere else - **SP+ ratings, recruiting rankings, roster talent,
-returning production and kickoff weather**:
+that exist nowhere else - **SP+ ratings (overall, offence and defence),
+recruiting rankings, roster talent and returning production**. Kickoff weather
+needs a *paid* CFBD tier and is reported as unavailable on a free key:
 
 ```bash
 export CFBD_API_KEY=...
@@ -79,7 +90,9 @@ make all
 ```
 
 Nothing else changes: the same tables gain non-null columns and the report
-fills in Section 3 and the currently-unavailable rows of the variable ranking.
+fills in Section 3 and the corresponding rows of the variable ranking. The
+report states the exact blocker for anything still missing rather than
+assuming a key is absent.
 
 ## Layout
 
@@ -95,7 +108,7 @@ atlas/
   testing/             deterministic synthetic league used by the test suite
 scripts/
   check_reproducible.py  builds twice, asserts byte-identical output
-tests/                 offline suite: 44 tests, no network
+tests/                 offline suite: 54 tests, no network
 ```
 
 ## Data sources
@@ -105,7 +118,8 @@ tests/                 offline suite: 44 tests, no network
 | sportsdataverse `cfbfastR-data` | no | schedules, results, team/venue geography, historical sportsbook lines (open, close, moneyline, per book) |
 | sportsdataverse `cfbfastR_cfb_pbp` | no | play-by-play with EPA and success |
 | ESPN public endpoints | no | FPI season ratings, pre-game matchup projections |
-| CollegeFootballData API | yes | SP+, recruiting, talent, returning production, weather |
+| CollegeFootballData API | free key | SP+ (overall/offence/defence), recruiting, roster talent, returning production |
+| CollegeFootballData API | paid tier | kickoff weather |
 
 ## Testing and CI
 

@@ -24,6 +24,7 @@ from pathlib import Path
 import pandas as pd
 
 from atlas.sources import cfbd, espn
+from atlas.staging import teams as teams_stage
 from atlas.util import get_logger, write_parquet
 
 LOG = get_logger(__name__)
@@ -35,8 +36,9 @@ def build_ratings(raw: Path, staging: Path, games: pd.DataFrame, teams: pd.DataF
     fpi = _prior_season_fpi(raw, sorted(games["season"].unique()))
     out = _attach_team_rating(out, fpi, "fpi")
 
-    sp = _prior_season_sp_plus(raw, sorted(games["season"].unique()), teams)
-    out = _attach_team_rating(out, sp, "sp_plus")
+    for column, name in SP_PLUS_COLUMNS.items():
+        sp = _prior_season_sp_plus(raw, sorted(games["season"].unique()), teams, column)
+        out = _attach_team_rating(out, sp, name)
 
     pred = _predictors(raw, sorted(games["season"].unique()))
     out = out.merge(pred, on="game_id", how="left")
@@ -88,30 +90,37 @@ def _prior_season_fpi(raw: Path, seasons: list[int]) -> pd.DataFrame:
     return pd.concat(frames, ignore_index=True).dropna(subset=["value"])
 
 
-def _prior_season_sp_plus(raw: Path, seasons: list[int], teams: pd.DataFrame) -> pd.DataFrame:
-    name_to_id = (
-        teams.dropna(subset=["school"])
-        .drop_duplicates(["season", "school"])
-        .set_index(["season", "school"])["team_id"]
-    )
+#: SP+ fields Atlas carries. The overall rating drives the margin benchmark;
+#: the offence/defence split is what a totals model actually needs, since a
+#: sum of two overall ratings says nothing about the scoring environment.
+SP_PLUS_COLUMNS = {
+    "rating": "sp_plus",
+    "offense.rating": "sp_plus_off",
+    "defense.rating": "sp_plus_def",
+}
+
+
+def _prior_season_sp_plus(
+    raw: Path, seasons: list[int], teams: pd.DataFrame, column: str = "rating"
+) -> pd.DataFrame:
+    resolve = teams_stage.name_resolver(teams)
     frames = []
     for season in seasons:
         path = raw / "cfbd" / f"sp_plus_{season - 1}.parquet"
         if not path.exists():
             continue
         df = pd.read_parquet(path)
-        if df.empty or "rating" not in df.columns:
+        if df.empty or column not in df.columns:
             continue
         df = df.dropna(subset=["team"])
-        idx = pd.MultiIndex.from_arrays([[season - 1] * len(df), df["team"]])
-        df["team_id"] = name_to_id.reindex(idx).to_numpy()
+        df["team_id"] = resolve(season - 1, df["team"])
         df = df.dropna(subset=["team_id"])
         frames.append(
             pd.DataFrame(
                 {
                     "season": season,
                     "team_id": df["team_id"].astype("int64"),
-                    "value": pd.to_numeric(df["rating"], errors="coerce"),
+                    "value": pd.to_numeric(df[column], errors="coerce"),
                 }
             )
         )

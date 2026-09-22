@@ -28,6 +28,9 @@ LOG = get_logger(__name__)
 
 USER_AGENT = "atlas-research/0.1 (+https://github.com/EdgeCash/Atlas)"
 
+#: Statuses worth retrying. Everything else is an answer, not a hiccup.
+RETRYABLE_STATUS = frozenset({429, 500, 502, 503, 504})
+
 
 def session() -> requests.Session:
     s = requests.Session()
@@ -51,18 +54,32 @@ def http_get(
     for attempt in range(retries + 1):
         try:
             resp = sess.get(url, params=params, headers=headers, timeout=timeout)
-            if resp.status_code in (429, 500, 502, 503, 504):
+            if resp.status_code in RETRYABLE_STATUS:
                 raise requests.HTTPError(f"{resp.status_code} for {url}", response=resp)
             resp.raise_for_status()
             return resp
-        except Exception as exc:  # noqa: BLE001 - retried below
+        except requests.HTTPError as exc:
+            # A 401/403/404 is a settled answer, not a hiccup. Retrying it
+            # wastes time and buries the real reason in the log.
+            status = getattr(exc.response, "status_code", None)
+            if status is not None and status not in RETRYABLE_STATUS:
+                raise
             last = exc
             if attempt == retries:
                 break
-            sleep = backoff**attempt
-            LOG.warning("GET failed (%s), retry %d in %.0fs: %s", url, attempt + 1, sleep, exc)
-            time.sleep(sleep)
+            _sleep_backoff(url, attempt, backoff, exc)
+        except Exception as exc:  # noqa: BLE001 - transport errors are retried
+            last = exc
+            if attempt == retries:
+                break
+            _sleep_backoff(url, attempt, backoff, exc)
     raise RuntimeError(f"GET failed after {retries + 1} attempts: {url}") from last
+
+
+def _sleep_backoff(url: str, attempt: int, backoff: float, exc: Exception) -> None:
+    sleep = backoff**attempt
+    LOG.warning("GET failed (%s), retry %d in %.0fs: %s", url, attempt + 1, sleep, exc)
+    time.sleep(sleep)
 
 
 def download(url: str, dest: Path, *, retries: int = 4, backoff: float = 2.0) -> Path:

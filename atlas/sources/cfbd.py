@@ -9,7 +9,7 @@ builds end-to-end without it from the open mirrors, and setting
 * FPI ratings (``/ratings/fpi``) - a second opinion next to the ESPN feed
 * recruiting rankings (``/recruiting/teams``) and roster talent (``/talent``)
 * returning production (``/player/returning``)
-* kickoff weather (``/games/weather``)
+* kickoff weather (``/games/weather``) - **paid CFBD tier only**
 
 All of these are season-level. Atlas joins season ``S-1`` values onto season
 ``S`` games so the rating is known before kickoff; weather is the exception,
@@ -18,11 +18,13 @@ it is a kickoff observation and is used as-is.
 
 from __future__ import annotations
 
+import json
 import os
 from pathlib import Path
 from typing import Any
 
 import pandas as pd
+import requests
 
 from atlas.util import get_logger, http_get, session, write_parquet
 
@@ -40,18 +42,44 @@ def available() -> bool:
     return api_key() is not None
 
 
-def _get(endpoint: str, params: dict[str, Any]) -> list[dict]:
+class CfbdTierError(RuntimeError):
+    """The key is valid but the endpoint needs a paid CFBD subscription."""
+
+
+def _get(endpoint: str, params: dict[str, Any], *, retries: int = 4) -> list[dict]:
     key = api_key()
     if not key:
         raise RuntimeError("CFBD_API_KEY is not set")
-    resp = http_get(
-        f"{BASE}{endpoint}",
-        sess=session(),
-        params=params,
-        headers={"Authorization": f"Bearer {key}"},
-    )
+    try:
+        resp = http_get(
+            f"{BASE}{endpoint}",
+            sess=session(),
+            params=params,
+            headers={"Authorization": f"Bearer {key}"},
+            retries=retries,
+        )
+    except requests.HTTPError as exc:
+        _raise_for_tier(exc.response, endpoint)
+        raise
     payload = resp.json()
     return payload if isinstance(payload, list) else []
+
+
+def _raise_for_tier(response: Any, endpoint: str) -> None:
+    """Turn CFBD's paid-tier 401 into a distinct, non-retryable error.
+
+    A 401 here does not mean the key is bad - every other endpoint works with
+    the same key. Retrying it four times per season only makes the ingest slow
+    and the log misleading.
+    """
+    if response is None or getattr(response, "status_code", None) != 401:
+        return
+    try:
+        message = response.json().get("message", "")
+    except Exception:  # noqa: BLE001 - a non-JSON 401 is still just a 401
+        message = ""
+    if "Patreon" in message or "Tier" in message:
+        raise CfbdTierError(f"{endpoint}: {message}")
 
 
 def _cached(raw: Path, name: str, season: int, endpoint: str, params: dict[str, Any]) -> Path:
@@ -83,16 +111,46 @@ def fetch_returning_production(raw: Path, season: int) -> Path:
 
 
 def fetch_weather(raw: Path, season: int) -> Path:
+    """Kickoff weather. Free CFBD keys cannot reach this endpoint."""
     dest = raw / "cfbd" / f"weather_{season}.parquet"
     if dest.exists():
         return dest
     rows: list[dict] = []
     for season_type in ("regular", "postseason"):
         try:
-            rows.extend(_get("/games/weather", {"year": season, "seasonType": season_type}))
-        except Exception as exc:  # noqa: BLE001 - weather sits behind a paid tier
+            rows.extend(
+                _get("/games/weather", {"year": season, "seasonType": season_type}, retries=0)
+            )
+        except CfbdTierError as exc:
+            record_status(raw, "weather", str(exc))
+            raise
+        except Exception as exc:  # noqa: BLE001 - one bad season must not kill the run
             LOG.warning("CFBD weather unavailable for %s/%s: %s", season, season_type, exc)
     return write_parquet(pd.json_normalize(rows), dest)
+
+
+def record_status(raw: Path, dataset: str, reason: str) -> None:
+    """Persist *why* a dataset is missing, so the report can say so exactly."""
+    path = raw / "cfbd" / "STATUS.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    status: dict[str, str] = {}
+    if path.exists():
+        try:
+            status = json.loads(path.read_text())
+        except json.JSONDecodeError:
+            status = {}
+    status[dataset] = reason
+    path.write_text(json.dumps(status, indent=2, sort_keys=True) + "\n")
+
+
+def unavailable_reason(raw: Path, dataset: str) -> str | None:
+    path = raw / "cfbd" / "STATUS.json"
+    if not path.exists():
+        return None
+    try:
+        return json.loads(path.read_text()).get(dataset)
+    except json.JSONDecodeError:
+        return None
 
 
 FETCHERS = {
@@ -116,6 +174,9 @@ def fetch_all(raw: Path, seasons: list[int]) -> dict[str, list[Path]]:
         for season in seasons:
             try:
                 paths.append(fn(raw, season))
+            except CfbdTierError as exc:
+                LOG.warning("CFBD %s needs a paid tier, skipping entirely: %s", name, exc)
+                break
             except Exception as exc:  # noqa: BLE001 - one bad season must not kill the run
                 LOG.warning("CFBD %s %s failed: %s", name, season, exc)
         out[name] = paths

@@ -112,3 +112,15 @@ def test_missing_required_column_is_a_hard_error():
     assert schema.check("games", ["game_id"]) != []
     with pytest.raises(KeyError):
         schema.check("not_a_table", [])
+
+
+def test_research_view_carries_every_rating_column(synthetic_build):
+    """New rating columns must reach the research view without a SQL edit."""
+    ratings = synthetic_build["tables"]["ratings"]
+    con = duckdb.connect(str(synthetic_build["paths"].duckdb), read_only=True)
+    try:
+        view_cols = {d[0] for d in con.execute("SELECT * FROM research_games LIMIT 0").description}
+    finally:
+        con.close()
+    expected = set(ratings.columns) - {"game_id", "season", "home_team_id", "away_team_id"}
+    assert expected.issubset(view_cols)
