@@ -18,6 +18,11 @@ COUNT_COLUMNS = {
 }
 
 
+#: Columns rendered with %g - values like a 4-point threshold should read "4",
+#: not "4.0000", but may legitimately be fractional.
+COMPACT_COLUMNS = {"threshold", "price", "quantile"}
+
+
 def fmt(value: float | None, digits: int = 3, dash: str = "n/a") -> str:
     if value is None or (isinstance(value, float) and not np.isfinite(value)):
         return dash
@@ -34,10 +39,13 @@ def table(df: pd.DataFrame, columns: list[str], headers: list[str], digits: int 
             if isinstance(value, (bool, np.bool_)):
                 cells.append("yes" if value else "no")
             elif isinstance(value, (int, np.integer)):
-                cells.append(f"{int(value):,}")
+                cells.append(str(int(value)) if col in COMPACT_COLUMNS | {"season"}
+                             else f"{int(value):,}")
             elif isinstance(value, (float, np.floating)):
                 if not np.isfinite(value):
                     cells.append("n/a")
+                elif col in COMPACT_COLUMNS:
+                    cells.append(f"{value:g}")
                 elif col in COUNT_COLUMNS:
                     cells.append(str(int(value)) if col == "season" else f"{int(round(value)):,}")
                 else:

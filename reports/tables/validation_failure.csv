@@ -1,0 +1,8 @@
+cause,implicated,evidence
+Threshold sensitivity,True,the frozen threshold ranged 1 to 8 points across experiments that differ only in which seasons they trained on
+Season instability,True,4 of 7 walk-forward seasons cleared -110; season win rates span 0.470 to 0.583
+Holdout collapse,True,Phase 1C's in-sample scan read 52.4% at a 4-point cut; the pooled true holdout reads 0.5165
+Sample size,True,"bets per season ranged 42 to 645; the highest-threshold folds bet fewer than 100 games, where a 55% read is noise"
+Multiple testing,True,Phase 1C scanned eight thresholds on the full sample and reported the best; this phase scanned none on holdout data and the apparent edge disappeared
+Market adaptation,False,at a fixed 4-point threshold the win rate averaged 0.522 in 2019-2021 and 0.534 in 2022-2025 - no trend consistent with the market learning; the signal was never there to adapt to
+Sample variance,True,"the bootstrap 95% interval on the pooled holdout is [0.4981, 0.5349] - it contains 50%"

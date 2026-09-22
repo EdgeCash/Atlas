@@ -1,0 +1,5 @@
+criterion,required,observed,passes,verdict
+1. Pooled holdout win rate > 52.38%,> 0.5238,0.5164601769911504,False,FAIL
+2. Bootstrap 95% CI lower bound > 50.0%,> 0.50,0.49805309734513276,False,FAIL
+3. At least 5 of 7 walk-forward seasons clear -110,>= 5,4.0,False,FAIL
+4. Positive expected units at -115,> 0 units,-97.304347826087,False,FAIL

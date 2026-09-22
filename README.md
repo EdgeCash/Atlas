@@ -23,6 +23,10 @@ no dashboard. It produces a warehouse, a measurement, and a recommendation.
 | Phase 1C situational edge | [`reports/situational_edge_report.md`](reports/situational_edge_report.md) |
 | Phase 1C market failure | [`reports/market_failure_report.md`](reports/market_failure_report.md) |
 | Phase 1C Velocity comparison | [`reports/velocity_comparison_report.md`](reports/velocity_comparison_report.md) |
+| **Signal verification (final verdict)** | [`reports/atlas_signal_verification_final.md`](reports/atlas_signal_verification_final.md) |
+| Threshold freeze report | [`reports/threshold_freeze_report.md`](reports/threshold_freeze_report.md) |
+| Bootstrap signal report | [`reports/bootstrap_signal_report.md`](reports/bootstrap_signal_report.md) |
+| Pre-registered criteria | [`docs/SIGNAL_PREREGISTRATION.md`](docs/SIGNAL_PREREGISTRATION.md) |
 | Supporting tables (CSV/JSON) | `reports/tables/` |
 | Alpha model recommendation | [`docs/ATLAS_ALPHA_SPEC.md`](docs/ATLAS_ALPHA_SPEC.md) |
 | Point-in-time methodology | [`docs/POINT_IN_TIME.md`](docs/POINT_IN_TIME.md) |
@@ -46,6 +50,28 @@ No candidate variable improved on the closing line by more than its own noise,
 and no benchmark cleared the 52.38% break-even hit rate against it. Marginal
 value over the market is reported as a paired per-game comparison with a
 t-statistic, so a 0.01 MAE point estimate cannot be mistaken for an edge.
+
+### The final answer: no edge
+
+The one candidate surviving Phases 1A-1C - selective NCAAF totals - was
+pre-registered and held out. **It failed all four criteria.**
+
+| Criterion | Required | Observed | |
+|---|---|---|---|
+| Pooled holdout win rate | > 52.38% | **51.65%** | FAIL |
+| Bootstrap 95% CI lower bound | > 50.0% | **49.81%** | FAIL |
+| Walk-forward seasons clearing -110 | ≥ 5 of 7 | **4 of 7** | FAIL |
+| Expected units at -115 | > 0 | **-97.3** | FAIL |
+
+The frozen threshold ranged from **1 to 8 points** across experiments that
+differed only in which seasons they trained on - there is no stable threshold
+to freeze. Holding it fixed at 4 points across every season, the most
+favourable honest reading available, lands 0.02% from break-even and nets
+-0.9 units over seven seasons.
+
+**Recommendation: terminate Atlas Alpha.** Four phases have found every
+variable Atlas can reach already priced into the closing line. That is a real
+finding, and it is worth more than a model that would have lost money slowly.
 
 ### Phase 1C: the search for unpriced information
 
@@ -111,6 +137,7 @@ python -m atlas.research.report           # stage 4: Phase 1A report
 python -m atlas.research.phase1b_report   # stage 5: Phase 1B reports
 make qb-data                              # research-only QB extraction
 python -m atlas.research.phase1c_report   # stage 6: Phase 1C reports
+python -m atlas.research.validation_report # stage 7: signal validation
 ```
 
 The quarterback-of-record extraction writes nothing into the warehouse, and
@@ -167,7 +194,7 @@ atlas/
 scripts/
   check_reproducible.py       builds twice, asserts byte-identical output
   research_qb_availability.py QB feasibility probe (research only)
-tests/                 offline suite: 99 tests, no network
+tests/                 offline suite: 116 tests, no network
 ```
 
 ## Data sources
@@ -210,10 +237,17 @@ end to end against synthetic station files in the collector's own layout.
 2. **Pool p-values and correct once.** Phase 1C ran 50 tests; at p < 0.05 that
    is ~2.5 apparent findings from noise alone. Post-hoc tests are carried but
    excluded from the pool and labelled.
+3. **Pre-register before you look.** The validation phase fixed its model,
+   threshold rule and pass/fail criteria in a commit of their own, *before*
+   any holdout season was scored. The git history is the audit trail.
 
-Phase 1B did neither, and it cost the programme a headline finding.
+Phase 1B lacked the first two and it cost the programme a headline finding.
+Phase 1C lacked the third and it cost the programme the next one.
 
 ## Scope boundary
 
-Phases 1A, 1B and 1C stop here. No predictions, no simulations, no wagers, no
-dashboard, no Phase 2.
+The programme stops here. No predictions, no simulations, no wagers, no
+dashboard, no Phase 2. The warehouse remains a clean, point-in-time-correct,
+reproducible research instrument for college football, and the negative
+results are reusable: anyone restarting this search can begin from "these
+forty variables are priced".

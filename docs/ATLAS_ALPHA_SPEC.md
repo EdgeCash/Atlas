@@ -1,5 +1,22 @@
 # Atlas Alpha Model - Specification
 
+**Status: SUPERSEDED. Atlas Alpha is not recommended.**
+
+> The one candidate this document was built around - selective NCAAF totals -
+> was pre-registered and held out in the signal-validation phase and **failed
+> all four criteria**: pooled holdout 51.65% against a 52.38% break-even, a
+> bootstrap interval containing 50%, 4 of 7 walk-forward seasons, and -97
+> units at -115. The frozen threshold ranged 1 to 8 points across experiments
+> differing only in training seasons.
+>
+> See [`reports/atlas_signal_verification_final.md`](../reports/atlas_signal_verification_final.md).
+> **Recommendation: terminate Atlas Alpha.**
+>
+> Everything below is retained as the record of how that conclusion was
+> reached, not as a build specification. The feature-role table in §2 remains
+> accurate about what predicts football; it is simply no longer relevant,
+> because none of it beats the closing line.
+
 **Status:** recommendation, amended after Phase 1B. Nothing here has been built.
 **Evidence:** [`reports/atlas_research_report_v1.md`](../reports/atlas_research_report_v1.md),
 [`reports/opponent_adjustment_report.md`](../reports/opponent_adjustment_report.md),
