@@ -12,3 +12,8 @@ data/staging/**
 data/warehouse/**
 !data/**/.gitkeep
 !data/**/MANIFEST.json
+
+# The site is generated from the warehouse and the tracking store in seconds.
+# The generator is the source of truth; the output is not committed.
+/site/
+/data/site/

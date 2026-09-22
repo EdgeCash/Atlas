@@ -1,7 +1,8 @@
 PYTHON ?= python3
 
 .PHONY: help install ingest warehouse research all test lint clean-data \
-	live-refresh live-run live-report live-check live-reproduce
+	live-refresh live-run live-report live-check live-reproduce \
+	site site-full site-serve
 
 help:
 	@echo "Atlas Phase 1A - research warehouse"
@@ -21,6 +22,9 @@ help:
 	@echo "  make live-run      Phase 5: poll lines, form signals, grade, report"
 	@echo "  make live-check    Ops: data quality, drift, anomalies, reproducibility"
 	@echo "  make live-reproduce  Ops: replay random periods and verify they match"
+	@echo ""
+	@echo "  make site       build the Atlas Sports Intelligence site into site/"
+	@echo "  make site-full  warehouse + numbers + market + site, from scratch"
 	@echo "  make qb-data    extract the QB of record (research only, ~1 GB transient)"
 	@echo "  make all        ingest -> warehouse -> research -> phase1b -> phase1c"
 	@echo "  make test       run the offline test suite"
@@ -96,6 +100,24 @@ live-check:
 
 live-reproduce:
 	$(PYTHON) -m atlas.live reproduce --sample 5
+
+# ---------------------------------------------------------------------------
+# Atlas Sports Intelligence - the product
+# ---------------------------------------------------------------------------
+
+# Static HTML from the warehouse and the tracking store. No server.
+site:
+	$(PYTHON) -m atlas.site.build
+
+# Everything the site needs, from a cold repository.
+site-full:
+	$(PYTHON) -m atlas.warehouse.build --include-scheduled
+	$(PYTHON) -m atlas.live refresh --no-rebuild
+	$(PYTHON) -m atlas.live run
+	$(PYTHON) -m atlas.site.build
+
+site-serve: site
+	$(PYTHON) -m http.server 8000 --directory site
 
 all: ingest warehouse research phase1b phase1c validate velocity beta gamma
 

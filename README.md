@@ -43,6 +43,8 @@ no dashboard. It produces a warehouse, a measurement, and a recommendation.
 | Matchup card specification | [`docs/ATLAS_CARD_SPEC.md`](docs/ATLAS_CARD_SPEC.md) |
 | Free / premium plan | [`docs/PREMIUM_PLAN.md`](docs/PREMIUM_PLAN.md) |
 | Wireframes and design system | [`design/index.html`](design/index.html) · renders in `design/screens/` |
+| **The site itself** | `make site` → `site/` · screenshots in `design/screens/site/` |
+| Implementation notes | [`docs/SITE_IMPLEMENTATION.md`](docs/SITE_IMPLEMENTATION.md) |
 | Phase 4 opening-line feasibility | [`reports/opening_line_feasibility.md`](reports/opening_line_feasibility.md) |
 | Phase 4 CLV economics | [`reports/clv_economics.md`](reports/clv_economics.md) |
 | Supporting tables (CSV/JSON) | `reports/tables/` |
@@ -117,6 +119,30 @@ data.
 Worth borrowing, in order: the publish gate's **edge ceiling**, **market
 anchoring**, **CLV as the grading metric**, **constitutional staking caps**,
 and **per-market evidence gating**. None of them is a football insight.
+
+### The site is built
+
+`make site` renders the whole product as static HTML in about seven seconds:
+58 matchup cards, 116 team pages, a research page, an NFL staging page, a
+premium framework page and 12 social templates. No server, no client
+framework — the card is a document, and a document loads instantly on a phone.
+
+```bash
+make site-full   # warehouse + numbers + market + site, from cold
+make site-serve  # build and serve on :8000
+```
+
+Every number is real: ESPN metadata for venue, broadcast and colours; the live
+tracking store for the market as it opened and stands; the point-in-time
+warehouse for drivers and percentiles; and the calibration bands recomputed
+from seven seasons on every build, so the grade and the research page cannot
+drift apart.
+
+**One finding needs a decision.** The approved rubric, on a real 58-game
+slate, grades 67% of cards A and never reaches A+ or D — the clustering
+failure `PRODUCT_VISION.md` names. I implemented it exactly as approved rather
+than adjusting it, measured the distribution, and put three options in
+[`docs/SITE_IMPLEMENTATION.md`](docs/SITE_IMPLEMENTATION.md).
 
 ### Atlas Sports Intelligence — the product
 
