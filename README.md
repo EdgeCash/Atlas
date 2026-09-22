@@ -29,6 +29,9 @@ no dashboard. It produces a warehouse, a measurement, and a recommendation.
 | Pre-registered criteria | [`docs/SIGNAL_PREREGISTRATION.md`](docs/SIGNAL_PREREGISTRATION.md) |
 | **Phase 2: Velocity edge decomposition** | [`reports/velocity_edge_decomposition.md`](reports/velocity_edge_decomposition.md) |
 | **Phase 3: market-aware beta framework** | [`reports/atlas_beta_framework.md`](reports/atlas_beta_framework.md) |
+| **Phase 4: gamma assessment (monetization)** | [`reports/atlas_gamma_assessment.md`](reports/atlas_gamma_assessment.md) |
+| Phase 4 opening-line feasibility | [`reports/opening_line_feasibility.md`](reports/opening_line_feasibility.md) |
+| Phase 4 CLV economics | [`reports/clv_economics.md`](reports/clv_economics.md) |
 | Supporting tables (CSV/JSON) | `reports/tables/` |
 | Alpha model recommendation | [`docs/ATLAS_ALPHA_SPEC.md`](docs/ATLAS_ALPHA_SPEC.md) |
 | Point-in-time methodology | [`docs/POINT_IN_TIME.md`](docs/POINT_IN_TIME.md) |
@@ -101,6 +104,37 @@ data.
 Worth borrowing, in order: the publish gate's **edge ceiling**, **market
 anchoring**, **CLV as the grading metric**, **constitutional staking caps**,
 and **per-market evidence gating**. None of them is a football insight.
+
+### Phase 4: can the movement signal be executed?
+
+Phase 3 measured CLV against one book's opener and a consensus close across
+roughly six books. That is not a bet anyone can place, so Phase 4 rebuilt the
+line table **per sportsbook** and graded each side at the book that posted it.
+
+**The signal survives.** Same-book grading gives **55.4%** on margins
+(z = 8.9) and **58.8%** on totals (z = 13.2), against the consensus method's
+55.2% and 58.9% - a book effect of 0.0005. It was not an artefact.
+
+**It is still not a bet.** One point of CLV is worth ~2.5% of win probability
+and -110 costs 2.38%, so -110 demands roughly **one full point**. Atlas
+averages 0.28 (margins) and 0.41 (totals). Concentrating on the loudest 10% of
+signals at the open lifts totals to **1.02 points (52.55% implied)** - clearing
+-110 by 0.17% on the point estimate, with a 95% lower bound of 52.04% that does
+not clear, in 3 of 6 seasons.
+
+Three structural findings decide the rest:
+
+* **Only four books in the entire feed ever post an opener**, all retail
+  (Bovada opens 67% of games). Pinnacle and BOOKMAKER appear only at the close.
+* **The early number is sold worse.** In the one book-season where both prices
+  are visible, the opener is -110 where the close is -105 - and that 5-cent
+  penalty is ~45% of the entire edge on the best cell in the study.
+* **Track 5 is unanswerable.** Atlas holds no timestamped odds, so the optimal
+  execution window cannot be measured at all.
+
+**Recommendation: BUILD ATLAS CLV SYSTEM** - instrument and grade the signal on
+CLV, acquire a timestamped archive, and do not wager. A pre-registered kill
+criterion is frozen in the report.
 
 ### Phase 3: the market as the prior
 
@@ -200,6 +234,7 @@ python -m atlas.research.phase1c_report   # stage 6: Phase 1C reports
 python -m atlas.research.validation_report # stage 7: signal validation
 python -m atlas.research.velocity_report   # stage 8: Velocity benchmark
 python -m atlas.research.beta_report       # stage 9: Phase 3 market-aware framework
+python -m atlas.research.gamma_report      # stage 10: Phase 4 execution research
 ```
 
 The quarterback-of-record extraction writes nothing into the warehouse, and

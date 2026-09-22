@@ -1,0 +1,2 @@
+bets,bets_per_season,mean_clv,clv_se,clv_ci_low,win_probability,win_probability_low,ev_-105,clears_-105,clears_-105_ci,ev_-110,clears_-110,clears_-110_ci,ev_-115,clears_-115,clears_-115_ci,ev_-120,clears_-120,clears_-120_ci
+6718,1119.6666666666667,0.4098690086335219,0.027332697583213793,0.35629692137042285,0.5102478830049502,0.5089084294940991,-0.003801752228430655,False,False,-0.025890405172367903,False,False,-0.046058305686397516,False,False,-0.06454554782425803,False,False

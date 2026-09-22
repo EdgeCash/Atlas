@@ -1,0 +1,2 @@
+market,bets,mean_clv,median_clv,sd_clv,sharpe_per_bet,p05,p25,p75,p95,beat_rate,total_clv_points,max_drawdown_points,max_drawdown_bets,longest_flat_or_down
+total,6718,0.4098690086335219,0.0,2.2402810019067876,0.18295428487973917,-3.0,-1.0,2.0,4.0,0.5880369187078452,2753.5,-52.0,110,307

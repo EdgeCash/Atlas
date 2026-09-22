@@ -14,6 +14,7 @@ help:
 	@echo "  make validate   signal validation: holdout, bootstrap, final verdict"
 	@echo "  make velocity   Phase 2: decompose where Velocity's edge comes from"
 	@echo "  make beta       Phase 3: market-aware framework and the beta report"
+	@echo "  make gamma      Phase 4: can the line-movement signal be executed?"
 	@echo "  make qb-data    extract the QB of record (research only, ~1 GB transient)"
 	@echo "  make all        ingest -> warehouse -> research -> phase1b -> phase1c"
 	@echo "  make test       run the offline test suite"
@@ -61,7 +62,13 @@ velocity:
 beta:
 	$(PYTHON) -m atlas.research.beta_report
 
-all: ingest warehouse research phase1b phase1c validate velocity beta
+# Phase 4 rebuilds the line table per sportsbook from data/raw rather than
+# reading the staged consensus, so it needs the raw odds feed present - not
+# just the warehouse.
+gamma:
+	$(PYTHON) -m atlas.research.gamma_report
+
+all: ingest warehouse research phase1b phase1c validate velocity beta gamma
 
 test:
 	$(PYTHON) -m pytest -q

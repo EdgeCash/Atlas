@@ -1,0 +1,2 @@
+market,bets,mean_clv,median_clv,sd_clv,sharpe_per_bet,p05,p25,p75,p95,beat_rate,total_clv_points,max_drawdown_points,max_drawdown_bets,longest_flat_or_down
+margin,8146,0.28204026516081515,0.0,2.29524991894089,0.12287998044716567,-3.0,-1.0,1.5,4.0,0.5543870192307693,2297.5,-121.5,316,699

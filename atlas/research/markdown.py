@@ -16,12 +16,15 @@ COUNT_COLUMNS = {
     "n_paired", "teams", "team_games", "with_qb", "changes", "settled",
     "opponents", "rank", "with_weather", "distinct_qbs", "n_prior_observations",
     "graded", "pushes", "clv_graded", "moved_games", "bets", "bets_to_detect",
+    "bets_per_season", "games_in_sample", "games_with_opener", "games_multi_book",
+    "games_opened", "books_posting_openers",
 }
 
 
 #: Columns rendered with %g - values like a 4-point threshold should read "4",
 #: not "4.0000", but may legitimately be fractional.
-COMPACT_COLUMNS = {"threshold", "price", "quantile", "market_weight"}
+COMPACT_COLUMNS = {"threshold", "price", "quantile", "market_weight", "top_pct",
+                   "clv_points", "median_clv"}
 
 
 def fmt(value: float | None, digits: int = 3, dash: str = "n/a") -> str:
