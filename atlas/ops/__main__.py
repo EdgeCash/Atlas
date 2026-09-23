@@ -3,6 +3,8 @@
     python -m atlas.ops heavy     # 04:00 ET - warehouse, model, every page
     python -m atlas.ops poll      # hourly (15 min on game days) - market only
     python -m atlas.ops social    # 05:00 ET - the featured card assets
+    python -m atlas.ops backup    # copy the live record, then read it back
+    python -m atlas.ops analytics # traffic, from the web server's access log
     python -m atlas.ops health    # the check; non-zero exit when failing
     python -m atlas.ops status    # what the status page will say
     python -m atlas.ops crontab   # print the schedule
@@ -20,6 +22,7 @@ import subprocess
 import sys
 import time
 from datetime import datetime
+from pathlib import Path
 
 from atlas.ops import freshness, health, schedule
 from atlas.util import get_logger
@@ -104,6 +107,41 @@ def poll(*, force: bool = False) -> int:
     return 0
 
 
+def backup_and_verify(*, keep: int = 30) -> int:
+    """Track 3. Copy the live record, read the copy back, prune the old ones.
+
+    The verify step is not optional and does not run separately: a backup
+    nobody has restored is a hypothesis, and the cheapest moment to find out
+    it is wrong is immediately.
+    """
+    from atlas.ops import backup as backups
+
+    created = backups.create()
+    problems = backups.verify(created)
+    if problems:
+        for problem in problems:
+            LOG.error("backup verification: %s", problem)
+        return 1
+    backups.prune(keep=keep)
+    print(backups.summary())
+    return 0
+
+
+def traffic(logs: list | None, *, top: int = 10) -> int:
+    """Track 2. Traffic from the access log. No client-side anything."""
+    from atlas import config
+    from atlas.ops import analytics
+
+    paths = [p for p in (logs or []) if p.exists()]
+    if not paths:
+        print("no access logs given — pass --access-log /var/log/atlas/access.log")
+        return 1
+    site = config.paths().root / "site"
+    grades = analytics.card_grades(site) if site.exists() else {}
+    print(analytics.report(analytics.read(paths, grades=grades), top=top))
+    return 0
+
+
 def social() -> int:
     """Track 4. The featured card assets, from the cards already published.
 
@@ -121,13 +159,20 @@ def social() -> int:
 def main() -> None:
     ap = argparse.ArgumentParser(description="Atlas live operations")
     ap.add_argument("command", choices=["heavy", "poll", "social", "health",
-                                        "status", "crontab"])
+                                        "status", "crontab", "backup",
+                                        "analytics"])
     ap.add_argument("--force", action="store_true",
                     help="poll even when this minute is not a poll minute")
     ap.add_argument("--skip-warehouse", action="store_true",
                     help="heavy refresh without rebuilding the warehouse")
     ap.add_argument("--root", default="/srv/atlas", help="crontab: repo path")
     ap.add_argument("--logs", default="/var/log/atlas", help="crontab: log path")
+    ap.add_argument("--keep", type=int, default=30,
+                    help="backup: how many to retain")
+    ap.add_argument("--access-log", type=Path, action="append", default=None,
+                    help="analytics: an access log; repeat for several")
+    ap.add_argument("--top", type=int, default=10,
+                    help="analytics: rows per table")
     args = ap.parse_args()
 
     if args.command == "heavy":
@@ -136,6 +181,10 @@ def main() -> None:
         raise SystemExit(poll(force=args.force))
     if args.command == "social":
         raise SystemExit(social())
+    if args.command == "backup":
+        raise SystemExit(backup_and_verify(keep=args.keep))
+    if args.command == "analytics":
+        raise SystemExit(traffic(args.access_log, top=args.top))
     if args.command == "crontab":
         print(schedule.crontab(root=args.root, logs=args.logs))
         return

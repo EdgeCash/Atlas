@@ -20,6 +20,9 @@ make ops-heavy                      # 04:00 ET - warehouse, model, every page
 make ops-poll                       # the light market poller
 make ops-health                     # non-zero exit when anything is stale
 make site-audit                     # the launch gate, over every built page
+make seo                            # canonicals, meta, OpenGraph, sitemap
+make perf                           # LCP and load time at three viewports
+make ops-backup                     # back up the live record, verify the copy
 make launch-check                   # audit + tests + lint
 python scripts/shoot_site.py        # design/screens/site/, real viewports
 ```
@@ -54,6 +57,8 @@ atlas/ops/
   schedule.py  the three cadences and the game-day windows, in Eastern
   freshness.py when each task last succeeded; the last/last_ok contract
   health.py    the checks, and what counts as blocking
+  analytics.py traffic from the web server's access log; no tracker
+  backup.py    copy the live record, and read the copy back
   status.py    one model behind /status.html and `make ops-status`
   html.py      escaping and number formatting
   assets/      atlas.css (the approved system), atlas.js (filtering)

@@ -98,6 +98,10 @@ CRONTAB = """\
 # through both daylight-saving transitions.
 CRON_TZ=America/New_York
 
+# Back up the live record and read the copy back. Daily 03:00 ET, an hour
+# before the heavy refresh so the backup is of a quiet store.
+0 3 * * *   cd {root} && make ops-backup >> {logs}/backup.log 2>&1
+
 # Heavy refresh - warehouse, model, every page. Daily 04:00 ET.
 0 4 * * *   cd {root} && make ops-heavy  >> {logs}/heavy.log 2>&1
 

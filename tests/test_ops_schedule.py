@@ -125,6 +125,7 @@ def test_the_crontab_pins_eastern_explicitly():
     build becomes a 3am build in the middle of the season."""
     text = schedule.crontab(root="/srv/atlas", logs="/var/log/atlas")
     assert "CRON_TZ=America/New_York" in text
+    assert "0 3 * * *" in text        # backup
     assert "0 4 * * *" in text        # heavy
     assert "0 5 * * *" in text        # social
     assert "*/15 * * * *" in text     # poller

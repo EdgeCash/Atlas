@@ -3,7 +3,8 @@ PYTHON ?= python3
 .PHONY: help install ingest warehouse research all test lint clean-data \
 	live-refresh live-run live-report live-check live-reproduce \
 	site site-full site-serve site-audit site-shots launch-check \
-	ops-heavy ops-poll ops-social ops-health ops-status ops-crontab
+	ops-heavy ops-poll ops-social ops-health ops-status ops-crontab \
+	ops-backup ops-analytics perf seo
 
 help:
 	@echo "Atlas Phase 1A - research warehouse"
@@ -31,6 +32,9 @@ help:
 	@echo "  make ops-poll   the light market poller (every 15 min)"
 	@echo "  make ops-health check freshness; non-zero exit when stale"
 	@echo "  make ops-status what the public status page says"
+	@echo "  make ops-backup back up the live record and verify the copy"
+	@echo "  make perf       measure load time and LCP at three viewports"
+	@echo "  make seo        validate canonicals, meta, OpenGraph and sitemap"
 	@echo "  make site-full  warehouse + numbers + market + site, from scratch"
 	@echo "  make qb-data    extract the QB of record (research only, ~1 GB transient)"
 	@echo "  make all        ingest -> warehouse -> research -> phase1b -> phase1c"
@@ -152,6 +156,23 @@ ops-health:
 ops-status:
 	$(PYTHON) -m atlas.ops status
 
+# Copy the live record, read the copy back, prune old ones. Daily 03:00 ET.
+ops-backup:
+	$(PYTHON) -m atlas.ops backup
+
+# Traffic from the web server's access log. No client-side anything.
+# make ops-analytics LOGS="--access-log /var/log/atlas/access.log"
+ops-analytics:
+	$(PYTHON) -m atlas.ops analytics $(LOGS)
+
+# Measure the built site in a real browser at three viewports.
+perf: site
+	$(PYTHON) scripts/measure_performance.py
+
+# Canonical tags, meta, OpenGraph, Twitter cards, sitemap and robots.
+seo: site
+	$(PYTHON) scripts/validate_seo.py
+
 # The schedule, ready to install.
 ops-crontab:
 	$(PYTHON) -m atlas.ops crontab --root $(CURDIR)
@@ -168,6 +189,7 @@ site-shots: site
 
 # Everything that has to pass before Atlas is published.
 launch-check: site-audit
+	$(PYTHON) scripts/validate_seo.py
 	$(PYTHON) -m pytest -q
 	$(PYTHON) -m ruff check atlas/ scripts/ tests/
 

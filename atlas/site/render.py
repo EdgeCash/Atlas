@@ -28,6 +28,12 @@ LOG = get_logger(__name__)
 
 TAGLINE = "Research. Analytics. Context."
 
+#: Where beta feedback goes. A mailto rather than a form: a form needs a
+#: server, and the one thing this product does not have is a server. It is
+#: also the only visible addition RC1 makes to a frozen design - one footer
+#: link, no button, no modal, nothing on the board or the card.
+FEEDBACK_EMAIL = "beta@atlas.football"
+
 #: The canonical origin. Search engines need one spelling of every page, and a
 #: social card posted from a preview build must still point at production.
 SITE_URL = "https://atlas.football"
@@ -151,6 +157,7 @@ def layout(*, title: str, body: str, depth: int = 0, description: str = "",
     <a href="{root}about.html">new here</a> ·
     <a href="{root}faq.html">questions</a> ·
     <a href="{root}status.html">data status</a> ·
+    <a href="mailto:{FEEDBACK_EMAIL}?subject=Atlas%20beta%20feedback">feedback</a> ·
     <a href="{root}research.html">how Atlas works</a> ·
     <a href="{root}research.html#grades">what grades mean</a></div>
   <div class="footer-note">Atlas publishes information. Readers make their own
@@ -281,7 +288,7 @@ def card_page(card: Card, *, bands: dict, overall_band,
         f"and grades this card {card.grade.letter if card.grade else 'ungraded'}."
     )
     return layout(
-        title=f"{card.title} — market, projection and grade | Atlas",
+        title=f"{card.title} — Atlas projection and grade",
         body=body, depth=1, description=description, active="ncaaf",
         canonical=card.path,
         social=social_tags(title=f"{card.title} · Atlas", description=description,
@@ -1202,12 +1209,11 @@ def homepage(cards: list[Card], *, bands: dict, rivalries: set | None = None,
 <script src="assets/atlas.js" defer></script>"""
 
     description = (
-        f"Every college football game this week, with the market number, the "
-        f"Atlas projection, the difference between them and a grade for how "
-        f"much each card's information has historically been worth. "
-        f"{len(cards)} cards, {strong} graded A or better, {weak} marked down."
+        f"Every college football game this week: the market number, the Atlas "
+        f"projection, and a grade for how much each card is worth. "
+        f"{len(cards)} cards, {weak} marked down."
     )
-    return layout(title="College football cards for this week | Atlas Sports Intelligence",
+    return layout(title="College football cards this week | Atlas",
                   body=body, active="today", description=description,
                   canonical="", social=social_tags(
                       title="Atlas Sports Intelligence", description=description,
@@ -1355,11 +1361,10 @@ def team_page(team, *, cards: list[Card], pool: dict) -> str:
 </div>"""
     slug = _team_slug(team)
     description = (
-        f"{team.name} season profile: opponent-adjusted efficiency, success "
-        f"rate, explosiveness and pace, all point-in-time, with every upcoming "
-        f"Atlas card and the grade on each."
+        f"{team.name}: opponent-adjusted efficiency, pace and form, all "
+        f"point-in-time, with every upcoming Atlas card and its grade."
     )
-    return layout(title=f"{team.name} — season profile and upcoming cards | Atlas",
+    return layout(title=f"{team.name} — season profile and Atlas cards",
                   body=body, depth=1, active="ncaaf",
                   description=description,
                   canonical=f"team/{slug}.html",
@@ -1526,12 +1531,12 @@ def about_page(example: Card | None, *, card_count: int) -> str:
 </section>"""
 
     description = (
-        "Atlas grades its own college football numbers. Every game gets a card: "
-        "the market, the projection, what is driving the difference, and a "
-        "letter for how much that information has historically been worth."
+        "Atlas grades its own college football numbers. Every game gets a "
+        "card: the market, the projection, and a letter for how much that "
+        "card has historically been worth."
     )
     return layout(
-        title="What Atlas is, and how to read a card | Atlas Sports Intelligence",
+        title="What Atlas is, and how to read a card",
         body=body, active="about", description=description,
         canonical="about.html",
         social=social_tags(title="Atlas Sports Intelligence",
@@ -1859,8 +1864,9 @@ def not_found_page() -> str:
     # No canonical and no indexing: a 404 that claims a canonical URL tells a
     # crawler the missing page is the real one.
     return layout(title="Not found | Atlas Sports Intelligence", body=body,
-                  description="That page is not here. The board always has "
-                              "this week's cards.",
+                  description="That page is not here. Cards come down once "
+                              "the game has been played, and the board always "
+                              "has this week's.",
                   structured='<meta name="robots" content="noindex">')
 
 
@@ -1999,9 +2005,9 @@ def research_page(bands: dict, overall_band, *, card_count: int) -> str:
       to do with the information.</p>
   </div>
 </section>"""
-    description = ("How the Atlas model works, what the A-F grades mean, the "
-                   "seven-season calibration record behind them, and why large "
-                   "disagreements lower confidence rather than raising it.")
+    description = ("How the Atlas model works, what the A-F grades mean, and "
+                   "why a large disagreement lowers confidence rather than "
+                   "raising it.")
     return layout(title="How Atlas works, and what the grades mean | Atlas",
                   body=body, active="research", canonical="research.html",
                   description=description,
