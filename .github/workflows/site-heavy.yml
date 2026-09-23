@@ -16,6 +16,16 @@ on:
         type: boolean
         default: true
 
+# A called workflow can only narrow what its caller was granted, never widen
+# it. With no block here the caller gets the repository default - read-only on
+# a repo configured that way - and publish.yml asking for pages: write reads as
+# an escalation, which GitHub rejects before any job starts. So the grant lives
+# with the trigger, which is also where it is easiest to audit.
+permissions:
+  contents: write      # commit tracking/ and the freshness stamp
+  pages: write         # deploy
+  id-token: write      # the OIDC token deploy-pages signs with
+
 jobs:
   publish:
     uses: ./.github/workflows/publish.yml
