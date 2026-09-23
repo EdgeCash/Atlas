@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-23T19:58:26+00:00",
+  "generated_at": "2026-09-23T20:04:01+00:00",
   "atlas_version": "0.1.0",
   "seasons_requested": [
     2018,
@@ -23,7 +23,40 @@
     2025,
     2026
   ],
-  "cfbd_enrichment": true,
+  "cfbd_enrichment": {
+    "present": true,
+    "key_in_environment": true,
+    "datasets": {
+      "sp_plus": {
+        "present": true,
+        "measured_on": "ratings.home_sp_plus",
+        "non_null": 7527,
+        "rows": 21968,
+        "coverage": 0.3426
+      },
+      "talent": {
+        "present": true,
+        "measured_on": "talent.home_talent",
+        "non_null": 10360,
+        "rows": 21968,
+        "coverage": 0.4716
+      },
+      "recruiting": {
+        "present": true,
+        "measured_on": "talent.home_recruiting_rank",
+        "non_null": 10421,
+        "rows": 21968,
+        "coverage": 0.4744
+      },
+      "returning": {
+        "present": true,
+        "measured_on": "talent.home_returning_production",
+        "non_null": 7526,
+        "rows": 21968,
+        "coverage": 0.3426
+      }
+    }
+  },
   "tables": {
     "market_lines": {
       "rows": 21968,
