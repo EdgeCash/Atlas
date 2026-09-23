@@ -48,18 +48,33 @@ jobs:
     timeout-minutes: 60
     outputs:
       ran: ${{ steps.gate.outputs.go }}
-    env:
-      # Job-level on purpose. Until the domain is registered the site lives at
-      # a Pages subpath, and a canonical pointing at an unregistered domain is
-      # worse than an ugly one. Anything that rebuilds the site must see this -
-      # `make site-audit` depends on `site` and so rebuilds it, which would
-      # silently rewrite every canonical back to production if this were set on
-      # one step. Set the ATLAS_SITE_URL repository variable to the real origin
-      # once atlas.football resolves; render.py already defaults to production,
-      # so clearing the variable is the whole cutover.
-      ATLAS_SITE_URL: ${{ vars.ATLAS_SITE_URL || format('https://{0}.github.io/{1}', github.repository_owner, github.event.repository.name) }}
     steps:
       - uses: actions/checkout@v4
+
+      # Exported here rather than set on a step, because anything that rebuilds
+      # the site must see it: `make site-audit` depends on `site` and so
+      # rebuilds it, which silently rewrote every canonical back to production
+      # when this was scoped to one step.
+      #
+      # Lowercased, because Pages serves a project site at the lowercased owner
+      # - edgecash.github.io, not EdgeCash.github.io - and a canonical should be
+      # the exact spelling of the URL it claims, not merely one that resolves.
+      #
+      # Set the ATLAS_SITE_URL repository variable to the real origin once
+      # atlas.football resolves; render.py already defaults to production, so
+      # clearing the variable is the whole cutover.
+      - name: Where this build will be served
+        env:
+          OVERRIDE: ${{ vars.ATLAS_SITE_URL }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          url="$OVERRIDE"
+          if [ -z "$url" ]; then
+            url="https://$(printf '%s' "$OWNER" | tr '[:upper:]' '[:lower:]').github.io/$REPO"
+          fi
+          echo "ATLAS_SITE_URL=$url" >> "$GITHUB_ENV"
+          echo "publishing as $url"
 
       # Before installing anything. The gate reads atlas/ops/schedule.py and the
       # committed freshness stamp with nothing but the standard library, so it
