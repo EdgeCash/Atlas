@@ -17,3 +17,8 @@ data/warehouse/**
 # The generator is the source of truth; the output is not committed.
 /site/
 /data/site/
+
+# Operational state: rewritten by every scheduled task, derived from nothing
+# but the clock. The site falls back gracefully when it is absent, and
+# committing it would produce a conflict on every run.
+/data/ops/

@@ -2,7 +2,8 @@ PYTHON ?= python3
 
 .PHONY: help install ingest warehouse research all test lint clean-data \
 	live-refresh live-run live-report live-check live-reproduce \
-	site site-full site-serve site-audit site-shots launch-check
+	site site-full site-serve site-audit site-shots launch-check \
+	ops-heavy ops-poll ops-social ops-health ops-status ops-crontab
 
 help:
 	@echo "Atlas Phase 1A - research warehouse"
@@ -26,6 +27,10 @@ help:
 	@echo "  make site       build the Atlas Sports Intelligence site into site/"
 	@echo "  make site-audit run the launch audit over every built page"
 	@echo "  make launch-check  audit + tests + lint, the pre-publish gate"
+	@echo "  make ops-heavy  daily 04:00 ET rebuild of everything"
+	@echo "  make ops-poll   the light market poller (every 15 min)"
+	@echo "  make ops-health check freshness; non-zero exit when stale"
+	@echo "  make ops-status what the public status page says"
 	@echo "  make site-full  warehouse + numbers + market + site, from scratch"
 	@echo "  make qb-data    extract the QB of record (research only, ~1 GB transient)"
 	@echo "  make all        ingest -> warehouse -> research -> phase1b -> phase1c"
@@ -120,6 +125,36 @@ site-full:
 
 site-serve: site
 	$(PYTHON) -m http.server 8000 --directory site
+
+# ---------------------------------------------------------------------------
+# Live operations - the three scheduled tasks. `make ops-crontab` prints the
+# schedule these are wired to; see docs/OPERATIONS_SCHEDULE.md.
+# ---------------------------------------------------------------------------
+
+# 04:00 ET daily. Warehouse, model, market, every page.
+ops-heavy:
+	$(PYTHON) -m atlas.ops heavy
+
+# Every 15 minutes. The task decides whether this minute is a poll minute,
+# so one crontab line covers the hourly and the game-day cadences.
+ops-poll:
+	$(PYTHON) -m atlas.ops poll
+
+# 05:00 ET daily. The featured card assets.
+ops-social:
+	$(PYTHON) -m atlas.ops social
+
+# Non-zero exit when a blocking check fails, so it can drive an alert.
+ops-health:
+	$(PYTHON) -m atlas.ops health
+
+# What the public status page says, in the terminal.
+ops-status:
+	$(PYTHON) -m atlas.ops status
+
+# The schedule, ready to install.
+ops-crontab:
+	$(PYTHON) -m atlas.ops crontab --root $(CURDIR)
 
 # The launch gate. Scans every built page for a named side, the forbidden
 # vocabulary, a card missing its disclaimer, and anything that moves. Exits

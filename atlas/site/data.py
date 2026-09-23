@@ -471,4 +471,13 @@ def is_rivalry(card: Card, pairs: set[frozenset]) -> bool:
 
 
 def generated_at() -> str:
-    return datetime.now(UTC).strftime("%d %b %Y %H:%M UTC")
+    """When this build ran, in the product's one timestamp format.
+
+    Only ever the build's own clock. Anything a reader is told about how
+    current the *market* is comes from the poll's recorded time, never from
+    here - a rebuild that ran against a failed poll must not advertise itself
+    as fresh market data.
+    """
+    from atlas.site.html import stamp
+
+    return stamp(datetime.now(UTC))

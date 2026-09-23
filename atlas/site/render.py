@@ -41,6 +41,24 @@ CARD_DISCLOSURE = (
     "before kickoff."
 )
 
+def freshness_badge(*pairs, root: str = "") -> str:
+    """One or more "Label: timestamp ET" stamps.
+
+    `docs/DATA_FRESHNESS.md`: every stamp is the time of the last *successful*
+    refresh of that thing, never the time the page was built. A board that
+    rebuilt at 7:05 against a market captured at 6:00 says 6:00, because that
+    is when the information a reader is looking at was last true.
+    """
+    items = "".join(
+        f'<span class="stamp"><b>{esc(label)}</b> {esc(value)}</span>'
+        for label, value in pairs if value
+    )
+    if not items:
+        return ""
+    return (f'<p class="freshness">{items}'
+            f'<a href="{root}status.html">Data status</a></p>')
+
+
 #: Most first-time visitors arrive on a card, from a link, knowing nothing
 #: about Atlas - so the card has to offer the explanation rather than assume a
 #: reader will find the nav. One line, at the end of the five-second view,
@@ -132,6 +150,7 @@ def layout(*, title: str, body: str, depth: int = 0, description: str = "",
   <div>Out-of-sample figures from a point-in-time database ·
     <a href="{root}about.html">new here</a> ·
     <a href="{root}faq.html">questions</a> ·
+    <a href="{root}status.html">data status</a> ·
     <a href="{root}research.html">how Atlas works</a> ·
     <a href="{root}research.html#grades">what grades mean</a></div>
   <div class="footer-note">Atlas publishes information. Readers make their own
@@ -225,7 +244,7 @@ def team_block(side, *, align: str) -> str:
 
 
 def card_page(card: Card, *, bands: dict, overall_band,
-              social_image: bool = False) -> str:
+              social_image: bool = False, freshness: dict | None = None) -> str:
     """The card, in three tiers.
 
     Tier 1 is everything a reader needs in five seconds and is always visible:
@@ -240,6 +259,11 @@ def card_page(card: Card, *, bands: dict, overall_band,
         _answer(card),
         _why_brief(card),
         _caution(card),
+        freshness_badge(
+            ("Projection built", (freshness or {}).get("projection", "")),
+            ("Market updated", (freshness or {}).get("market", "")),
+            root="../",
+        ),
         NEW_HERE,
         '<div class="tier2">',
         _open_market(card),
@@ -1078,7 +1102,8 @@ def _grade_block(letters: tuple, label: str, caption: str,
 </section>"""
 
 
-def homepage(cards: list[Card], *, bands: dict, rivalries: set | None = None) -> str:
+def homepage(cards: list[Card], *, bands: dict, rivalries: set | None = None,
+             freshness: dict | None = None) -> str:
     """Rule 1: the board is the product.
 
     The board is the first thing on the page. No hero, no marketing, no
@@ -1129,6 +1154,8 @@ def homepage(cards: list[Card], *, bands: dict, rivalries: set | None = None) ->
   <span class="board-note">{len(cards)} cards · {strong} graded A or better ·
     {weak} marked down</span>
 </div>
+
+{freshness_badge(("Updated", (freshness or {}).get("board", "")))}
 
 <p class="new-here board-new-here">Every game gets a card — and a letter for how
   much that card's information has historically been worth.
@@ -1743,6 +1770,80 @@ def faq_page() -> str:
                   canonical="faq.html",
                   social=social_tags(title="Questions about Atlas",
                                      description=description, url="faq.html"))
+
+
+def status_page(summary) -> str:
+    """Track 7. What Atlas knows about its own state, published.
+
+    A static site fails quietly: the board keeps serving and the only symptom
+    of a poller that died on Thursday is a market number that stopped moving.
+    This page is the version of that a reader can check for themselves, which
+    is the same discipline as publishing the reliability record - a claim
+    nobody can audit is a claim.
+    """
+    def block(title: str, note: str, rows) -> str:
+        if not rows:
+            return ""
+        items = "".join(
+            f"""<div class="status-row{' bad' if not row.ok else ''}">
+  <span class="status-label">{esc(row.label)}</span>
+  <span class="status-value">{esc(row.value)}</span>
+  <span class="status-note">{esc(row.note)}</span>
+</div>"""
+            for row in rows
+        )
+        return f"""<section class="section">
+  <div class="section-head"><h2>{esc(title)}</h2>
+    <span class="note">{esc(note)}</span></div>
+  <div class="card status-list">{items}</div>
+</section>"""
+
+    checks = "".join(
+        f"""<div class="status-row{' bad' if not c.ok else ''}">
+  <span class="status-label">{esc(c.name)}</span>
+  <span class="status-value">{esc(c.status)}</span>
+  <span class="status-note">{esc(c.detail)}</span>
+</div>"""
+        for c in summary.checks
+    )
+    healthy = summary.healthy
+    body = f"""<header class="page-head">
+  <h1>Data status</h1>
+  <p class="sub">How current everything on this site is, and what is
+    producing it. Atlas rebuilds on a schedule from free sources; when
+    something stops, this page says so before a reader has to guess.</p>
+</header>
+
+<div class="card card-pad banner-low">
+  <div class="banner-row">
+    <span class="badge {'mute' if healthy else 'warn'}">{'All systems reporting' if healthy else 'Degraded'}</span>
+    <p class="note banner-text">{esc(summary.mode)}.</p>
+  </div>
+</div>
+
+{block("Freshness", "the last successful run of each task", summary.freshness_rows)}
+{block("Providers", "where the information comes from", summary.provider_rows)}
+{block("Tracker", "opinions published, and how many have been scored",
+       summary.tracker_rows)}
+
+<section class="section">
+  <div class="section-head"><h2>Health checks</h2>
+    <span class="note">the same checks the operator's alert runs on</span></div>
+  <div class="card status-list">{checks}</div>
+</section>
+
+<div class="disclosure top-gap">
+  <b>What the timestamps mean.</b> Every stamp on this site is the time of the
+  last <b>successful</b> refresh of that thing, in Eastern — never the time a
+  page was built and never your browser's clock. A rebuild that ran against a
+  failed market poll shows the market's older time, because that is when the
+  numbers a reader is looking at were last true.
+</div>"""
+    return layout(title="Data status | Atlas Sports Intelligence", body=body,
+                  description="How current Atlas's information is: the last "
+                              "refresh, the last market poll, provider status "
+                              "and the state of the live tracker.",
+                  canonical="status.html")
 
 
 def not_found_page() -> str:

@@ -1,3 +1,5 @@
 run_id,started_at,finished_at,command,provider,code_version,quotes,snapshots_added,signals_added,grades_added,exceptions,alerts,status,detail
 405dbe10-0343-4061-814a-56faf7e63b4f,2026-09-22T17:42:29+00:00,2026-09-22T17:42:31+00:00,poll,espn,12eefca,116,2,0,0,0,1,ok,
 f3c7fb22-dee8-477c-9056-501f62426374,2026-09-22T17:45:05+00:00,2026-09-22T17:45:06+00:00,poll,espn,12eefca,116,0,0,0,0,1,ok,
+5cf197b3-ffb2-4a40-977c-9fd6279e886e,2026-09-23T02:41:58+00:00,2026-09-23T02:41:59+00:00,poll,espn,e984cbd,116,13,0,0,0,1,ok,
+5797e372-ebab-4773-81fa-b32a27d7af36,2026-09-23T02:42:23+00:00,2026-09-23T02:42:25+00:00,poll,espn,e984cbd,116,0,0,0,0,1,ok,

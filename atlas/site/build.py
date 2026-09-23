@@ -14,6 +14,8 @@ from dataclasses import replace
 from pathlib import Path
 
 from atlas import config
+from atlas.ops import freshness as ops_freshness
+from atlas.ops import status as ops_status
 from atlas.site import grade as grading
 from atlas.site import meta as espn_meta
 from atlas.site import render, social
@@ -43,6 +45,7 @@ def build(out: Path | None = None, *, social_cards: bool = True,
 
     bands = grading.calibration_bands("total")
     overall = grading.overall(bands)
+    stamps = _freshness(social_cards=social_cards)
 
     if out.exists():
         shutil.rmtree(out)
@@ -64,8 +67,8 @@ def build(out: Path | None = None, *, social_cards: bool = True,
         for side in (card.home, card.away):
             side.logo = logos.get(side.team_id)
 
-    (out / "index.html").write_text(
-        render.homepage(cards, bands=bands, rivalries=rivalry_pairs()))
+    (out / "index.html").write_text(render.homepage(
+        cards, bands=bands, rivalries=rivalry_pairs(), freshness=stamps))
     (out / "research.html").write_text(
         render.research_page(bands, overall, card_count=len(cards)))
     (out / "about.html").write_text(
@@ -80,7 +83,7 @@ def build(out: Path | None = None, *, social_cards: bool = True,
     for card in cards:
         (out / card.path).write_text(render.card_page(
             card, bands=bands, overall_band=overall,
-            social_image=card.slug in social_slugs))
+            social_image=card.slug in social_slugs, freshness=stamps))
 
     teams = _teams(cards)
     pool = _pool()
@@ -93,13 +96,50 @@ def build(out: Path | None = None, *, social_cards: bool = True,
         # One of each grade where possible, so the templates are reviewed
         # against the range they have to survive rather than the flattering end.
         for card in (c for c in cards if c.slug in social_slugs):
-            images.extend(social.write(card, out / "social"))
+            images.extend(social.write(card, out / "social",
+                                       generated=stamps["social"]))
 
+    # The build's own stamp is what the board shows as "Updated". Recorded
+    # after the pages are written, so a build that fails halfway never
+    # advertises itself as complete.
+    if social_cards:
+        ops_freshness.record("social", detail=f"{len(images)} files")
+    ops_freshness.record("build", detail=f"{len(cards)} cards, {len(teams)} teams")
+    # Written last, so it reports the run that just happened rather than the
+    # one before it.
+    (out / "status.html").write_text(render.status_page(ops_status.summary()))
     _write_robots(out)
     _write_sitemap(out, cards, teams)
     LOG.info("site: %d cards, %d teams, %d images -> %s",
              len(cards), len(teams), len(images), out)
     return {"cards": len(cards), "teams": len(teams), "images": len(images), "out": out}
+
+
+def _freshness(*, social_cards: bool = True) -> dict:
+    """The four stamps every page can show.
+
+    Each is the last *successful* run of the thing it describes, not this
+    build's clock. A rebuild triggered by an hourly poll shows the market's
+    poll time; a rebuild that ran while the poller was down shows the older
+    market time, which is the honest answer.
+    """
+    from atlas.site.data import generated_at
+    from atlas.site.html import stamp
+
+    def at(event: str, fallback: str = "") -> str:
+        recorded = ops_freshness.last(event)
+        return stamp(recorded.at) if recorded else fallback
+
+    now = generated_at()
+    return {
+        # Projections come from the heavy refresh, so they age at its pace.
+        "projection": at("heavy", now),
+        "market": at("poll", now),
+        "board": at("build", now),
+        # Same reasoning as the board: if this build is making the social
+        # assets, their stamp is this build's clock.
+        "social": now if social_cards else at("social", now),
+    }
 
 
 def _example_card(cards) -> object | None:
@@ -179,6 +219,7 @@ def _write_sitemap(out: Path, cards, teams: dict) -> None:
         ("", "daily", SITEMAP_PRIORITY[""]),
         ("about.html", "monthly", SITEMAP_PRIORITY["about.html"]),
         ("faq.html", "monthly", "0.7"),
+        ("status.html", "daily", "0.4"),
         ("research.html", "weekly", SITEMAP_PRIORITY["research.html"]),
         ("nfl.html", "monthly", "0.4"),
         ("premium.html", "monthly", "0.5"),

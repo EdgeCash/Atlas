@@ -43,6 +43,18 @@ def day_clock(when: datetime) -> str:
     return f"{local.strftime('%a')} {clock(when)}"
 
 
+def stamp(when: datetime) -> str:
+    """"Sep 22, 2026 7:05 PM ET" - the one freshness format.
+
+    `docs/TIMESTAMP_STANDARD.md`: every visible timestamp in the product uses
+    this, in Eastern, with the zone named. A timestamp without a zone is a
+    number a reader has to guess about, and a product whose whole claim is
+    that its information is current cannot be vague about when.
+    """
+    local = eastern(when)
+    return f"{local.strftime('%b %-d, %Y')} {clock(when)}"
+
+
 def esc(value: object) -> str:
     return _escape(str(value), quote=True)
 

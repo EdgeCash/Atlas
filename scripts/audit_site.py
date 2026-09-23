@@ -60,6 +60,7 @@ def audit(site: Path) -> tuple[dict, dict]:
     advisory: dict[str, list[str]] = {
         "missing canonical": [], "missing meta description": [],
         "missing structured data": [], "missing social tags": [],
+        "missing freshness stamp": [], "timestamp without a zone": [],
     }
 
     for path in pages:
@@ -91,6 +92,14 @@ def audit(site: Path) -> tuple[dict, dict]:
             advisory["missing structured data"].append(rel)
         if rel.startswith("ncaaf/") and 'property="og:title"' not in html:
             advisory["missing social tags"].append(rel)
+        # Track 6: a reader must never have to guess how old a number is.
+        if (rel == "index.html" or rel.startswith("ncaaf/")) \
+                and 'class="freshness"' not in html:
+            advisory["missing freshness stamp"].append(rel)
+        # A clock time with no zone is a number a reader has to guess about.
+        for match in re.finditer(r"\d{1,2}:\d{2}\s*[AP]M(?!\s*ET)", text):
+            advisory["timestamp without a zone"].append(
+                f"{rel}: ...{text[max(0, match.start() - 30):match.end() + 6]}...")
 
     return blocking, advisory
 

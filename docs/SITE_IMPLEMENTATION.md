@@ -16,6 +16,9 @@ make site                                             # build site/
 ```
 
 ```bash
+make ops-heavy                      # 04:00 ET - warehouse, model, every page
+make ops-poll                       # the light market poller
+make ops-health                     # non-zero exit when anything is stale
 make site-audit                     # the launch gate, over every built page
 make launch-check                   # audit + tests + lint
 python scripts/shoot_site.py        # design/screens/site/, real viewports
@@ -44,6 +47,14 @@ atlas/site/
   render.py    the three card tiers, and the other four page types
   social.py    1200×675 and 1080×1080, SVG rasterised to PNG at 2×
   build.py     orchestration and the CLI
+```
+
+```
+atlas/ops/
+  schedule.py  the three cadences and the game-day windows, in Eastern
+  freshness.py when each task last succeeded; the last/last_ok contract
+  health.py    the checks, and what counts as blocking
+  status.py    one model behind /status.html and `make ops-status`
   html.py      escaping and number formatting
   assets/      atlas.css (the approved system), atlas.js (filtering)
 ```
@@ -78,6 +89,7 @@ site/
   index.html          today's board, search, conference and grade filters
   about.html          the thirty-second landing page
   faq.html            27 questions, the uncomfortable ones first
+  status.html         freshness, providers, tracker, health checks
   404.html            noindex, no canonical
   research.html       how Atlas works, what grades mean, calibration
   nfl.html            the three stages, and why grades come last

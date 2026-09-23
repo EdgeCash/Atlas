@@ -118,7 +118,7 @@ def _accent(card: Card, width: float) -> str:
 # ---------------------------------------------------------------------------
 
 
-def wide(card: Card) -> str:
+def wide(card: Card, *, generated: str = "") -> str:
     """One game, one idea.
 
     The earlier version carried three stat cells, three drivers and a
@@ -201,7 +201,8 @@ def wide(card: Card) -> str:
 
   <line x1="72" y1="{H - 96}" x2="{W - 72}" y2="{H - 96}" stroke="{BORDER}"/>
   <text x="72" y="{H - 56}" {_font(18, 620, INK_2)}>{SITE}/{esc(card.slug)}</text>
-  <text x="{W - 72}" y="{H - 56}" text-anchor="end" {_font(16, 400, INK_3)}>Grade = information quality, not a recommendation</text>
+  <text x="{W - 72}" y="{H - 62}" text-anchor="end" {_font(16, 400, INK_3)}>Grade = information quality, not a recommendation</text>
+  {f'<text x="{W - 72}" y="{H - 38}" text-anchor="end" {_font(14, 400, INK_3)}>Generated {esc(generated)}</text>' if generated else ""}
 </svg>"""
 
 
@@ -281,7 +282,7 @@ def _grade_title(card: Card) -> str:
 # ---------------------------------------------------------------------------
 
 
-def square(card: Card) -> str:
+def square(card: Card, *, generated: str = "") -> str:
     W = H = 1080
     title_lines = _wrap(card.title, 20)
     drivers = card.drivers[:3]
@@ -354,7 +355,8 @@ def square(card: Card) -> str:
   {box}
   <line x1="56" y1="{H - 92}" x2="{W - 56}" y2="{H - 92}" stroke="{BORDER}"/>
   <text x="56" y="{H - 56}" {_font(16, 600, INK_2)}>{SITE}/{esc(card.slug)}</text>
-  <text x="{W - 56}" y="{H - 56}" text-anchor="end" {_font(16, 400, INK_3)}>Research. Analytics. Context.</text>
+  <text x="{W - 56}" y="{H - 62}" text-anchor="end" {_font(16, 400, INK_3)}>Research. Analytics. Context.</text>
+  {f'<text x="{W - 56}" y="{H - 38}" text-anchor="end" {_font(14, 400, INK_3)}>Generated {esc(generated)}</text>' if generated else ""}
 </svg>"""
 
 
@@ -363,11 +365,19 @@ def square(card: Card) -> str:
 # ---------------------------------------------------------------------------
 
 
-def write(card: Card, out: Path, *, png: bool = True) -> list[Path]:
-    """Both templates for one card, as SVG and (optionally) PNG at 2x."""
+def write(card: Card, out: Path, *, png: bool = True,
+          generated: str = "") -> list[Path]:
+    """Both templates for one card, as SVG and (optionally) PNG at 2x.
+
+    ``generated`` is the stamp the card carries. A social card outlives its
+    page by months in somebody's timeline, so it has to say when it was made -
+    a screenshot with no date is a claim about a game that may already have
+    been played.
+    """
     out.mkdir(parents=True, exist_ok=True)
     written = []
-    for name, svg in (("wide", wide(card)), ("square", square(card))):
+    for name, svg in (("wide", wide(card, generated=generated)),
+                      ("square", square(card, generated=generated))):
         path = out / f"{card.slug}-{name}.svg"
         path.write_text(svg)
         written.append(path)

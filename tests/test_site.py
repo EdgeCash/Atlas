@@ -212,9 +212,10 @@ def test_missing_inputs_cost_the_completeness_component():
 # ---------------------------------------------------------------------------
 
 
-def _page(card: Card) -> str:
+def _page(card: Card, *, freshness: dict | None = None) -> str:
     bands = {label: _band(label) for label in BAND_STATS}
-    return render.card_page(card, bands=bands, overall_band=_band("2-4"))
+    return render.card_page(card, bands=bands, overall_band=_band("2-4"),
+                            freshness=freshness)
 
 
 def test_tier_one_is_visible_without_opening_anything():
@@ -434,6 +435,28 @@ def test_the_faq_answers_the_question_that_decides_everything():
     assert "what to discount, not what to look at" in page
     assert "Is this a selections service?" in page
     assert "Does Atlas take affiliate money" in page
+
+
+def test_every_public_surface_carries_a_freshness_stamp():
+    """Track 6. A reader must never have to guess how old a number is, and the
+    stamp must be the refresh time rather than the build's clock."""
+    stamps = {"projection": "Sep 22, 2026 7:05 PM ET",
+              "market": "Sep 22, 2026 6:00 PM ET",
+              "board": "Sep 22, 2026 7:05 PM ET"}
+    card = _page(_card(), freshness=stamps)
+    assert "Projection built" in card and stamps["projection"] in card
+    assert "Market updated" in card and stamps["market"] in card
+    # The market stamp is older than the build. A rebuild that ran against an
+    # hour-old poll must say so rather than advertising itself as fresh.
+    assert card.index(stamps["market"]) > card.index("Market updated")
+
+
+def test_a_stamp_names_its_zone():
+    """`docs/TIMESTAMP_STANDARD.md`: ET, always, spelled out. A timestamp
+    without a zone is a number a reader has to guess about."""
+    page = _page(_card(), freshness={"board": "Sep 22, 2026 7:05 PM ET"})
+    for match in re.findall(r"\d{1,2}:\d{2} [AP]M[^<]*", page):
+        assert "ET" in match, match
 
 
 def test_the_landing_page_works_without_an_example_card():
