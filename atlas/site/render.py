@@ -10,7 +10,8 @@ from __future__ import annotations
 
 import os
 
-from atlas.site.data import MARKET_WEIGHT, Card
+from atlas.site.data import Card
+from atlas.site.grade import seasons_word
 from atlas.site.html import (
     clock,
     day_and_clock,
@@ -291,7 +292,7 @@ def card_page(card: Card, *, bands: dict, overall_band,
     ]))
     description = (
         f"{card.title}: market {card.spread_text}, total "
-        f"{num(card.total.current)}. Atlas projects {num(card.anchored_total)} "
+        f"{num(card.total.current)}. Atlas projects {_projected_score(card)} "
         f"and grades this card {card.grade.letter if card.grade else 'ungraded'}."
     )
     return layout(
@@ -398,38 +399,51 @@ def _hero(card: Card, home_accent: str, away_accent: str) -> str:
 
 
 def _answer(card: Card) -> str:
-    """Market, Atlas, difference — and the grade, which dominates."""
-    difference = card.total_difference
+    """Market first, Atlas's own number second, the difference, and the grade,
+    which dominates. The market is the reference, never an input."""
+    difference = card.margin_difference
     grade_block = _grade_hero(card)
     return f"""<div class="answer">
   <div class="card answer-nums">
     <div class="answer-cell">
       <div class="stat-label">Market</div>
       <div class="answer-value">{esc(card.spread_text)}</div>
-      <div class="stat-note">total {num(card.total.current)}</div>
+      <div class="stat-note">total {num(card.total.current)}{_market_move_note(card)}</div>
     </div>
     <div class="answer-cell">
       <div class="stat-label"><span class="wide-only">Atlas projects</span><span class="narrow-only">Atlas</span></div>
       <div class="answer-value">{_projected_score(card)}</div>
       <div class="stat-note">{esc(card.away.abbr)}–{esc(card.home.abbr)} ·
-        total {num(card.anchored_total)}</div>
+        total {num(card.model_total)}</div>
     </div>
     <div class="answer-cell">
       <div class="stat-label">Difference</div>
       <div class="answer-value {_diff_class(difference)}">{signed(difference)}</div>
-      <div class="stat-note">on the total</div>
+      <div class="stat-note">on the spread · total {signed(card.total_difference)}</div>
     </div>
   </div>
   {grade_block}
 </div>"""
 
 
+def _market_move_note(card: Card) -> str:
+    """Where the spread opened, when it has moved: open, move and now in one line."""
+    move = card.spread.movement
+    if move is None or abs(move) < 0.05 or card.spread.open_line is None:
+        return ""
+    opener = card.home if card.spread.open_line >= 0 else card.away
+    return (f" · spread opened {esc(opener.abbr)} {minus(-abs(card.spread.open_line))}, "
+            f"moved {signed(move)} toward {esc(card.home.abbr if move > 0 else card.away.abbr)}")
+
+
 def _projected_score(card: Card) -> str:
-    """Away first, as the title reads. The note names both abbreviations,
-    because "15-29" on its own is a pair of numbers, not a scoreline."""
+    """Away first, as the title reads, to one decimal: the mean of the
+    model's score distribution is not an integer and is not rounded to one.
+    The note names both abbreviations, because "15.4–29.1" on its own is a
+    pair of numbers, not a scoreline."""
     if card.projected_home is None:
         return "—"
-    return f"{card.projected_away:.0f}–{card.projected_home:.0f}"
+    return f"{card.projected_away:.1f}–{card.projected_home:.1f}"
 
 
 #: Below this the difference is not a disagreement. The 0-1 band is where
@@ -535,7 +549,7 @@ def _open_market(card: Card) -> str:
 
 def _open_projection(card: Card) -> str:
     return _panel("Projection detail",
-                  "the projected score, the chance of winning, and the model before it is anchored to the market",
+                  "the projected score, the chance of winning, the total's range and the most likely exact score",
                   _s3_projection(card, bare=True) + _s4_difference(card, bare=True))
 
 
@@ -561,7 +575,7 @@ def _open_movement(card: Card) -> str:
 
 def _open_reliability(card: Card, bands: dict, overall_band) -> str:
     return _panel("Reliability record",
-                  "what Atlas claimed and what it delivered, across seven "
+                  "what Atlas claimed and what it delivered, across the "
                   "seasons it never saw while being built",
                   _s8_reliability(card, bands, overall_band, bare=True))
 
@@ -661,11 +675,11 @@ def _movement_sentence(card: Card) -> str:
 
 
 def _s3_projection(card: Card, *, bare: bool = False) -> str:
-    if card.anchored_total is None and card.anchored_margin is None:
+    if card.projection is None:
         return ""
-    fav = card.favourite
-    score = ("—" if card.projected_home is None else
-             f"{card.projected_away:.0f} – {card.projected_home:.0f}")
+    p = card.projection
+    fav = card.model_favourite
+    score = f"{card.projected_away:.1f} – {card.projected_home:.1f}"
     over = card.over_probability
     over_label = "Over probability" if (over or 0) >= 0.5 else "Under probability"
     over_value = over if (over or 0) >= 0.5 else (None if over is None else 1 - over)
@@ -680,37 +694,38 @@ def _s3_projection(card: Card, *, bare: bool = False) -> str:
         <div class="stat-value">{score}</div>
         <div class="stat-note">{esc(card.away.short)} – {esc(card.home.short)}</div></div>
       <div class="stat"><div class="stat-label">Projected spread</div>
-        <div class="stat-value">{esc(fav.abbr)} {minus(-abs(card.anchored_margin)) if card.anchored_margin is not None else "—"}</div>
+        <div class="stat-value">{esc(fav.abbr)} {minus(-abs(card.model_margin))}</div>
         <div class="stat-note">market {minus(-abs(card.spread.current)) if card.spread.current is not None else "—"}</div></div>
       <div class="stat"><div class="stat-label">Projected total</div>
-        <div class="stat-value">{num(card.anchored_total)}</div>
-        <div class="stat-note">market {num(card.total.current)}</div></div>
+        <div class="stat-value">{num(card.model_total)}</div>
+        <div class="stat-note">market {num(card.total.current)} · 80% range {p.total_lo:.0f}–{p.total_hi:.0f}</div></div>
     </div>
     <div class="grid-3 divided">
       <div class="stat"><div class="stat-label">{esc(win_side.short)} win probability</div>
         <div class="stat-value">{pct(win_value)}</div>
-        <div class="stat-note">from the projected margin</div></div>
+        <div class="stat-note">from the score grid</div></div>
       <div class="stat"><div class="stat-label">{over_label}</div>
         <div class="stat-value">{pct(over_value)}</div>
         <div class="stat-note">at the current total of {num(card.total.current)}</div></div>
-      <div class="stat"><div class="stat-label">Unanchored model</div>
-        <div class="stat-value">{num(card.model_total)}</div>
-        <div class="stat-note">total, before market anchoring</div></div>
+      <div class="stat"><div class="stat-label">Most likely score</div>
+        <div class="stat-value">{p.top_away}–{p.top_home}</div>
+        <div class="stat-note">{pct(p.top_p)} of the grid — one cell of 6,400</div></div>
     </div>
   </div>
   <div class="disclosure top-gap">
-    <b>Why the projection sits close to the market.</b> Atlas weights the
-    market at <b>{MARKET_WEIGHT["total"]:.2f}</b> on totals and
-    <b>{MARKET_WEIGHT["margin"]:.2f}</b> on spreads. Those weights were fitted,
-    not chosen: across 5,778 games the model's own contribution to a spread was
-    statistically indistinguishable from zero. A projection that ignored the
-    market would be less accurate, and Atlas publishes the accurate one.
+    <b>How this number is made.</b> Every FBS team starts the season at a
+    preseason expectation built from last season's ratings, roster talent,
+    recruiting, returning production and the coaching situation. After every
+    game a filter updates each team's offence and defence, opponent-adjusted,
+    and the two teams' numbers meet here with the home advantage. The total
+    adds the teams' pace and the wind. The market is never an input; it is
+    shown so you can see where Atlas differs and read why.
   </div>"""
     if bare:
         return inner
     return f"""<section class="section">
   <div class="section-head"><h2>Atlas projection</h2>
-    <span class="note">market-anchored · out-of-sample model</span></div>
+    <span class="note">Atlas's own number · out-of-sample model</span></div>
   {inner}
 </section>"""
 
@@ -724,7 +739,7 @@ def _s4_difference(card: Card, *, bare: bool = False) -> str:
                 else (model_prob - market_prob) * 100)
     rows_ = [
         ['<span class="lead">Spread</span>',
-         f"{esc(card.favourite.abbr)} {minus(-abs(card.model_margin)) if card.model_margin is not None else '—'}",
+         f"{esc(card.model_favourite.abbr)} {minus(-abs(card.model_margin)) if card.model_margin is not None else '—'}",
          f"{esc(card.favourite.abbr)} {minus(-abs(card.spread.current)) if card.spread.current is not None else '—'}",
          _diff_cell(card.margin_difference)],
         ['<span class="lead">Total</span>', num(card.model_total),
@@ -742,7 +757,7 @@ def _s4_difference(card: Card, *, bare: bool = False) -> str:
     )
     inner = f"""<div class="{_panel_card(bare)}">
     <h3 class="top-gap">Atlas difference</h3>
-    {table(["Measure", "Atlas model (unanchored)", "Market", "Difference"], rows_)}
+    {table(["Measure", "Atlas model", "Market", "Difference"], rows_)}
     <div class="disclosure top-gap">
       <b>A difference is not an edge.</b> Atlas has measured what happens at
       every size of disagreement, and the gap between what the model claims and
@@ -753,7 +768,7 @@ def _s4_difference(card: Card, *, bare: bool = False) -> str:
         return inner
     return f"""<section class="section">
   <div class="section-head"><h2>Atlas difference</h2>
-    <span class="note">model minus market, before anchoring</span></div>
+    <span class="note">model minus market</span></div>
   {inner}
 </section>"""
 
@@ -794,8 +809,8 @@ def _s5_grade(card: Card, *, bare: bool = False) -> str:
     <div class="card-pad divided">
       <div class="meter">{meters}</div>
       <p class="note top-gap">Atlas sits <b>{g.disagreement:.1f} points</b> from
-        the market. The calibration curve, fitted to seven seasons out of
-        sample, expects cards at that distance to fall <b>{abs(g.expected_gap):.1%}</b>
+        the market. The calibration curve, fitted to every completed season
+        out of sample, expects cards at that distance to fall <b>{abs(g.expected_gap):.1%}</b>
         short of what they claim — which is where the calibration component
         above comes from.</p>
       {conditions}
@@ -978,14 +993,13 @@ def _s8_reliability(card: Card, bands: dict, overall_band, *, bare: bool = False
           gap is why Atlas grades large disagreements <em>down</em>.</p>
       </div>
       <div>
-        <h3>This band, seven seasons</h3>
+        <h3>This band, {seasons_word(band)}</h3>
         {table(["Measure", "This band", "All cards"], rows_)}
         <div class="disclosure top-gap">
           <b>Read the gap, not the claim.</b> Atlas's raw confidence numbers run
           high — a claimed {pct(band.claimed, 0)} has historically delivered
-          {pct(band.realised, 0)}. The grade and the anchored projection both
-          already correct for this. The claim is shown so the correction is
-          visible rather than hidden.
+          {pct(band.realised, 0)}. The grade already corrects for this. The
+          claim is shown so the correction is visible rather than hidden.
         </div>
       </div>
     </div>
@@ -1077,7 +1091,7 @@ GRADE_SECTIONS = (
      "of what it delivered."),
     (("D", "F"), "Marked down",
      "A large disagreement, in the range where Atlas has been least reliable "
-     "across seven seasons. Atlas marks these down itself."),
+     "across every season it never saw. Atlas marks these down itself."),
 )
 
 
@@ -1285,7 +1299,7 @@ def _featured_cell(card: Card) -> str:
     <div><span class="stat-label">Total</span>
       <span class="feature-num">{num(card.total.current)}</span></div>
     <div><span class="stat-label">Atlas</span>
-      <span class="feature-num">{num(card.anchored_total)}</span></div>
+      <span class="feature-num">{num(card.model_total)}</span></div>
   </div>
   <p class="note feature-foot">Difference {signed(difference)} on the total</p>
   <p class="feature-line">{esc(card.spread_text)} · total {num(card.total.current)}
@@ -1418,7 +1432,7 @@ def about_page(example: Card | None, *, card_count: int) -> str:
     """
     walkthrough = _card_walkthrough(example) if example else ""
     letters = table(
-        ["Grade", "What it means", "Share of seven seasons"],
+        ["Grade", "What it means", "Share of the record"],
         [['<span class="lead">A+</span>',
           "Atlas and the market land on the same number. Reliable — and Atlas "
           "is adding least here.", "6%"],
@@ -1454,11 +1468,12 @@ def about_page(example: Card | None, *, card_count: int) -> str:
       <h3>A research desk, published</h3>
       <p>Atlas models {card_count} college football games a week from a
         point-in-time database — every figure uses only what was knowable
-        before kickoff, going back seven seasons.</p>
-      <p>The model is anchored to the betting market, because seven seasons of
-        out-of-sample testing said the market is the better starting point.
-        Where Atlas differs from it, the card says by how much and what is
-        driving it.</p>
+        before kickoff, going back to 2018.</p>
+      <p>The number is Atlas's own. Every team starts a season at a preseason
+        expectation and is updated after every game, opponent-adjusted, and
+        the projection is the mean of a full score distribution, to one
+        decimal. The market is never an input: it sits beside Atlas's number
+        so you can see where they differ and what is driving it.</p>
       <p>And then it does the thing nothing else in this category does: it
         grades itself, in public, on every card, using its own historical
         record.</p>
@@ -1489,7 +1504,7 @@ def about_page(example: Card | None, *, card_count: int) -> str:
       this card deserve?</b> It is not a rating of the game and it is not a
       recommendation.</p>
     {letters}
-    <p>The thresholds are <b>absolute</b> and were set once from seven seasons
+    <p>The thresholds are <b>absolute</b> and were set once from the out-of-sample record
       of results. The same card grades the same on a quiet Tuesday and on
       championship Saturday, so a screenshot means the same thing whenever it
       was taken.</p>
@@ -1513,13 +1528,13 @@ def about_page(example: Card | None, *, card_count: int) -> str:
       confidence every week. None of them tells you which of those numbers has
       historically been worth anything.</p>
     <p>Atlas measured that, and the answer was uncomfortable: <b>the further its
-      model sits from the market, the worse it does.</b> Across seven seasons
+      model sits from the market, the worse it does.</b> Across every season it never saw
       out of sample, cards claiming 77% accuracy delivered 50%. The loudest
       cards are the weakest ones.</p>
     <p>Most products would bury that. Atlas made it the largest element on the
       card. A grade that can say F is the only kind of grade worth anything,
       and it is the reason the A means something too.</p>
-    <p class="note"><a href="research.html">The seven-season record, the
+    <p class="note"><a href="research.html">The out-of-sample record, the
       methodology, and every number behind this page</a> ·
       <a href="faq.html">questions</a>.</p>
   </div>
@@ -1567,15 +1582,16 @@ CARD_STEPS = (
     ("The market", "What the betting market currently says — the spread and "
                    "the game total. This is the reference everything else is "
                    "measured against, not a price to act on."),
-    ("Atlas", "What Atlas projects: the score, and the total underneath it. "
-              "The projection is anchored to the market, because seven seasons "
-              "said that beats the raw model."),
-    ("The difference", "How far Atlas sits from the market on the total. This "
-                       "is the number the grade is mostly about — and a large "
-                       "one is a warning, not an opportunity."),
+    ("Atlas", "What Atlas projects: the score to one decimal, and the total "
+              "underneath it. The model's own number - the market is not an "
+              "input to it."),
+    ("The difference", "How far Atlas sits from the market on the spread, with "
+                       "the total beneath. This is the number the grade is "
+                       "mostly about — and a large one is a warning, not an "
+                       "opportunity."),
     ("The grade", "A letter, a score out of 100, and three lines explaining "
                   "itself: what the letter says, what Atlas did, and the "
-                  "seven-season record behind it."),
+                  "out-of-sample record behind it."),
     ("Why", "The three things the model is reading, each with the crest of the "
             "team it favours."),
     ("Be careful about", "Up to three warnings computed from this game — a "
@@ -1644,7 +1660,7 @@ FAQ = (
          "the most reliable because Atlas has added nothing to them. The "
          "grade tells you what to discount, not what to look at."),
         ("Why does a large difference lower the grade?",
-         "Because, measured across seven seasons out of sample, that is where "
+         "Because, measured across every completed season out of sample, that is where "
          "the model is worst. Cards claiming 77% accuracy delivered 50%. "
          "Everything else in this category shouts loudest where its model "
          "disagrees most; Atlas grades itself down there."),
@@ -1654,10 +1670,10 @@ FAQ = (
         ("Who assigns the grades?",
          "Nobody. The rubric is code, nothing is entered by hand or adjusted "
          "afterwards, and the calibration curve behind it is refitted from "
-         "seven seasons of data on every build \u2014 so the site cannot drift "
+         "the full record on every build \u2014 so the site cannot drift "
          "away from the research it cites."),
         ("Why do so few cards get A+?",
-         "The thresholds were set once from seven seasons of results and then "
+         "The thresholds were set once from the out-of-sample record and then "
          "fixed, and about 6% of cards historically reach A+. Atlas does not "
          "grade on a curve: a curve would make the same card mean something "
          "different depending on which Saturday you looked at it."),
@@ -1672,16 +1688,17 @@ FAQ = (
     )),
     ("The numbers", (
         ("What is \u201cthe difference\u201d?",
-         "Atlas's projected game total minus the market's. Positive means "
-         "Atlas projects more points than the market; negative, fewer. It is "
-         "coloured only above one point, because below that the two are "
-         "statistically indistinguishable."),
-        ("Why does Atlas use the market at all?",
-         "Because seven seasons of out-of-sample testing said the market is "
-         "the better forecast. On spreads the model's own contribution could "
-         "not be told apart from zero, so the published spread is the "
-         "market's number. Atlas publishes the accurate number and shows the "
-         "raw model beside it, labelled."),
+         "Atlas's projected home margin minus the market's spread, with the "
+         "total beneath it. Positive means Atlas likes the home side more "
+         "than the market does; negative, less. It is coloured only above one "
+         "point, because below that the two are statistically "
+         "indistinguishable."),
+        ("Why does Atlas show the market at all?",
+         "Because it is the reference. Atlas's number is its own - the market "
+         "is never an input to it - and the card puts the two side by side "
+         "so the difference, and the reasons behind it, are the product. "
+         "Measured out of sample, the closing line is the closer forecast, "
+         "and the grade is built from exactly that record."),
         ("What is \u201cpoint-in-time\u201d?",
          "Every figure attached to a game uses only information that existed "
          "before kickoff. A team's profile in week 4 is what was knowable in "
@@ -1899,15 +1916,18 @@ def research_page(bands: dict, overall_band, *, card_count: int) -> str:
       point-in-time database: every figure attached to a game uses only
       information that existed before kickoff. The model is fitted on completed
       seasons and scored on seasons it has never seen.</p>
+    <p>The projection is the model's own. Each team opens the season at a
+      preseason expectation built from last season's ratings, talent,
+      recruiting, returning production and the coaching situation; after every
+      game a filter updates its offence and defence, opponent-adjusted; the
+      total adds pace and wind; and the score is the mean of a full
+      distribution over every possible final, to one decimal.</p>
     <p>Then it does something most models do not. It compares itself to the
-      market, and it publishes what that comparison found — which is that the
-      market is the stronger forecast.</p>
-    <p><b>Atlas weights the market at {MARKET_WEIGHT["total"]:.2f} on totals and
-      {MARKET_WEIGHT["margin"]:.2f} on spreads.</b> Those weights were fitted
-      across 5,778 games, not chosen. On spreads, the model's own contribution
-      could not be told apart from zero, so the published spread is the
-      market's number. The projection you see is the accurate one; the raw
-      model sits beside it, labelled, so the correction is visible.</p>
+      market, and it publishes what that comparison found. Walked forward
+      over five seasons it never saw, Atlas's number is closer to the final
+      margin than a rating system or a preseason ranking and not as close as
+      the closing line. The market is not an input to the model; it is the
+      reference the grade is measured against.</p>
   </div>
 </section>
 
@@ -1919,15 +1939,15 @@ def research_page(bands: dict, overall_band, *, card_count: int) -> str:
     <p>It is computed, never assigned. Four components, one hundred points:</p>
     {table(["Component", "Points", "What it measures"], [
       ['<span class="lead">Calibration</span>', "45",
-       "how far short of its claim a card this far from the market has historically fallen, read from a curve fitted to seven seasons"],
+       "how far short of its claim a card this far from the market has historically fallen, read from a curve fitted to every completed season out of sample"],
       ['<span class="lead">Market agreement</span>', "25",
-       "how far the unanchored model sits from the market"],
+       "how far Atlas's number sits from the market on the spread"],
       ['<span class="lead">Card conditions</span>', "15",
        "how mature the season is, and how settled the market has been since the number opened"],
       ['<span class="lead">Data completeness</span>', "15",
        "how many of the required inputs are present"],
     ])}
-    {table(["Score", "Grade", "Share of seven seasons"],
+    {table(["Score", "Grade", "Share of the record"],
            [["96–100", '<span class="lead">A+</span>', "6%"],
             ["90–95", '<span class="lead">A</span>', "14%"],
             ["79–89", '<span class="lead">B</span>', "31%"],
@@ -1935,7 +1955,7 @@ def research_page(bands: dict, overall_band, *, card_count: int) -> str:
             ["51–65", '<span class="lead">D</span>', "15%"],
             ["below 51", '<span class="lead">F</span>', "10%"]])}
     <p>The six thresholds were chosen once, from the distribution of scores
-      across seven seasons, and then fixed. They are <b>absolute</b>: a card's
+      across the out-of-sample record, and then fixed. They are <b>absolute</b>: a card's
       letter depends on that card and on nothing else on the board, so the same
       card grades the same on a quiet Tuesday and on championship Saturday.
       Atlas does not grade on a curve, because a curve would make a screenshot
@@ -1972,15 +1992,14 @@ def research_page(bands: dict, overall_band, *, card_count: int) -> str:
 <section class="section" id="calibration">
   <div class="section-head"><h2>Calibration</h2></div>
   <div class="card card-pad prose">
-    <p>Calibration asks whether a claimed 65% is a real 65%. Atlas's raw model
-      is <b>overconfident</b>, and gets more so as it gets more confident: its
-      top confidence bucket claims
+    <p>Calibration asks whether a claimed 65% is a real 65%. Against the
+      closing number Atlas is <b>overconfident</b>, and gets more so as it
+      gets more confident: its top confidence bucket claims
       {pct(bands["10+"].claimed, 0) if "10+" in bands else "—"} and realises
       about {pct(bands["10+"].realised, 0) if "10+" in bands else "—"}.</p>
-    <p>Two things on every card already correct for this. The projection is
-      market-anchored, which collapses the error. And the grade is built from
-      the calibration record itself, so a card in a badly-calibrated band
-      cannot grade well no matter how interesting it looks.</p>
+    <p>The grade corrects for this on every card. It is built from the
+      calibration record itself, so a card in a badly-calibrated band cannot
+      grade well no matter how interesting it looks.</p>
     <p>The claimed number is still shown, beside the realised one, because a
       correction you cannot see is a correction you cannot check.</p>
   </div>
@@ -2035,7 +2054,7 @@ def nfl_page() -> str:
     <span class="badge mute">Stage 1 of 3</span>
     <p class="note banner-text">Schedules and market context are the work of a
       data feed. Projections need a model. Grades need a model that has been
-      measured for seven seasons — and until that sentence is true for the NFL,
+      measured across seasons it never saw — and until that sentence is true for the NFL,
       a grade would be decoration.</p>
   </div>
 </div>
@@ -2050,7 +2069,7 @@ def nfl_page() -> str:
         ['<span class="lead">2</span>', "projections and drivers",
          "NFL play-by-play from 2018, the warehouse rebuilt, the model refitted"],
         ['<span class="lead">3</span>', "grades",
-         "the same seven-season calibration study college football has"],
+         "the same out-of-sample calibration study college football has"],
     ]) + """
     <p class="note top-gap">The warehouse, feature and model layers are
       sport-agnostic, so most of the college pipeline carries over. The binding

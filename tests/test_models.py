@@ -575,3 +575,64 @@ def test_total_calibration_and_grid_run_walk_forward(research_frame):
     assert ((table["p_home"] >= 0) & (table["p_home"] <= 1)).all()
     text = total_mod.render(scored, table, fits)
     assert "## Total, regular season, pooled" in text and "most likely score" in text
+
+
+# ---------------------------------------------------------------------------
+# Step 6: the projector that feeds the card, and the record that feeds the grade
+# ---------------------------------------------------------------------------
+
+from atlas.models import ncaaf_projection as projecting  # noqa: E402
+
+_FIXED = {s: state_mod.Choice(q=0.0, p0=40.0, sigma=11.0, loglik=0.0, seasons=()) for s in range(2019, 2031)}
+
+
+def _with_scheduled(research_frame):
+    """The synthetic league with its last season's final games still to play."""
+    frame = research_frame.copy()
+    last = frame["season"].max()
+    tail = frame[(frame["season"] == last)].sort_values("kickoff").tail(12).index
+    for c in ("actual_margin", "actual_total", "home_score", "away_score"):
+        if c in frame:
+            frame.loc[tail, c] = np.nan
+    return frame
+
+
+def test_projector_projects_the_unplayed_games_from_the_played_ones(research_frame):
+    frame = _with_scheduled(research_frame)
+    projector = projecting.fit(frame, choices=_FIXED)
+    scheduled = frame[frame["actual_margin"].isna() & (frame["season"] == projector.season)]
+    out = projecting.project(projector, scheduled)
+    assert len(out) == len(scheduled)
+    assert projector.assimilated == int((frame["season"] == projector.season).sum()) - len(scheduled)
+    assert np.isfinite(out[["margin_mean", "margin_sd", "total_mean", "home_mean", "away_mean", "p_home"]]).all().all()
+    assert ((out["p_home"] > 0) & (out["p_home"] < 1)).all()
+    assert (out["home_mean"] + out["away_mean"] - out["total_mean"]).abs().max() < 1e-6
+    assert (out["margin_sd"] > 10).all()
+    assert out["model_version"].nunique() == 1 and len(out["model_version"].iloc[0]) == 12
+    view = projector.team(int(out["home_team_id"].iloc[0]))
+    assert view is not None and 1 <= view["rank"] <= view["teams"] and view["games"] >= 0
+
+
+def test_projector_never_reads_the_market_or_the_result(research_frame):
+    """Blanking every closing line on the scheduled games, or scrambling their
+    results, changes nothing: the number is the model's own."""
+    frame = _with_scheduled(research_frame)
+    projector = projecting.fit(frame, choices=_FIXED)
+    scheduled = frame[frame["actual_margin"].isna() & (frame["season"] == projector.season)].copy()
+    base = projecting.project(projector, scheduled)
+    scheduled["closing_spread"] = np.nan
+    scheduled["closing_total"] = np.nan
+    again = projecting.project(projector, scheduled)
+    assert np.allclose(base["margin_mean"], again["margin_mean"]) and np.allclose(base["total_mean"], again["total_mean"])
+
+
+def test_history_is_one_row_per_game_and_market_with_a_calibrated_claim(research_frame):
+    h = projecting.history(research_frame, choices=_FIXED, first_test_season=2021)
+    assert set(h["market"]) == {"margin", "total"}
+    assert h.groupby("market").size().nunique() == 1
+    assert ((h["claimed"] >= 0.5) & (h["claimed"] <= 1.0)).all()
+    assert set(h["won"].unique()) <= {0.0, 0.5, 1.0}
+    assert (h["abs_edge"] >= 0).all()
+    # A claim near a coin flip is roughly a coin flip: the record is honest about the market.
+    close = h[(h["market"] == "margin") & (h["abs_edge"] < 1.0)]
+    assert abs(close["won"].mean() - 0.5) < 0.15

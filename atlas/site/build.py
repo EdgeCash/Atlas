@@ -43,7 +43,7 @@ def build(out: Path | None = None, *, social_cards: bool = True,
             "`python -m atlas.warehouse.build --include-scheduled`"
         )
 
-    bands = grading.calibration_bands("total")
+    bands = grading.calibration_bands()
     overall = grading.overall(bands)
     stamps = _freshness(social_cards=social_cards)
 

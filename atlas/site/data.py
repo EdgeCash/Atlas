@@ -28,12 +28,9 @@ from atlas.util import get_logger
 
 LOG = get_logger(__name__)
 
-#: Fitted in `reports/atlas_beta_framework.md`. The spread weight is 1.00
-#: because the model's contribution could not be told apart from zero.
-MARKET_WEIGHT = {"margin": 1.00, "total": 0.89}
-
-#: Out-of-sample residual standard deviations around the closing number.
-RESIDUAL_SD = {"margin": 15.413, "total": 15.956}
+#: Below this many games of a team's own evidence this season, the card says
+#: the number is still mostly the preseason expectation.
+THIN_EVIDENCE_GAMES = 2
 
 #: Inputs a complete card needs. Missing ones cost the completeness component.
 REQUIRED_FEATURES = (
@@ -77,6 +74,43 @@ class Line:
 
 
 @dataclass
+class Projection:
+    """Atlas's own number for the game, from ``tracking/projections.csv``.
+
+    Means are decimal and never rounded; ``margin_mean`` is home minus away,
+    positive when the home side is the stronger. ``home``/``away`` carry the
+    state's view of each team in points above FBS average, with its rank and
+    how many games of this season's evidence it rests on.
+    """
+
+    margin_mean: float
+    margin_sd: float
+    total_mean: float
+    total_sd: float
+    home_mean: float
+    away_mean: float
+    p_home: float
+    total_lo: float
+    total_hi: float
+    top_home: int
+    top_away: int
+    top_p: float
+    hfa: float = 0.0
+    pace_adj: float = 0.0
+    wind_adj: float = 0.0
+    home: dict = field(default_factory=dict)
+    away: dict = field(default_factory=dict)
+    teams: int | None = None
+    version: str = ""
+    refreshed_at: str = ""
+
+    @property
+    def games_of_evidence(self) -> int | None:
+        games = [side.get("games") for side in (self.home, self.away) if side.get("games") is not None]
+        return None if not games else int(min(games))
+
+
+@dataclass
 class Card:
     game_id: int
     season: int
@@ -95,13 +129,13 @@ class Card:
     total: Line
     moneyline: dict
     books: int
-    model_margin: float | None
-    model_total: float | None
+    projection: Projection | None
     grade: grading.Grade | None
     drivers: list = field(default_factory=list)
     completeness: float = 1.0
     missing: list[str] = field(default_factory=list)
     cautions: list[str] = field(default_factory=list)
+    postseason: bool = False
 
     # -- derived -----------------------------------------------------------
 
@@ -117,13 +151,24 @@ class Card:
     def title(self) -> str:
         return f"{self.away.short} at {self.home.short}"
 
-    @property
-    def anchored_margin(self) -> float | None:
-        return _blend(self.spread.current, self.model_margin, MARKET_WEIGHT["margin"])
+    # The model's number is the model's number. Nothing here blends it with
+    # the market; the market is on the card for comparison.
 
     @property
-    def anchored_total(self) -> float | None:
-        return _blend(self.total.current, self.model_total, MARKET_WEIGHT["total"])
+    def model_margin(self) -> float | None:
+        """Home minus away, the model's mean."""
+        return None if self.projection is None else self.projection.margin_mean
+
+    @property
+    def model_total(self) -> float | None:
+        return None if self.projection is None else self.projection.total_mean
+
+    @property
+    def market_margin(self) -> float | None:
+        """The market's home margin. The live spread is captured home-oriented
+        (`atlas/live/provider.py`): positive when the home side is favoured,
+        the same convention as the model's ``margin_mean``."""
+        return self.spread.current
 
     @property
     def total_difference(self) -> float | None:
@@ -133,40 +178,45 @@ class Card:
 
     @property
     def margin_difference(self) -> float | None:
-        if self.model_margin is None or self.spread.current is None:
+        """Model minus market on the home margin: positive means Atlas likes the home side more."""
+        if self.model_margin is None or self.market_margin is None:
             return None
-        return self.model_margin - self.spread.current
+        return self.model_margin - self.market_margin
 
     @property
     def projected_home(self) -> float | None:
-        if self.anchored_total is None or self.anchored_margin is None:
-            return None
-        return (self.anchored_total + self.anchored_margin) / 2
+        return None if self.projection is None else self.projection.home_mean
 
     @property
     def projected_away(self) -> float | None:
-        if self.anchored_total is None or self.anchored_margin is None:
-            return None
-        return (self.anchored_total - self.anchored_margin) / 2
+        return None if self.projection is None else self.projection.away_mean
 
     @property
     def home_win_probability(self) -> float | None:
-        if self.anchored_margin is None:
-            return None
-        return float(stats.norm.cdf(self.anchored_margin / RESIDUAL_SD["margin"]))
-
-    @property
-    def over_probability(self) -> float | None:
-        if self.anchored_total is None or self.total.current is None:
-            return None
-        edge = self.anchored_total - self.total.current
-        return float(stats.norm.cdf(edge / RESIDUAL_SD["total"]))
+        """From the grid, key numbers and all."""
+        return None if self.projection is None else self.projection.p_home
 
     @property
     def model_win_probability(self) -> float | None:
-        if self.model_margin is None:
+        return self.home_win_probability
+
+    @property
+    def over_probability(self) -> float | None:
+        """P(total above the current market total), from the model's total."""
+        if self.projection is None or self.total.current is None:
             return None
-        return float(stats.norm.cdf(self.model_margin / RESIDUAL_SD["margin"]))
+        return float(stats.norm.sf((self.total.current - self.projection.total_mean) / self.projection.total_sd))
+
+    @property
+    def cover_probability(self) -> float | None:
+        """P(home margin above the current market margin), from the model's margin."""
+        if self.projection is None or self.market_margin is None:
+            return None
+        return float(stats.norm.sf((self.market_margin - self.projection.margin_mean) / self.projection.margin_sd))
+
+    @property
+    def model_favourite(self) -> Side:
+        return self.home if (self.model_margin or 0.0) >= 0 else self.away
 
     @property
     def market_win_probability(self) -> float | None:
@@ -191,14 +241,6 @@ class Card:
 
 def _slug(name: str) -> str:
     return "".join(c.lower() if c.isalnum() else "-" for c in name).strip("-").replace("--", "-")
-
-
-def _blend(market: float | None, model: float | None, weight: float) -> float | None:
-    if market is None:
-        return model
-    if model is None:
-        return market
-    return weight * market + (1 - weight) * model
 
 
 def _implied(price: object) -> float | None:
@@ -256,11 +298,11 @@ def build_cards(*, horizon: int = 8, refresh_meta: bool = False) -> list[Card]:
         return []
 
     store = Store.open()
-    numbers = store.read("numbers")
+    projections = store.read("projections")
     snapshots = store.read("snapshots")
     metadata = espn_meta.fetch(espn_meta.days_ahead(horizon), refresh=refresh_meta)
-    bands = grading.calibration_bands("total")
-    curve = grading.calibration_curve("total")
+    bands = grading.calibration_bands()
+    curve = grading.calibration_curve()
 
     season = int(scheduled["season"].max())
     pool = percentile_pool(frame, season)
@@ -275,7 +317,7 @@ def build_cards(*, horizon: int = 8, refresh_meta: bool = False) -> list[Card]:
         kickoff = pd.to_datetime(info["kickoff"], utc=True, errors="coerce")
         if pd.isna(kickoff) or kickoff < now:
             continue
-        card = _card(row, info, numbers, snapshots, pool, bands, curve)
+        card = _card(row, info, projections, snapshots, pool, bands, curve)
         if card is not None:
             cards.append(card)
 
@@ -284,20 +326,40 @@ def build_cards(*, horizon: int = 8, refresh_meta: bool = False) -> list[Card]:
     return cards
 
 
-def _card(row, info, numbers, snapshots, pool, bands, curve) -> Card | None:
+def _projection(projections: pd.DataFrame, game_id: int) -> Projection | None:
+    """The newest projection for a game, or None where the model has none."""
+    if projections.empty:
+        return None
+    block = projections[projections["game_id"].astype("Int64") == game_id]
+    if block.empty:
+        return None
+    row = block.sort_values("refreshed_at").iloc[-1]
+    means = {k: _num(row.get(k)) for k in ("margin_mean", "margin_sd", "total_mean", "total_sd",
+                                            "home_mean", "away_mean", "p_home", "total_lo", "total_hi", "top_p")}
+    if any(v is None for v in means.values()):
+        return None
+
+    def side(prefix: str) -> dict:
+        out = {k: _num(row.get(f"{prefix}_{k}")) for k in ("off", "def", "net", "sd_off", "sd_def", "rank", "games")}
+        return {k: (int(v) if k in ("rank", "games") and v is not None else v) for k, v in out.items()}
+
+    teams = _num(row.get("teams"))
+    return Projection(
+        **means,
+        top_home=int(_num(row.get("top_home")) or 0), top_away=int(_num(row.get("top_away")) or 0),
+        hfa=_num(row.get("hfa")) or 0.0, pace_adj=_num(row.get("pace_adj")) or 0.0,
+        wind_adj=_num(row.get("wind_adj")) or 0.0,
+        home=side("home"), away=side("away"), teams=None if teams is None else int(teams),
+        version=str(row.get("model_version") or ""), refreshed_at=str(row.get("refreshed_at") or ""),
+    )
+
+
+def _card(row, info, projections, snapshots, pool, bands, curve) -> Card | None:
     from atlas.site import drivers as driving
 
     game_id = int(row["game_id"])
     home_meta, away_meta = info["home"], info["away"]
-
-    model = {}
-    block = numbers[numbers["game_id"].astype("Int64") == game_id] if not numbers.empty else numbers
-    if not block.empty:
-        block = block.sort_values("refreshed_at")
-        for market in ("margin", "total"):
-            rows = block[block["market"] == market]
-            if not rows.empty:
-                model[market] = _num(rows.iloc[-1]["prediction"])
+    projection = _projection(projections, game_id)
 
     lines = {}
     quotes = snapshots[snapshots["game_id"].astype("Int64") == game_id] if not snapshots.empty else snapshots
@@ -327,7 +389,7 @@ def _card(row, info, numbers, snapshots, pool, bands, curve) -> Card | None:
     missing = []
     if not lines:
         missing.append("no market posted")
-    if not model:
+    if projection is None:
         missing.append("no Atlas number yet")
     if present < len(REQUIRED_FEATURES):
         missing.append("some team metrics unavailable")
@@ -367,21 +429,21 @@ def _card(row, info, numbers, snapshots, pool, bands, curve) -> Card | None:
         total=lines.get("total", empty("total")),
         moneyline=info.get("moneyline") or {},
         books=books,
-        model_margin=model.get("margin"),
-        model_total=model.get("total"),
+        projection=projection,
         grade=None,
         completeness=completeness,
         missing=missing,
+        postseason=str(row.get("season_type") or "regular") != "regular",
     )
 
-    difference = card.total_difference
+    difference = card.margin_difference
     if difference is not None:
         band = bands.get(grading.band_label(difference))
         if band is not None:
             card.grade = grading.compute(
                 difference, band, completeness, curve=curve,
                 conditions=grading.Conditions(week=int(row["week"]),
-                                              movement=card.total.movement),
+                                              movement=card.spread.movement),
             )
     card.drivers = driving.select(card, pool)
     card.cautions = cautions(card)
@@ -397,8 +459,21 @@ def cautions(card: Card) -> list[str]:
     """
     out: list[str] = []
     band = card.grade.band if card.grade else None
-    difference = card.total_difference
+    difference = card.margin_difference
 
+    evidence = card.projection.games_of_evidence if card.projection else None
+    if evidence is not None and evidence <= THIN_EVIDENCE_GAMES:
+        thin = min((card.home, card.away),
+                   key=lambda s: (card.projection.home if s is card.home else card.projection.away).get("games", 0))
+        out.append(
+            f"Atlas has seen {evidence} game{'s' if evidence != 1 else ''} from {thin.short} this "
+            "season, so its number here is still mostly its preseason expectation."
+        )
+    if card.postseason:
+        out.append(
+            "A bowl or playoff game. Atlas is fitted on the regular season only; "
+            "opt-outs and motivation are not in its number."
+        )
     if band and difference is not None and abs(difference) >= 6:
         # The grade block directly above already gives this game's
         # claimed-versus-delivered figures, so repeating them here spent a
@@ -407,7 +482,7 @@ def cautions(card: Card) -> list[str]:
         # it without the word "band", which is research vocabulary that means
         # nothing to somebody who arrived from a link.
         out.append(
-            f"Atlas is {abs(difference):.1f} points away from the market here. "
+            f"Atlas is {abs(difference):.1f} points away from the market on the spread. "
             "That is the range where its projection has been least worth "
             "leaning on — read the drivers and the market context instead."
         )
@@ -430,7 +505,7 @@ def cautions(card: Card) -> list[str]:
             f"{missing} of {len(REQUIRED_FEATURES)} team metrics are missing, "
             "which lowers the data-completeness component of the grade."
         )
-    total_move, model_direction = card.total.movement, difference
+    total_move, model_direction = card.total.movement, card.total_difference
     if total_move and model_direction and (total_move > 0) != (model_direction > 0):
         out.append(
             "Atlas and the market have moved opposite ways on the total since "

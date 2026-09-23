@@ -309,7 +309,7 @@ realised-versus-claimed accuracy walk-forward and out of sample. Its
 | 1 | Reference models + lattice + scoring harness, walk-forward, both sports (`atlas/models/`) | `reports/{sport}_benchmarks.md` reproduces the §2 table |
 | 2 | Layer A+B, **NCAAF first** (the data is here) | beats Elo on CRPS and Brier out of sample |
 | 3 | Layer A+B, NFL | same |
-| 4 | Card: model number in the second slot, market open/move/now in the first, drivers third | language audit passes; grade uses the new distribution |
+| 4 | Card: model number in the second slot, market open/move/now in the first, drivers third | language audit passes; grade uses the new distribution — **done for NCAAF** (`docs/MODEL_PLAN_NCAAF.md` step 6) |
 | 5 | v2 drive simulation, if phase 1's exact-score log-score leaves room | measurable gain on exact-score log-score |
 
 College goes first because its warehouse exists, its games are four times as

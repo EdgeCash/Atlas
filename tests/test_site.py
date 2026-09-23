@@ -74,7 +74,24 @@ def _side(key: str, name: str, colour: str) -> Side:
                          "adj_pace": 28.0, "plays_per_game": 52.0})
 
 
-def _card(*, model_total=50.7, market_total=48.5, grade=True) -> Card:
+def _projection(margin_mean: float, total_mean: float) -> data.Projection:
+    """A projection with the grid's numbers derived the way the model's would be."""
+    return data.Projection(
+        margin_mean=margin_mean, margin_sd=16.2, total_mean=total_mean, total_sd=16.0,
+        home_mean=(total_mean + margin_mean) / 2, away_mean=(total_mean - margin_mean) / 2,
+        p_home=0.5 + margin_mean / 60.0, total_lo=total_mean - 20, total_hi=total_mean + 20,
+        top_home=round((total_mean + margin_mean) / 2), top_away=round((total_mean - margin_mean) / 2),
+        top_p=0.003, hfa=2.5, pace_adj=-0.4, wind_adj=-0.2,
+        home={"off": 6.1, "def": 3.2, "net": 9.3, "sd_off": 4.0, "sd_def": 4.1, "rank": 21, "games": 4},
+        away={"off": 2.0, "def": -1.5, "net": 0.5, "sd_off": 4.2, "sd_def": 4.3, "rank": 60, "games": 4},
+        teams=136, version="test", refreshed_at="2026-09-21T09:00:00+00:00",
+    )
+
+
+def _card(*, model_margin=-5.5, model_total=50.7, market_total=48.5, grade=True) -> Card:
+    """The market has the away side by 7.5 (a home margin of -7.5);
+    ``model_margin`` is the model's own home margin, so the default sits two
+    points from the market."""
     card = Card(
         game_id=1, season=2026, week=5,
         kickoff=datetime.now(UTC) + timedelta(days=2),
@@ -87,12 +104,12 @@ def _card(*, model_total=50.7, market_total=48.5, grade=True) -> Card:
         total=Line("total", 49.5, market_total, -110.0, -105.0),
         moneyline={"home_open": "+370", "home_close": "+270",
                    "away_open": "-485", "away_close": "-340"},
-        books=1, model_margin=-7.1, model_total=model_total, grade=None,
+        books=1, projection=_projection(model_margin, model_total), grade=None,
     )
     if grade:
-        difference = card.total_difference
+        difference = card.margin_difference
         card.grade = _grade(difference, week=card.week,
-                            movement=card.total.movement)
+                            movement=card.spread.movement)
     card.drivers = driving.select(card, _POOL)
     card.cautions = data.cautions(card)
     return card
@@ -241,7 +258,7 @@ def test_every_section_is_still_on_the_page_behind_a_panel():
                     "Market movement", "Reliability record"):
         assert summary in page, f"missing panel: {summary}"
     # The detail itself, not just the summary.
-    assert "Unanchored model" in page
+    assert "Most likely score" in page
     assert "A difference is not an edge" in page
     assert "Calibration by disagreement band" in page
 
@@ -274,28 +291,51 @@ def test_a_card_carries_structured_data_for_the_game_and_nothing_more():
     assert "projection" not in block.lower()
 
 
-def test_the_projection_is_anchored_and_the_raw_model_is_shown_beside_it():
-    """The spec's central display rule: publish the accurate number, show the
-    correction rather than hiding it."""
-    card = _card(model_total=50.7, market_total=48.5)
+def test_the_projection_is_the_models_own_number_to_one_decimal():
+    """The product rule: Atlas's number is the model's number, never a blend
+    with the market, and the headline is the distribution's mean to one
+    decimal - 22.6–28.1, never 23–28."""
+    card = _card(model_margin=-5.5, model_total=50.7, market_total=48.5)
     page = _page(card)
-    assert card.anchored_total == pytest.approx(48.742, abs=0.01)
-    assert "48.7" in page
-    assert "50.7" in page
-    assert "Unanchored model" in page
+    tier1 = page.split('<div class="tier2">')[0]
+    assert card.model_total == 50.7 and card.model_margin == -5.5
+    assert card.projected_home == pytest.approx(22.6) and card.projected_away == pytest.approx(28.1)
+    assert "28.1–22.6" in tier1
+    assert "50.7" in tier1
+    assert "48.5" in tier1                                  # the market, beside it
+    assert card.margin_difference == pytest.approx(2.0)     # market has the away side by 7.5
+    assert "Most likely score" in page
 
 
-def test_the_spread_projection_equals_the_market():
-    """Weight 1.00 on spreads. The model's contribution could not be told
-    apart from zero, so Atlas publishes the market's number."""
+def test_the_market_is_shown_first_with_its_open_and_move():
+    """Market open, move and now come before Atlas's number, and the market
+    never changes the number."""
     card = _card()
-    assert card.anchored_margin == card.spread.current
+    page = _page(card)
+    tier1 = page.split('<div class="tier2">')[0]
+    answer = tier1[tier1.index('class="answer"'):]      # past the page's own <head>
+    assert answer.index(">Market<") < answer.index("Atlas projects")
+    assert "spread opened" in answer and "moved +4.0" in answer
+    moved = _card()
+    moved.spread = Line("margin", -11.5, -3.5, -110.0, -105.0)
+    assert moved.model_margin == card.model_margin
+    assert moved.projected_home == card.projected_home
+
+
+def test_the_grade_is_computed_on_the_spread():
+    """The headline is the score and the spread is the market that prices it,
+    so the grade's disagreement is on the margin, not the total."""
+    close = _card(model_margin=-7.0, model_total=70.0)     # far on the total, close on the spread
+    far = _card(model_margin=4.0, model_total=48.5)        # the reverse
+    assert close.grade.disagreement == pytest.approx(0.5)
+    assert far.grade.disagreement == pytest.approx(11.5)
+    assert far.grade.score < close.grade.score
 
 
 def test_a_low_grade_card_leads_with_its_low_confidence():
     """Rule 4: the grade is the centrepiece, and on a weak card it has to be
     the first thing a reader takes in."""
-    card = _card(model_total=60.0)
+    card = _card(model_margin=4.0)
     assert card.grade.low
     page = _page(card)
     tier1 = page.split('<div class="tier2">')[0]
@@ -307,8 +347,8 @@ def test_a_low_grade_card_leads_with_its_low_confidence():
 def test_cautions_are_specific_to_the_card():
     """Rule 5, question 5. A caution that appears on every card is read as
     decoration, so the wide-disagreement one must only fire when it applies."""
-    loud = _card(model_total=62.0)
-    quiet = _card(model_total=49.0)
+    loud = _card(model_margin=7.5)
+    quiet = _card(model_margin=-7.0)
     assert any("points away from the market" in c for c in loud.cautions)
     assert not any("points away from the market" in c for c in quiet.cautions)
     assert len(loud.cautions) <= 3
@@ -319,8 +359,8 @@ def test_no_caution_uses_research_vocabulary():
     never seen Atlas. "The 10+ band" is a sentence from a research report."""
     jargon = ("band", "calibration", "out of sample", "walk-forward",
               "point-in-time", "unanchored", "percentile")
-    for card in (_card(model_total=62.0), _card(model_total=49.0),
-                 _card(model_total=56.0)):
+    for card in (_card(model_margin=7.5), _card(model_margin=0.5),
+                 _card(model_margin=-5.5)):
         for caution in card.cautions:
             lowered = caution.lower()
             assert not any(word in lowered for word in jargon), caution
@@ -378,7 +418,7 @@ def _visible_text(page: str) -> str:
 
 @pytest.mark.parametrize("builder", [
     lambda: _page(_card()),
-    lambda: _page(_card(model_total=60.0)),
+    lambda: _page(_card(model_margin=4.0)),
     lambda: render.nfl_page(),
     lambda: render.premium_page(),
     lambda: render.about_page(_card(), card_count=58),
@@ -401,7 +441,7 @@ def test_no_page_tells_a_reader_what_to_do(builder):
 
 @pytest.mark.parametrize("builder", [
     lambda: _page(_card()),
-    lambda: _page(_card(model_total=60.0)),
+    lambda: _page(_card(model_margin=4.0)),
     lambda: render.about_page(_card(), card_count=58),
     lambda: render.faq_page(),
 ], ids=["card-a", "card-f", "about", "faq"])

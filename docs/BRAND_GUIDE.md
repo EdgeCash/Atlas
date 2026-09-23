@@ -187,7 +187,7 @@ about the product than any A-grade card could.
 | The per-game page | **matchup card** | "the pick", "the play" |
 | Model minus market | **difference** | "edge", "value" |
 | A–F rating | **grade** | "confidence rating", "star rating" |
-| The anchored number | **projection** | "prediction", "our number" |
+| The model's number | **projection** | "prediction", "our number" |
 | Historical accuracy | **reliability record** | "track record", "results" |
 | Line movement | **market intelligence** | "steam", "sharp action" |
 <!-- lang-lint: end -->

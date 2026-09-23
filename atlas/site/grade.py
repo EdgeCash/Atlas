@@ -31,8 +31,7 @@ from dataclasses import dataclass
 import numpy as np
 import pandas as pd
 
-from atlas.research import beta_report as beta
-from atlas.research import market_aware as ma
+from atlas import config
 from atlas.util import get_logger
 
 LOG = get_logger(__name__)
@@ -268,7 +267,9 @@ def _lesson(letter: str, band: Band, disagreement: float,
     """
     edge = abs(float(disagreement))
     near = "this close to" if edge < 2 else "this far from"
-    claim = (f"Across seven seasons, cards {near} the market claimed "
+    size = ("small" if edge < 1 else "modest" if edge < 2 else "moderate" if edge < 4
+            else "wide" if edge < 6 else "large" if edge < 10 else "very large")
+    claim = (f"Across {seasons_word(band)}, cards {near} the market claimed "
              f"{band.claimed:.0%} accuracy and delivered {band.realised:.0%}.")
 
     if letter == "A+":
@@ -288,33 +289,41 @@ def _lesson(letter: str, band: Band, disagreement: float,
     if letter == "B":
         return [
             "Historically sound.",
-            f"A moderate disagreement of {edge:.1f} points.",
+            f"A {size} disagreement of {edge:.1f} points.",
             claim + " The claim runs a little ahead of the delivery.",
         ]
     if letter == "C":
         return [
             "Mixed record.",
-            f"A wide disagreement of {edge:.1f} points.",
+            f"A {size} disagreement of {edge:.1f} points.",
             claim + " That gap is where this grade comes from.",
         ]
     if letter == "D":
         return [
             "Historically unreliable.",
-            f"A large disagreement of {edge:.1f} points.",
+            f"A {size} disagreement of {edge:.1f} points.",
             claim + " Atlas commonly struggles this far out.",
         ]
     return [
         "Historically unreliable.",
-        f"A very large disagreement of {edge:.1f} points.",
+        f"A {size} disagreement of {edge:.1f} points.",
         claim + " Atlas marks its own card down.",
     ]
+
+
+def seasons_word(band: Band) -> str:
+    """"five seasons", from the record itself, never transcribed."""
+    words = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven",
+             8: "eight", 9: "nine", 10: "ten"}
+    n = int(band.seasons)
+    return f"{words.get(n, str(n))} season{'s' if n != 1 else ''}"
 
 
 def _headline(letter: str, band: Band, disagreement: float) -> str:
     if letter in ("A+", "A"):
         return (
             "Atlas and the market agree closely, and this disagreement band has "
-            "been among the model's most consistent across seven seasons."
+            f"been among the model's most consistent across {seasons_word(band)}."
         )
     if letter == "B":
         return (
@@ -339,39 +348,32 @@ def _headline(letter: str, band: Band, disagreement: float) -> str:
 # ---------------------------------------------------------------------------
 
 
-def calibration_bands(market_name: str = "total") -> dict[str, Band]:
-    """Claimed vs realised accuracy by band, computed from the warehouse.
+#: The market the grade is computed on. The card's headline is the projected
+#: score, and the spread is the market that prices it.
+GRADED_MARKET = "margin"
 
-    Recomputed at build time rather than transcribed, so the site can never
-    drift from the research it cites. Seven seasons, out of sample, under the
-    walk-forward protocol every earlier phase used.
+
+def calibration_bands(market_name: str = GRADED_MARKET) -> dict[str, Band]:
+    """Claimed vs realised accuracy by band, from the model's own record.
+
+    The record is the model walked forward over every completed season it
+    never saw while being built (`atlas/models/ncaaf_projection.history`),
+    written to the tracking store by the weekly refresh so a build never
+    drifts from it. Recomputed here on every build, never transcribed.
     """
-    from atlas.research.dataset import load_research_frame, research_sample
-
-    frame = ma.prepare(research_sample(load_research_frame()))
-    market = beta.markets(frame)[market_name]
-    scored = ma.walk_forward(frame, market)
-
-    audit = ma.edge_audit(scored, market).set_index("bucket")
-    bucketed = ma.bucket_edges(scored, market)
-    probs = ma.to_probability(bucketed, market, 0.0)
-    outcomes = pd.to_numeric(bucketed[market.outcome], errors="coerce")
-    bucketed["won"] = ma.realised(probs, outcomes)
-
+    frame = _scored(market_name)
+    frame["band"] = frame["abs_edge"].map(band_label)
     bands: dict[str, Band] = {}
-    for label, block in bucketed.groupby("edge_bucket", observed=True):
-        label = str(label)
-        if label not in audit.index:
-            continue
-        per_season = block.dropna(subset=["won"]).groupby("season")["won"].agg(["size", "mean"])
+    for label, block in frame.groupby("band"):
+        per_season = block.groupby("season")["won"].agg(["size", "mean"])
         per_season = per_season[per_season["size"] >= 25]
-        row = audit.loc[label]
-        bands[label] = Band(
-            label=label,
-            games=int(row["games"]),
-            claimed=float(row["claimed"]),
-            realised=float(row["actual"]),
-            gap=float(row["calibration_gap"]),
+        claimed, realised = float(block["claimed"].mean()), float(block["won"].mean())
+        bands[str(label)] = Band(
+            label=str(label),
+            games=int(len(block)),
+            claimed=claimed,
+            realised=realised,
+            gap=realised - claimed,
             seasons=int(len(per_season)),
             seasons_above=int((per_season["mean"] > 0.5).sum()),
         )
@@ -386,7 +388,7 @@ SLICE = 0.5
 MIN_SLICE_GAMES = 40
 
 
-def calibration_curve(market_name: str = "total") -> Curve:
+def calibration_curve(market_name: str = GRADED_MARKET) -> Curve:
     """Fit ``gap(d) = -a * d ** p`` to seven seasons, out of sample.
 
     The seven-band table this replaced was a reporting convention, not a
@@ -395,8 +397,7 @@ def calibration_curve(market_name: str = "total") -> Curve:
     close to linear. Refitted on every build, because the coefficient moves by
     about 2.5x across seasons and a transcribed constant would drift.
     """
-    frame, market = _scored(market_name)
-    frame = frame.dropna(subset=["won", "abs_edge"])
+    frame = _scored(market_name)
 
     edges, gaps, weights = [], [], []
     upper = float(frame["abs_edge"].quantile(0.995))
@@ -429,19 +430,29 @@ def calibration_curve(market_name: str = "total") -> Curve:
     return curve
 
 
-def _scored(market_name: str):
-    """The walk-forward frame both the curve and the band table are built on."""
-    from atlas.research.dataset import load_research_frame, research_sample
+def _scored(market_name: str) -> pd.DataFrame:
+    """The model's record against the closing number, for one market.
 
-    frame = ma.prepare(research_sample(load_research_frame()))
-    market = beta.markets(frame)[market_name]
-    scored = ma.walk_forward(frame, market)
-    bucketed = ma.bucket_edges(scored, market)
-    probs = ma.to_probability(bucketed, market, 0.0)
-    outcomes = pd.to_numeric(bucketed[market.outcome], errors="coerce")
-    bucketed["won"] = ma.realised(probs, outcomes)
-    bucketed["claimed"] = np.maximum(probs, 1 - probs)
-    return bucketed, market
+    Read from the tracking store's ``calibration`` table, which the weekly
+    refresh writes. If it is missing - a fresh checkout, a test - the record
+    is built in process from the warehouse, which is slower but the same.
+    """
+    from atlas.live.store import Store
+
+    table = Store.open().read("calibration")
+    if table.empty:
+        from atlas.models import ncaaf_projection, ncaaf_state
+        from atlas.research.dataset import load_research_frame
+
+        paths = config.paths()
+        LOG.warning("no calibration table; building the model's record in process")
+        table = ncaaf_projection.history(
+            load_research_frame(paths.warehouse),
+            choices=ncaaf_state.load_choices(ncaaf_state.choices_path(paths.root)))
+    frame = table[table["market"] == market_name].copy()
+    for column in ("abs_edge", "claimed", "won", "season"):
+        frame[column] = pd.to_numeric(frame[column], errors="coerce")
+    return frame.dropna(subset=["abs_edge", "claimed", "won"]).reset_index(drop=True)
 
 
 def overall(bands: dict[str, Band]) -> Band:

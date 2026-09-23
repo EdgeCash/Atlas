@@ -156,9 +156,11 @@ shouts loudest exactly where their model is weakest, because a big
 disagreement makes a compelling post. Atlas has measured the opposite and acts
 on it:
 
-* The published projection is **market-anchored** — weight 1.00 on spreads,
-  0.89 on totals, both fitted — because that is the accurate number. The
-  unanchored model sits beside it so the correction is visible.
+* The published projection is **Atlas's own number** — a preseason prior
+  for every team, updated after every game by a Kalman filter over each
+  offence and defence, opponent-adjusted, with a calibrated total and an
+  80×80 grid over the final score whose decimal mean is the headline. The
+  market is never an input; it sits beside the number for comparison.
 * Every card carries an **A–F grade for information quality**, not a
   recommendation. A card where Atlas sits 11 points from the market grades
   **F**, because that band claimed 77% accuracy and delivered 49.5%.

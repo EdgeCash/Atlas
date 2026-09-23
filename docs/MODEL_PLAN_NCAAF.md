@@ -351,6 +351,25 @@ and was right 0.35% of the time; the actual score sat in the grid's top
 ten cells 3% of the time and its median rank was 478. The card shows the
 top cell for what it is.
 
+**Card — built, step 6.** `atlas/models/ncaaf_projection.py` runs steps 2–5
+forward to today: the season's prior, the state carried through every game
+already played, the calibrated total and the grid, one row per scheduled
+game, published by the weekly refresh to `tracking/projections.csv` with
+the state's view of each team (offence, defence, rank, games of evidence)
+for the drivers. The card reads it; nothing on the card blends the model
+with the market any more. Tier one is the market (spread, total, where the
+spread opened and how far it moved) first, Atlas's projection second, to
+one decimal, and the difference on the spread; the drivers open with the
+model's own terms in points; the cautions say when a team's number is
+still mostly its preseason expectation and when a game is a bowl. The
+grade is computed on the spread and fitted to this model's walk-forward
+record against the closing line (`tracking/calibration.csv`, written by
+the same refresh; five seasons, 3,864 games; the curve's fit r = 0.72), so
+it describes this model and not the one before it. The site audit passes
+on every page. Not changed: the closing-line signal tracker still forms
+its signals from the earlier ridge model's numbers; replacing that is a
+product decision, not a modelling one.
+
 ---
 
 ## 6. Validation — college specifics
@@ -411,12 +430,13 @@ bucket**, and the ECE row holds.
 | 3 | Kalman state model, off/def, opponent-adjusted, no extras (`atlas/models/kalman.py`, `atlas/models/ncaaf_state.py`, `make ncaaf-state`) | **done — beats Elo in every week bucket; CRPS 8.96 vs Elo 9.23, market 8.61** |
 | 4 | Coaching-change and programme-mean features in the prior; portal fetch; QB measured | **done — weeks 1–4 CRPS 9.51 → 9.47, weeks 3–4 9.73 → 9.67; state pooled 8.96 → 8.94** |
 | 5 | Total model + joint grid (`atlas/models/ncaaf_total.py`, `atlas/models/joint.py`, `make ncaaf-total`) | **done — total CRPS 9.13 (naive 9.62, market 8.85); grid P(home) within 0.04 in every spread bucket** |
-| 6 | Wire into the card (model number second slot, market open/move/now first, drivers third) and the grade | language audit passes |
+| 6 | Wire into the card (model number second slot, market open/move/now first, drivers third) and the grade (`atlas/models/ncaaf_projection.py`, `tracking/projections.csv`, `tracking/calibration.csv`) | **done — audit passes on 182 pages; grade fitted to this model's record** |
 | 7 | v2 drive simulation, if warranted | |
 
-Steps 0–5 are done. Step 6 wires the grid into the card: market open,
-move and now first; the model's decimal projection second; the drivers
-third.
+Steps 0–6 are done. The card shows the market's open, move and now first,
+the model's decimal projection second and the drivers third, and the grade
+is fitted to this model's own record. What remains is v2 (step 7), the
+portal once the next keyed run caches it, and the NFL plan.
 
 ---
 

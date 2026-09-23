@@ -82,30 +82,27 @@ Six values. Three headline, three supporting.
 
 | Field | Definition |
 |---|---|
-| Projected score | derived from the anchored margin and anchored total |
-| Projected spread | `w·market + (1−w)·model`, **w = 1.00** |
-| Projected total | `w·market + (1−w)·model`, **w = 0.89** |
-| Win probability | `Φ(anchored margin / σ)`, σ = 15.41 |
-| Over/under probability | `Φ((anchored total − market total) / σ)`, σ = 15.96 |
-| Unanchored model | the raw model number, labelled as such |
+| Projected score | the mean of the 80×80 grid over (home, away) points, **to one decimal**, never a rounded integer |
+| Projected spread | the grid's mean margin, home minus away |
+| Projected total | the grid's mean total, with its 80% range |
+| Win probability | P(home > away) from the grid, key numbers and all |
+| Over/under probability | P(total above the current market total), from the model's total and its sd |
+| Most likely score | the grid's single most probable cell, with its probability (a fraction of a percent) |
 
-### Why the projection is anchored
+### Where the number comes from
 
-The weights are fitted, with standard errors, across 5,778 games:
+`docs/MODEL_PLAN_NCAAF.md`, steps 2–5, run forward to today by
+`atlas/models/ncaaf_projection.py` and published by the weekly refresh to
+`tracking/projections.csv`: every FBS team opens the season at a preseason
+prior (last season's SP+ and FPI, talent, recruiting, returning production,
+the programme's long-run mean and the coaching situation); a joint Kalman
+filter over every team's offence and defence updates it after each game,
+opponent-adjusted; the total is the state's implied total recalibrated with
+pace and wind; the margin and total meet on the grid.
 
-| Market | Model weight β | SE | t vs 0 | Implied market weight |
-|---|---|---|---|---|
-| Spread | 0.0228 | 0.0321 | +0.71 | **0.98 → shipped as 1.00** |
-| Total | 0.1106 | 0.0397 | +2.79 | **0.89** |
-
-On spreads the model's contribution cannot be distinguished from zero, so the
-published spread is the market's. Rounding 0.98 up to 1.00 is deliberate: a
-weight whose distance from 1.00 cannot be told apart from zero is not a
-weight, and carrying it forward would dress up a null as a parameter.
-
-**Both numbers are shown.** The unanchored model sits beside the projection so
-the correction is visible rather than hidden. On the Miami card the gap is
-42.3 against 52.3, and the card explains it in one sentence.
+**The market is never an input.** It is on the card because it is the
+reference the grade is measured against and the number a reader has already
+seen. Where the two differ, the difference and the drivers are the product.
 
 ### Win probability is not cover probability
 
@@ -118,9 +115,8 @@ figure.
 
 ## §4 Atlas difference
 
-Model minus market, **before** anchoring — because the unanchored difference
-is the informative quantity, and because a difference computed after anchoring
-would be near zero by construction and would tell the reader nothing.
+Model minus market, on the spread (home margin) and on the total. The grade
+is computed on the spread difference; the total's is shown beneath it.
 
 | Row | Shown as |
 |---|---|
@@ -146,7 +142,7 @@ Four components, 100 points.
 | Component | Points | Formula | Source |
 |---|---|---|---|
 | Calibration | 40 | `40 · max(0, 1 − \|gap\| / 0.35)` | realised minus claimed accuracy in this game's disagreement band |
-| Market agreement | 25 | `25 · max(0, 1 − \|difference\| / 12)` | unanchored model minus market |
+| Market agreement | 25 | `25 · max(0, 1 − \|difference\| / 12)` | model minus market, on the spread |
 | Signal stability | 20 | `20 · (seasons above 50% / seasons measured)` | same band, season by season |
 | Data completeness | 15 | share of required inputs present | features, books quoting, weeks of season data |
 
@@ -276,8 +272,8 @@ Every row shows the all-cards figure beside the this-band figure so the reader
 can see whether this card is better or worse than typical.
 
 **The disclosure is mandatory and identical on every card:** Atlas's raw
-confidence numbers run high, the grade and the anchored projection already
-correct for it, and the claim is shown so the correction is visible.
+confidence numbers run high against the closing number, the grade already
+corrects for it, and the claim is shown so the correction is visible.
 
 ---
 
@@ -289,7 +285,7 @@ Full rationale in [`PREMIUM_PLAN.md`](PREMIUM_PLAN.md).
 |---|---|---|
 | §1 Header | all | — |
 | §2 Market | current spread, total | opening numbers, movement, moneyline, book depth |
-| §3 Projection | projected spread, total | score, win probability, unanchored model |
+| §3 Projection | projected spread, total | score, win probability, total range, most likely score |
 | §4 Difference | — | all |
 | §5 Grade | **letter grade** | component breakdown |
 | §6 Drivers | top 1 | all 3–5, percentiles, bars |
@@ -307,7 +303,7 @@ selling confidence and charging extra for the caveat.
 
 | Condition | Behaviour |
 |---|---|
-| No market posted | §2 shows "not posted"; §3 shows the unanchored model only, clearly labelled; grade capped at **C** |
+| No market posted | §2 shows "not posted"; §3 shows the model's number as always; no difference, so no grade |
 | No moneyline | field reads "not posted"; never derived |
 | Fewer than 3 games played by a team | drivers shown with a shrinkage note; completeness component reduced |
 | Weather unavailable | row omitted |

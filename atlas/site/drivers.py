@@ -6,7 +6,11 @@ percentile — "95th percentile" is readable, "+0.283 adjusted EPA" alone is
 not.
 
 Drivers are ranked by how much they move the projection, so the list is the
-model's own reasoning rather than a fixed set of stats.
+model's own reasoning rather than a fixed set of stats. The first candidates
+are the model's own terms - each team's offence and defence as the state
+sees them, in points, with the home advantage and the total's pace and wind
+terms - and the efficiency metrics that explain *why* the state sees them
+that way come after.
 """
 
 from __future__ import annotations
@@ -50,10 +54,60 @@ def _pct(pool, metric, value):
     return percentile(pool, metric, value)
 
 
+def _model_drivers(card) -> list[tuple[float, Driver]]:
+    """What the model itself is made of, for this game, in points."""
+    p = card.projection
+    if p is None or not p.home or not p.away:
+        return []
+    home, away = card.home, card.away
+    out: list[tuple[float, Driver]] = []
+
+    def strength(name: str, key: str, note: str) -> None:
+        h, a = p.home.get(key), p.away.get(key)
+        if h is None or a is None:
+            return
+        gap = h - a
+        leader, trailer = (home, away) if gap >= 0 else (away, home)
+        lead, trail = (h, a) if gap >= 0 else (a, h)
+        out.append((abs(gap), Driver(
+            name=name,
+            magnitude=f"{leader.abbr} +{abs(gap):.1f} pts",
+            sentence=(f"Atlas rates {leader.short}'s {note} at {lead:+.1f} points a game against FBS average "
+                      f"and {trailer.short}'s at {trail:+.1f}, opponent-adjusted, after "
+                      f"{p.home.get('games', 0) if leader is home else p.away.get('games', 0)} games this season."),
+            share=min(0.48, abs(gap) / 30.0),
+            toward_home=gap >= 0,
+            scale_left=away.short, scale_right=home.short,
+            favours=leader.key,
+        )))
+
+    strength("Offence, in points", "off", "offence")
+    strength("Defence, in points", "def", "defence")
+    if p.hfa and not card.neutral:
+        out.append((abs(p.hfa), Driver(
+            name="Home advantage",
+            magnitude=f"{home.abbr} +{p.hfa:.1f} pts",
+            sentence=f"Playing at home is worth {p.hfa:.1f} points in this season's model, fitted, not assumed.",
+            share=min(0.48, p.hfa / 12.0), toward_home=True,
+            scale_left=away.short, scale_right=home.short, favours=home.key,
+        )))
+    game_terms = p.pace_adj + p.wind_adj
+    if abs(game_terms) >= 0.5:
+        out.append((abs(game_terms), Driver(
+            name="Pace and wind, on the total",
+            magnitude=f"{game_terms:+.1f} pts",
+            sentence=(f"The teams' pace moves the projected total by {p.pace_adj:+.1f} and the wind by "
+                      f"{p.wind_adj:+.1f}, against an average game."),
+            share=min(0.48, abs(game_terms) / 8.0), toward_home=game_terms > 0,
+            scale_left="lower total", scale_right="higher total",
+        )))
+    return out
+
+
 def select(card, pool: dict) -> list[Driver]:
     """The drivers that explain this card, strongest first."""
     home, away = card.home, card.away
-    candidates: list[tuple[float, Driver]] = []
+    candidates: list[tuple[float, Driver]] = list(_model_drivers(card))
 
     def add(weight: float, driver: Driver) -> None:
         candidates.append((abs(weight), driver))

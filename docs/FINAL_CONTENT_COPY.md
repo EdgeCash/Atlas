@@ -47,9 +47,11 @@ everything below it is read as research or as a tip sheet.
 > every figure uses only what was knowable before kickoff, going back seven
 > seasons.
 >
-> The model is anchored to the betting market, because seven seasons of
-> out-of-sample testing said the market is the better starting point. Where
-> Atlas differs from it, the card says by how much and what is driving it.
+> The number is Atlas's own. Every team starts a season at a preseason
+> expectation and is updated after every game, opponent-adjusted, and the
+> projection is the mean of a full score distribution, to one decimal. The
+> market is never an input: it sits beside Atlas's number so you can see
+> where they differ and what is driving it.
 >
 > And then it does the thing nothing else in this category does: it grades
 > itself, in public, on every card, using its own historical record.
@@ -151,7 +153,7 @@ At the top of the scale the middle line carries the caveat:
 | Panel | Summary |
 |---|---|
 | Market detail | where the line opened, where it is now, and the prices |
-| Projection detail | the projected score, the chance of winning, and the model before it is anchored to the market |
+| Projection detail | the projected score, the chance of winning, the total's range and the most likely exact score |
 | How this grade was computed | the four things that set the letter, out of a hundred |
 | All drivers | all N things the model is reading, and how each team ranks against the rest of the country |
 | Market movement | how far the market has moved since the number opened, and which way |

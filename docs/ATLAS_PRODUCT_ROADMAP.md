@@ -14,7 +14,7 @@ to consumer product. This is the plan.
 | Layer | State |
 |---|---|
 | Data | Point-in-time warehouse, opponent-adjusted, nine seasons |
-| Model | Market-anchored, walk-forward validated, weights fitted (1.00 spreads, 0.89 totals) |
+| Model | Atlas's own: preseason prior + Kalman state + calibrated total + score grid, walk-forward validated (`docs/MODEL_PLAN_NCAAF.md`); the market is never an input |
 | Grading | **V2 — continuous, absolute thresholds, every letter reachable** |
 | Live tracking | Deterministic signal ids, two-season success horizon, accumulating |
 | Operations | Data quality gates, drift detection, anomaly checks, reproducibility harness |

@@ -172,7 +172,7 @@ def wide(card: Card, *, generated: str = "") -> str:
 
     return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}"
      viewBox="0 0 {W} {H}" role="img"
-     aria-label="{esc(card.title)}: market {esc(card.spread_text)}, total {num(card.total.current)}. Atlas projects {num(card.anchored_total)} and grades this card {esc(card.grade.letter if card.grade else "ungraded")}.">
+     aria-label="{esc(card.title)}: market {esc(card.spread_text)}, total {num(card.total.current)}. Atlas projects {num(card.model_total)} and grades this card {esc(card.grade.letter if card.grade else "ungraded")}.">
   <rect width="{W}" height="{H}" fill="{BG}"/>
   {_accent(card, W)}
   <text x="72" y="92" {_font(23, 680, INK, -0.4)}>Atlas</text>
@@ -189,7 +189,7 @@ def wide(card: Card, *, generated: str = "") -> str:
   <text x="72" y="{row_y + 44}" {_font(17, 400, INK_3)}>total {num(card.total.current)}</text>
 
   <text x="430" y="{row_y - 34}" {_font(13, 640, INK_3, 1.2)}>ATLAS</text>
-  <text x="430" y="{row_y + 14}" {_font(44, 700, INK, -1.6)}>{num(card.anchored_total)}</text>
+  <text x="430" y="{row_y + 14}" {_font(44, 700, INK, -1.6)}>{num(card.model_total)}</text>
   <text x="430" y="{row_y + 44}" {_font(17, 400, INK_3)}>projected total</text>
 
   <text x="700" y="{row_y - 34}" {_font(13, 640, INK_3, 1.2)}>DIFFERENCE</text>
@@ -308,8 +308,9 @@ def square(card: Card, *, generated: str = "") -> str:
 
     cells = (_cell(56, y, 470, 126, "Market total", num(card.total.current),
                    f"opened {num(card.total.open_line)}")
-             + _cell(554, y, 470, 126, "Atlas projects", num(card.anchored_total),
-                     f"unanchored model {num(card.model_total)}"))
+             + _cell(554, y, 470, 126, "Atlas projects", num(card.model_total),
+                     f"score {card.projected_away:.1f}–{card.projected_home:.1f}"
+                     if card.projected_home is not None else "the model's own total"))
     y += 126 + 56
 
     driver_block = f'<text x="56" y="{y}" {_font(13, 640, INK_3, 1.1)}>WHAT THE MODEL IS READING</text>'

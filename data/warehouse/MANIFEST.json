@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-23T22:51:03+00:00",
+  "generated_at": "2026-09-23T23:14:25+00:00",
   "atlas_version": "0.1.0",
   "seasons_requested": [
     2018,
@@ -30,71 +30,71 @@
       "sp_plus": {
         "present": true,
         "measured_on": "ratings.home_sp_plus",
-        "non_null": 6906,
-        "rows": 21328,
-        "coverage": 0.3238
+        "non_null": 7527,
+        "rows": 21968,
+        "coverage": 0.3426
       },
       "talent": {
         "present": true,
         "measured_on": "talent.home_talent",
-        "non_null": 9731,
-        "rows": 21328,
-        "coverage": 0.4563
+        "non_null": 10360,
+        "rows": 21968,
+        "coverage": 0.4716
       },
       "recruiting": {
         "present": true,
         "measured_on": "talent.home_recruiting_rank",
-        "non_null": 9792,
-        "rows": 21328,
-        "coverage": 0.4591
+        "non_null": 10421,
+        "rows": 21968,
+        "coverage": 0.4744
       },
       "returning": {
         "present": true,
         "measured_on": "talent.home_returning_production",
-        "non_null": 6905,
-        "rows": 21328,
-        "coverage": 0.3238
+        "non_null": 7526,
+        "rows": 21968,
+        "coverage": 0.3426
       },
       "coaches": {
         "present": true,
         "measured_on": "talent.home_new_coach",
-        "non_null": 6959,
-        "rows": 21328,
-        "coverage": 0.3263
+        "non_null": 7588,
+        "rows": 21968,
+        "coverage": 0.3454
       }
     }
   },
   "tables": {
     "market_lines": {
-      "rows": 21328,
+      "rows": 21968,
       "columns": 13
     },
     "outcomes": {
-      "rows": 21328,
+      "rows": 21968,
       "columns": 7
     },
     "games": {
-      "rows": 21328,
+      "rows": 21968,
       "columns": 29
     },
     "ratings": {
-      "rows": 21328,
+      "rows": 21968,
       "columns": 20
     },
     "efficiency_metrics": {
-      "rows": 21328,
+      "rows": 21968,
       "columns": 36
     },
     "adjusted_efficiency_metrics": {
-      "rows": 21328,
+      "rows": 21968,
       "columns": 111
     },
     "talent": {
-      "rows": 21328,
+      "rows": 21968,
       "columns": 19
     },
     "context": {
-      "rows": 21328,
+      "rows": 21968,
       "columns": 22
     }
   }

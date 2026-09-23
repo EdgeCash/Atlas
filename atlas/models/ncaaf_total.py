@@ -139,10 +139,11 @@ def _score_total(test: pd.DataFrame, models: dict[str, tuple[np.ndarray, float]]
         if has_line.any():
             p_over[has_line] = _p_over(pmf[has_line], TOTAL_SUPPORT, line[has_line])
         rows.append(pd.DataFrame({
+            "game_id": test["game_id"].to_numpy() if "game_id" in test else np.arange(len(test)),
             "season": season, "week": test["week"].to_numpy(),
             "season_type": test["season_type"].to_numpy() if "season_type" in test else "regular",
             "abs_spread": test["closing_spread"].abs().to_numpy() if "closing_spread" in test else np.nan,
-            "model": name, "mean": mean, "sigma": sigma,
+            "model": name, "mean": mean, "sigma": sigma, "line": line,
             "crps": scoring.crps(pmf, TOTAL_SUPPORT, y), "mae": scoring.mae(mean, y),
             "p_over": p_over, "over": over,
         }))
@@ -183,10 +184,15 @@ def _joint_table(fc: pd.DataFrame, margin_pmf: np.ndarray, margin_support: np.nd
         s["margin_crps_state"] = scoring.crps(margin_pmf[sl], margin_support, y[sl])
         s["cell_p"] = J.cell_probability(home[sl], away[sl])
         s["rank"] = J.rank_of(home[sl], away[sl])
+        s["margin_sd"] = fc["m_sd"].to_numpy(dtype=float)[sl]
+        if "closing_spread" in fc:
+            line = -pd.to_numeric(fc["closing_spread"], errors="coerce").to_numpy(dtype=float)[sl]
+            s["p_cover"] = _p_over(mp, ms, np.where(np.isnan(line), 0.0, line))
+            s.loc[np.isnan(line), "p_cover"] = np.nan
         parts.append(s)
     out = pd.concat(parts, ignore_index=True)
     out.insert(0, "season", season)
-    for c in ("week", "season_type", "kickoff", "home_team", "away_team", "neutral_site", "closing_spread",
+    for c in ("game_id", "week", "season_type", "kickoff", "home_team", "away_team", "neutral_site", "closing_spread",
               "closing_total", "actual_margin", "actual_total"):
         if c in fc:
             out[c] = fc[c].to_numpy()

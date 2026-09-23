@@ -18,6 +18,7 @@ from datetime import UTC, date, datetime, timedelta
 
 import pandas as pd
 
+from atlas import config
 from atlas.live import audit, ops_report, quality, reproduce
 from atlas.live import dashboard as dashboarding
 from atlas.live import drift as drifting
@@ -157,7 +158,36 @@ def refresh(seasons: list[int] | None = None, *, rebuild: bool = True) -> int:
     # from the number that produced it, which a wholesale rewrite would erase.
     store.upsert("numbers", numbers)
     LOG.info("published %d numbers", len(numbers))
+    publish_projections(store)
     return len(numbers)
+
+
+def publish_projections(store: Store) -> int:
+    """The model's own number for every scheduled game, and its record.
+
+    The card reads ``projections``; the grade reads ``calibration``. Both are
+    written here, by the heavy refresh, because both need the warehouse and
+    the hourly poll must not.
+    """
+    from atlas.models import ncaaf_projection as projecting
+    from atlas.models import ncaaf_state as state_mod
+    from atlas.research.dataset import load_research_frame
+
+    paths = config.paths()
+    frame = load_research_frame(paths.warehouse)
+    choices = state_mod.load_choices(state_mod.choices_path(paths.root))
+    projector = projecting.fit(frame, choices=choices)
+    scheduled = frame[frame["actual_margin"].isna() & (frame["season"] == projector.season)]
+    rows = projecting.project(projector, scheduled)
+    if rows.empty:
+        LOG.warning("refresh produced no projections")
+        return 0
+    rows = rows.copy()
+    rows["refreshed_at"] = datetime.now(UTC).replace(microsecond=0).isoformat()
+    store.upsert("projections", rows)
+    store.write("calibration", projecting.history(frame, choices=choices))
+    LOG.info("published %d projections, model %s", len(rows), projector.version)
+    return len(rows)
 
 
 def check(store: Store | None = None) -> dict:
