@@ -571,7 +571,9 @@ def test_total_calibration_and_grid_run_walk_forward(research_frame):
     assert pooled.loc["total", "crps"] <= pooled.loc["naive", "crps"] + 0.05
     assert np.isfinite(table["home_mean"]).all()
     assert (table["home_mean"] + table["away_mean"] - table["total_mean"]).abs().max() < 1e-9
-    assert (table["margin_crps_joint"] - table["margin_crps_state"]).abs().mean() < 0.3
+    # The points lattice reshapes the margin marginal game by game; on average
+    # it must not make the margin worse than the state's own lattice pmf.
+    assert table["margin_crps_joint"].mean() <= table["margin_crps_state"].mean() + 0.3
     assert ((table["p_home"] >= 0) & (table["p_home"] <= 1)).all()
     text = total_mod.render(scored, table, fits)
     assert "## Total, regular season, pooled" in text and "most likely score" in text
@@ -636,3 +638,50 @@ def test_history_is_one_row_per_game_and_market_with_a_calibrated_claim(research
     # A claim near a coin flip is roughly a coin flip: the record is honest about the market.
     close = h[(h["market"] == "margin") & (h["abs_edge"] < 1.0)]
     assert abs(close["won"].mean() - 0.5) < 0.15
+
+
+# ---------------------------------------------------------------------------
+# Step 7 (v1.5): the points lattice on the grid
+# ---------------------------------------------------------------------------
+
+
+def test_reweighting_by_ones_is_the_identity_and_the_grid_stays_normalised():
+    J = joint_mod.build(*_normal_pmfs(3.0, 50.0))
+    same = J.reweight(np.ones(J.P))
+    assert np.allclose(same.pmf, J.pmf)
+    factor = np.ones(J.P)
+    factor[[0, 3, 7, 10, 14]] = 3.0
+    K = J.reweight(factor)
+    assert abs(K.pmf.sum() - 1.0) < 1e-9
+    assert K.home_marginal()[0, 7] > J.home_marginal()[0, 7]
+    with pytest.raises(ValueError):
+        J.reweight(np.ones(5))
+
+
+def test_points_lattice_learns_the_key_numbers_it_is_shown():
+    """Feed the fit a league that scores 7 and 14 far more than a normal
+    would, and the factor rises there and stays near one elsewhere."""
+    rng = np.random.default_rng(3)
+    n = 3000
+    mp = lat.discretise(np.zeros(n), 10.0, lat.DEFAULT_SUPPORT)
+    tp = lat.discretise(np.full(n, 50.0), 14.0, total_mod.TOTAL_SUPPORT)
+    joints = [joint_mod.build(mp[s:s + 500], lat.DEFAULT_SUPPORT, tp[s:s + 500], total_mod.TOTAL_SUPPORT)
+              for s in range(0, n, 500)]
+    home = np.where(rng.random(n) < 0.4, rng.choice([7, 14], n), rng.integers(15, 40, n))
+    away = np.where(rng.random(n) < 0.4, rng.choice([7, 14], n), rng.integers(15, 40, n))
+    factor = joint_mod.fit_points(joints, home, away)
+    assert factor.shape == (joint_mod.DEFAULT_MAX_POINTS,)
+    assert factor[7] > 2.0 and factor[14] > 2.0
+    assert factor[0] <= 1.0 and abs(factor[25] - 1.0) < 0.6
+    assert (factor <= joint_mod.POINTS_MAX_FACTOR).all() and (factor >= 1 / joint_mod.POINTS_MAX_FACTOR).all()
+    with pytest.raises(ValueError):
+        joint_mod.fit_points(joints, home[:-1], away[:-1])
+
+
+def test_the_points_lattice_is_fitted_and_applied_walk_forward(research_frame):
+    fixed = {s: state_mod.Choice(q=0.0, p0=40.0, sigma=11.0, loglik=0.0, seasons=()) for s in range(2021, 2030)}
+    scored, table, fits = total_mod.run(research_frame, first_test_season=2021, choices=fixed)
+    lattices = {s: f.points_factor for s, f in fits.items()}
+    assert all(f is not None and f.shape == (joint_mod.DEFAULT_MAX_POINTS,) for f in lattices.values())
+    assert {"cell_p_plain", "rank_plain", "cell_log_plain"} <= set(table.columns)
+    assert (table["cell_p"] > 0).all()

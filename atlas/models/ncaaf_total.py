@@ -13,7 +13,9 @@ rest measured as nothing and are left out.
 
 The margin (with its key-number lattice) and the total (a discretised
 normal) are then combined on an 80x80 grid over (home, away) points by
-:mod:`atlas.models.joint`. Every headline number is a mean of that grid.
+:mod:`atlas.models.joint`, and the grid is reweighted by a points lattice
+fitted on the training seasons' own grids (step 7's v1.5). Every headline
+number is a mean of that grid.
 
 Scored where the plan says to look: the total against naive, the raw state
 total and the market; P(home) reliability by spread bucket; and the exact
@@ -23,7 +25,7 @@ score, which is reported for what it is.
 from __future__ import annotations
 
 import argparse
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 import numpy as np
@@ -61,6 +63,7 @@ class TotalFit:
     sigma: float                     # residual sd after calibration
     raw_sigma: float                 # residual sd of the uncalibrated state total
     n: int
+    points_factor: np.ndarray | None = None   # the points lattice fitted beside it, one value per points cell
 
     def mean(self, fc: pd.DataFrame) -> np.ndarray:
         return _design(fc, self.names, self.fill) @ self.coef
@@ -166,24 +169,51 @@ def summarise_total(scored: pd.DataFrame, by: list[str] | None = None) -> pd.Dat
     return out.sort_values(keys).reset_index(drop=True)
 
 
-def _joint_table(fc: pd.DataFrame, margin_pmf: np.ndarray, margin_support: np.ndarray,
-                 total_mean: np.ndarray, total_sigma: float, market_pmf: np.ndarray | None,
-                 season: int) -> pd.DataFrame:
-    """Build the grid in chunks and keep one row of headline numbers per game."""
-    total_pmf = lat.discretise(total_mean, total_sigma, TOTAL_SUPPORT)
-    y = fc["actual_margin"].to_numpy(dtype=int)
+def _points(fc: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
     home = ((fc["actual_total"] + fc["actual_margin"]) / 2).to_numpy(dtype=int)
     away = ((fc["actual_total"] - fc["actual_margin"]) / 2).to_numpy(dtype=int)
+    return home, away
+
+
+def _plain_grids(fc: pd.DataFrame, grid_: lat.Lattice, tfit: TotalFit) -> list[joint.Joint]:
+    """The v1 grids of a frame of state forecasts, in chunks."""
+    margin_pmf = grid_.pmf(fc["m_mean"].to_numpy(dtype=float), fc["m_sd"].to_numpy(dtype=float))
+    total_pmf = lat.discretise(tfit.mean(fc), tfit.sigma, TOTAL_SUPPORT)
+    return [joint.build(margin_pmf[s:s + CHUNK], grid_.support, total_pmf[s:s + CHUNK], TOTAL_SUPPORT)
+            for s in range(0, len(fc), CHUNK)]
+
+
+def fit_points_lattice(train_fc: pd.DataFrame, grid_: lat.Lattice, tfit: TotalFit) -> np.ndarray:
+    """The points lattice, fitted on the training seasons' own grids."""
+    home, away = _points(train_fc)
+    return joint.fit_points(_plain_grids(train_fc, grid_, tfit), home, away)
+
+
+def _joint_table(fc: pd.DataFrame, margin_pmf: np.ndarray, margin_support: np.ndarray,
+                 total_mean: np.ndarray, total_sigma: float, market_pmf: np.ndarray | None,
+                 season: int, points_factor: np.ndarray | None = None) -> pd.DataFrame:
+    """Build the grid in chunks and keep one row of headline numbers per game.
+
+    ``cell_p_plain`` and ``rank_plain`` are the v1 grid's, before the points
+    lattice, so the report can show what the lattice is worth.
+    """
+    total_pmf = lat.discretise(total_mean, total_sigma, TOTAL_SUPPORT)
+    y = fc["actual_margin"].to_numpy(dtype=int)
+    home, away = _points(fc)
     parts = []
     for start in range(0, len(fc), CHUNK):
         sl = slice(start, start + CHUNK)
         J = joint.build(margin_pmf[sl], margin_support, total_pmf[sl], TOTAL_SUPPORT)
+        plain_p, plain_rank = J.cell_probability(home[sl], away[sl]), J.rank_of(home[sl], away[sl])
+        if points_factor is not None:
+            J = J.reweight(points_factor)
         s = J.summary()
         ms, mp = J.margin_pmf()
         s["margin_crps_joint"] = scoring.crps(mp, ms, y[sl])
         s["margin_crps_state"] = scoring.crps(margin_pmf[sl], margin_support, y[sl])
         s["cell_p"] = J.cell_probability(home[sl], away[sl])
         s["rank"] = J.rank_of(home[sl], away[sl])
+        s["cell_p_plain"], s["rank_plain"] = plain_p, plain_rank
         s["margin_sd"] = fc["m_sd"].to_numpy(dtype=float)[sl]
         if "closing_spread" in fc:
             line = -pd.to_numeric(fc["closing_spread"], errors="coerce").to_numpy(dtype=float)[sl]
@@ -201,6 +231,7 @@ def _joint_table(fc: pd.DataFrame, margin_pmf: np.ndarray, margin_support: np.nd
     out["won"] = (y > 0).astype(float) + 0.5 * (y == 0)
     out["p_home_market"] = scoring.home_win_probability(market_pmf, margin_support) if market_pmf is not None else np.nan
     out["cell_log"] = -np.log(np.maximum(out["cell_p"], LOG_FLOOR))
+    out["cell_log_plain"] = -np.log(np.maximum(out["cell_p_plain"], LOG_FLOOR))
     return out
 
 
@@ -212,7 +243,8 @@ def run(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON,
     for season, train, test in ref.walk_forward(frame, first_test_season=first_test_season):
         prior = prior_mod.fit(frame, feats, season=season)
         choice = (choices or {}).get(season) or state_mod.tune(frame, feats, season, grid=grid, like=prior)
-        tfit = fit_total(_training_forecasts(frame, feats, season, choice, prior))
+        train_fc = _training_forecasts(frame, feats, season, choice, prior)
+        tfit = fit_total(train_fc)
         fits[season] = tfit
         fc = _with_forecasts(test, prior, state_mod._spec(choice.q, choice.p0, choice.sigma, prior))
         treg = train[train["season_type"] == "regular"] if "season_type" in train else train
@@ -233,8 +265,11 @@ def run(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON,
             grid_ = lat.Lattice(support=lat.DEFAULT_SUPPORT, factor=np.ones(len(lat.DEFAULT_SUPPORT)),
                                 sigma=float(fc["m_sd"].mean()), games=0)
         scored.append(_score_total(fc, models, season))
+        points_factor = fit_points_lattice(train_fc, grid_, tfit)
+        fits[season] = tfit = replace(tfit, points_factor=points_factor)
         margin_pmf = grid_.pmf(fc["m_mean"].to_numpy(dtype=float), fc["m_sd"].to_numpy(dtype=float))
-        tables.append(_joint_table(fc, margin_pmf, grid_.support, total_mean, tfit.sigma, market_pmf, season))
+        tables.append(_joint_table(fc, margin_pmf, grid_.support, total_mean, tfit.sigma, market_pmf, season,
+                                   points_factor=points_factor))
         LOG.info("season %s: total = %.2f + %.3f state%s; sigma %.2f (raw %.2f); %d games", season, tfit.coef[0],
                  tfit.coef[1], "".join(f" {c:+.3f} {n}" for n, c in zip(tfit.names[1:], tfit.coef[2:], strict=True)),
                  tfit.sigma, tfit.raw_sigma, len(fc))
@@ -322,19 +357,32 @@ def render(scored: pd.DataFrame, table: pd.DataFrame, fits: dict[int, TotalFit])
               "The 28+ row is the plan's check on the tails; it overlaps the 21+ row.", "", md(rel), ""]
     mc = treg[["margin_crps_joint", "margin_crps_state"]].mean()
     parts += ["## The margin through the grid", "",
-              f"Margin CRPS from the grid's own margin marginal: {mc['margin_crps_joint']:.3f}; from the state's lattice "
-              f"pmf directly: {mc['margin_crps_state']:.3f}. The grid's parity and 0-79 bounds cost "
-              f"{mc['margin_crps_joint'] - mc['margin_crps_state']:+.3f}.", ""]
-    exact = {"games": len(treg), "mean P(top exact score)": f"{treg['top_p'].mean():.4f}",
-             "top score was right": f"{(treg['rank'] == 1).mean():.4f}",
-             "actual score in the top 10 cells": f"{(treg['rank'] <= 10).mean():.4f}",
-             "actual score in the top 50 cells": f"{(treg['rank'] <= 50).mean():.4f}",
-             "mean -log P(actual score)": f"{treg['cell_log'].mean():.3f}",
-             "median rank of the actual score": f"{treg['rank'].median():.0f}"}
+              f"Margin CRPS from the grid's own margin marginal, points lattice applied: {mc['margin_crps_joint']:.3f}; "
+              f"from the state's lattice pmf directly: {mc['margin_crps_state']:.3f}. The grid's 0-79 bounds and the "
+              f"points lattice together cost {mc['margin_crps_joint'] - mc['margin_crps_state']:+.3f}.", ""]
+    def exact(rank: str, log: str) -> dict:
+        return {"games": len(treg),
+                "top score was right": f"{(treg[rank] == 1).mean():.4f}",
+                "actual score in the top 10 cells": f"{(treg[rank] <= 10).mean():.4f}",
+                "actual score in the top 50 cells": f"{(treg[rank] <= 50).mean():.4f}",
+                "mean -log P(actual score)": f"{treg[log].mean():.3f}",
+                "median rank of the actual score": f"{treg[rank].median():.0f}"}
+    exact_rows = pd.DataFrame([{"grid": "margin lattice only (v1)", **exact("rank_plain", "cell_log_plain")},
+                               {"grid": "with the points lattice (v1.5)", **exact("rank", "cell_log")}])
+    lattices = {s: f.points_factor for s, f in fits.items() if f.points_factor is not None}
     parts += ["## The exact score, for what it is", "",
               "The headline is the mean, to one decimal. With a team's points uncertain by eleven or so, the most "
-              "probable exact score is a fraction-of-a-percent event, and the card shows it as such.", "",
-              md(pd.DataFrame([exact])), ""]
+              f"probable exact score is a fraction-of-a-percent event (mean {treg['top_p'].mean():.4f} with the points "
+              "lattice), and the card shows it as such. The points lattice is step 7's answer to the plan's gate: "
+              "a fitted multiplier on each side's own key numbers, no simulation.", "",
+              md(exact_rows), ""]
+    if lattices:
+        last_l = lattices[max(lattices)]
+        keys = (0, 3, 6, 7, 10, 13, 14, 17, 20, 21, 24, 27, 28, 31, 35, 38, 42)
+        parts += [f"### Points lattice fitted for {max(lattices)}", "",
+                  "Observed over expected frequency of a team scoring exactly this many points, shrunk toward one "
+                  "where the expectation is thin and capped at 5.", "",
+                  md(pd.DataFrame([{str(k): f"{last_l[k]:.2f}" for k in keys}])), ""]
     last = treg[treg["season"] == seasons[-1]]
     if "kickoff" in last:
         last = last.sort_values("kickoff").tail(12)

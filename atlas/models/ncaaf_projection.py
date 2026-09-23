@@ -53,6 +53,7 @@ class Projector:
     choice: state_mod.Choice
     total: total_mod.TotalFit
     grid: lat.Lattice
+    points_factor: np.ndarray         # the points lattice, one multiplier per points value
     played: dict[int, int]            # games of evidence per team this season
     assimilated: int                  # games this season the state has seen
     version: str
@@ -72,7 +73,7 @@ class Projector:
 
 def _version(season: int, choice: state_mod.Choice, total: total_mod.TotalFit,
              assimilated: int, last_kickoff: str) -> str:
-    payload = "|".join([MODEL_NAME, str(season), f"{choice.q:.3f},{choice.p0:.3f},{choice.sigma:.3f}",
+    payload = "|".join([MODEL_NAME, "points-lattice", str(season), f"{choice.q:.3f},{choice.p0:.3f},{choice.sigma:.3f}",
                         ",".join(f"{c:.4f}" for c in total.coef), str(assimilated), last_kickoff])
     return hashlib.sha256(payload.encode()).hexdigest()[:12]
 
@@ -116,7 +117,8 @@ def fit(frame: pd.DataFrame, *, season: int | None = None,
     played = pd.concat([this_season["home_team_id"], this_season["away_team_id"]]).value_counts()
     played = {int(k): int(v) for k, v in played.items()}
 
-    total = total_mod.fit_total(total_mod._training_forecasts(sample, feats, season, choice, prior))
+    train_fc = total_mod._training_forecasts(sample, feats, season, choice, prior)
+    total = total_mod.fit_total(train_fc)
     train = sample[sample["season"] < season]
     if train["closing_spread"].notna().any():
         market = ref.market(train, train)
@@ -124,12 +126,14 @@ def fit(frame: pd.DataFrame, *, season: int | None = None,
     else:
         grid = lat.Lattice(support=lat.DEFAULT_SUPPORT, factor=np.ones(len(lat.DEFAULT_SUPPORT)),
                            sigma=prior.net.resid_sd, games=0)
+    points_factor = total_mod.fit_points_lattice(train_fc, grid, total)
     last = str(this_season["kickoff"].max()) if not this_season.empty else ""
     version = _version(season, choice, total, len(this_season), last)
     LOG.info("projector %s: season %s, %d games assimilated, q=%.1f p0=%.0f sigma=%.0f, total sigma %.2f",
              version, season, len(this_season), choice.q, choice.p0, choice.sigma, total.sigma)
     return Projector(season=season, prior=prior, state=state, spec=spec, choice=choice, total=total,
-                     grid=grid, played=played, assimilated=int(len(this_season)), version=version)
+                     grid=grid, points_factor=points_factor, played=played, assimilated=int(len(this_season)),
+                     version=version)
 
 
 def project(projector: Projector, scheduled: pd.DataFrame) -> pd.DataFrame:
@@ -150,7 +154,8 @@ def project(projector: Projector, scheduled: pd.DataFrame) -> pd.DataFrame:
     parts = []
     for start in range(0, len(rows), CHUNK):
         sl = slice(start, start + CHUNK)
-        parts.append(joint.build(margin_pmf[sl], p.grid.support, total_pmf[sl], total_mod.TOTAL_SUPPORT).summary())
+        parts.append(joint.build(margin_pmf[sl], p.grid.support, total_pmf[sl], total_mod.TOTAL_SUPPORT)
+                     .reweight(p.points_factor).summary())
     summary = pd.concat(parts, ignore_index=True)
 
     fill = p.total.fill

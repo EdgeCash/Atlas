@@ -370,6 +370,39 @@ on every page. Not changed: the closing-line signal tracker still forms
 its signals from the earlier ridge model's numbers; replacing that is a
 product decision, not a modelling one.
 
+**Step 7 — the gate, measured; v1.5 instead of v2.** The foundation said
+to build the state-dependent drive simulation only if v1's exact-score
+log score left visible room. It did, but not where a simulation would
+look for it. Walk-forward, regular seasons 2021–2025, mean −log P(actual
+score) on the 80×80 grid:
+
+| grid | −log P | top-10 hit | median rank | margin CRPS | total CRPS |
+|---|---|---|---|---|---|
+| two discretised normals, no lattice | 7.647 | 1.2% | 562 | 8.975 | 9.141 |
+| margin lattice only (v1) | 7.535 | 3.1% | 481 | 8.973 | 9.140 |
+| market's grid (closing spread and total through the same margin lattice) | 7.465 | 3.4% | 444 | 8.645 | 8.846 |
+| **v1 + points lattice (v1.5)** | **7.099** | **5.7%** | **242** | **8.950** | **9.122** |
+
+A team's points cluster on their own key numbers — 0, 3, 7, 10, 14, 17,
+21, 24, 28 — and a lattice on the margin sees none of that. The points
+lattice is one fitted multiplier per points value, observed over expected
+frequency on the training seasons' own grids, shrunk toward one where the
+expectation is thin and capped at 5, applied to both sides and
+renormalised (`atlas/models/joint.py`, `fit_points` and `reweight`). It
+is worth four times what the margin lattice was, it beats the market's
+own grid on the exact score by 0.37 nats, and it leaves the margin and
+total CRPS very slightly better rather than worse. The 2025 fit puts a
+shutout at 3.5× the normal's frequency, 7 points at 3.0×, 3 at 2.7×, 10
+at 2.7× and 14 at 2.5×. It is fitted walk-forward in `ncaaf_total` and in
+the projector, so the card's most likely score is now a key-number pair
+at roughly 1% rather than an off-key cell at 0.3%.
+
+So the drive simulation is not warranted on this evidence. Its case would
+have to be made against 7.10, and the remaining structure a product of
+two points lattices and a margin lattice cannot express — score-dependent
+decisions late in games, the 2-point conversion — is what it would have
+to capture. That is the v2 bar, and it stays open.
+
 ---
 
 ## 6. Validation — college specifics
@@ -431,12 +464,11 @@ bucket**, and the ECE row holds.
 | 4 | Coaching-change and programme-mean features in the prior; portal fetch; QB measured | **done — weeks 1–4 CRPS 9.51 → 9.47, weeks 3–4 9.73 → 9.67; state pooled 8.96 → 8.94** |
 | 5 | Total model + joint grid (`atlas/models/ncaaf_total.py`, `atlas/models/joint.py`, `make ncaaf-total`) | **done — total CRPS 9.13 (naive 9.62, market 8.85); grid P(home) within 0.04 in every spread bucket** |
 | 6 | Wire into the card (model number second slot, market open/move/now first, drivers third) and the grade (`atlas/models/ncaaf_projection.py`, `tracking/projections.csv`, `tracking/calibration.csv`) | **done — audit passes on 182 pages; grade fitted to this model's record** |
-| 7 | v2 drive simulation, if warranted | |
+| 7 | v2 drive simulation, if warranted | **gate measured; not warranted yet.** A points lattice (v1.5, `joint.fit_points`) took the exact-score log score 7.54 → 7.10 with no simulation; a simulation has to beat 7.10 |
 
-Steps 0–6 are done. The card shows the market's open, move and now first,
-the model's decimal projection second and the drivers third, and the grade
-is fitted to this model's own record. What remains is v2 (step 7), the
-portal once the next keyed run caches it, and the NFL plan.
+Steps 0–7 are done, step 7 by measuring its own gate. What remains is the
+portal once the next keyed run caches it, a v2 simulation only if it can
+beat the v1.5 grid on the exact score, and the NFL plan.
 
 ---
 
