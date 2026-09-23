@@ -20,11 +20,18 @@ functional of that object:
 
 | Reader sees | Is |
 |---|---|
-| "Atlas projects 27–24" | the modal or mean score |
+| **"Atlas projects 27.4–25.8, total 53.2"** | **the mean of the distribution — always decimal** |
 | "62% Georgia" | mass where home margin > 0 |
-| "Total 51 ±" | the marginal on home + away |
-| "27–24 has a 1.1% chance" | mass on one cell |
+| "Total 53.2, likely range 41–65" | the marginal on home + away and its central interval |
+| "27–26 exactly: 1.1%" | mass on one integer cell — a secondary output, never the headline |
 | "Market says −3, Atlas says −5.5, here's why" | the mean, its drivers, and the market's |
+
+**The headline is the mean, and the mean is a decimal.** 27.4–25.8 is more
+honest than 27–26: it says what the distribution is centred on without
+pretending a football score is a real number, and it does not invite a reader
+to grade it as right or wrong. Integers appear only where the distribution is
+asked about an integer — "how likely is 27–26 exactly?" — and that is a
+feature a reader opens, not the number on the card.
 
 Two consequences the product must honour.
 
@@ -35,8 +42,9 @@ scoring rules and reliability, with MAE reported alongside as a courtesy.
 
 **The point forecast is a by-product.** The current Atlas model predicts margin
 and total as two independent point estimates and derives a score by arithmetic.
-That cannot answer "what's the chance of 27–24" — nor can any model built that
-way. The distribution comes first; the number is read off it.
+That cannot answer "how likely is a two-score game" or "what's the chance of
+27–26" — nor can any model built that way. The distribution comes first; the
+decimal projection is its mean, read off it.
 
 ---
 
@@ -61,12 +69,12 @@ is what the models are graded against.
 | Modal exact score is right | **0.34%** | **0.23%** |
 
 Read the last two rows carefully, because they set expectations for the entire
-product. **A market-quality model names the exact final score about once in
-300 NFL games and once in 400 college games.** The most common NFL score,
-20–17, occurs in 1.9% of games; 619 distinct scores appeared in 2,159 games.
-The honest claim is never "we said 27–24"; it is "we said 27–24 was the single
-most likely score at 1.1%, and 27–24-ish (±3 each side) at 9%, and that
-probability is true."
+product. **A market-quality model names the exact integer final score about
+once in 300 NFL games and once in 400 college games.** The most common NFL
+score, 20–17, occurs in 1.9% of games; 619 distinct scores appeared in 2,159
+games. That is why the headline is the decimal mean and not an integer guess:
+"we projected 27.4–25.8" is a statement about where the distribution sat, and
+it is graded by CRPS and calibration, not by whether 27–26 came up.
 
 ### Why the ceiling is where it is
 
@@ -297,8 +305,8 @@ realised-versus-claimed accuracy walk-forward and out of sample. Its
 
 | Phase | Deliverable | Done when |
 |---|---|---|
-| 0 | NFL ingest (nflverse → warehouse), FBS filter on the NCAAF frame | both frames pass the point-in-time tests |
-| 1 | Layer C on the market mean, both sports | reproduces the §2 benchmark table |
+| 0 | NFL ingest (nflverse → warehouse); pin the NCAAF frame (FBS-vs-FBS, garbage time excluded — both already true) with tests | both frames pass the point-in-time tests |
+| 1 | Reference models + lattice + scoring harness, walk-forward, both sports (`atlas/models/`) | `reports/{sport}_benchmarks.md` reproduces the §2 table |
 | 2 | Layer A+B, **NCAAF first** (the data is here) | beats Elo on CRPS and Brier out of sample |
 | 3 | Layer A+B, NFL | same |
 | 4 | Card: model number in the second slot, market open/move/now in the first, drivers third | language audit passes; grade uses the new distribution |

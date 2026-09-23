@@ -197,7 +197,8 @@ reweighted by rolling key-number multipliers. Overtime is absorbed by the
 lattice fit (ties are 0.4%).
 
 **Output per game.** A 60×60 probability grid over (home, away) points, plus
-its functionals.
+its functionals. The headline projection is the grid's mean to one decimal —
+24.6–21.3, total 45.9 — never a rounded integer.
 
 ---
 

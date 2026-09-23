@@ -62,21 +62,27 @@ its own.
 
 Also hosted free: `sportsdataverse-data` → `espn_cfb_drives/drives_{season}.parquet`.
 
-### The FBS filter — a bug to fix before anything else
+### The FBS filter — verified, and now pinned
 
-`games` holds **7,588 FBS, 4,976 FCS, 4,890 D-III and 4,445 D-II games.** The
-play-by-play from 2022 on covers ~300 teams. Only **28%** of the research-style
-frame is FBS-vs-FBS. The current pipeline gets away with it because
-`research_sample()` requires a closing line and lower-division games mostly
-have none — an accident, not a filter.
+**Correction to the first version of this plan.** It said the pipeline was
+filtering FBS-vs-FBS "by accident." It is not. `atlas/research/dataset.QUERY`
+reads `research_games WHERE home_division = 'fbs' AND away_division = 'fbs'`,
+deliberately, and `research_sample()` yields 5,778 such games for 2018–2025.
+The unfiltered 28% figure came from an ad-hoc query in the research notes, not
+from the pipeline, and so did the 0.90 drive-persistence artifact. Both were
+analysis mistakes; the warehouse was right.
 
-It matters: measured on the unfiltered pbp, NCAAF drive-rate persistence came
-out at 0.90 (a division-mix artifact). Filtered to FBS-vs-FBS it is 0.44–0.59,
-the same as the NFL. **Every number in this plan is FBS-vs-FBS.** The model
-frame must filter on `home_division == away_division == 'fbs'` explicitly, and
-FBS-vs-FCS games enter only as a single "FCS opponent" effect for the FBS
-team's state update (the standard treatment; CFBD's own Elo and SRS exclude
-them entirely).
+What is true and matters: `games` holds **7,588 FBS, 4,976 FCS, 4,890 D-III
+and 4,445 D-II games**, and the play-by-play from 2022 on covers ~300 teams.
+Any aggregate taken *outside* the research query is wrong without the filter,
+and the efficiency staging computes team-game rows for every division. That is
+correct — the opponent adjustment needs FCS opponents as actors, each shrunk
+toward the league prior by the ridge, which is the "pooled FCS effect" already
+in place — but it means **nothing downstream may aggregate from staging
+without going through the research frame.** `tests/test_models.py` pins the
+frame to FBS-vs-FBS so a future query cannot drift.
+
+Every number in this plan is FBS-vs-FBS.
 
 ---
 
@@ -130,7 +136,10 @@ Fourth quarter, fourth down inside the 35: **go for it 82%** when trailing by
 implication for a v2 simulation.
 
 **Garbage time is 11.1% of scrimmage plays** at Connelly's thresholds (43 /
-37 / 27 / 21 by quarter). Every efficiency input is computed excluding it.
+37 / 27 / 21 by quarter). The staging layer already excludes it from every
+efficiency input, at Atlas's own, slightly stricter thresholds
+(`config.GARBAGE_TIME_MARGIN` = 38 / 28 / 22 / 16; overtime never). Pinned by
+test.
 
 ### Persistence (FBS-vs-FBS)
 
@@ -192,7 +201,7 @@ game's EPA) is weaker than a good preseason projection would be.
 | 2 | **Preseason prior from last SP+/FPI × returning production × recruiting/talent** | 0.60–0.63 corr at week 1; SP+ recipe | yes |
 | 3 | **Home field** | +4.6 now, +7.1 in 2018–19; fit per season | yes |
 | 4 | **Strength-of-schedule / connectivity** | via opponent adjustment; FCS games as one effect | yes |
-| 5 | Garbage-time exclusion | 11.1% of plays | yes (preprocessing) |
+| 5 | Garbage-time exclusion | 11.1% of plays; already in staging | yes (in place) |
 | 6 | Between-season regression | AR ≈ 0.67 by analogy; **fit it** — college turnover is higher | yes |
 | 7 | **Coaching change** | corr −0.56 between prior overachievement vs 20-yr program mean and subsequent SP+ change; i.e. regress a new-coach team toward its *program* mean, not the league mean | v1.1 |
 | 8 | **Transfer portal** | unquantified in the literature beyond "large"; CFBD `/player/portal` is free; use as a returning-production adjustment | v1.1 |
@@ -236,7 +245,8 @@ single pooled FCS strength.
 ≈ 0.05, discretised, margin reweighted by the key-number multipliers above,
 refit on a rolling window.
 
-**Output.** An 80×80 grid over (home, away) points.
+**Output.** An 80×80 grid over (home, away) points. The headline projection is
+its mean to one decimal — 31.7–24.2, total 55.9 — never a rounded integer.
 
 ---
 
@@ -257,17 +267,34 @@ Foundation §6 applies. Additions:
 
 ### Success criteria
 
-| Score | Naive | Prior-season FPI | Elo | **Target v1** | Market |
-|---|---|---|---|---|---|
-| CRPS, margin | ~9.6 | ~9.2 (est.) | ~8.9 (est.) | **≤ 8.85** | 8.61 |
-| Brier, home win | 0.245 | ~0.19 (est.) | ~0.185 (est.) | **≤ 0.183** | 0.178 |
-| MAE, margin | 14.5 | ~13.0 | ~12.8 | **≤ 12.7** | 12.25 |
-| ECE, home win | — | — | — | **< 0.02** | ~0.01 |
+Measured by `make ncaaf-benchmarks` (`reports/ncaaf_benchmarks.md`):
+regular season 2021–2025, 3,730 games, every reference fitted only on the
+seasons before the one it forecasts, the same lattice applied to all.
 
-The Prediction Tracker has FPI at 12.81 MAE and Massey/Sagarin at 13.03 over
-recent seasons against a Vegas figure near 12.2, which brackets the targets.
+| Score | Naive | Prior FPI | Prior SP+ | Elo | Atlas adj. EPA (today) | **Target v1** | Market |
+|---|---|---|---|---|---|---|---|
+| CRPS, margin | 11.44 | 9.93 | 9.93 | **9.23** | 9.37 | **≤ 9.00** | 8.61 |
+| Brier, home win | 0.242 | 0.207 | 0.208 | **0.188** | 0.192 | **≤ 0.184** | 0.176 |
+| MAE, margin | 15.91 | 13.98 | 14.04 | **13.04** | 13.25 | **≤ 12.8** | 12.12 |
+| ECE, home win | 0.001 | 0.018 | 0.023 | 0.015 | 0.017 | **< 0.02** | 0.025 |
+
+Two things the measured table says that the estimated one could not.
+
+**Elo and the priors trade places across the season.** In weeks 1–2 Elo scores
+10.18 CRPS and prior-season FPI 9.66 — the prior wins; from week 5 on Elo is
+8.86–9.10 and FPI 9.47–10.73 — the state wins. A candidate has to beat *both*
+in *their* weeks, which is the whole reason the plan has a prior layer and a
+state layer rather than one or the other.
+
+**Atlas's current point-in-time adjusted EPA is already within 0.14 CRPS of
+Elo** and clear of both prior-season ratings. The inputs were never the
+problem; the model shape was.
+
+Naive's ECE of 0.001 is not a virtue — a constant forecast is trivially
+calibrated. It is there to show ECE must be read beside Brier.
+
 **v1 is done when it beats Elo on every row, out of sample, in every week
-bucket.**
+bucket**, and the ECE row holds.
 
 ---
 
@@ -275,8 +302,8 @@ bucket.**
 
 | Step | Work | Output |
 |---|---|---|
-| 0 | FBS-vs-FBS filter in `research_sample()` and a pooled-FCS opponent effect; garbage-time flag in staging | tests pin both |
-| 1 | Benchmarks on the filtered frame: naive, prior-FPI, Elo, market-in-lattice. Reproduce §3 exactly | `reports/ncaaf_benchmarks.md` |
+| 0 | Pin the frame: tests that the research frame is FBS-vs-FBS and that staging excludes garbage time. Both were already true; the tests stop them drifting | `tests/test_models.py` |
+| 1 | Benchmarks on that frame: naive, prior-FPI, prior-SP+, Elo, Atlas's own adjusted EPA, market-in-lattice, walk-forward 2021–25 | `reports/ncaaf_benchmarks.md` via `make ncaaf-benchmarks` |
 | 2 | Preseason prior: refit the SP+ recipe on our data (last SP+ × returning × recruiting × talent) | week-1 corr ≥ 0.62 |
 | 3 | Kalman state model, off/def, opponent-adjusted, no extras. Walk-forward 2018–25 | beats Elo? by week bucket |
 | 4 | Coaching-change and portal adjustments to the prior; QB of record | week 1–3 improvement |
@@ -284,8 +311,7 @@ bucket.**
 | 6 | Wire into the card (model number second slot, market open/move/now first, drivers third) and the grade | language audit passes |
 | 7 | v2 drive simulation, if warranted | |
 
-Step 0 is a correctness fix and should land immediately regardless of the
-rest. Steps 1–3 are the substance.
+Steps 0 and 1 are done. Steps 2–3 are the substance.
 
 ---
 
@@ -303,5 +329,7 @@ rest. Steps 1–3 are the substance.
   fitted on 2018–21 may under-weight roster churn. Refit yearly.
 - **Bowls and opt-outs.** Excluded from fitting; the card must carry a flag,
   because a reader looking at a bowl card is looking at a different game.
-- **Two-thirds of the warehouse is not FBS.** Anything that aggregates without
-  the filter is wrong. Step 0 exists because this already bit once.
+- **Two-thirds of the warehouse is not FBS.** Anything that aggregates
+  from staging without going through the research frame is wrong; it bit the
+  research for this plan once. The frame is pinned; the habit still has to be
+  kept.
