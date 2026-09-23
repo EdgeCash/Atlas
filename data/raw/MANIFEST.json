@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-23T18:28:26+00:00",
+  "generated_at": "2026-09-23T19:52:39+00:00",
   "seasons": [
     2018,
     2019,
@@ -74,8 +74,17 @@
       2026
     ],
     "cfbd": {
-      "enabled": false,
-      "datasets": []
+      "enabled": true,
+      "datasets": [
+        "coaches",
+        "fpi",
+        "rankings",
+        "recruiting",
+        "returning",
+        "sp_plus",
+        "talent",
+        "weather"
+      ]
     }
   }
 }

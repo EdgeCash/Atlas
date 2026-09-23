@@ -1,6 +1,6 @@
 # Atlas Data Quality
 
-*Generated 2026-09-23 18:31 UTC by `python -m atlas.live check`. Regenerated on every
+*Generated 2026-09-23 19:53 UTC by `python -m atlas.live check`. Regenerated on every
 tracker run against the live record in `tracking/`.*
 
 ---
@@ -11,7 +11,7 @@ tracker run against the live record in `tracking/`.*
 
 | | |
 |---|---|
-| Signals checked | 116 |
+| Signals checked | 232 |
 | Grades checked | 0 |
 | Checks run | 16 |
 | Blocking exceptions | 0 |
@@ -26,18 +26,18 @@ complaints. Every check is listed here on every run.
 
 | Check | Severity | Scope | Rows checked | Exceptions | Clean |
 |---|---|---|---|---|---|
-| game exists | blocking | signals | 116 | 0 | yes |
-| market exists | blocking | signals | 116 | 0 | yes |
-| opening line exists | warning | signals | 116 | 0 | yes |
-| entry line exists | blocking | signals | 116 | 0 | yes |
-| line history exists | blocking | signals | 116 | 0 | yes |
-| entry line in range | blocking | signals | 116 | 0 | yes |
-| opening line in range | warning | signals | 116 | 0 | yes |
-| entry price in range | warning | signals | 116 | 0 | yes |
-| disagreement is consistent | blocking | signals | 116 | 0 | yes |
-| signal is an opinion | blocking | signals | 116 | 0 | yes |
-| signal id is unique | blocking | signals | 116 | 0 | yes |
-| model version recorded | warning | signals | 116 | 0 | yes |
+| game exists | blocking | signals | 232 | 0 | yes |
+| market exists | blocking | signals | 232 | 0 | yes |
+| opening line exists | warning | signals | 232 | 0 | yes |
+| entry line exists | blocking | signals | 232 | 0 | yes |
+| line history exists | blocking | signals | 232 | 0 | yes |
+| entry line in range | blocking | signals | 232 | 0 | yes |
+| opening line in range | warning | signals | 232 | 0 | yes |
+| entry price in range | warning | signals | 232 | 0 | yes |
+| disagreement is consistent | blocking | signals | 232 | 0 | yes |
+| signal is an opinion | blocking | signals | 232 | 0 | yes |
+| signal id is unique | blocking | signals | 232 | 0 | yes |
+| model version recorded | warning | signals | 232 | 0 | yes |
 | grade references a signal | blocking | grades | 0 | 0 | yes |
 | clv is consistent | blocking | grades | 0 | 0 | yes |
 | result matches clv | blocking | grades | 0 | 0 | yes |
