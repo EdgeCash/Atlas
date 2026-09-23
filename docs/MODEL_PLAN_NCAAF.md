@@ -203,9 +203,9 @@ game's EPA) is weaker than a good preseason projection would be.
 | 4 | **Strength-of-schedule / connectivity** | via opponent adjustment; FCS games as one effect | yes |
 | 5 | Garbage-time exclusion | 11.1% of plays; already in staging | yes (in place) |
 | 6 | Between-season regression | AR ≈ 0.67 by analogy; **fit it** — college turnover is higher | yes |
-| 7 | **Coaching change** | corr −0.56 between prior overachievement vs 20-yr program mean and subsequent SP+ change; i.e. regress a new-coach team toward its *program* mean, not the league mean | v1.1 |
-| 8 | **Transfer portal** | unquantified in the literature beyond "large"; CFBD `/player/portal` is free; use as a returning-production adjustment | v1.1 |
-| 9 | QB | `qb_of_record` exists; effect unmeasured here; college backups are further from starters than NFL ones | v1.1 |
+| 7 | **Coaching change** | literature: corr −0.56 between overachievement vs the 20-yr programme mean and the next SP+ change. Measured here on the prior's out-of-sample residual: every team under-regresses toward its programme mean (t −3.9) and a new coach's team regresses harder (interaction t −2.6 to −4.2) | **done, step 4** |
+| 8 | **Transfer portal** | unquantified in the literature beyond "large"; CFBD `/player/portal` is free and is now fetched, but nothing is cached yet (the raw store predates the fetch) | fetch added; measure when the next keyed run caches it |
+| 9 | QB | measured, retrospectively: a change of quarterback of record moves the state's residual **−3.2 points** (t −6.4) on 20% of team-games, the NFL's −3.3 again. Not modelled: the series is known only at kickoff and is barred from the warehouse; a live signal needs a pre-kickoff starter source Atlas does not have | measured, not in v1 |
 | 10 | Bowl opt-outs / motivation | lines move 3–9 points on opt-outs; **exclude bowls from fitting**, flag on the card | v1: exclude |
 | 11 | Rest, travel | rest_diff, travel_distance in warehouse; expect small | total model / v2 |
 | 12 | Weather | Meteostat; total-only | total model |
@@ -255,6 +255,20 @@ loses 2021 by 0.03 CRPS — the one season whose training window is a third
 COVID, when every preseason feature's correlation with the eventual rating
 collapsed (SP+ 0.56, talent 0.31, recruiting −0.28 against ~0.73, ~0.62,
 ~−0.62 in every other year). It is the best-calibrated of the six.
+
+**v1.1 (step 4) — built.** Three programme features joined the recipe, all
+pre-season facts staged by `atlas/staging/talent.py`: the programme's mean
+SP+ over the seasons already played, whether the team opens under a head
+coach hired since the previous September (a mid-season interim never opens
+a season), and their interaction with last season's overachievement. The
+recipe learned −1.41 points per sd on the interaction, −1.11 on the
+new-coach flag and +0.94 on the programme mean. Weeks 1–4 CRPS 9.51 →
+9.47, weeks 3–4 9.73 → 9.67; team-level week-1 correlation up in four
+seasons of five (2024: 0.717 → 0.736), down in 2021, whose SP+ history is
+four seasons thin. Through the state it is worth 0.02 CRPS pooled and
+0.07 in weeks 3–4, winning 2022–2025 and losing 2021 by 0.05. Returning
+*passing* production was tested and adds nothing once total returning
+production is in. The quarterback and the portal are in §4, rows 8–9.
 
 **State — built, `reports/ncaaf_state.md`.** One joint Kalman filter over
 every team's `off` and `def` with a full covariance, which is the opponent
@@ -363,13 +377,13 @@ bucket**, and the ECE row holds.
 | 1 | Benchmarks on that frame: naive, prior-FPI, prior-SP+, Elo, Atlas's own adjusted EPA, market-in-lattice, walk-forward 2021–25 | `reports/ncaaf_benchmarks.md` via `make ncaaf-benchmarks` |
 | 2 | Preseason prior: the SP+ recipe refit on our data, directly on games (`atlas/models/ncaaf_prior.py`, `make ncaaf-prior`) | **done — week-1 corr 0.671** (bar 0.62; FPI alone 0.623) |
 | 3 | Kalman state model, off/def, opponent-adjusted, no extras (`atlas/models/kalman.py`, `atlas/models/ncaaf_state.py`, `make ncaaf-state`) | **done — beats Elo in every week bucket; CRPS 8.96 vs Elo 9.23, market 8.61** |
-| 4 | Coaching-change and portal adjustments to the prior; QB of record | week 1–3 improvement |
+| 4 | Coaching-change and programme-mean features in the prior; portal fetch; QB measured | **done — weeks 1–4 CRPS 9.51 → 9.47, weeks 3–4 9.73 → 9.67; state pooled 8.96 → 8.94** |
 | 5 | Total model + bivariate lattice distribution | 80×80 grid; reliability by spread bucket |
 | 6 | Wire into the card (model number second slot, market open/move/now first, drivers third) and the grade | language audit passes |
 | 7 | v2 drive simulation, if warranted | |
 
-Steps 0–3 are done. Step 4 is the prior's v1.1: the coaching change, the
-portal and the quarterback, judged on weeks 1–3.
+Steps 0–4 are done. Step 5 is the total and the joint (home, away) grid,
+which is what the card shows.
 
 ---
 
