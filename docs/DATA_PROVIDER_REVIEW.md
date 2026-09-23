@@ -112,6 +112,44 @@ exposure of a credential that has already leaked once and cannot be rotated.
 
 ---
 
+## The reason that outranks licensing
+
+Asked again on 23 September, and tracing what the market number actually drives
+turned up a stronger answer than the licensing one. Three facts from the code:
+
+**1. The grade is computed from the total alone.** `atlas/site/data.py` grades
+a card with `difference = card.total_difference`. The spread never enters a
+grade. So the headline benefit of a multi-book feed - a sharper consensus
+*spread* - is worth nothing to the thing Atlas sells.
+
+**2. Atlas's published spread already *is* the market spread.**
+`MARKET_WEIGHT = {"margin": 1.00, "total": 0.89}`. At a weight of 1.00 the
+model contributes nothing to the spread, so a better spread would change a
+displayed number and no computed one. The only market figure that drives
+anything is the total, at 89% market and 11% model.
+
+**3. The calibration could never be refitted against BettingPros.**
+`grade.calibration_curve()` fits `gap(d) = -a * d ** p` over seven seasons of
+historical closing lines, refitting on every build because the coefficient
+moves about 2.5x across seasons. **BettingPros has no archive** - that is the
+stated reason Velocity's collector snapshots the live board at all. So adopting
+it would mean grading BettingPros-measured disagreements with a curve fitted on
+a different market series, with no way to ever validate or correct the
+mismatch. The grade is the product, and an uncalibrated grade is worse than no
+grade.
+
+In fairness, a seam already exists: the live feed is ESPN's scoreboard, not
+literally the historical closing-line series the curve is fitted on. Adding
+BettingPros would widen that seam rather than create it. But the current feed
+is the same *kind* of series - one book's closing-ish line - and a multi-book
+consensus is not, and the current one can at least be checked against history.
+
+**And there is no failure to fix.** Every recorded live run so far reports
+`status: ok`, 142 quotes, zero exceptions. That is one day of history and thin
+evidence, so it argues weakly - but it argues against, not for.
+
+---
+
 ## What Atlas actually gives up by not taking it
 
 Worth stating honestly rather than pretending the answer is free.
