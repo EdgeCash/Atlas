@@ -310,14 +310,46 @@ weeks 1–2 (9.15 to 9.26): one game of evidence already helps. The gap to
 the market narrows from 0.74 CRPS in weeks 1–2 to 0.12 by week 13, which
 is the size of the step-4 job and the step-5 job respectively.
 
-**Total.** `(off_h + off_a) − (def_h + def_a) + base_t + pace + weather`.
+**Total — built, `reports/ncaaf_total.md`.** The state already implies a
+total, its home points plus its away points, but the sum of two noisy
+strengths spreads more than real totals do (slope 0.69 against actual
+totals). So the total is that implied number recalibrated walk-forward on
+the training seasons' own state forecasts (slope 0.51–0.67, refit each
+season) plus the two game-level terms that measured as real on its
+residual: the teams' combined adjusted pace (seconds per play; about −1.5
+points per sd) and the effective wind (−0.15 to −0.20 points per mph).
+Temperature, precipitation, domes and rest all measured at |t| < 0.5 and
+are out. Forecast sd 16.2–17.2 against the market's 15.7.
 
-**Distribution.** Bivariate normal (margin, total), fitted sds, correlation
-≈ 0.05, discretised, margin reweighted by the key-number multipliers above,
-refit on a rolling window.
+| total, regular 2021–25 | CRPS | MAE |
+|---|---|---|
+| naive (training mean) | 9.62 | 13.63 |
+| state total, raw | 9.19 | 12.96 |
+| **total (calibrated)** | **9.13** | **12.91** |
+| market (closing total) | 8.85 | 12.47 |
 
-**Output.** An 80×80 grid over (home, away) points. The headline projection is
+The gap to the market is 0.53 CRPS in weeks 1–2 and 0.22 by week 13. A
+model weaker than the market is over-confident on P(over) by construction
+(its ECE against the closing total is 0.07; where it disagrees with the
+line the market is usually right), which is one more reason the card never
+frames the total as a side.
+
+**Distribution — built, `atlas/models/joint.py`.** The margin (state mean
+and sd through the key-number lattice) and the total (discretised normal)
+are combined as a product on the pairs they both allow, which is the whole
+grid, since a margin and a total from one game always share parity. Their
+residual correlation measured at 0.07, so independence is the v1 joint.
+Passing the margin through the grid costs +0.03 CRPS (8.97 against the
+lattice's 8.94), the price of the 0–79 bounds.
+
+**Output — built.** An 80×80 grid over (home, away) points; the headline is
 its mean to one decimal — 31.7–24.2, total 55.9 — never a rounded integer.
+P(home) from the grid is within 0.04 of the observed rate in every spread
+bucket, 28+ point favourites included (0.83 forecast, 0.85 observed), the
+same shape as the market's. The most probable exact score is a 0.3% event
+and was right 0.35% of the time; the actual score sat in the grid's top
+ten cells 3% of the time and its median rank was 478. The card shows the
+top cell for what it is.
 
 ---
 
@@ -378,12 +410,13 @@ bucket**, and the ECE row holds.
 | 2 | Preseason prior: the SP+ recipe refit on our data, directly on games (`atlas/models/ncaaf_prior.py`, `make ncaaf-prior`) | **done — week-1 corr 0.671** (bar 0.62; FPI alone 0.623) |
 | 3 | Kalman state model, off/def, opponent-adjusted, no extras (`atlas/models/kalman.py`, `atlas/models/ncaaf_state.py`, `make ncaaf-state`) | **done — beats Elo in every week bucket; CRPS 8.96 vs Elo 9.23, market 8.61** |
 | 4 | Coaching-change and programme-mean features in the prior; portal fetch; QB measured | **done — weeks 1–4 CRPS 9.51 → 9.47, weeks 3–4 9.73 → 9.67; state pooled 8.96 → 8.94** |
-| 5 | Total model + bivariate lattice distribution | 80×80 grid; reliability by spread bucket |
+| 5 | Total model + joint grid (`atlas/models/ncaaf_total.py`, `atlas/models/joint.py`, `make ncaaf-total`) | **done — total CRPS 9.13 (naive 9.62, market 8.85); grid P(home) within 0.04 in every spread bucket** |
 | 6 | Wire into the card (model number second slot, market open/move/now first, drivers third) and the grade | language audit passes |
 | 7 | v2 drive simulation, if warranted | |
 
-Steps 0–4 are done. Step 5 is the total and the joint (home, away) grid,
-which is what the card shows.
+Steps 0–5 are done. Step 6 wires the grid into the card: market open,
+move and now first; the model's decimal projection second; the drivers
+third.
 
 ---
 

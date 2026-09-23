@@ -504,3 +504,74 @@ def test_prior_derives_the_coaching_interaction_from_staged_columns():
     assert t.loc[2, "new_coach_x_overach"] == 0.0
     bare = prior_mod.team_seasons(frame.drop(columns=["home_new_coach", "away_new_coach"]))
     assert "new_coach_x_overach" not in bare.columns
+
+
+# ---------------------------------------------------------------------------
+# Step 5: the joint (home, away) grid and the total
+# ---------------------------------------------------------------------------
+
+from atlas.models import joint as joint_mod  # noqa: E402
+from atlas.models import ncaaf_total as total_mod  # noqa: E402
+
+
+def _normal_pmfs(margin_mean, total_mean, margin_sd=10.0, total_sd=14.0):
+    ms = lat.DEFAULT_SUPPORT
+    ts = total_mod.TOTAL_SUPPORT
+    return (lat.discretise(np.array([margin_mean]), margin_sd, ms), ms,
+            lat.discretise(np.array([total_mean]), total_sd, ts), ts)
+
+
+def test_joint_means_are_the_margin_and_total_means():
+    """home = (total + margin) / 2 on average; the grid sums to one."""
+    J = joint_mod.build(*_normal_pmfs(3.0, 50.0))
+    assert J.pmf.shape == (1, 80, 80)
+    assert abs(J.pmf.sum() - 1.0) < 1e-9
+    assert abs(J.home_mean()[0] - 26.5) < 0.3
+    assert abs(J.away_mean()[0] - 23.5) < 0.3
+    s = J.summary()
+    assert abs(s.loc[0, "margin_mean"] - 3.0) < 0.3 and abs(s.loc[0, "total_mean"] - 50.0) < 0.3
+    assert s.loc[0, "total_lo"] < 50 < s.loc[0, "total_hi"]
+
+
+def test_joint_keeps_the_margin_marginal_and_the_win_probability():
+    """A broad total barely disturbs the margin pmf, so P(home) and the margin
+    marginal come back as they went in."""
+    mp, ms, tp, ts = _normal_pmfs(3.0, 50.0)
+    J = joint_mod.build(mp, ms, tp, ts)
+    support, marg = J.margin_pmf()
+    got = pd.Series(marg[0], index=support)
+    want = pd.Series(mp[0], index=ms)
+    assert (got.reindex(want.index).fillna(0) - want).abs().max() < 0.01
+    assert abs(J.p_home_win()[0] - scoring.home_win_probability(mp, ms)[0]) < 0.01
+
+
+def test_joint_top_score_is_its_own_most_probable_cell():
+    J = joint_mod.build(*_normal_pmfs(3.0, 50.0))
+    h, a, p = J.top_score()
+    assert p[0] == J.cell_probability(h, a)[0]
+    assert J.rank_of(h, a)[0] == 1
+    assert J.rank_of(np.array([70]), np.array([0]))[0] > 1000
+    assert J.cell_probability(np.array([95]), np.array([3]))[0] == 0.0     # off the grid
+
+
+def test_joint_refuses_mismatched_inputs():
+    mp, ms, tp, ts = _normal_pmfs(3.0, 50.0)
+    with pytest.raises(ValueError):
+        joint_mod.build(np.vstack([mp, mp]), ms, tp, ts)
+
+
+def test_total_calibration_and_grid_run_walk_forward(research_frame):
+    """The calibrated total is a real forecast on the synthetic league: it beats
+    naive, its sd is positive, and the grid's margin agrees with the state's."""
+    fixed = {s: state_mod.Choice(q=0.0, p0=40.0, sigma=11.0, loglik=0.0, seasons=())
+             for s in range(2021, 2030)}
+    scored, table, fits = total_mod.run(research_frame, first_test_season=2021, choices=fixed)
+    pooled = total_mod.summarise_total(scored[scored["season_type"] == "regular"]).set_index("model")
+    assert all(f.sigma > 0 and f.n > 0 for f in fits.values())
+    assert pooled.loc["total", "crps"] <= pooled.loc["naive", "crps"] + 0.05
+    assert np.isfinite(table["home_mean"]).all()
+    assert (table["home_mean"] + table["away_mean"] - table["total_mean"]).abs().max() < 1e-9
+    assert (table["margin_crps_joint"] - table["margin_crps_state"]).abs().mean() < 0.3
+    assert ((table["p_home"] >= 0) & (table["p_home"] <= 1)).all()
+    text = total_mod.render(scored, table, fits)
+    assert "## Total, regular season, pooled" in text and "most likely score" in text

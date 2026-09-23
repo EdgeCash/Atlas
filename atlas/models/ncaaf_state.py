@@ -22,7 +22,8 @@ from __future__ import annotations
 
 import argparse
 import itertools
-from dataclasses import dataclass
+import json
+from dataclasses import asdict, dataclass
 from pathlib import Path
 
 import numpy as np
@@ -65,6 +66,25 @@ class Choice:
     sigma: float
     loglik: float
     seasons: tuple[int, ...]
+
+
+def choices_path(root: Path) -> Path:
+    """Where the tuned hyperparameters are written, so downstream models
+    (the total, the grid) reuse the state's choice instead of re-tuning."""
+    return root / "reports" / "ncaaf_state_choices.json"
+
+
+def save_choices(choices: dict[int, Choice], path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({str(s): asdict(c) for s, c in sorted(choices.items())}, indent=1) + "\n")
+
+
+def load_choices(path: Path) -> dict[int, Choice] | None:
+    if not path.exists():
+        return None
+    raw = json.loads(path.read_text())
+    return {int(s): Choice(q=c["q"], p0=c["p0"], sigma=c["sigma"], loglik=c["loglik"],
+                           seasons=tuple(int(x) for x in c["seasons"])) for s, c in raw.items()}
 
 
 def _spec(q: float, p0: float, sigma: float, prior: prior_mod.Prior) -> kalman.Spec:
@@ -235,6 +255,7 @@ def main() -> None:
     out = args.out or (paths.root / "reports" / "ncaaf_state.md")
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(render(scored, choices, finals, frame))
+    save_choices(choices, choices_path(paths.root) if args.out is None else out.with_suffix(".choices.json"))
     reg = scored[scored["season_type"] == "regular"]
     LOG.info("wrote %s\n%s", out, evaluate.summarise(reg).to_string(index=False))
 
