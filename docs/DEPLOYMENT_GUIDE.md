@@ -9,7 +9,7 @@ database to provision and no queue. What follows is a morning of work.
 
 | | |
 |---|---|
-| Runtime | Python 3.11+, the repository, the dependencies in `requirements.txt` |
+| Runtime | Python 3.11+, the repository, the dependencies in `pyproject.toml` |
 | Disk | ~2 GB — the warehouse, the tracking store, the built site (13 MB) and a year of backups (<7 MB) |
 | Network | outbound HTTPS to the ESPN scoreboard and the sportsdataverse mirrors |
 | Web server | anything that serves files — nginx, Caddy, S3 + CloudFront, Netlify, GitHub Pages |
@@ -19,12 +19,90 @@ No inbound ports besides the web server's. Nothing in Atlas listens.
 
 ---
 
+## 0. Where to host it, and what it costs
+
+Measured on this repository rather than estimated, because the numbers pick the
+machine.
+
+| | Measured |
+|---|---|
+| Built site | **13 MB**, 352 files — 182 HTML, 154 PNG, 12 SVG |
+| Heavy rebuild, warehouse step | 67 s, **2.9 GB peak RSS** |
+| Heavy rebuild, site render | 43 s, 400 MB |
+| Poll — market capture + render | ~45 s, 400 MB |
+| Working data on disk | ~250 MB (`data/raw` 184 MB, warehouse 45 MB, staging 13 MB) |
+| **Publishes per month** | **1,068** — `should_poll()` counted over September 2026 |
+
+Three of those decide everything.
+
+**The site is 13 MB.** Serving it is free anywhere. Hosting is not the cost and
+should not drive the decision.
+
+**The schedule publishes 1,068 times a month.** Every game-day poll rewrites the
+board, so each one is a publish. That is what rules out the free build tiers:
+Cloudflare Pages allows 500 deployments a month on the free plan, and GitHub
+Actions' 2,000 free minutes are nearly all consumed by ~1,070 runs of a job that
+takes about ninety seconds. Worse, GitHub's own documentation says a scheduled
+workflow "can be delayed during periods of high loads" and that "some queued
+jobs may be dropped." Atlas stamps every page with when its information was last
+refreshed; a publish pipeline that silently skips runs breaks the one promise
+`TIMESTAMP_STANDARD.md` makes.
+
+**The heavy rebuild peaks at 2.9 GB.** That sets the box. 4 GB runs it without
+thought; 2 GB runs it with a swapfile, because the spike lasts about ten seconds
+and happens at 04:00 when nobody is reading.
+
+### The recommendation
+
+**One small always-on VPS running cron and nginx, with Cloudflare's free plan in
+front of it.**
+
+| | |
+|---|---|
+| Server | 4 GB / 2 vCPU — Vultr $20/mo, DigitalOcean $24/mo |
+| CDN, TLS, DNS | **Cloudflare free** — unlimited bandwidth, free certificate |
+| Domain | `atlas.football`, roughly $10 the first year and $25–30 to renew |
+| **Total** | **~$21–25 a month** |
+
+Cloudflare in front matters more than the choice of VPS: it absorbs a traffic
+spike from a post that lands, so the origin only ever serves the CDN, and a
+13 MB site behind a cache never troubles a small machine.
+
+A cheaper variant that works: **2 GB with a 4 GB swapfile, about $10–12 a
+month.** The only thing that touches 2.9 GB is one daily step. Verify it on day
+one by watching `make ops-heavy` complete, and keep the 4 GB option in reserve.
+
+### Why not the free tiers
+
+| Option | Why not |
+|---|---|
+| Cloudflare Pages / Netlify free | 500 deploys a month against 1,068 publishes — and no access log, see below |
+| GitHub Actions as the scheduler | ~1,070 runs × 90 s ≈ the entire 2,000-minute free allowance, and GitHub documents that scheduled jobs may be delayed or dropped |
+| Oracle Cloud Always Free | genuinely free and big enough (2 OCPU / 12 GB ARM), but ARM capacity is scarce in US regions and Oracle halved this tier in June 2026 without announcing it. Fine to experiment on; not what a launch should depend on. |
+
+**The access log is the second reason to own the web server.** `atlas.ops.analytics`
+reads Combined Log Format and reports traffic by page type and by the grade of
+the cards readers opened — with no tracker, no consent banner and no third
+party. That report exists because nginx writes the log. Host the site on a
+managed static platform and the analytics design in `ANALYTICS_SPEC_FINAL.md`
+has to be replaced with somebody's JavaScript.
+
+### If the monthly cost needs to come down further
+
+The 2.9 GB peak is not inherent. `_load_duckdb` holds every staged table in
+memory at once and hands them to DuckDB together; writing them one at a time and
+releasing each would cut the peak substantially and make a 1–2 GB machine
+comfortable rather than tight. That is an afternoon of work against roughly $10
+a month, so it is worth doing only once the site is actually up.
+
+---
+
 ## 1. Install
 
 ```bash
 git clone <repo> /srv/atlas && cd /srv/atlas
 python -m venv .venv && . .venv/bin/activate
-pip install -r requirements.txt
+pip install -e ".[dev]"      # or: make install
 make site-full          # warehouse, numbers, market, site — the cold path
 make launch-check       # audit, SEO, 299 tests, lint. Must be green.
 ```
@@ -81,7 +159,7 @@ social cards are rebuilt under the same name only once a day.
 ## 3. Schedule
 
 ```bash
-make ops-crontab --root /srv/atlas | crontab -
+make ops-crontab | crontab -      # uses the working directory as the root
 mkdir -p /var/log/atlas
 ```
 
