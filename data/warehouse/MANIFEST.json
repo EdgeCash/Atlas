@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-23T20:04:01+00:00",
+  "generated_at": "2026-09-23T22:51:03+00:00",
   "atlas_version": "0.1.0",
   "seasons_requested": [
     2018,
@@ -25,69 +25,76 @@
   ],
   "cfbd_enrichment": {
     "present": true,
-    "key_in_environment": true,
+    "key_in_environment": false,
     "datasets": {
       "sp_plus": {
         "present": true,
         "measured_on": "ratings.home_sp_plus",
-        "non_null": 7527,
-        "rows": 21968,
-        "coverage": 0.3426
+        "non_null": 6906,
+        "rows": 21328,
+        "coverage": 0.3238
       },
       "talent": {
         "present": true,
         "measured_on": "talent.home_talent",
-        "non_null": 10360,
-        "rows": 21968,
-        "coverage": 0.4716
+        "non_null": 9731,
+        "rows": 21328,
+        "coverage": 0.4563
       },
       "recruiting": {
         "present": true,
         "measured_on": "talent.home_recruiting_rank",
-        "non_null": 10421,
-        "rows": 21968,
-        "coverage": 0.4744
+        "non_null": 9792,
+        "rows": 21328,
+        "coverage": 0.4591
       },
       "returning": {
         "present": true,
         "measured_on": "talent.home_returning_production",
-        "non_null": 7526,
-        "rows": 21968,
-        "coverage": 0.3426
+        "non_null": 6905,
+        "rows": 21328,
+        "coverage": 0.3238
+      },
+      "coaches": {
+        "present": true,
+        "measured_on": "talent.home_new_coach",
+        "non_null": 6959,
+        "rows": 21328,
+        "coverage": 0.3263
       }
     }
   },
   "tables": {
     "market_lines": {
-      "rows": 21968,
+      "rows": 21328,
       "columns": 13
     },
     "outcomes": {
-      "rows": 21968,
+      "rows": 21328,
       "columns": 7
     },
     "games": {
-      "rows": 21968,
+      "rows": 21328,
       "columns": 29
     },
     "ratings": {
-      "rows": 21968,
+      "rows": 21328,
       "columns": 20
     },
     "efficiency_metrics": {
-      "rows": 21968,
+      "rows": 21328,
       "columns": 36
     },
     "adjusted_efficiency_metrics": {
-      "rows": 21968,
+      "rows": 21328,
       "columns": 111
     },
     "talent": {
-      "rows": 21968,
-      "columns": 13
+      "rows": 21328,
+      "columns": 19
     },
     "context": {
-      "rows": 21968,
+      "rows": 21328,
       "columns": 22
     }
   }

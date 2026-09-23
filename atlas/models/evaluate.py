@@ -82,7 +82,9 @@ def markdown(df: pd.DataFrame) -> str:
     """A GitHub-flavoured table from a frame whose cells are already formatted."""
     cols = list(df.columns)
     lines = ["| " + " | ".join(str(c) for c in cols) + " |", "|" + "|".join(["---"] * len(cols)) + "|"]
-    for _, row in df.iterrows():
+    # ``iterrows`` upcasts a row to one dtype, which turns an int season into
+    # 2021.000 next to a float; object rows keep each cell's own type.
+    for _, row in df.astype(object).iterrows():
         cells = []
         for c in cols:
             v = row[c]
