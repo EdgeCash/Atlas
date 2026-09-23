@@ -28,6 +28,10 @@ LOG = get_logger(__name__)
 
 TAGLINE = "Research. Analytics. Context."
 
+#: The canonical origin. Search engines need one spelling of every page, and a
+#: social card posted from a preview build must still point at production.
+SITE_URL = "https://atlas.football"
+
 #: The sentence that appears on every card, unchanged.
 CARD_DISCLOSURE = (
     "<b>What this card is.</b> Research, analytics and market context. Atlas "
@@ -69,15 +73,19 @@ def accents(card: Card) -> tuple[str, str]:
 
 
 def layout(*, title: str, body: str, depth: int = 0, description: str = "",
-           active: str = "", social: str = "") -> str:
+           active: str = "", social: str = "", canonical: str | None = None,
+           structured: str = "") -> str:
     root = "../" * depth
+    # "NCAAF" pointed at the board, which is where "Today" already points. Two
+    # links to one page is a link nobody trusts, and the slot was needed.
     nav_items = [
         ("Today", f"{root}index.html", "today"),
-        ("NCAAF", f"{root}index.html", "ncaaf"),
         ("NFL", f"{root}nfl.html", "nfl"),
         ("Research", f"{root}research.html", "research"),
         ("Premium", f"{root}premium.html", "premium"),
+        ("About", f"{root}about.html", "about"),
     ]
+    active = "today" if active == "ncaaf" else active
     current = ' aria-current="page"'
     nav = "".join(
         f'<a href="{href}"{current if key == active else ""}>{esc(label)}</a>'
@@ -96,7 +104,9 @@ def layout(*, title: str, body: str, depth: int = 0, description: str = "",
 <meta name="color-scheme" content="light dark">
 <title>{esc(title)}</title>
 <link rel="stylesheet" href="{root}assets/atlas.css">
+{f'<link rel="canonical" href="{esc(SITE_URL)}/{esc(canonical)}">' if canonical is not None else ""}
 {social}
+{structured}
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -111,6 +121,7 @@ def layout(*, title: str, body: str, depth: int = 0, description: str = "",
 <footer>
   <div><b>Atlas Sports Intelligence</b> · {TAGLINE}</div>
   <div>Out-of-sample figures from a point-in-time database ·
+    <a href="{root}about.html">new here</a> ·
     <a href="{root}research.html">how Atlas works</a> ·
     <a href="{root}research.html#grades">what grades mean</a></div>
   <div class="footer-note">Atlas publishes information. Readers make their own
@@ -122,16 +133,39 @@ def layout(*, title: str, body: str, depth: int = 0, description: str = "",
 """
 
 
-def social_tags(*, title: str, description: str, image: str | None = None) -> str:
+def social_tags(*, title: str, description: str, image: str | None = None,
+                url: str | None = None) -> str:
     tags = [
         f'<meta property="og:title" content="{esc(title)}">',
         f'<meta property="og:description" content="{esc(description)}">',
+        '<meta property="og:site_name" content="Atlas Sports Intelligence">',
         '<meta property="og:type" content="article">',
         '<meta name="twitter:card" content="summary_large_image">',
+        f'<meta name="twitter:title" content="{esc(title)}">',
+        f'<meta name="twitter:description" content="{esc(description)}">',
     ]
+    if url:
+        tags.append(f'<meta property="og:url" content="{esc(SITE_URL)}/{esc(url)}">')
     if image:
-        tags.append(f'<meta property="og:image" content="{esc(image)}">')
+        # Absolute, because a link unfurled inside another product cannot
+        # resolve a relative path.
+        tags.append(f'<meta property="og:image" content="{esc(SITE_URL)}/{esc(image)}">')
+        tags.append(f'<meta name="twitter:image" content="{esc(SITE_URL)}/{esc(image)}">')
     return "\n".join(tags)
+
+
+def json_ld(payload: dict) -> str:
+    """One structured-data block. Search engines read it; nobody sees it.
+
+    Only facts that are already visible on the page go in here - a page whose
+    markup claims something its body does not is the kind of thing that gets a
+    site demoted, and it would be dishonest besides.
+    """
+    import json
+
+    return ('<script type="application/ld+json">'
+            + json.dumps(payload, separators=(",", ":"))
+            + "</script>")
 
 
 # ---------------------------------------------------------------------------
@@ -180,7 +214,8 @@ def team_block(side, *, align: str) -> str:
 # ---------------------------------------------------------------------------
 
 
-def card_page(card: Card, *, bands: dict, overall_band) -> str:
+def card_page(card: Card, *, bands: dict, overall_band,
+              social_image: bool = False) -> str:
     """The card, in three tiers.
 
     Tier 1 is everything a reader needs in five seconds and is always visible:
@@ -211,10 +246,58 @@ def card_page(card: Card, *, bands: dict, overall_band) -> str:
         f"and grades this card {card.grade.letter if card.grade else 'ungraded'}."
     )
     return layout(
-        title=f"{card.title} — Atlas Sports Intelligence",
+        title=f"{card.title} — market, projection and grade | Atlas",
         body=body, depth=1, description=description, active="ncaaf",
-        social=social_tags(title=f"{card.title} · Atlas", description=description),
+        canonical=card.path,
+        social=social_tags(title=f"{card.title} · Atlas", description=description,
+                           url=card.path,
+                           image=f"social/{card.slug}-wide.png" if social_image else None),
+        structured=_card_schema(card),
     )
+
+
+def _card_schema(card: Card) -> str:
+    """SportsEvent. Teams, venue and kickoff - the facts on the page, nothing
+    else.
+
+    Deliberately *not* the page's meta description, which names the grade and
+    the projection. Structured data is for the game; a machine-readable grade
+    is one copy-paste away from being a feed of letters with no card around
+    them, and the card is the thing that makes a letter mean anything.
+    """
+    competitors = [
+        {"@type": "SportsTeam", "name": side.name,
+         "url": f"{SITE_URL}/team/{_team_slug(side)}.html"}
+        for side in (card.away, card.home)
+    ]
+    payload = {
+        "@context": "https://schema.org",
+        "@type": "SportsEvent",
+        "name": card.title,
+        "description": f"{card.away.name} at {card.home.name}, college football.",
+        "startDate": card.kickoff.isoformat(),
+        "eventStatus": "https://schema.org/EventScheduled",
+        "sport": "American Football",
+        "url": f"{SITE_URL}/{card.path}",
+        "homeTeam": competitors[1],
+        "awayTeam": competitors[0],
+        "competitor": competitors,
+    }
+    if card.venue:
+        location = {"@type": "Place", "name": card.venue}
+        if card.city:
+            location["address"] = {
+                "@type": "PostalAddress", "addressLocality": card.city,
+                "addressRegion": card.state or "", "addressCountry": "US",
+            }
+        payload["location"] = location
+    return json_ld(payload)
+
+
+def _team_slug(side) -> str:
+    from atlas.site.data import _slug
+
+    return _slug(side.name)
 
 
 # ---------------------------------------------------------------------------
@@ -1070,8 +1153,17 @@ def homepage(cards: list[Card], *, bands: dict, rivalries: set | None = None) ->
 
 <script src="assets/atlas.js" defer></script>"""
 
-    return layout(title="Atlas Sports Intelligence — college football cards",
-                  body=body, active="today")
+    description = (
+        f"Every college football game this week, with the market number, the "
+        f"Atlas projection, the difference between them and a grade for how "
+        f"much each card's information has historically been worth. "
+        f"{len(cards)} cards, {strong} graded A or better, {weak} marked down."
+    )
+    return layout(title="College football cards for this week | Atlas Sports Intelligence",
+                  body=body, active="today", description=description,
+                  canonical="", social=social_tags(
+                      title="Atlas Sports Intelligence", description=description,
+                      url=""))
 
 
 def _row_crests(card: Card, root: str = "") -> str:
@@ -1213,10 +1305,29 @@ def team_page(team, *, cards: list[Card], pool: dict) -> str:
   player-level model, and a page that looked like one would imply research that
   does not exist.
 </div>"""
-    return layout(title=f"{team.name} — Atlas Sports Intelligence", body=body,
-                  depth=1, active="ncaaf",
-                  description=f"{team.name} season profile: opponent-adjusted "
-                              "efficiency, pace and upcoming Atlas cards.")
+    slug = _team_slug(team)
+    description = (
+        f"{team.name} season profile: opponent-adjusted efficiency, success "
+        f"rate, explosiveness and pace, all point-in-time, with every upcoming "
+        f"Atlas card and the grade on each."
+    )
+    return layout(title=f"{team.name} — season profile and upcoming cards | Atlas",
+                  body=body, depth=1, active="ncaaf",
+                  description=description,
+                  canonical=f"team/{slug}.html",
+                  social=social_tags(title=f"{team.name} · Atlas",
+                                     description=description,
+                                     url=f"team/{slug}.html"),
+                  structured=json_ld({
+                      "@context": "https://schema.org",
+                      "@type": "SportsTeam",
+                      "name": team.name,
+                      "sport": "American Football",
+                      "url": f"{SITE_URL}/team/{slug}.html",
+                      **({"memberOf": {"@type": "SportsOrganization",
+                                       "name": team.conference}}
+                         if team.conference else {}),
+                  }))
 
 
 def _ordinal_note(rank: float | None, extra: str) -> str:
@@ -1231,6 +1342,209 @@ def _ordinal_note(rank: float | None, extra: str) -> str:
 # ---------------------------------------------------------------------------
 # Research, NFL and premium
 # ---------------------------------------------------------------------------
+
+
+# ---------------------------------------------------------------------------
+# About — the thirty-second page
+# ---------------------------------------------------------------------------
+
+
+def about_page(example: Card | None, *, card_count: int) -> str:
+    """What Atlas is, what a grade means, how to read a card, and why it exists.
+
+    Built from a real card rather than a mock, so the walkthrough cannot drift
+    away from the product it is describing. A first-time visitor should be able
+    to stop after the first screen and still be right about what Atlas is.
+    """
+    walkthrough = _card_walkthrough(example) if example else ""
+    letters = table(
+        ["Grade", "What it means", "Share of seven seasons"],
+        [['<span class="lead">A+</span>',
+          "Atlas and the market land on the same number. Reliable — and Atlas "
+          "is adding least here.", "6%"],
+         ['<span class="lead">A</span>',
+          "Closely aligned. Strong calibration.", "14%"],
+         ['<span class="lead">B</span>',
+          "A moderate difference, in the range where the claim and the delivery "
+          "stay close.", "31%"],
+         ['<span class="lead">C</span>',
+          "A wide difference. The claim starts to run ahead of the delivery.", "25%"],
+         ['<span class="lead">D</span>',
+          "A large difference. Atlas commonly struggles this far out.", "15%"],
+         ['<span class="lead">F</span>',
+          "A very large difference, in the range where Atlas has been least "
+          "reliable. Atlas marks its own card down.", "10%"]])
+
+    body = f"""<header class="lede">
+  <h1>Atlas grades its own numbers.</h1>
+  <p class="lede-text">Every college football game gets a card: what the market
+    says, what Atlas projects, what is driving the difference — and a letter
+    saying how much that card's information has historically been worth.
+    <b>Atlas never tells anyone what to do with it.</b></p>
+  <div class="lede-actions">
+    <a class="button" href="index.html">See this week's board</a>
+    <a class="button ghost" href="#read">How to read a card</a>
+  </div>
+</header>
+
+<section class="section" id="what">
+  <div class="section-head"><h2>What Atlas is</h2></div>
+  <div class="grid-2">
+    <div class="card card-pad prose">
+      <h3>A research desk, published</h3>
+      <p>Atlas models {card_count} college football games a week from a
+        point-in-time database — every figure uses only what was knowable
+        before kickoff, going back seven seasons.</p>
+      <p>The model is anchored to the betting market, because seven seasons of
+        out-of-sample testing said the market is the better starting point.
+        Where Atlas differs from it, the card says by how much and what is
+        driving it.</p>
+      <p>And then it does the thing nothing else in this category does: it
+        grades itself, in public, on every card, using its own historical
+        record.</p>
+    </div>
+    <div class="card card-pad prose">
+      <h3>What Atlas is not</h3>
+      <ul class="plain">
+        <li><b>Not a selections service.</b> No card names a side. Not as a
+          lean, not as an arrow, not as a highlighted row.</li>
+        <li><b>Not a sportsbook.</b> Nothing here can be acted on from this
+          page, and nothing is sized.</li>
+        <li><b>Not a record of wins and losses.</b> The record Atlas publishes
+          is calibration: what it claimed, against what it delivered.</li>
+        <li><b>Not urgent.</b> No countdowns, no alerts, nothing on any Atlas
+          page moves.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+{walkthrough}
+
+<section class="section" id="grades">
+  <div class="section-head"><h2>What the grades mean</h2>
+    <span class="note">computed, never assigned</span></div>
+  <div class="card card-pad prose">
+    <p>A grade answers one question: <b>how much weight does the information on
+      this card deserve?</b> It is not a rating of the game and it is not a
+      recommendation.</p>
+    {letters}
+    <p>The thresholds are <b>absolute</b> and were set once from seven seasons
+      of results. The same card grades the same on a quiet Tuesday and on
+      championship Saturday, so a screenshot means the same thing whenever it
+      was taken.</p>
+    <div class="disclosure">
+      <b>A top grade does not mean "read this one first."</b> Cards where Atlas
+      and the market agree to within a point have realised 50.8% against a
+      51.3% claim across 760 games — statistically a coin flip. They grade
+      highest because they are the most reliable, and they are the most
+      reliable because Atlas has added nothing to them. The grade tells you
+      what to discount, not what to look at.
+    </div>
+    <p class="note"><a href="research.html#grades">The full rubric, the four
+      components and the calibration curve behind them</a>.</p>
+  </div>
+</section>
+
+<section class="section" id="why">
+  <div class="section-head"><h2>Why Atlas exists</h2></div>
+  <div class="card card-pad prose">
+    <p>Every model in this category publishes its numbers with the same
+      confidence every week. None of them tells you which of those numbers has
+      historically been worth anything.</p>
+    <p>Atlas measured that, and the answer was uncomfortable: <b>the further its
+      model sits from the market, the worse it does.</b> Across seven seasons
+      out of sample, cards claiming 77% accuracy delivered 50%. The loudest
+      cards are the weakest ones.</p>
+    <p>Most products would bury that. Atlas made it the largest element on the
+      card. A grade that can say F is the only kind of grade worth anything,
+      and it is the reason the A means something too.</p>
+    <p class="note"><a href="research.html">The seven-season record, the
+      methodology, and every number behind this page</a>.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="card card-pad prose">
+    <h3>Start here</h3>
+    <p><a href="index.html">This week's board</a> · <a
+      href="research.html">how Atlas works</a> · <a href="research.html#grades">what
+      grades mean</a> · <a href="premium.html">what is free and what is not</a></p>
+    <p class="note">Everything that makes Atlas checkable — the grades, the
+      research, the methodology and the reliability record — is free and
+      always will be.</p>
+  </div>
+</section>"""
+
+    description = (
+        "Atlas grades its own college football numbers. Every game gets a card: "
+        "the market, the projection, what is driving the difference, and a "
+        "letter for how much that information has historically been worth."
+    )
+    return layout(
+        title="What Atlas is, and how to read a card | Atlas Sports Intelligence",
+        body=body, active="about", description=description,
+        canonical="about.html",
+        social=social_tags(title="Atlas Sports Intelligence",
+                           description=description, url="about.html"),
+        structured=json_ld({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Atlas Sports Intelligence",
+            "url": SITE_URL,
+            "slogan": TAGLINE,
+            "description": description,
+        }),
+    )
+
+
+#: The walkthrough's numbered notes, in the order a reader meets them.
+CARD_STEPS = (
+    ("The game", "Both teams with their crests, rank, record and conference, "
+                 "then kickoff, broadcast and venue. You should recognise the "
+                 "game before you read a word."),
+    ("The market", "What the betting market currently says — the spread and "
+                   "the game total. This is the reference everything else is "
+                   "measured against, not a price to act on."),
+    ("Atlas", "What Atlas projects: the score, and the total underneath it. "
+              "The projection is anchored to the market, because seven seasons "
+              "said that beats the raw model."),
+    ("The difference", "How far Atlas sits from the market on the total. This "
+                       "is the number the grade is mostly about — and a large "
+                       "one is a warning, not an opportunity."),
+    ("The grade", "A letter, a score out of 100, and three lines explaining "
+                  "itself: what the letter says, what Atlas did, and the "
+                  "seven-season record behind it."),
+    ("Why", "The three things the model is reading, each with the crest of the "
+            "team it favours."),
+    ("Be careful about", "Up to three warnings computed from this game — a "
+                         "thin market, a lopsided spread, a missing metric. A "
+                         "card with nothing to flag says nothing."),
+    ("Everything else", "Market detail, the projection's arithmetic, how the "
+                        "grade was computed, all the drivers, how the line has "
+                        "moved, and the reliability record — each one tap away."),
+)
+
+
+def _card_walkthrough(card: Card) -> str:
+    steps = "".join(
+        f'<li class="step"><span class="step-n">{i}</span>'
+        f'<div><b>{esc(name)}</b><p class="note">{esc(text)}</p></div></li>'
+        for i, (name, text) in enumerate(CARD_STEPS, start=1)
+    )
+    return f"""<section class="section" id="read">
+  <div class="section-head"><h2>How to read a card</h2>
+    <span class="note">eight things, in the order you meet them</span></div>
+  <div class="card card-pad prose">
+    <p>Every card is the same shape. The first screen answers five questions —
+      who is playing, what the market says, what Atlas says, why, and what
+      should make you careful — and everything else is one tap below it.</p>
+    <ol class="steps">{steps}</ol>
+    <p class="note top-gap">Worked example:
+      <a href="{esc(card.path)}">{esc(card.title)}</a>, graded
+      <b>{esc(card.grade.letter) if card.grade else "—"}</b>.</p>
+  </div>
+</section>"""
 
 
 def research_page(bands: dict, overall_band, *, card_count: int) -> str:
@@ -1368,10 +1682,15 @@ def research_page(bands: dict, overall_band, *, card_count: int) -> str:
       to do with the information.</p>
   </div>
 </section>"""
-    return layout(title="How Atlas works — Atlas Sports Intelligence", body=body,
-                  active="research",
-                  description="How the Atlas model works, what the A–F grades "
-                              "mean, and why large disagreements lower confidence.")
+    description = ("How the Atlas model works, what the A-F grades mean, the "
+                   "seven-season calibration record behind them, and why large "
+                   "disagreements lower confidence rather than raising it.")
+    return layout(title="How Atlas works, and what the grades mean | Atlas",
+                  body=body, active="research", canonical="research.html",
+                  description=description,
+                  social=social_tags(title="How Atlas works",
+                                     description=description,
+                                     url="research.html"))
 
 
 def nfl_page() -> str:
@@ -1415,39 +1734,51 @@ def nfl_page() -> str:
   product, and its entire credibility comes from having been tested. Putting an
   untested model behind it would spend that credibility to fill a page.
 </div>"""
-    return layout(title="NFL — Atlas Sports Intelligence", body=body, active="nfl",
+    return layout(title="NFL — why Atlas has not published cards yet | Atlas",
+                  body=body, active="nfl", canonical="nfl.html",
                   description="Atlas NFL cards are in calibration. The three "
                               "stages, and why grades come last.")
 
 
 def premium_page() -> str:
-    compare = table(["", "Free", "Premium"], [
-        ['<span class="lead">Every game, every week</span>', "✓", "✓"],
-        ['<span class="lead">Atlas grade (the letter)</span>', "✓", "✓"],
-        ['<span class="lead">Reliability record</span>', "✓ always", "✓"],
-        ['<span class="lead">Research and methodology</span>', "✓", "✓"],
-        ['<span class="lead">Team pages</span>', "✓", "✓"],
-        ['<span class="lead">Projected spread and total</span>', "✓", "✓"],
-        ['<span class="lead">Projected score and win probability</span>',
+    """The launch split: this week is free, the archive and the depth are paid.
+
+    The earlier framework put the Atlas difference behind the boundary. That is
+    no longer coherent - the difference is on every board row and on every
+    social card - and it was never the dangerous artefact. A difference without
+    a grade beside it is; a difference with one is the product. So the line
+    moved to a shape that can actually be held: everything needed to judge a
+    card this week is free, and what is paid is history, depth and delivery.
+    """
+    compare = table(["", "Free forever", "Premium"], [
+        ['<span class="lead">This week\'s board, every game</span>', "✓", "✓"],
+        ['<span class="lead">The Atlas grade, and its three-line explanation</span>', "✓", "✓"],
+        ['<span class="lead">Market number, Atlas projection, the difference</span>', "✓", "✓"],
+        ['<span class="lead">Why — the three leading drivers</span>', "✓", "✓"],
+        ['<span class="lead">Be careful about</span>', "✓", "✓"],
+        ['<span class="lead">How the grade was computed</span>', "✓", "✓"],
+        ['<span class="lead">Reliability record and calibration</span>', "✓ always", "✓"],
+        ['<span class="lead">Research and methodology</span>', "✓ always", "✓"],
+        ['<span class="lead">Team pages and season profiles</span>', "✓", "✓"],
+        ['<span class="lead">Social cards</span>', "✓", "✓"],
+        ['<span class="lead">Past weeks and past seasons</span>',
+         '<span class="flat">this week only</span>', "✓"],
+        ['<span class="lead">Every driver, with percentiles</span>',
+         '<span class="lead">top three</span>', "✓"],
+        ['<span class="lead">Full market history, snapshot by snapshot</span>',
+         '<span class="lead">open and current</span>', "✓"],
+        ['<span class="lead">How a card\'s grade has moved during the week</span>',
          '<span class="flat">—</span>', "✓"],
-        ['<span class="lead">Opening numbers and movement</span>',
-         '<span class="flat">—</span>', "✓"],
-        ['<span class="lead">Moneyline and de-vigged probabilities</span>',
-         '<span class="flat">—</span>', "✓"],
-        ['<span class="lead">Atlas difference</span>', '<span class="flat">—</span>', "✓"],
-        ['<span class="lead">Grade component breakdown</span>',
-         '<span class="flat">—</span>', "✓"],
-        ['<span class="lead">All drivers with percentiles</span>',
-         '<span class="lead">top driver</span>', "✓"],
-        ['<span class="lead">Market intelligence</span>',
-         '<span class="flat">—</span>', "✓"],
-        ['<span class="lead">Historical database and export</span>',
-         '<span class="flat">—</span>', "✓"],
+        ['<span class="lead">Daily and weekly email</span>',
+         '<span class="lead">weekly board</span>', "✓"],
+        ['<span class="lead">Data export</span>', '<span class="flat">—</span>', "✓"],
     ])
     body = f"""<header class="page-head">
   <h1>Premium</h1>
-  <p class="sub">Atlas sells depth. It does not sell honesty — the grade and the
-    reliability record are free, permanently.</p>
+  <p class="sub">Atlas sells history, depth and delivery. It does not sell
+    honesty — the grade, the research, the methodology and the reliability
+    record are free, permanently, and everything you need to judge this week\'s
+    card is free with them.</p>
 </header>
 
 <div class="card card-pad banner-low">
@@ -1466,18 +1797,25 @@ def premium_page() -> str:
 <section class="section">
   <div class="section-head"><h2>Why these lines</h2></div>
   <div class="card card-pad prose">
-    <p><b>The grade letter is free.</b> It is the product's honesty in one
-      character, and it has to be in front of everyone — including people who
-      only ever see a screenshot.</p>
-    <p><b>The reliability record is free, permanently.</b> It is the evidence.
-      A reliability record that costs money is not a record, it is a claim.</p>
-    <p><b>The Atlas difference section is entirely paid.</b> It is the part
-      closest to being misread as a recommendation, and it carries the most
-      caveats. Putting it where a reader has already seen the grade is a
-      product-safety decision as much as a commercial one.</p>
+    <p><b>The credibility layer is free, permanently.</b> The grade, the
+      research, the methodology and the reliability record. Evidence for a
+      claim should never cost more than the claim, and a reliability record
+      that costs money is not a record — it is a marketing asset.</p>
+    <p><b>Everything needed to judge this week\'s card is free.</b> The market
+      number, the projection, the difference, why, and what should make you
+      careful. A card that is half visible is a card a reader cannot check, and
+      an unverifiable card is worth less than no card.</p>
+    <p><b>What is paid is history, depth and delivery.</b> Past weeks, every
+      driver rather than the leading three, the full snapshot-by-snapshot
+      market history, the daily email and export. None of it changes what a
+      free reader concludes about a game; all of it is work Atlas does that
+      costs money to keep doing.</p>
     <p><b>No affiliate revenue, ever.</b> Books pay for traffic that converts
       to deposits. Taking that money would mean Atlas earns more when readers
-      act — an interest directly opposed to the product's only claim.</p>
+      act — an interest directly opposed to the product\'s only claim.</p>
+    <p><b>Nothing is ever blurred.</b> A premium surface is absent and named,
+      never teased. A blurred number is an advertisement wearing the clothes of
+      information.</p>
   </div>
 </section>
 
@@ -1491,7 +1829,8 @@ def premium_page() -> str:
       show one line describing what is behind them and a single link.</p>
   </div>
 </section>"""
-    return layout(title="Premium — Atlas Sports Intelligence", body=body,
-                  active="premium",
+    return layout(title="What is free and what is premium | Atlas",
+                  body=body, active="premium", canonical="premium.html",
                   description="What Atlas premium includes, what stays free "
-                              "permanently, and why.")
+                              "permanently, and why the credibility layer is "
+                              "never behind a boundary.")

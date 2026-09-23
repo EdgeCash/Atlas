@@ -2,7 +2,7 @@ PYTHON ?= python3
 
 .PHONY: help install ingest warehouse research all test lint clean-data \
 	live-refresh live-run live-report live-check live-reproduce \
-	site site-full site-serve
+	site site-full site-serve site-audit site-shots launch-check
 
 help:
 	@echo "Atlas Phase 1A - research warehouse"
@@ -24,6 +24,8 @@ help:
 	@echo "  make live-reproduce  Ops: replay random periods and verify they match"
 	@echo ""
 	@echo "  make site       build the Atlas Sports Intelligence site into site/"
+	@echo "  make site-audit run the launch audit over every built page"
+	@echo "  make launch-check  audit + tests + lint, the pre-publish gate"
 	@echo "  make site-full  warehouse + numbers + market + site, from scratch"
 	@echo "  make qb-data    extract the QB of record (research only, ~1 GB transient)"
 	@echo "  make all        ingest -> warehouse -> research -> phase1b -> phase1c"
@@ -118,6 +120,21 @@ site-full:
 
 site-serve: site
 	$(PYTHON) -m http.server 8000 --directory site
+
+# The launch gate. Scans every built page for a named side, the forbidden
+# vocabulary, a card missing its disclaimer, and anything that moves. Exits
+# non-zero on a blocking finding, so it can gate a deploy.
+site-audit: site
+	$(PYTHON) scripts/audit_site.py
+
+# Screenshots of the built site at real viewports, into design/screens/site/.
+site-shots: site
+	$(PYTHON) scripts/shoot_site.py
+
+# Everything that has to pass before Atlas is published.
+launch-check: site-audit
+	$(PYTHON) -m pytest -q
+	$(PYTHON) -m ruff check atlas/ scripts/ tests/
 
 all: ingest warehouse research phase1b phase1c validate velocity beta gamma
 

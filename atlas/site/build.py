@@ -68,11 +68,17 @@ def build(out: Path | None = None, *, social_cards: bool = True,
         render.homepage(cards, bands=bands, rivalries=rivalry_pairs()))
     (out / "research.html").write_text(
         render.research_page(bands, overall, card_count=len(cards)))
+    (out / "about.html").write_text(
+        render.about_page(_example_card(cards), card_count=len(cards)))
     (out / "nfl.html").write_text(render.nfl_page())
     (out / "premium.html").write_text(render.premium_page())
 
+    social_slugs = {c.slug for c in _spread_of_grades(
+        [c for c in cards if c.grade], SOCIAL_LIMIT)} if social_cards else set()
     for card in cards:
-        (out / card.path).write_text(render.card_page(card, bands=bands, overall_band=overall))
+        (out / card.path).write_text(render.card_page(
+            card, bands=bands, overall_band=overall,
+            social_image=card.slug in social_slugs))
 
     teams = _teams(cards)
     pool = _pool()
@@ -82,17 +88,28 @@ def build(out: Path | None = None, *, social_cards: bool = True,
 
     images = []
     if social_cards:
-        graded = [c for c in cards if c.grade]
-        # One of each grade band where possible, so the templates are reviewed
+        # One of each grade where possible, so the templates are reviewed
         # against the range they have to survive rather than the flattering end.
-        picked = _spread_of_grades(graded, SOCIAL_LIMIT)
-        for card in picked:
+        for card in (c for c in cards if c.slug in social_slugs):
             images.extend(social.write(card, out / "social"))
 
     _write_robots(out)
+    _write_sitemap(out, cards, teams)
     LOG.info("site: %d cards, %d teams, %d images -> %s",
              len(cards), len(teams), len(images), out)
     return {"cards": len(cards), "teams": len(teams), "images": len(images), "out": out}
+
+
+def _example_card(cards) -> object | None:
+    """The card the "how to read a card" walkthrough points at.
+
+    The highest-graded card with both a rank and a broadcast: a first-time
+    reader should meet the product on a game they have heard of, and on a card
+    that has something in every section."""
+    ranked = [c for c in cards
+              if c.grade and c.tv and (c.home.rank or c.away.rank)]
+    pool = ranked or [c for c in cards if c.grade] or list(cards)
+    return max(pool, key=lambda c: c.grade.score if c.grade else 0) if pool else None
 
 
 def _teams(cards) -> dict:
@@ -134,8 +151,52 @@ def _spread_of_grades(cards, limit: int) -> list:
 
 def _write_robots(out: Path) -> None:
     (out / "robots.txt").write_text(
-        "User-agent: *\nAllow: /\n"
+        "User-agent: *\n"
+        "Allow: /\n"
+        f"Sitemap: {render.SITE_URL}/sitemap.xml\n"
     )
+
+
+#: Crawl priority. A game card is the page somebody searches for; the board is
+#: the page they land on from the outside. Everything else is context.
+SITEMAP_PRIORITY = {"": "1.0", "about.html": "0.9", "research.html": "0.8",
+                    "ncaaf": "0.8", "team": "0.6"}
+
+
+def _write_sitemap(out: Path, cards, teams: dict) -> None:
+    """Every public page, once, with the day it was built.
+
+    A card's content changes whenever the market does, so `changefreq` is
+    daily on cards and weekly on the pages that only move when the research
+    does. Nothing here is a claim the site does not keep.
+    """
+    from datetime import UTC, datetime
+
+    today = datetime.now(UTC).date().isoformat()
+    urls: list[tuple[str, str, str]] = [
+        ("", "daily", SITEMAP_PRIORITY[""]),
+        ("about.html", "monthly", SITEMAP_PRIORITY["about.html"]),
+        ("research.html", "weekly", SITEMAP_PRIORITY["research.html"]),
+        ("nfl.html", "monthly", "0.4"),
+        ("premium.html", "monthly", "0.5"),
+    ]
+    urls += [(card.path, "daily", SITEMAP_PRIORITY["ncaaf"]) for card in cards]
+    urls += [(f"team/{slug}.html", "weekly", SITEMAP_PRIORITY["team"])
+             for slug in sorted(teams)]
+
+    entries = "".join(
+        f"<url><loc>{render.SITE_URL}/{path}</loc>"
+        f"<lastmod>{today}</lastmod>"
+        f"<changefreq>{freq}</changefreq>"
+        f"<priority>{priority}</priority></url>"
+        for path, freq, priority in urls
+    )
+    (out / "sitemap.xml").write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+        f"{entries}</urlset>\n"
+    )
+    LOG.info("sitemap: %d urls", len(urls))
 
 
 def main() -> None:

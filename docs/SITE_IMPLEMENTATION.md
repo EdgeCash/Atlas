@@ -16,6 +16,8 @@ make site                                             # build site/
 ```
 
 ```bash
+make site-audit                     # the launch gate, over every built page
+make launch-check                   # audit + tests + lint
 python scripts/shoot_site.py        # design/screens/site/, real viewports
 ```
 
@@ -74,6 +76,7 @@ card cannot disagree with each other.
 ```
 site/
   index.html          today's board, search, conference and grade filters
+  about.html          the thirty-second landing page
   research.html       how Atlas works, what grades mean, calibration
   nfl.html            the three stages, and why grades come last
   premium.html        comparison table, framework only, no payment path
@@ -81,9 +84,18 @@ site/
   team/{slug}.html    116 team pages
   social/             12 templates, SVG + PNG at 2×
   assets/             atlas.css, atlas.js
+  sitemap.xml         179 urls
+  robots.txt
 ```
 
-3.6 MB total. The largest HTML page is 31 KB.
+13 MB total, most of it cached logos and rasterised social cards. The largest
+HTML page is 31 KB.
+
+Every page carries a canonical URL, a meta description and Open Graph tags;
+cards and team pages carry `SportsEvent` and `SportsTeam` structured data. The
+structured data deliberately omits the grade and the projection - it describes
+the game, and a machine-readable grade is one copy-paste from being a feed of
+letters with no card around them.
 
 ---
 

@@ -631,6 +631,9 @@ footer { display: grid; gap: 4px; }
   .wide-only { display: none; }
   .narrow-only { display: inline; }
 
+  /* Five links and a wordmark is the most a 390px bar holds. */
+  .nav-links { gap: 11px; font-size: 13px; }
+
   /* Head to head, not a stacked list. Two crests either side of "at" is the
      shape of a matchup, and a reader identifies the game from the marks
      before they read either name - which is the whole point of putting the
@@ -711,4 +714,45 @@ footer { display: grid; gap: 4px; }
   .board-bar .search { flex: 3 1 150px; min-width: 0; }
   .board-bar .select { flex: 2 1 118px; min-width: 0; font-size: 12.5px; }
   .board-bar .filter { flex: 1 1 auto; font-size: 12.5px; padding: 7px 8px; }
+}
+
+/* --------------------------------------------------------------- about --- */
+/* The thirty-second page. It is the only surface in the product with a hero,
+   because it is the only one whose job is to explain rather than to inform. */
+
+.lede { margin: 26px 0 8px; max-width: 34em; }
+.lede h1 { font-size: 30px; letter-spacing: -.03em; line-height: 1.15; }
+.lede-text { font-size: 16px; color: var(--ink-2); margin: 12px 0 0;
+             line-height: 1.55; }
+.lede-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 18px; }
+
+.button {
+  display: inline-grid; place-items: center; min-height: 42px;
+  padding: 0 18px; border-radius: 10px; background: var(--ink);
+  color: var(--bg); font-size: 14.5px; font-weight: 620;
+  text-decoration: none; border: 1px solid var(--ink);
+}
+.button.ghost { background: transparent; color: var(--ink); border-color: var(--border-strong); }
+.button:hover { opacity: .92; }
+
+.plain { list-style: none; margin: 0; padding: 0; }
+.plain li { padding: 7px 0; font-size: 14px; color: var(--ink-2); }
+.plain li + li { border-top: 1px solid var(--border); }
+
+.steps { list-style: none; margin: 14px 0 0; padding: 0; counter-reset: step; }
+.step { display: grid; grid-template-columns: 26px 1fr; gap: 12px;
+        padding: 11px 0; align-items: start; }
+.step + .step { border-top: 1px solid var(--border); }
+.step-n {
+  width: 26px; height: 26px; border-radius: 8px; display: grid;
+  place-items: center; background: var(--surface-sunk);
+  border: 1px solid var(--border); font-size: 12.5px; font-weight: 680;
+  font-variant-numeric: tabular-nums; color: var(--ink-2);
+}
+.step b { font-size: 14.5px; }
+.step .note { margin: 2px 0 0; }
+
+@media (min-width: 720px) {
+  .lede h1 { font-size: 38px; }
+  .lede-text { font-size: 17.5px; }
 }

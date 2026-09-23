@@ -246,9 +246,31 @@ def test_every_section_is_still_on_the_page_behind_a_panel():
 
 
 def test_the_panels_are_native_and_need_no_javascript():
+    """The card runs no code. The only <script> a card may carry is the
+    structured-data block, which browsers do not execute - it is markup for
+    search engines and it cannot open a panel."""
     page = _page(_card())
     assert page.count("<details") >= 6
-    assert "<script" not in page
+    assert "<script src=" not in page
+    scripts = re.findall(r"<script[^>]*>", page)
+    assert all('type="application/ld+json"' in tag for tag in scripts), scripts
+
+
+def test_a_card_carries_structured_data_for_the_game_and_nothing_more():
+    """Structured data states the facts on the page - teams, venue, kickoff.
+    Never the grade or the projection: a machine-readable projection is one
+    copy-paste from being a feed of numbers with no card around them."""
+    import json
+
+    page = _page(_card())
+    block = re.search(r'<script type="application/ld\+json">(.+?)</script>',
+                      page, re.S).group(1)
+    payload = json.loads(block)
+    assert payload["@type"] == "SportsEvent"
+    assert payload["homeTeam"]["name"] == "Iowa State"
+    assert payload["awayTeam"]["name"] == "Utah Utes"
+    assert "grade" not in block.lower()
+    assert "projection" not in block.lower()
 
 
 def test_the_projection_is_anchored_and_the_raw_model_is_shown_beside_it():
@@ -346,7 +368,8 @@ def _visible_text(page: str) -> str:
     lambda: _page(_card(model_total=60.0)),
     lambda: render.nfl_page(),
     lambda: render.premium_page(),
-], ids=["card-a", "card-f", "nfl", "premium"])
+    lambda: render.about_page(_card(), card_count=58),
+], ids=["card-a", "card-f", "nfl", "premium", "about"])
 def test_no_page_tells_a_reader_what_to_do(builder):
     """`docs/BRAND_GUIDE.md`: the vocabulary is a product constraint, not a
     style preference, and it is checked rather than trusted."""
@@ -364,12 +387,36 @@ def test_no_page_tells_a_reader_what_to_do(builder):
 @pytest.mark.parametrize("builder", [
     lambda: _page(_card()),
     lambda: _page(_card(model_total=60.0)),
-], ids=["card-a", "card-f"])
+    lambda: render.about_page(_card(), card_count=58),
+], ids=["card-a", "card-f", "about"])
 def test_no_card_names_a_side(builder):
     banned = re.compile(
         r"\b(take the|lay the|back the|we like|our pick|recommended side|"
         r"leans? (over|under))\b", re.IGNORECASE)
     assert not banned.findall(builder())
+
+
+def test_the_landing_page_answers_the_four_questions_it_promises():
+    """Track 1. A first-time visitor has to get what Atlas is, what a grade
+    means, how to read a card and why it exists - and the first screen has to
+    be enough to be *right* about Atlas even if they stop there."""
+    page = render.about_page(_card(), card_count=58)
+    lede = page.split('<section class="section"')[0]
+    assert "never tells anyone what to do" in lede
+    for anchor in ('id="what"', 'id="read"', 'id="grades"', 'id="why"'):
+        assert anchor in page, anchor
+    # The caveat that stops the grade being read as a ranking travels with it.
+    assert "what to discount, not what to look at" in page
+    # And the page is honest about the boundary it is selling against.
+    assert "always will be" in page
+
+
+def test_the_landing_page_works_without_an_example_card():
+    """Out of season there is no card to walk through. The page still has to
+    stand up rather than render a hole where a section was."""
+    page = render.about_page(None, card_count=0)
+    assert 'id="read"' not in page
+    assert 'id="what"' in page and 'id="grades"' in page and 'id="why"' in page
 
 
 def test_every_card_repeats_the_difference_disclaimer():

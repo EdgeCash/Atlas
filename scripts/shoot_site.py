@@ -27,6 +27,9 @@ C_CARD = "ncaaf/app-state-mountaineers-nc-state-wolfpack.html"
 F_CARD = "ncaaf/central-michigan-chippewas-miami-hurricanes.html"
 
 SHOTS = [
+    ("00-about-mobile", "about.html", 390, 844, False),
+    ("00-about-desktop", "about.html", 1440, 1000, False),
+    ("00-about-read", "about.html", 1440, 2200, False),
     ("01-homepage-desktop", "index.html", 1440, 1000, False),
     ("02-homepage-mobile", "index.html", 390, 844, False),
     ("03-board-desktop", "index.html", 1440, 2400, False),
