@@ -24,6 +24,15 @@ No inbound ports besides the web server's. Nothing in Atlas listens.
 Measured on this repository rather than estimated, because the numbers pick the
 machine.
 
+> **Corrected 23 September 2026.** This section originally argued against
+> GitHub Actions partly on cost, assuming a private repository's 2,000-minute
+> allowance. **`EdgeCash/Atlas` is public**, so Actions minutes are free and
+> unlimited and the billing API reports every run so far at zero. The cheapest
+> way to launch is therefore GitHub Pages + Actions at **$0/month plus the
+> domain** — see `RUNNING_COSTS.md`. What follows is the right answer once the
+> 15-minute cadence or the access-log analytics is worth paying for; it is not
+> the right answer for day one.
+
 | | Measured |
 |---|---|
 | Built site | **13 MB**, 352 files — 182 HTML, 154 PNG, 12 SVG |
@@ -39,14 +48,15 @@ Three of those decide everything.
 should not drive the decision.
 
 **The schedule publishes 1,068 times a month.** Every game-day poll rewrites the
-board, so each one is a publish. That is what rules out the free build tiers:
-Cloudflare Pages allows 500 deployments a month on the free plan, and GitHub
-Actions' 2,000 free minutes are nearly all consumed by ~1,070 runs of a job that
-takes about ninety seconds. Worse, GitHub's own documentation says a scheduled
-workflow "can be delayed during periods of high loads" and that "some queued
-jobs may be dropped." Atlas stamps every page with when its information was last
-refreshed; a publish pipeline that silently skips runs breaks the one promise
-`TIMESTAMP_STANDARD.md` makes.
+board, so each one is a publish. Cloudflare Pages allows 500 deployments a month
+on the free plan, so that host is out — but GitHub Pages has no deploy cap when
+a custom Actions workflow does the publishing, and on a public repository those
+minutes are free. What survives is the *reliability* objection, not the cost
+one: GitHub's own documentation says a scheduled workflow "can be delayed during
+periods of high loads" and that "some queued jobs may be dropped." Atlas stamps
+every page with when its information was last refreshed, so a skipped run
+publishes a timestamp that overstates freshness. That is tolerable hourly and
+uncomfortable at fifteen minutes.
 
 **The heavy rebuild peaks at 2.9 GB.** That sets the box. 4 GB runs it without
 thought; 2 GB runs it with a swapfile, because the spike lasts about ten seconds
@@ -77,7 +87,7 @@ one by watching `make ops-heavy` complete, and keep the 4 GB option in reserve.
 | Option | Why not |
 |---|---|
 | Cloudflare Pages / Netlify free | 500 deploys a month against 1,068 publishes — and no access log, see below |
-| GitHub Actions as the scheduler | ~1,070 runs × 90 s ≈ the entire 2,000-minute free allowance, and GitHub documents that scheduled jobs may be delayed or dropped |
+| GitHub Pages + Actions | **nothing, for day one** — free and uncapped on a public repo. The costs are a scheduled run that may be dropped, and no access log. Start here; see `RUNNING_COSTS.md` |
 | Oracle Cloud Always Free | genuinely free and big enough (2 OCPU / 12 GB ARM), but ARM capacity is scarce in US regions and Oracle halved this tier in June 2026 without announcing it. Fine to experiment on; not what a launch should depend on. |
 
 **The access log is the second reason to own the web server.** `atlas.ops.analytics`
