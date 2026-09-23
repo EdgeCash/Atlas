@@ -165,6 +165,13 @@ jobs:
 
       - name: Refresh
         if: steps.gate.outputs.go == 'true'
+        env:
+          # The warehouse build records `cfbd_enrichment: cfbd.available()`,
+          # which reads the environment rather than the data. Without the key
+          # here the manifest claimed no enrichment on a warehouse that had it,
+          # because staging loads the CFBD parquets by file existence and never
+          # consults the key. The data was always right; the provenance was not.
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
         # --force because the gate above has already decided, in Eastern time
         # and tolerant of a late start. Letting the task re-apply the strict
         # should_poll() minute test here would undo exactly that.
