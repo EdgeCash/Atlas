@@ -18,21 +18,23 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 
 from atlas import config
+from atlas.models import (
+    evaluate,
+    scoring,  # noqa: F401 - re-exported for callers
+)
 from atlas.models import lattice as lat
 from atlas.models import reference as ref
-from atlas.models import scoring
 from atlas.research.dataset import load_research_frame, research_sample
 from atlas.util import get_logger
 
 LOG = get_logger(__name__)
 
 FIRST_TEST_SEASON = 2021
-WEEK_BUCKETS = [(1, 2), (3, 4), (5, 8), (9, 12), (13, 99)]
-SPREAD_BUCKETS = [(0, 3), (3, 7), (7, 14), (14, 21), (21, 99)]
+WEEK_BUCKETS = evaluate.WEEK_BUCKETS
+SPREAD_BUCKETS = evaluate.SPREAD_BUCKETS
 
 
 def score_frame(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON) -> pd.DataFrame:
@@ -43,80 +45,15 @@ def score_frame(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEAS
         # The lattice is a property of scores, fit on the best available mean.
         grid = lat.fit(train["actual_margin"].to_numpy(), -train["closing_spread"].to_numpy(),
                        forecasts["market"].sigma)
-        y = test["actual_margin"].to_numpy(dtype=int)
-        for name, fc in forecasts.items():
-            pmf = grid.pmf(fc.mean, fc.sigma)
-            p_home = scoring.home_win_probability(pmf, grid.support)
-            rows.append(pd.DataFrame({
-                "season": season,
-                "week": test["week"].to_numpy(),
-                "season_type": test["season_type"].to_numpy() if "season_type" in test else "regular",
-                "abs_spread": test["closing_spread"].abs().to_numpy(),
-                "model": name,
-                "mean": fc.mean,
-                "sigma": fc.sigma,
-                "coefficient": fc.coefficient,
-                "hfa": fc.hfa,
-                "p_home": p_home,
-                "won": (y > 0).astype(float) + 0.5 * (y == 0),
-                "crps": scoring.crps(pmf, grid.support, y),
-                "brier": scoring.brier(pmf, grid.support, y),
-                "log_margin": scoring.log_score(pmf, grid.support, y),
-                "mae": scoring.mae(fc.mean, y),
-            }))
+        rows.append(evaluate.score(test, forecasts, grid, season=season))
         LOG.info("season %s: %d games scored against %d references", season, len(test), len(forecasts))
     return pd.concat(rows, ignore_index=True)
 
 
-def summarise(scored: pd.DataFrame, by: list[str] | None = None) -> pd.DataFrame:
-    keys = ["model", *(by or [])]
-    out = scored.groupby(keys, observed=True).agg(
-        games=("crps", "size"),
-        crps=("crps", "mean"),
-        brier=("brier", "mean"),
-        log_margin=("log_margin", "mean"),
-        mae=("mae", "mean"),
-    ).reset_index()
-    ece = scored.groupby(keys, observed=True).apply(
-        lambda d: scoring.expected_calibration_error(d["p_home"], d["won"]), include_groups=False
-    ).rename("ece").reset_index()
-    out = out.merge(ece, on=keys)
-    out["model"] = pd.Categorical(out["model"], categories=ref.ORDER, ordered=True)
-    return out.sort_values(keys).reset_index(drop=True)
-
-
-def _bucket(values: pd.Series, buckets: list[tuple[int, int]], label: str) -> pd.Series:
-    edges = [b[0] for b in buckets] + [buckets[-1][1]]
-    labels = [f"{label} {lo}-{hi}" if hi < 99 else f"{label} {lo}+" for lo, hi in buckets]
-    return pd.cut(values, bins=edges, labels=labels, right=False, include_lowest=True)
-
-
-def _fmt(df: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
-    out = df.copy()
-    for c in cols:
-        if c in out:
-            digits = 2 if c == "mae" else 3
-            out[c] = [("" if pd.isna(v) else f"{v:.{digits}f}") for v in out[c]]
-    return out
-
-
-def table(df: pd.DataFrame) -> str:
-    """A GitHub-flavoured markdown table from a frame whose cells are already
-    formatted. Integers stay integers; anything else is rendered with str()."""
-    cols = list(df.columns)
-    lines = ["| " + " | ".join(str(c) for c in cols) + " |", "|" + "|".join(["---"] * len(cols)) + "|"]
-    for _, row in df.iterrows():
-        cells = []
-        for c in cols:
-            v = row[c]
-            if isinstance(v, (int, np.integer)):
-                cells.append(str(int(v)))
-            elif isinstance(v, (float, np.floating)):
-                cells.append("" if pd.isna(v) else f"{v:.3f}")
-            else:
-                cells.append(str(v))
-        lines.append("| " + " | ".join(cells) + " |")
-    return "\n".join(lines)
+summarise = evaluate.summarise
+_bucket = evaluate.bucket
+_fmt = evaluate.formatted
+table = evaluate.markdown
 
 
 def render(scored: pd.DataFrame) -> str:

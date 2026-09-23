@@ -222,12 +222,39 @@ scored but never fitted. Garbage time removed from every efficiency input.
 **State.** For each FBS team *i* and week *t*: `off_it`, `def_it` in points
 per game above FBS average, opponent-adjusted.
 
-**Preseason prior (week 1).**
-`off_{i,1} ~ N(m_i, s²)` where `m_i` is a fitted linear combination of last
-season's SP+ offence, returning production (offence), recruiting rank and
-talent — the SP+ recipe, refit on our data — and `s` is fitted. Same for
-defence with its own returning-production split. A coaching change widens
-`s` and shifts `m_i` toward the program's long-run mean (factor 7).
+**Preseason prior (week 1) — built, `reports/ncaaf_prior.md`.**
+`net_i` is a linear combination of last season's SP+, last season's FPI, the
+talent composite, recruiting rank and returning production, standardised and
+fitted **directly on training games** (margin on the home-minus-away feature
+difference plus home advantage), walk-forward. Off and def come from one
+stacked regression on points scored with a scorer block and an opponent
+block. A first version regressed on the ridge-shrunk least-squares season
+rating and used the compressed prediction as a margin; it needed a slope of
+1.21 to match real margins and lost 0.6 MAE to the direct fit. The game is
+the target.
+
+What the recipe learned (2025 window, points of margin per sd): SP+ +4.19,
+FPI +3.41, talent +2.26, returning production +1.68, recruiting −1.38;
+home advantage +2.52; game residual sd 17.40, which is the state model's
+starting uncertainty. Coaching change and the portal are v1.1 (factors 7–8).
+
+Scored where a prior is the whole forecast, regular season 2021–2025,
+walk-forward, same lattice and scoring as the benchmarks:
+
+| weeks 1–4 | CRPS | Brier | MAE | ECE | corr, wk 1 |
+|---|---|---|---|---|---|
+| naive | 12.65 | 0.234 | 17.63 | 0.047 | — |
+| prior FPI | 9.78 | 0.179 | 13.77 | 0.032 | 0.623 |
+| prior SP+ | 9.89 | 0.181 | 13.99 | 0.036 | — |
+| Elo | 9.95 | 0.178 | 13.92 | 0.034 | — |
+| **prior (this)** | **9.51** | **0.175** | **13.47** | **0.017** | **0.671** |
+| market | 8.54 | 0.158 | 12.10 | 0.026 | 0.738 |
+
+Weeks 1–2 alone: 9.25 against FPI's 9.66. It wins four seasons of five and
+loses 2021 by 0.03 CRPS — the one season whose training window is a third
+COVID, when every preseason feature's correlation with the eventual rating
+collapsed (SP+ 0.56, talent 0.31, recruiting −0.28 against ~0.73, ~0.62,
+~−0.62 in every other year). It is the best-calibrated of the six.
 
 **Process.** Within season `off_{i,t+1} = off_it + ε`, `ε ~ N(0, σ²_off)`,
 `σ_off ≈ σ_def` (college defence persists). Fitted so the prior's half-life
@@ -304,14 +331,15 @@ bucket**, and the ECE row holds.
 |---|---|---|
 | 0 | Pin the frame: tests that the research frame is FBS-vs-FBS and that staging excludes garbage time. Both were already true; the tests stop them drifting | `tests/test_models.py` |
 | 1 | Benchmarks on that frame: naive, prior-FPI, prior-SP+, Elo, Atlas's own adjusted EPA, market-in-lattice, walk-forward 2021–25 | `reports/ncaaf_benchmarks.md` via `make ncaaf-benchmarks` |
-| 2 | Preseason prior: refit the SP+ recipe on our data (last SP+ × returning × recruiting × talent) | week-1 corr ≥ 0.62 |
+| 2 | Preseason prior: the SP+ recipe refit on our data, directly on games (`atlas/models/ncaaf_prior.py`, `make ncaaf-prior`) | **done — week-1 corr 0.671** (bar 0.62; FPI alone 0.623) |
 | 3 | Kalman state model, off/def, opponent-adjusted, no extras. Walk-forward 2018–25 | beats Elo? by week bucket |
 | 4 | Coaching-change and portal adjustments to the prior; QB of record | week 1–3 improvement |
 | 5 | Total model + bivariate lattice distribution | 80×80 grid; reliability by spread bucket |
 | 6 | Wire into the card (model number second slot, market open/move/now first, drivers third) and the grade | language audit passes |
 | 7 | v2 drive simulation, if warranted | |
 
-Steps 0 and 1 are done. Steps 2–3 are the substance.
+Steps 0–2 are done. Step 3 — the Kalman state, initialised from this prior
+with variance 17.4² on the game and ~10² on a team — is the substance.
 
 ---
 

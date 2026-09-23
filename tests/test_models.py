@@ -9,9 +9,10 @@ import pytest
 from scipy import stats
 
 from atlas import config
+from atlas.models import evaluate, ratings, scoring
 from atlas.models import lattice as lat
+from atlas.models import ncaaf_prior as prior_mod
 from atlas.models import reference as ref
-from atlas.models import scoring
 from atlas.models.ncaaf_benchmarks import render, score_frame, summarise
 from atlas.staging import efficiency
 
@@ -248,3 +249,110 @@ def test_normal_discretisation_matches_scipy_mass():
     expected = stats.norm.cdf(0.35) - stats.norm.cdf(0.25)
     # renormalised over a finite support, so allow the tail mass
     assert p[k] == pytest.approx(expected, rel=0.02)
+
+
+# ---------------------------------------------------------------------------
+# Least-squares season ratings
+# ---------------------------------------------------------------------------
+
+
+def _strength(frame: pd.DataFrame) -> pd.Series:
+    """The synthetic league's true strength, recovered from its Elo (1500 + 20 * strength)."""
+    both = pd.concat([
+        frame[["home_team_id", "home_pregame_elo"]].rename(columns={"home_team_id": "t", "home_pregame_elo": "e"}),
+        frame[["away_team_id", "away_pregame_elo"]].rename(columns={"away_team_id": "t", "away_pregame_elo": "e"}),
+    ]).drop_duplicates("t").set_index("t")["e"]
+    return (both - 1500.0) / 20.0
+
+
+def test_season_ratings_recover_the_synthetic_strengths(research_frame):
+    season = research_frame[research_frame["season"] == 2021]
+    r = ratings.fit(season)
+    truth = _strength(season).reindex(r.teams)
+    assert np.corrcoef(r.net, truth)[0, 1] > 0.9
+    assert abs(r.net.mean()) < 1e-6 and abs(r.off.mean()) < 1e-6
+    assert 0.5 < r.hfa < 5.0                       # synthetic HFA is 2.5
+
+
+def test_off_plus_def_is_net_up_to_the_ridge(research_frame):
+    r = ratings.fit(research_frame[research_frame["season"] == 2021])
+    assert np.corrcoef(r.off + r.defense, r.net)[0, 1] > 0.98
+
+
+def test_ratings_need_the_score_columns():
+    with pytest.raises(KeyError):
+        ratings.fit(pd.DataFrame({"home_team_id": [1], "away_team_id": [2]}))
+
+
+# ---------------------------------------------------------------------------
+# The preseason prior
+# ---------------------------------------------------------------------------
+
+
+def test_team_seasons_is_one_row_per_team_season(research_frame):
+    ts = prior_mod.team_seasons(research_frame)
+    assert not ts.duplicated(["season", "team_id"]).any()
+    assert ts.groupby("season").size().min() > 0
+    assert "fpi" in ts.columns
+
+
+def test_prior_never_fits_on_its_own_season(research_frame):
+    feats = prior_mod.team_seasons(research_frame)
+    p = prior_mod.fit(research_frame, feats, season=2022)
+    assert p.season == 2022
+    train = research_frame[(research_frame["season"] < 2022) & (research_frame["season_type"] == "regular")]
+    assert p.net.n == len(train)
+    assert p.points.n == 2 * len(train)
+    assert set(p.teams["season"]) == {2022}
+
+
+def test_prior_uses_only_features_with_coverage(research_frame):
+    """The synthetic league has no SP+, talent or returning production: the
+    fitted recipe must be FPI alone, not a NaN-filled five-feature fit."""
+    feats = prior_mod.team_seasons(research_frame)
+    p = prior_mod.fit(research_frame, feats, season=2022)
+    assert p.net.features == ["fpi"]
+    assert p.points.off_features == ["fpi"] and p.points.def_features == ["fpi"]
+    assert np.isfinite(p.teams["net"]).all()
+
+
+def test_prior_off_plus_def_agrees_with_net(research_frame):
+    """Two fits, one from margins and one from stacked points; they should
+    describe the same league."""
+    feats = prior_mod.team_seasons(research_frame)
+    p = prior_mod.fit(research_frame, feats, season=2022)
+    assert np.corrcoef(p.teams["off"] + p.teams["def"], p.teams["net"])[0, 1] > 0.95
+
+
+def test_a_team_the_prior_never_saw_is_league_average(research_frame):
+    feats = prior_mod.team_seasons(research_frame)
+    p = prior_mod.fit(research_frame, feats, season=2022)
+    test = research_frame[research_frame["season"] == 2022].head(3).copy()
+    test["home_team_id"] = -1
+    fc = prior_mod.game_forecast(p, test)
+    away = prior_mod._lookup(p.teams, test, "away")
+    is_home = 1.0 - test["neutral_site"].fillna(0).to_numpy(dtype=float)
+    assert np.allclose(fc.mean, -away + p.net.hfa * is_home)
+
+
+def test_prior_tracks_the_eventual_rating_on_the_synthetic_league(research_frame):
+    """Synthetic strengths are fixed across seasons and FPI is strength plus
+    noise, so a prior fitted on FPI must track the next season's rating."""
+    scored, priors, tracking = prior_mod.run(research_frame, first_test_season=2021)
+    assert (tracking[tracking["target"] == "net"]["corr"] > 0.8).all()
+
+
+def test_prior_beats_naive_in_the_early_weeks(research_frame):
+    scored, _, _ = prior_mod.run(research_frame, first_test_season=2021)
+    early = scored[scored["week"] <= 4]
+    pooled = evaluate.summarise(early).set_index("model")
+    assert pooled.loc["prior", "crps"] < pooled.loc["naive", "crps"]
+    assert pooled.loc["prior", "brier"] < pooled.loc["naive", "brier"]
+
+
+def test_prior_report_renders(research_frame):
+    scored, priors, tracking = prior_mod.run(research_frame, first_test_season=2021)
+    text = prior_mod.render(scored, priors, tracking, research_frame)
+    for heading in ("## What the recipe learned", "## How well the prior tracked", "## Game-level scores",
+                    "## By week bucket", "top and bottom ten"):
+        assert heading in text
