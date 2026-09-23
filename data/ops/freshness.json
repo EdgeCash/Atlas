@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-09-23T18:31:23.907378+00:00",
+      "detail": "market in 3s",
+      "mode": "ordinary",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-23T18:31:23.745120+00:00",
+      "detail": "58 cards, 116 teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-09-23T18:29:14.483264+00:00",
       "detail": "58 cards, 116 teams",
       "name": "build",
@@ -298,7 +311,7 @@
   ],
   "last": {
     "build": {
-      "at": "2026-09-23T18:29:14.483264+00:00",
+      "at": "2026-09-23T18:31:23.745120+00:00",
       "detail": "58 cards, 116 teams",
       "name": "build",
       "ok": true
@@ -310,8 +323,9 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-09-23T18:29:09.321713+00:00",
-      "detail": "captured during the heavy refresh",
+      "at": "2026-09-23T18:31:23.907378+00:00",
+      "detail": "market in 3s",
+      "mode": "ordinary",
       "name": "poll",
       "ok": true
     },
@@ -324,7 +338,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-09-23T18:29:14.483264+00:00",
+      "at": "2026-09-23T18:31:23.745120+00:00",
       "detail": "58 cards, 116 teams",
       "name": "build",
       "ok": true
@@ -336,8 +350,9 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-09-23T18:29:09.321713+00:00",
-      "detail": "captured during the heavy refresh",
+      "at": "2026-09-23T18:31:23.907378+00:00",
+      "detail": "market in 3s",
+      "mode": "ordinary",
       "name": "poll",
       "ok": true
     },
