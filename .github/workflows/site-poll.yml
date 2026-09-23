@@ -1,0 +1,28 @@
+name: site poll
+
+# The market, and nothing else. Hourly most of the time, every fifteen minutes
+# inside the game-day windows in atlas/ops/schedule.py.
+#
+# These crons are a deliberate superset. Cron is UTC, the product's schedule is
+# Eastern, and the two drift by an hour twice a season - so rather than encode
+# a UTC approximation that silently goes wrong in November, fire often and let
+# should_poll() decide in Eastern time. A run that is not a poll minute stops
+# at the gate in a few seconds, before installing anything.
+
+on:
+  schedule:
+    - cron: "0 * * * *"          # the hourly cadence, every day
+    - cron: "*/15 * * * 6,0"     # game days: Saturday and Sunday, both zones
+  workflow_dispatch:
+    inputs:
+      force:
+        description: poll even when it is not a poll minute
+        type: boolean
+        default: true
+
+jobs:
+  publish:
+    uses: ./.github/workflows/publish.yml
+    with:
+      mode: poll
+      force: ${{ github.event_name == 'workflow_dispatch' && inputs.force }}

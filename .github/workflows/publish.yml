@@ -1,0 +1,223 @@
+name: publish
+
+# The one place the site is built and deployed. Both schedules call it, so
+# there is a single copy of the Pages plumbing and a single copy of the
+# commit-the-record step.
+#
+# `mode` picks which of the two jobs in docs/OPERATIONS_SCHEDULE.md runs:
+#
+#   heavy  04:00 ET daily - warehouse, model, market, every page, social
+#   poll   market only, no rebuild - hourly, every 15 minutes on game days
+#
+# The cadence is decided in Eastern time by atlas/ops/schedule.py rather than
+# by cron, because cron here is UTC and the schedule has to survive both
+# daylight-saving transitions. The callers fire a deliberate superset and this
+# workflow's gate decides.
+
+on:
+  workflow_call:
+    inputs:
+      mode:
+        description: heavy | poll
+        required: true
+        type: string
+      force:
+        description: run even when the Eastern-time gate says no
+        required: false
+        default: false
+        type: boolean
+    secrets:
+      CFBD_API_KEY:
+        required: false
+
+permissions:
+  contents: write      # commit tracking/ and the freshness stamp
+  pages: write
+  id-token: write
+
+# Pages allows one deployment at a time, and two polls must never interleave
+# on the tracking store. Never cancel in progress: a half-finished poll that
+# has captured the market but not recorded it is the one state worth avoiding.
+concurrency:
+  group: atlas-publish
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    outputs:
+      ran: ${{ steps.gate.outputs.go }}
+    env:
+      # Job-level on purpose. Until the domain is registered the site lives at
+      # a Pages subpath, and a canonical pointing at an unregistered domain is
+      # worse than an ugly one. Anything that rebuilds the site must see this -
+      # `make site-audit` depends on `site` and so rebuilds it, which would
+      # silently rewrite every canonical back to production if this were set on
+      # one step. Set the ATLAS_SITE_URL repository variable to the real origin
+      # once atlas.football resolves; render.py already defaults to production,
+      # so clearing the variable is the whole cutover.
+      ATLAS_SITE_URL: ${{ vars.ATLAS_SITE_URL || format('https://{0}.github.io/{1}', github.repository_owner, github.event.repository.name) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # Before installing anything. The gate reads atlas/ops/schedule.py and the
+      # committed freshness stamp with nothing but the standard library, so it
+      # costs a couple of seconds and most invocations stop here.
+      #
+      # It asks "is this due", not "is this the scheduled minute". GitHub
+      # documents that a scheduled workflow can be delayed, and an exact-minute
+      # test turns a late run into a lost one - see schedule.due().
+      - name: Is this due, in Eastern time?
+        id: gate
+        env:
+          MODE: ${{ inputs.mode }}
+          FORCE: ${{ inputs.force }}
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, os, sys
+          from datetime import datetime
+          from pathlib import Path
+          sys.path.insert(0, ".")
+          from atlas.ops import schedule
+
+          mode = os.environ["MODE"]
+          stamps = Path("data/ops/freshness.json")
+          last = None
+          if stamps.exists():
+              entry = json.loads(stamps.read_text()).get("last_ok", {}).get(mode)
+              if entry:
+                  last = datetime.fromisoformat(entry["at"])
+
+          if os.environ.get("FORCE") == "true":
+              go, why = True, "forced from the Actions tab"
+          else:
+              go, why = schedule.due(mode, last)
+          print(f"go={'true' if go else 'false'}")
+          print(f"why={why}")
+          PY
+          echo "gate: $(grep '^why=' "$GITHUB_OUTPUT" | tail -1 | cut -d= -f2-)"
+
+      - if: steps.gate.outputs.go != 'true'
+        run: echo "Not this minute - ${{ steps.gate.outputs.why }}. Nothing to do."
+
+      - uses: actions/setup-python@v5
+        if: steps.gate.outputs.go == 'true'
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        if: steps.gate.outputs.go == 'true'
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+
+      # data/raw and data/warehouse are gitignored and together about 230 MB.
+      # Rebuilding them from the providers on every poll would take minutes and
+      # hammer sources that are free because nobody abuses them. The heavy run
+      # writes a fresh entry; a poll only ever reads.
+      - name: Restore the warehouse
+        id: cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            data/raw
+            data/warehouse
+          key: atlas-data-
+          restore-keys: |
+            atlas-data-
+
+      # A poll renders the site from the warehouse it did not build. Without
+      # one there is nothing to render, and publishing a site built from an
+      # empty warehouse would replace a good board with an empty one.
+      - name: A poll needs a warehouse
+        if: steps.gate.outputs.go == 'true' && inputs.mode == 'poll' && steps.cache.outputs.cache-matched-key == ''
+        run: |
+          echo "::error::No warehouse cache. Run the heavy workflow first (Actions -> site heavy -> Run workflow)."
+          exit 1
+
+      # Only the heavy run touches the providers for anything but the market.
+      # CFBD caches per season and skips what it already has, so this is a
+      # handful of calls a day against a 1,000/month free tier - and it is
+      # skipped entirely when no key is configured, which the warehouse
+      # tolerates by dropping the enrichment columns.
+      - name: Ingest
+        if: steps.gate.outputs.go == 'true' && inputs.mode == 'heavy'
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+        run: python -m atlas.ingest
+
+      - name: Refresh
+        if: steps.gate.outputs.go == 'true'
+        # --force because the gate above has already decided, in Eastern time
+        # and tolerant of a late start. Letting the task re-apply the strict
+        # should_poll() minute test here would undo exactly that.
+        run: python -m atlas.ops ${{ inputs.mode }} --force
+
+      - name: Social assets
+        if: steps.gate.outputs.go == 'true' && inputs.mode == 'heavy'
+        run: make ops-social
+
+      - name: Health
+        if: steps.gate.outputs.go == 'true'
+        continue-on-error: true      # advisory: a failing check must not stop a good build
+        run: make ops-health
+
+      - name: Save the warehouse
+        if: steps.gate.outputs.go == 'true' && inputs.mode == 'heavy'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            data/raw
+            data/warehouse
+          key: atlas-data-${{ github.run_id }}
+
+      # tracking/ is the one thing in Atlas that cannot be rebuilt: a signal is
+      # an opinion published at a moment and the moment does not come back.
+      # Committing it is also its offsite backup. data/ops/freshness.json rides
+      # along because the timestamps on the site are read back from it, and a
+      # poll that could not see the heavy run's stamp would publish a board
+      # with half its provenance missing.
+      - name: Commit the record
+        if: steps.gate.outputs.go == 'true'
+        run: |
+          git config user.name "atlas-tracker"
+          git config user.email "noreply@anthropic.com"
+          git add tracking data/ops/freshness.json \
+            reports/live_clv_tracking.md reports/atlas_data_quality.md \
+            reports/atlas_drift_monitoring.md reports/atlas_operations_manual.md \
+            reports/dashboard.html 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "nothing changed"
+            exit 0
+          fi
+          git commit -m "${{ inputs.mode }}: $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')"
+          for i in 1 2 3 4; do
+            git pull --rebase origin "${GITHUB_REF_NAME}" && \
+              git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            sleep $((2 ** i))
+          done
+          exit 1
+
+      # scripts/audit_site.py directly, not `make site-audit`: that target
+      # depends on `site` and would rebuild what we are trying to inspect.
+      - name: Audit the built site
+        if: steps.gate.outputs.go == 'true'
+        run: python scripts/audit_site.py
+
+      - uses: actions/upload-pages-artifact@v3
+        if: steps.gate.outputs.go == 'true'
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    if: needs.build.outputs.ran == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

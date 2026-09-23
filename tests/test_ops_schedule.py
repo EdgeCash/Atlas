@@ -175,3 +175,79 @@ def test_the_windows_are_stated_in_eastern_not_utc():
     a year when the clocks change."""
     assert schedule.EASTERN.key == "America/New_York"
     assert all(isinstance(w.start, time) for w in schedule.GAME_DAYS)
+
+
+# ---------------------------------------------------------------------------
+# due(): the question a hosted scheduler has to ask
+# ---------------------------------------------------------------------------
+
+
+def _et(y, m, d, hh, mm):
+    return datetime(y, m, d, hh, mm, tzinfo=schedule.EASTERN)
+
+
+def test_a_late_poll_is_still_due():
+    """The whole reason due() exists.
+
+    GitHub documents that a scheduled workflow can be delayed. Asked "is this a
+    poll minute", a run that fires at 11:07 answers no and the poll is lost.
+    Asked "is it due", it answers yes and the poll is merely late.
+    """
+    now = _et(2026, 9, 23, 11, 7)
+    assert not schedule.should_poll(now), "precondition: 11:07 is not a poll minute"
+    go, why = schedule.due("poll", _et(2026, 9, 23, 10, 0), now)
+    assert go, why
+
+
+def test_a_poll_that_just_ran_is_not_due_again():
+    now = _et(2026, 9, 23, 11, 7)
+    go, why = schedule.due("poll", _et(2026, 9, 23, 11, 2), now)
+    assert not go
+    assert "5m ago" in why
+
+
+def test_the_game_day_cadence_is_the_one_that_applies():
+    """Saturday afternoon: fifteen minutes, not sixty."""
+    saturday = _et(2026, 9, 26, 14, 0)
+    assert schedule.game_day(saturday) is not None
+    assert schedule.due("poll", _et(2026, 9, 26, 13, 44), saturday)[0]
+    assert not schedule.due("poll", _et(2026, 9, 26, 13, 55), saturday)[0]
+
+
+def test_slack_absorbs_a_run_that_fires_slightly_early():
+    """Five minutes of tolerance, measured from the last poll, not the clock.
+
+    A cron tick that lands at 10:59:30 for the 11:00 slot is this hour's poll,
+    not a rejected one. Forty minutes after the last poll is not.
+    """
+    last = _et(2026, 9, 23, 10, 0)
+    assert schedule.due("poll", last, _et(2026, 9, 23, 10, 56))[0]
+    assert not schedule.due("poll", last, _et(2026, 9, 23, 10, 40))[0]
+
+
+def test_something_that_never_ran_is_due():
+    for event in ("heavy", "poll"):
+        go, why = schedule.due(event, None, _et(2026, 9, 23, 11, 0))
+        assert go and "never" in why
+
+
+def test_heavy_runs_once_a_day_and_not_before_four():
+    yesterday = _et(2026, 9, 22, 4, 0)
+    assert not schedule.due("heavy", yesterday, _et(2026, 9, 23, 3, 30))[0]
+    assert schedule.due("heavy", yesterday, _et(2026, 9, 23, 4, 2))[0]
+    # A late start still runs it: the rebuild is due all day, not for a minute.
+    assert schedule.due("heavy", yesterday, _et(2026, 9, 23, 9, 0))[0]
+
+
+def test_heavy_does_not_run_twice_in_one_day():
+    today = _et(2026, 9, 23, 4, 0)
+    go, why = schedule.due("heavy", today, _et(2026, 9, 23, 8, 0))
+    assert not go
+    assert "already ran today" in why
+
+
+def test_due_explains_itself():
+    """A scheduler that silently declines to run is the hard one to debug."""
+    for event, last in (("poll", _et(2026, 9, 23, 10, 59)), ("heavy", _et(2026, 9, 23, 4, 0))):
+        _, why = schedule.due(event, last, _et(2026, 9, 23, 11, 0))
+        assert why and why[0].islower() or why[0].isdigit(), why

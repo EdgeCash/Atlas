@@ -1,0 +1,26 @@
+name: site heavy
+
+# 04:00 ET daily: warehouse, model, market, every page, social assets.
+#
+# Cron here is UTC and has no notion of daylight saving, so both candidate
+# hours fire and publish.yml's Eastern-time gate lets exactly one through.
+# 08:00 UTC is 04:00 EDT (Mar-Nov); 09:00 UTC is 04:00 EST (Nov-Mar).
+
+on:
+  schedule:
+    - cron: "0 8,9 * * *"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: run even outside the 04:00 ET window
+        type: boolean
+        default: true
+
+jobs:
+  publish:
+    uses: ./.github/workflows/publish.yml
+    with:
+      mode: heavy
+      force: ${{ github.event_name == 'workflow_dispatch' && inputs.force }}
+    secrets:
+      CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}

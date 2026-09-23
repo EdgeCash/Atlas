@@ -91,6 +91,52 @@ def should_poll(moment: datetime | None = None) -> bool:
     return local.minute % poll_interval_minutes(local) == 0
 
 
+#: How late a hosted scheduler may fire and still count as this tick rather
+#: than a missed one. Five minutes is longer than any delay cron imposes and
+#: shorter than the tightest cadence Atlas runs.
+SLACK_MINUTES = 5
+
+
+def due(event: str, last: datetime | None, moment: datetime | None = None,
+        *, slack: int = SLACK_MINUTES) -> tuple[bool, str]:
+    """Whether ``event`` is due now, given when it last succeeded.
+
+    :func:`should_poll` answers *"is this a scheduled minute"*, which is the
+    right question for a crontab: cron fires on the minute, so an exact match
+    is exact. A hosted scheduler is not cron. GitHub documents that a
+    scheduled workflow "can be delayed during periods of high loads", and a
+    run that fires at 11:07 asked *"is this the minute"* answers **no** - so a
+    late poll becomes a lost poll, which is strictly worse than a late one.
+
+    Asking *"is it due"* turns a delay back into a delay. It is also
+    self-correcting in the other direction: two runs that overlap cannot both
+    be due, because the first one's success moves ``last``.
+
+    Returns the decision and a sentence for the log, because a scheduler that
+    silently declines to run is the thing that is hard to debug at 4 AM.
+    """
+    now = (moment or datetime.now(EASTERN)).astimezone(EASTERN)
+    if last is None:
+        return True, f"{event} has never run"
+    last = last.astimezone(EASTERN)
+    waited = (now - last).total_seconds() / 60
+
+    if event == "heavy":
+        if last.date() >= now.date():
+            return False, f"heavy already ran today at {last:%H:%M ET}"
+        if now.hour < HEAVY_HOUR:
+            return False, f"{now:%H:%M ET} is before the {HEAVY_HOUR:02d}:00 rebuild"
+        return True, f"last heavy was {last:%a %H:%M ET}, {waited / 60:.0f}h ago"
+
+    interval = poll_interval_minutes(now)
+    if waited + slack < interval:
+        return False, (f"polled {waited:.0f}m ago; the cadence here is "
+                       f"every {interval}m")
+    window = game_day(now)
+    where = f" ({window.name})" if window else ""
+    return True, f"last poll {waited:.0f}m ago, cadence {interval}m{where}"
+
+
 #: The crontab Atlas ships. Written in Eastern with an explicit CRON_TZ so the
 #: schedule does not move when the clocks do.
 CRONTAB = """\

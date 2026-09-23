@@ -40,6 +40,25 @@ def _meta(html: str, kind: str, name: str) -> str | None:
     return _tag(html, rf'<meta\s+{kind}="{re.escape(name)}"\s+content="([^"]*)"')
 
 
+def _site_relative(base: str, url: str) -> str:
+    """The part of ``url`` below ``base``, as a path relative to the site root.
+
+    The base may carry a path of its own: GitHub Pages serves a project site at
+    ``/<repo>/``, so a correct canonical there is ``/Atlas/ncaaf/x.html`` while
+    the file on disk is ``ncaaf/x.html``. Against a bare domain this strips
+    nothing and behaves exactly as it always did.
+    """
+    prefix = urlsplit(base).path.strip("/")
+    path = urlsplit(url).path.lstrip("/")
+    if not prefix:
+        return path
+    if path == prefix:
+        return ""
+    if path.startswith(f"{prefix}/"):
+        return path[len(prefix) + 1:]
+    return path
+
+
 def validate(site: Path, base: str) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
@@ -80,7 +99,7 @@ def validate(site: Path, base: str) -> tuple[list[str], list[str]]:
             if not canonical.startswith(base):
                 errors.append(f"{rel}: canonical is not on {base} — {canonical}")
             expected = "" if rel == "index.html" else rel
-            if urlsplit(canonical).path.lstrip("/") != expected:
+            if _site_relative(base, canonical) != expected:
                 errors.append(f"{rel}: canonical points elsewhere — {canonical}")
 
         # Open Graph and Twitter, where the page claims them.
@@ -95,7 +114,7 @@ def validate(site: Path, base: str) -> tuple[list[str], list[str]]:
                 if not image.startswith("http"):
                     errors.append(f"{rel}: og:image is relative — {image}")
                 else:
-                    local = site / urlsplit(image).path.lstrip("/")
+                    local = site / _site_relative(base, image)
                     if not local.exists():
                         errors.append(f"{rel}: og:image does not exist — {image}")
                     elif local.stat().st_size < 1024:
@@ -129,7 +148,7 @@ def _sitemap(site: Path, base: str, pages: list[Path]) -> list[str]:
         if not loc.startswith(base):
             errors.append(f"sitemap: {loc} is not on {base}")
             continue
-        rel = urlsplit(loc).path.lstrip("/") or "index.html"
+        rel = _site_relative(base, loc) or "index.html"
         listed.add(rel)
         if not (site / rel).exists():
             errors.append(f"sitemap: {loc} does not exist on disk")

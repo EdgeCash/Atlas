@@ -8,6 +8,8 @@ from `docs/BRAND_GUIDE.md`.
 
 from __future__ import annotations
 
+import os
+
 from atlas.site.data import MARKET_WEIGHT, Card
 from atlas.site.html import (
     clock,
@@ -36,7 +38,12 @@ FEEDBACK_EMAIL = "beta@atlas.football"
 
 #: The canonical origin. Search engines need one spelling of every page, and a
 #: social card posted from a preview build must still point at production.
-SITE_URL = "https://atlas.football"
+#:
+#: Overridable because the site has to be publishable before the domain is
+#: bought: on GitHub Pages it lives at a project subpath, and a canonical that
+#: claims a domain nobody has registered yet is worse than no launch at all.
+#: The default stays production, so nothing changes for a normal build.
+SITE_URL = os.environ.get("ATLAS_SITE_URL", "https://atlas.football").rstrip("/")
 
 #: The sentence that appears on every card, unchanged.
 CARD_DISCLOSURE = (

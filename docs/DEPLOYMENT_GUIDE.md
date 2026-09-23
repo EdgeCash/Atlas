@@ -31,7 +31,8 @@ machine.
 > way to launch is therefore GitHub Pages + Actions at **$0/month plus the
 > domain** — see `RUNNING_COSTS.md`. What follows is the right answer once the
 > 15-minute cadence or the access-log analytics is worth paying for; it is not
-> the right answer for day one.
+> the right answer for day one. The Pages path is built and documented in
+> `GITHUB_PAGES_SETUP.md`.
 
 | | Measured |
 |---|---|

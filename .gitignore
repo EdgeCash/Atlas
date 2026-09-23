@@ -18,10 +18,15 @@ data/warehouse/**
 /site/
 /data/site/
 
-# Operational state: rewritten by every scheduled task, derived from nothing
-# but the clock. The site falls back gracefully when it is absent, and
-# committing it would produce a conflict on every run.
-/data/ops/
+# Operational state: rewritten by every scheduled task. Mostly derived from
+# nothing but the clock, so it is not worth versioning - except freshness.json,
+# which the build reads back to stamp every page. On the GitHub Actions path a
+# poll runs in a fresh container and would otherwise publish a board that had
+# never heard of the heavy refresh, so that one file is tracked and the publish
+# workflow commits it. The conflict this comment used to worry about is handled
+# by the same rebase-and-retry the tracking store already uses.
+/data/ops/*
+!/data/ops/freshness.json
 
 # Backups of the live record. Machine state, and the whole point of them is
 # that a copy lives somewhere other than this repository.
