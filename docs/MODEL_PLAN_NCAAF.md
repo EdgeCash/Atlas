@@ -256,15 +256,45 @@ COVID, when every preseason feature's correlation with the eventual rating
 collapsed (SP+ 0.56, talent 0.31, recruiting −0.28 against ~0.73, ~0.62,
 ~−0.62 in every other year). It is the best-calibrated of the six.
 
-**Process.** Within season `off_{i,t+1} = off_it + ε`, `ε ~ N(0, σ²_off)`,
-`σ_off ≈ σ_def` (college defence persists). Fitted so the prior's half-life
-comes out near three games.
+**State — built, `reports/ncaaf_state.md`.** One joint Kalman filter over
+every team's `off` and `def` with a full covariance, which is the opponent
+adjustment (`atlas/models/kalman.py`). Each season opens at the prior's
+means; every FBS-vs-FBS regular-season game is forecast before kickoff and
+then assimilated as two observations, the home and the away points.
 
-**Observation.** `margin_g ~ N(μ_g, σ²_m)`,
-`μ_g = (off_h − def_a) − (off_a − def_h) + HFA_t·(1 − neutral)`, `σ_m` fitted
-(expect 15.5–15.7). Kalman update; also observe game-level adjusted net EPA as
-a second, lower-noise channel. FBS-vs-FCS games update the FBS team against a
-single pooled FCS strength.
+**Process.** Within season `off_{i,t+1} = off_it + ε`, `ε ~ N(0, q)` per
+week, the same `q` on off and def. Chosen per test season by walk-forward
+on the three most recent training seasons, by Gaussian predictive
+log-likelihood: `q = 1` point² per week (0 for 2021, whose training window
+is a third COVID), prior variance 20 on a team's off and again on its def,
+observation sd 10 on one team's points. A game's margin therefore opens at
+sd ≈ 15.5 and the prior's half-life comes out near three games, as §3
+predicted.
+
+**Observation.** v1 observes the two point totals only. The adjusted-EPA
+channel and the pooled FCS opponent are v1.2; they were not needed to pass
+the step-3 bar.
+
+Scored beside the references, regular season 2021–2025, walk-forward,
+same lattice and scoring as the benchmarks:
+
+| regular 2021–25 | CRPS | Brier | MAE | ECE |
+|---|---|---|---|---|
+| Elo | 9.23 | 0.188 | 13.04 | 0.015 |
+| prior alone | 9.79 | 0.204 | 13.83 | 0.016 |
+| **state** | **8.96** | **0.183** | **12.66** | 0.017 |
+| market | 8.61 | 0.176 | 12.12 | 0.025 |
+
+By week bucket the state's CRPS against Elo's is 9.15 / 10.18 (weeks 1–2),
+9.32 / 9.75 (3–4), 8.79 / 8.86 (5–8), 8.84 / 8.99 (9–12) and 9.01 / 9.10
+(13+): it wins every bucket on CRPS, Brier, log score and MAE, every
+season (2021 is the closest, 9.32 to 9.34), the bowls (9.21 to 9.54) and
+every spread bucket, by most at 21+ points (9.28 to 10.27), where Elo's
+fixed K under-rates the best teams. Calibration error is within noise of
+Elo's, better in three buckets and worse in two. It also beats the prior in
+weeks 1–2 (9.15 to 9.26): one game of evidence already helps. The gap to
+the market narrows from 0.74 CRPS in weeks 1–2 to 0.12 by week 13, which
+is the size of the step-4 job and the step-5 job respectively.
 
 **Total.** `(off_h + off_a) − (def_h + def_a) + base_t + pace + weather`.
 
@@ -332,14 +362,14 @@ bucket**, and the ECE row holds.
 | 0 | Pin the frame: tests that the research frame is FBS-vs-FBS and that staging excludes garbage time. Both were already true; the tests stop them drifting | `tests/test_models.py` |
 | 1 | Benchmarks on that frame: naive, prior-FPI, prior-SP+, Elo, Atlas's own adjusted EPA, market-in-lattice, walk-forward 2021–25 | `reports/ncaaf_benchmarks.md` via `make ncaaf-benchmarks` |
 | 2 | Preseason prior: the SP+ recipe refit on our data, directly on games (`atlas/models/ncaaf_prior.py`, `make ncaaf-prior`) | **done — week-1 corr 0.671** (bar 0.62; FPI alone 0.623) |
-| 3 | Kalman state model, off/def, opponent-adjusted, no extras. Walk-forward 2018–25 | beats Elo? by week bucket |
+| 3 | Kalman state model, off/def, opponent-adjusted, no extras (`atlas/models/kalman.py`, `atlas/models/ncaaf_state.py`, `make ncaaf-state`) | **done — beats Elo in every week bucket; CRPS 8.96 vs Elo 9.23, market 8.61** |
 | 4 | Coaching-change and portal adjustments to the prior; QB of record | week 1–3 improvement |
 | 5 | Total model + bivariate lattice distribution | 80×80 grid; reliability by spread bucket |
 | 6 | Wire into the card (model number second slot, market open/move/now first, drivers third) and the grade | language audit passes |
 | 7 | v2 drive simulation, if warranted | |
 
-Steps 0–2 are done. Step 3 — the Kalman state, initialised from this prior
-with variance 17.4² on the game and ~10² on a team — is the substance.
+Steps 0–3 are done. Step 4 is the prior's v1.1: the coaching change, the
+portal and the quarterback, judged on weeks 1–3.
 
 ---
 
