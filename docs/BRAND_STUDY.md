@@ -4,8 +4,16 @@ Whether "Atlas" should be the permanent brand. Conducted without assuming the
 answer, and with the two owned domains scored against every alternative rather
 than given a head start.
 
-**Verdict: YES — keep Atlas.** Runner-up: **Lodestar**. The reasoning is in
-`FINAL_5_BRANDS.md`; the evidence is here.
+**Verdict: YES — keep Atlas, conditional on one legal opinion.** Runner-up:
+**Lodestar**. The reasoning is in `FINAL_5_BRANDS.md`; the evidence is here.
+
+> **Updated 23 September 2026.** The trademark search this study named as its
+> one outstanding pre-launch item has since been run. It found a live US
+> federal registration of the identical bare word **ATLAS** in the identical
+> class — Reg. 7,995,348, class 041, owned by Atlas FC's holding company —
+> whose recital is narrowed exhaustively to **soccer**. The YES below stands
+> only if a trademark attorney reads that narrowing as leaving American
+> football information registrable. See `TRADEMARK_SEARCH.md`.
 
 ---
 
@@ -169,7 +177,10 @@ class, but the *search* consequence is real.
 
 **A direct sports collision.** **Club Atlas** is a Liga MX football club,
 founded 1916. For a product on a `.football` domain, that is the sharpest
-conflict in the study — sharper than any tech overlap.
+conflict in the study — sharper than any tech overlap. *(This was written as an
+estimate. The trademark search since confirmed it is worse than estimated: the
+club's holding company holds a live US registration of the bare word in class
+041. See `TRADEMARK_SEARCH.md`.)*
 
 ### Why they do not disqualify it
 
@@ -181,7 +192,10 @@ decided not to fight for.
 
 **Because Club Atlas is soccer, in Spanish, in Mexico.** The audience overlap
 with American college football cards is close to zero, and no reasonable person
-confuses them in context.
+confuses them in context. *(The register partly agrees: every clause of Reg.
+7,995,348 carries a `namely` limitation to soccer. Whether that narrowing is
+enough to clear American football information is a lawyer's call, not this
+study's.)*
 
 **Because the alternative costs the voice.** The 76 sentences above are not
 decoration. They are the product's register, they are enforced by tests, and
@@ -194,8 +208,12 @@ dashboard.
 
 Stated in advance so the decision is falsifiable rather than defended:
 
-1. **A trademark opposition** in class 9 or 41 that a search turns up. Not
-   checked here — a lawyer's job, and it should be done before launch.
+1. **A trademark opposition** in class 9 or 41 that a search turns up.
+   **Run since — see `TRADEMARK_SEARCH.md`.** It found not an opposition but a
+   prior registration, which is the thing that causes them: the identical bare
+   word, class 041, live, held by Atlas FC's holding company, with a recital
+   limited throughout to soccer. This condition is now **partly met**, and it
+   is met in the only way this study said could overturn the YES.
 2. **Expansion beyond football.** `.football` becomes wrong, `.com` becomes
    necessary, and `atlas.com` is unobtainable. A bare "Atlas" without a
    category TLD is much weaker.
@@ -204,9 +222,10 @@ Stated in advance so the decision is falsifiable rather than defended:
 4. **A serious investor or partner objecting** on distinctiveness grounds. It
    is the one criticism of the name that is fair.
 
-None applies today. All three of the first are pre-launch checks, and the
-window to change costs 176 files and one afternoon — which is the other reason
-to decide now rather than later.
+**The first now partly applies.** Conditions 2 through 4 do not. The window to
+change still costs 176 files and one afternoon — which is why the one open
+question is worth a lawyer's hour now rather than after launch, when the cost
+becomes permanent.
 
 ---
 
@@ -266,7 +285,14 @@ all.
 > If Atlas launched tomorrow and could never change its name again, would Atlas
 > be the recommended choice?
 
-# YES
+# YES — subject to one legal opinion
 
 One winner: **Atlas**. One runner-up: **Lodestar**. The full case for both, and
 the conditions under which Lodestar takes over, are in `FINAL_5_BRANDS.md`.
+
+The study's own reasoning is unchanged: on voice, fit, expandability and
+switching cost, Atlas wins. What changed is that the pre-launch check this
+study asked for has been run and came back with a live identical registration
+in the operative class. **Get a clearance opinion on US Reg. 7,995,348 before
+launch. If counsel says the soccer limitation does not clear American football
+information, the answer becomes NO and the name becomes Lodestar.**

@@ -2,13 +2,20 @@
 
 One winner. One runner-up. One explanation.
 
+> **Updated 23 September 2026.** The trademark search named below as the one
+> outstanding pre-launch item has been run. It found a live US registration of
+> the identical bare word **ATLAS** in class 041 — the operative class —
+> narrowed throughout to **soccer**. The winner below is now conditional on a
+> trademark attorney's opinion on that narrowing. `TRADEMARK_SEARCH.md` has
+> the finding; the flip table at the end of this document has been updated.
+
 ---
 
 ## The five
 
 | | Name | Weighted | The single strongest thing | The single weakest |
 |---|---|---|---|---|
-| 1 | **Atlas** | 41 | the voice is already built on it | defensibility — crowded, plus Club Atlas |
+| 1 | **Atlas** | 41 | the voice is already built on it | defensibility — crowded, plus a **live class 041 registration** held by Club Atlas |
 | 2 | **Lodestar** | 40 | everything Atlas does, twice as defensible | one syllable longer, and it implies following |
 | 3 | **Brier** | 42 | the most defensible and the most *meaningful* name in the study | nobody outside forecasting knows it |
 | 4 | **Almanac** | 38 | the warmest, and the only other one a fan finds comfortable | weak agency in a headline |
@@ -136,16 +143,24 @@ Lodestar is second rather than first.
 
 Written in advance so this is a falsifiable recommendation, not a defended one.
 
-| Condition | Then |
-|---|---|
-| A trademark search finds an opposition in class 9 or 41 | **Lodestar** |
-| The product expands beyond football, so `.football` stops working and a bare `.com` is needed | **Lodestar** — `atlas.com` is unobtainable |
-| Paid search becomes the acquisition plan | **Lodestar** — bidding on a term that crowded is expensive |
-| An investor or partner objects on distinctiveness | reconsider; it is the one fair criticism |
+| Condition | Then | Status |
+|---|---|---|
+| A trademark search finds an opposition in class 9 or 41 | **Lodestar** | *(**partly met** — a prior registration, not an opposition: Reg. 7,995,348, class 041, live, identical mark, recital limited to soccer. Resolves on counsel's reading. See `TRADEMARK_SEARCH.md`.)* |
+| The product expands beyond football, so `.football` stops working and a bare `.com` is needed | **Lodestar** — `atlas.com` is unobtainable | not met |
+| Paid search becomes the acquisition plan | **Lodestar** — bidding on a term that crowded is expensive | not met |
+| An investor or partner objects on distinctiveness | reconsider; it is the one fair criticism | not met |
 
-**The trademark search has not been done and should be, before launch.** It is
-a lawyer's task, not this study's, and it is the single item that could
-overturn a YES.
+**The trademark search has now been done** — `TRADEMARK_SEARCH.md`. It was the
+single item that could overturn a YES, and it came back with a live identical
+registration in class 041 whose services are limited exhaustively to soccer.
+Whether that limitation clears American football information is a lawyer's
+task, not this study's, and it is the one thing standing between this
+recommendation and a launch that cannot be taken back.
+
+The search also gave Lodestar direct evidence where it previously had only a
+judgement score: **no live bare LODESTAR mark exists in class 41 or 42.** In
+the class that matters, the difference between the two names is the difference
+between empty and occupied by an identical mark.
 
 ---
 
@@ -154,7 +169,12 @@ overturn a YES.
 > If Atlas launched tomorrow and could never change its name again, would Atlas
 > be the recommended choice?
 
-# YES
+# YES — subject to one legal opinion
+
+Atlas wins the study on every axis the study can measure. It does not clear
+itself on the one axis only a lawyer can measure. **Get a clearance opinion on
+US Reg. 7,995,348. If the soccer limitation holds, keep Atlas. If it does not,
+the answer is NO and the name is Lodestar.**
 
 ---
 
@@ -165,6 +185,9 @@ Atlas is not the most defensible name available, and the study says so plainly
 reference you consult rather than a signal you follow, calm enough to carry a
 harsh judgement, short enough to sit beside a failing grade, and already the
 grammatical subject of the best sentence anybody wrote here. Its weakness is
-brand search, which this product decided not to compete in. **Keep Atlas.
-Register the domains listed in `DOMAIN_STRATEGY.md`, run the trademark search
-before launch, and hold Lodestar in reserve.**
+defensibility — brand search, which this product decided not to compete in,
+and now a live identical registration in the class it would file in, held by a
+soccer club and limited to soccer throughout. **Keep Atlas. Register the
+domains listed in `DOMAIN_STRATEGY.md`, get a clearance opinion on US Reg.
+7,995,348 before launch, and hold Lodestar — whose class 41 space the search
+found empty — in reserve.**
