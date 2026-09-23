@@ -9,9 +9,10 @@ import pytest
 from scipy import stats
 
 from atlas import config
-from atlas.models import evaluate, ratings, scoring
+from atlas.models import evaluate, kalman, ratings, scoring
 from atlas.models import lattice as lat
 from atlas.models import ncaaf_prior as prior_mod
+from atlas.models import ncaaf_state as state_mod
 from atlas.models import reference as ref
 from atlas.models.ncaaf_benchmarks import render, score_frame, summarise
 from atlas.staging import efficiency
@@ -355,4 +356,137 @@ def test_prior_report_renders(research_frame):
     text = prior_mod.render(scored, priors, tracking, research_frame)
     for heading in ("## What the recipe learned", "## How well the prior tracked", "## Game-level scores",
                     "## By week bucket", "top and bottom ten"):
+        assert heading in text
+
+
+# ---------------------------------------------------------------------------
+# The joint Kalman filter
+# ---------------------------------------------------------------------------
+
+
+def _flat_spec(**kw) -> kalman.Spec:
+    base = dict(q_off=1.0, q_def=1.0, p0_off=40.0, p0_def=40.0, sigma=11.0, base=27.0, boost=2.5)
+    base.update(kw)
+    return kalman.Spec(**base)
+
+
+def test_forecast_reads_the_state_and_the_home_boost():
+    teams = np.array([1, 2])
+    st = kalman.initialise(teams, off=[5.0, -5.0], defense=[3.0, -3.0], spec=_flat_spec())
+    mean, sd, mh, ma = kalman.forecast(st, 1, 2, 1.0, _flat_spec())
+    # margin = off_h + def_h - off_a - def_a + boost = 5 + 3 + 5 + 3 + 2.5
+    assert mean == pytest.approx(18.5)
+    assert mh - ma == pytest.approx(18.5)
+    neutral, *_ = kalman.forecast(st, 1, 2, 0.0, _flat_spec())
+    assert neutral == pytest.approx(16.0)
+
+
+def test_forecast_variance_is_state_plus_two_point_noises():
+    teams = np.array([1, 2])
+    spec = _flat_spec(p0_off=4.0, p0_def=9.0, sigma=11.0)
+    st = kalman.initialise(teams, off=[0.0, 0.0], defense=[0.0, 0.0], spec=spec)
+    _, sd, _, _ = kalman.forecast(st, 1, 2, 1.0, spec)
+    assert sd ** 2 == pytest.approx(2 * 4.0 + 2 * 9.0 + 2 * 11.0 ** 2)
+
+
+def test_an_update_moves_the_state_toward_the_result_and_shrinks_uncertainty():
+    teams = np.array([1, 2, 3])
+    spec = _flat_spec()
+    st = kalman.initialise(teams, off=[0.0, 0.0, 0.0], defense=[0.0, 0.0, 0.0], spec=spec)
+    before = np.diag(st.P).copy()
+    kalman.update(st, 1, 2, home_pts=45.0, away_pts=10.0, is_home=1.0, spec=spec)
+    assert st.off(1) > 0 and st.defense(1) > 0 and st.off(2) < 0 and st.defense(2) < 0
+    assert st.off(3) == 0.0                                    # a bystander is untouched
+    assert (np.diag(st.P)[[0, 1, 3, 4]] < before[[0, 1, 3, 4]]).all()
+    assert np.allclose(st.P, st.P.T)
+
+
+def test_process_noise_widens_only_the_diagonal():
+    st = kalman.initialise(np.array([1, 2]), off=[0, 0], defense=[0, 0], spec=_flat_spec(q_off=3.0, q_def=1.0))
+    P0 = st.P.copy()
+    kalman.advance(st, 2, _flat_spec(q_off=3.0, q_def=1.0))
+    assert np.allclose(np.diag(st.P) - np.diag(P0), [6, 6, 2, 2])
+    assert np.allclose(st.P - np.diag(np.diag(st.P)), P0 - np.diag(np.diag(P0)))
+
+
+def test_run_season_is_point_in_time(research_frame):
+    """Changing a later game's result must not change an earlier forecast."""
+    season = research_frame[(research_frame["season"] == 2021)].copy()
+    teams = np.unique(np.r_[season["home_team_id"], season["away_team_id"]])
+    spec = _flat_spec()
+    def forecasts(df):
+        st = kalman.initialise(teams, np.zeros(len(teams)), np.zeros(len(teams)), spec)
+        return kalman.run_season(df, st, spec)
+    a = forecasts(season)
+    tampered = season.copy()
+    last = tampered.sort_values("kickoff").index[-1]
+    tampered.loc[last, "actual_margin"] += 40
+    b = forecasts(tampered)
+    earlier = tampered.sort_values("kickoff").index[:-1]
+    assert np.allclose(a.loc[earlier, "mean"], b.loc[earlier, "mean"])
+
+
+def test_filter_recovers_the_synthetic_strengths_from_a_zero_prior(research_frame):
+    """No prior at all, one season of games: the state must find the truth."""
+    season = research_frame[research_frame["season"] == 2021]
+    teams = np.unique(np.r_[season["home_team_id"], season["away_team_id"]])
+    spec = _flat_spec(q_off=0.0, q_def=0.0, p0_off=80.0, p0_def=80.0, sigma=11.0)
+    st = kalman.initialise(teams, np.zeros(len(teams)), np.zeros(len(teams)), spec)
+    kalman.run_season(season, st, spec)
+    truth = _strength(season).reindex(teams).to_numpy()
+    net = np.array([st.net(t) for t in teams])
+    assert np.corrcoef(net, truth)[0, 1] > 0.85
+
+
+def test_uncertainty_falls_through_the_season(research_frame):
+    season = research_frame[research_frame["season"] == 2021]
+    teams = np.unique(np.r_[season["home_team_id"], season["away_team_id"]])
+    spec = _flat_spec(q_off=0.5, q_def=0.5)
+    st = kalman.initialise(teams, np.zeros(len(teams)), np.zeros(len(teams)), spec)
+    fc = kalman.run_season(season, st, spec)
+    by_week = fc.join(season["week"]).groupby("week")["sd"].mean()
+    assert by_week.iloc[-1] < by_week.iloc[0]
+
+
+# ---------------------------------------------------------------------------
+# The NCAAF state runner
+# ---------------------------------------------------------------------------
+
+SMALL_GRID = {"q": (0.0, 2.0), "p0": (2.0, 40.0), "sigma": (9.0, 11.0)}
+
+
+def test_tuning_never_uses_the_test_season(research_frame):
+    feats = prior_mod.team_seasons(research_frame)
+    choice = state_mod.tune(research_frame, feats, 2022, grid=SMALL_GRID)
+    assert all(s < 2022 for s in choice.seasons)
+    assert choice.q in SMALL_GRID["q"] and choice.p0 in SMALL_GRID["p0"]
+
+
+def test_state_beats_the_prior_late_and_matches_it_early(research_frame):
+    """Synthetic strengths are fixed, so a prior fitted on FPI is already
+    close; the state must not be worse late, and must equal the prior at the
+    very first game of the season before any update."""
+    scored, choices, finals = state_mod.run(research_frame, first_test_season=2021, grid=SMALL_GRID)
+    reg = scored[scored["season_type"] == "regular"]
+    late = evaluate.summarise(reg[reg["week"] >= 6]).set_index("model")
+    # The mean is the claim: the state must be as good a point forecast as a
+    # near-perfect prior. CRPS also pays for the sd, and the state's sd sits at
+    # the grid's floor while the prior's is an optimistic in-sample residual,
+    # so that comparison is loose on purpose.
+    assert abs(late.loc["state", "mae"] - late.loc["prior", "mae"]) < 0.15
+    assert late.loc["state", "crps"] <= late.loc["prior", "crps"] + 0.25
+    assert late.loc["state", "crps"] < late.loc["naive", "crps"] - 2.0
+    # With fixed strengths the tuning must find no need for process noise.
+    assert all(c.q == 0.0 for c in choices.values())
+    first = reg[reg["week"] == 1]
+    s = first[first["model"] == "state"].sort_values("season")["mean"].to_numpy()
+    p = first[first["model"] == "prior"].sort_values("season")["mean"].to_numpy()
+    assert np.allclose(s[:1], p[:1])
+
+
+def test_state_report_renders(research_frame):
+    scored, choices, finals = state_mod.run(research_frame, first_test_season=2021, grid=SMALL_GRID)
+    text = state_mod.render(scored, choices, finals, research_frame)
+    for heading in ("## Hyperparameters chosen", "## Regular season, pooled", "## By week bucket",
+                    "## Reliability", "top and bottom ten"):
         assert heading in text

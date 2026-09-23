@@ -4,7 +4,7 @@ PYTHON ?= python3
 	live-refresh live-run live-report live-check live-reproduce \
 	site site-full site-serve site-audit site-shots launch-check \
 	ops-heavy ops-poll ops-social ops-health ops-status ops-crontab \
-	ops-backup ops-analytics perf seo ncaaf-benchmarks ncaaf-prior
+	ops-backup ops-analytics perf seo ncaaf-benchmarks ncaaf-prior ncaaf-state
 
 help:
 	@echo "Atlas Phase 1A - research warehouse"
@@ -35,6 +35,7 @@ help:
 	@echo "  make ops-backup back up the live record and verify the copy"
 	@echo "  make ncaaf-benchmarks  score the reference models the NCAAF model must beat"
 	@echo "  make ncaaf-prior       fit and score the NCAAF preseason prior"
+	@echo "  make ncaaf-state       run and score the NCAAF Kalman state model"
 	@echo "  make perf       measure load time and LCP at three viewports"
 	@echo "  make seo        validate canonicals, meta, OpenGraph and sitemap"
 	@echo "  make site-full  warehouse + numbers + market + site, from scratch"
@@ -175,6 +176,10 @@ ncaaf-benchmarks:
 # The preseason prior, walk-forward, scored where priors matter.
 ncaaf-prior:
 	$(PYTHON) -m atlas.models.ncaaf_prior
+
+# The state model: the prior updated by every game, walk-forward.
+ncaaf-state:
+	$(PYTHON) -m atlas.models.ncaaf_state
 
 perf: site
 	$(PYTHON) scripts/measure_performance.py
