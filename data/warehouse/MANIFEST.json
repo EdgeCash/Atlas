@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-23T19:53:33+00:00",
+  "generated_at": "2026-09-23T19:58:26+00:00",
   "atlas_version": "0.1.0",
   "seasons_requested": [
     2018,
@@ -23,7 +23,7 @@
     2025,
     2026
   ],
-  "cfbd_enrichment": false,
+  "cfbd_enrichment": true,
   "tables": {
     "market_lines": {
       "rows": 21968,
