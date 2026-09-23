@@ -173,33 +173,6 @@ jobs:
             data/warehouse
           key: atlas-data-${{ github.run_id }}
 
-      # tracking/ is the one thing in Atlas that cannot be rebuilt: a signal is
-      # an opinion published at a moment and the moment does not come back.
-      # Committing it is also its offsite backup. data/ops/freshness.json rides
-      # along because the timestamps on the site are read back from it, and a
-      # poll that could not see the heavy run's stamp would publish a board
-      # with half its provenance missing.
-      - name: Commit the record
-        if: steps.gate.outputs.go == 'true'
-        run: |
-          git config user.name "atlas-tracker"
-          git config user.email "noreply@anthropic.com"
-          git add tracking data/ops/freshness.json \
-            reports/live_clv_tracking.md reports/atlas_data_quality.md \
-            reports/atlas_drift_monitoring.md reports/atlas_operations_manual.md \
-            reports/dashboard.html 2>/dev/null || true
-          if git diff --cached --quiet; then
-            echo "nothing changed"
-            exit 0
-          fi
-          git commit -m "${{ inputs.mode }}: $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')"
-          for i in 1 2 3 4; do
-            git pull --rebase origin "${GITHUB_REF_NAME}" && \
-              git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
-            sleep $((2 ** i))
-          done
-          exit 1
-
       # scripts/audit_site.py directly, not `make site-audit`: that target
       # depends on `site` and would rebuild what we are trying to inspect.
       - name: Audit the built site
@@ -210,6 +183,41 @@ jobs:
         if: steps.gate.outputs.go == 'true'
         with:
           path: site
+
+      # tracking/ is the one thing in Atlas that cannot be rebuilt: a signal is
+      # an opinion published at a moment and the moment does not come back.
+      # Committing it is also its offsite backup. data/ops/freshness.json rides
+      # along because the timestamps on the site are read back from it, and a
+      # poll that could not see the heavy run's stamp would publish a board
+      # with half its provenance missing.
+      #
+      # Last, after the artifact is uploaded: a git problem here should not cost
+      # a site that already built and passed its audit.
+      - name: Commit the record
+        if: steps.gate.outputs.go == 'true'
+        run: |
+          git config user.name "atlas-tracker"
+          git config user.email "noreply@anthropic.com"
+          git add -A tracking data/ops reports
+          # Every other tracked file the run rewrote. The warehouse and raw
+          # manifests are the ones that matter - they record what this build
+          # was made from, and leaving them modified but unstaged is what made
+          # the first run fail: `git pull --rebase` refuses to run against a
+          # dirty tree, so the commit landed and could never be pushed.
+          git add -u
+          if git diff --cached --quiet; then
+            echo "nothing changed"
+            exit 0
+          fi
+          git commit -m "${{ inputs.mode }}: $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')"
+          for i in 1 2 3 4; do
+            # --autostash as well, so anything a future step leaves behind is a
+            # rebase that succeeds rather than a run that fails at the last line.
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" && \
+              git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            sleep $((2 ** i))
+          done
+          exit 1
 
   deploy:
     needs: build
