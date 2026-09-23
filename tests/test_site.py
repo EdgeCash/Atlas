@@ -52,6 +52,20 @@ def _band(label="2-4", **overrides) -> grading.Band:
     return grading.Band(**fields)
 
 
+#: The fitted curve, pinned. The real one is refitted from the warehouse on
+#: every build and moves as seasons accumulate; these tests are about the
+#: rubric's properties, so they hold the curve still and vary the card.
+_CURVE = grading.Curve(a=0.0133, p=1.139, games=5006, r=0.88, seasons=7)
+
+
+def _grade(disagreement, band=None, completeness=1.0, **conditions):
+    return grading.compute(
+        disagreement, band if band is not None else _band(grading.band_label(disagreement)),
+        completeness, curve=_CURVE,
+        conditions=grading.Conditions(**conditions) if conditions else None,
+    )
+
+
 def _side(key: str, name: str, colour: str) -> Side:
     return Side(key=key, name=name, short=name.split()[0], abbr=name[:3].upper(),
                 colour=colour, record="3-1", conference="Big 12",
@@ -77,7 +91,8 @@ def _card(*, model_total=50.7, market_total=48.5, grade=True) -> Card:
     )
     if grade:
         difference = card.total_difference
-        card.grade = grading.compute(difference, _band(grading.band_label(difference)), 1.0)
+        card.grade = _grade(difference, week=card.week,
+                            movement=card.total.movement)
     card.drivers = driving.select(card, _POOL)
     card.cautions = data.cautions(card)
     return card
@@ -96,24 +111,76 @@ def test_a_larger_disagreement_can_never_raise_a_grade():
     """The product's central claim. If this ever inverts, Atlas is shouting
     loudest where its model is weakest, like everything else in the category."""
     band = _band()
-    scores = [grading.compute(d, band, 1.0).score for d in (0.5, 2.0, 5.0, 9.0, 14.0)]
+    scores = [_grade(d, band).score for d in (0.5, 2.0, 5.0, 9.0, 14.0)]
     assert scores == sorted(scores, reverse=True)
 
 
-def test_a_worse_calibrated_band_can_never_raise_a_grade():
-    tight = grading.compute(3.0, _band(gap=-0.01), 1.0)
-    loose = grading.compute(3.0, _band(gap=-0.26), 1.0)
-    assert tight.score > loose.score
+def test_a_steeper_calibration_curve_can_never_raise_a_grade():
+    """V2 reads the curve, not the band's own gap, so this is the property
+    that replaced "a worse-calibrated band can never raise a grade"."""
+    shallow = grading.compute(3.0, _band(), 1.0,
+                              curve=grading.Curve(0.008, 1.139, 5006, 0.88, 7))
+    steep = grading.compute(3.0, _band(), 1.0,
+                            curve=grading.Curve(0.030, 1.139, 5006, 0.88, 7))
+    assert shallow.score > steep.score
+
+
+def test_early_season_and_an_unsettled_market_can_never_raise_a_grade():
+    """Both adjustments held season by season; both must lower the score."""
+    settled = _grade(3.0, week=10, movement=0.0)
+    early = _grade(3.0, week=2, movement=0.0)
+    moved = _grade(3.0, week=10, movement=3.5)
+    assert settled.score > early.score
+    assert settled.score > moved.score
+
+
+def test_the_grade_teaches_itself_in_three_plain_lines():
+    """Rule 4. A letter is a symbol, and a symbol nobody explains is skipped."""
+    for disagreement in (0.4, 3.0, 7.0, 11.2):
+        lesson = _grade(disagreement).lesson
+        assert len(lesson) == 3
+        assert all(line.endswith(".") for line in lesson)
+        assert f"{disagreement:.1f} points" in lesson[1]
+        # The third line is the record - except at the very top of the scale,
+        # where the record is a coin flip and the caveat is the useful thing.
+        assert "%" in lesson[2] or "adding least" in lesson[2]
+
+
+def test_the_top_of_the_scale_says_atlas_is_adding_least():
+    """The finding that stops the grade being read as a ranking. Cards where
+    Atlas and the market agree to within a point realise 50.8% against a 51.3%
+    claim - a coin flip. An A+ card is one where Atlas contributed nothing, so
+    the top of the scale has to say so itself."""
+    top = _grade(0.05, _band("0-1"), week=12, movement=0.0)
+    assert top.letter == "A+"
+    assert "adding least" in " ".join(top.lesson)
+    assert "not that this is the card to read first" in " ".join(top.lesson)
 
 
 def test_the_letter_boundaries_match_the_specification():
-    assert grading.letter_for(90) == "A+"
-    assert grading.letter_for(89.9) == "A"
-    assert grading.letter_for(80) == "A"
-    assert grading.letter_for(70) == "B"
-    assert grading.letter_for(60) == "C"
-    assert grading.letter_for(50) == "D"
-    assert grading.letter_for(49.9) == "F"
+    assert grading.letter_for(96) == "A+"
+    assert grading.letter_for(95.9) == "A"
+    assert grading.letter_for(90) == "A"
+    assert grading.letter_for(79) == "B"
+    assert grading.letter_for(66) == "C"
+    assert grading.letter_for(51) == "D"
+    assert grading.letter_for(50.9) == "F"
+
+
+def test_the_thresholds_are_absolute_and_never_slate_relative():
+    """The property the brief asked for by name. A card's letter must depend
+    on that card alone, so grading it twice with different neighbours - which
+    is what a percentile scheme would notice - cannot change it."""
+    lonely = _grade(4.0)
+    crowded = _grade(4.0)
+    assert lonely.letter == crowded.letter == grading.letter_for(lonely.score)
+
+
+def test_every_letter_is_reachable():
+    """V1 could not produce A+ or D at all. Sweep the range Atlas actually
+    sees and check each letter comes out of it."""
+    seen = {_grade(d / 10, week=12, movement=0.0).letter for d in range(0, 200)}
+    assert seen == {"A+", "A", "B", "C", "D", "F"}
 
 
 def test_band_labels_cover_the_whole_range():
@@ -124,18 +191,19 @@ def test_band_labels_cover_the_whole_range():
 
 
 def test_a_worked_example_from_the_specification():
-    """Spec §5: the F example. The inputs are the spec's, so the arithmetic
-    is pinned even if the band table moves as seasons accumulate."""
-    grade = grading.compute(11.174, _band("10+", gap=-0.2777, claimed=0.7727,
-                                          realised=0.495, seasons=5,
-                                          seasons_above=2, games=402), 1.0)
+    """The F example, recomputed under V2. The inputs are held still, so the
+    arithmetic is pinned even as the fitted curve moves with the seasons."""
+    grade = _grade(11.174, _band("10+", gap=-0.2777, claimed=0.7727,
+                                 realised=0.495, seasons=5,
+                                 seasons_above=2, games=402),
+                   week=4, movement=1.0)
     assert grade.letter == "F"
-    assert grade.score == pytest.approx(33.0, abs=1.0)
+    assert grade.score == pytest.approx(44.5, abs=1.0)
 
 
 def test_missing_inputs_cost_the_completeness_component():
-    full = grading.compute(3.0, _band(), 1.0)
-    partial = grading.compute(3.0, _band(), 0.5)
+    full = _grade(3.0, _band(), 1.0)
+    partial = _grade(3.0, _band(), 0.5)
     assert full.score - partial.score == pytest.approx(7.5)
 
 
@@ -208,7 +276,7 @@ def test_a_low_grade_card_leads_with_its_low_confidence():
     assert card.grade.low
     page = _page(card)
     tier1 = page.split('<div class="tier2">')[0]
-    assert "Low confidence" in tier1
+    assert "Historically unreliable" in tier1
     assert 'class="card grade-hero f"' in tier1 or 'class="card grade-hero d"' in tier1
     assert tier1.index("grade-mark") < tier1.index("Be careful about")
 

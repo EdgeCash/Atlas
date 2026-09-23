@@ -525,7 +525,11 @@ footer { display: grid; gap: 4px; }
 .grade-title {
   font-size: 16px; font-weight: 660; letter-spacing: -.015em; color: var(--ink);
 }
-.grade-line { font-size: 12.5px; color: var(--ink-3); margin: 3px 0 9px; }
+.grade-line { font-size: 13px; color: var(--ink-2); margin: 4px 0 0; }
+.grade-line.quiet { font-size: 12.5px; color: var(--ink-3); margin-bottom: 10px; }
+/* The disclaimer is the smallest thing in the block on purpose: it has to be
+   present on every card and it is not what the reader came for. */
+.grade-foot { font-size: 11px; color: var(--ink-4); margin: 8px 0 0; }
 .grade-bar {
   height: 6px; border-radius: 99px; background: var(--border); overflow: hidden;
 }
@@ -593,6 +597,10 @@ footer { display: grid; gap: 4px; }
 .board-head { display: flex; align-items: baseline; gap: 10px; margin: 20px 0 12px; }
 .board-head h1 { font-size: 21px; }
 .board-note { font-size: 12.5px; color: var(--ink-3); margin-left: auto; }
+/* What the letter means, on the heading. A board grouped by grade reads as a
+   ranking of what to look at first; this is the cheapest place to say it is
+   not one. */
+.section-caption { margin: -4px 0 9px; max-width: 62ch; }
 
 /* Named `board-bar`, not `bar`: `.bar` is the driver meter track, and the two
    sharing a name meant the meter's centre tick was being drawn through the
@@ -663,10 +671,22 @@ footer { display: grid; gap: 4px; }
   .feature-title { font-size: 15.5px; margin: 8px 0 1px; }
   /* The crests carry the identity on a board row, but not at the cost of
      wrapping the team names underneath them. */
+  /* The crests carry the identity on a board row, but not at the cost of
+     wrapping the team names underneath them. The right-hand column is capped
+     because its two numbers never wrap, so without a cap it takes whatever
+     it wants and the title wraps to three lines instead. */
   .row-crests .crest { width: 25px; height: 25px; }
-  .game-teams { font-size: 14px; }
-  .game-line { font-size: 12.5px; }
-  .game-right { gap: 8px; }
+  .row-crests { gap: 1px; }
+  .game-row { padding: 12px 11px; gap: 6px 9px; }
+  .game-teams { font-size: 13.5px; }
+  .game-meta { font-size: 11px; }
+  .game-line { font-size: 12px; white-space: nowrap; }
+  .game-right { gap: 7px; }
+  .game-numbers { max-width: 108px; }
+  .grade-pill { width: 27px; height: 27px; font-size: 13px; }
+  /* A rank inline with the title pushed the title into the numbers. It is a
+     badge about a team, so it sits with the crests. */
+  .rank { font-size: .78em; }
 
   .feature-meta { margin-bottom: 9px; }
   .feature-nums, .feature-foot { display: none; }

@@ -144,7 +144,7 @@ def wide(card: Card) -> str:
     y += (len(title_lines) - 1) * step
     meta = " · ".join(filter(None, [day_and_clock(card.kickoff), card.tv]))
     meta_y = y + 44
-    row_y = meta_y + 88
+    row_y = meta_y + 78
 
     grade_colour = TONE_COLOUR[card.grade.tone] if card.grade else INK_3
     grade_block = _grade_mark(W - 72 - 128, row_y - 72, 128, card) if card.grade else ""
@@ -159,12 +159,12 @@ def wide(card: Card) -> str:
     # the square card's job; this one's job is what the numbers mean.
     read_lines = _wrap(_read(card), 78)[:2]
     read_block = ""
-    if read_lines and row_y + 44 < H - 201:
+    if read_lines and row_y + 44 < H - 196:
         read_block = (
-            f'<text x="72" y="{H - 193}" {_font(13, 640, INK_3, 1.2)}>'
+            f'<text x="72" y="{H - 188}" {_font(13, 640, INK_3, 1.2)}>'
             "WHAT THIS MEANS</text>"
             + "".join(
-                f'<text x="72" y="{H - 161 + i * 32}" {_font(24, 500, INK_2, -0.3)}>'
+                f'<text x="72" y="{H - 156 + i * 32}" {_font(24, 500, INK_2, -0.3)}>'
                 f"{esc(line)}</text>"
                 for i, line in enumerate(read_lines)
             )
@@ -230,7 +230,7 @@ def _read(card: Card) -> str:
                 "projection has historically been worth.")
     direction = "above" if difference > 0 else "below"
     if abs(difference) < 1.0:
-        return ("Atlas and the market land on the same number - which is where "
+        return ("Atlas and the market land on the same number \u2014 which is where "
                 "this model has been most reliable, and where it adds least.")
     if card.grade and card.grade.low:
         return (f"Atlas projects {abs(difference):.1f} points {direction} the "

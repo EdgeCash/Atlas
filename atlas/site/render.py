@@ -321,16 +321,19 @@ def _grade_hero(card: Card) -> str:
     <p class="grade-line">Not enough history to grade this card.</p></div>
 </div>"""
     g = card.grade
-    title = {"A+": "Very high confidence", "A": "High confidence",
-             "B": "Solid confidence", "C": "Mixed confidence",
-             "D": "Low confidence", "F": "Low confidence"}[g.letter]
+    # Rule 4: the grade teaches. A letter is a symbol, and a symbol a reader
+    # has to be taught is a symbol they skip - so every card teaches it again,
+    # in plain English, from its own numbers.
+    headline, alignment, record = g.lesson
     return f"""<div class="card grade-hero {g.tone}">
   <div class="grade-mark">{g.letter}<small>{g.score:.0f}<span>/100</span></small></div>
   <div class="grade-words">
-    <div class="grade-title">{esc(title)}</div>
-    <p class="grade-line">How much weight this card's information deserves —
-      not a recommendation.</p>
+    <div class="grade-title">{esc(headline)}</div>
+    <p class="grade-line">{esc(alignment)}</p>
+    <p class="grade-line quiet">{esc(record)}</p>
     <div class="grade-bar"><span style="width:{g.score:.0f}%"></span></div>
+    <p class="grade-foot">How much weight this card's information deserves —
+      not a recommendation.</p>
   </div>
 </div>"""
 
@@ -642,6 +645,8 @@ def _s5_grade(card: Card, *, bare: bool = False) -> str:
     title = {"A+": "High-reliability card", "A": "High-reliability card",
              "B": "Solid card", "C": "Mixed card",
              "D": "Low-reliability card", "F": "Low-reliability card"}[g.letter]
+    conditions = "".join(
+        f'<p class="note top-gap-sm">{esc(note)}</p>' for note in g.condition_notes)
     inner = f"""  <div class="{_panel_card(bare)}">
     <div class="grade-wrap">
       <div class="grade {g.tone}">{g.letter}<small>{g.score:.0f}</small></div>
@@ -650,6 +655,12 @@ def _s5_grade(card: Card, *, bare: bool = False) -> str:
     </div>
     <div class="card-pad divided">
       <div class="meter">{meters}</div>
+      <p class="note top-gap">Atlas sits <b>{g.disagreement:.1f} points</b> from
+        the market. The calibration curve, fitted to seven seasons out of
+        sample, expects cards at that distance to fall <b>{abs(g.expected_gap):.1%}</b>
+        short of what they claim — which is where the calibration component
+        above comes from.</p>
+      {conditions}
       <p class="note top-gap">The grade describes how much weight the
         information deserves. It says nothing about which side of a market
         anyone should take, and Atlas does not publish that.
@@ -909,12 +920,77 @@ def _calibration_chart(bands: dict, active: str) -> str:
 # ---------------------------------------------------------------------------
 
 
-def homepage(cards: list[Card], *, bands: dict) -> str:
-    """Rule 2: cards before navigation.
+#: How many games the "next kickoffs" section shows.
+NEXT_KICKOFFS = 5
+
+#: The grade sections, and the caption each one carries. The caption is not
+#: decoration: a board grouped by letter reads as a ranking of what to look at
+#: first, and the letter does not mean that. Saying what it does mean, on the
+#: heading, is the cheapest place to stop the misreading.
+GRADE_SECTIONS = (
+    (("A+", "A"), "Graded A",
+     "Atlas and the market are closely aligned. Reliable numbers — and the "
+     "cards where Atlas is adding least."),
+    (("B",), "Graded B",
+     "A moderate disagreement, in the range where the model's claim and its "
+     "realised accuracy stay close."),
+    (("C",), "Graded C",
+     "A wide disagreement. The model's historical claim starts to run ahead "
+     "of what it delivered."),
+    (("D", "F"), "Marked down",
+     "A large disagreement, in the range where Atlas has been least reliable "
+     "across seven seasons. Atlas marks these down itself."),
+)
+
+
+def _is_rivalry(card: Card, pairs: set) -> bool:
+    from atlas.site.data import is_rivalry
+
+    return is_rivalry(card, pairs)
+
+
+def _board_section(title: str, note: str, cards: list[Card], *,
+                   dates: bool = False) -> str:
+    """One block of rows. Silent when it has nothing in it - an empty section
+    with a heading tells a reader the product is broken."""
+    if not cards:
+        return ""
+    rows = "".join(_game_row(c, dates=dates) for c in cards)
+    return f"""<section class="section tight">
+  <div class="section-head"><h2>{esc(title)}</h2>
+    <span class="note">{esc(note)}</span></div>
+  <div class="card game-list">{rows}</div>
+</section>"""
+
+
+def _grade_block(letters: tuple, label: str, caption: str,
+                 cards: list[Card]) -> str:
+    block = [c for c in cards if c.grade and c.grade.letter in letters]
+    if not block:
+        return ""
+    block.sort(key=lambda c: (-c.grade.score, c.kickoff))
+    rows = "".join(_game_row(c, dates=True) for c in block)
+    return f"""<section class="section tight">
+  <div class="section-head"><h2>{esc(label)}</h2>
+    <span class="note">{_plural(len(block), "card")}</span></div>
+  <p class="note section-caption">{esc(caption)}</p>
+  <div class="card game-list">{rows}</div>
+</section>"""
+
+
+def homepage(cards: list[Card], *, bands: dict, rivalries: set | None = None) -> str:
+    """Rule 1: the board is the product.
 
     The board is the first thing on the page. No hero, no marketing, no
     summary tiles above the fold — a reader who came for a game sees games,
     and the filters sit in a compact bar that stays with them as they scroll.
+
+    Sections, in order: featured national games, rivalries, the next kickoffs,
+    then every card grouped by grade. The grade blocks carry a caption saying
+    what the letter means, because a board sorted by a letter reads as a
+    ranking of what to look at first and the letter does not mean that — the
+    most reliable cards are the ones where Atlas agrees with the market, which
+    is to say the ones where Atlas has said least.
     """
     graded = [c for c in cards if c.grade]
     strong = sum(1 for c in graded if c.grade.letter in ("A+", "A"))
@@ -931,16 +1007,11 @@ def homepage(cards: list[Card], *, bands: dict) -> str:
     })
     conf_options = "".join(f'<option value="{esc(c)}">{esc(c)}</option>' for c in conferences)
 
-    by_day: dict[str, list[Card]] = {}
-    for card in cards:
-        by_day.setdefault(eastern(card.kickoff).strftime("%A, %-d %B"), []).append(card)
-    day_blocks = "".join(
-        f"""<section class="section tight">
-  <div class="section-head"><h2>{esc(day)}</h2>
-    <span class="note">{_plural(len(day_cards), "game")}</span></div>
-  <div class="card game-list">{"".join(_game_row(c) for c in day_cards)}</div>
-</section>"""
-        for day, day_cards in by_day.items()
+    rivalry_cards = [c for c in cards if rivalries and _is_rivalry(c, rivalries)]
+    upcoming = sorted(cards, key=lambda c: c.kickoff)[:NEXT_KICKOFFS]
+    grade_blocks = "".join(
+        _grade_block(letters, label, caption, cards)
+        for letters, label, caption in GRADE_SECTIONS
     )
 
     featured_block = ""
@@ -974,7 +1045,11 @@ def homepage(cards: list[Card], *, bands: dict) -> str:
 
 {featured_block}
 
-{day_blocks}
+{_board_section("Rivalries", "played in at least eight of the last nine seasons", rivalry_cards)}
+
+{_board_section("Next kickoffs", "the next five games on the board", upcoming, dates=True)}
+
+{grade_blocks}
 
 <div class="card card-pad nfl-strip">
   <div class="banner-row">
@@ -1004,7 +1079,9 @@ def _row_crests(card: Card, root: str = "") -> str:
             f'{_logo(card.home, size="small", root=root)}</span>')
 
 
-def _game_row(card: Card) -> str:
+def _game_row(card: Card, *, dates: bool = False) -> str:
+    """One board row. ``dates`` adds the day, which a section that is not
+    grouped by day needs and a day block does not."""
     grade_letter = card.grade.letter if card.grade else ""
     grade_key = ("low" if card.grade and card.grade.low
                  else grade_letter.rstrip("+") if grade_letter else "")
@@ -1016,16 +1093,17 @@ def _game_row(card: Card) -> str:
     difference = card.total_difference
     diff_text = (f"Atlas {signed(difference)}" if difference is not None
                  else "no Atlas number")
-    ranks = "".join(
-        f'<span class="rank">#{side.rank}</span>'
-        for side in (card.away, card.home) if side.rank
-    )
-    meta = " · ".join(filter(None, [clock(card.kickoff), card.tv]))
+    # One rank chip for the row, the better of the two: two of them beside a
+    # long matchup title was pushing the title into the numbers column.
+    best = min((s.rank for s in (card.away, card.home) if s.rank), default=None)
+    ranks = f' <span class="rank">#{best}</span>' if best else ""
+    when = day_clock(card.kickoff) if dates else clock(card.kickoff)
+    meta = " · ".join(filter(None, [when, card.tv]))
     return f"""<a class="game-row" href="{esc(card.path)}"
    data-search="{esc(haystack)}" data-conf="{esc(confs)}" data-grade="{esc(grade_key)}">
   <div class="game-main">
     <div class="row-teams">{_row_crests(card)}
-      <span class="game-teams">{esc(card.title)}</span>{ranks}</div>
+      <span class="game-teams">{esc(card.title)}{ranks}</span></div>
     <div class="game-meta">{esc(meta)}</div>
   </div>
   <div class="game-right">
@@ -1196,21 +1274,34 @@ def research_page(bands: dict, overall_band, *, card_count: int) -> str:
       much weight does the information on this card deserve?</p>
     <p>It is computed, never assigned. Four components, one hundred points:</p>
     {table(["Component", "Points", "What it measures"], [
-      ['<span class="lead">Calibration</span>', "40",
-       "how close claimed accuracy has been to realised accuracy in this card's disagreement band"],
+      ['<span class="lead">Calibration</span>', "45",
+       "how far short of its claim a card this far from the market has historically fallen, read from a curve fitted to seven seasons"],
       ['<span class="lead">Market agreement</span>', "25",
        "how far the unanchored model sits from the market"],
-      ['<span class="lead">Signal stability</span>', "20",
-       "how many seasons that band has finished above even"],
+      ['<span class="lead">Card conditions</span>', "15",
+       "how mature the season is, and how settled the market has been since the number opened"],
       ['<span class="lead">Data completeness</span>', "15",
        "how many of the required inputs are present"],
     ])}
-    {table(["Score", "Grade"], [["90–100", '<span class="lead">A+</span>'],
-                                ["80–89", '<span class="lead">A</span>'],
-                                ["70–79", '<span class="lead">B</span>'],
-                                ["60–69", '<span class="lead">C</span>'],
-                                ["50–59", '<span class="lead">D</span>'],
-                                ["below 50", '<span class="lead">F</span>']])}
+    {table(["Score", "Grade", "Share of seven seasons"],
+           [["96–100", '<span class="lead">A+</span>', "6%"],
+            ["90–95", '<span class="lead">A</span>', "14%"],
+            ["79–89", '<span class="lead">B</span>', "31%"],
+            ["66–78", '<span class="lead">C</span>', "25%"],
+            ["51–65", '<span class="lead">D</span>', "15%"],
+            ["below 51", '<span class="lead">F</span>', "10%"]])}
+    <p>The six thresholds were chosen once, from the distribution of scores
+      across seven seasons, and then fixed. They are <b>absolute</b>: a card's
+      letter depends on that card and on nothing else on the board, so the same
+      card grades the same on a quiet Tuesday and on championship Saturday.
+      Atlas does not grade on a curve, because a curve would make a screenshot
+      mean something different depending on the week it was taken.</p>
+    <p><b>A top grade is not a signal to read that card first.</b> Cards where
+      Atlas and the market agree to within a point have realised 50.8% against
+      a 51.3% claim across 760 games — statistically a coin flip. They grade
+      highest because they are the most reliable, and they are the most
+      reliable because Atlas has added nothing to them. The grade tells a
+      reader what to discount, not what to look at.</p>
   </div>
 </section>
 

@@ -36,7 +36,7 @@ opens without JavaScript, survives find-in-page, and prints.
 ```
 atlas/site/
   meta.py      ESPN scoreboard: venue, broadcast, records, ranks, team colours
-  grade.py     the rubric from ATLAS_CARD_SPEC §5, and the calibration bands
+  grade.py     the V2 rubric, the fitted calibration curve and the bands
   data.py      joins warehouse + tracking + ESPN into one Card per game
   drivers.py   ranks the drivers and writes their sentences
   render.py    the three card tiers, and the other four page types
@@ -55,17 +55,19 @@ atlas/site/
 | Moneyline | ESPN, where a book posts one |
 | Atlas's number | `tracking/numbers.csv`, published by the weekly refresh |
 | Drivers, percentiles | the point-in-time warehouse |
-| Calibration bands, grade | recomputed from the warehouse at build time |
+| Calibration curve and bands, grade | refitted from the warehouse at build time |
 
 One network call per build, cached. Everything else is local.
 
-### Why the calibration bands are recomputed, not transcribed
+### Why the calibration curve is refitted, not transcribed
 
-The grade depends on seven seasons of out-of-sample calibration. Hard-coding
-that table would let the site drift away from the research it cites the first
-time a season was added. `grade.calibration_bands()` recomputes it from the
-warehouse on every build — about two seconds — so the research page, the grade
-and the reliability section cannot disagree with each other.
+The grade depends on seven seasons of out-of-sample calibration. Hard-coding it
+would let the site drift away from the research it cites the first time a season
+was added — and the curve's coefficient moves by about 2.5× across seasons, so
+the drift would be real. `grade.calibration_curve()` refits it from the
+warehouse on every build, and `calibration_bands()` recomputes the seven-row
+table the reliability section reports, so the research page, the grade and the
+card cannot disagree with each other.
 
 ### Output
 
@@ -87,67 +89,54 @@ site/
 
 ## The grade is computed
 
-`grade.compute()` is `ATLAS_CARD_SPEC.md` §5 in code: calibration 40, market
-agreement 25, signal stability 20, data completeness 15. Nothing is entered by
-hand and no card is adjusted.
+`grade.compute()` is `GRADE_V2_IMPLEMENTATION.md` in code: calibration 45,
+market agreement 25, card conditions 15, data completeness 15, with absolute
+letter thresholds at 96 / 90 / 79 / 66 / 51. Nothing is entered by hand and no
+card is adjusted.
 
-Three tests pin the properties that matter, rather than the numbers that will
-move as seasons accumulate:
-
-- a larger disagreement can never raise a grade;
-- a worse-calibrated band can never raise a grade;
-- the letter boundaries match the specification exactly.
+Eleven tests pin the properties that matter rather than the numbers that will
+move as seasons accumulate — among them that a larger disagreement can never
+raise a grade, that a steeper calibration curve can never raise one, that the
+thresholds are absolute and never slate-relative, and that every letter is
+reachable.
 
 ---
 
 ## Findings for review
 
-### 1. Grades cluster at A — the one thing that needs a decision
+### 1. Grade V2 replaced V1, and the distribution now separates
 
-**This is now researched in full in `GRADE_REWORK_OPTIONS.md`**, which measures
-three rework options against the real slate and recommends one. The summary
-below is what the build itself reports.
+V1 clustered: 39 of 58 cards at A, two letters unreachable, six distinct scores.
+The cause was structural — the score was a step function of the disagreement
+band, because three of its four components were constants.
 
-The approved rubric, applied to a real 58-game slate:
+The bands turned out to be an artifact of the research report's own buckets.
+V2 fits the curve they were summarising:
 
-| Grade | Cards | Share |
+```
+gap(d) = -0.0133 * d^1.139     r = 0.88, n = 5006
+```
+
+On the same 58-card slate:
+
+| Grade | V1 | V2 |
 |---|---|---|
-| A+ | 0 | 0% |
-| A | 39 | 67% |
-| B | 11 | 19% |
-| C | 7 | 12% |
-| D | 0 | 0% |
-| F | 1 | 2% |
+| A+ | 0 | 0 |
+| A | 39 | 7 |
+| B | 11 | 23 |
+| C | 7 | 17 |
+| D | 0 | 10 |
+| F | 1 | 1 |
 
-Scores run 33.0 to 87.6, median 82.0.
+53 of 58 cards now score distinctly. Across seven seasons: A+ 6%, A 14%, B 31%,
+C 25%, D 15%, F 10%.
 
-`PRODUCT_VISION.md` names this exact failure: *"Grades cluster: if 80% of
-cards grade B, the grade is decoration."* It is 67% at A, and two letters are
-unreachable.
-
-**The cause is structural, not a bug.** Mean component scores across the slate:
-
-| Component | Mean | Why |
-|---|---|---|
-| Data completeness | 1.000 | every input is present on every card |
-| Calibration | 0.839 | 67% of cards sit within 4 points of the market, where gaps are small |
-| Market agreement | 0.737 | same reason |
-| Signal stability | 0.640 | the best real band is 5 of 7 seasons |
-
-A+ is arithmetically unreachable: with stability capped near 0.71 and a
-realistic calibration score, the ceiling is about 88. D is nearly unreachable
-because the 8–10 band still scores around 60.
-
-**I implemented the rubric exactly as approved and did not adjust it**, and the
-refinement sprint did not adjust it either. `GRADE_REWORK_OPTIONS.md` now shows
-why the first instinct — grading on a curve — is the wrong fix: the score is a
-step function of the disagreement band, so a percentile cut falls *inside* a
-cluster of cards that carry identical evidence. The recommendation there is to
-re-cut the absolute letter boundaries into the gaps between clusters, and to
-give the rubric a component that varies card to card.
-
-It needs approval because it changes what a grade means, and that is not an
-implementation decision.
+**The finding underneath it matters more than the numbers.** Cards where Atlas
+and the market agree to within a point realise 50.8% against a 51.3% claim — a
+coin flip, p = 0.69 on 760 games. An A+ card is one where Atlas has contributed
+nothing, so the grade prioritises in one direction only: it says what to
+discount. The card, the board's section captions and the research page all say
+so, and a test pins that the top of the scale carries the caveat.
 
 ### 2. One book quoting, on every card
 
@@ -174,6 +163,24 @@ distance would be better and is not worth the dependency yet.
 
 ---
 
+## The board
+
+`HOMEPAGE_FINAL.md` is the specification. Four section types, in order:
+featured national games, rivalries, the next five kickoffs, then every card
+grouped by grade.
+
+**Rivalries are computed, not curated.** A pairing counts when the two teams
+have met in at least eight of the nine seasons the warehouse holds, keyed on
+ESPN team ids — the warehouse and the scoreboard spell half of college football
+differently and a name join silently returns nothing. 179 pairings qualify and
+four are on this slate.
+
+Each grade block carries a caption saying what the letter means, because a board
+grouped by letter reads as a ranking of what to look at first and the letter
+does not mean that.
+
+---
+
 ## Mobile
 
 Most readers arrive from a link. The card is designed at 390px and expands:
@@ -183,7 +190,13 @@ Most readers arrive from a link. The card is designed at 390px and expands:
   of the navigation bar;
 - every number is tabular, so columns do not jitter;
 - the grade is in tier 1 on every card, so the most important thing on the page
-  is visible without scrolling whatever the letter is;
+  is visible without scrolling whatever the letter is, and it carries its own
+  three-line explanation there;
+- the hero is a head-to-head — two 52px crests either side of "at" — so the game
+  is identified before a word is read;
+- driver rows stack name over value; three columns in 358px meant both wrapped;
+- one rank chip per board row, not two, and the numbers column is capped at
+  108px, because otherwise a long matchup title wrapped to three lines;
 - the board's filter row wraps rather than scrolling sideways — a scrolling
   strip hides its own right-hand end;
 - 44px hit targets; the whole game row is the link.

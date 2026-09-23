@@ -17,7 +17,7 @@ from atlas import config
 from atlas.site import grade as grading
 from atlas.site import meta as espn_meta
 from atlas.site import render, social
-from atlas.site.data import build_cards, percentile_pool
+from atlas.site.data import build_cards, percentile_pool, rivalry_pairs
 from atlas.util import get_logger
 
 LOG = get_logger(__name__)
@@ -64,7 +64,8 @@ def build(out: Path | None = None, *, social_cards: bool = True,
         for side in (card.home, card.away):
             side.logo = logos.get(side.team_id)
 
-    (out / "index.html").write_text(render.homepage(cards, bands=bands))
+    (out / "index.html").write_text(
+        render.homepage(cards, bands=bands, rivalries=rivalry_pairs()))
     (out / "research.html").write_text(
         render.research_page(bands, overall, card_count=len(cards)))
     (out / "nfl.html").write_text(render.nfl_page())

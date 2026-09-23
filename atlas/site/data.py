@@ -260,6 +260,7 @@ def build_cards(*, horizon: int = 8, refresh_meta: bool = False) -> list[Card]:
     snapshots = store.read("snapshots")
     metadata = espn_meta.fetch(espn_meta.days_ahead(horizon), refresh=refresh_meta)
     bands = grading.calibration_bands("total")
+    curve = grading.calibration_curve("total")
 
     season = int(scheduled["season"].max())
     pool = percentile_pool(frame, season)
@@ -274,7 +275,7 @@ def build_cards(*, horizon: int = 8, refresh_meta: bool = False) -> list[Card]:
         kickoff = pd.to_datetime(info["kickoff"], utc=True, errors="coerce")
         if pd.isna(kickoff) or kickoff < now:
             continue
-        card = _card(row, info, numbers, snapshots, pool, bands)
+        card = _card(row, info, numbers, snapshots, pool, bands, curve)
         if card is not None:
             cards.append(card)
 
@@ -283,7 +284,7 @@ def build_cards(*, horizon: int = 8, refresh_meta: bool = False) -> list[Card]:
     return cards
 
 
-def _card(row, info, numbers, snapshots, pool, bands) -> Card | None:
+def _card(row, info, numbers, snapshots, pool, bands, curve) -> Card | None:
     from atlas.site import drivers as driving
 
     game_id = int(row["game_id"])
@@ -377,7 +378,11 @@ def _card(row, info, numbers, snapshots, pool, bands) -> Card | None:
     if difference is not None:
         band = bands.get(grading.band_label(difference))
         if band is not None:
-            card.grade = grading.compute(difference, band, completeness)
+            card.grade = grading.compute(
+                difference, band, completeness, curve=curve,
+                conditions=grading.Conditions(week=int(row["week"]),
+                                              movement=card.total.movement),
+            )
     card.drivers = driving.select(card, pool)
     card.cautions = cautions(card)
     return card
@@ -426,6 +431,37 @@ def cautions(card: Card) -> list[str]:
             "it opened."
         )
     return out[:3]
+
+
+#: A pairing counts as a rivalry when it has been played in at least this many
+#: of the seasons the warehouse holds. Computed, not curated: Atlas has no
+#: editorial list of rivalries and inventing one would be a claim the data
+#: cannot support. An unbroken annual series is what a rivalry is operationally,
+#: and the board states the definition beside the section so it can be argued
+#: with.
+RIVALRY_SEASONS = 8
+
+
+def rivalry_pairs(frame: pd.DataFrame | None = None) -> set[frozenset]:
+    """Team-id pairs that meet nearly every season.
+
+    Keyed on ESPN team ids rather than names: the warehouse and the scoreboard
+    spell half of college football differently, and a name join silently
+    returns nothing.
+    """
+    frame = load_research_frame() if frame is None else frame
+    played = frame.dropna(subset=["away_team_id", "home_team_id"])
+    pairs: dict[frozenset, set] = {}
+    for away, home, season in zip(played["away_team_id"], played["home_team_id"],
+                                  played["season"], strict=True):
+        pairs.setdefault(frozenset((int(away), int(home))), set()).add(int(season))
+    return {pair for pair, seasons in pairs.items() if len(seasons) >= RIVALRY_SEASONS}
+
+
+def is_rivalry(card: Card, pairs: set[frozenset]) -> bool:
+    if card.home.team_id is None or card.away.team_id is None:
+        return False
+    return frozenset((int(card.home.team_id), int(card.away.team_id))) in pairs
 
 
 def generated_at() -> str:

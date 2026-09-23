@@ -1,12 +1,27 @@
-"""The Atlas grade, computed.
+"""The Atlas grade, computed. Version 2.
 
-`docs/ATLAS_CARD_SPEC.md` §5 defines a four-component rubric out of 100. This
-module is that definition in code; nothing about a grade is entered by hand,
-and a test pins the two worked examples from the spec.
+`docs/GRADE_V2_IMPLEMENTATION.md` is the specification; `GRADE_STRATEGY_V2.md`
+is the research behind it. Nothing about a grade is entered by hand.
+
+V1 looked calibration up in a seven-row table of disagreement bands, which made
+the score a step function: seven clusters, four reachable letters, 67% of a
+real slate at A. The bands turned out to be an artifact of the research
+report's own buckets. Re-slicing the same seven seasons finely shows a smooth,
+monotone, near-linear relationship between the size of a disagreement and the
+calibration gap, and it holds out of sample in every season tested.
+
+V2 therefore fits the curve instead of reading the table. The score is
+continuous, every letter is reachable, and the thresholds are absolute: a
+card's letter depends on that card and not on what else is on the board.
 
 The grade is **not a recommendation**. It measures how much weight the rest of
-the card deserves, and it is built so that the loudest cards score lowest —
-because that is what seven seasons of calibration say should happen.
+the card deserves, and it is built so that the loudest cards score lowest.
+
+One consequence is worth stating where it cannot be missed. Cards where Atlas
+and the market agree to within a point realise 50.8% against a 51.3% claim -
+a coin flip, p = 0.69. An A+ card is one where Atlas has contributed nothing.
+So the grade prioritises in one direction only: it says what to discount, not
+what to look at first. `_lesson` says so on every card at the top of the scale.
 """
 
 from __future__ import annotations
@@ -22,21 +37,39 @@ from atlas.util import get_logger
 
 LOG = get_logger(__name__)
 
-#: Component weights, out of 100.
-WEIGHTS = {"calibration": 40, "agreement": 25, "stability": 20, "completeness": 15}
+#: Component weights, out of 100. Signal stability is gone: it measured "in how
+#: many of seven seasons did this band beat 50%", and there are no bands now.
+WEIGHTS = {"calibration": 45, "agreement": 25, "conditions": 15, "completeness": 15}
 
-#: A calibration gap this wide scores zero. The worst band Atlas measures sits
-#: at −0.278, so the scale has headroom without being generous.
+#: A calibration gap this wide scores zero. The worst the curve reaches inside
+#: the measured range is about −0.26, so the scale has headroom.
 GAP_SCALE = 0.35
 
-#: A disagreement this large scores zero on agreement. Chosen from the band
-#: table: 10+ points is where realised accuracy collapses to chance.
+#: A disagreement this large scores zero on agreement. 10+ points is where
+#: realised accuracy collapses to chance.
 DISAGREEMENT_SCALE = 12.0
 
-#: Score floors for each letter.
-LETTERS = ((90, "A+"), (80, "A"), (70, "B"), (60, "C"), (50, "D"), (0, "F"))
+#: Score floors for each letter. Chosen once from the seven-season distribution
+#: of V2 scores so that A+ and F are both rare and every letter is reachable -
+#: and then fixed. Calibrating thresholds against history is not grading on a
+#: curve: a curve recomputes the boundaries from whoever turned up this week,
+#: so the same card takes a different letter on a different Saturday. These do
+#: not move unless the research moves.
+LETTERS = ((96, "A+"), (90, "A"), (79, "B"), (66, "C"), (51, "D"), (0, "F"))
 
-#: Bands, matching `atlas.research.market_aware.EDGE_BUCKETS`.
+#: Measured in `GRADE_REWORK_OPTIONS.md` §C2 and stable season by season: weeks
+#: 1-4 calibrate worse in 6 of 7 seasons, and a total that has moved 1.5 or
+#: more since it opened calibrates worse in 5 of 6. Both worsen the gap, which
+#: lowers the grade, which is the direction the evidence points.
+EARLY_SEASON_WEEKS = 4
+EARLY_SEASON_PENALTY = -0.028
+UNSETTLED_MOVE = 1.5
+UNSETTLED_PENALTY = -0.022
+
+#: Bands, matching `atlas.research.market_aware.EDGE_BUCKETS`. V2 does not
+#: grade from these - it fits a curve - but the reliability record on the card
+#: and the research page still report by band, because a table of seven rows is
+#: how a reader checks a curve.
 BANDS = ((0, 1), (1, 2), (2, 4), (4, 6), (6, 8), (8, 10), (10, 1000))
 
 
@@ -66,22 +99,83 @@ class Band:
 
 
 @dataclass(frozen=True)
+class Curve:
+    """Calibration gap as a function of how far Atlas sits from the market.
+
+    ``gap(d) = -a * d ** p``, fitted to finely sliced out-of-sample results.
+    The fitted exponent is near 1, so the relationship is close to linear; the
+    coefficient moves by a factor of about 2.5 across seasons, which is why
+    this is refitted on every build rather than transcribed.
+    """
+
+    a: float
+    p: float
+    games: int
+    r: float
+    seasons: int
+
+    def gap(self, disagreement: float) -> float:
+        d = max(abs(float(disagreement)), 0.05)
+        return -self.a * d ** self.p
+
+
+@dataclass(frozen=True)
+class Conditions:
+    """The two things besides the disagreement that move a card's grade.
+
+    Both were measured against seven seasons and both held season by season:
+    early-season cards calibrate worse (6 of 7), and cards whose total has
+    moved since it opened calibrate worse (5 of 6). They are small - two to
+    three points of calibration gap against twenty-seven across the range -
+    and they are the only inputs that separate two cards the market treats
+    the same way.
+    """
+
+    week: int = 99
+    movement: float | None = None
+
+    @property
+    def early(self) -> bool:
+        return self.week <= EARLY_SEASON_WEEKS
+
+    @property
+    def unsettled(self) -> bool:
+        return self.movement is not None and abs(self.movement) >= UNSETTLED_MOVE
+
+    @property
+    def penalty(self) -> float:
+        return ((EARLY_SEASON_PENALTY if self.early else 0.0)
+                + (UNSETTLED_PENALTY if self.unsettled else 0.0))
+
+    @property
+    def score(self) -> float:
+        """0-1. Half for a mature season, half for a settled market."""
+        maturity = 0.5 if not self.early else 0.5 * min(1.0, max(0, self.week - 1) / 4)
+        settled = 0.5 if not self.unsettled else 0.2
+        return min(1.0, maturity + settled)
+
+
+@dataclass(frozen=True)
 class Grade:
     letter: str
     score: float
     calibration: float
     agreement: float
-    stability: float
+    conditions: float
     completeness: float
     band: Band
     headline: str
+    lesson: list[str]
+    disagreement: float
+    expected_gap: float
+    condition_notes: list[str]
 
     @property
     def components(self) -> list[tuple[str, float, int]]:
         return [
             ("Calibration", self.calibration, WEIGHTS["calibration"]),
             ("Market agreement", self.agreement, WEIGHTS["agreement"]),
-            ("Signal stability", self.stability, WEIGHTS["stability"]),
+            ("Card conditions", self.conditions, WEIGHTS["conditions"]),
             ("Data completeness", self.completeness, WEIGHTS["completeness"]),
         ]
 
@@ -93,6 +187,12 @@ class Grade:
     def low(self) -> bool:
         return self.letter in ("D", "F")
 
+    @property
+    def word(self) -> str:
+        """The letter in one word, for a social card and a board caption."""
+        return {"A+": "Very high", "A": "High", "B": "Solid",
+                "C": "Mixed", "D": "Low", "F": "Low"}[self.letter]
+
 
 def letter_for(score: float) -> str:
     for floor, letter in LETTERS:
@@ -101,17 +201,21 @@ def letter_for(score: float) -> str:
     return "F"
 
 
-def compute(disagreement: float, band: Band, completeness: float) -> Grade:
-    """The rubric. Four components, one letter."""
-    calibration = max(0.0, 1.0 - abs(band.gap) / GAP_SCALE)
+def compute(disagreement: float, band: Band, completeness: float, *,
+            curve: Curve, conditions: Conditions | None = None) -> Grade:
+    """The rubric. Four components, one letter, nothing entered by hand."""
+    conditions = conditions or Conditions()
+    expected_gap = curve.gap(disagreement) + conditions.penalty
+
+    calibration = max(0.0, 1.0 - abs(expected_gap) / GAP_SCALE)
     agreement = max(0.0, 1.0 - abs(float(disagreement)) / DISAGREEMENT_SCALE)
-    stability = band.stability
+    condition_score = conditions.score
     completeness = min(1.0, max(0.0, float(completeness)))
 
     score = (
         WEIGHTS["calibration"] * calibration
         + WEIGHTS["agreement"] * agreement
-        + WEIGHTS["stability"] * stability
+        + WEIGHTS["conditions"] * condition_score
         + WEIGHTS["completeness"] * completeness
     )
     letter = letter_for(score)
@@ -120,11 +224,90 @@ def compute(disagreement: float, band: Band, completeness: float) -> Grade:
         score=score,
         calibration=calibration,
         agreement=agreement,
-        stability=stability,
+        conditions=condition_score,
         completeness=completeness,
         band=band,
         headline=_headline(letter, band, disagreement),
+        lesson=_lesson(letter, band, disagreement, expected_gap),
+        disagreement=abs(float(disagreement)),
+        expected_gap=expected_gap,
+        condition_notes=_condition_notes(conditions),
     )
+
+
+def _condition_notes(conditions: Conditions) -> list[str]:
+    out = []
+    if conditions.early:
+        out.append(
+            f"It is week {conditions.week}. Team profiles are still shrunk "
+            "toward last season, and early-season cards have calibrated worse "
+            "in six of seven seasons."
+        )
+    if conditions.unsettled:
+        out.append(
+            f"The total has moved {abs(conditions.movement):.1f} points since "
+            "it opened. Cards on a market that has moved have calibrated worse "
+            "in five of six seasons."
+        )
+    if not out:
+        out.append(
+            "The season is mature enough for the team profiles to have "
+            "settled, and the market has not moved much since it opened."
+        )
+    return out
+
+
+def _lesson(letter: str, band: Band, disagreement: float,
+            expected_gap: float) -> list[str]:
+    """Three plain-English lines: what the letter says, what Atlas did, and
+    what the record behind it is.
+
+    The grade is the least self-explanatory thing on the card - a letter is a
+    symbol, and a symbol a reader has to be taught is a symbol they skip. Each
+    card teaches it again, in words, from its own numbers.
+    """
+    edge = abs(float(disagreement))
+    near = "this close to" if edge < 2 else "this far from"
+    claim = (f"Across seven seasons, cards {near} the market claimed "
+             f"{band.claimed:.0%} accuracy and delivered {band.realised:.0%}.")
+
+    if letter == "A+":
+        return [
+            "Historically reliable.",
+            f"Atlas and the market land on the same number, {edge:.1f} points apart.",
+            "Agreement is where this model is most reliable, and where it is "
+            "adding least — a top grade means trust the number, not that this "
+            "is the card to read first.",
+        ]
+    if letter == "A":
+        return [
+            "Historically reliable.",
+            f"Atlas and the market are closely aligned, {edge:.1f} points apart.",
+            claim,
+        ]
+    if letter == "B":
+        return [
+            "Historically sound.",
+            f"A moderate disagreement of {edge:.1f} points.",
+            claim + " The claim runs a little ahead of the delivery.",
+        ]
+    if letter == "C":
+        return [
+            "Mixed record.",
+            f"A wide disagreement of {edge:.1f} points.",
+            claim + " That gap is where this grade comes from.",
+        ]
+    if letter == "D":
+        return [
+            "Historically unreliable.",
+            f"A large disagreement of {edge:.1f} points.",
+            claim + " Atlas commonly struggles this far out.",
+        ]
+    return [
+        "Historically unreliable.",
+        f"A very large disagreement of {edge:.1f} points.",
+        claim + " Atlas marks its own card down.",
+    ]
 
 
 def _headline(letter: str, band: Band, disagreement: float) -> str:
@@ -194,6 +377,71 @@ def calibration_bands(market_name: str = "total") -> dict[str, Band]:
         )
     LOG.info("calibration bands: %d computed for %s", len(bands), market_name)
     return bands
+
+
+#: Slice width for the curve fit, in points of disagreement. Narrow enough
+#: that the shape is not an artifact of the slicing, wide enough that each
+#: slice carries a usable number of games.
+SLICE = 0.5
+MIN_SLICE_GAMES = 40
+
+
+def calibration_curve(market_name: str = "total") -> Curve:
+    """Fit ``gap(d) = -a * d ** p`` to seven seasons, out of sample.
+
+    The seven-band table this replaced was a reporting convention, not a
+    property of the data: sliced at half a point instead, the relationship
+    between the size of a disagreement and the calibration gap is smooth and
+    close to linear. Refitted on every build, because the coefficient moves by
+    about 2.5x across seasons and a transcribed constant would drift.
+    """
+    frame, market = _scored(market_name)
+    frame = frame.dropna(subset=["won", "abs_edge"])
+
+    edges, gaps, weights = [], [], []
+    upper = float(frame["abs_edge"].quantile(0.995))
+    lo = 0.0
+    while lo < upper:
+        block = frame[(frame["abs_edge"] >= lo) & (frame["abs_edge"] < lo + SLICE)]
+        if len(block) >= MIN_SLICE_GAMES:
+            edges.append(lo + SLICE / 2)
+            gaps.append(float(block["won"].mean() - block["claimed"].mean()))
+            weights.append(len(block))
+        lo += SLICE
+
+    edges_a, gaps_a = np.asarray(edges), np.asarray(gaps)
+    negative = gaps_a < 0
+    if negative.sum() < 4:
+        raise RuntimeError("not enough negatively calibrated slices to fit a curve")
+
+    # Least squares in log space: log(-gap) = log(a) + p * log(d). Slices where
+    # the model happened to beat its claim carry no information about the decay
+    # and are left out of the fit rather than clamped.
+    coef = np.polyfit(np.log(edges_a[negative]), np.log(-gaps_a[negative]), 1)
+    p_exp, a_coef = float(coef[0]), float(np.exp(coef[1]))
+    predicted = -a_coef * edges_a ** p_exp
+    r = float(np.corrcoef(predicted, gaps_a)[0, 1])
+
+    curve = Curve(a=a_coef, p=p_exp, games=int(len(frame)), r=r,
+                  seasons=int(frame["season"].nunique()))
+    LOG.info("calibration curve: gap(d) = -%.4f * d^%.3f  (r=%.2f, n=%d)",
+             curve.a, curve.p, curve.r, curve.games)
+    return curve
+
+
+def _scored(market_name: str):
+    """The walk-forward frame both the curve and the band table are built on."""
+    from atlas.research.dataset import load_research_frame, research_sample
+
+    frame = ma.prepare(research_sample(load_research_frame()))
+    market = beta.markets(frame)[market_name]
+    scored = ma.walk_forward(frame, market)
+    bucketed = ma.bucket_edges(scored, market)
+    probs = ma.to_probability(bucketed, market, 0.0)
+    outcomes = pd.to_numeric(bucketed[market.outcome], errors="coerce")
+    bucketed["won"] = ma.realised(probs, outcomes)
+    bucketed["claimed"] = np.maximum(probs, 1 - probs)
+    return bucketed, market
 
 
 def overall(bands: dict[str, Band]) -> Band:
