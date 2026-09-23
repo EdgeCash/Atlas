@@ -1,10 +1,12 @@
-"""Roster talent: recruiting rankings and returning production.
+"""Roster talent and programme context: recruiting, returning production, the
+head coach and the programme's long-run SP+.
 
-Both are pre-season facts - recruiting classes sign in February and returning
-production is fixed once the roster is set - so the **same** season's value is
-point-in-time safe, unlike SP+/FPI.
+All four are pre-season facts - recruiting classes sign in February, returning
+production is fixed once the roster is set, a head coach's hire date is public
+before week 1, and the programme mean uses only seasons already played - so the
+**same** season's value is point-in-time safe, unlike SP+/FPI.
 
-Both come only from CFBD. Without ``CFBD_API_KEY`` the columns exist but are
+All come only from CFBD. Without ``CFBD_API_KEY`` the columns exist but are
 null, and the research report says so rather than quietly dropping the
 variables.
 """
@@ -35,12 +37,17 @@ def build_talent(raw: Path, staging: Path, games: pd.DataFrame, teams: pd.DataFr
     returning = _season_table(raw, teams, seasons, "returning", value_col="percentPPA")
     out = _attach(out, returning, "returning_production")
 
+    out = _attach(out, _coach_table(raw, teams, seasons), "new_coach")
+    out = _attach(out, _program_table(raw, teams, seasons), "sp_program_mean")
+
     empty = [
         name
         for name, col in (
             ("recruiting", "recruiting_rank_diff"),
             ("talent", "talent_diff"),
             ("returning production", "returning_production_diff"),
+            ("coaches", "new_coach_diff"),
+            ("SP+ history", "sp_program_mean_diff"),
         )
         if out[col].isna().all()
     ]
@@ -79,6 +86,89 @@ def _season_table(
     if not frames:
         return pd.DataFrame(columns=["season", "team_id", "value"])
     return pd.concat(frames, ignore_index=True).dropna(subset=["value"])
+
+
+#: A head coach hired on or after 1 September of the previous year opens the
+#: season in their first year. An interim who took over mid-season and kept
+#: the job is therefore "new" in the following season, not the one they
+#: inherited.
+NEW_COACH_FROM = "{}-09-01"
+#: The season is taken to have opened by mid-August: a coach hired after that
+#: replaced someone during the season and never opened it.
+SEASON_OPENS = "{}-08-15"
+
+
+def _coach_table(raw: Path, teams: pd.DataFrame, seasons: list[int]) -> pd.DataFrame:
+    """``1.0`` where the team opens the season under a new head coach.
+
+    The opening coach is the one on the season's staff list who was hired
+    before the season began. A mid-season replacement is a fact about games
+    already played, so it never sets the flag for that season.
+    """
+    resolve = teams_stage.name_resolver(teams)
+    frames = []
+    for season in seasons:
+        path = raw / "cfbd" / f"coaches_{season}.parquet"
+        if not path.exists():
+            continue
+        df = pd.read_parquet(path)
+        if df.empty or "seasons" not in df.columns or "hireDate" not in df.columns:
+            continue
+        df = df.explode("seasons").dropna(subset=["seasons"]).reset_index(drop=True)
+        stints = pd.json_normalize(df["seasons"].tolist())
+        if "school" not in stints.columns or "year" not in stints.columns:
+            continue
+        df = pd.concat([df.drop(columns="seasons"), stints], axis=1)
+        df = df[df["year"] == season].dropna(subset=["school"]).copy()
+        df["hire"] = pd.to_datetime(df["hireDate"], errors="coerce", utc=True).dt.tz_localize(None)
+        df["opened"] = df["hire"].isna() | (df["hire"] <= pd.Timestamp(SEASON_OPENS.format(season)))
+        df = (df.sort_values(["school", "opened", "hire"], ascending=[True, False, True])
+                .drop_duplicates("school"))
+        df["team_id"] = resolve(season, df["school"])
+        df = df.dropna(subset=["team_id"])
+        new = (df["hire"] >= pd.Timestamp(NEW_COACH_FROM.format(season - 1))).astype(float)
+        frames.append(pd.DataFrame({"season": season, "team_id": df["team_id"].astype("int64"),
+                                    "value": new.to_numpy()}))
+    if not frames:
+        return pd.DataFrame(columns=["season", "team_id", "value"])
+    return pd.concat(frames, ignore_index=True)
+
+
+def _program_table(raw: Path, teams: pd.DataFrame, seasons: list[int]) -> pd.DataFrame:
+    """Mean SP+ over every season before this one.
+
+    What the programme is, as opposed to what last year's team was: the
+    prior regresses a team toward this rather than toward the league mean,
+    and a new coach's team harder. Only seasons already played count.
+    """
+    resolve = teams_stage.name_resolver(teams)
+    history = []
+    for path in sorted((raw / "cfbd").glob("sp_plus_*.parquet")):
+        year = int(path.stem.rsplit("_", 1)[1])
+        if year >= max(seasons):
+            continue
+        df = pd.read_parquet(path)
+        if df.empty or "team" not in df.columns or "rating" not in df.columns:
+            continue
+        df = df.dropna(subset=["team"])
+        df["team_id"] = resolve(year, df["team"])
+        df = df.dropna(subset=["team_id"])
+        history.append(pd.DataFrame({"year": year, "team_id": df["team_id"].astype("int64"),
+                                     "rating": pd.to_numeric(df["rating"], errors="coerce")}))
+    if not history:
+        return pd.DataFrame(columns=["season", "team_id", "value"])
+    history = pd.concat(history, ignore_index=True).dropna(subset=["rating"])
+    frames = []
+    for season in seasons:
+        past = history[history["year"] < season]
+        if past.empty:
+            continue
+        mean = past.groupby("team_id")["rating"].mean()
+        frames.append(pd.DataFrame({"season": season, "team_id": mean.index.to_numpy(dtype="int64"),
+                                    "value": mean.to_numpy()}))
+    if not frames:
+        return pd.DataFrame(columns=["season", "team_id", "value"])
+    return pd.concat(frames, ignore_index=True)
 
 
 def _attach(out: pd.DataFrame, table: pd.DataFrame, name: str) -> pd.DataFrame:

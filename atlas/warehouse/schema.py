@@ -75,6 +75,10 @@ REQUIRED: dict[str, list[str]] = {
         "home_recruiting_rank",
         "away_recruiting_rank",
         "talent_diff",
+        "home_new_coach",
+        "away_new_coach",
+        "home_sp_program_mean",
+        "away_sp_program_mean",
     ],
     "context": [
         "game_id",

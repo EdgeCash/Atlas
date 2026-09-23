@@ -44,12 +44,21 @@ FIRST_TEST_SEASON = 2021
 
 #: Preseason facts, as the warehouse names them on a team's side of a game.
 #: Every one is known before week 1 and is constant within a team-season.
+#: Step 4 added the programme context: the programme's long-run SP+ (the
+#: regression is toward *that*, not the league mean), whether the team opens
+#: under a new head coach, and the interaction of the two - a new coach's team
+#: regresses to the programme harder.
+PROGRAMME = ["sp_program_mean", "new_coach", "new_coach_x_overach"]
 FEATURES = {
-    "net": ["sp_plus", "fpi", "talent", "recruiting_rank", "returning_production"],
-    "off": ["sp_plus_off", "fpi", "talent", "recruiting_rank", "returning_production"],
-    "def": ["sp_plus_def", "fpi", "talent", "recruiting_rank", "returning_production"],
+    "net": ["sp_plus", "fpi", "talent", "recruiting_rank", "returning_production", *PROGRAMME],
+    "off": ["sp_plus_off", "fpi", "talent", "recruiting_rank", "returning_production", *PROGRAMME],
+    "def": ["sp_plus_def", "fpi", "talent", "recruiting_rank", "returning_production", *PROGRAMME],
 }
 ALL_FEATURES = sorted({f for fs in FEATURES.values() for f in fs})
+#: Features computed from staged columns rather than read from the frame:
+#: ``name -> (flag, last season, programme mean)``, giving ``flag * (last - mean)``.
+DERIVED = {"new_coach_x_overach": ("new_coach", "sp_plus", "sp_program_mean")}
+FRAME_FEATURES = [f for f in ALL_FEATURES if f not in DERIVED]
 
 #: Ridge on standardised features. Five features against ~130 teams a season
 #: times three or more seasons is not a regime that needs much of it.
@@ -158,13 +167,18 @@ def team_seasons(frame: pd.DataFrame) -> pd.DataFrame:
     """
     parts = []
     for side in ("home", "away"):
-        cols = {f"{side}_{f}": f for f in ALL_FEATURES if f"{side}_{f}" in frame.columns}
+        cols = {f"{side}_{f}": f for f in FRAME_FEATURES if f"{side}_{f}" in frame.columns}
         part = frame[["season", f"{side}_team_id", *cols]].rename(
             columns={f"{side}_team_id": "team_id", **cols})
         parts.append(part)
     long = pd.concat(parts, ignore_index=True)
-    return (long.groupby(["season", "team_id"], as_index=False)[[c for c in ALL_FEATURES if c in long]]
-                .first())
+    out = (long.groupby(["season", "team_id"], as_index=False)[[c for c in FRAME_FEATURES if c in long]]
+               .first())
+    for name, (flag, last, mean) in DERIVED.items():
+        if {flag, last, mean} <= set(out.columns):
+            num = {c: pd.to_numeric(out[c], errors="coerce") for c in (flag, last, mean)}
+            out[name] = num[flag] * (num[last] - num[mean])
+    return out
 
 
 def season_targets(frame: pd.DataFrame) -> pd.DataFrame:

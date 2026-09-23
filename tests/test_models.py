@@ -490,3 +490,17 @@ def test_state_report_renders(research_frame):
     for heading in ("## Hyperparameters chosen", "## Regular season, pooled", "## By week bucket",
                     "## Reliability", "top and bottom ten"):
         assert heading in text
+
+
+def test_prior_derives_the_coaching_interaction_from_staged_columns():
+    """``new_coach_x_overach`` is new-coach × (last SP+ − programme mean), built
+    in :func:`team_seasons`; without the staged columns it is simply absent."""
+    frame = pd.DataFrame({"season": [2021, 2021], "home_team_id": [1, 2], "away_team_id": [2, 1],
+                          "home_sp_plus": [10.0, 0.0], "away_sp_plus": [0.0, 10.0],
+                          "home_sp_program_mean": [4.0, 0.0], "away_sp_program_mean": [0.0, 4.0],
+                          "home_new_coach": [1.0, 0.0], "away_new_coach": [0.0, 1.0]})
+    t = prior_mod.team_seasons(frame).set_index("team_id")
+    assert t.loc[1, "new_coach_x_overach"] == 6.0
+    assert t.loc[2, "new_coach_x_overach"] == 0.0
+    bare = prior_mod.team_seasons(frame.drop(columns=["home_new_coach", "away_new_coach"]))
+    assert "new_coach_x_overach" not in bare.columns

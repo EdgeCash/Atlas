@@ -10,6 +10,7 @@ builds end-to-end without it from the open mirrors, and setting
 * recruiting rankings (``/recruiting/teams``) and roster talent (``/talent``)
 * coaching staffs (``/coaches``) and weekly polls (``/rankings``)
 * returning production (``/player/returning``)
+* transfer portal entries (``/player/portal``)
 * kickoff weather (``/games/weather``) - **paid CFBD tier only**
 
 All of these are season-level. Atlas joins season ``S-1`` values onto season
@@ -143,6 +144,12 @@ def fetch_returning_production(raw: Path, season: int) -> Path:
     return _cached(raw, "returning", season, "/player/returning", {"year": season})
 
 
+def fetch_portal(raw: Path, season: int) -> Path:
+    """Players who entered the portal ahead of ``season``. Cached for the
+    step-4 portal adjustment; nothing stages it until it has been measured."""
+    return _cached(raw, "portal", season, "/player/portal", {"year": season})
+
+
 def fetch_weather(raw: Path, season: int) -> Path:
     """Kickoff weather. Free CFBD keys cannot reach this endpoint."""
     dest = raw / "cfbd" / f"weather_{season}.parquet"
@@ -205,6 +212,7 @@ STAGED: dict[str, tuple[str, str]] = {
     "talent": ("talent", "home_talent"),
     "recruiting": ("talent", "home_recruiting_rank"),
     "returning": ("talent", "home_returning_production"),
+    "coaches": ("talent", "home_new_coach"),
 }
 
 
@@ -216,6 +224,7 @@ FETCHERS = {
     "rankings": fetch_rankings,
     "recruiting": fetch_recruiting,
     "returning": fetch_returning_production,
+    "portal": fetch_portal,
     "weather": fetch_weather,
 }
 

@@ -154,3 +154,38 @@ def test_name_resolver_falls_back_across_seasons():
     assert exact.iloc[0] == 7
     assert earlier.iloc[0] == 7
     assert pd.isna(unknown.iloc[0])
+
+
+def test_new_coach_and_program_mean_are_preseason_facts(tmp_path):
+    """A head coach hired in the off-season is new; a mid-season interim never
+    opens a season; the programme mean uses only seasons already played."""
+    from atlas.staging import talent
+
+    raw = tmp_path / "raw"
+    (raw / "cfbd").mkdir(parents=True)
+    teams = pd.DataFrame({"season": [2021, 2021, 2022, 2022], "school": ["A", "B", "A", "B"],
+                          "team_id": [1, 2, 1, 2]})
+
+    def coaches(season, rows):
+        pd.DataFrame([{"id": i, "firstName": "x", "lastName": n, "hireDate": h,
+                       "seasons": [{"school": s, "year": season, "games": g}]}
+                      for i, n, h, s, g in rows]).to_parquet(raw / "cfbd" / f"coaches_{season}.parquet", index=False)
+
+    coaches(2021, [(1, "Old", "2015-01-10T00:00:00.000Z", "A", 8),
+                   (3, "Interim", "2021-10-01T00:00:00.000Z", "A", 4),
+                   (2, "Steady", "2010-01-10T00:00:00.000Z", "B", 12)])
+    coaches(2022, [(4, "New", "2021-12-05T00:00:00.000Z", "A", 12),
+                   (2, "Steady", "2010-01-10T00:00:00.000Z", "B", 12)])
+    for year, a, b in ((2019, 10.0, -5.0), (2020, 20.0, -5.0), (2021, 30.0, -5.0), (2022, 99.0, 99.0)):
+        pd.DataFrame({"year": year, "team": ["A", "B"], "rating": [a, b]}).to_parquet(
+            raw / "cfbd" / f"sp_plus_{year}.parquet", index=False)
+    games = pd.DataFrame({"game_id": [1, 2], "season": [2021, 2022], "home_team_id": [1, 1], "away_team_id": [2, 2]})
+
+    out = talent.build_talent(raw, tmp_path, games, teams).set_index("game_id")
+    assert out.loc[1, "home_new_coach"] == 0.0          # hired 2015; the October interim never opened 2021
+    assert out.loc[2, "home_new_coach"] == 1.0          # hired December 2021
+    assert out.loc[2, "away_new_coach"] == 0.0
+    assert out.loc[2, "new_coach_diff"] == 1.0
+    assert out.loc[1, "home_sp_program_mean"] == 15.0   # 2019-2020: 2021 has not been played
+    assert out.loc[2, "home_sp_program_mean"] == 20.0   # 2019-2021; 2022's 99 is the future
+    assert out.loc[2, "away_sp_program_mean"] == -5.0
