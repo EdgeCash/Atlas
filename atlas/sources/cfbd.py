@@ -186,6 +186,28 @@ def unavailable_reason(raw: Path, dataset: str) -> str | None:
         return None
 
 
+#: What each CFBD dataset actually leaves in the warehouse, as
+#: ``dataset -> (staged table, a representative column)``. A dataset that is
+#: null in that column everywhere did not reach the warehouse, whatever the
+#: environment said.
+#:
+#: Three CFBD-adjacent things are deliberately absent, because attributing them
+#: here would be the same misreporting this map exists to end:
+#:
+#: * **FPI** comes from ESPN - `atlas/staging/ratings.py` reads
+#:   ``espn.season_fpi_path``, not this module.
+#: * **Elo** rides in on the sportsdataverse game rows.
+#: * **Weather** is Meteostat's, free and unmetered; CFBD is only a fallback
+#:   when no station observation exists, so claiming it would be wrong in the
+#:   ordinary case.
+STAGED: dict[str, tuple[str, str]] = {
+    "sp_plus": ("ratings", "home_sp_plus"),
+    "talent": ("talent", "home_talent"),
+    "recruiting": ("talent", "home_recruiting_rank"),
+    "returning": ("talent", "home_returning_production"),
+}
+
+
 FETCHERS = {
     "sp_plus": fetch_sp_plus,
     "fpi": fetch_fpi,

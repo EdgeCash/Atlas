@@ -92,7 +92,8 @@ def test_manifest_records_the_build(synthetic_build):
     )
     assert manifest["seasons_present"]
     assert set(manifest["tables"]) == set(schema.TABLES)
-    assert manifest["cfbd_enrichment"] in (True, False)
+    assert isinstance(manifest["cfbd_enrichment"], dict)
+    assert "present" in manifest["cfbd_enrichment"]
 
 
 def test_rebuild_is_deterministic(synthetic_build):
@@ -124,3 +125,88 @@ def test_research_view_carries_every_rating_column(synthetic_build):
         con.close()
     expected = set(ratings.columns) - {"game_id", "season", "home_team_id", "away_team_id"}
     assert expected.issubset(view_cols)
+
+
+
+# ---------------------------------------------------------------------------
+# cfbd_enrichment reports the data, not the environment
+# ---------------------------------------------------------------------------
+
+
+def _frames(sp_plus, talent):
+    """Two staged tables with the CFBD-derived columns set as given."""
+    return {
+        "ratings": pd.DataFrame({"game_id": [1, 2], "home_sp_plus": sp_plus}),
+        "talent": pd.DataFrame(
+            {
+                "game_id": [1, 2],
+                "home_talent": talent,
+                "home_recruiting_rank": talent,
+                "home_returning_production": talent,
+            }
+        ),
+    }
+
+
+def test_enrichment_is_reported_without_a_key_when_the_data_is_there(monkeypatch):
+    """The case that shipped wrong.
+
+    Staging loads the CFBD parquets by file existence, so a build over
+    already-fetched files has the enrichment whether or not a key is set. The
+    old field asked the environment and answered no.
+    """
+    from atlas.sources import cfbd
+    from atlas.warehouse import build as build_mod
+
+    monkeypatch.delenv("CFBD_API_KEY", raising=False)
+    assert not cfbd.available()
+
+    out = build_mod._cfbd_enrichment(_frames([12.4, 9.1], [880.0, 790.0]))
+    assert out["present"] is True
+    assert out["key_in_environment"] is False
+    assert out["datasets"]["sp_plus"]["non_null"] == 2
+
+
+def test_no_enrichment_is_reported_with_a_key_when_the_data_is_not(monkeypatch):
+    """The other half, which nothing used to check.
+
+    A key whose every fetch failed leaves null columns. Reporting enrichment
+    there would overstate the warehouse, which is the worse direction.
+    """
+    import numpy as np
+
+    from atlas.warehouse import build as build_mod
+
+    monkeypatch.setenv("CFBD_API_KEY", "not-a-real-key")
+    out = build_mod._cfbd_enrichment(_frames([np.nan, np.nan], [np.nan, np.nan]))
+    assert out["present"] is False
+    assert out["key_in_environment"] is True
+    assert all(not d["present"] for d in out["datasets"].values())
+
+
+def test_coverage_is_the_share_of_rows_that_carry_the_column():
+    import numpy as np
+
+    from atlas.warehouse import build as build_mod
+
+    out = build_mod._cfbd_enrichment(_frames([12.4, np.nan], [880.0, 790.0]))
+    assert out["datasets"]["sp_plus"]["coverage"] == 0.5
+    assert out["datasets"]["talent"]["coverage"] == 1.0
+
+
+def test_a_missing_table_is_reported_rather_than_raising():
+    from atlas.warehouse import build as build_mod
+
+    out = build_mod._cfbd_enrichment({})
+    assert out["present"] is False
+    assert out["datasets"]["sp_plus"]["missing"] == "ratings.home_sp_plus"
+
+
+def test_fpi_elo_and_weather_are_not_claimed_as_cfbd():
+    """FPI is ESPN's, Elo rides in on the game rows, and weather is Meteostat's
+    with CFBD only a fallback. Attributing any of them here would be the same
+    misreporting this field was rewritten to end."""
+    from atlas.sources import cfbd
+
+    claimed = {column for _, column in cfbd.STAGED.values()}
+    assert not any("fpi" in c or "elo" in c or "weather" in c for c in claimed)

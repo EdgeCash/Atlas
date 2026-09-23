@@ -311,6 +311,48 @@ LEFT JOIN outcomes o USING (game_id)
 """
 
 
+def _cfbd_enrichment(tables: dict[str, pd.DataFrame]) -> dict:
+    """What CFBD actually contributed, measured on the staged tables.
+
+    This field used to be ``cfbd.available()``, which answers *"was a key set
+    in this process"* - a question about the environment, not about the data.
+    Staging loads the CFBD parquets by file existence and never consults the
+    key, so the two disagree in **both** directions:
+
+    * a keyless build over already-fetched files reported no enrichment on a
+      warehouse full of it, which is what shipped on 23 September 2026;
+    * a keyed build whose every fetch failed would report enrichment on a
+      warehouse with none, which is the worse half and was never noticed
+      because nothing checked.
+
+    Provenance that reports the environment is provenance that can lie. This
+    counts rows instead.
+    """
+    datasets = {}
+    for name, (table, column) in cfbd.STAGED.items():
+        df = tables.get(table)
+        if df is None or column not in df.columns:
+            datasets[name] = {"present": False, "missing": f"{table}.{column}"}
+            continue
+        rows = int(len(df))
+        non_null = int(df[column].notna().sum())
+        datasets[name] = {
+            "present": non_null > 0,
+            "measured_on": f"{table}.{column}",
+            "non_null": non_null,
+            "rows": rows,
+            "coverage": round(non_null / rows, 4) if rows else 0.0,
+        }
+    return {
+        "present": any(d["present"] for d in datasets.values()),
+        # Kept because it is genuinely useful next to the counts: a key with no
+        # coverage means the fetches failed, and coverage with no key means the
+        # build ran on cached files. Neither is an error; conflating them was.
+        "key_in_environment": cfbd.available(),
+        "datasets": datasets,
+    }
+
+
 def _write_manifest(paths: config.Paths, tables: dict[str, pd.DataFrame], seasons: list[int]) -> None:
     games = tables["games"]
     manifest = {
@@ -318,7 +360,7 @@ def _write_manifest(paths: config.Paths, tables: dict[str, pd.DataFrame], season
         "atlas_version": config.__dict__.get("__version__", "0.1.0"),
         "seasons_requested": seasons,
         "seasons_present": sorted(int(s) for s in games["season"].unique()),
-        "cfbd_enrichment": cfbd.available(),
+        "cfbd_enrichment": _cfbd_enrichment(tables),
         "tables": {
             name: {"rows": int(len(df)), "columns": int(df.shape[1])}
             for name, df in tables.items()
