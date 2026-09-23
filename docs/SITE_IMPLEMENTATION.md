@@ -77,6 +77,8 @@ card cannot disagree with each other.
 site/
   index.html          today's board, search, conference and grade filters
   about.html          the thirty-second landing page
+  faq.html            27 questions, the uncomfortable ones first
+  404.html            noindex, no canonical
   research.html       how Atlas works, what grades mean, calibration
   nfl.html            the three stages, and why grades come last
   premium.html        comparison table, framework only, no payment path

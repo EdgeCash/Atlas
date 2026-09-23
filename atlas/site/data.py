@@ -400,10 +400,16 @@ def cautions(card: Card) -> list[str]:
     difference = card.total_difference
 
     if band and difference is not None and abs(difference) >= 6:
+        # The grade block directly above already gives this game's
+        # claimed-versus-delivered figures, so repeating them here spent a
+        # caution on a sentence the reader has just read. This says the part
+        # the grade does not: what a reader should do about it. And it says
+        # it without the word "band", which is research vocabulary that means
+        # nothing to somebody who arrived from a link.
         out.append(
-            f"Atlas sits {abs(difference):.1f} points from the market. Cards in "
-            f"the {band.label} band have claimed {band.claimed:.0%} accuracy and "
-            f"delivered {band.realised:.0%}."
+            f"Atlas is {abs(difference):.1f} points away from the market here. "
+            "That is the range where its projection has been least worth "
+            "leaning on — read the drivers and the market context instead."
         )
     if card.books <= 1:
         out.append(

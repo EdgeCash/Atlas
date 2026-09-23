@@ -70,6 +70,8 @@ def build(out: Path | None = None, *, social_cards: bool = True,
         render.research_page(bands, overall, card_count=len(cards)))
     (out / "about.html").write_text(
         render.about_page(_example_card(cards), card_count=len(cards)))
+    (out / "faq.html").write_text(render.faq_page())
+    (out / "404.html").write_text(render.not_found_page())
     (out / "nfl.html").write_text(render.nfl_page())
     (out / "premium.html").write_text(render.premium_page())
 
@@ -176,6 +178,7 @@ def _write_sitemap(out: Path, cards, teams: dict) -> None:
     urls: list[tuple[str, str, str]] = [
         ("", "daily", SITEMAP_PRIORITY[""]),
         ("about.html", "monthly", SITEMAP_PRIORITY["about.html"]),
+        ("faq.html", "monthly", "0.7"),
         ("research.html", "weekly", SITEMAP_PRIORITY["research.html"]),
         ("nfl.html", "monthly", "0.4"),
         ("premium.html", "monthly", "0.5"),

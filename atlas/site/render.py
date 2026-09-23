@@ -41,6 +41,15 @@ CARD_DISCLOSURE = (
     "before kickoff."
 )
 
+#: Most first-time visitors arrive on a card, from a link, knowing nothing
+#: about Atlas - so the card has to offer the explanation rather than assume a
+#: reader will find the nav. One line, at the end of the five-second view,
+#: which is exactly where somebody who is confused has got to.
+NEW_HERE = (
+    '<p class="new-here">New to Atlas? '
+    '<a href="../about.html">What a card is, and what a grade means</a></p>'
+)
+
 #: Two accents closer than this read as the same colour, so the away team
 #: falls back to slate. `docs/UI_SYSTEM.md`, team accent rule 4.
 COLLISION = 60.0
@@ -122,6 +131,7 @@ def layout(*, title: str, body: str, depth: int = 0, description: str = "",
   <div><b>Atlas Sports Intelligence</b> · {TAGLINE}</div>
   <div>Out-of-sample figures from a point-in-time database ·
     <a href="{root}about.html">new here</a> ·
+    <a href="{root}faq.html">questions</a> ·
     <a href="{root}research.html">how Atlas works</a> ·
     <a href="{root}research.html#grades">what grades mean</a></div>
   <div class="footer-note">Atlas publishes information. Readers make their own
@@ -230,6 +240,7 @@ def card_page(card: Card, *, bands: dict, overall_band,
         _answer(card),
         _why_brief(card),
         _caution(card),
+        NEW_HERE,
         '<div class="tier2">',
         _open_market(card),
         _open_projection(card),
@@ -355,7 +366,7 @@ def _answer(card: Card) -> str:
     return f"""<div class="answer">
   <div class="card answer-nums">
     <div class="answer-cell">
-      <div class="stat-label"><span class="wide-only">Market</span><span class="narrow-only">Mkt</span></div>
+      <div class="stat-label">Market</div>
       <div class="answer-value">{esc(card.spread_text)}</div>
       <div class="stat-note">total {num(card.total.current)}</div>
     </div>
@@ -366,7 +377,7 @@ def _answer(card: Card) -> str:
         total {num(card.anchored_total)}</div>
     </div>
     <div class="answer-cell">
-      <div class="stat-label"><span class="wide-only">Difference</span><span class="narrow-only">Diff</span></div>
+      <div class="stat-label">Difference</div>
       <div class="answer-value {_diff_class(difference)}">{signed(difference)}</div>
       <div class="stat-note">on the total</div>
     </div>
@@ -480,34 +491,40 @@ def _panel(summary: str, hint: str, body: str, *, open_: bool = False) -> str:
 
 
 def _open_market(card: Card) -> str:
-    hint = "open, current, movement, moneyline"
+    hint = "where the line opened, where it is now, and the prices"
     return _panel("Market detail", hint, _s2_market(card, bare=True))
 
 
 def _open_projection(card: Card) -> str:
     return _panel("Projection detail",
-                  "score, win probability, the unanchored model",
+                  "the projected score, the chance of winning, and the model before it is anchored to the market",
                   _s3_projection(card, bare=True) + _s4_difference(card, bare=True))
 
 
 def _open_grade(card: Card) -> str:
     return _panel("How this grade was computed",
-                  "four components, one hundred points",
+                  "the four things that set the letter, out of a hundred",
                   _s5_grade(card, bare=True))
 
 
 def _open_drivers(card: Card) -> str:
-    return _panel("All drivers", f"{len(card.drivers)} measured, with percentiles",
+    return _panel("All drivers",
+                  f"all {len(card.drivers)} things the model is reading, and how "
+                  "each team ranks against the rest of the country",
                   _s6_drivers(card, bare=True))
 
 
 def _open_movement(card: Card) -> str:
-    return _panel("Market movement", "how this number has moved since it opened",
+    return _panel("Market movement",
+                  "how far the market has moved since the number opened, "
+                  "and which way",
                   _s7_market_intelligence(card, bare=True))
 
 
 def _open_reliability(card: Card, bands: dict, overall_band) -> str:
-    return _panel("Reliability record", "seven seasons, out of sample",
+    return _panel("Reliability record",
+                  "what Atlas claimed and what it delivered, across seven "
+                  "seasons it never saw while being built",
                   _s8_reliability(card, bands, overall_band, bare=True))
 
 
@@ -1113,8 +1130,12 @@ def homepage(cards: list[Card], *, bands: dict, rivalries: set | None = None) ->
     {weak} marked down</span>
 </div>
 
+<p class="new-here board-new-here">Every game gets a card — and a letter for how
+  much that card's information has historically been worth.
+  <a href="about.html">How to read one</a></p>
+
 <div class="board-bar" id="controls">
-  <input class="search" type="search" id="q" placeholder="Search a team or conference"
+  <input class="search" type="search" id="q" placeholder="Search teams"
          aria-label="Search games" autocomplete="off">
   <select id="conf" class="select" aria-label="Filter by conference">
     <option value="">All conferences</option>{conf_options}
@@ -1460,7 +1481,8 @@ def about_page(example: Card | None, *, card_count: int) -> str:
       card. A grade that can say F is the only kind of grade worth anything,
       and it is the reason the A means something too.</p>
     <p class="note"><a href="research.html">The seven-season record, the
-      methodology, and every number behind this page</a>.</p>
+      methodology, and every number behind this page</a> ·
+      <a href="faq.html">questions</a>.</p>
   </div>
 </section>
 
@@ -1545,6 +1567,200 @@ def _card_walkthrough(card: Card) -> str:
       <b>{esc(card.grade.letter) if card.grade else "—"}</b>.</p>
   </div>
 </section>"""
+
+
+#: The published FAQ. Grouped, because a flat list of thirty questions is a
+#: wall; the uncomfortable ones come first inside each group, because burying
+#: them is the thing this product exists not to do.
+FAQ = (
+    ("What Atlas is", (
+        ("What is Atlas?",
+         "Every college football game gets a card: what the betting market "
+         "says, what Atlas projects, what is driving the difference between "
+         "them, and a letter for how much that card's information has "
+         "historically been worth. Atlas never tells anyone what to do with "
+         "it."),
+        ("Is this a selections service?",
+         "No. No card names a side \u2014 not as a lean, not as an arrow, not as a "
+         "highlighted row. Every page is checked at build time by a test that "
+         "fails if a side appears anywhere, and again by an audit over all "
+         "179 built pages."),
+        ("Do I need to know anything about betting?",
+         "No. The market number is a reference point because it is the best "
+         "public forecast of a game that exists. One thing does assume the "
+         "notation - \u201cMIA \u221241.5\u201d means Miami is favoured by "
+         "41.5 points \u2014 and everything else is in plain English."),
+        ("Do I need to understand modelling?",
+         "No. The card's first screen is written for somebody who does not, "
+         "and the grade explains itself in three plain sentences on every "
+         "card. The technical detail is behind panels and on the research "
+         "page."),
+    )),
+    ("The grade", (
+        ("Is an A card the one I should read first?",
+         "No, and this is the least intuitive thing about Atlas. Cards where "
+         "Atlas and the market agree to within a point have realised 50.8% "
+         "against a 51.3% claim across 760 games \u2014 statistically a coin flip. "
+         "They grade highest because they are the most reliable, and they are "
+         "the most reliable because Atlas has added nothing to them. The "
+         "grade tells you what to discount, not what to look at."),
+        ("Why does a large difference lower the grade?",
+         "Because, measured across seven seasons out of sample, that is where "
+         "the model is worst. Cards claiming 77% accuracy delivered 50%. "
+         "Everything else in this category shouts loudest where its model "
+         "disagrees most; Atlas grades itself down there."),
+        ("Is an A card a better game to watch?",
+         "No. The grade says nothing about the game. It is about how much "
+         "weight Atlas's own numbers on that card deserve."),
+        ("Who assigns the grades?",
+         "Nobody. The rubric is code, nothing is entered by hand or adjusted "
+         "afterwards, and the calibration curve behind it is refitted from "
+         "seven seasons of data on every build \u2014 so the site cannot drift "
+         "away from the research it cites."),
+        ("Why do so few cards get A+?",
+         "The thresholds were set once from seven seasons of results and then "
+         "fixed, and about 6% of cards historically reach A+. Atlas does not "
+         "grade on a curve: a curve would make the same card mean something "
+         "different depending on which Saturday you looked at it."),
+        ("Can a card's grade change during the week?",
+         "Yes. The grade depends partly on how far Atlas sits from the "
+         "market, and the market moves. A card graded B on Tuesday can be "
+         "graded C by Saturday if the line moves away from Atlas's number."),
+        ("What does \u201cmarked down\u201d mean?",
+         "A card graded D or F. There is a filter for them on the board, "
+         "because the cards Atlas trusts least are the ones a reader most "
+         "needs to know about."),
+    )),
+    ("The numbers", (
+        ("What is \u201cthe difference\u201d?",
+         "Atlas's projected game total minus the market's. Positive means "
+         "Atlas projects more points than the market; negative, fewer. It is "
+         "coloured only above one point, because below that the two are "
+         "statistically indistinguishable."),
+        ("Why does Atlas use the market at all?",
+         "Because seven seasons of out-of-sample testing said the market is "
+         "the better forecast. On spreads the model's own contribution could "
+         "not be told apart from zero, so the published spread is the "
+         "market's number. Atlas publishes the accurate number and shows the "
+         "raw model beside it, labelled."),
+        ("What is \u201cpoint-in-time\u201d?",
+         "Every figure attached to a game uses only information that existed "
+         "before kickoff. A team's profile in week 4 is what was knowable in "
+         "week 4 - no hindsight, anywhere in the database."),
+        ("Why does every card say one book is quoting?",
+         "Because the live tracker currently captures a single provider. It "
+         "is a real limitation, it is named on the card rather than hidden, "
+         "and adding a second provider is the highest-value item on the "
+         "roadmap."),
+    )),
+    ("Coverage", (
+        ("Which sports?",
+         "College football only. NFL is staged behind calibration \u2014 the model "
+         "has to be fitted and back-tested to the same standard before NFL "
+         "cards publish. No other sports are planned."),
+        ("Why not publish NFL projections now, without grades?",
+         "Because the grade framework is the product, and its credibility "
+         "comes entirely from having been tested. Putting an untested model "
+         "behind it would spend that credibility to fill a page."),
+    )),
+    ("Money", (
+        ("Is Atlas free?",
+         "Yes. The grade, the research, the methodology, the reliability "
+         "record and everything needed to judge a card this week are free and "
+         "always will be."),
+        ("Will there be a paid tier?",
+         "Eventually, for history, depth and delivery \u2014 past weeks and "
+         "seasons, every driver rather than the leading three, the full "
+         "market history, and email. Not the grade, not the research, not the "
+         "record. There is no payment path on this site."),
+        ("Does Atlas take affiliate money from sportsbooks?",
+         "No, and it never will. Books pay for traffic that converts to "
+         "deposits, which would mean Atlas earns more when readers act \u2014 an "
+         "interest directly opposed to the product's only claim."),
+        ("Is anything blurred or teased?",
+         "No. A premium surface is absent and named, never blurred. A blurred "
+         "number is an advertisement wearing the clothes of information."),
+    )),
+    ("Trust", (
+        ("How do I know the record is real?",
+         "It is recomputed from the database on every build rather than "
+         "transcribed, and the research page shows claimed accuracy against "
+         "realised accuracy for every band of disagreement, with the number "
+         "of games behind each row."),
+        ("Has Atlas been wrong?",
+         "Constantly, and the product is built around saying so. The grading "
+         "system exists because the research found the model's most confident "
+         "cards were its worst ones."),
+        ("Does Atlas track me?",
+         "Server logs and a single first-party counter. No third-party "
+         "analytics, no ad pixel, no cross-site identity, no account. There "
+         "is nothing to sign into."),
+    )),
+    ("Practical", (
+        ("Does the site work without JavaScript?",
+         "Yes. Every page is complete before anything loads. The only script "
+         "is 40 lines of filtering on the board; the card's expanding panels "
+         "are native HTML."),
+        ("Why is it so plain?",
+         "Because it is a research product, and because a page that loads "
+         "instantly on a phone on a stadium network beats a page that looks "
+         "impressive on a laptop."),
+        ("Can I get this by email?",
+         "A weekly board email is planned. There is no sender yet, so nothing "
+         "is collecting addresses."),
+    )),
+)
+
+
+def faq_page() -> str:
+    groups = "".join(
+        f"""<section class="section" id="{esc(title.lower().replace(' ', '-'))}">
+  <div class="section-head"><h2>{esc(title)}</h2></div>
+  <div class="card card-pad faq">""" + "".join(
+            f"<h3>{esc(q)}</h3><p>{esc(a)}</p>" for q, a in items
+        ) + """</div>
+</section>"""
+        for title, items in FAQ
+    )
+    description = (
+        "What Atlas is, what the grades mean, why a large difference lowers a "
+        "grade, what is free, and what Atlas will never publish."
+    )
+    body = f"""<header class="page-head">
+  <h1>Questions</h1>
+  <p class="sub">The plain answers, including the uncomfortable ones. If
+    something here is unclear, it is a problem with the page rather than with
+    the reader.</p>
+</header>
+{groups}
+<div class="disclosure top-gap">
+  <b>Still unclear?</b> <a href="about.html">What Atlas is and how to read a
+  card</a> · <a href="research.html">how the model works</a> ·
+  <a href="research.html#grades">the full grade rubric</a>
+</div>"""
+    return layout(title="Questions about Atlas | Atlas Sports Intelligence",
+                  body=body, active="about", description=description,
+                  canonical="faq.html",
+                  social=social_tags(title="Questions about Atlas",
+                                     description=description, url="faq.html"))
+
+
+def not_found_page() -> str:
+    body = """<header class="lede">
+  <h1>That page is not here.</h1>
+  <p class="lede-text">Cards come down when the game has been played. The board
+    always has this week's.</p>
+  <div class="lede-actions">
+    <a class="button" href="/index.html">This week's board</a>
+    <a class="button ghost" href="/about.html">What Atlas is</a>
+  </div>
+</header>"""
+    # No canonical and no indexing: a 404 that claims a canonical URL tells a
+    # crawler the missing page is the real one.
+    return layout(title="Not found | Atlas Sports Intelligence", body=body,
+                  description="That page is not here. The board always has "
+                              "this week's cards.",
+                  structured='<meta name="robots" content="noindex">')
 
 
 def research_page(bands: dict, overall_band, *, card_count: int) -> str:

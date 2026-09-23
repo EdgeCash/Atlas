@@ -308,9 +308,21 @@ def test_cautions_are_specific_to_the_card():
     decoration, so the wide-disagreement one must only fire when it applies."""
     loud = _card(model_total=62.0)
     quiet = _card(model_total=49.0)
-    assert any("points from the market" in c for c in loud.cautions)
-    assert not any("points from the market" in c for c in quiet.cautions)
+    assert any("points away from the market" in c for c in loud.cautions)
+    assert not any("points away from the market" in c for c in quiet.cautions)
     assert len(loud.cautions) <= 3
+
+
+def test_no_caution_uses_research_vocabulary():
+    """Track 3. A caution is read by somebody who arrived from a link and has
+    never seen Atlas. "The 10+ band" is a sentence from a research report."""
+    jargon = ("band", "calibration", "out of sample", "walk-forward",
+              "point-in-time", "unanchored", "percentile")
+    for card in (_card(model_total=62.0), _card(model_total=49.0),
+                 _card(model_total=56.0)):
+        for caution in card.cautions:
+            lowered = caution.lower()
+            assert not any(word in lowered for word in jargon), caution
 
 
 def test_a_card_with_no_market_still_publishes():
@@ -369,7 +381,9 @@ def _visible_text(page: str) -> str:
     lambda: render.nfl_page(),
     lambda: render.premium_page(),
     lambda: render.about_page(_card(), card_count=58),
-], ids=["card-a", "card-f", "nfl", "premium", "about"])
+    lambda: render.faq_page(),
+    lambda: render.not_found_page(),
+], ids=["card-a", "card-f", "nfl", "premium", "about", "faq", "404"])
 def test_no_page_tells_a_reader_what_to_do(builder):
     """`docs/BRAND_GUIDE.md`: the vocabulary is a product constraint, not a
     style preference, and it is checked rather than trusted."""
@@ -388,7 +402,8 @@ def test_no_page_tells_a_reader_what_to_do(builder):
     lambda: _page(_card()),
     lambda: _page(_card(model_total=60.0)),
     lambda: render.about_page(_card(), card_count=58),
-], ids=["card-a", "card-f", "about"])
+    lambda: render.faq_page(),
+], ids=["card-a", "card-f", "about", "faq"])
 def test_no_card_names_a_side(builder):
     banned = re.compile(
         r"\b(take the|lay the|back the|we like|our pick|recommended side|"
@@ -409,6 +424,16 @@ def test_the_landing_page_answers_the_four_questions_it_promises():
     assert "what to discount, not what to look at" in page
     # And the page is honest about the boundary it is selling against.
     assert "always will be" in page
+
+
+def test_the_faq_answers_the_question_that_decides_everything():
+    """The A-card question. A reader who gets this wrong misreads every card,
+    so the answer has to be on the published page, not only in the repo."""
+    page = render.faq_page()
+    assert "Is an A card the one I should read first?" in page
+    assert "what to discount, not what to look at" in page
+    assert "Is this a selections service?" in page
+    assert "Does Atlas take affiliate money" in page
 
 
 def test_the_landing_page_works_without_an_example_card():

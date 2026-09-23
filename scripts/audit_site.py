@@ -81,7 +81,9 @@ def audit(site: Path) -> tuple[dict, dict]:
         if MOTION.search(html):
             blocking["motion or urgency"].append(rel)
 
-        if 'rel="canonical"' not in html:
+        # A 404 has no canonical on purpose: claiming one tells a crawler the
+        # missing page is the real one.
+        if 'rel="canonical"' not in html and rel != "404.html":
             advisory["missing canonical"].append(rel)
         if 'name="description"' not in html:
             advisory["missing meta description"].append(rel)
