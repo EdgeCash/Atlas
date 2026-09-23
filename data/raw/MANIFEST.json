@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-22T15:47:50+00:00",
+  "generated_at": "2026-09-23T18:24:30+00:00",
   "seasons": [
     2018,
     2019,
@@ -36,6 +36,28 @@
       2025,
       2026
     ],
+    "play_by_play": [
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "espn_predictor": [
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026
+    ],
     "rosters": [
       2014,
       2015,
@@ -51,9 +73,9 @@
       2025,
       2026
     ],
-    "qb_of_record": {
-      "team_games": 18968,
-      "warehouse_use": "none - post-kickoff data, research only"
+    "cfbd": {
+      "enabled": false,
+      "datasets": []
     }
   }
 }

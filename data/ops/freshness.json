@@ -1,6 +1,42 @@
 {
   "history": [
     {
+      "at": "2026-09-23T18:25:28.450584+00:00",
+      "detail": "58 cards, 116 teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-23T18:25:28.449638+00:00",
+      "detail": "12 files",
+      "name": "social",
+      "ok": true
+    },
+    {
+      "at": "2026-09-23T18:25:22.702369+00:00",
+      "detail": "captured during the heavy refresh",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-23T18:25:22.701201+00:00",
+      "detail": "warehouse in 28s; model in 3s; market in 3s; site in 17s",
+      "name": "heavy",
+      "ok": true
+    },
+    {
+      "at": "2026-09-23T18:25:22.486731+00:00",
+      "detail": "58 cards, 116 teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-23T18:25:22.485869+00:00",
+      "detail": "12 files",
+      "name": "social",
+      "ok": true
+    },
+    {
       "at": "2026-09-23T15:30:49.686103+00:00",
       "detail": "58 cards, 116 teams",
       "name": "build",
@@ -226,52 +262,52 @@
   ],
   "last": {
     "build": {
-      "at": "2026-09-23T15:30:49.686103+00:00",
+      "at": "2026-09-23T18:25:28.450584+00:00",
       "detail": "58 cards, 116 teams",
       "name": "build",
       "ok": true
     },
     "heavy": {
-      "at": "2026-09-23T02:42:34.304601+00:00",
-      "detail": "model in 4s; market in 3s; site in 8s",
+      "at": "2026-09-23T18:25:22.701201+00:00",
+      "detail": "warehouse in 28s; model in 3s; market in 3s; site in 17s",
       "name": "heavy",
       "ok": true
     },
     "poll": {
-      "at": "2026-09-23T02:42:34.305750+00:00",
+      "at": "2026-09-23T18:25:22.702369+00:00",
       "detail": "captured during the heavy refresh",
       "name": "poll",
       "ok": true
     },
     "social": {
-      "at": "2026-09-23T15:30:49.684782+00:00",
-      "detail": "24 files",
+      "at": "2026-09-23T18:25:28.449638+00:00",
+      "detail": "12 files",
       "name": "social",
       "ok": true
     }
   },
   "last_ok": {
     "build": {
-      "at": "2026-09-23T15:30:49.686103+00:00",
+      "at": "2026-09-23T18:25:28.450584+00:00",
       "detail": "58 cards, 116 teams",
       "name": "build",
       "ok": true
     },
     "heavy": {
-      "at": "2026-09-23T02:42:34.304601+00:00",
-      "detail": "model in 4s; market in 3s; site in 8s",
+      "at": "2026-09-23T18:25:22.701201+00:00",
+      "detail": "warehouse in 28s; model in 3s; market in 3s; site in 17s",
       "name": "heavy",
       "ok": true
     },
     "poll": {
-      "at": "2026-09-23T02:42:34.305750+00:00",
+      "at": "2026-09-23T18:25:22.702369+00:00",
       "detail": "captured during the heavy refresh",
       "name": "poll",
       "ok": true
     },
     "social": {
-      "at": "2026-09-23T15:30:49.684782+00:00",
-      "detail": "24 files",
+      "at": "2026-09-23T18:25:28.449638+00:00",
+      "detail": "12 files",
       "name": "social",
       "ok": true
     }
