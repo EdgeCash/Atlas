@@ -220,15 +220,31 @@ Foundation §6 applies. NFL additions:
 
 ### Success criteria
 
-| Score | Naive | Elo (538 params) | **Target v1** | Market |
-|---|---|---|---|---|
-| CRPS, margin | ~7.9 | ~7.4 (est.) | **≤ 7.35** | 7.10 |
-| Brier, home win | 0.249 | ~0.225 (est.) | **≤ 0.220** | 0.213 |
-| MAE, margin | 10.9 | ~10.6 | **≤ 10.5** | 10.04 |
-| ECE, home win | — | — | **< 0.02** | ~0.01 |
+Measured by `make nfl-benchmarks` (`reports/nfl_benchmarks.md`), regular
+season 2023–2025, 816 games, every reference fitted only on the seasons
+before the one it forecasts (from 2011), the same lattice applied to all:
 
-Elo's numbers are estimates from the literature (Prediction Tracker: best
-systems ≈ 10.5 MAE); the first thing phase 3 does is measure them on our data.
+| Score | Naive | Elo (538 params) | Adjusted EPA | **Target v1** | Market |
+|---|---|---|---|---|---|
+| CRPS, margin | 8.02 | 7.37 | 7.39 | **< 7.37** | 7.08 |
+| Brier, home win | 0.249 | 0.223 | 0.224 | **< 0.223** | 0.211 |
+| MAE, margin | 11.10 | 10.24 | 10.31 | **< 10.24** | 9.74 |
+| ECE, home win | 0.019 | 0.042 | 0.041 | **< 0.03** | 0.049 |
+
+The estimates in the first draft of this table (naive ~7.9, Elo ~7.4,
+market 7.10) were within 0.1 of the measurement. Two things the
+measurement added:
+
+- **The quarterback test has a number now.** On regular-season games where
+  a side's quarterback of record differs from its previous game's (385 of
+  1,647 from 2020), Elo's CRPS is 7.63 against 7.25 elsewhere, a gap of
+  **0.38**; adjusted EPA's is 0.38 too; the market's is **0.05** (7.11
+  against 7.06). That 0.33 is what the QB state (step 4) is for.
+- **Elo is strongest early.** Weeks 1–3: Elo 6.93 to the market's 6.75;
+  weeks 13+: 7.38 to 7.04. The gap to the market opens as the season goes,
+  the opposite of college, because the NFL's prior (last season, reverted)
+  is good and its in-season read is noisy at 17 games.
+
 **v1 is done when it beats Elo on every row out of sample.** Matching the
 market is v2's ambition, not v1's requirement.
 
@@ -240,7 +256,7 @@ market is v2's ambition, not v1's requirement.
 |---|---|---|
 | 0 | `atlas/sources/nflverse.py`: fetch + cache pbp, schedules, injuries, depth charts, snap counts, rosters (`make nfl-ingest`) | **done** — 80 files, 114 MB, 2011–2026; pbp trimmed to 145 columns |
 | 1 | `atlas/staging/nfl/`: games, team-game efficiency and drives, QB of record and QB1, injuries, opponent-adjusted and point-in-time features through the college modules unchanged (`make nfl-warehouse`) | **done** — `data/warehouse/nfl.duckdb`, 4,368 games (4,128 completed), 122 columns; reproduces §3 exactly |
-| 2 | Benchmarks: naive, Elo, market-in-lattice. Reproduce §3 and foundation §2 exactly | `reports/nfl_benchmarks.md` |
+| 2 | Benchmarks: naive, Elo, adjusted EPA, market-in-lattice, plus the quarterback test (`atlas/models/nfl_benchmarks.py`, `make nfl-benchmarks`) | **done** — `reports/nfl_benchmarks.md`; 2023–25 regular season: naive 8.02, Elo 7.37, market 7.08 CRPS |
 | 3 | Kalman state model, off/def, no QB. Walk-forward 2011–25 | beats naive and Elo? |
 | 4 | Add QB state and HFA fit | the QB test |
 | 5 | Total model + bivariate lattice distribution | full 60×60 grid; reliability |
@@ -274,8 +290,7 @@ Steps 0–1 are done, in a session. What the build established:
 - Coverage: adjusted and point-in-time metrics 99.6%, QB1 99.4%, injury
   counts 94%, wind 64% (outdoor games only, as expected).
 
-Step 2 is next and reuses the college benchmark harness; step 3 is where
-the work is.
+Step 2 is done on the same harness. Step 3 is where the work is.
 
 ---
 

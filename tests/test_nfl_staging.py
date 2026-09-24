@@ -129,3 +129,17 @@ def test_snapshot_depth_charts_map_to_the_week_before_kickoff():
     assert out[(1, nfl_games.TEAM_ID["BUF"])] == "allen"
     assert out[(2, nfl_games.TEAM_ID["BUF"])] == "trubisky"        # the change came before week 2
     assert out[(1, nfl_games.TEAM_ID["KC"])] == "mahomes" and out[(2, nfl_games.TEAM_ID["KC"])] == "backup"
+
+
+def test_nfl_benchmarks_score_the_synthetic_league(nfl_frame):
+    """Step 2's harness runs on the NFL frame: naive, Elo, adjusted EPA and the market, walk-forward."""
+    from atlas.models import nfl_benchmarks as nb
+    from atlas.research.nfl_dataset import research_sample
+
+    sample = research_sample(nfl_frame)
+    scored = nb.score_frame(sample, first_test_season=SEASONS[1], min_train_seasons=1)
+    assert set(scored["model"]) >= {"naive", "elo", "market"}
+    assert scored["qb_change"].dropna().isin([0.0, 1.0]).all()
+    assert np.isfinite(scored["crps"]).all()
+    text = nb.render(scored)
+    assert "## Regular season, every scored season pooled" in text and "quarterback" in text.lower()

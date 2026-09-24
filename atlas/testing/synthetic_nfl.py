@@ -15,7 +15,7 @@ import pandas as pd
 #: Eight current codes; the first season spells the Raiders "OAK" so the
 #: franchise map is exercised.
 CODES = ["KC", "BUF", "LV", "DEN", "PHI", "DAL", "SF", "SEA"]
-WEEKS = 7
+WEEKS = 10
 
 
 def _code(code: str, season: int, first: int) -> str:
