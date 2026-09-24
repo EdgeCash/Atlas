@@ -1,6 +1,6 @@
 # Atlas Data Quality
 
-*Generated 2026-09-23 22:10 UTC by `python -m atlas.live check`. Regenerated on every
+*Generated 2026-09-24 12:13 UTC by `python -m atlas.live check`. Regenerated on every
 tracker run against the live record in `tracking/`.*
 
 ---

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-24T01:44:15+00:00",
+  "generated_at": "2026-09-24T12:12:18+00:00",
   "atlas_version": "0.1.0",
   "seasons_requested": [
     2018,
@@ -25,7 +25,7 @@
   ],
   "cfbd_enrichment": {
     "present": true,
-    "key_in_environment": false,
+    "key_in_environment": true,
     "datasets": {
       "sp_plus": {
         "present": true,

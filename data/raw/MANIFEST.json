@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-23T20:03:44+00:00",
+  "generated_at": "2026-09-24T12:11:43+00:00",
   "seasons": [
     2018,
     2019,
@@ -78,6 +78,7 @@
       "datasets": [
         "coaches",
         "fpi",
+        "portal",
         "rankings",
         "recruiting",
         "returning",
