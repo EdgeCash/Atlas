@@ -16,9 +16,14 @@ cover 76-84% of outcomes.
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 from scipy.optimize import minimize
+
+from atlas import config
 
 LOW, HIGH = 0.10, 0.90
 GATE = (0.76, 0.84)
@@ -89,3 +94,23 @@ def coverage(scored: pd.DataFrame, by: list[str] | None = None) -> pd.DataFrame:
                      "coverage": g["inside"].mean(), "below": g["below"].mean(), "above": g["above"].mean(),
                      "width": g["width"].mean()})
     return pd.DataFrame(rows)
+
+
+def lines_path() -> Path:
+    return config.paths().root / "reports" / "dfs_ranges.json"
+
+
+def save(lines: dict, seasons: str, path: Path | None = None) -> Path:
+    """The fitted lines, for live projections: small, public, and not a projection."""
+    path = path or lines_path()
+    out = {"fitted_on": seasons, "quantiles": [LOW, HIGH], "lines": {}}
+    for (position, q), (a, b) in sorted(lines.items()):
+        out["lines"].setdefault(position, {})["low" if q == LOW else "high"] = [round(a, 4), round(b, 4)]
+    path.write_text(json.dumps(out, indent=2) + "\n")
+    return path
+
+
+def load(path: Path | None = None) -> dict[tuple[str, float], tuple[float, float]]:
+    data = json.loads((path or lines_path()).read_text())
+    return {(position, LOW if end == "low" else HIGH): tuple(ab)
+            for position, ends in data["lines"].items() for end, ab in ends.items()}

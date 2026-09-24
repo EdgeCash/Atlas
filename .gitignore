@@ -31,3 +31,7 @@ data/warehouse/**
 # Backups of the live record. Machine state, and the whole point of them is
 # that a copy lives somewhere other than this repository.
 /data/backups/
+
+# DFS slate output: projections and the owner's lineups. Never committed -
+# the owner page publishes them only encrypted (docs/MODEL_PLAN_DFS.md, step 6).
+/data/dfs/

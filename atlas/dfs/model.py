@@ -44,6 +44,7 @@ as salary does.
 from __future__ import annotations
 
 import argparse
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -108,9 +109,12 @@ def market_totals(raw=None) -> pd.DataFrame:
     return pd.concat(parts, ignore_index=True)
 
 
-def features(frame: pd.DataFrame, env: pd.DataFrame) -> pd.DataFrame:
-    """The benchmark frame with each row's game environment and the interactions."""
-    staging = config.paths().staging / "nfl"
+def features(frame: pd.DataFrame, env: pd.DataFrame, staging: Path | None = None) -> pd.DataFrame:
+    """The benchmark frame with each row's game environment and the interactions.
+
+    ``staging`` is the NFL staging directory the player tables are read from
+    (the live slate points it at a copy with the upcoming week's rows)."""
+    staging = staging or config.paths().staging / "nfl"
     trends = pd.read_parquet(staging / "dfs_player_games.parquet")
     trend_cols = [c for c in trends.columns if c.endswith("_trend")]
     trends = trends[trends["season_type"] == "REG"][["season", "week", "player_id", "game_id", *trend_cols]]
@@ -119,7 +123,7 @@ def features(frame: pd.DataFrame, env: pd.DataFrame) -> pd.DataFrame:
                 how="left")
     f = f.merge(_dst_trends(pd.read_parquet(staging / "dfs_dst_games.parquet")), on=["season", "week", "player_id"],
                 how="left")
-    news = pd.read_parquet(context.path()).drop(columns=["team"])
+    news = pd.read_parquet(context.path(staging)).drop(columns=["team"])
     f = f.merge(news, on=["season", "week", "player_id"], how="left")
     # The long view of his scoring, which a four-game trend forgets.
     f = f.sort_values(["player_id", "season", "week"])
@@ -449,6 +453,9 @@ def main() -> None:
     atlas_only = run(market=False) if args.atlas_only else None
     out = config.paths().root / "reports" / "dfs_projections.md"
     out.write_text(render(scored, atlas_only))
+    # The range lines for live projections: every out-of-sample miss so far.
+    done = scored.dropna(subset=["model", "target"])
+    ranges.save(ranges.fit(done), f"{int(done['season'].min())}-{int(done['season'].max())}")
     salaried = scored[scored["season"].isin(bm.SALARY_SEASONS) & scored["dk_salary"].notna()]
     LOG.info("wrote %s\n%s", out, gate(bm.regulars(salaried)).round(3).to_string(index=False))
 

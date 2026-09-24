@@ -43,8 +43,8 @@ HALFLIFE = 4.0
 QB_GAMES = 8
 
 
-def path() -> Path:
-    return config.paths().staging / "nfl" / "dfs_player_context.parquet"
+def path(staging: Path | None = None) -> Path:
+    return (staging or config.paths().staging / "nfl") / "dfs_player_context.parquet"
 
 
 def _order(season, week) -> np.ndarray:
@@ -186,9 +186,11 @@ def usual_qb(player_games: pd.DataFrame) -> pd.DataFrame:
     return out.assign(season=out["order"] // 100, week=out["order"] % 100).drop(columns=["order"])
 
 
-def build(seasons: list[int] | None = None) -> pd.DataFrame:
+def build(seasons: list[int] | None = None, staging: Path | None = None) -> pd.DataFrame:
+    """The context table, from ``staging``'s player-games (the NFL staging directory by default)."""
     paths = config.paths()
-    player_games = pd.read_parquet(paths.staging / "nfl" / "dfs_player_games.parquet")
+    staging = staging or paths.staging / "nfl"
+    player_games = pd.read_parquet(staging / "dfs_player_games.parquet")
     seasons = seasons or sorted(int(s) for s in player_games["season"].unique())
     report = injuries(paths.raw, seasons)
     chart = depth(paths.raw, seasons)
@@ -210,7 +212,7 @@ def build(seasons: list[int] | None = None) -> pd.DataFrame:
         out[c] = out[c].fillna(0)
     out["is_qb1"] = (out["player_id"] == out["qb1_id"]).astype(int)
     out = out.drop(columns=["qb1_id", "position"])
-    write_parquet(out, path())
+    write_parquet(out, path(staging))
     LOG.info("context: %d player-weeks; injury status for %d, depth rank for %d", len(out),
              int((out["status"] > 0).sum()), int(out["depth_rank"].notna().sum()))
     return out

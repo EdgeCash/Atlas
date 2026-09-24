@@ -75,7 +75,10 @@ def player_pool(draftables: dict, group_id: int) -> pd.DataFrame:
     """One row per player in a Classic group: salary, position, team, game.
 
     DraftKings lists a player once per roster slot he fits (a running back
-    appears again for FLEX); the salary is the same, so the first is kept.
+    appears again for FLEX), each listing with its own draftable id; the
+    salary is the same. The first listing is kept: its draftable id is the
+    one DraftKings' own salary file carries, and its upload file accepts it
+    in any slot the player fits.
     """
     rows = []
     for d in draftables.get("draftables", []) or []:
@@ -85,6 +88,7 @@ def player_pool(draftables: dict, group_id: int) -> pd.DataFrame:
         rows.append({
             "draft_group_id": int(group_id),
             "player_id": int(d["playerId"]),
+            "draftable_id": int(d["draftableId"]) if d.get("draftableId") is not None else None,
             "name": d.get("displayName"),
             "position": d.get("position"),
             "team": d.get("teamAbbreviation"),
@@ -95,8 +99,8 @@ def player_pool(draftables: dict, group_id: int) -> pd.DataFrame:
             "status": "" if d.get("status") in (None, "None") else d.get("status"),
             "disabled": bool(d.get("isDisabled", False)),
         })
-    frame = pd.DataFrame(rows, columns=["draft_group_id", "player_id", "name", "position", "team", "salary", "game",
-                                        "game_start", "status", "disabled"])
+    frame = pd.DataFrame(rows, columns=["draft_group_id", "player_id", "draftable_id", "name", "position", "team",
+                                        "salary", "game", "game_start", "status", "disabled"])
     return frame.drop_duplicates(["draft_group_id", "player_id"], keep="first").reset_index(drop=True)
 
 

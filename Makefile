@@ -1,6 +1,6 @@
 PYTHON ?= python3
 
-.PHONY: help install ingest warehouse research all test lint clean-data dfs-capture dfs-history dfs-staging dfs-scoring dfs-benchmarks dfs-model \
+.PHONY: help install ingest warehouse research all test lint clean-data dfs-capture dfs-history dfs-staging dfs-scoring dfs-benchmarks dfs-model dfs-lineups dfs-slate \
 	live-refresh live-run live-report live-check live-reproduce \
 	site site-full site-serve site-audit site-shots launch-check \
 	ops-heavy ops-poll ops-social ops-health ops-status ops-crontab \
@@ -221,6 +221,14 @@ dfs-model:
 	$(PYTHON) -m atlas.dfs.environment
 	$(PYTHON) -m atlas.dfs.context
 	$(PYTHON) -m atlas.dfs.model --atlas-only
+
+# DFS plan, step 5: the optimizer's lineups backtested on 2015-2021, and this
+# week's slate projected with lineups under data/dfs/ (never committed).
+dfs-lineups:
+	$(PYTHON) -m atlas.dfs.backtest
+
+dfs-slate:
+	$(PYTHON) -m atlas.dfs.slate --capture
 
 # NFL plan, step 1: point-in-time team-game tables in their own warehouse.
 nfl-warehouse:

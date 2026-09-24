@@ -72,7 +72,7 @@ SCHEMA: dict[str, list[str]] = {
     ],
     "dfs_salaries": [
         "draft_group_id", "player_id", "name", "position", "team", "salary", "game", "game_start",
-        "status", "disabled", "captured_at",
+        "status", "disabled", "captured_at", "draftable_id",
     ],
     "games": [
         "game_id", "season", "week", "kickoff", "home_team", "away_team",

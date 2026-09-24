@@ -22,7 +22,8 @@ LOBBY = {"DraftGroups": [
 
 
 def _draftable(pid, name, pos, salary, slot):
-    return {"playerId": pid, "displayName": name, "position": pos, "salary": salary, "rosterSlotId": slot,
+    return {"playerId": pid, "draftableId": 1000 * pid + slot, "displayName": name, "position": pos, "salary": salary,
+            "rosterSlotId": slot,
             "teamAbbreviation": "ATL", "status": "Q" if pid == 11 else "None", "isDisabled": False,
             "competition": {"name": "ATL @ GB", "startTime": "2026-09-25T00:15:00.0000000Z"}}
 
@@ -45,6 +46,7 @@ def test_a_player_listed_for_two_roster_slots_is_one_row():
     assert list(pool["player_id"]) == [10, 11] and list(pool["salary"]) == [8700, 7100]
     assert pool.loc[pool["player_id"] == 11, "status"].item() == "Q"
     assert pool.loc[pool["player_id"] == 10, "status"].item() == ""            # healthy
+    assert pool.loc[pool["player_id"] == 10, "draftable_id"].item() == 10067   # the RB listing, not FLEX
 
 
 def test_capture_writes_the_record_and_never_fails_the_run(tmp_path, monkeypatch):
