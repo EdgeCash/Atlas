@@ -209,3 +209,27 @@ def test_a_switch_to_an_unseen_quarterback_lowers_the_forecast():
     assert fc.loc[3, "mean"] > fc.loc[2, "mean"]                 # the incumbent's return gives it back
     assert ("qb", "qb-new") in state.extra and state.value(("qb", "qb-new")) > -4.0   # it learned from week 3
     assert starters[1] == "qb-a" and state.value(ns.HFA_KEY) > 0
+
+
+def test_the_nfl_total_and_grid_run_walk_forward(nfl_frame):
+    from atlas.models import nfl_state as ns
+    from atlas.models import nfl_total as nt
+    from atlas.research.nfl_dataset import research_sample
+
+    sample = research_sample(nfl_frame)
+    fixed = ({SEASONS[1]: ns.Choice(0.0, 0.67, 25.0, 9.5, 0.0, ())},
+             {SEASONS[1]: ns.QBChoice(9.0, -2.0, 0.0, ())})
+    frame = nt.prepare(sample)
+    from atlas.models import reference as ref
+    # one training season on the synthetic league
+    monkey = ref.walk_forward
+    ref.walk_forward = lambda f, first_test_season, **kw: monkey(f, first_test_season=first_test_season, min_train_seasons=1)
+    try:
+        scored, table, fits = nt.run(frame, first_test_season=SEASONS[1], choices=fixed)
+    finally:
+        ref.walk_forward = monkey
+    assert set(scored["model"]) == {"naive", "state_raw", "total", "market"}
+    assert (table["home_mean"] + table["away_mean"] - table["total_mean"]).abs().max() < 1e-6
+    assert ((table["top_home"] < nt.MAX_POINTS) & (table["top_away"] < nt.MAX_POINTS)).all()
+    assert fits[SEASONS[1]].points_factor.shape == (nt.MAX_POINTS,)
+    assert "## The exact score" in nt.render(scored, table, fits)

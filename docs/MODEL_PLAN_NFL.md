@@ -189,16 +189,43 @@ by feeding `net EPA` for the game rather than the raw margin — EPA is a less
 noisy read of the same performance (this is the nfelo/nflfastR insight and
 worth testing as a second observation channel).
 
-**Total.** Separate, additive: `total_g = (off_h + off_a) − (def_h + def_a) + base_t + roof/weather`.
+**Total — built, `reports/nfl_total.md`.** The quarterback state's
+implied total (its home points plus its away points), recalibrated
+walk-forward on the training seasons' own forecasts - the sum of two
+noisy strengths over-disperses, slope 0.52–0.71 - plus the one game-level
+term that measured as real on its residual: the wind, −0.29 to −0.38
+points per mph, with a dome at zero wind. Once the wind is in, the dome
+itself, temperature, pace, rest and a division game all measure at
+|t| < 1 and are out. Forecast sd 13.2–13.9 against the market's 13.0.
 
-**Distribution.** Bivariate normal on (margin, total) with fitted sds and
-residual correlation ≈ 0.03, discretised to integer (home, away), margin
-reweighted by rolling key-number multipliers. Overtime is absorbed by the
-lattice fit (ties are 0.4%).
+| total, regular 2023–25 | CRPS | MAE |
+|---|---|---|
+| naive | 7.61 | 10.68 |
+| state total, raw | 7.48 | 10.56 |
+| **total (calibrated)** | **7.36** | **10.39** |
+| market | 7.24 | 10.12 |
 
-**Output per game.** A 60×60 probability grid over (home, away) points, plus
-its functionals. The headline projection is the grid's mean to one decimal —
-24.6–21.3, total 45.9 — never a rounded integer.
+Residual correlation between margin and total measured at 0.01, so the
+joint is the product, as in college.
+
+**Distribution — built.** The margin (state mean and sd through the
+key-number lattice) and the total (discretised normal) meet on a **60×60
+grid** over (home, away) points (`atlas/models/joint.py`), reweighted by
+the points lattice fitted on the training seasons' own grids. Passing the
+margin through the grid costs nothing (7.351 either way). The points
+lattice is worth 0.26 nats on the exact score (7.15 → 6.89), doubles the
+top-ten hit rate (4.0% → 8.8%) and moves the actual score's median rank
+from 312 to 231. What it fitted for 2026 is Silver's drift in one row:
+**3, 6, 10, 13, 17 and 20 are elevated (2.2, 2.1, 2.8, 1.6, 1.7, 2.1×)
+while 14, 21 and 28 are not (1.0, 0.8, 0.8×)** - the multiples of seven
+are no longer where NFL finals land.
+
+**Output per game — built.** The grid's mean to one decimal - 24.6–21.3,
+total 45.9 - never a rounded integer, with P(home), the total's 80% range
+and the most probable exact score (1.4% on average). P(home) from the grid
+is within 0.03 of the observed rate in every spread bucket to 10 points,
+where the NFL lives, and 0.06 low on the 79 games past 10, where the
+market is 0.04 low too.
 
 ---
 
@@ -259,7 +286,7 @@ market is v2's ambition, not v1's requirement.
 | 2 | Benchmarks: naive, Elo, adjusted EPA, market-in-lattice, plus the quarterback test (`atlas/models/nfl_benchmarks.py`, `make nfl-benchmarks`) | **done** — `reports/nfl_benchmarks.md`; 2023–25 regular season: naive 8.02, Elo 7.37, market 7.08 CRPS |
 | 3 | Kalman state model, off/def, no QB, carried across seasons (`atlas/models/nfl_state.py`, `make nfl-state`) | **done** — ties Elo (2023–25: CRPS 7.375 to 7.372) |
 | 4 | Add QB state and HFA fit | **done — beats Elo on every row** (CRPS 7.351, Brier 0.222, MAE 10.20, ECE 0.027); the QB test gap did not close, and the report says why |
-| 5 | Total model + bivariate lattice distribution | full 60×60 grid; reliability |
+| 5 | Total model + joint grid (`atlas/models/nfl_total.py`, `make nfl-total`) | **done** — total CRPS 7.36 (naive 7.61, market 7.24); 60×60 grid with the points lattice; P(home) within 0.03 of observed where the NFL lives |
 | 6 | Wire into the card and the grade | `nfl.html` becomes a board |
 | 7 | v2: state-dependent drive simulation, only if step 5's exact-score log-score is measurably short of the benchmark | |
 

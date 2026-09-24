@@ -4,7 +4,7 @@ PYTHON ?= python3
 	live-refresh live-run live-report live-check live-reproduce \
 	site site-full site-serve site-audit site-shots launch-check \
 	ops-heavy ops-poll ops-social ops-health ops-status ops-crontab \
-	ops-backup ops-analytics perf seo ncaaf-benchmarks ncaaf-prior ncaaf-state ncaaf-total nfl-ingest nfl-warehouse nfl-benchmarks nfl-state
+	ops-backup ops-analytics perf seo ncaaf-benchmarks ncaaf-prior ncaaf-state ncaaf-total nfl-ingest nfl-warehouse nfl-benchmarks nfl-state nfl-total
 
 help:
 	@echo "Atlas Phase 1A - research warehouse"
@@ -41,6 +41,7 @@ help:
 	@echo "  make nfl-warehouse     stage the NFL team-game tables and build data/warehouse/nfl.duckdb"
 	@echo "  make nfl-benchmarks    score the reference models the NFL model must beat"
 	@echo "  make nfl-state         run and score the NFL Kalman state model"
+	@echo "  make nfl-total         calibrate the NFL total and score the joint score grid"
 	@echo "  make perf       measure load time and LCP at three viewports"
 	@echo "  make seo        validate canonicals, meta, OpenGraph and sitemap"
 	@echo "  make site-full  warehouse + numbers + market + site, from scratch"
@@ -205,6 +206,10 @@ nfl-benchmarks:
 # NFL plan, step 3: the state, carried across seasons, walk-forward.
 nfl-state:
 	$(PYTHON) -m atlas.models.nfl_state
+
+# NFL plan, step 5: the total and the 60x60 grid on top of the state.
+nfl-total:
+	$(PYTHON) -m atlas.models.nfl_total
 
 perf: site
 	$(PYTHON) scripts/measure_performance.py
