@@ -2055,7 +2055,7 @@ def nfl_page(cards: list[Card] | None = None, *, bands: dict | None = None,
     graded = [c for c in cards if c.grade]
     by_day: dict[str, list[Card]] = {}
     for card in cards:
-        by_day.setdefault(day_and_clock(card.kickoff).split(",")[0], []).append(card)
+        by_day.setdefault(day_and_clock(card.kickoff).split(" · ")[0], []).append(card)
     sections = "".join(_board_section(day, _plural(len(block), "game"), block) for day, block in by_day.items())
     if not cards:
         sections = """<div class="card card-pad banner-low">

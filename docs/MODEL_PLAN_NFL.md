@@ -227,6 +227,24 @@ is within 0.03 of the observed rate in every spread bucket to 10 points,
 where the NFL lives, and 0.06 low on the 79 games past 10, where the
 market is 0.04 low too.
 
+**Card — built, step 6.** `atlas/models/nfl_projection.py` runs steps 3–5
+forward to today - the quarterback state through every game already
+played, the calibrated total, the grid with its points lattice - one row
+per scheduled game, keyed by ESPN's event id (now staged on the NFL games
+table) so the odds poll, the game metadata and the card all join on it.
+The weekly refresh publishes both sports to `tracking/projections.csv`
+and both records to `tracking/calibration.csv`, each row carrying its
+sport, and an NFL failure never takes the college publish down. The card
+is the college card: the same renderer, the same tiers, the same audited
+copy, with no team-page links because the NFL has no team pages yet. The
+grade is fitted per sport from that sport's own walk-forward record
+(margin market; the NFL curve is `gap(d) = −0.025·d^1.09`, r = 0.72, on
+1,725 games). Each poll now captures the NFL scoreboard beside college,
+logos are cached per sport because ESPN numbers NFL and college teams
+from one, and the heavy job ingests nflverse and builds the NFL warehouse
+before the model step. `nfl.html` is the NFL board, grouped by day. The
+site audit passes on every page with the NFL cards counted as cards.
+
 ---
 
 ## 6. Validation — NFL specifics
@@ -287,7 +305,7 @@ market is v2's ambition, not v1's requirement.
 | 3 | Kalman state model, off/def, no QB, carried across seasons (`atlas/models/nfl_state.py`, `make nfl-state`) | **done** — ties Elo (2023–25: CRPS 7.375 to 7.372) |
 | 4 | Add QB state and HFA fit | **done — beats Elo on every row** (CRPS 7.351, Brier 0.222, MAE 10.20, ECE 0.027); the QB test gap did not close, and the report says why |
 | 5 | Total model + joint grid (`atlas/models/nfl_total.py`, `make nfl-total`) | **done** — total CRPS 7.36 (naive 7.61, market 7.24); 60×60 grid with the points lattice; P(home) within 0.03 of observed where the NFL lives |
-| 6 | Wire into the card and the grade | `nfl.html` becomes a board |
+| 6 | Wire into the card and the grade (`atlas/models/nfl_projection.py`; the live and site layers take a sport) | **done** — `nfl.html` is a board; 17 NFL cards this week; audit passes |
 | 7 | v2: state-dependent drive simulation, only if step 5's exact-score log-score is measurably short of the benchmark | |
 
 Steps 0–1 are done, in a session. What the build established:
