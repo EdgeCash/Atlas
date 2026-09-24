@@ -31,6 +31,7 @@ committed: the owner page (step 6) publishes it only encrypted.
 from __future__ import annotations
 
 import argparse
+import json
 import tempfile
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -40,7 +41,7 @@ import pandas as pd
 
 from atlas import config
 from atlas.dfs import benchmarks as bm
-from atlas.dfs import context, environment, model, participation, players, ranges
+from atlas.dfs import context, environment, model, participation, players, ranges, record
 from atlas.dfs import optimizer as op
 from atlas.sources import nflverse
 from atlas.util import get_logger
@@ -61,14 +62,22 @@ def out_dir(draft_group_id: int) -> Path:
     return config.paths().root / "data" / "dfs" / str(int(draft_group_id))
 
 
+class NoSlate(LookupError):
+    """No upcoming slate with the label is in the record."""
+
+
 def choose_slate(slates: pd.DataFrame, label: str = "Main", now: datetime | None = None) -> pd.Series:
-    """The next slate with this label that has not started more than a day ago."""
+    """The next slate with this label that has not started.
+
+    Only an upcoming one: once games are played the tables carry their
+    results, and a projection built then would not be the one a reader saw
+    before kickoff."""
     now = now or datetime.now(timezone.utc)
     s = slates[slates["label"] == label].copy()
     s["start"] = pd.to_datetime(s["starts_at"], utc=True)
-    s = s[s["start"] >= pd.Timestamp(now) - pd.Timedelta(days=1)].sort_values("start")
+    s = s[s["start"] > pd.Timestamp(now)].sort_values("start")
     if s.empty:
-        raise LookupError(f"no upcoming {label} slate in the record")
+        raise NoSlate(f"no upcoming {label} slate in the record")
     return s.iloc[0]
 
 
@@ -237,10 +246,13 @@ def run(label: str = "Main", *, capture: bool = False, now: datetime | None = No
     out = out_dir(group)
     out.mkdir(parents=True, exist_ok=True)
     cols = ["name", "position", "team", "opponent", "salary", "status", "projection", "low", "high", "p_play",
-            "if_plays", "matched_by",
+            "if_plays", "matched_by", "season", "week",
             "player_id", "player_id_dk", "draftable_id", "game_start"]
     projected.sort_values("projection", ascending=False)[cols].to_csv(out / "projections.csv", index=False,
                                                                       float_format="%.2f")
+    (out / "slate.json").write_text(json.dumps({"draft_group_id": group, "label": label,
+                                                 "starts_at": str(slate["starts_at"])}) + "\n")
+    record.save(projected, slate, store, now=now)
     built = lineups(projected)
     (out / "lineups_upload.csv").write_text(op.upload_csv(built))
     readable = pd.concat([lu.assign(lineup=i + 1) for i, lu in enumerate(built)])

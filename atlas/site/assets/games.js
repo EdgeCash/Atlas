@@ -13,6 +13,15 @@
 (function () {
   "use strict";
 
+  // The sticky filter bar sits under the menu, whose height depends on the
+  // screen and the font: measure it rather than guess it per breakpoint.
+  function navHeight() {
+    var nav = document.querySelector(".nav");
+    if (nav) document.documentElement.style.setProperty("--nav-h", Math.floor(nav.getBoundingClientRect().height) - 1 + "px");
+  }
+  navHeight();
+  window.addEventListener("resize", navHeight);
+
   var KEY = "atlas-following";
   var KEEP_DAYS = 4;
   var DAY = 864e5;

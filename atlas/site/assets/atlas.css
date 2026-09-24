@@ -636,7 +636,9 @@ footer { display: grid; gap: 4px; }
    sharing a name meant the meter's centre tick was being drawn through the
    middle of the filter row. */
 .board-bar {
-  position: sticky; top: 45px; z-index: 10; margin: 0 -16px 12px;
+  /* --nav-h is the menu's measured height (games.js), so the bar sits right
+     under the menu however many rows it takes on this screen and font. */
+  position: sticky; top: var(--nav-h, 45px); z-index: 10; margin: 0 -16px 12px;
   padding: 9px 16px; background: color-mix(in srgb, var(--bg) 92%, transparent);
   backdrop-filter: saturate(1.6) blur(10px);
   border-bottom: 1px solid var(--border);
@@ -756,7 +758,7 @@ footer { display: grid; gap: 4px; }
   /* The filter row does not scroll sideways on a phone. A horizontally
      scrolling strip hides its own right-hand end, and the grade filters were
      the half that stayed hidden. Two rows, nothing clipped. */
-  .board-bar { top: 43px; gap: 6px; }
+  .board-bar { top: var(--nav-h, 43px); gap: 6px; }
   .board-bar .search { flex: 3 1 150px; min-width: 0; }
   .board-bar .select { flex: 2 1 118px; min-width: 0; font-size: 12.5px; }
   .board-bar .filter { flex: 1 1 auto; font-size: 12.5px; padding: 7px 8px; }
@@ -870,18 +872,16 @@ footer { display: grid; gap: 4px; }
    phone, the largest included - the menu takes its own full-width row, every
    entry visible, rather than running off the edge or hiding behind a scroll.
    Last in the file so it wins over the wider breakpoints above. */
-@media (max-width: 460px) {
+/* Eight entries do not fit one row on a phone, and none may be hidden or
+   scrolled out of sight: two rows of four. */
+@media (max-width: 520px) {
   .logo span { display: none; }
   .nav-inner { flex-wrap: wrap; row-gap: 7px; column-gap: 10px; padding-top: 9px; padding-bottom: 9px; }
-  .nav-links { margin-left: 0; width: 100%; justify-content: space-between; gap: 6px; font-size: 13.5px; }
-}
-/* Seven entries on the narrowest phones: smaller type before anything is
-   hidden or scrolled out of sight. */
-@media (max-width: 380px) {
-  .nav-links { font-size: 12.5px; gap: 4px; }
+  .nav-links { margin-left: 0; width: 100%; display: grid; grid-template-columns: repeat(4, auto);
+               justify-content: space-between; column-gap: 8px; row-gap: 5px; font-size: 14px; }
 }
 @media (max-width: 340px) {
-  .nav-links { font-size: 11.5px; gap: 2px; }
+  .nav-links { font-size: 13px; column-gap: 4px; }
 }
 
 /* ----------------------------------------------------- tiles or list ---- */
@@ -902,14 +902,19 @@ html[data-view="tiles"] .view-list { display: none; }
 .game-tile[hidden] { display: none; }
 
 /* ----------------------------------------------------- menu and name ---- */
-/* Six menu entries and the full name do not share one row below 600px: the
-   name shortens to "Atlas". Below 460px the menu takes its own row, so the
-   sticky filter bar sits under a taller menu. */
+/* Eight menu entries and the full name share one row only above 760px.
+   Below that the menu takes its own row; below 600px the name shortens to
+   "Atlas"; below 520px the menu is two rows of four (the rules above). The
+   sticky filter bar follows the menu's measured height (--nav-h). */
+@media (max-width: 760px) {
+  .nav-inner { flex-wrap: wrap; row-gap: 6px; }
+  .nav-links { margin-left: 0; width: 100%; justify-content: space-between; }
+}
 @media (max-width: 600px) {
   .logo span { display: none; }
 }
-@media (max-width: 460px) {
-  .board-bar { top: 68px; }
+@media (max-width: 520px) {
+  .board-bar { top: var(--nav-h, 95px); }
 }
 
 /* ------------------------------------------------ stretched links ---- */
@@ -1008,3 +1013,22 @@ html[data-view="tiles"] .view-list { display: none; }
 .owner-table th:nth-child(2) { text-align: left; }
 .owner-table td:nth-child(2) { padding-left: 10px; }
 #owner-out select { margin: 6px 0 10px; min-height: 36px; font-size: 15px; }
+
+/* -------------------------------------------------------------- dfs ---- */
+
+.dfs-filters { display: flex; flex-wrap: wrap; gap: 7px; margin: 12px 0; }
+.dfs-chip {
+  min-height: 36px; padding: 0 14px; border-radius: 999px; font-size: 14px; font-weight: 600;
+  border: 1px solid var(--border-strong); background: var(--surface); color: var(--ink-2);
+}
+.dfs-chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.dfs-table td, .dfs-record td { text-align: right; padding: 6px 0 6px 12px; border-top: 1px solid var(--border);
+  white-space: nowrap; }
+.dfs-table td:first-child, .dfs-record td:first-child { text-align: left; padding-left: 0; white-space: normal; }
+.dfs-table td:nth-child(2), .dfs-table td:nth-child(3), .dfs-table td:nth-child(4) { text-align: left; }
+.dfs-table th:nth-child(2), .dfs-table th:nth-child(3), .dfs-table th:nth-child(4) { text-align: left;
+  padding-left: 12px; }
+.dfs-table th, .dfs-record th { padding-left: 12px; }
+.dfs-table tr[hidden] { display: none; }
+.dfs-status { font-size: 11px; font-weight: 650; color: var(--serious); margin-left: 4px; }
+.dfs-more summary { cursor: pointer; font-weight: 620; color: var(--ink-2); }

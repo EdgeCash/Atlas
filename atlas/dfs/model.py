@@ -44,6 +44,7 @@ as salary does.
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
 import numpy as np
@@ -52,7 +53,7 @@ from sklearn.ensemble import HistGradientBoostingRegressor
 
 from atlas import config
 from atlas.dfs import benchmarks as bm
-from atlas.dfs import context, defense, environment, players, ranges
+from atlas.dfs import context, defense, environment, players, ranges, record
 from atlas.sources import nflverse
 from atlas.staging.nfl.games import FRANCHISE
 from atlas.util import get_logger
@@ -457,7 +458,33 @@ def main() -> None:
     done = scored.dropna(subset=["model", "target"])
     ranges.save(ranges.fit(done), f"{int(done['season'].min())}-{int(done['season'].max())}")
     salaried = scored[scored["season"].isin(bm.SALARY_SEASONS) & scored["dk_salary"].notna()]
+    record.record_path().write_text(json.dumps(history(scored), indent=2) + "\n")
     LOG.info("wrote %s\n%s", out, gate(bm.regulars(salaried)).round(3).to_string(index=False))
+
+
+def history(scored: pd.DataFrame) -> dict:
+    """The walk-forward record the public DFS page shows: each team's regulars,
+    every completed season, and against salary where salaries exist."""
+    last_full = int(scored["season"].max())
+    done = scored[scored["season"] < last_full]
+    regs = bm.regulars(done.assign(dk_salary=done["dk_salary"].where(done["season"].isin(bm.SALARY_SEASONS))))
+    salaried = bm.regulars(scored[scored["season"].isin(bm.SALARY_SEASONS) & scored["dk_salary"].notna()])
+    positions = {}
+    for pos in bm.POSITIONS:
+        r, sr = regs[regs["position"] == pos], salaried[salaried["position"] == pos]
+        inside = (r["target"] >= r["model_lo"]) & (r["target"] <= r["model_hi"])
+        positions[pos] = {
+            "player_weeks": int(len(r)),
+            "mae": round(float(np.mean(np.abs(r["target"] - r["model"]))), 2),
+            "baseline_mae": round(float(np.mean(np.abs(r["target"] - r["baseline"]))), 2),
+            "rank": round(bm.rank_correlation(r, "model"), 3),
+            "coverage": round(float(inside[r["model_lo"].notna()].mean()), 3),
+            "salary_era_rank": round(bm.rank_correlation(sr, "model"), 3),
+            "salary_rank": round(bm.rank_correlation(sr, "salary"), 3),
+        }
+    return {"seasons": f"{int(done['season'].min())}-{int(done['season'].max())}",
+            "salary_seasons": f"{min(bm.SALARY_SEASONS) + 1}-{max(bm.SALARY_SEASONS)}",
+            "positions": positions}
 
 
 if __name__ == "__main__":

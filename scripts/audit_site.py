@@ -41,6 +41,12 @@ SIDE = re.compile(
     r"\b(take the|lay the|back the|we like|our pick|recommended side|"
     r"leans? (over|under)|best bet)\b", re.IGNORECASE)
 
+#: The DFS area's promise words (docs/MODEL_PLAN_DFS.md §1): no "optimal" or
+#: "winning" lineups, nothing guaranteed, no returns.
+DFS_PROMISE = re.compile(
+    r"\b(optimal|optimized lineups?|winning lineups?|guarantee[ds]?|can'?t lose|cash line|profit(s|able)?)\b",
+    re.IGNORECASE)
+
 #: Motion implies urgency, and Atlas is a pre-kickoff product.
 MOTION = re.compile(r"@keyframes|animation\s*:|setInterval|requestAnimationFrame")
 
@@ -56,6 +62,7 @@ def audit(site: Path) -> tuple[dict, dict]:
     blocking: dict[str, list[str]] = {
         "forbidden vocabulary": [], "a named side": [],
         "card missing the grade disclaimer": [], "motion or urgency": [],
+        "dfs page missing the responsible-gaming note": [], "dfs page promising results": [],
     }
     advisory: dict[str, list[str]] = {
         "missing canonical": [], "missing meta description": [],
@@ -81,6 +88,11 @@ def audit(site: Path) -> tuple[dict, dict]:
             blocking["card missing the grade disclaimer"].append(rel)
         if MOTION.search(html):
             blocking["motion or urgency"].append(rel)
+        if rel == "dfs.html" or rel.startswith("dfs/"):
+            if "1-800-gambler" not in text or "draftkings.com/responsible-gaming" not in html:
+                blocking["dfs page missing the responsible-gaming note"].append(rel)
+            if DFS_PROMISE.search(text):
+                blocking["dfs page promising results"].append(rel)
 
         # A 404 has no canonical on purpose: claiming one tells a crawler the
         # missing page is the real one. Nor does the owner page, which asks

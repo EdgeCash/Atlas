@@ -109,6 +109,12 @@ def build(out: Path | None = None, *, social_cards: bool = True,
     from atlas.dfs import owner as dfs_owner
 
     (out / "dfs" / "owner.html").write_text(render.owner_page(dfs_owner.read()))
+    # The public DFS area (step 7): the latest slate's recorded projections and the model's record.
+    dfs_slate, dfs_players = _dfs_slate()
+    from atlas.dfs import record as dfs_record
+
+    (out / "dfs.html").write_text(render.dfs_page(dfs_slate, dfs_players, history=dfs_record.history(),
+                                                  live=dfs_record.live()))
 
     social_slugs = {c.slug for c in _spread_of_grades(
         [c for c in cards if c.grade], SOCIAL_LIMIT)} if social_cards else set()
@@ -272,6 +278,25 @@ def _spread_of_grades(cards, limit: int) -> list:
     return picked[:limit]
 
 
+def _dfs_slate() -> tuple[dict | None, list[dict]]:
+    """The latest Main slate in the DFS record, and its players by projection."""
+    import pandas as pd
+
+    from atlas.live.store import Store
+
+    rec = Store.open().read("dfs_projections")
+    rec = rec[rec["slate"] == "Main"] if not rec.empty else rec
+    if rec.empty:
+        return None, []
+    rec = rec.assign(start=pd.to_datetime(rec["starts_at"], utc=True, errors="coerce"))
+    latest = rec[rec["draft_group_id"] == rec.sort_values("start")["draft_group_id"].iloc[-1]]
+    latest = latest.sort_values(["projection", "salary"], ascending=[False, False])
+    slate = {"draft_group_id": int(latest["draft_group_id"].iloc[0]), "starts_at": latest["starts_at"].iloc[0],
+             "projected_at": latest["projected_at"].max()}
+    players = latest.astype(object).where(latest.notna(), None).to_dict(orient="records")
+    return slate, players
+
+
 def _write_robots(out: Path) -> None:
     (out / "robots.txt").write_text(
         "User-agent: *\n"
@@ -305,6 +330,7 @@ def _write_sitemap(out: Path, cards, teams: dict, nfl_teams: dict | None = None)
         ("ncaaf.html", "daily", "0.9"),
         ("nfl.html", "daily", "0.9"),
         ("premium.html", "monthly", "0.5"),
+        ("dfs.html", "daily", "0.7"),
     ]
     urls += [(card.path, "daily", SITEMAP_PRIORITY.get(card.sport, SITEMAP_PRIORITY["ncaaf"])) for card in cards]
     urls += [(f"team/{slug}.html", "weekly", SITEMAP_PRIORITY["team"])

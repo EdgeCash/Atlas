@@ -141,6 +141,7 @@ def layout(*, title: str, body: str, depth: int = 0, description: str = "",
         ("Home", f"{root}index.html", "home"),
         ("NCAAF", f"{root}ncaaf.html", "ncaaf"),
         ("NFL", f"{root}nfl.html", "nfl"),
+        ("DFS", f"{root}dfs.html", "dfs"),
         ("Scores", f"{root}scoreboard.html", "scores"),
         ("Research", f"{root}research.html", "research"),
         ("Premium", f"{root}premium.html", "premium"),
@@ -1526,6 +1527,176 @@ def scoreboard_page() -> str:
                   description=description, canonical="scoreboard.html")
 
 
+#: On every DFS page (plan §1): who DFS is for, and where to get help. The
+#: audit fails a DFS page without it.
+DFS_NOTE = """<b>DFS is gambling for adults.</b> DraftKings contests are open only to adults (18, 19 or 21 and
+  older, by state) in the states where DraftKings offers them. If it stops being fun, help is at
+  <a href="https://www.draftkings.com/responsible-gaming" rel="noopener">DraftKings' responsible gaming
+  page</a> and on 1-800-GAMBLER."""
+
+
+def _dfs_num(value, digits: int = 1) -> str:
+    try:
+        v = float(value)
+    except (TypeError, ValueError):
+        return "–"
+    return "–" if v != v else f"{v:.{digits}f}"
+
+
+def _dfs_pct(value) -> str:
+    try:
+        v = float(value)
+    except (TypeError, ValueError):
+        return "–"
+    return "–" if v != v else f"{round(v * 100):d}%"
+
+
+def _dfs_table(players: list[dict]) -> str:
+    rows = []
+    for p in players:
+        status = f' <span class="dfs-status">{esc(p["status"])}</span>' if p.get("status") else ""
+        rows.append(
+            f'<tr data-pos="{esc(p["position"])}"><td class="lead">{esc(p["name"])}{status}</td>'
+            f'<td>{esc(p["position"])}</td><td>{esc(p["team"])}</td><td>{esc(p.get("opponent") or "")}</td>'
+            f'<td>${int(p["salary"]):,}</td><td><b>{_dfs_num(p["projection"])}</b></td>'
+            f'<td>{_dfs_num(p["low"])}–{_dfs_num(p["high"])}</td><td>{_dfs_pct(p.get("p_play"))}</td></tr>')
+    return ('<div class="table-scroll"><table class="rows dfs-table"><thead><tr><th>Player</th><th>Pos</th>'
+            '<th>Team</th><th>Opp</th><th>Salary</th><th>Projection</th><th>Range</th><th>Plays</th></tr></thead>'
+            f'<tbody>{"".join(rows)}</tbody></table></div>')
+
+
+def _dfs_when(iso) -> str:
+    from datetime import datetime
+
+    try:
+        return stamp(datetime.fromisoformat(str(iso).replace("Z", "+00:00")))
+    except (TypeError, ValueError):
+        return ""
+
+
+def _dfs_started(iso) -> bool:
+    from datetime import datetime, timezone
+
+    try:
+        return datetime.fromisoformat(str(iso).replace("Z", "+00:00")) <= datetime.now(timezone.utc)
+    except (TypeError, ValueError):
+        return False
+
+
+def _dfs_board(slate: dict | None, players: list[dict]) -> str:
+    if not slate or not players:
+        return ('<div class="card card-pad"><p class="note banner-text">No slate is posted yet. DraftKings '
+                'posts the next Sunday main slate early in the week, and its projections appear here with the '
+                'next morning\'s refresh.</p></div>')
+    likely = [p for p in players if not (float(p.get("p_play") or 0) < 0.25)]
+    unlikely = [p for p in players if float(p.get("p_play") or 0) < 0.25]
+    head = (f'<p class="freshness"><span class="stamp"><b>Projected</b> {esc(_dfs_when(slate.get("projected_at")))}'
+            f'</span><span class="stamp"><b>First kickoff</b> {esc(_dfs_when(slate.get("starts_at")))}</span></p>')
+    if _dfs_started(slate.get("starts_at")):
+        head += ('<p class="note">This slate has started. Its projections are shown as they were published before '
+                 'the first kickoff; the next slate replaces them once DraftKings posts it.</p>')
+    buttons = "".join(
+        f'<button type="button" class="dfs-chip" data-filter="{p}" aria-pressed="{"true" if p == "All" else "false"}">'
+        f'{p}</button>' for p in ("All", "QB", "RB", "WR", "TE", "DST"))
+    more = ""
+    if unlikely:
+        more = (f'<details class="card card-pad top-gap dfs-more"><summary>Players less likely to play '
+                f'({len(unlikely)})</summary>{_dfs_table(unlikely)}</details>')
+    return (f'{head}\n<div class="dfs-filters" role="group" aria-label="Position">{buttons}</div>\n'
+            f'<div class="card card-pad">{_dfs_table(likely)}</div>\n{more}')
+
+
+def _dfs_history(history: dict | None) -> str:
+    if not history or not history.get("positions"):
+        return '<p class="note">The walk-forward record is published with the model.</p>'
+    rows = "".join(
+        f'<tr><td class="lead">{esc(pos)}</td><td>{r["player_weeks"]:,}</td><td>{r["mae"]:.2f}</td>'
+        f'<td>{r["baseline_mae"]:.2f}</td><td>{r["rank"]:.3f}</td><td>{r["coverage"]:.0%}</td>'
+        f'<td>{r["salary_era_rank"]:.3f}</td><td>{r["salary_rank"]:.3f}</td></tr>'
+        for pos, r in history["positions"].items())
+    return f"""<div class="table-scroll"><table class="rows dfs-record">
+  <thead><tr><th>Position</th><th>Player-weeks</th><th>Miss</th><th>Recent form's miss</th><th>Ranking</th>
+    <th>In range</th><th>Ranking {esc(history['salary_seasons'])}</th><th>Salary's ranking</th></tr></thead>
+  <tbody>{rows}</tbody>
+</table></div>
+<p class="note">Each team's regulars - its top quarterback, two running backs, three receivers, tight end and
+  defense - every season {esc(history['seasons'])}, each projected by a model fitted only on the seasons before
+  it. <b>Miss</b> is the average distance from the projection to the points scored; <b>recent form's miss</b> is
+  the same for the player's recent average, the simplest alternative. <b>Ranking</b> is how well the projections
+  order each position's players in a week (a correlation: 1 is perfect, 0 is chance). <b>In range</b> is how
+  often the points landed inside the range, built to hold four outcomes in five. DraftKings' own salaries exist
+  for {esc(history['salary_seasons'])}, and the last two columns compare the rankings there.</p>"""
+
+
+def _dfs_live(live: dict | None) -> str:
+    if live and live.get("slates"):
+        n = live["slates"]
+        return (f"<p>{n} slate{'s' if n != 1 else ''} graded, {live['players']:,} players: an average miss of "
+                f"{live['mae']:.2f} points, {live['coverage']:.0%} inside their range, a ranking of "
+                f"{_dfs_num(live['rank'], 3)}. Every priced player counts, including those who did not play and "
+                f"scored zero.</p>")
+    return ("<p>The live record starts with the first slate Atlas publishes: its projections are kept as they "
+            "stood before kickoff and graded against the points scored once the games are played.</p>")
+
+
+def dfs_page(slate: dict | None, players: list[dict], *, history: dict | None, live: dict | None) -> str:
+    """The public DFS area (`docs/MODEL_PLAN_DFS.md`, step 7): each player's
+    projection with its range and chance of playing, and the model's record.
+
+    The reader decides; the page arranges. No lineup is shown, nothing is
+    featured or highlighted, and the list is every priced player by
+    projection. Walled off from the cards, which keep their promise.
+    """
+    body = f"""<div class="board-head">
+  <h1>DFS projections</h1>
+  <span class="board-note">DraftKings NFL Classic · Sunday main slate</span>
+</div>
+
+<div class="disclosure dfs-what">
+  <b>What this page is.</b> Every player DraftKings has priced for the slate, with Atlas's projection of his
+  DraftKings points, a range that should hold four outcomes in five, and the chance he plays at all. It is a set
+  of numbers, not a lineup: Atlas does not build or feature one here, and nothing on this page promises anything
+  about a contest. {DFS_NOTE}
+</div>
+
+{_dfs_board(slate, players)}
+
+<section class="section" id="record">
+  <div class="section-head"><h2>The record</h2></div>
+  <div class="card card-pad prose">
+    <h3>Live</h3>
+    {_dfs_live(live)}
+    <h3>Walk-forward, before launch</h3>
+    {_dfs_history(history)}
+  </div>
+</section>
+
+<section class="section" id="how">
+  <div class="section-head"><h2>How the projections work</h2></div>
+  <div class="card card-pad prose">
+    <p>Each projection starts from the player's recent DraftKings scoring and corrects it with what is known before
+      kickoff: his share of his team's snaps, targets, carries and red-zone touches; the game as Atlas's own NFL model
+      sees it; the injury report and the depth chart, including the targets and carries a teammate's absence leaves
+      behind; and, for a defense, its pass rush and takeaways against the offense it faces. Unlike the game cards,
+      the DFS model also reads the betting market's implied team totals - measured honestly, they know more about
+      how many points a team will score than Atlas's game model does.</p>
+    <p>The projection is an average that already counts the chance a player does not play; <b>Plays</b> is that
+      chance. The <b>Range</b> runs from the 10th to the 90th percentile, and it is lopsided on purpose: DraftKings
+      points have a floor near zero and occasional very big touchdown weeks. No outside projections are used.</p>
+  </div>
+</section>
+
+<div class="disclosure top-gap">
+  <b>Walled off from the cards.</b> On its game cards Atlas does not publish selections - research, analytics and
+  market context only - and this page does not change that. {DFS_NOTE}
+</div>
+<script src="{asset("dfs.js")}" defer></script>"""
+    description = ("DraftKings NFL projections from Atlas's own model: every priced player with a range, the "
+                   "chance he plays, and the model's out-of-sample record.")
+    return layout(title="DFS projections | Atlas", body=body, active="dfs", description=description,
+                  canonical="dfs.html")
+
+
 def owner_page(record: dict | None) -> str:
     """The owner's DFS page: ciphertext and the means to open it, nothing else.
 
@@ -1573,7 +1744,7 @@ def owner_page(record: dict | None) -> str:
   <b>What this page is.</b> The page holds only ciphertext. The passphrase you type derives the key here, in
   this browser, and the lineups are decrypted into this tab's memory - nothing is stored or sent. They are the
   most projected points under DraftKings' cap from Atlas's DFS model; they promise nothing about any contest.
-  DFS is for adults where it is legal. Help is available at 1-800-GAMBLER.
+  {DFS_NOTE}
 </div>
 
 <script type="application/json" id="owner-box">{island}</script>
@@ -2082,7 +2253,10 @@ def about_page(example: Card | None, *, card_count: int) -> str:
       <h3>What Atlas is not</h3>
       <ul class="plain">
         <li><b>Not a selections service.</b> No card names a side. Not as a
-          lean, not as an arrow, not as a highlighted row.</li>
+          lean, not as an arrow, not as a highlighted row. The
+          <a href="dfs.html">DFS page</a> is separate and says what it is:
+          player projections for DraftKings contests, with their ranges and
+          record, and no lineup.</li>
         <li><b>Not a sportsbook.</b> Nothing here can be acted on from this
           page, and nothing is sized.</li>
         <li><b>Not a record of wins and losses.</b> The record Atlas publishes
@@ -2240,6 +2414,21 @@ FAQ = (
          "highlighted row. Every page is checked at build time by a test that "
          "fails if a side appears anywhere, and again by an audit over all "
          "179 built pages."),
+        ("What is the DFS page?",
+         "A separate part of Atlas for DraftKings' NFL daily fantasy contests: "
+         "every player DraftKings has priced for the Sunday main slate, with "
+         "Atlas's projection of his points, a range that should hold four "
+         "outcomes in five, and the chance he plays at all - beside the "
+         "model's record. It shows no lineup and features no player. DFS is "
+         "gambling, for adults, where it is legal."),
+        ("Why does the DFS model read the betting market when the cards do not?",
+         "Because it was measured. Built on Atlas's game model alone, the DFS "
+         "model ranked quarterbacks and defenses a little worse than "
+         "DraftKings' own prices; the gap was how many points each team would "
+         "score, which the market's implied team totals know better. The "
+         "cards compare Atlas with the market, so the market can never be one "
+         "of their inputs; the DFS page compares its projections with what "
+         "players score, so it can."),
         ("Do I need to know anything about betting?",
          "No. The market number is a reference point because it is the best "
          "public forecast of a game that exists. One thing does assume the "

@@ -74,6 +74,13 @@ SCHEMA: dict[str, list[str]] = {
         "draft_group_id", "player_id", "name", "position", "team", "salary", "game", "game_start",
         "status", "disabled", "captured_at", "draftable_id",
     ],
+    # Atlas's public DFS projections, each slate's last before its first
+    # kickoff (atlas/dfs/record.py). Graded afterwards against what the
+    # players scored: the DFS model's live record.
+    "dfs_projections": [
+        "draft_group_id", "slate", "starts_at", "season", "week", "player_id_dk", "player_id", "name", "position",
+        "team", "opponent", "salary", "status", "projection", "low", "high", "p_play", "projected_at",
+    ],
     "games": [
         "game_id", "season", "week", "kickoff", "home_team", "away_team",
         "home_team_id", "away_team_id", "status", "completed",
@@ -109,6 +116,7 @@ KEYS: dict[str, list[str]] = {
     # Last capture wins: a player's status (questionable, out) is worth
     # having as of the latest look before the slate locks.
     "dfs_salaries": ["draft_group_id", "player_id"],
+    "dfs_projections": ["draft_group_id", "player_id_dk"],
     "games": ["game_id"],
     "snapshots": ["game_id", "book", "market", "line", "price"],
     "signals": ["signal_id"],
@@ -122,6 +130,7 @@ SORT: dict[str, list[str]] = {
     "calibration": ["sport", "season", "week", "game_id", "market"],
     "dfs_slates": ["starts_at", "draft_group_id"],
     "dfs_salaries": ["draft_group_id", "position", "salary", "player_id"],
+    "dfs_projections": ["starts_at", "draft_group_id", "position", "player_id_dk"],
     "games": ["kickoff", "game_id"],
     "snapshots": ["game_id", "market", "book", "captured_at"],
     "signals": ["created_at", "game_id", "market", "book"],

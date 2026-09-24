@@ -63,11 +63,12 @@ def heavy(*, skip_warehouse: bool = False) -> int:
         # DraftKings' Classic salaries for the DFS model's record. It never
         # fails the run: a missed capture is logged, the site still builds.
         ("dfs-capture", ["atlas.sources.draftkings"]),
-        # The owner's DFS page: the week's lineups, encrypted with the
-        # ATLAS_OWNER_KEY secret before anything is written that the site
-        # publishes. Never fails the run either; without the secret it
-        # builds nothing (atlas/dfs/owner.py).
-        ("dfs-owner", ["atlas.dfs.owner"]),
+        # DFS: the upcoming Main slate's projections, recorded in
+        # tracking/dfs_projections.csv for the public DFS page until its
+        # first kickoff; and the owner's lineups, encrypted with the
+        # ATLAS_OWNER_KEY secret before anything the site publishes is
+        # written. Never fails the run (atlas/dfs/owner.py).
+        ("dfs", ["atlas.dfs.owner"]),
         ("site", ["atlas.site.build"]),
     ]
     details = []

@@ -124,11 +124,11 @@ def read(path: Path | None = None) -> dict | None:
 
 
 def refresh(*, label: str = "Main", rebuild: bool = True) -> Path:
-    """The heavy refresh's step. Never raises."""
+    """The heavy refresh's DFS step: the slate for everyone, the lineups for the owner. Never raises.
+
+    The public projections (step 7) are built and recorded whether or not
+    the owner key is set; only the sealed lineups need it."""
     passphrase = os.environ.get(SECRET, "")
-    if not passphrase.strip():
-        LOG.warning("no %s secret: the owner page is not built", SECRET)
-        return write(None, reason="The owner key is not configured.")
     try:
         if rebuild:
             from atlas.dfs import context, environment, players
@@ -140,13 +140,22 @@ def refresh(*, label: str = "Main", rebuild: bool = True) -> Path:
         from atlas.dfs import slate
 
         out = slate.run(label)
+    except Exception as error:  # noqa: BLE001 - the site must still build
+        # The type only: a message could quote a player or a number.
+        LOG.error("DFS slate not built: %s", type(error).__name__)
+        reason = ("No upcoming slate is posted yet." if type(error).__name__ == "NoSlate"
+                  else f"This refresh could not build the lineups ({type(error).__name__}).")
+        return write(None, reason=reason)
+    if not passphrase.strip():
+        LOG.warning("no %s secret: the owner page is not built", SECRET)
+        return write(None, reason="The owner key is not configured.")
+    try:
         plain = json.dumps(payload(out, label=label), separators=(",", ":")).encode("utf-8")
         box = encrypt(plain, passphrase)
         _check_sealed(box, plain)
         LOG.info("owner page: %s slate encrypted (%d bytes of ciphertext)", label, len(box["ct"]))
         return write(box)
-    except Exception as error:  # noqa: BLE001 - the site must still build
-        # The type only: a message could quote a player or a number.
+    except Exception as error:  # noqa: BLE001
         LOG.error("owner page not built: %s", type(error).__name__)
         return write(None, reason=f"This refresh could not build the lineups ({type(error).__name__}).")
 
