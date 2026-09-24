@@ -78,8 +78,9 @@ def build(out: Path | None = None, *, social_cards: bool = True,
         for side in (card.home, card.away):
             side.logo = nfl_logos.get(side.team_id)
 
-    (out / "index.html").write_text(render.homepage(
-        cards, bands=bands, rivalries=rivalry_pairs(), freshness=stamps))
+    (out / "index.html").write_text(render.homepage(cards, nfl_cards, freshness=stamps))
+    (out / "ncaaf.html").write_text(render.board_page(
+        cards, sport="ncaaf", rivalries=rivalry_pairs(), freshness=stamps))
     (out / "research.html").write_text(
         render.research_page(bands, overall, card_count=len(cards)))
     (out / "about.html").write_text(
@@ -272,7 +273,8 @@ def _write_sitemap(out: Path, cards, teams: dict, nfl_teams: dict | None = None)
         ("faq.html", "monthly", "0.7"),
         ("status.html", "daily", "0.4"),
         ("research.html", "weekly", SITEMAP_PRIORITY["research.html"]),
-        ("nfl.html", "monthly", "0.4"),
+        ("ncaaf.html", "daily", "0.9"),
+        ("nfl.html", "daily", "0.9"),
         ("premium.html", "monthly", "0.5"),
     ]
     urls += [(card.path, "daily", SITEMAP_PRIORITY.get(card.sport, SITEMAP_PRIORITY["ncaaf"])) for card in cards]

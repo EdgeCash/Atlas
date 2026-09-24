@@ -422,11 +422,13 @@ def _visible_text(page: str) -> str:
     lambda: _page(_card()),
     lambda: _page(_card(model_margin=4.0)),
     lambda: render.nfl_page(),
+    lambda: render.board_page([_card(), _card(model_margin=4.0)], sport="ncaaf"),
+    lambda: render.homepage([_card()], [_nfl_card()]),
     lambda: render.premium_page(),
     lambda: render.about_page(_card(), card_count=58),
     lambda: render.faq_page(),
     lambda: render.not_found_page(),
-], ids=["card-a", "card-f", "nfl", "premium", "about", "faq", "404"])
+], ids=["card-a", "card-f", "nfl", "ncaaf-board", "home", "premium", "about", "faq", "404"])
 def test_no_page_tells_a_reader_what_to_do(builder):
     """`docs/BRAND_GUIDE.md`: the vocabulary is a product constraint, not a
     style preference, and it is checked rather than trusted."""
@@ -582,12 +584,21 @@ def test_an_nfl_card_lives_under_nfl_and_links_its_team_pages():
     assert "Atlas projects" in page and "not a recommendation" in page.lower()
 
 
-def test_the_nfl_board_lists_cards_by_day_and_says_so_when_empty():
-    bands = {label: _band(label) for label in BAND_STATS}
+def test_the_nfl_board_has_the_college_layout_and_says_so_when_empty():
+    """One layout for both sports: the same head, filter bar, featured row,
+    next kickoffs and grade blocks - and no conference filter where there are
+    no conferences."""
     cards = [_nfl_card(), _nfl_card(model_margin=4.0)]
-    board = render.nfl_page(cards, bands=bands, freshness={"projection": "x", "market": "y"})
-    assert board.count('class="game-row"') == 2
-    assert "2 cards this week" in board and 'href="nfl/' in board
+    board = render.nfl_page(cards, freshness={"projection": "x", "market": "y"})
+    college = render.board_page([_card(), _card(model_margin=4.0)], sport="ncaaf")
+    for page in (board, college):
+        for piece in ('class="board-head"', 'class="board-bar"', "<h2>Featured</h2>", "<h2>Next kickoffs</h2>",
+                      'class="featured"', "assets/atlas.js"):
+            assert piece in page, piece
+    assert "<h1>NFL</h1>" in board and "<h1>College football</h1>" in college
+    assert 'id="conf"' not in board and 'id="conf"' in college
+    assert 'href="nfl/' in board and 'href="../nfl.html"' not in board
+    assert 'href="nfl.html" aria-current="page"' in board and 'href="ncaaf.html" aria-current="page"' in college
     empty = render.nfl_page([], bands={}, freshness=None)
     assert "No NFL games are scheduled" in empty
     for page in (board, empty):
@@ -688,3 +699,29 @@ def test_team_win_loss_counts_this_seasons_regular_season_results():
         "season_type": ["regular"] * 4, "home_team_id": [4, 4, 16, 4], "away_team_id": [16, 20, 4, 20],
         "actual_margin": [np.nan, 7.0, 3.0, -10.0]})
     assert team_win_loss([card], frame) == {card.home.team_id: "1-1", card.away.team_id: "1-0"}
+
+
+def test_the_home_page_features_the_best_matchups_in_each_sport():
+    """Three from each board, chosen the way each board chooses its featured
+    row, with the way to every game in that sport under them."""
+    college = [_card() for _ in range(5)]
+    college[3].home.rank = 4
+    college[3].away.rank = 9
+    nfl = [_nfl_team_card(), _nfl_card(), _nfl_card(model_margin=4.0), _nfl_card()]
+    nfl[0].projection.away = {"off": 5.0, "def": 4.0}          # the two best-rated teams meet here
+    home = render.homepage(college, nfl, freshness={"board": "x"})
+    assert "<h2>College football</h2>" in home and "<h2>NFL</h2>" in home
+    assert home.count('class="card card-pad feature"') == 6
+    assert 'href="ncaaf.html">All 5 college games this week' in home
+    assert 'href="nfl.html">All 4 NFL games this week' in home
+    assert render.featured_cards(college, "ncaaf")[0] is college[3]          # the ranked matchup leads
+    assert render.featured_cards(nfl, "nfl")[0] is nfl[0]                   # the best-rated teams lead
+    assert 'aria-current="page"' not in home                                  # home is the name, not a tab
+    empty = render.homepage([_card()], [])
+    assert "No NFL games are scheduled in the next week" in empty
+
+
+def test_the_nav_names_both_sports():
+    page = render.layout(title="t", body="", depth=1, active="nfl")
+    assert 'href="../ncaaf.html">NCAAF' in page and 'href="../nfl.html" aria-current="page">NFL' in page
+    assert 'class="logo" href="../index.html"' in page

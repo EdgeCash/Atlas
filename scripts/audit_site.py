@@ -93,7 +93,7 @@ def audit(site: Path) -> tuple[dict, dict]:
         if rel.startswith(("ncaaf/", "nfl/")) and 'property="og:title"' not in html:
             advisory["missing social tags"].append(rel)
         # Track 6: a reader must never have to guess how old a number is.
-        if (rel == "index.html" or rel.startswith(("ncaaf/", "nfl/"))) \
+        if (rel in ("index.html", "ncaaf.html", "nfl.html") or rel.startswith(("ncaaf/", "nfl/"))) \
                 and 'class="freshness"' not in html:
             advisory["missing freshness stamp"].append(rel)
         # A clock time with no zone is a number a reader has to guess about.

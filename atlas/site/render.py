@@ -118,23 +118,22 @@ def layout(*, title: str, body: str, depth: int = 0, description: str = "",
            active: str = "", social: str = "", canonical: str | None = None,
            structured: str = "") -> str:
     root = "../" * depth
-    # "NCAAF" pointed at the board, which is where "Today" already points. Two
-    # links to one page is a link nobody trusts, and the slot was needed.
+    # One entry per sport, each its full board; the name at the left is home,
+    # which shows the best matchups from both.
     nav_items = [
-        ("Today", f"{root}index.html", "today"),
+        ("NCAAF", f"{root}ncaaf.html", "ncaaf"),
         ("NFL", f"{root}nfl.html", "nfl"),
         ("Research", f"{root}research.html", "research"),
         ("Premium", f"{root}premium.html", "premium"),
         ("About", f"{root}about.html", "about"),
     ]
-    active = "today" if active == "ncaaf" else active
     current = ' aria-current="page"'
     nav = "".join(
         f'<a href="{href}"{current if key == active else ""}>{esc(label)}</a>'
         for label, href, key in nav_items
     )
     meta_description = description or (
-        "Research, analytics and market context for college football. "
+        "Research, analytics and market context for college football and the NFL. "
         "Atlas does not publish selections."
     )
     return f"""<!DOCTYPE html>
@@ -1143,35 +1142,94 @@ def _grade_block(letters: tuple, label: str, caption: str,
 </section>"""
 
 
-def homepage(cards: list[Card], *, bands: dict, rivalries: set | None = None,
-             freshness: dict | None = None) -> str:
-    """Rule 1: the board is the product.
+#: What each sport's board is called, and how its featured row is chosen.
+SPORTS = {
+    "ncaaf": {"name": "College football", "short": "college", "path": "ncaaf.html",
+              "featured": "ranked matchups, highest-grade cards"},
+    "nfl": {"name": "NFL", "short": "NFL", "path": "nfl.html",
+            "featured": "the highest-rated teams on Atlas's model"},
+}
+
+#: How many matchups a featured row shows, on a board and on the home page.
+FEATURED = 3
+
+
+def featured_cards(cards: list[Card], sport: str, n: int = FEATURED) -> list[Card]:
+    """The best matchups on a board.
+
+    College: games between ranked teams first, then the grade. The NFL has no
+    poll, so its best matchups are the games between the two best teams on
+    Atlas's own rating - each side's net, its expected quarterback included -
+    then the grade. Graded cards only, where there are any: a featured card
+    without a grade is a matchup with half its card missing.
+    """
+    pool = [c for c in cards if c.grade] or list(cards)
+
+    def score(card: Card) -> float:
+        return card.grade.score if card.grade else 0.0
+
+    if sport == "nfl":
+        from atlas.site.data import offence_with_quarterback
+
+        def strength(card: Card) -> float:
+            p = card.projection
+            if p is None or not p.home or not p.away:
+                return float("-inf")
+            total = 0.0
+            for view in (p.home, p.away):
+                off, dfn = offence_with_quarterback(view), view.get("def")
+                if off is None or dfn is None:
+                    return float("-inf")
+                total += off + dfn
+            return total
+
+        return sorted(pool, key=lambda c: (-strength(c), -score(c), c.kickoff))[:n]
+    return sorted(pool, key=lambda c: (-(c.home.rank is not None) - (c.away.rank is not None),
+                                       -score(c), c.kickoff))[:n]
+
+
+def _featured_row(cards: list[Card], sport: str, *, heading: str = "Featured", more: str = "",
+                  root: str = "") -> str:
+    featured = featured_cards(cards, sport)
+    if not featured:
+        return ""
+    return f"""<section class="section tight">
+  <div class="section-head"><h2>{esc(heading)}</h2>
+    <span class="note">{esc(SPORTS[sport]["featured"])}</span></div>
+  <div class="featured">{"".join(_featured_cell(c, root=root) for c in featured)}</div>
+  {more}
+</section>"""
+
+
+def board_page(cards: list[Card], *, sport: str = "ncaaf", rivalries: set | None = None,
+               freshness: dict | None = None, teams: dict | None = None, bands: dict | None = None) -> str:
+    """Rule 1: the board is the product. One layout for both sports.
 
     The board is the first thing on the page. No hero, no marketing, no
     summary tiles above the fold — a reader who came for a game sees games,
     and the filters sit in a compact bar that stays with them as they scroll.
 
-    Sections, in order: featured national games, rivalries, the next kickoffs,
-    then every card grouped by grade. The grade blocks carry a caption saying
-    what the letter means, because a board sorted by a letter reads as a
-    ranking of what to look at first and the letter does not mean that — the
-    most reliable cards are the ones where Atlas agrees with the market, which
-    is to say the ones where Atlas has said least.
+    Sections, in order: featured matchups, rivalries (college), the next
+    kickoffs, then every card grouped by grade. The grade blocks carry a
+    caption saying what the letter means, because a board sorted by a letter
+    reads as a ranking of what to look at first and the letter does not mean
+    that — the most reliable cards are the ones where Atlas agrees with the
+    market, which is to say the ones where Atlas has said least.
     """
+    info = SPORTS[sport]
     graded = [c for c in cards if c.grade]
     strong = sum(1 for c in graded if c.grade.letter in ("A+", "A"))
     weak = sum(1 for c in graded if c.grade.low)
 
-    featured = sorted(
-        graded,
-        key=lambda c: (-(c.home.rank is not None) - (c.away.rank is not None),
-                       -c.grade.score),
-    )[:3]
-
     conferences = sorted({
         conf for card in cards for conf in (card.home.conference, card.away.conference) if conf
     })
-    conf_options = "".join(f'<option value="{esc(c)}">{esc(c)}</option>' for c in conferences)
+    conf_select = ""
+    if conferences:
+        options = "".join(f'<option value="{esc(c)}">{esc(c)}</option>' for c in conferences)
+        conf_select = f"""<select id="conf" class="select" aria-label="Filter by conference">
+    <option value="">All conferences</option>{options}
+  </select>"""
 
     rivalry_cards = [c for c in cards if rivalries and _is_rivalry(c, rivalries)]
     upcoming = sorted(cards, key=lambda c: c.kickoff)[:NEXT_KICKOFFS]
@@ -1179,35 +1237,13 @@ def homepage(cards: list[Card], *, bands: dict, rivalries: set | None = None,
         _grade_block(letters, label, caption, cards)
         for letters, label, caption in GRADE_SECTIONS
     )
+    week = eastern(min(c.kickoff for c in cards)).strftime("Week of %-d %B") if cards else "This week"
 
-    featured_block = ""
-    if featured:
-        featured_block = f"""<section class="section tight">
-  <div class="section-head"><h2>Featured</h2>
-    <span class="note">ranked matchups, highest-grade cards</span></div>
-  <div class="featured">{"".join(_featured_cell(c) for c in featured)}</div>
-</section>"""
-
-    week = eastern(cards[0].kickoff).strftime("Week of %-d %B") if cards else "This week"
-
-    body = f"""<div class="board-head">
-  <h1>{esc(week)}</h1>
-  <span class="board-note">{len(cards)} cards · {strong} graded A or better ·
-    {weak} marked down</span>
-</div>
-
-{freshness_badge(("Updated", (freshness or {}).get("board", "")))}
-
-<p class="new-here board-new-here">Every game gets a card — and a letter for how
-  much that card's information has historically been worth.
-  <a href="about.html">How to read one</a></p>
-
-<div class="board-bar" id="controls">
+    if cards:
+        board = f"""<div class="board-bar" id="controls">
   <input class="search" type="search" id="q" placeholder="Search teams"
          aria-label="Search games" autocomplete="off">
-  <select id="conf" class="select" aria-label="Filter by conference">
-    <option value="">All conferences</option>{conf_options}
-  </select>
+  {conf_select}
   <button class="filter" data-grade="" aria-pressed="true">All</button>
   <button class="filter" data-grade="A" aria-pressed="false">A &amp; up</button>
   <button class="filter" data-grade="B" aria-pressed="false">B &amp; up</button>
@@ -1215,43 +1251,118 @@ def homepage(cards: list[Card], *, bands: dict, rivalries: set | None = None,
 </div>
 <p class="note board-count" id="count" aria-live="polite"></p>
 
-{featured_block}
+{_featured_row(cards, sport)}
 
 {_board_section("Rivalries", "played in at least eight of the last nine seasons", rivalry_cards)}
 
 {_board_section("Next kickoffs", "the next five games on the board", upcoming, dates=True)}
 
-{grade_blocks}
+{grade_blocks}"""
+    else:
+        board = f"""<div class="card card-pad banner-low">
+  <p class="note banner-text">No {esc(info["short"])} games are scheduled in the next week, or the warehouse has not
+    been built yet. The model, its record and how it is graded are on <a href="research.html">Research</a>.</p>
+</div>"""
 
-<div class="card card-pad nfl-strip">
-  <div class="banner-row">
-    <span class="badge mute">NFL</span>
-    <p class="note banner-text">The same card for the NFL, from the NFL's own model:
-      the market first, Atlas's number second, and a grade fitted to its own
-      out-of-sample record. <a href="nfl.html">This week's NFL board</a>.</p>
-  </div>
+    if sport == "nfl":
+        disclosure = """<b>How the NFL number is made.</b> Every team's offence and defence are carried from
+  season to season, regressed toward the mean, and updated after every game by a filter that adjusts for the
+  opponent; a quarterback state travels with the player; the home advantage is fitted, not assumed; the total
+  adds the wind. The market is never an input. Measured out of sample on 2023-2025, the number is closer to the
+  final margin than Elo and not as close as the closing line, and the grade is built from that record."""
+    else:
+        disclosure = f"""<b>About this week's numbers.</b> It is week {cards[0].week if cards else ""},
+  so team profiles are still shrunk toward last season and efficiency figures move a lot between games."""
+    disclosure += """ Atlas publishes research, analytics and market context; it does not publish selections,
+  does not size anything and does not project returns."""
+
+    body = f"""<div class="board-head">
+  <h1>{esc(info["name"])}</h1>
+  <span class="board-note">{esc(week)} · {_plural(len(cards), "card")} · {strong} graded A or better ·
+    {weak} marked down</span>
 </div>
 
+{freshness_badge(("Projection built", (freshness or {}).get("projection", "")),
+                 ("Market updated", (freshness or {}).get("market", "")))}
+
+<p class="new-here board-new-here">Every game gets a card — and a letter for how
+  much that card's information has historically been worth.
+  <a href="about.html">How to read one</a></p>
+
+{board}
+
+{_team_strip(teams) if sport == "nfl" else ""}
+
 <div class="disclosure top-gap">
-  <b>About this week's numbers.</b> It is week {cards[0].week if cards else ""},
-  so team profiles are still shrunk toward last season and efficiency figures
-  move a lot between games. Atlas publishes research, analytics and market
-  context; it does not publish selections, does not size anything and does not
-  project returns.
+  {disclosure}
 </div>
 
 <script src="assets/atlas.js" defer></script>"""
 
     description = (
-        f"Every college football game this week: the market number, the Atlas "
+        f"Every {info['short']} game this week: the market number, the Atlas "
         f"projection, and a grade for how much each card is worth. "
         f"{len(cards)} cards, {weak} marked down."
     )
-    return layout(title="College football cards this week | Atlas",
-                  body=body, active="today", description=description,
-                  canonical="", social=social_tags(
-                      title="Atlas Sports Intelligence", description=description,
-                      url=""))
+    title = f"{info['name']} cards this week | Atlas"
+    return layout(title=title, body=body, active=sport, description=description,
+                  canonical=info["path"], social=social_tags(title=title, description=description,
+                                                             url=info["path"]))
+
+
+def nfl_page(cards: list[Card] | None = None, *, bands: dict | None = None,
+             freshness: dict | None = None, teams: dict | None = None) -> str:
+    """The NFL board: the college board's layout, from the NFL's own model."""
+    return board_page(cards or [], sport="nfl", freshness=freshness, teams=teams)
+
+
+def homepage(cards: list[Card], nfl_cards: list[Card] | None = None, *, bands: dict | None = None,
+             rivalries: set | None = None, freshness: dict | None = None) -> str:
+    """The front door: the best matchups in each sport, and the way to every game.
+
+    Three of each, chosen the way each board chooses its featured row, with a
+    link to the full board under them. Everything else lives on the boards.
+    """
+    nfl_cards = nfl_cards or []
+    sections = []
+    for sport, block in (("ncaaf", cards), ("nfl", nfl_cards)):
+        info = SPORTS[sport]
+        if block:
+            more = (f'<p class="more-link"><a class="button ghost" href="{info["path"]}">'
+                    f'All {_plural(len(block), info["short"] + " game")} this week</a></p>')
+            sections.append(_featured_row(block, sport, heading=info["name"], more=more))
+        else:
+            sections.append(f"""<section class="section tight">
+  <div class="section-head"><h2>{esc(info["name"])}</h2></div>
+  <p class="note">No {esc(info["short"])} games are scheduled in the next week.</p>
+</section>""")
+    first = min((c.kickoff for c in [*cards, *nfl_cards]), default=None)
+    week = eastern(first).strftime("Week of %-d %B") if first else "This week"
+    total = len(cards) + len(nfl_cards)
+    body = f"""<div class="board-head">
+  <h1>This week's best matchups</h1>
+  <span class="board-note">{esc(week)} · {_plural(total, "card")} across college football and the NFL</span>
+</div>
+
+{freshness_badge(("Updated", (freshness or {}).get("board", "")))}
+
+<p class="new-here board-new-here">Every game gets a card: what the market says, what Atlas
+  projects, and a letter for how much that card's information has historically been worth.
+  <a href="about.html">How to read one</a></p>
+
+{"".join(sections)}
+
+<div class="disclosure top-gap">
+  <b>Why these games.</b> College matchups between ranked teams come first; in the NFL, the games between
+  the highest-rated teams on Atlas's own model. The grade breaks ties. Being featured says a game is a big
+  one, not that its card is worth more: Atlas publishes research, analytics and market context, and it
+  does not publish selections.
+</div>"""
+    description = (f"This week's best college football and NFL matchups: the market number, the Atlas "
+                   f"projection, and a grade for how much each card is worth. {total} cards.")
+    return layout(title="Atlas Sports Intelligence — this week's college football and NFL cards",
+                  body=body, active="home", description=description, canonical="",
+                  social=social_tags(title="Atlas Sports Intelligence", description=description, url=""))
 
 
 def _row_crests(card: Card, root: str = "") -> str:
@@ -1300,10 +1411,10 @@ def _plural(count: int, noun: str) -> str:
     return f"{count} {noun}" if count == 1 else f"{count} {noun}s"
 
 
-def _featured_cell(card: Card) -> str:
+def _featured_cell(card: Card, *, root: str = "") -> str:
     difference = card.total_difference
-    return f"""<a class="card card-pad feature" href="{esc(card.path)}">
-  <div class="feature-head">{_row_crests(card)}{grade_pill(card)}</div>
+    return f"""<a class="card card-pad feature" href="{root}{esc(card.path)}">
+  <div class="feature-head">{_row_crests(card, root=root)}{grade_pill(card)}</div>
   <h3 class="feature-title">{esc(card.title)}</h3>
   <p class="note feature-meta">{esc(day_clock(card.kickoff))}{esc(" · " + card.tv if card.tv else "")}</p>
   <div class="feature-nums">
@@ -2244,49 +2355,6 @@ def research_page(bands: dict, overall_band, *, card_count: int) -> str:
                   social=social_tags(title="How Atlas works",
                                      description=description,
                                      url="research.html"))
-
-
-def nfl_page(cards: list[Card] | None = None, *, bands: dict | None = None,
-             freshness: dict | None = None, teams: dict | None = None) -> str:
-    """The NFL board: the same rows as the college board, grouped by day.
-
-    With no cards - before the season, or a build without the NFL warehouse -
-    the page says so in one sentence rather than pretending.
-    """
-    cards = cards or []
-    graded = [c for c in cards if c.grade]
-    by_day: dict[str, list[Card]] = {}
-    for card in cards:
-        by_day.setdefault(day_and_clock(card.kickoff).split(" · ")[0], []).append(card)
-    sections = "".join(_board_section(day, _plural(len(block), "game"), block) for day, block in by_day.items())
-    if not cards:
-        sections = """<div class="card card-pad banner-low">
-  <p class="note banner-text">No NFL games are scheduled in the next week, or the NFL warehouse has not
-    been built yet. The model, its record and how it is graded are the same as college football's;
-    see <a href="research.html">Research</a>.</p>
-</div>"""
-    stamp_line = freshness_badge(("Projection built", (freshness or {}).get("projection", "")),
-                                 ("Market updated", (freshness or {}).get("market", "")))
-    body = f"""<header class="page-head">
-  <h1>NFL</h1>
-  <p class="sub">{_plural(len(cards), "card")} this week, {_plural(len(graded), "grade")}. The market first,
-    Atlas's own number second, and a grade for how much weight it deserves - the same card as college
-    football, from the NFL's own model.</p>
-</header>
-{sections}
-{_team_strip(teams)}
-{stamp_line}
-<div class="disclosure top-gap">
-  <b>How the NFL number is made.</b> Every team's offence and defence are carried from season to season,
-  regressed toward the mean, and updated after every game by a filter that adjusts for the opponent; a
-  quarterback state travels with the player; the home advantage is fitted, not assumed; the total adds the
-  wind. The market is never an input. Measured out of sample on 2023-2025, the number is closer to the
-  final margin than Elo and not as close as the closing line, and the grade is built from that record.
-</div>"""
-    description = (f"Atlas NFL cards this week: {len(cards)} games with the market, Atlas's own projection "
-                   "and a grade for how much weight it deserves.")
-    return layout(title="NFL cards this week | Atlas", body=body, active="nfl", canonical="nfl.html",
-                  description=description)
 
 
 def _team_strip(teams: dict | None) -> str:

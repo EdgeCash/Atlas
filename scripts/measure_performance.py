@@ -35,7 +35,7 @@ VIEWPORTS = (("mobile", 390, 844), ("tablet", 834, 1112), ("desktop", 1440, 900)
 #: Each page type once. Team and card pages are representative of 116 and 58
 #: siblings built from the same template.
 PAGES = (
-    ("board", "index.html"),
+    ("board", "ncaaf.html"),
     ("card", "ncaaf/central-michigan-chippewas-miami-hurricanes.html"),
     ("team", "team/georgia-bulldogs.html"),
     ("landing", "about.html"),

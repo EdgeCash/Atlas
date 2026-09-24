@@ -1,5 +1,6 @@
-/* Homepage filtering. Plain DOM over already-rendered rows: the page is
-   complete before this file loads, and it works without it. */
+/* Board filtering, both sports. Plain DOM over already-rendered rows: the
+   page is complete before this file loads, and it works without it. The
+   conference filter is optional - the NFL board has none. */
 (function () {
   "use strict";
   var q = document.getElementById("q");
@@ -21,7 +22,7 @@
 
   function apply() {
     var text = (q.value || "").trim().toLowerCase();
-    var conference = conf.value;
+    var conference = conf ? conf.value : "";
     var shown = 0;
     rows.forEach(function (row) {
       var ok =
@@ -45,7 +46,7 @@
   }
 
   q.addEventListener("input", apply);
-  conf.addEventListener("change", apply);
+  if (conf) conf.addEventListener("change", apply);
   buttons.forEach(function (button) {
     button.addEventListener("click", function () {
       grade = button.dataset.grade;

@@ -369,6 +369,8 @@ h3 { margin: 0 0 6px; }
 /* ---------------------------------------------------------- featured ---- */
 
 .featured { display: grid; gap: 10px; grid-template-columns: 1fr; }
+/* The home page's way from a sport's featured row to its full board. */
+.more-link { margin: 12px 0 0; }
 @media (min-width: 760px) { .featured { grid-template-columns: repeat(3, 1fr); } }
 .feature { text-decoration: none; color: inherit; display: block; }
 .feature:hover { border-color: var(--border-strong); }
