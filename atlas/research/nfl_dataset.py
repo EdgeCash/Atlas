@@ -25,6 +25,17 @@ def load_passer_games(warehouse: Path | None = None) -> pd.DataFrame:
         con.close()
 
 
+def load_players(warehouse: Path | None = None) -> pd.DataFrame:
+    """Every quarterback's draft pick and entry year; empty on a warehouse without the table."""
+    con = duckdb.connect(str(warehouse_path(warehouse)), read_only=True)
+    try:
+        return con.execute("SELECT * FROM players").df()
+    except duckdb.Error:
+        return pd.DataFrame(columns=["passer_id", "name", "draft_number", "entry_year"])
+    finally:
+        con.close()
+
+
 def load_nfl_frame(warehouse: Path | None = None) -> pd.DataFrame:
     con = duckdb.connect(str(warehouse_path(warehouse)), read_only=True)
     try:

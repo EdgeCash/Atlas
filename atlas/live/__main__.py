@@ -216,7 +216,7 @@ def publish_projections(store: Store) -> int:
 
         nfl_frame = load_nfl_frame(paths.warehouse)
         nfl = nfl_projection.fit(nfl_frame, choices=nfl_state.load_choices(nfl_state.choices_path(paths.root)),
-                                 passers=nfl_projection._passers(paths))
+                                 passers=nfl_projection._passers(paths), players=nfl_projection._players(paths))
         nfl_rows = nfl_projection.project(nfl, nfl_frame[nfl_frame["actual_margin"].isna()
                                                          & (nfl_frame["season"] == nfl.season)])
         if not nfl_rows.empty:

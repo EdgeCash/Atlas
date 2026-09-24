@@ -62,10 +62,11 @@ def _with_forecasts(games: pd.DataFrame, fc: pd.DataFrame) -> pd.DataFrame:
 
 
 def run(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON,
-        choices: tuple[dict, dict] | None = None, passers: pd.DataFrame | None = None):
+        choices: tuple[dict, dict] | None = None, passers: pd.DataFrame | None = None,
+        players: pd.DataFrame | None = None):
     """Walk-forward: state, calibrated total, joint grid, scored beside the references."""
     frame = prepare(frame)
-    record = ns.PasserRecord(passers) if passers is not None else None
+    record = ns.PasserRecord(passers, players) if passers is not None else None
     all_seasons = [int(s) for s in sorted(frame["season"].unique())]
     levels = {s: ns._levels(frame[frame["season"] < max(s, all_seasons[0] + 1)], s) for s in all_seasons}
     team_choices, qb_choices = choices if choices else ({}, {})
@@ -75,13 +76,15 @@ def run(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON,
         qb = qb_choices.get(season) or ns.tune_qb(frame, season, choice, levels, record=record)
         history = [s for s in all_seasons if s < season]
         fcs, state, starters = ns.run_qb(frame[frame["season"] < season], history, choice=choice, p0=qb.p0,
-                                         new_mean=qb.new_mean, levels=levels, k_epa=qb.k_epa, record=record, k_obs=qb.k_obs)
+                                         new_mean=qb.new_mean, levels=levels, k_epa=qb.k_epa, record=record, k_obs=qb.k_obs,
+                                         k_draft=qb.k_draft)
         train_fc = pd.concat([_with_forecasts(frame[frame["season"] == s], fcs[s])
                               for s in history[-ns.TUNING_SEASONS:]], ignore_index=True)
         train_fc = train_fc[train_fc["season_type"] == "regular"]
         tfit = tm.fit_total(train_fc, ADJUSTMENTS)
         tfcs, _, _ = ns.run_qb(frame, [season], choice=choice, p0=qb.p0, new_mean=qb.new_mean, levels=levels,
-                               state=state, starters=starters, k_epa=qb.k_epa, record=record, k_obs=qb.k_obs)
+                               state=state, starters=starters, k_epa=qb.k_epa, record=record, k_obs=qb.k_obs,
+                               k_draft=qb.k_draft)
         fc = _with_forecasts(test, tfcs[season])
         treg = train[train["season_type"] == "regular"]
         naive_mean, naive_sd = float(treg["actual_total"].mean()), float(treg["actual_total"].std(ddof=1))
@@ -219,8 +222,9 @@ def main() -> None:
     choices = ns.load_choices(ns.choices_path(paths.root))
     if choices is None:
         LOG.warning("no saved NFL state hyperparameters (%s); tuning here, which is slow", ns.choices_path(paths.root))
-    from atlas.models.nfl_projection import _passers
-    scored, table, fits = run(frame, first_test_season=args.first_test_season, choices=choices, passers=_passers(paths))
+    from atlas.models.nfl_projection import _passers, _players
+    scored, table, fits = run(frame, first_test_season=args.first_test_season, choices=choices, passers=_passers(paths),
+                              players=_players(paths))
     out = args.out or (paths.root / "reports" / "nfl_total.md")
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(render(scored, table, fits))

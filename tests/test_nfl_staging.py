@@ -361,3 +361,58 @@ def test_qb_choices_round_trip_with_the_observation_gain(tmp_path):
     ns.save_choices(team, qb, tmp_path / "c.json")
     loaded_team, loaded_qb = ns.load_choices(tmp_path / "c.json")
     assert loaded_team == team and loaded_qb[2024] == ns.QBChoice(9.0, -2.0, -1.0, (2021, 2022, 2023), 15.0, 20.0)
+
+
+def test_quarterback_draft_reads_the_rosters(tmp_path):
+    """v1.3: a pick for a drafted quarterback, an empty pick for an undrafted
+    one, and nobody whose draft status the rosters never state."""
+    from atlas.sources import nflverse
+    from atlas.staging.nfl.build import PLAYER_COLUMNS, quarterback_draft
+
+    nfl = tmp_path / "nfl"
+    nfl.mkdir()
+    pd.DataFrame({
+        "gsis_id": ["a", "a", "b", "c", "d"], "position": ["QB", "QB", "QB", "QB", "WR"],
+        "full_name": ["A", "A", "B", "C", "D"], "draft_number": [1.0, None, None, None, 5.0],
+        "entry_year": [2020, 2020, 2021, None, 2020], "rookie_year": [2020, 2020, 2021, None, 2020],
+    }).to_parquet(nflverse.rosters_path(tmp_path, 2021))
+    out = quarterback_draft(tmp_path, [2020, 2021]).set_index("passer_id")
+    assert list(out.reset_index().columns) == PLAYER_COLUMNS
+    assert set(out.index) == {"a", "b"}                          # c: status unknown; d: not a quarterback
+    assert out.loc["a", "draft_number"] == 1.0 and pd.isna(out.loc["b", "draft_number"])
+    assert quarterback_draft(tmp_path / "none", [2021]).empty
+
+
+def test_a_rookie_opens_on_his_draft_slot_and_it_fades_with_his_record():
+    from atlas.models import kalman
+    from atlas.models import nfl_state as ns
+
+    assert ns.draft_score(1) == pytest.approx(np.log(64.0))
+    assert ns.draft_score(64) == pytest.approx(0.0)
+    assert ns.draft_score(None) == ns.draft_score(260) < 0
+
+    players = pd.DataFrame({"passer_id": ["top", "late", "vet"], "name": ["T", "L", "V"],
+                            "draft_number": [1.0, None, 1.0], "entry_year": [2024, 2024, 2015]})
+    log = pd.DataFrame({"passer_id": ["vet"] * 20, "game_id": [f"v{i}" for i in range(20)],
+                        "game_date": [str(d.date()) for d in pd.date_range("2015-09-10", periods=20, freq="7D")],
+                        "dropbacks": [40] * 20, "qb_epa_per_dropback": [0.0] * 20})
+    rec = ns.PasserRecord(log, players)
+    assert rec.draft_of("top") > 0 > rec.draft_of("late") and rec.draft_of("nobody") == 0.0
+    assert rec.names["top"] == "T"
+
+    kick = pd.Timestamp("2024-09-08", tz="UTC")
+    spec = ns._spec(0.0, 9.0, 22.0, 2.0)
+
+    def opening(qb):
+        state = kalman.initialise(np.array([1, 2]), np.zeros(2), np.zeros(2),
+                                  kalman.Spec(**{**spec.__dict__, "p0_off": 4.0, "p0_def": 4.0}))
+        state.add(("qb", "opp"), 0.0, 4.0)
+        game = pd.DataFrame([{"game_id": "g1", "season": 2024, "week": 1, "kickoff": kick, "home_team_id": 1,
+                              "away_team_id": 2, "home_qb1_id": qb, "home_qb_id": qb, "away_qb1_id": "opp",
+                              "away_qb_id": "opp", "actual_margin": np.nan, "actual_total": np.nan,
+                              "neutral_site": 1}])
+        ns.run_season_qb(game, state, spec, p0=4.0, new_mean=-2.0, starters={}, record=rec, k_draft=1.0)
+        return state.value(("qb", qb))
+
+    assert opening("top") > -2.0 > opening("late")               # the slot speaks for a rookie
+    assert opening("vet") == pytest.approx(-2.0, abs=0.5)         # 800 dropbacks: the slot has faded

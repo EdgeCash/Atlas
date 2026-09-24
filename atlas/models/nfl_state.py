@@ -67,10 +67,25 @@ GRID = {
 #: is a second measurement of his state alone - ``k_obs`` points per unit,
 #: with noise variance ``k_obs**2 * play_var / dropbacks`` - so the
 #: quarterback/offence split is identified from more than the points.
+#: v1.3 adds ``k_draft``: points of prior per unit of draft score (see
+#: :func:`draft_score`), weighted by how little NFL record the quarterback
+#: has, so it speaks for a rookie and fades as his own dropbacks arrive. It
+#: is tuned in a second pass beside ``new_mean``, the others held.
 QB_GRID = {"p0": (4.0, 9.0, 16.0), "new_mean": (0.0, -2.0, -4.0), "k_epa": (0.0, 15.0, 30.0),
-           "k_obs": (0.0, 10.0, 20.0, 30.0)}
+           "k_obs": (0.0, 10.0, 20.0, 30.0), "k_draft": (0.0, 0.4, 0.8, 1.2)}
 EPA_SHRINK = 100.0
 OBS_MIN_DROPBACKS = 10  # fewer is a cameo, not a measurement of the starter
+#: Undrafted prices as the last pick: measured on 128 debuts 2011-26 with 100+
+#: early dropbacks, day-three picks and undrafted both open about 0.165 EPA per
+#: dropback below the league, first-rounders 0.084.
+UNDRAFTED_PICK = 260.0
+DRAFT_CENTRE = float(np.log(64.0))   # the end of round two scores zero
+
+
+def draft_score(pick: float | None) -> float:
+    """``log(64) - log(pick)``: +4.2 for the first pick, 0 at 64, -1.4 undrafted."""
+    pick = UNDRAFTED_PICK if pick is None or pd.isna(pick) else min(float(pick), UNDRAFTED_PICK)
+    return DRAFT_CENTRE - float(np.log(max(pick, 1.0)))
 QB_Q = 0.05            # process variance per week on a quarterback
 QB_PHI = 0.9           # between-season regression on a quarterback
 QB_P_SEASON = 1.0      # between-season innovation on a quarterback
@@ -97,6 +112,7 @@ class QBChoice:
     seasons: tuple[int, ...]
     k_epa: float = 0.0
     k_obs: float = 0.0
+    k_draft: float = 0.0
 
 
 class PasserRecord:
@@ -108,12 +124,19 @@ class PasserRecord:
     with v1.2, after every game he was the quarterback of record in.
     """
 
-    def __init__(self, passers: pd.DataFrame | None) -> None:
+    def __init__(self, passers: pd.DataFrame | None, players: pd.DataFrame | None = None) -> None:
         self.by_passer: dict[str, tuple[np.ndarray, np.ndarray, np.ndarray]] = {}
         self.by_game: dict[tuple[str, str], tuple[float, float]] = {}
         self.names: dict[str, str] = {}
+        self.draft: dict[str, float] = {}
         self.league = 0.0
         self.play_var = 0.0
+        if players is not None and not players.empty:
+            self.draft = {str(pid): draft_score(pick)
+                          for pid, pick in zip(players["passer_id"], players["draft_number"], strict=True)}
+            if "name" in players:
+                self.names.update(dict(zip(players["passer_id"].astype(str), players["name"].astype(str),
+                                           strict=True)))
         if passers is None or passers.empty:
             return
         p = passers.dropna(subset=["passer_id", "game_date"]).copy()
@@ -130,7 +153,7 @@ class PasserRecord:
             self.by_game = {(str(pid), str(gid)): (float(n), float(e - self.league))
                             for pid, gid, n, e in zip(p["passer_id"], p["game_id"], weights, epa, strict=True)}
         if "passer_name" in p.columns:
-            self.names = dict(zip(p["passer_id"].astype(str), p["passer_name"].astype(str), strict=True))
+            self.names.update(dict(zip(p["passer_id"].astype(str), p["passer_name"].astype(str), strict=True)))
         for pid, g in p.groupby("passer_id"):
             n = g["dropbacks"].to_numpy(dtype=float)
             self.by_passer[str(pid)] = (g["date"].to_numpy(), np.cumsum(n),
@@ -146,6 +169,10 @@ class PasserRecord:
         if k == 0:
             return 0.0, 0.0
         return float(n[k - 1]), float(s[k - 1] / n[k - 1] - self.league)
+
+    def draft_of(self, passer_id) -> float:
+        """The quarterback's draft score; 0 (the centre) when the rosters never listed him."""
+        return self.draft.get(str(passer_id), 0.0)
 
     def game(self, passer_id, game_id) -> tuple[float, float]:
         """(dropbacks, EPA per dropback above league) for one passer in one game; zeros if absent."""
@@ -174,7 +201,7 @@ def load_choices(path: Path) -> tuple[dict[int, Choice], dict[int, QBChoice]] | 
                               seasons=tuple(int(x) for x in c["seasons"])) for s, c in raw.items()}
     qb = {int(s): QBChoice(p0=c["qb"]["p0"], new_mean=c["qb"]["new_mean"], loglik=c["qb"]["loglik"],
                            seasons=tuple(int(x) for x in c["qb"]["seasons"]), k_epa=c["qb"].get("k_epa", 0.0),
-                           k_obs=c["qb"].get("k_obs", 0.0))
+                           k_obs=c["qb"].get("k_obs", 0.0), k_draft=c["qb"].get("k_draft", 0.0))
           for s, c in raw.items() if c.get("qb")}
     return choices, qb
 
@@ -242,7 +269,8 @@ def _advance_qb(state: kalman.State, weeks: int, spec: kalman.Spec, qb_q: float)
 
 def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *, p0: float, new_mean: float,
                   qb_q: float = QB_Q, first_season: bool = False, starters: dict | None = None,
-                  k_epa: float = 0.0, record: PasserRecord | None = None, k_obs: float = 0.0) -> pd.DataFrame:
+                  k_epa: float = 0.0, record: PasserRecord | None = None, k_obs: float = 0.0,
+                  k_draft: float = 0.0) -> pd.DataFrame:
     """Forecast every game with each side's expected starter, then learn from the one who played.
 
     The expected starter is the depth chart's QB1 for the week (knowable
@@ -257,6 +285,8 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
     seasons and is updated in place. With ``k_obs`` (v1.2) the quarterback
     of record's own EPA per dropback in the game, from ``record``, is a
     second measurement of his state after the points have been assimilated.
+    With ``k_draft`` (v1.3) a new quarterback's prior also carries his draft
+    score, weighted by the share of ``EPA_SHRINK`` his record has not filled.
     """
     g = games.sort_values(["kickoff", "week"])
     n = state.n
@@ -289,9 +319,10 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
             mean = 0.0
             if not first_season:
                 mean = new_mean
-                if k_epa and record is not None and kickoff is not None:
+                if record is not None and kickoff is not None and (k_epa or k_draft):
                     n, epa = record.before(qb, kickoff)
-                    mean += k_epa * epa * (n / (n + EPA_SHRINK))
+                    w = n / (n + EPA_SHRINK)
+                    mean += k_epa * epa * w + k_draft * record.draft_of(qb) * (1.0 - w)
             state.add(key, mean, p0)
         return state.extra[key]
 
@@ -352,7 +383,7 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
 def run_qb(frame: pd.DataFrame, seasons: list[int], *, choice: Choice, p0: float, new_mean: float,
            levels: dict[int, tuple[float, float]], state: kalman.State | None = None,
            starters: dict | None = None, teams: np.ndarray | None = None, k_epa: float = 0.0,
-           record: PasserRecord | None = None, k_obs: float = 0.0):
+           record: PasserRecord | None = None, k_obs: float = 0.0, k_draft: float = 0.0):
     """Like :func:`run`, with the quarterback state and the fitted home advantage."""
     if teams is None:
         teams = np.unique(np.r_[frame["home_team_id"], frame["away_team_id"]])
@@ -368,7 +399,7 @@ def run_qb(frame: pd.DataFrame, seasons: list[int], *, choice: Choice, p0: float
             new_season(state, choice.phi, choice.p_season)
         forecasts[season] = run_season_qb(frame[frame["season"] == season], state, spec, p0=p0, new_mean=new_mean,
                                           first_season=(first and i == 0), starters=starters, k_epa=k_epa,
-                                          record=record, k_obs=k_obs)
+                                          record=record, k_obs=k_obs, k_draft=k_draft)
     return forecasts, state, starters
 
 
@@ -388,6 +419,18 @@ def tune_qb(frame: pd.DataFrame, season: int, choice: Choice, levels: dict[int, 
         ll = sum(_loglik(fcs[s], train[train["season"] == s]) for s in scored)
         if best is None or ll > best.loglik:
             best = QBChoice(p0, new_mean, ll, tuple(scored), k_epa, k_obs)
+    # Second pass: the draft score beside the intercept it shifts, the rest held.
+    draft_grid = grid.get("k_draft", (0.0,)) if record is not None and record.draft else (0.0,)
+    if any(draft_grid):
+        held = best
+        for new_mean, k_draft in itertools.product(grid["new_mean"], draft_grid):
+            if not k_draft and new_mean == held.new_mean:
+                continue
+            fcs, _, _ = run_qb(train, seasons, choice=choice, p0=held.p0, new_mean=new_mean, levels=levels,
+                               teams=teams, k_epa=held.k_epa, record=record, k_obs=held.k_obs, k_draft=k_draft)
+            ll = sum(_loglik(fcs[s], train[train["season"] == s]) for s in scored)
+            if ll > best.loglik:
+                best = QBChoice(held.p0, new_mean, ll, tuple(scored), held.k_epa, held.k_obs, k_draft)
     return best
 
 
@@ -447,7 +490,7 @@ def tune(frame: pd.DataFrame, season: int, levels: dict[int, tuple[float, float]
 
 def walk_forward(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON, grid: dict = GRID,
                  min_train_seasons: int = 2, qb: bool = True, qb_grid: dict = QB_GRID,
-                 passers: pd.DataFrame | None = None):
+                 passers: pd.DataFrame | None = None, players: pd.DataFrame | None = None):
     """Tune on the past, forecast the season, score beside the references.
 
     With ``qb`` the quarterback model (step 4) is tuned and scored too, as
@@ -458,7 +501,7 @@ def walk_forward(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEA
               "home_qb1_out", "away_qb1_out"):
         if c not in frame.columns:
             frame[c] = pd.NA
-    record = PasserRecord(passers) if passers is not None else None
+    record = PasserRecord(passers, players) if passers is not None else None
     all_seasons = [int(s) for s in sorted(frame["season"].unique())]
     scored, choices, finals = [], {}, {}
     qb_choices, qb_finals = {}, {}
@@ -485,10 +528,10 @@ def walk_forward(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEA
             qb_choices[season] = qb_choice
             _, qstate, starters = run_qb(frame[frame["season"] < season], history, choice=choice, p0=qb_choice.p0,
                                          new_mean=qb_choice.new_mean, levels=levels, k_epa=qb_choice.k_epa,
-                                         record=record, k_obs=qb_choice.k_obs)
+                                         record=record, k_obs=qb_choice.k_obs, k_draft=qb_choice.k_draft)
             qfcs, qstate, _ = run_qb(frame, [season], choice=choice, p0=qb_choice.p0, new_mean=qb_choice.new_mean,
                                      levels=levels, state=qstate, starters=starters, k_epa=qb_choice.k_epa,
-                                     record=record, k_obs=qb_choice.k_obs)
+                                     record=record, k_obs=qb_choice.k_obs, k_draft=qb_choice.k_draft)
             qfc = qfcs[season]
             qb_finals[season] = qstate
             models["state_qb"] = ref.Forecast("state_qb", qfc["mean"].to_numpy(dtype=float),
@@ -501,6 +544,7 @@ def walk_forward(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEA
                  levels[season][0], levels[season][1], len(test),
                  f"; qb p0={qb_choices[season].p0:.0f} new={qb_choices[season].new_mean:+.0f} "
                  f"k_epa={qb_choices[season].k_epa:.0f} k_obs={qb_choices[season].k_obs:.0f} "
+                 f"k_draft={qb_choices[season].k_draft:.1f} "
                  f"hfa fitted {qb_finals[season].value(HFA_KEY):.2f}" if qb else "")
     out = pd.concat(scored, ignore_index=True)
     out.attrs["qb_choices"] = {s: asdict(c) for s, c in qb_choices.items()}
@@ -536,13 +580,16 @@ def render(scored: pd.DataFrame, choices: dict[int, Choice], finals: dict[int, k
         "team model alone (step 3); `state_qb` adds a quarterback state carried by the player and a fitted, "
         "slowly drifting home advantage (step 4), forecast with the depth chart's QB1 and updated with the "
         "quarterback of record, whose own EPA per dropback in the game is a second measurement of him "
-        "(v1.2, `pts per EPA/dropback, observed`). Same lattice and scoring as the benchmarks.", "",
+        "(v1.2, `pts per EPA/dropback, observed`); a quarterback with little NFL record also opens on his "
+        "draft slot (v1.3, `pts per draft score`, where the score is log 64 minus log pick). Same lattice and "
+        "scoring as the benchmarks.", "",
         "## Hyperparameters chosen, per season", "",
         md(pd.DataFrame([{"season": s, "q per week": c.q, "phi": c.phi, "p_season": c.p_season,
                           "sigma (pts)": c.sigma, "tuned on": ", ".join(map(str, c.seasons)),
                           **({"QB prior var": qb_choices[s]["p0"], "new QB prior": qb_choices[s]["new_mean"],
                               "pts per EPA/dropback": qb_choices[s].get("k_epa", 0.0),
                               "pts per EPA/dropback, observed": qb_choices[s].get("k_obs", 0.0),
+                              "pts per draft score": qb_choices[s].get("k_draft", 0.0),
                               "HFA fitted": round(hfa_fitted[s], 2)} if s in qb_choices else {})}
                          for s, c in choices.items()])), "",
         f"## Reporting window, regular season {REPORT_SEASONS[0]}-{REPORT_SEASONS[-1]}", "",
@@ -611,13 +658,14 @@ def main() -> None:
     args = ap.parse_args()
     paths = config.paths()
     frame = research_sample(load_nfl_frame(paths.warehouse))
-    from atlas.research.nfl_dataset import load_passer_games
+    from atlas.research.nfl_dataset import load_passer_games, load_players
     try:
         passers = load_passer_games(paths.warehouse)
     except Exception as error:  # noqa: BLE001 - an older warehouse has no passer log
         LOG.warning("no passer log in the warehouse (%s); new quarterbacks get the flat prior", error)
         passers = None
-    scored, choices, finals, frame = walk_forward(frame, first_test_season=args.first_test_season, passers=passers)
+    scored, choices, finals, frame = walk_forward(frame, first_test_season=args.first_test_season, passers=passers,
+                                                  players=load_players(paths.warehouse))
     out = args.out or (paths.root / "reports" / "nfl_state.md")
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(render(scored, choices, finals, frame))

@@ -18,6 +18,11 @@ column conventions as the college ``research_games`` so
 * the injury report's count of players Out or Doubtful, and whether the
   QB1 or the QB2 was one of them (``home_qb1_out``, ``home_qb2_out``), by
   the player's own id.
+
+Beside it, ``players``: every quarterback the rosters ever listed, with his
+draft pick (empty for an undrafted player) and the year he entered the
+league. A pick is made in April, before any game he could play, so it is
+pre-kickoff safe for every game in the frame.
 """
 
 from __future__ import annotations
@@ -76,6 +81,10 @@ def build(seasons: list[int] | None = None, *, include_scheduled: bool = True) -
         passers = eff_stage.load_passers(staging.parent)
         con.register("passers", passers)
         con.execute("CREATE OR REPLACE TABLE passer_games AS SELECT * FROM passers")
+        players = quarterback_draft(paths.raw, seasons)
+        write_parquet(players, staging / "players.parquet")
+        con.register("players", players)
+        con.execute("CREATE OR REPLACE TABLE players AS SELECT * FROM players")
     finally:
         con.close()
     manifest = {"generated_at": datetime.now(UTC).isoformat(timespec="seconds"), "seasons": seasons,
@@ -253,6 +262,40 @@ def injury_counts(raw: Path, seasons: list[int]) -> pd.DataFrame:
         frames.append(g)
     return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame(
         columns=["season", "week", "team_id", "injured_out", "out_ids"])
+
+
+PLAYER_COLUMNS = ["passer_id", "name", "draft_number", "entry_year"]
+
+
+def quarterback_draft(raw: Path, seasons: list[int]) -> pd.DataFrame:
+    """One row per quarterback the weekly rosters ever list: draft pick and entry year.
+
+    ``draft_number`` is empty for an undrafted player, which the rosters mark
+    by carrying his entry year and no pick (Romo, Keenum, DeVito). A player
+    with neither is dropped: his draft status is unknown, not undrafted.
+    """
+    frames = []
+    for season in seasons:
+        path = nflverse.rosters_path(raw, season)
+        if not path.exists():
+            continue
+        wanted = ["gsis_id", "position", "full_name", "draft_number", "entry_year", "rookie_year"]
+        d = pd.read_parquet(path)
+        frames.append(d[[c for c in wanted if c in d.columns]])
+    if not frames:
+        return pd.DataFrame(columns=PLAYER_COLUMNS)
+    r = pd.concat(frames, ignore_index=True).dropna(subset=["gsis_id"])
+    if "position" in r:
+        r = r[r["gsis_id"].isin(r.loc[r["position"] == "QB", "gsis_id"])]
+    for c in ("draft_number", "entry_year", "rookie_year"):
+        r[c] = pd.to_numeric(r[c], errors="coerce") if c in r else np.nan
+    r["entry_year"] = r["entry_year"].fillna(r["rookie_year"])
+    out = r.groupby("gsis_id").agg(name=("full_name", "last"), draft_number=("draft_number", "min"),
+                                   entry_year=("entry_year", "min")).reset_index()
+    out = out.rename(columns={"gsis_id": "passer_id"})
+    out = out[out["draft_number"].notna() | out["entry_year"].notna()]
+    LOG.info("players: %d quarterbacks, %d drafted", len(out), int(out["draft_number"].notna().sum()))
+    return out[PLAYER_COLUMNS].reset_index(drop=True)
 
 
 def main() -> None:

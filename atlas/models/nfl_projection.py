@@ -30,7 +30,12 @@ from atlas.models import ncaaf_total as tm
 from atlas.models import nfl_state as ns
 from atlas.models import nfl_total as nt
 from atlas.models import reference as ref
-from atlas.research.nfl_dataset import load_nfl_frame, load_passer_games, research_sample
+from atlas.research.nfl_dataset import (
+    load_nfl_frame,
+    load_passer_games,
+    load_players,
+    research_sample,
+)
 from atlas.util import get_logger
 
 LOG = get_logger(__name__)
@@ -72,7 +77,7 @@ class Projector:
 
 def _version(season, choice, qb, total, assimilated, last) -> str:
     payload = "|".join([MODEL_NAME, str(season), f"{choice.q},{choice.phi},{choice.p_season},{choice.sigma}",
-                        f"{qb.p0},{qb.new_mean},{qb.k_epa},{qb.k_obs}", ",".join(f"{c:.4f}" for c in total.coef), str(assimilated), last])
+                        f"{qb.p0},{qb.new_mean},{qb.k_epa},{qb.k_obs},{qb.k_draft}", ",".join(f"{c:.4f}" for c in total.coef), str(assimilated), last])
     return hashlib.sha256(payload.encode()).hexdigest()[:12]
 
 
@@ -89,7 +94,7 @@ def _choices_for(season: int, choices, frame, levels):
 
 
 def fit(frame: pd.DataFrame, *, season: int | None = None, choices=None,
-        passers: pd.DataFrame | None = None) -> Projector:
+        passers: pd.DataFrame | None = None, players: pd.DataFrame | None = None) -> Projector:
     """Fit on every completed season, carry the state through this one.
 
     ``frame`` is the NFL research frame *with* scheduled games, as
@@ -97,7 +102,7 @@ def fit(frame: pd.DataFrame, *, season: int | None = None, choices=None,
     ``passers`` the staged passer log, for a new quarterback's prior.
     """
     frame = nt.prepare(frame)
-    record = ns.PasserRecord(passers) if passers is not None else None
+    record = ns.PasserRecord(passers, players) if passers is not None else None
     if season is None:
         season = int(frame["season"].max())
     completed = frame[frame["actual_margin"].notna()]
@@ -107,7 +112,8 @@ def fit(frame: pd.DataFrame, *, season: int | None = None, choices=None,
     choice, qb = _choices_for(season, choices, sample, levels)
     history = [s for s in all_seasons if s < season]
     fcs, state, starters = ns.run_qb(completed[completed["season"] < season], history, choice=choice, p0=qb.p0,
-                                     new_mean=qb.new_mean, levels=levels, k_epa=qb.k_epa, record=record, k_obs=qb.k_obs)
+                                     new_mean=qb.new_mean, levels=levels, k_epa=qb.k_epa, record=record, k_obs=qb.k_obs,
+                                     k_draft=qb.k_draft)
     train_fc = pd.concat([nt._with_forecasts(completed[completed["season"] == s], fcs[s])
                           for s in history[-ns.TUNING_SEASONS:]], ignore_index=True)
     train_fc = train_fc[train_fc["season_type"] == "regular"]
@@ -119,7 +125,7 @@ def fit(frame: pd.DataFrame, *, season: int | None = None, choices=None,
     this_season = completed[completed["season"] == season]
     if not this_season.empty:
         ns.run_qb(frame, [season], choice=choice, p0=qb.p0, new_mean=qb.new_mean, levels=levels, state=state,
-                  starters=starters, k_epa=qb.k_epa, record=record, k_obs=qb.k_obs)
+                  starters=starters, k_epa=qb.k_epa, record=record, k_obs=qb.k_obs, k_draft=qb.k_draft)
     else:
         ns.new_season(state, choice.phi, choice.p_season)
     played = pd.concat([this_season["home_team_id"], this_season["away_team_id"]]).value_counts()
@@ -149,7 +155,8 @@ def project(projector: Projector, scheduled: pd.DataFrame) -> pd.DataFrame:
                          index=dict(p.state.index))
     state.extra.update(p.state.extra)
     fc = ns.run_season_qb(rows.assign(actual_margin=np.nan, actual_total=np.nan), state, p.spec, p0=p.qb.p0,
-                          new_mean=p.qb.new_mean, starters=dict(p.starters), k_epa=p.qb.k_epa, record=p.record, k_obs=p.qb.k_obs)
+                          new_mean=p.qb.new_mean, starters=dict(p.starters), k_epa=p.qb.k_epa, record=p.record, k_obs=p.qb.k_obs,
+                          k_draft=p.qb.k_draft)
     rows["state_total"] = (fc["home_pts"] + fc["away_pts"]).to_numpy()
     total_mean = p.total.mean(rows)
     support = tm.total_support(nt.MAX_POINTS)
@@ -199,12 +206,18 @@ def _passers(paths) -> pd.DataFrame | None:
         return None
 
 
+def _players(paths) -> pd.DataFrame:
+    """Draft picks for the new-quarterback prior; empty (the centre for everyone) if not staged."""
+    return load_players(paths.warehouse)
+
+
 def history(paths=None, *, first_test_season: int = nt.FIRST_TEST_SEASON) -> pd.DataFrame:
     """The model against the closing line, walk-forward, for the grade (``sport = "nfl"``)."""
     paths = paths or config.paths()
     frame = research_sample(load_nfl_frame(paths.warehouse))
     choices = ns.load_choices(ns.choices_path(paths.root))
-    scored, table, _ = nt.run(frame, first_test_season=first_test_season, choices=choices, passers=_passers(paths))
+    scored, table, _ = nt.run(frame, first_test_season=first_test_season, choices=choices, passers=_passers(paths),
+                              players=_players(paths))
     t = table.dropna(subset=["closing_spread", "closing_total", "p_cover"])
     line = -t["closing_spread"].to_numpy(dtype=float)
     p_cover = t["p_cover"].to_numpy(dtype=float)
@@ -235,7 +248,7 @@ def main() -> None:
     paths = config.paths()
     frame = load_nfl_frame(paths.warehouse)
     projector = fit(frame, season=args.season, choices=ns.load_choices(ns.choices_path(paths.root)),
-                    passers=_passers(paths))
+                    passers=_passers(paths), players=_players(paths))
     scheduled = frame[frame["actual_margin"].isna() & (frame["season"] == projector.season)]
     out = project(projector, scheduled)
     with pd.option_context("display.width", 200, "display.max_rows", 100):
