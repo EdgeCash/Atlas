@@ -285,7 +285,12 @@ learned +1.19 points per sd on it. Weeks 1–4 CRPS 9.472 → 9.443, weeks
 1–2 9.247 → 9.164; better in 2023, 2024 and 2025, worse by 0.04 in 2022,
 unchanged in 2021, which had no portal. Small, in the direction the data
 said, and it will grow: the portal's scale has doubled since 2021 and
-the feature's sd with it.
+the feature's sd with it. Re-run on the new prior, the state chose the
+same hyperparameters and moved where the prior does: weeks 1–2 CRPS
+9.169 → 9.095, weeks 3–4 9.251 → 9.269, later buckets within 0.02,
+pooled 8.940 → 8.936. The filter overwrites the prior by mid-season, as
+it should, so a preseason feature is worth its first-month gain and no
+more.
 
 **State — built, `reports/ncaaf_state.md`.** One joint Kalman filter over
 every team's `off` and `def` with a full covariance, which is the opponent
@@ -478,7 +483,7 @@ bucket**, and the ECE row holds.
 | 1 | Benchmarks on that frame: naive, prior-FPI, prior-SP+, Elo, Atlas's own adjusted EPA, market-in-lattice, walk-forward 2021–25 | `reports/ncaaf_benchmarks.md` via `make ncaaf-benchmarks` |
 | 2 | Preseason prior: the SP+ recipe refit on our data, directly on games (`atlas/models/ncaaf_prior.py`, `make ncaaf-prior`) | **done — week-1 corr 0.671** (bar 0.62; FPI alone 0.623) |
 | 3 | Kalman state model, off/def, opponent-adjusted, no extras (`atlas/models/kalman.py`, `atlas/models/ncaaf_state.py`, `make ncaaf-state`) | **done — beats Elo in every week bucket; CRPS 8.96 vs Elo 9.23, market 8.61** |
-| 4 | Coaching-change and programme-mean features in the prior; portal fetch; QB measured | **done — weeks 1–4 CRPS 9.51 → 9.47, weeks 3–4 9.73 → 9.67; state pooled 8.96 → 8.94** |
+| 4 | Coaching-change and programme-mean features in the prior; portal fetch; QB measured | **done — weeks 1–4 CRPS 9.51 → 9.47, weeks 3–4 9.73 → 9.67; state pooled 8.96 → 8.94; portal (v1.2) 9.169 → 9.095 in weeks 1–2** |
 | 5 | Total model + joint grid (`atlas/models/ncaaf_total.py`, `atlas/models/joint.py`, `make ncaaf-total`) | **done — total CRPS 9.13 (naive 9.62, market 8.85); grid P(home) within 0.04 in every spread bucket** |
 | 6 | Wire into the card (model number second slot, market open/move/now first, drivers third) and the grade (`atlas/models/ncaaf_projection.py`, `tracking/projections.csv`, `tracking/calibration.csv`) | **done — audit passes on 182 pages; grade fitted to this model's record** |
 | 7 | v2 drive simulation, if warranted | **gate measured; not warranted yet.** A points lattice (v1.5, `joint.fit_points`) took the exact-score log score 7.54 → 7.10 with no simulation; a simulation has to beat 7.10 |

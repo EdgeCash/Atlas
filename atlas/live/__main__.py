@@ -211,11 +211,12 @@ def publish_projections(store: Store) -> int:
     # The NFL, when its warehouse is there. Its absence or failure is logged
     # and never takes the college publish down with it.
     try:
-        from atlas.models import nfl_projection
+        from atlas.models import nfl_projection, nfl_state
         from atlas.research.nfl_dataset import load_nfl_frame
 
         nfl_frame = load_nfl_frame(paths.warehouse)
-        nfl = nfl_projection.fit(nfl_frame, passers=nfl_projection._passers(paths))
+        nfl = nfl_projection.fit(nfl_frame, choices=nfl_state.load_choices(nfl_state.choices_path(paths.root)),
+                                 passers=nfl_projection._passers(paths))
         nfl_rows = nfl_projection.project(nfl, nfl_frame[nfl_frame["actual_margin"].isna()
                                                          & (nfl_frame["season"] == nfl.season)])
         if not nfl_rows.empty:
