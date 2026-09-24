@@ -173,6 +173,16 @@ promote Atlas into a real betting system, or terminate it.
   ESPN's public scoreboard, which quotes DraftKings. That is one of the four
   books Phase 4 found ever posts an opener, which is why it was chosen; it is
   still one book.
+* **One name per book.** In its first week the feed spelled DraftKings two
+  ways, alternating between polls, and the tracker keyed each spelling as its
+  own book: every signal was recorded twice, and a signal's closing line
+  could be the stale last look under its own spelling. Names are now reduced
+  to one where a quote enters (`atlas/live/books.py`), and every poll first
+  reconciles what is already written: one line history per game, the
+  earliest signal per game, market and book kept (the same opinion, recorded
+  a day later under the other spelling, removed), grades moved with their
+  signal, and any grade of a game whose history was merged cleared so the
+  same poll grades it again against the whole of it.
 * **Cold start.** A signal formed four days after a line posts has already
   lost part of the move. Early polls will show large `pre_signal_move` values
   and depressed CLV until the tracker has been running long enough to see

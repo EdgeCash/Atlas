@@ -20,6 +20,7 @@ from typing import Protocol
 
 import pandas as pd
 
+from atlas.live.books import canonical
 from atlas.util import _guard_offline, get_logger, http_get, session
 
 LOG = get_logger(__name__)
@@ -139,7 +140,8 @@ class EspnScoreboard:
             }
 
             for odds in comp.get("odds", []) or []:
-                book = ((odds.get("provider") or {}).get("name") or "unknown")
+                # One name per book: the feed has spelled DraftKings two ways.
+                book = canonical((odds.get("provider") or {}).get("name") or "unknown")
                 spread = odds.get("pointSpread") or {}
                 total = odds.get("total") or {}
 

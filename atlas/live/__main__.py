@@ -19,7 +19,7 @@ from datetime import UTC, date, datetime, timedelta
 import pandas as pd
 
 from atlas import config
-from atlas.live import audit, ops_report, quality, reproduce
+from atlas.live import audit, books, ops_report, quality, reproduce
 from atlas.live import dashboard as dashboarding
 from atlas.live import drift as drifting
 from atlas.live import grade as grading
@@ -114,6 +114,7 @@ def poll(horizon: int = DEFAULT_HORIZON_DAYS, *, provider: str = "espn",
     store = Store.open()
     run = audit.Run(command="poll", provider=provider)
     try:
+        books.reconcile(store)
         now = datetime.now(UTC).replace(microsecond=0).isoformat()
         quotes = _fetch_quotes(provider, _days(horizon))
         run.quotes = len(quotes)

@@ -14,6 +14,7 @@ from datetime import date, datetime, timedelta
 from pathlib import Path
 
 from atlas import config
+from atlas.live.books import canonical
 from atlas.live.provider import SCOREBOARD
 from atlas.util import _guard_offline, get_logger, http_get, session
 
@@ -112,7 +113,7 @@ def _moneyline(comp: dict) -> dict:
     """
     for odds in comp.get("odds", []) or []:
         block = odds.get("moneyline") or {}
-        out = {"book": (odds.get("provider") or {}).get("name")}
+        out = {"book": canonical((odds.get("provider") or {}).get("name"))}
         for side in ("home", "away"):
             for when in ("open", "close"):
                 value = ((block.get(side) or {}).get(when) or {}).get("odds")
