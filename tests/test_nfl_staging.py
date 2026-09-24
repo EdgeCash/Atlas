@@ -417,3 +417,40 @@ def test_a_rookie_opens_on_his_draft_slot_and_it_fades_with_his_record():
 
     assert opening("top") > -2.0 > opening("late")               # the slot speaks for a rookie
     assert opening("vet") == pytest.approx(-2.0, abs=0.5)         # 800 dropbacks: the slot has faded
+
+
+def test_the_efficiency_channel_reads_an_offence_through_its_plays():
+    """Two sides score the same points, but the home offence moves the ball far
+    better per play. Off, the channel leaves the state as the points leave it;
+    on, the home offence reads stronger, by more when the reading rests on more plays."""
+    from atlas.models import kalman
+    from atlas.models import nfl_state as ns
+
+    kick = pd.Timestamp("2024-09-08", tz="UTC")
+    games = pd.DataFrame([{"game_id": f"g{w}", "season": 2024, "week": w, "kickoff": kick + pd.Timedelta(days=7 * w),
+                           "home_team_id": 1, "away_team_id": 2, "home_qb1_id": pd.NA, "home_qb_id": pd.NA,
+                           "away_qb1_id": pd.NA, "away_qb_id": pd.NA, "actual_margin": 0.0, "actual_total": 44.0,
+                           "neutral_site": 1} for w in range(1, 7)])
+
+    def eff(plays):
+        return ns.EfficiencyRecord(pd.DataFrame({
+            "game_id": [f"g{w}" for w in range(1, 7) for _ in (0, 1)], "team_id": [1, 2] * 6,
+            "epa": [0.2, -0.2] * 6, "plays": [plays] * 12, "play_var": 1.8}))
+
+    def run(record, k_eff):
+        spec = ns._spec(0.0, 9.0, 22.0, 2.0)
+        state = kalman.initialise(np.array([1, 2]), np.zeros(2), np.zeros(2),
+                                  kalman.Spec(**{**spec.__dict__, "p0_off": 4.0, "p0_def": 4.0}))
+        fc = ns.run_season_qb(games, state, spec, p0=9.0, new_mean=0.0, first_season=False, starters={},
+                              eff=record, k_eff=k_eff)
+        return state, fc
+
+    base, base_fc = run(None, 0.0)
+    off, off_fc = run(eff(40), 0.0)
+    assert np.allclose(off_fc["mean"], base_fc["mean"]) and np.allclose(off.x, base.x)     # off is off
+    thin, _ = run(eff(12), 30.0)
+    thick, _ = run(eff(40), 30.0)
+    gap = lambda s: s.x[0] - s.x[1]  # noqa: E731 - home offence over away offence
+    assert gap(thick) > gap(thin) > gap(base) + 0.1
+    assert ns.EfficiencyRecord(pd.DataFrame({"game_id": ["g"], "team_id": [1], "epa": [0.1], "plays": [5],
+                                             "play_var": 1.0})).game("g", 1) == (5.0, 0.0)   # centred on the league

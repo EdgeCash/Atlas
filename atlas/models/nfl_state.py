@@ -118,6 +118,34 @@ class QBChoice:
     k_epa: float = 0.0
     k_obs: float = 0.0
     k_draft: float = 0.0
+    k_eff: float = 0.0
+
+
+class EfficiencyRecord:
+    """Each offence's EPA per play in each game, above the league, and how many plays.
+
+    An optional third measurement channel (`atlas/research/nfl_early_down.py`):
+    after a game, an offence's EPA per play is a reading of its offence (and
+    quarterback, and home advantage) against the opposing defence, in points
+    through ``k_eff`` and with noise ``k_eff**2 * play_var / plays``. Off by
+    default: the channel is used only when a record and a non-zero ``k_eff``
+    are passed.
+    """
+
+    def __init__(self, games: pd.DataFrame) -> None:
+        g = games.dropna(subset=["epa", "plays"])
+        weights = g["plays"].to_numpy(dtype=float)
+        epa = g["epa"].to_numpy(dtype=float)
+        self.league = float(np.average(epa, weights=weights)) if len(g) else 0.0
+        self.play_var = float(g["play_var"].iloc[0]) if "play_var" in g and len(g) else 1.0
+        self.by_game = {(str(gid), tid): (float(n), float(e - self.league))
+                        for gid, tid, n, e in zip(g["game_id"], g["team_id"], weights, epa, strict=True)}
+
+    def game(self, game_id, team) -> tuple[float, float]:
+        return self.by_game.get((str(game_id), team), (0.0, 0.0))
+
+
+EFF_MIN_PLAYS = 10
 
 
 class PasserRecord:
@@ -282,7 +310,7 @@ def expected_starter(qb1, qb2, qb1_out):
 def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *, p0: float, new_mean: float,
                   qb_q: float = QB_Q, first_season: bool = False, starters: dict | None = None,
                   k_epa: float = 0.0, record: PasserRecord | None = None, k_obs: float = 0.0,
-                  k_draft: float = 0.0) -> pd.DataFrame:
+                  k_draft: float = 0.0, eff: EfficiencyRecord | None = None, k_eff: float = 0.0) -> pd.DataFrame:
     """Forecast every game with each side's expected starter, then learn from the one who played.
 
     The expected starter is the depth chart's QB1 for the week (knowable
@@ -388,6 +416,13 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
                 n_db, epa = record.game(qb, game_ids[i])
                 if n_db >= OBS_MIN_DROPBACKS:
                     kalman.row_update(state, [q_idx], [], k_obs * epa, k_obs ** 2 * record.play_var / n_db)
+        if k_eff and eff is not None:
+            # Each offence's EPA per play in the game: a reading of what its points read.
+            for off, off_qb, opp, at_home in ((h, qh_rec, ia, is_home), (a, qa_rec, ih, 0.0)):
+                n_pl, e = eff.game(game_ids[i], off)
+                if n_pl >= EFF_MIN_PLAYS:
+                    plus = [state.index[off]] + ([off_qb] if off_qb is not None else []) + ([hfa] if at_home else [])
+                    kalman.row_update(state, plus, [n + opp], k_eff * e, k_eff ** 2 * eff.play_var / n_pl)
     out = pd.DataFrame({"mean": means, "sd": sds, "home_pts": hps, "away_pts": aps, "home_qb_state": hqs,
                         "away_qb_state": aqs}, index=g.index)
     return out.reindex(games.index)
@@ -396,7 +431,8 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
 def run_qb(frame: pd.DataFrame, seasons: list[int], *, choice: Choice, p0: float, new_mean: float,
            levels: dict[int, tuple[float, float]], state: kalman.State | None = None,
            starters: dict | None = None, teams: np.ndarray | None = None, k_epa: float = 0.0,
-           record: PasserRecord | None = None, k_obs: float = 0.0, k_draft: float = 0.0):
+           record: PasserRecord | None = None, k_obs: float = 0.0, k_draft: float = 0.0,
+           eff: EfficiencyRecord | None = None, k_eff: float = 0.0):
     """Like :func:`run`, with the quarterback state and the fitted home advantage."""
     if teams is None:
         teams = np.unique(np.r_[frame["home_team_id"], frame["away_team_id"]])
@@ -412,7 +448,7 @@ def run_qb(frame: pd.DataFrame, seasons: list[int], *, choice: Choice, p0: float
             new_season(state, choice.phi, choice.p_season)
         forecasts[season] = run_season_qb(frame[frame["season"] == season], state, spec, p0=p0, new_mean=new_mean,
                                           first_season=(first and i == 0), starters=starters, k_epa=k_epa,
-                                          record=record, k_obs=k_obs, k_draft=k_draft)
+                                          record=record, k_obs=k_obs, k_draft=k_draft, eff=eff, k_eff=k_eff)
     return forecasts, state, starters
 
 
