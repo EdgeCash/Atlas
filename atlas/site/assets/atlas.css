@@ -993,3 +993,18 @@ html[data-view="tiles"] .view-list { display: none; }
   .mu-stat { font-size: 12.5px; gap: 4px; }
   .mu-head { font-size: 11px; letter-spacing: .04em; }
 }
+
+/* ------------------------------------------------------------ owner ---- */
+
+.owner-form { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; margin-top: 10px; }
+.owner-form[hidden] { display: none; }
+.owner-form label { font-size: 13px; font-weight: 620; color: var(--ink-2); }
+.owner-form input[type="password"] {
+  flex: 1 1 220px; min-height: 42px; padding: 0 12px; font-size: 16px;
+  border: 1px solid var(--border-strong); border-radius: 10px; background: var(--surface); color: var(--ink);
+}
+.owner-table td { text-align: right; padding: 6px 0 6px 10px; border-top: 1px solid var(--border); }
+.owner-table td:first-child, .owner-table td:nth-child(2),
+.owner-table th:nth-child(2) { text-align: left; }
+.owner-table td:nth-child(2) { padding-left: 10px; }
+#owner-out select { margin: 6px 0 10px; min-height: 36px; font-size: 15px; }

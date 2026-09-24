@@ -29,6 +29,10 @@ on:
     secrets:
       CFBD_API_KEY:
         required: false
+      # The owner page's passphrase (docs/MODEL_PLAN_DFS.md, step 6). Only the
+      # heavy run's Refresh step sees it; only ciphertext comes out.
+      ATLAS_OWNER_KEY:
+        required: false
 
 permissions:
   contents: write      # commit tracking/ and the freshness stamp
@@ -143,6 +147,20 @@ jobs:
           restore-keys: |
             atlas-data-
 
+      # The owner page's ciphertext, in its own cache entry (a new path in the
+      # warehouse entry would change its key and cost a cold rebuild). A poll
+      # does not build lineups, so without this it would republish the owner
+      # page empty. Only ciphertext: the readable lineups beside it in
+      # data/dfs/ are never cached, never committed and never published.
+      - name: Restore the owner page
+        if: steps.gate.outputs.go == 'true'
+        uses: actions/cache/restore@v4
+        with:
+          path: data/dfs/owner.enc.json
+          key: atlas-owner-
+          restore-keys: |
+            atlas-owner-
+
       # A poll renders the site from the warehouse it did not build. Without
       # one there is nothing to render, and publishing a site built from an
       # empty warehouse would replace a good board with an empty one.
@@ -172,6 +190,7 @@ jobs:
           # because staging loads the CFBD parquets by file existence and never
           # consults the key. The data was always right; the provenance was not.
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          ATLAS_OWNER_KEY: ${{ inputs.mode == 'heavy' && secrets.ATLAS_OWNER_KEY || '' }}
         # --force because the gate above has already decided, in Eastern time
         # and tolerant of a late start. Letting the task re-apply the strict
         # should_poll() minute test here would undo exactly that.
@@ -194,6 +213,13 @@ jobs:
             data/raw
             data/warehouse
           key: atlas-data-${{ github.run_id }}
+
+      - name: Save the owner page
+        if: steps.gate.outputs.go == 'true' && inputs.mode == 'heavy' && hashFiles('data/dfs/owner.enc.json') != ''
+        uses: actions/cache/save@v4
+        with:
+          path: data/dfs/owner.enc.json
+          key: atlas-owner-${{ github.run_id }}
 
       # scripts/audit_site.py directly, not `make site-audit`: that target
       # depends on `site` and would rebuild what we are trying to inspect.

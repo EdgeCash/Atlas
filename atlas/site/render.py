@@ -24,6 +24,7 @@ from atlas.site.html import (
     possessive,
     price,
     signed,
+    stamp,
     table,
 )
 from atlas.util import get_logger
@@ -1523,6 +1524,63 @@ def scoreboard_page() -> str:
     description = "Follow games from the Atlas boards and see their live scores in one place."
     return layout(title="My scoreboard | Atlas", body=body, active="scores",
                   description=description, canonical="scoreboard.html")
+
+
+def owner_page(record: dict | None) -> str:
+    """The owner's DFS page: ciphertext and the means to open it, nothing else.
+
+    ``record`` is `atlas/dfs/owner.py`'s output - an encrypted box, or the
+    reason there is none. The lineups exist in readable form only in the
+    browser that typed the passphrase. Not linked from the site, not in the
+    sitemap, and asks search engines not to index it.
+    """
+    import json
+
+    record = record or {"box": None, "reason": "Nothing has been built yet."}
+    island = json.dumps({"box": record.get("box")}).replace("</", "<\\/")
+    built = record.get("built_at")
+    when = ""
+    if built:
+        from datetime import datetime
+
+        try:
+            when = f" Last built {esc(stamp(datetime.fromisoformat(built)))}."
+        except (TypeError, ValueError):
+            when = ""
+    if record.get("box"):
+        state = f"<p class=\"note\">This week's lineups, encrypted.{when}</p>"
+    else:
+        state = f"<p class=\"note\">{esc(record.get('reason') or 'Nothing to open.')}{when}</p>"
+    body = f"""<div class="board-head">
+  <h1>Owner</h1>
+  <span class="board-note">Private DFS lineups · opened in this browser only</span>
+</div>
+
+<div class="card card-pad">
+  {state}
+  <form id="owner-form" class="owner-form" autocomplete="on">
+    <input type="text" name="username" value="atlas-owner" autocomplete="username" hidden>
+    <label for="owner-pass">Passphrase</label>
+    <input id="owner-pass" name="password" type="password" autocomplete="current-password" required>
+    <button class="button" type="submit">Open</button>
+  </form>
+  <p class="note" id="owner-status" aria-live="polite"></p>
+</div>
+
+<div id="owner-out"></div>
+
+<div class="disclosure top-gap">
+  <b>What this page is.</b> The page holds only ciphertext. The passphrase you type derives the key here, in
+  this browser, and the lineups are decrypted into this tab's memory - nothing is stored or sent. They are the
+  most projected points under DraftKings' cap from Atlas's DFS model; they promise nothing about any contest.
+  DFS is for adults where it is legal. Help is available at 1-800-GAMBLER.
+</div>
+
+<script type="application/json" id="owner-box">{island}</script>
+<script src="../{asset("owner.js")}" defer></script>"""
+    html = layout(title="Owner | Atlas", body=body, depth=1, description="Private page.",
+                  canonical=None)
+    return html.replace("<head>\n", "<head>\n<meta name=\"robots\" content=\"noindex, nofollow\">\n", 1)
 
 
 def _row_crests(card: Card, root: str = "") -> str:

@@ -83,8 +83,9 @@ def audit(site: Path) -> tuple[dict, dict]:
             blocking["motion or urgency"].append(rel)
 
         # A 404 has no canonical on purpose: claiming one tells a crawler the
-        # missing page is the real one.
-        if 'rel="canonical"' not in html and rel != "404.html":
+        # missing page is the real one. Nor does the owner page, which asks
+        # not to be indexed at all.
+        if 'rel="canonical"' not in html and rel not in ("404.html", "dfs/owner.html"):
             advisory["missing canonical"].append(rel)
         if 'name="description"' not in html:
             advisory["missing meta description"].append(rel)

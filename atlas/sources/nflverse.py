@@ -149,6 +149,32 @@ def _fresh(dest: Path, refresh: bool) -> None:
         dest.unlink()
 
 
+#: Fields every season of nflverse's play-by-play carries that a cached copy
+#: may predate - added for DFS defense scoring (who scored, who recovered,
+#: blocked punts, defensive conversions). A cached season without them is
+#: fetched again, once.
+PBP_REQUIRED = ("td_team", "fumble_recovery_1_team", "punt_blocked", "defensive_two_point_conv",
+                "defensive_extra_point_conv")
+
+
+def _checked(dest: Path) -> Path:
+    """A marker: this season was fetched since the fields were added, so a
+    file still without them reflects the source, not an old cache."""
+    return dest.with_name(f".{dest.stem}.checked")
+
+
+def _stale_pbp(dest: Path) -> bool:
+    if not dest.exists() or dest.stat().st_size == 0 or _checked(dest).exists():
+        return False
+    import pyarrow.parquet as pq
+
+    try:
+        names = set(pq.read_schema(dest).names)
+    except Exception:  # noqa: BLE001 - an unreadable cache is a stale one
+        return True
+    return not set(PBP_REQUIRED) <= names
+
+
 def fetch_play_by_play(raw: Path, season: int, *, refresh: bool = False, keep_full: bool = False) -> Path:
     """One season of play-by-play, trimmed to :data:`PBP_COLUMNS`.
 
@@ -157,13 +183,15 @@ def fetch_play_by_play(raw: Path, season: int, *, refresh: bool = False, keep_fu
     and a few tens permanent.
     """
     dest = pbp_path(raw, season)
-    _fresh(dest, refresh)
+    _fresh(dest, refresh or _stale_pbp(dest))
     if dest.exists() and dest.stat().st_size > 0:
         return dest
     full = nfl_dir(raw) / f"_full_play_by_play_{season}.parquet"
     full.unlink(missing_ok=True)
     download(_release("pbp", f"play_by_play_{season}.parquet"), full)
     write_parquet(_read_available_columns(full, PBP_COLUMNS), dest)
+    if _stale_pbp(dest):
+        _checked(dest).touch()
     if not keep_full:
         full.unlink(missing_ok=True)
     return dest

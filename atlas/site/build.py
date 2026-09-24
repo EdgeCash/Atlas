@@ -103,6 +103,12 @@ def build(out: Path | None = None, *, social_cards: bool = True,
                 freshness=stamps))
     (out / "premium.html").write_text(render.premium_page())
     (out / "scoreboard.html").write_text(render.scoreboard_page())
+    # The owner's DFS page: ciphertext only (atlas/dfs/owner.py). Not linked,
+    # not in the sitemap, asks not to be indexed.
+    (out / "dfs").mkdir(exist_ok=True)
+    from atlas.dfs import owner as dfs_owner
+
+    (out / "dfs" / "owner.html").write_text(render.owner_page(dfs_owner.read()))
 
     social_slugs = {c.slug for c in _spread_of_grades(
         [c for c in cards if c.grade], SOCIAL_LIMIT)} if social_cards else set()

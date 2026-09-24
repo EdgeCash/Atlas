@@ -8,7 +8,7 @@ Beat the baseline's CRPS at every position, and rank each position's regulars at
 
 | position | crps model | crps baseline | rank model | rank salary | rank gap se | beats baseline | ranks as well as salary |
 |---|---|---|---|---|---|---|---|
-| DST | 3.230 | 3.322 | 0.274 | 0.243 | 0.011 | yes | yes |
+| DST | 3.229 | 3.354 | 0.284 | 0.243 | 0.012 | yes | yes |
 | QB | 4.576 | 4.746 | 0.341 | 0.330 | 0.011 | yes | yes |
 | RB | 4.140 | 4.227 | 0.523 | 0.506 | 0.007 | yes | yes |
 | TE | 3.578 | 3.614 | 0.420 | 0.403 | 0.008 | yes | yes |
@@ -20,7 +20,7 @@ The same model with the line's team totals left out - Atlas's game model the onl
 
 | position | crps model | crps baseline | rank model | rank salary | rank gap se | beats baseline | ranks as well as salary |
 |---|---|---|---|---|---|---|---|
-| DST | 3.241 | 3.322 | 0.265 | 0.243 | 0.012 | yes | yes |
+| DST | 3.237 | 3.354 | 0.276 | 0.243 | 0.012 | yes | yes |
 | QB | 4.614 | 4.746 | 0.315 | 0.330 | 0.011 | yes | no |
 | RB | 4.145 | 4.227 | 0.524 | 0.506 | 0.007 | yes | yes |
 | TE | 3.580 | 3.614 | 0.423 | 0.403 | 0.008 | yes | yes |
@@ -38,11 +38,11 @@ Each team's projected points alone, as a ranking of its regulars against the wee
 
 ## Ranges, 2015-2021, each team's regulars: the gate passes
 
-Each projection carries a range from its 10th to its 90th percentile (`atlas/dfs/ranges.py`): per position, a linear quantile regression of the model's out-of-sample misses on the projection, fitted on the seasons before. DraftKings points are lopsided - a floor near zero, a long tail of touchdown weeks - so the two ends are fitted separately rather than drawn as a normal curve. The gate (plan §7, step 4): the 80% range holds 76%-84% of outcomes at every position. Overall: 80.2%. `below` and `above` should each be near 10%; `width` is the range in points.
+Each projection carries a range from its 10th to its 90th percentile (`atlas/dfs/ranges.py`): per position, a linear quantile regression of the model's out-of-sample misses on the projection, fitted on the seasons before. DraftKings points are lopsided - a floor near zero, a long tail of touchdown weeks - so the two ends are fitted separately rather than drawn as a normal curve. The gate (plan §7, step 4): the 80% range holds 76%-84% of outcomes at every position. Overall: 80.3%. `below` and `above` should each be near 10%; `width` is the range in points.
 
 | position | player-weeks | coverage | below | above | width |
 |---|---|---|---|---|---|
-| DST | 3616 | 80.0% | 11.9% | 8.0% | 15.3 |
+| DST | 3616 | 80.1% | 9.8% | 10.1% | 14.4 |
 | QB | 3607 | 81.0% | 7.5% | 11.5% | 21.3 |
 | RB | 7187 | 80.0% | 7.6% | 12.5% | 17.8 |
 | TE | 3600 | 81.2% | 6.9% | 12.0% | 15.6 |
@@ -52,7 +52,7 @@ Each projection carries a range from its 10th to its 90th percentile (`atlas/dfs
 
 | position | player-weeks | coverage | below | above | width |
 |---|---|---|---|---|---|
-| DST | 3616 | 80.0% | 11.9% | 8.0% | 15.3 |
+| DST | 3616 | 80.1% | 9.8% | 10.1% | 14.4 |
 | QB | 4256 | 77.4% | 12.6% | 9.9% | 21.2 |
 | RB | 11094 | 80.5% | 9.1% | 10.4% | 15.0 |
 | TE | 7863 | 81.6% | 8.7% | 9.7% | 12.2 |
@@ -62,7 +62,7 @@ Each projection carries a range from its 10th to its 90th percentile (`atlas/dfs
 
 | position | player-weeks | coverage | below | above | width |
 |---|---|---|---|---|---|
-| DST | 2174 | 82.1% | 10.2% | 7.7% | 14.5 |
+| DST | 2174 | 82.3% | 9.3% | 8.4% | 14.2 |
 | QB | 2174 | 83.1% | 6.9% | 10.0% | 22.0 |
 | RB | 4339 | 80.1% | 9.3% | 10.6% | 17.7 |
 | TE | 2168 | 80.9% | 7.8% | 11.3% | 15.5 |
@@ -72,17 +72,17 @@ Each projection carries a range from its 10th to its 90th percentile (`atlas/dfs
 
 | season | player-weeks | coverage | below | above | width |
 |---|---|---|---|---|---|
-| 2015 | 4087 | 78.6% | 9.3% | 12.0% | 17.6 |
-| 2016 | 4078 | 81.8% | 7.9% | 10.3% | 18.0 |
-| 2017 | 4077 | 81.2% | 8.2% | 10.6% | 17.7 |
-| 2018 | 4077 | 79.8% | 8.5% | 11.7% | 17.8 |
-| 2019 | 4073 | 79.5% | 8.8% | 11.7% | 17.9 |
-| 2020 | 4077 | 80.9% | 7.8% | 11.3% | 18.0 |
-| 2021 | 4339 | 80.0% | 8.7% | 11.3% | 17.9 |
-| 2022 | 4329 | 79.9% | 10.1% | 9.9% | 17.9 |
-| 2023 | 4342 | 81.8% | 8.5% | 9.7% | 17.7 |
-| 2024 | 4340 | 80.8% | 8.8% | 10.4% | 17.7 |
-| 2025 | 4349 | 81.0% | 9.3% | 9.7% | 17.5 |
+| 2015 | 4087 | 78.9% | 8.5% | 12.6% | 17.4 |
+| 2016 | 4078 | 82.0% | 7.6% | 10.5% | 17.9 |
+| 2017 | 4077 | 81.2% | 8.1% | 10.7% | 17.6 |
+| 2018 | 4077 | 79.6% | 8.4% | 11.9% | 17.7 |
+| 2019 | 4073 | 79.4% | 8.6% | 11.9% | 17.9 |
+| 2020 | 4077 | 80.9% | 7.7% | 11.5% | 17.9 |
+| 2021 | 4339 | 79.9% | 8.5% | 11.6% | 17.8 |
+| 2022 | 4329 | 79.9% | 10.0% | 10.0% | 17.9 |
+| 2023 | 4342 | 81.8% | 8.4% | 9.8% | 17.6 |
+| 2024 | 4340 | 80.8% | 8.7% | 10.5% | 17.7 |
+| 2025 | 4349 | 81.0% | 9.2% | 9.8% | 17.4 |
 
 ## Defenses
 
@@ -90,27 +90,27 @@ A defense's projection is the average of the player model's and one built from i
 
 | seasons | projection | mae | rank corr |
 |---|---|---|---|
-| 2015-2021 | blend (published) | 4.517 | 0.274 |
-| 2015-2021 | parts alone | 4.502 | 0.264 |
-| 2015-2021 | baseline | 4.652 | 0.131 |
-| 2022-2025 | blend (published) | 4.254 | 0.296 |
-| 2022-2025 | parts alone | 4.227 | 0.305 |
-| 2022-2025 | baseline | 4.420 | 0.111 |
+| 2015-2021 | blend (published) | 4.560 | 0.284 |
+| 2015-2021 | parts alone | 4.575 | 0.283 |
+| 2015-2021 | baseline | 4.753 | 0.132 |
+| 2022-2025 | blend (published) | 4.296 | 0.297 |
+| 2022-2025 | parts alone | 4.309 | 0.303 |
+| 2022-2025 | baseline | 4.476 | 0.111 |
 
 ## Salary era, 2015-2021, regulars
 
 | model | player-weeks | mae | crps | rank corr |
 |---|---|---|---|---|
-| model | 28808 | 5.638 | 4.019 | 0.410 |
-| baseline | 28808 | 5.769 | 4.107 | 0.367 |
+| model | 28808 | 5.643 | 4.018 | 0.412 |
+| baseline | 28808 | 5.782 | 4.111 | 0.367 |
 | salary | 28808 | 5.833 | 4.148 | 0.393 |
 
 ### By position
 
 | position | model | player-weeks | mae | crps | rank corr |
 |---|---|---|---|---|---|
-| DST | model | 3616 | 4.517 | 3.230 | 0.274 |
-| DST | baseline | 3616 | 4.652 | 3.322 | 0.131 |
+| DST | model | 3616 | 4.560 | 3.229 | 0.284 |
+| DST | baseline | 3616 | 4.753 | 3.354 | 0.132 |
 | DST | salary | 3616 | 4.702 | 3.311 | 0.243 |
 | QB | model | 3607 | 6.457 | 4.576 | 0.341 |
 | QB | baseline | 3607 | 6.696 | 4.746 | 0.297 |
@@ -129,34 +129,34 @@ A defense's projection is the average of the player model's and one built from i
 
 | season | model | player-weeks | mae | crps | rank corr |
 |---|---|---|---|---|---|
-| 2015 | model | 4087 | 5.793 | 4.142 | 0.367 |
-| 2015 | baseline | 4087 | 5.857 | 4.184 | 0.352 |
+| 2015 | model | 4087 | 5.788 | 4.133 | 0.374 |
+| 2015 | baseline | 4087 | 5.871 | 4.187 | 0.352 |
 | 2015 | salary | 4087 | 5.990 | 4.304 | 0.358 |
-| 2016 | model | 4078 | 5.481 | 3.906 | 0.422 |
-| 2016 | baseline | 4078 | 5.630 | 4.000 | 0.369 |
+| 2016 | model | 4078 | 5.499 | 3.912 | 0.420 |
+| 2016 | baseline | 4078 | 5.647 | 4.008 | 0.369 |
 | 2016 | salary | 4078 | 5.671 | 4.035 | 0.407 |
-| 2017 | model | 4077 | 5.435 | 3.865 | 0.386 |
-| 2017 | baseline | 4077 | 5.539 | 3.945 | 0.339 |
+| 2017 | model | 4077 | 5.435 | 3.861 | 0.391 |
+| 2017 | baseline | 4077 | 5.549 | 3.946 | 0.339 |
 | 2017 | salary | 4077 | 5.655 | 4.029 | 0.357 |
-| 2018 | model | 4077 | 5.711 | 4.076 | 0.429 |
-| 2018 | baseline | 4077 | 5.846 | 4.176 | 0.367 |
+| 2018 | model | 4077 | 5.715 | 4.076 | 0.431 |
+| 2018 | baseline | 4077 | 5.859 | 4.179 | 0.367 |
 | 2018 | salary | 4077 | 5.816 | 4.160 | 0.415 |
-| 2019 | model | 4073 | 5.772 | 4.131 | 0.426 |
-| 2019 | baseline | 4073 | 5.939 | 4.238 | 0.377 |
+| 2019 | model | 4073 | 5.776 | 4.131 | 0.429 |
+| 2019 | baseline | 4073 | 5.949 | 4.241 | 0.377 |
 | 2019 | salary | 4073 | 5.931 | 4.235 | 0.404 |
-| 2020 | model | 4077 | 5.648 | 4.027 | 0.426 |
-| 2020 | baseline | 4077 | 5.808 | 4.127 | 0.385 |
+| 2020 | model | 4077 | 5.658 | 4.030 | 0.425 |
+| 2020 | baseline | 4077 | 5.826 | 4.134 | 0.385 |
 | 2020 | salary | 4077 | 5.940 | 4.211 | 0.408 |
-| 2021 | model | 4339 | 5.624 | 3.985 | 0.415 |
-| 2021 | baseline | 4339 | 5.765 | 4.083 | 0.377 |
+| 2021 | model | 4339 | 5.632 | 3.988 | 0.416 |
+| 2021 | baseline | 4339 | 5.773 | 4.086 | 0.377 |
 | 2021 | salary | 4339 | 5.825 | 4.067 | 0.402 |
 
 ## 2022-2025, regulars (no salaries; every game-model setting tuned on earlier seasons only)
 
 | position | model | player-weeks | mae | crps | rank corr |
 |---|---|---|---|---|---|
-| DST | model | 2174 | 4.254 | 3.023 | 0.296 |
-| DST | baseline | 2174 | 4.420 | 3.155 | 0.111 |
+| DST | model | 2174 | 4.296 | 3.037 | 0.297 |
+| DST | baseline | 2174 | 4.476 | 3.176 | 0.111 |
 | QB | model | 2174 | 6.337 | 4.523 | 0.340 |
 | QB | baseline | 2174 | 6.636 | 4.726 | 0.292 |
 | RB | model | 4339 | 5.454 | 3.863 | 0.590 |

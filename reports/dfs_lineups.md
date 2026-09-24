@@ -6,7 +6,7 @@ Every Sunday main slate with DraftKings' own salaries: the lineup with the most 
 
 | seasons | slates | model | salary | baseline | best possible |
 |---|---|---|---|---|---|
-| 2015-2021 | 119 | 137.2 | 123.4 | 127.7 | 279.1 |
+| 2015-2021 | 119 | 136.8 | 123.4 | 127.7 | 279.1 |
 
 `salary` is DraftKings' price read as a projection: one straight line per position, so its optimizer simply spends the cap where a dollar buys the most. It is the market's view taken literally, not a way anyone would build a lineup - the fair comparison for the model's ranking is step 3's.
 
@@ -14,8 +14,8 @@ Every Sunday main slate with DraftKings' own salaries: the lineup with the most 
 
 | model against | slates | model higher | mean difference | standard error |
 |---|---|---|---|---|
-| salary | 119 | 72% | +13.8 | 2.9 |
-| baseline | 119 | 71% | +9.5 | 2.0 |
+| salary | 119 | 71% | +13.4 | 3.0 |
+| baseline | 119 | 68% | +9.1 | 2.1 |
 
 ## Projected against scored
 
@@ -23,21 +23,21 @@ What each lineup was projected to score and what it did. A lineup chosen as the 
 
 | projection | projected | scored |
 |---|---|---|
-| model | 150.4 | 137.2 |
+| model | 150.4 | 136.8 |
 | salary | 120.4 | 123.4 |
-| baseline | 160.9 | 127.7 |
+| baseline | 161.6 | 127.7 |
 
 ## By season
 
 | season | slates | model | salary | baseline | best possible |
 |---|---|---|---|---|---|
-| 2015 | 17 | 140.9 | 127.9 | 132.9 | 287.6 |
-| 2016 | 16 | 126.0 | 105.2 | 111.3 | 271.3 |
-| 2017 | 17 | 134.5 | 127.5 | 121.3 | 264.3 |
-| 2018 | 17 | 146.5 | 136.7 | 138.4 | 284.5 |
-| 2019 | 17 | 137.9 | 124.3 | 130.4 | 296.8 |
-| 2020 | 17 | 140.2 | 130.4 | 134.1 | 279.8 |
-| 2021 | 18 | 133.9 | 111.7 | 124.6 | 269.8 |
+| 2015 | 17 | 144.2 | 127.9 | 132.9 | 287.6 |
+| 2016 | 16 | 124.6 | 105.2 | 111.3 | 271.3 |
+| 2017 | 17 | 134.2 | 127.5 | 121.3 | 264.3 |
+| 2018 | 17 | 145.2 | 136.7 | 138.4 | 284.5 |
+| 2019 | 17 | 136.8 | 124.3 | 130.4 | 296.8 |
+| 2020 | 17 | 140.0 | 130.4 | 134.1 | 279.8 |
+| 2021 | 18 | 132.2 | 111.7 | 124.6 | 269.8 |
 
 ## Who plays at all
 
