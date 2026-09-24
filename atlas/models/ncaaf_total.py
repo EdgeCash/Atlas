@@ -51,6 +51,11 @@ ADJUSTMENTS = ("adj_pace_sum", "weather_wind_effective")
 
 TOTAL_SUPPORT = np.arange(0, 2 * joint.DEFAULT_MAX_POINTS - 1)
 CHUNK = 400
+
+
+def total_support(max_points: int = joint.DEFAULT_MAX_POINTS) -> np.ndarray:
+    """Every total a ``max_points``-a-side grid can hold."""
+    return np.arange(0, 2 * max_points - 1)
 LOG_FLOOR = 1e-6
 TOTAL_ORDER = ("naive", "state_raw", "total", "market")
 
@@ -77,9 +82,9 @@ def _design(fc: pd.DataFrame, names: tuple[str, ...], fill: dict[str, float]) ->
     return np.column_stack(cols)
 
 
-def fit_total(train: pd.DataFrame) -> TotalFit:
+def fit_total(train: pd.DataFrame, adjustments: tuple[str, ...] = ADJUSTMENTS) -> TotalFit:
     """``actual_total ~ 1 + state_total + adjustments`` on training forecasts."""
-    present = tuple(a for a in ADJUSTMENTS if a in train.columns
+    present = tuple(a for a in adjustments if a in train.columns
                     and pd.to_numeric(train[a], errors="coerce").notna().mean() >= 0.5)
     names = ("state_total", *present)
     fill = {a: float(pd.to_numeric(train[a], errors="coerce").mean()) for a in present}
@@ -129,7 +134,8 @@ def _p_over(pmf: np.ndarray, support: np.ndarray, line: np.ndarray) -> np.ndarra
     return 1.0 - at_or_below + np.where(push, 0.5 * exact, 0.0)
 
 
-def _score_total(test: pd.DataFrame, models: dict[str, tuple[np.ndarray, float]], season: int) -> pd.DataFrame:
+def _score_total(test: pd.DataFrame, models: dict[str, tuple[np.ndarray, float]], season: int,
+                 support: np.ndarray = TOTAL_SUPPORT) -> pd.DataFrame:
     y = test["actual_total"].to_numpy(dtype=int)
     line = pd.to_numeric(test["closing_total"], errors="coerce").to_numpy(dtype=float) \
         if "closing_total" in test else np.full(len(test), np.nan)
@@ -137,17 +143,17 @@ def _score_total(test: pd.DataFrame, models: dict[str, tuple[np.ndarray, float]]
     over = np.where(has_line, (y > line).astype(float) + 0.5 * (y == line), np.nan)
     rows = []
     for name, (mean, sigma) in models.items():
-        pmf = lat.discretise(mean, sigma, TOTAL_SUPPORT)
+        pmf = lat.discretise(mean, sigma, support)
         p_over = np.full(len(test), np.nan)
         if has_line.any():
-            p_over[has_line] = _p_over(pmf[has_line], TOTAL_SUPPORT, line[has_line])
+            p_over[has_line] = _p_over(pmf[has_line], support, line[has_line])
         rows.append(pd.DataFrame({
             "game_id": test["game_id"].to_numpy() if "game_id" in test else np.arange(len(test)),
             "season": season, "week": test["week"].to_numpy(),
             "season_type": test["season_type"].to_numpy() if "season_type" in test else "regular",
             "abs_spread": test["closing_spread"].abs().to_numpy() if "closing_spread" in test else np.nan,
             "model": name, "mean": mean, "sigma": sigma, "line": line,
-            "crps": scoring.crps(pmf, TOTAL_SUPPORT, y), "mae": scoring.mae(mean, y),
+            "crps": scoring.crps(pmf, support, y), "mae": scoring.mae(mean, y),
             "p_over": p_over, "over": over,
         }))
     return pd.concat(rows, ignore_index=True)
@@ -175,35 +181,40 @@ def _points(fc: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
     return home, away
 
 
-def _plain_grids(fc: pd.DataFrame, grid_: lat.Lattice, tfit: TotalFit) -> list[joint.Joint]:
+def _plain_grids(fc: pd.DataFrame, grid_: lat.Lattice, tfit: TotalFit,
+                 max_points: int = joint.DEFAULT_MAX_POINTS) -> list[joint.Joint]:
     """The v1 grids of a frame of state forecasts, in chunks."""
+    support = total_support(max_points)
     margin_pmf = grid_.pmf(fc["m_mean"].to_numpy(dtype=float), fc["m_sd"].to_numpy(dtype=float))
-    total_pmf = lat.discretise(tfit.mean(fc), tfit.sigma, TOTAL_SUPPORT)
-    return [joint.build(margin_pmf[s:s + CHUNK], grid_.support, total_pmf[s:s + CHUNK], TOTAL_SUPPORT)
+    total_pmf = lat.discretise(tfit.mean(fc), tfit.sigma, support)
+    return [joint.build(margin_pmf[s:s + CHUNK], grid_.support, total_pmf[s:s + CHUNK], support, max_points=max_points)
             for s in range(0, len(fc), CHUNK)]
 
 
-def fit_points_lattice(train_fc: pd.DataFrame, grid_: lat.Lattice, tfit: TotalFit) -> np.ndarray:
+def fit_points_lattice(train_fc: pd.DataFrame, grid_: lat.Lattice, tfit: TotalFit,
+                       max_points: int = joint.DEFAULT_MAX_POINTS) -> np.ndarray:
     """The points lattice, fitted on the training seasons' own grids."""
     home, away = _points(train_fc)
-    return joint.fit_points(_plain_grids(train_fc, grid_, tfit), home, away)
+    return joint.fit_points(_plain_grids(train_fc, grid_, tfit, max_points), home, away)
 
 
 def _joint_table(fc: pd.DataFrame, margin_pmf: np.ndarray, margin_support: np.ndarray,
                  total_mean: np.ndarray, total_sigma: float, market_pmf: np.ndarray | None,
-                 season: int, points_factor: np.ndarray | None = None) -> pd.DataFrame:
+                 season: int, points_factor: np.ndarray | None = None,
+                 max_points: int = joint.DEFAULT_MAX_POINTS) -> pd.DataFrame:
     """Build the grid in chunks and keep one row of headline numbers per game.
 
     ``cell_p_plain`` and ``rank_plain`` are the v1 grid's, before the points
     lattice, so the report can show what the lattice is worth.
     """
-    total_pmf = lat.discretise(total_mean, total_sigma, TOTAL_SUPPORT)
+    support = total_support(max_points)
+    total_pmf = lat.discretise(total_mean, total_sigma, support)
     y = fc["actual_margin"].to_numpy(dtype=int)
     home, away = _points(fc)
     parts = []
     for start in range(0, len(fc), CHUNK):
         sl = slice(start, start + CHUNK)
-        J = joint.build(margin_pmf[sl], margin_support, total_pmf[sl], TOTAL_SUPPORT)
+        J = joint.build(margin_pmf[sl], margin_support, total_pmf[sl], support, max_points=max_points)
         plain_p, plain_rank = J.cell_probability(home[sl], away[sl]), J.rank_of(home[sl], away[sl])
         if points_factor is not None:
             J = J.reweight(points_factor)
@@ -276,11 +287,13 @@ def run(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON,
     return pd.concat(scored, ignore_index=True), pd.concat(tables, ignore_index=True), fits
 
 
-def _reliability_by_spread(table: pd.DataFrame) -> pd.DataFrame:
+def _reliability_by_spread(table: pd.DataFrame, buckets: list[tuple[int, int]] = evaluate.SPREAD_BUCKETS,
+                           tail: int = 28) -> pd.DataFrame:
     t = table.dropna(subset=["abs_spread"]).copy()
-    t["bucket"] = evaluate.bucket(t["abs_spread"], evaluate.SPREAD_BUCKETS, "|spread|").astype(str)
-    big = t[t["abs_spread"] >= 28].assign(bucket="|spread| 28+")
-    t = pd.concat([t, big])
+    t["bucket"] = evaluate.bucket(t["abs_spread"], buckets, "|spread|").astype(str)
+    tail_label = f"|spread| {tail}+"
+    if tail_label not in set(t["bucket"]):                 # the tail row overlaps the last bucket unless it is it
+        t = pd.concat([t, t[t["abs_spread"] >= tail].assign(bucket=tail_label)])
     rows = []
     for b, d in t.groupby("bucket", sort=False):
         row = {"bucket": b, "games": len(d), "grid P(home)": d["p_home"].mean(), "observed": d["won"].mean()}
@@ -289,7 +302,7 @@ def _reliability_by_spread(table: pd.DataFrame) -> pd.DataFrame:
             row["market P(home)"] = d["p_home_market"].mean()
             row["market gap"] = row["market P(home)"] - row["observed"]
         rows.append(row)
-    order = [f"|spread| {lo}-{hi}" if hi < 99 else f"|spread| {lo}+" for lo, hi in evaluate.SPREAD_BUCKETS] + ["|spread| 28+"]
+    order = list(dict.fromkeys([f"|spread| {lo}-{hi}" if hi < 99 else f"|spread| {lo}+" for lo, hi in buckets] + [tail_label]))
     out = pd.DataFrame(rows)
     out["bucket"] = pd.Categorical(out["bucket"], categories=[o for o in order if o in set(out["bucket"])], ordered=True)
     return out.sort_values("bucket").reset_index(drop=True)

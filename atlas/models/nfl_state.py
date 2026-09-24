@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import argparse
 import itertools
+import json
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
@@ -87,6 +88,28 @@ class QBChoice:
 
 
 HFA_KEY = "__hfa__"
+
+
+def choices_path(root: Path) -> Path:
+    """Where the tuned hyperparameters go, so the total and the projector reuse them."""
+    return root / "reports" / "nfl_state_choices.json"
+
+
+def save_choices(choices: dict[int, Choice], qb_choices: dict[int, dict], path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {str(s): {**asdict(c), "qb": qb_choices.get(s)} for s, c in sorted(choices.items())}
+    path.write_text(json.dumps(payload, indent=1) + "\n")
+
+
+def load_choices(path: Path) -> tuple[dict[int, Choice], dict[int, QBChoice]] | None:
+    if not path.exists():
+        return None
+    raw = json.loads(path.read_text())
+    choices = {int(s): Choice(q=c["q"], phi=c["phi"], p_season=c["p_season"], sigma=c["sigma"], loglik=c["loglik"],
+                              seasons=tuple(int(x) for x in c["seasons"])) for s, c in raw.items()}
+    qb = {int(s): QBChoice(p0=c["qb"]["p0"], new_mean=c["qb"]["new_mean"], loglik=c["qb"]["loglik"],
+                           seasons=tuple(int(x) for x in c["qb"]["seasons"])) for s, c in raw.items() if c.get("qb")}
+    return choices, qb
 
 
 def _levels(train: pd.DataFrame, season: int) -> tuple[float, float]:
@@ -459,6 +482,8 @@ def main() -> None:
     out = args.out or (paths.root / "reports" / "nfl_state.md")
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(render(scored, choices, finals, frame))
+    save_choices(choices, scored.attrs.get("qb_choices", {}),
+                 choices_path(paths.root) if args.out is None else out.with_suffix(".choices.json"))
     window = scored[(scored["season_type"] == "regular") & scored["season"].isin(REPORT_SEASONS)]
     LOG.info("wrote %s\n%s", out, evaluate.summarise(window, order=ORDER).to_string(index=False))
 

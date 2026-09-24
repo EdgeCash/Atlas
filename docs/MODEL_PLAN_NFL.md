@@ -257,8 +257,8 @@ market is v2's ambition, not v1's requirement.
 | 0 | `atlas/sources/nflverse.py`: fetch + cache pbp, schedules, injuries, depth charts, snap counts, rosters (`make nfl-ingest`) | **done** — 80 files, 114 MB, 2011–2026; pbp trimmed to 145 columns |
 | 1 | `atlas/staging/nfl/`: games, team-game efficiency and drives, QB of record and QB1, injuries, opponent-adjusted and point-in-time features through the college modules unchanged (`make nfl-warehouse`) | **done** — `data/warehouse/nfl.duckdb`, 4,368 games (4,128 completed), 122 columns; reproduces §3 exactly |
 | 2 | Benchmarks: naive, Elo, adjusted EPA, market-in-lattice, plus the quarterback test (`atlas/models/nfl_benchmarks.py`, `make nfl-benchmarks`) | **done** — `reports/nfl_benchmarks.md`; 2023–25 regular season: naive 8.02, Elo 7.37, market 7.08 CRPS |
-| 3 | Kalman state model, off/def, no QB. Walk-forward 2011–25 | beats naive and Elo? |
-| 4 | Add QB state and HFA fit | the QB test |
+| 3 | Kalman state model, off/def, no QB, carried across seasons (`atlas/models/nfl_state.py`, `make nfl-state`) | **done** — ties Elo (2023–25: CRPS 7.375 to 7.372) |
+| 4 | Add QB state and HFA fit | **done — beats Elo on every row** (CRPS 7.351, Brier 0.222, MAE 10.20, ECE 0.027); the QB test gap did not close, and the report says why |
 | 5 | Total model + bivariate lattice distribution | full 60×60 grid; reliability |
 | 6 | Wire into the card and the grade | `nfl.html` becomes a board |
 | 7 | v2: state-dependent drive simulation, only if step 5's exact-score log-score is measurably short of the benchmark | |
@@ -290,7 +290,33 @@ Steps 0–1 are done, in a session. What the build established:
 - Coverage: adjusted and point-in-time metrics 99.6%, QB1 99.4%, injury
   counts 94%, wind 64% (outdoor games only, as expected).
 
-Step 2 is done on the same harness. Step 3 is where the work is.
+Steps 3 and 4 are done (`reports/nfl_state.md`). What they established:
+
+- **The state alone ties Elo.** Regular season 2023–25: CRPS 7.375 against
+  Elo's 7.372, Brier 0.2229 to 0.2227, MAE 10.24 to 10.24. The tuned
+  hyperparameters sit at the strong-regression end of the grid: `phi` 0.5
+  to 0.67 between seasons, innovation 5, process noise 0.25 to 0.5 a week,
+  observation sd 8.5 on a team's points. An NFL team is mostly last year's
+  team, shrunk hard, plus a season's worth of noisy evidence.
+- **The quarterback state and the fitted home advantage clear the bar.**
+  `state_qb` beats Elo on every row of the reporting window: CRPS 7.351,
+  Brier 0.2216, MAE 10.20, ECE 0.027 (Elo 0.042). Its gains are in weeks
+  1–3 (6.86 to Elo's 6.93) and in calibration. The fitted home advantage
+  drifted from 0.6 in 2020 to 2.1 in 2025, against the training means'
+  2.2: the filter agrees with §3 that home field fell and has come part of
+  the way back.
+- **The quarterback test did not close, and the reason is the data.** On
+  the 385 games where a side changed quarterback, `state_qb` scores 7.61
+  against 7.25 elsewhere, the same 0.37 gap as Elo. The forecast uses the
+  depth chart's QB1 for the week, and on those games the depth chart named
+  the new starter only **37% of the time** (home) and 42% (away), against
+  96% agreement with the starter in games with no change: most changes are
+  in-week injuries and benchings the weekly chart never carried. The model
+  can only price a change it is told about. v1.1 is to stage the QB2 from
+  the depth chart and switch to it when the injury report lists the QB1 as
+  Out or Doubtful (`home_qb1_out` is already in the frame), and to give a
+  new quarterback a prior from his own `qb_epa`/CPOE per dropback rather
+  than a flat number; the tuned flat prior came out at 0 to −2, tight.
 
 ---
 
