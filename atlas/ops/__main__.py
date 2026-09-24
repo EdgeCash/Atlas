@@ -63,11 +63,12 @@ def heavy(*, skip_warehouse: bool = False) -> int:
         # DraftKings' Classic salaries for the DFS model's record. It never
         # fails the run: a missed capture is logged, the site still builds.
         ("dfs-capture", ["atlas.sources.draftkings"]),
-        # DFS: the upcoming Main slate's projections, recorded in
-        # tracking/dfs_projections.csv for the public DFS page until its
-        # first kickoff; and the owner's lineups, encrypted with the
-        # ATLAS_OWNER_KEY secret before anything the site publishes is
-        # written. Never fails the run (atlas/dfs/owner.py).
+        # DFS: every upcoming Classic, Showdown and Tiers slate projected;
+        # the Main slate's projections recorded in tracking/dfs_projections.csv
+        # for the public DFS page until its first kickoff; and the owner's
+        # lineups for every slate, encrypted with the ATLAS_OWNER_KEY secret
+        # before anything the site publishes is written. Never fails the run
+        # (atlas/dfs/owner.py).
         ("dfs", ["atlas.dfs.owner"]),
         ("site", ["atlas.site.build"]),
     ]

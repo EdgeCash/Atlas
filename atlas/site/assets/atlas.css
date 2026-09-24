@@ -1032,3 +1032,4 @@ html[data-view="tiles"] .view-list { display: none; }
 .dfs-table tr[hidden] { display: none; }
 .dfs-status { font-size: 11px; font-weight: 650; color: var(--serious); margin-left: 4px; }
 .dfs-more summary { cursor: pointer; font-weight: 620; color: var(--ink-2); }
+.owner-slate { margin: 10px 0 4px; min-height: 40px; font-size: 15px; max-width: 100%; }

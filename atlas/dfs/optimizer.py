@@ -86,6 +86,10 @@ def _program(p: pd.DataFrame, opts: Options, earlier: list[set], banned: set):
     teams = p["team"].to_numpy()
     for team in np.unique(teams):
         add((teams == team).astype(float), 0, opts.max_per_team)
+    # DraftKings: players from at least two games - so never all nine from one.
+    games = _games(p)
+    for game in np.unique(games):
+        add((games == game).astype(float), 0, ROSTER - 1)
     offense = pos != "DST"
     if opts.no_defense_vs_offense:
         # A defense d rules out every offensive player on the team it faces:
@@ -115,6 +119,11 @@ def _program(p: pd.DataFrame, opts: Options, earlier: list[set], banned: set):
     if (lower > upper).any():
         raise Infeasible("a locked player is also excluded or at his exposure limit")
     return np.array(rows), np.array(lo), np.array(hi), Bounds(lower, upper)
+
+
+def _games(p: pd.DataFrame) -> np.ndarray:
+    """Each player's game, named by its two teams in order."""
+    return np.array([" v ".join(sorted((str(t), str(o)))) for t, o in zip(p["team"], p["opponent"], strict=True)])
 
 
 def optimize(pool: pd.DataFrame, opts: Options | None = None) -> list[pd.DataFrame]:
@@ -192,6 +201,8 @@ def valid(lineup: pd.DataFrame, opts: Options | None = None) -> list[str]:
             problems.append(f"{counts.get(position, 0)} {position}")
     if lineup["team"].value_counts().max() > opts.max_per_team:
         problems.append("too many from one team")
+    if len(set(_games(lineup))) < 2:
+        problems.append("one game only")
     if opts.no_defense_vs_offense:
         for _, d in lineup[lineup["position"] == "DST"].iterrows():
             if ((lineup["team"] == d["opponent"]) & (lineup["position"] != "DST")).any():
@@ -214,4 +225,166 @@ def upload_csv(lineups: list[pd.DataFrame], id_column: str = "draftable_id") -> 
     lines = [",".join(UPLOAD_SLOTS)]
     for lineup in lineups:
         lines.append(",".join(str(int(v)) for v in lineup[id_column]))
+    return "\n".join(lines) + "\n"
+
+
+# ---------------------------------------------------------------------------
+# Showdown Captain Mode and Tiers
+# ---------------------------------------------------------------------------
+
+SHOWDOWN_SLOTS = ["CPT", "FLEX", "FLEX", "FLEX", "FLEX", "FLEX"]
+SHOWDOWN_SIZE = 6
+CAPTAIN = 1.5                      # the Captain's points and salary
+TIER_COUNT = 6
+TIER_SLOTS = [f"T{i}" for i in range(1, TIER_COUNT + 1)]
+
+
+class _Rows:
+    """Constraint rows for one program: ``lo <= coef @ x <= hi``."""
+
+    def __init__(self):
+        self.rows, self.lo, self.hi = [], [], []
+
+    def add(self, coef, low, high) -> None:
+        self.rows.append(np.asarray(coef, dtype=float))
+        self.lo.append(low)
+        self.hi.append(high)
+
+    def solve(self, objective: np.ndarray, lower: np.ndarray, upper: np.ndarray):
+        res = milp(-objective, constraints=LinearConstraint(np.array(self.rows), self.lo, self.hi),
+                   integrality=np.ones(len(objective)), bounds=Bounds(lower, upper))
+        return None if res.status != 0 or res.x is None else np.round(res.x).astype(int)
+
+
+def showdown(pool: pd.DataFrame, opts: Options | None = None) -> list[pd.DataFrame]:
+    """Showdown Captain Mode: one game, a Captain and five FLEX under the cap.
+
+    The Captain scores 1.5 times his points and costs his Captain salary
+    (``cpt_salary``, DraftKings' own, 1.5 times his FLEX ``salary``). Every
+    position may play either slot, kickers and defenses included; a player
+    plays one slot at most; DraftKings requires players from both teams.
+    ``opts`` uses the same locks, excludes, n, min_unique and max_exposure.
+    """
+    opts = opts or Options()
+    p = pool.dropna(subset=["projection", "salary", "cpt_salary"]).reset_index(drop=True)
+    n = len(p)
+    ids = p["id"].to_numpy()
+    proj = p["projection"].to_numpy(dtype=float)
+    objective = np.r_[CAPTAIN * proj, proj]                        # [captain_i..., flex_i...]
+    cap_each = max(1, math.floor(opts.max_exposure * opts.n + 1e-9))
+    used: dict = {}
+    lineups, earlier = [], []
+    for _ in range(opts.n):
+        c = _Rows()
+        add = c.add
+        add(np.r_[np.ones(n), np.zeros(n)], 1, 1)
+        add(np.r_[np.zeros(n), np.ones(n)], SHOWDOWN_SIZE - 1, SHOWDOWN_SIZE - 1)
+        add(np.r_[p["cpt_salary"].to_numpy(dtype=float), p["salary"].to_numpy(dtype=float)], 0, opts.cap)
+        for i in range(n):
+            coef = np.zeros(2 * n)
+            coef[i] = coef[n + i] = 1
+            add(coef, 0, 1)
+        teams = p["team"].to_numpy()
+        for team in np.unique(teams):
+            m = (teams == team).astype(float)
+            add(np.r_[m, m], 0, SHOWDOWN_SIZE - 1)             # both teams: never all six from one
+        for lineup in earlier:
+            m = np.isin(ids, list(lineup)).astype(float)
+            add(np.r_[m, m], 0, SHOWDOWN_SIZE - opts.min_unique)
+        banned = {pid for pid, count in used.items() if count >= cap_each}
+        for pid in opts.locks:
+            m = (ids == pid).astype(float)
+            add(np.r_[m, m], 1, 1)
+        upper = np.where(np.isin(ids, list(opts.excludes) + list(banned)), 0.0, 1.0)
+        if set(opts.locks) & (set(opts.excludes) | banned):
+            if not lineups:
+                raise Infeasible("a locked player is also excluded or at his exposure limit")
+            break
+        x = c.solve(objective, np.zeros(2 * n), np.r_[upper, upper])
+        if x is None:
+            if not lineups:
+                raise Infeasible("no Showdown lineup fits")
+            break
+        cpt = p[x[:n] == 1].assign(slot="CPT")
+        cpt = cpt.assign(salary=cpt["cpt_salary"], projection=CAPTAIN * cpt["projection"],
+                         draftable_id=cpt["cpt_draftable_id"])
+        for col in ("low", "high"):                        # his range scales with his points
+            if col in cpt:
+                cpt[col] = CAPTAIN * cpt[col]
+        flex = p[x[n:] == 1].sort_values("projection", ascending=False).assign(slot="FLEX")
+        lineup = pd.concat([cpt, flex]).reset_index(drop=True)
+        lineups.append(lineup)
+        earlier.append(set(lineup["id"]))
+        for pid in lineup["id"]:
+            used[pid] = used.get(pid, 0) + 1
+    return lineups
+
+
+def valid_showdown(lineup: pd.DataFrame, opts: Options | None = None) -> list[str]:
+    opts = opts or Options()
+    problems = []
+    if list(lineup["slot"]) != SHOWDOWN_SLOTS:
+        problems.append(f"slots {list(lineup['slot'])}")
+    if lineup["id"].duplicated().any():
+        problems.append("a player twice")
+    if lineup["salary"].sum() > opts.cap:
+        problems.append(f"salary {lineup['salary'].sum()}")
+    if lineup["team"].nunique() < 2:
+        problems.append("one team only")
+    return problems
+
+
+def tiers(pool: pd.DataFrame, opts: Options | None = None) -> list[pd.DataFrame]:
+    """Tiers: one player from each tier, no salary, players from at least two games."""
+    opts = opts or Options()
+    p = pool.dropna(subset=["projection", "tier"]).reset_index(drop=True)
+    ids = p["id"].to_numpy()
+    tier = p["tier"].astype(int).to_numpy()
+    games = _games(p)
+    cap_each = max(1, math.floor(opts.max_exposure * opts.n + 1e-9))
+    used: dict = {}
+    lineups, earlier = [], []
+    for _ in range(opts.n):
+        c = _Rows()
+        for t in range(1, TIER_COUNT + 1):
+            c.add(tier == t, 1, 1)
+        for game in np.unique(games):
+            c.add(games == game, 0, TIER_COUNT - 1)            # at least two games
+        for lineup in earlier:
+            c.add(np.isin(ids, list(lineup)), 0, TIER_COUNT - opts.min_unique)
+        banned = {pid for pid, count in used.items() if count >= cap_each}
+        lower = np.isin(ids, list(opts.locks)).astype(float)
+        upper = np.where(np.isin(ids, list(opts.excludes) + list(banned)), 0.0, 1.0)
+        if (lower > upper).any():
+            if not lineups:
+                raise Infeasible("a locked player is also excluded or at his exposure limit")
+            break
+        x = c.solve(p["projection"].to_numpy(dtype=float), lower, upper)
+        if x is None:
+            if not lineups:
+                raise Infeasible("no Tiers lineup fits")
+            break
+        lineup = p[x == 1].sort_values("tier").assign(slot=lambda d: "T" + d["tier"].astype(int).astype(str))
+        lineups.append(lineup.reset_index(drop=True))
+        earlier.append(set(lineup["id"]))
+        for pid in lineup["id"]:
+            used[pid] = used.get(pid, 0) + 1
+    return lineups
+
+
+def valid_tiers(lineup: pd.DataFrame) -> list[str]:
+    problems = []
+    if list(lineup["slot"]) != TIER_SLOTS:
+        problems.append(f"slots {list(lineup['slot'])}")
+    if len(set(_games(lineup))) < 2:
+        problems.append("one game only")
+    return problems
+
+
+def upload(lineups: list[pd.DataFrame], game_type: str = "Classic") -> str:
+    """DraftKings' upload file for any of the three formats."""
+    header = {"Classic": UPLOAD_SLOTS, "Showdown": SHOWDOWN_SLOTS, "Tiers": TIER_SLOTS}[game_type]
+    lines = [",".join(header)]
+    for lineup in lineups:
+        lines.append(",".join(str(int(v)) for v in lineup["draftable_id"]))
     return "\n".join(lines) + "\n"

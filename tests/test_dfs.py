@@ -381,3 +381,63 @@ def test_defense_from_parts_reads_its_form_and_averages_the_bonus():
     assert out["exp_sacks"].iloc[1] > 2 * out["exp_sacks"].iloc[0]      # a pass rush in form projects more sacks
     # No misses around the line: the bonus is the table's value at the projected score.
     assert out["exp_pa_bonus"].tolist() == pytest.approx([7.0, -1.0], abs=0.05)
+
+
+# ---------------------------------------------------------------------------
+# Kickers (Showdown)
+# ---------------------------------------------------------------------------
+
+
+def test_kicker_scoring_follows_draftkings():
+    rows = pd.DataFrame([
+        {"fg_made_20_29": 1, "fg_made_30_39": 1, "fg_made_40_49": 1, "fg_made_50_59": 1, "pat_made": 2,
+         "fg_missed": 3, "pat_missed": 1},                 # misses cost nothing
+        {"fg_made_60_": 1},
+    ])
+    assert list(scoring.kicker_points(rows)) == [3 + 3 + 4 + 5 + 2, 5]
+
+
+def test_kicker_scoring_is_checked_against_draftkings_averages():
+    from atlas.dfs import kicker
+
+    g = pd.DataFrame([{"season": 2026, "name": "Trey Smack", "dk_points": 12.0},
+                      {"season": 2026, "name": "Trey Smack", "dk_points": 9.0},
+                      {"season": 2026, "name": "Nick Folk", "dk_points": 7.0}])
+    pools = [{"draftables": [
+        {"playerId": 1, "position": "K", "displayName": "Trey Smack",
+         "draftStatAttributes": [{"id": 90, "value": "10.5"}]},
+        {"playerId": 2, "position": "K", "displayName": "Nick Folk", "draftStatAttributes": [{"id": 90, "value": "8.0"}]},
+        {"playerId": 3, "position": "K", "displayName": "New Kicker", "draftStatAttributes": [{"id": 90, "value": "-"}]},
+    ]}]
+    rec = kicker.reconcile(pools, g, 2026).set_index("kicker")
+    assert bool(rec.loc["Trey Smack", "agrees"]) and not bool(rec.loc["Nick Folk", "agrees"])
+    assert "New Kicker" not in rec.index                   # no games yet: nothing to compare
+
+
+def test_kicker_model_is_walk_forward():
+    from atlas.dfs import kicker
+
+    rng = np.random.default_rng(4)
+    rows = []
+    for s in range(2011, 2017):
+        for t in range(12):
+            for w in range(1, 18):
+                team_pts = 22 + rng.normal(0, 4)
+                rows.append({"season": s, "week": w, "season_type": "REG", "team": f"T{t}", "opponent": "X",
+                             "player_id": f"k{t}", "name": f"K{t}", "fg_att": 2, "pat_att": 2, "long_att": 0,
+                             "team_pts": team_pts,
+                             "dk_points": max(0.0, 2 + 0.3 * team_pts + rng.normal(0, 3))})
+    g = pd.DataFrame(rows)
+    env = g[["season", "week", "team", "team_pts"]].assign(opp_pts=20.0, proj_total=42.0, proj_margin=0.0,
+                                                          home=1, wind=5.0)
+    market = env[["season", "week", "team"]].assign(mkt_pts=env["team_pts"], mkt_opp=20.0)
+    f = kicker.frame(g.drop(columns=["team_pts"]), env, market)
+    oos = kicker.walk_forward(f, first=2013)
+    poisoned = f.copy()
+    poisoned.loc[poisoned["season"] == 2016, "target"] += 100
+    again = kicker.walk_forward(poisoned, first=2013)
+    a, b = oos[oos["season"] == 2015], again[again["season"] == 2015]
+    assert np.allclose(a["model"].to_numpy(), b["model"].to_numpy())
+    scored = kicker.score(oos, first=2015)
+    table = kicker.summary(scored).set_index("projection")
+    assert table.loc["model", "crps"] < table.loc["baseline", "crps"]           # the game carries real signal

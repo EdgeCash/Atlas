@@ -76,26 +76,55 @@ def decrypt(box: dict, passphrase: str) -> bytes:
     return AESGCM(_key(passphrase, raw("salt"), int(box["iterations"]))).decrypt(raw("iv"), raw("ct"), None)
 
 
-def payload(out: Path, *, label: str = "Main", built_at: str | None = None) -> dict:
-    """What the owner sees: the lineups, DraftKings' upload file, and the pool's projections."""
+def _clean(value):
+    """Strict JSON for the browser: a missing number is null, never NaN."""
+    if isinstance(value, float) and value != value:
+        return None
+    if isinstance(value, dict):
+        return {k: _clean(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_clean(v) for v in value]
+    return value
+
+
+def _slate_payload(out: Path) -> dict:
+    meta = json.loads((out / "slate.json").read_text())
     lineups = pd.read_csv(out / "lineups.csv")
-    pool = pd.read_csv(out / "projections.csv")
+    return {
+        **meta,
+        "lineups": [
+            {"slots": g[["slot", "name", "team", "salary", "projection", "low", "high"]].round(1)
+                .to_dict(orient="records"),
+             "salary": int(g["salary"].sum()) if meta.get("game_type") != "Tiers" else None,
+             "projection": round(float(g["projection"].sum()), 1)}
+            for _, g in lineups.groupby("lineup", sort=True)
+        ],
+        "upload_csv": (out / "lineups_upload.csv").read_text(),
+    }
+
+
+def payload(index: Path, *, built_at: str | None = None) -> dict:
+    """What the owner sees: every slate's lineups and upload file, and the
+    players of the biggest Classic slate by projection."""
+    slates = json.loads(index.read_text())["slates"]
+    root = index.parent
+    outs = [root / str(s["draft_group_id"]) for s in slates]
+    classic = [o for o, s in zip(outs, slates, strict=True) if s.get("game_type", "Classic") == "Classic"]
+    biggest = max(classic or outs, key=lambda o: sum(1 for _ in (o / "projections.csv").open()))
+    pool = pd.read_csv(biggest / "projections.csv")
     starts = pd.to_datetime(pool["game_start"], utc=True, errors="coerce") if "game_start" in pool else None
     keep = ["name", "position", "team", "opponent", "salary", "status", "projection", "low", "high", "p_play"]
     pool = pool[[c for c in keep if c in pool]].copy()
     for c in ("projection", "low", "high"):
         pool[c] = pool[c].round(1)
     pool["p_play"] = pool["p_play"].round(2)
+    first = [s for s in slates if s.get("game_type") == "Classic" and s.get("label") == "Main"]
     return {
-        "slate": label, "draft_group_id": int(out.name), "built_at": built_at or _now(),
+        "built_at": built_at or _now(),
+        "slate": "Main" if first else slates[0]["label"],
+        "draft_group_id": int((first or slates)[0]["draft_group_id"]),
         "first_kickoff": starts.min().isoformat() if starts is not None and starts.notna().any() else None,
-        "lineups": [
-            {"slots": g[["slot", "name", "team", "salary", "projection", "low", "high"]].round(1)
-                .to_dict(orient="records"),
-             "salary": int(g["salary"].sum()), "projection": round(float(g["projection"].sum()), 1)}
-            for _, g in lineups.groupby("lineup", sort=True)
-        ],
-        "upload_csv": (out / "lineups_upload.csv").read_text(),
+        "slates": [_slate_payload(o) for o in outs],
         "players": json.loads(pool.to_json(orient="records")),
     }
 
@@ -123,7 +152,7 @@ def read(path: Path | None = None) -> dict | None:
         return None
 
 
-def refresh(*, label: str = "Main", rebuild: bool = True) -> Path:
+def refresh(*, rebuild: bool = True) -> Path:
     """The heavy refresh's DFS step: the slate for everyone, the lineups for the owner. Never raises.
 
     The public projections (step 7) are built and recorded whether or not
@@ -139,7 +168,7 @@ def refresh(*, label: str = "Main", rebuild: bool = True) -> Path:
             context.build()
         from atlas.dfs import slate
 
-        out = slate.run(label)
+        index = slate.run_all()
     except Exception as error:  # noqa: BLE001 - the site must still build
         # The type only: a message could quote a player or a number.
         LOG.error("DFS slate not built: %s", type(error).__name__)
@@ -150,10 +179,11 @@ def refresh(*, label: str = "Main", rebuild: bool = True) -> Path:
         LOG.warning("no %s secret: the owner page is not built", SECRET)
         return write(None, reason="The owner key is not configured.")
     try:
-        plain = json.dumps(payload(out, label=label), separators=(",", ":")).encode("utf-8")
+        plain = json.dumps(_clean(payload(index)), separators=(",", ":"), allow_nan=False).encode("utf-8")
         box = encrypt(plain, passphrase)
         _check_sealed(box, plain)
-        LOG.info("owner page: %s slate encrypted (%d bytes of ciphertext)", label, len(box["ct"]))
+        LOG.info("owner page: %d slates encrypted (%d bytes of ciphertext)", len(json.loads(plain)["slates"]),
+                 len(box["ct"]))
         return write(box)
     except Exception as error:  # noqa: BLE001
         LOG.error("owner page not built: %s", type(error).__name__)
@@ -187,10 +217,9 @@ def _check_sealed(box: dict, plain: bytes) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Build and encrypt the owner's DFS page payload")
-    parser.add_argument("--label", default="Main")
     parser.add_argument("--no-rebuild", action="store_true", help="use the DFS tables already staged")
     args = parser.parse_args()
-    refresh(label=args.label, rebuild=not args.no_rebuild)
+    refresh(rebuild=not args.no_rebuild)
 
 
 if __name__ == "__main__":

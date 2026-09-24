@@ -60,9 +60,9 @@ def test_no_secret_builds_no_lineups(tmp_path, monkeypatch):
     monkeypatch.setenv("ATLAS_TRACKING_DIR", str(tmp_path))
     monkeypatch.setattr(owner, "enc_path", lambda: tmp_path / "owner.enc.json")
     ran = []
-    monkeypatch.setattr(slate, "run", lambda label: ran.append(label) or tmp_path)
+    monkeypatch.setattr(slate, "run_all", lambda: ran.append(1) or tmp_path)
     owner.refresh(rebuild=False)
-    assert ran == ["Main"]                                   # the public slate is built regardless
+    assert ran == [1]                                        # the public slate is built regardless
     record = owner.read(tmp_path / "owner.enc.json")
     assert record["box"] is None and "not configured" in record["reason"]
 
@@ -74,10 +74,10 @@ def test_a_failure_records_its_kind_and_nothing_else(tmp_path, monkeypatch):
     monkeypatch.setenv("ATLAS_TRACKING_DIR", str(tmp_path))
     monkeypatch.setattr(owner, "enc_path", lambda: tmp_path / "owner.enc.json")
 
-    def boom(label):
+    def boom():
         raise KeyError("Josh Allen salary 8000")
 
-    monkeypatch.setattr(slate, "run", boom)
+    monkeypatch.setattr(slate, "run_all", boom)
     owner.refresh(rebuild=False)
     record = owner.read(tmp_path / "owner.enc.json")
     assert record["box"] is None and "KeyError" in record["reason"]
@@ -85,8 +85,25 @@ def test_a_failure_records_its_kind_and_nothing_else(tmp_path, monkeypatch):
 
 
 def _slate_output(tmp_path):
+    """Two slates as the slate step writes them, and their index."""
+    showdown = tmp_path / "153775"
+    showdown.mkdir()
+    (showdown / "slate.json").write_text(json.dumps({"draft_group_id": 153775, "game_type": "Showdown",
+                                                     "label": "ATL @ GB", "starts_at": "2026-09-25T00:15:00+00:00"}))
+    pd.DataFrame([{"name": "Bijan Robinson", "position": "RB", "team": "ATL", "salary": 11800, "status": None,
+                   "projection": 20.0, "low": 5.0, "high": 35.0, "p_play": 1.0,
+                   "game_start": "2026-09-25T00:15:00Z"}]).to_csv(showdown / "projections.csv", index=False)
+    pd.DataFrame([{"lineup": 1, "slot": s, "name": f"SD {i}", "team": "ATL", "salary": 8000, "projection": 12.0,
+                   "low": 3.0, "high": 22.0} for i, s in enumerate(["CPT", "FLEX", "FLEX", "FLEX", "FLEX", "FLEX"])]
+                 ).to_csv(showdown / "lineups.csv", index=False)
+    (showdown / "lineups_upload.csv").write_text("CPT,FLEX,FLEX,FLEX,FLEX,FLEX\n1,2,3,4,5,6\n")
     out = tmp_path / "153769"
     out.mkdir()
+    (out / "slate.json").write_text(json.dumps({"draft_group_id": 153769, "game_type": "Classic", "label": "Main",
+                                                "starts_at": "2026-09-27T17:00:00+00:00"}))
+    (tmp_path / "index.json").write_text(json.dumps({"slates": [
+        {"draft_group_id": 153775, "game_type": "Showdown", "label": "ATL @ GB"},
+        {"draft_group_id": 153769, "game_type": "Classic", "label": "Main"}]}))
     pd.DataFrame([{"name": "Josh Allen", "position": "QB", "team": "BUF", "opponent": "LAC", "salary": 8000,
                    "status": None, "projection": 27.99, "low": 15.7, "high": 40.5, "p_play": 1.0,
                    "game_start": "2026-09-27T17:00:00Z"}]).to_csv(out / "projections.csv", index=False)
@@ -94,15 +111,18 @@ def _slate_output(tmp_path):
                    "low": 5.0, "high": 25.0} for i, s in enumerate(
         ["QB", "RB", "RB", "WR", "WR", "WR", "TE", "FLEX", "DST"])]).to_csv(out / "lineups.csv", index=False)
     (out / "lineups_upload.csv").write_text("QB,RB,RB,WR,WR,WR,TE,FLEX,DST\n1,2,3,4,5,6,7,8,9\n")
-    return out
+    return tmp_path / "index.json"
 
 
 def test_payload_and_page_carry_only_ciphertext(tmp_path, monkeypatch):
     from atlas.site import render
 
     data = owner.payload(_slate_output(tmp_path))
-    assert data["draft_group_id"] == 153769 and len(data["lineups"]) == 1
-    assert data["lineups"][0]["salary"] == 45000 and data["upload_csv"].startswith("QB,RB")
+    assert data["draft_group_id"] == 153769 and [s["game_type"] for s in data["slates"]] == ["Showdown", "Classic"]
+    main = data["slates"][1]
+    assert main["lineups"][0]["salary"] == 45000 and main["upload_csv"].startswith("QB,RB")
+    assert data["slates"][0]["upload_csv"].startswith("CPT,FLEX")
+    assert data["players"][0]["name"] == "Josh Allen"                        # the biggest Classic slate's pool
     assert data["first_kickoff"].startswith("2026-09-27T17:00")
     box = owner.encrypt(json.dumps(data).encode(), "horse battery", iterations=FAST)
     page = render.owner_page({"built_at": "2026-09-24T12:00:00+00:00", "box": box, "reason": None})
@@ -148,10 +168,10 @@ def test_no_upcoming_slate_says_so(tmp_path, monkeypatch):
     monkeypatch.setenv("ATLAS_TRACKING_DIR", str(tmp_path))
     monkeypatch.setattr(owner, "enc_path", lambda: tmp_path / "owner.enc.json")
 
-    def none(label):
+    def none():
         raise slate.NoSlate("none")
 
-    monkeypatch.setattr(slate, "run", none)
+    monkeypatch.setattr(slate, "run_all", none)
     owner.refresh(rebuild=False)
     assert owner.read(tmp_path / "owner.enc.json")["reason"] == "No upcoming slate is posted yet."
 
@@ -211,13 +231,14 @@ def test_dfs_page_lists_players_and_keeps_its_promises():
     from atlas.site import render
     from scripts.audit_site import DFS_PROMISE, FORBIDDEN, visible
 
-    players = _projected().assign(status=["", "", ""]).to_dict(orient="records")
+    players = _projected().assign(status=["", "", ""], name=["Drew Lock", "Josh Kelly", "Bills"]).to_dict(
+        orient="records")                                     # names that contain banned words are still names
     history = {"seasons": "2015-2025", "salary_seasons": "2015-2021", "positions": {
         "QB": {"player_weeks": 10, "mae": 6.4, "baseline_mae": 6.7, "rank": 0.34, "coverage": 0.82,
                "salary_era_rank": 0.341, "salary_rank": 0.33}}}
     page = render.dfs_page({"starts_at": "2026-09-27T17:00:00+00:00", "projected_at": "2026-09-26T08:00:00+00:00"},
                            players, history=history, live={"slates": 0})
-    assert "Josh Allen" in page and "Players less likely to play (1)" in page and "0.330" in page
+    assert "Drew Lock" in page and "Players less likely to play (1)" in page and "0.330" in page
     assert "1-800-GAMBLER" in page and "draftkings.com/responsible-gaming" in page
     text = visible(page)
     assert not DFS_PROMISE.search(text)
@@ -227,3 +248,9 @@ def test_dfs_page_lists_players_and_keeps_its_promises():
             assert any(a in text[max(0, m.start() - 70):m.end() + 70] for a in allowed), word
     empty = render.dfs_page(None, [], history=None, live=None)
     assert "No slate is posted yet" in empty
+
+
+def test_payload_is_strict_json_for_the_browser():
+    data = owner._clean({"lineups": [{"salary": float("nan"), "slots": [{"projection": 1.5, "low": float("nan")}]}]})
+    text = json.dumps(data, allow_nan=False)
+    assert "NaN" not in text and '"salary": null' in text

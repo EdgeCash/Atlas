@@ -54,6 +54,18 @@ def offense_points(stats: pd.DataFrame) -> pd.Series:
     ).round(2)
 
 
+def kicker_points(stats: pd.DataFrame) -> pd.Series:
+    """DraftKings points for a kicker's game (Showdown; Classic has no kicker).
+
+    A field goal of 0-39 yards is 3, 40-49 is 4, 50 or more is 5; an extra
+    point is 1; a miss costs nothing. Checked against DraftKings' own
+    points-per-game for the 2026 kickers in its Showdown pools
+    (`atlas/dfs/kicker.py`, `reports/dfs_kickers.md`)."""
+    c = lambda name: stats[name].fillna(0).astype(float) if name in stats else pd.Series(0.0, index=stats.index)  # noqa: E731
+    short = c("fg_made_0_19") + c("fg_made_20_29") + c("fg_made_30_39")
+    return (3 * short + 4 * c("fg_made_40_49") + 5 * (c("fg_made_50_59") + c("fg_made_60_")) + c("pat_made")).round(2)
+
+
 def points_allowed_score(points_allowed: pd.Series) -> pd.Series:
     pa = points_allowed.astype(float)
     conditions = [pa <= bound for bound, _ in POINTS_ALLOWED]

@@ -18,6 +18,8 @@ LOBBY = {"DraftGroups": [
      "StartDate": "2026-09-25T00:15:00.0000000Z"},
     {"DraftGroupId": 4, "ContestTypeId": 21, "ContestStartTimeSuffix": None, "GameCount": 11,    # too far out
      "StartDate": "2026-11-01T18:00:00.0000000Z"},
+    {"DraftGroupId": 5, "ContestTypeId": 189, "ContestStartTimeSuffix": "", "GameCount": 13,     # snake
+     "StartDate": "2026-09-27T17:00:00.0000000Z"},
 ]}
 
 
@@ -61,18 +63,19 @@ def test_capture_writes_the_record_and_never_fails_the_run(tmp_path, monkeypatch
         return LOBBY if "lobby" in url else POOL
 
     counts = dk.capture(store, fetch=fetch, now=NOW)
-    assert counts == {"slates": 2, "players": 4}
-    assert len(store.read("dfs_slates")) == 2 and len(store.read("dfs_salaries")) == 4
-    assert sum("draftables" in u for u in calls) == 2
+    assert counts == {"slates": 3, "players": 6}                       # two Classic and a Showdown
+    assert len(store.read("dfs_slates")) == 3 and len(store.read("dfs_salaries")) == 6
+    assert sum("draftables" in u for u in calls) == 3
+    assert set(store.read("dfs_slates")["game_type"]) == {"Classic", "Showdown"}
     # Captured again: the same rows, updated in place.
     dk.capture(store, fetch=fetch, now=NOW)
-    assert len(store.read("dfs_salaries")) == 4
+    assert len(store.read("dfs_salaries")) == 6
 
     def broken(url):
         raise ConnectionError("DraftKings is down")
 
     assert dk.capture(store, fetch=broken, now=NOW) == {"slates": 0, "players": 0}
-    assert len(store.read("dfs_salaries")) == 4                       # the record is untouched
+    assert len(store.read("dfs_salaries")) == 6                       # the record is untouched
 
 
 def test_the_rotoguru_page_parses_to_player_weeks():
@@ -99,3 +102,29 @@ def test_the_heavy_run_captures_draftkings_before_the_site():
 
     source = inspect.getsource(ops.heavy)
     assert source.index('"dfs-capture"') < source.index('("site"')
+
+
+def test_every_captured_format_is_labeled_and_snake_is_not_kept():
+    got = dk.slates(LOBBY, now=NOW)
+    assert list(zip(got["draft_group_id"], got["game_type"], got["label"], strict=True)) == [
+        (1, "Classic", "Main"), (2, "Classic", "Thu-Mon"), (3, "Showdown", "Showdown")]
+
+
+def test_showdown_pool_keeps_the_captain_price_beside_the_flex():
+    sd = {"draftables": [
+        {**_draftable(10, "Bijan Robinson", "RB", 17700, 511), "draftableId": 900},    # Captain: 1.5x
+        {**_draftable(10, "Bijan Robinson", "RB", 11800, 512), "draftableId": 901},
+    ]}
+    row = dk.player_pool(sd, 7).iloc[0]
+    assert (row["salary"], row["draftable_id"], row["cpt_salary"], row["cpt_draftable_id"]) == (11800, 901, 17700, 900)
+
+
+def test_tiers_pool_has_no_salary_and_numbers_its_tiers():
+    tiers = {"draftables": [
+        {**_draftable(10, "Josh Allen", "QB", None, 323), "draftableId": 1},
+        {**_draftable(11, "Bijan Robinson", "RB", None, 325), "draftableId": 2},
+        {**_draftable(12, "Drake London", "WR", None, 324), "draftableId": 3},
+    ]}
+    pool = dk.player_pool(tiers, 8).set_index("player_id")
+    assert pool["salary"].isna().all()
+    assert pool["tier"].to_dict() == {10: 1, 11: 3, 12: 2}

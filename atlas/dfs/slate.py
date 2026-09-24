@@ -85,14 +85,18 @@ def with_games(pool: pd.DataFrame, schedule: pd.DataFrame) -> pd.DataFrame:
     """Each player's game in nflverse's terms: season, week, game id, opponent."""
     p = pool.copy()
     p["team"] = p["team"].replace(DK_TEAM)
-    sides = p["game"].str.split(" @ ", n=1, expand=True)
+    # "KC @ MIA", or "BAL vs DAL" at a neutral site, where DraftKings' order
+    # need not be the schedule's home and away: both orders are tried.
+    sides = p["game"].str.split(r" @ | vs ", n=1, expand=True, regex=True)
     p["away"], p["home"] = sides[0].replace(DK_TEAM), sides[1].replace(DK_TEAM)
     p["opponent"] = np.where(p["team"] == p["home"], p["away"], p["home"])
     start = pd.to_datetime(p["game_start"], utc=True)
     p["gameday"] = start.dt.tz_convert(EASTERN).dt.strftime("%Y-%m-%d")
     s = schedule[schedule["game_type"] == "REG"][["game_id", "season", "week", "gameday", "home_team", "away_team"]]
     s = s.rename(columns={"home_team": "home", "away_team": "away"})
-    return p.merge(s, on=["home", "away", "gameday"], how="left")
+    flipped = s.rename(columns={"home": "away", "away": "home"})
+    both = pd.concat([s, flipped], ignore_index=True).drop_duplicates(["home", "away", "gameday"])
+    return p.merge(both, on=["home", "away", "gameday"], how="left")
 
 
 def match(pool: pd.DataFrame, player_games: pd.DataFrame, master: pd.DataFrame | None = None) -> pd.DataFrame:
@@ -153,6 +157,8 @@ def project(pool: pd.DataFrame, *, staging: Path | None = None, lines: dict | No
     model for the season in progress, on the coming week."""
     staging = staging or config.paths().staging / "nfl"
     playable = pool.dropna(subset=["season", "week"])
+    kickers = playable[playable["position"] == "K"]
+    playable = playable[playable["position"] != "K"]
     season = int(playable["season"].mode().iloc[0])
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
@@ -168,12 +174,18 @@ def project(pool: pd.DataFrame, *, staging: Path | None = None, lines: dict | No
                      on=["season", "week", "player_id"], how="left")
     got = got.join(ranges.apply(got.dropna(subset=["model"]), lines if lines is not None else ranges.load()))
     got["p_play"] = play_probability(got, news, aug, staging)
+    if len(kickers):
+        from atlas.dfs import kicker
+
+        k = kicker.project(kickers.astype({"season": int, "week": int}))
+        got = pd.concat([got, k.assign(position="K")], ignore_index=True)
     got["if_plays"] = got["model"]
     got["projection"] = got["p_play"] * got["model"]
     got["low"] = mixture_quantile(got["p_play"], got["model"], got["model_lo"], got["model_hi"], ranges.LOW)
     got["high"] = mixture_quantile(got["p_play"], got["model"], got["model_lo"], got["model_hi"], ranges.HIGH)
     keep = ["season", "week", "player_id", "p_play", "if_plays", "projection", "low", "high"]
-    return pool.merge(got[keep], on=["season", "week", "player_id"], how="left")
+    return pool.astype({"season": "Int64", "week": "Int64"}).merge(
+        got[keep].astype({"season": "Int64", "week": "Int64"}), on=["season", "week", "player_id"], how="left")
 
 
 def play_probability(rows: pd.DataFrame, news: pd.DataFrame, player_games: pd.DataFrame,
@@ -214,15 +226,50 @@ def mixture_quantile(p, if_plays, low, high, level: float) -> np.ndarray:
     return np.where(cond <= 0, 0.0, q)
 
 
-def lineups(projected: pd.DataFrame, opts: op.Options = OWNER) -> list[pd.DataFrame]:
-    """The owner's lineups from the playable part of the pool."""
-    ok = projected["status"].fillna("").astype(str).str.upper().isin(PLAYABLE) & ~projected["disabled"].astype(bool)
+#: How many lineups each format gets on the owner page, and their rules.
+LINEUPS = {
+    "Main": OWNER,
+    "Classic": op.Options(n=5, min_unique=2, qb_stack=1, max_exposure=0.8),
+    "Showdown": op.Options(n=5, min_unique=2, max_exposure=0.8),
+    "Tiers": op.Options(n=3, min_unique=2, max_exposure=1.0),
+}
+
+
+def _playable(projected: pd.DataFrame) -> pd.DataFrame:
+    ok = projected["status"].fillna("").astype(str).str.upper().isin(PLAYABLE) & \
+        ~projected["disabled"].fillna(False).astype(bool)
     p = projected[ok].dropna(subset=["projection"])
-    p = p.assign(id=p["player_id_dk"], draftable_id=p["draftable_id"])
-    return op.optimize(p, opts)
+    return p.assign(id=p["player_id_dk"])
 
 
-def run(label: str = "Main", *, capture: bool = False, now: datetime | None = None) -> Path:
+def lineups(projected: pd.DataFrame, game_type: str = "Classic", opts: op.Options | None = None) -> list[pd.DataFrame]:
+    """The owner's lineups for one slate from the playable part of its pool."""
+    p = _playable(projected)
+    if game_type == "Showdown":
+        return op.showdown(p, opts or LINEUPS["Showdown"])
+    if game_type == "Tiers":
+        return op.tiers(p, opts or LINEUPS["Tiers"])
+    return op.optimize(p, opts or LINEUPS["Classic"])
+
+
+def upcoming(slates: pd.DataFrame, now: datetime | None = None) -> pd.DataFrame:
+    """Every captured slate that has not started, oldest first; a slate captured
+    before formats were recorded is a Classic one."""
+    now = now or datetime.now(timezone.utc)
+    s = slates.copy()
+    s["game_type"] = s["game_type"].fillna("Classic") if "game_type" in s else "Classic"
+    s["start"] = pd.to_datetime(s["starts_at"], utc=True)
+    return s[s["start"] > pd.Timestamp(now)].sort_values(["start", "game_type", "label"]).reset_index(drop=True)
+
+
+def index_path() -> Path:
+    return config.paths().root / "data" / "dfs" / "index.json"
+
+
+def run_all(*, capture: bool = False, now: datetime | None = None) -> Path:
+    """Every upcoming Classic, Showdown and Tiers slate: one projection of every
+    player in any of their pools, then each slate's lineups. The Main slate's
+    projections also go into the public record. Returns the index of what was built."""
     from atlas.live.store import Store
 
     store = Store.open()
@@ -230,46 +277,68 @@ def run(label: str = "Main", *, capture: bool = False, now: datetime | None = No
         from atlas.sources import draftkings
 
         draftkings.capture(store)
-    slate = choose_slate(store.read("dfs_slates"), label, now)
-    group = int(slate["draft_group_id"])
-    pool = store.read("dfs_salaries")
-    pool = pool[pool["draft_group_id"] == group].rename(columns={"player_id": "player_id_dk"})
-    if pool["draftable_id"].isna().all():
-        raise LookupError("the record has no draftable ids for this slate; run with --capture")
+    todo = upcoming(store.read("dfs_slates"), now)
+    if todo.empty:
+        raise NoSlate("no upcoming slate in the record")
+    salaries = store.read("dfs_salaries")
+    salaries = salaries[salaries["draft_group_id"].isin(todo["draft_group_id"])]
+    salaries = salaries.rename(columns={"player_id": "player_id_dk"})
+    if salaries.empty or salaries["draftable_id"].isna().all():
+        raise LookupError("the record has no draftable ids for these slates; run with --capture")
+
+    # One projection per player, whatever slates he is in.
     raw = config.paths().raw
-    pool = with_games(pool, pd.read_parquet(nflverse.schedules_path(raw)))
+    players_ = salaries.sort_values("draft_group_id").drop_duplicates("player_id_dk")[
+        ["player_id_dk", "name", "position", "team", "game", "game_start", "status", "disabled"]]
+    players_ = with_games(players_, pd.read_parquet(nflverse.schedules_path(raw)))
     master_path = nflverse.players_path(raw)
     master = pd.read_parquet(master_path) if master_path.exists() else None
     pg = pd.read_parquet(config.paths().staging / "nfl" / "dfs_player_games.parquet")
-    pool = match(pool, pg, master)
-    projected = project(pool)
-    out = out_dir(group)
-    out.mkdir(parents=True, exist_ok=True)
-    cols = ["name", "position", "team", "opponent", "salary", "status", "projection", "low", "high", "p_play",
-            "if_plays", "matched_by", "season", "week",
-            "player_id", "player_id_dk", "draftable_id", "game_start"]
-    projected.sort_values("projection", ascending=False)[cols].to_csv(out / "projections.csv", index=False,
+    projected = project(match(players_, pg, master))
+    per_player = projected[["player_id_dk", "season", "week", "game_id", "opponent", "player_id", "matched_by",
+                            "p_play", "if_plays", "projection", "low", "high"]]
+
+    built = []
+    for _, slate in todo.iterrows():
+        group, kind, label = int(slate["draft_group_id"]), slate["game_type"], slate["label"]
+        pool = salaries[salaries["draft_group_id"] == group].merge(per_player, on="player_id_dk", how="left")
+        pool["team"] = pool["team"].replace(DK_TEAM)
+        out = out_dir(group)
+        out.mkdir(parents=True, exist_ok=True)
+        cols = ["name", "position", "team", "opponent", "salary", "cpt_salary", "tier", "status", "projection", "low",
+                "high", "p_play", "if_plays", "matched_by", "season", "week", "player_id", "player_id_dk",
+                "draftable_id", "cpt_draftable_id", "game_start"]
+        pool.sort_values("projection", ascending=False)[cols].to_csv(out / "projections.csv", index=False,
                                                                       float_format="%.2f")
-    (out / "slate.json").write_text(json.dumps({"draft_group_id": group, "label": label,
-                                                 "starts_at": str(slate["starts_at"])}) + "\n")
-    record.save(projected, slate, store, now=now)
-    built = lineups(projected)
-    (out / "lineups_upload.csv").write_text(op.upload_csv(built))
-    readable = pd.concat([lu.assign(lineup=i + 1) for i, lu in enumerate(built)])
-    readable[["lineup", "slot", "name", "team", "salary", "projection", "low", "high"]].to_csv(
-        out / "lineups.csv", index=False, float_format="%.2f")
-    unmatched = int((projected["matched_by"] == "none (no history)").sum())
-    LOG.info("%s slate %d: %d players projected (%d without history), %d lineups -> %s", label, group,
-             int(projected["projection"].notna().sum()), unmatched, len(built), out)
-    return out
+        meta = {"draft_group_id": group, "game_type": kind, "label": label, "starts_at": str(slate["starts_at"])}
+        (out / "slate.json").write_text(json.dumps(meta) + "\n")
+        if kind == "Classic" and label == "Main":
+            record.save(pool, slate, store, now=now)
+        try:
+            made = lineups(pool, kind, LINEUPS["Main"] if (kind, label) == ("Classic", "Main") else None)
+        except op.Infeasible:
+            made = []
+        (out / "lineups_upload.csv").write_text(op.upload(made, kind))
+        if made:
+            readable = pd.concat([lu.assign(lineup=i + 1) for i, lu in enumerate(made)])
+            readable[["lineup", "slot", "name", "team", "salary", "projection", "low", "high"]].to_csv(
+                out / "lineups.csv", index=False, float_format="%.2f")
+        else:
+            pd.DataFrame(columns=["lineup", "slot", "name", "team", "salary", "projection", "low", "high"]).to_csv(
+                out / "lineups.csv", index=False)
+        built.append({**meta, "lineups": len(made)})
+        LOG.info("%s %s (%d): %d lineups", kind, label, group, len(made))
+    index_path().write_text(json.dumps({"slates": built}, indent=1) + "\n")
+    LOG.info("DFS: %d slates, %d players projected (%d without history)", len(built),
+             int(projected["projection"].notna().sum()), int((projected["matched_by"] == "none (no history)").sum()))
+    return index_path()
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Project a DraftKings Classic slate and build lineups")
-    parser.add_argument("--label", default="Main")
+    parser = argparse.ArgumentParser(description="Project every upcoming DraftKings NFL slate and build lineups")
     parser.add_argument("--capture", action="store_true", help="capture DraftKings' pools first")
     args = parser.parse_args()
-    run(args.label, capture=args.capture)
+    run_all(capture=args.capture)
 
 
 if __name__ == "__main__":

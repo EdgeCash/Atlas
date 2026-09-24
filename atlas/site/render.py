@@ -1527,6 +1527,12 @@ def scoreboard_page() -> str:
                   description=description, canonical="scoreboard.html")
 
 
+def player_name(name) -> str:
+    """A person's name, marked so the launch audit reads it as a name: a
+    quarterback called Lock or a receiver called Kelly is not vocabulary."""
+    return f'<span class="pn">{esc(name)}</span>'
+
+
 #: On every DFS page (plan §1): who DFS is for, and where to get help. The
 #: audit fails a DFS page without it.
 DFS_NOTE = """<b>DFS is gambling for adults.</b> DraftKings contests are open only to adults (18, 19 or 21 and
@@ -1556,7 +1562,7 @@ def _dfs_table(players: list[dict]) -> str:
     for p in players:
         status = f' <span class="dfs-status">{esc(p["status"])}</span>' if p.get("status") else ""
         rows.append(
-            f'<tr data-pos="{esc(p["position"])}"><td class="lead">{esc(p["name"])}{status}</td>'
+            f'<tr data-pos="{esc(p["position"])}"><td class="lead">{player_name(p["name"])}{status}</td>'
             f'<td>{esc(p["position"])}</td><td>{esc(p["team"])}</td><td>{esc(p.get("opponent") or "")}</td>'
             f'<td>${int(p["salary"]):,}</td><td><b>{_dfs_num(p["projection"])}</b></td>'
             f'<td>{_dfs_num(p["low"])}–{_dfs_num(p["high"])}</td><td>{_dfs_pct(p.get("p_play"))}</td></tr>')
@@ -2020,13 +2026,13 @@ def nfl_team_page(team, *, cards: list[Card], pool: dict, results: list | None =
 
     if qb and qb_pts is not None:
         offense_note = f"team {signed(view.get('off'))} · {qb} {signed(qb_pts)}"
-        qb_line = (f"<b>Expected starter: {esc(qb)}.</b> {signed(qb_pts)} of that offense is his (± {num(qb_sd)}), "
+        qb_line = (f"<b>Expected starter: {player_name(qb)}.</b> {signed(qb_pts)} of that offense is his (± {num(qb_sd)}), "
                    "and it travels with him: the model rates the quarterback and the team separately and adds "
                    "them for the game. He is the depth chart's first quarterback unless the injury report lists "
                    "him out.")
     elif qb:
         offense_note = "points scored above average"
-        qb_line = (f"<b>Expected starter: {esc(qb)}.</b> The model has not rated him yet; until he plays, the "
+        qb_line = (f"<b>Expected starter: {player_name(qb)}.</b> The model has not rated him yet; until he plays, the "
                    "offense carries a new quarterback's prior.")
     else:
         offense_note = "points scored above average"

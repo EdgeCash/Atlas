@@ -79,49 +79,73 @@
     return wrap;
   }
 
-  function download(data) {
-    var blob = new Blob([data.upload_csv], { type: "text/csv" });
-    var a = el("a", { href: URL.createObjectURL(blob), download: "atlas-dk-" + data.draft_group_id + ".csv" });
+  function download(slate) {
+    var blob = new Blob([slate.upload_csv], { type: "text/csv" });
+    var name = "atlas-dk-" + slate.draft_group_id + "-" + (slate.game_type || "Classic").toLowerCase() + ".csv";
+    var a = el("a", { href: URL.createObjectURL(blob), download: name });
     document.body.appendChild(a);
     a.click();
     a.remove();
   }
 
+  function slateName(s) {
+    var kind = s.game_type || "Classic";
+    return kind + (s.label && s.label !== kind ? " · " + s.label : "") + " · " + eastern(s.starts_at);
+  }
+
+  function lineupCards(slate, holder) {
+    holder.textContent = "";
+    if (!slate.lineups.length) {
+      holder.appendChild(el("p", { "class": "note" }, "No lineup fits this slate's pool."));
+      return;
+    }
+    slate.lineups.forEach(function (lu, i) {
+      var card = el("div", { "class": "card card-pad top-gap" });
+      var cost = lu.salary === null || lu.salary === undefined ? "" : " · " + money(lu.salary);
+      card.appendChild(el("h3", null, "Lineup " + (i + 1) + " · " + pts(lu.projection) + " projected" + cost));
+      card.appendChild(table(["Slot", "Player", "Team", "Salary", "Proj", "Range"],
+        lu.slots.map(function (s) {
+          return [s.slot, s.name, s.team, s.salary === null || s.salary === undefined || isNaN(s.salary) ? "–" : money(s.salary),
+                  pts(s.projection), pts(s.low) + "–" + pts(s.high)];
+        })));
+      holder.appendChild(card);
+    });
+  }
+
   function render(data) {
     out.textContent = "";
+    var slates = data.slates || [];
     var head = el("div", { "class": "card card-pad" });
-    head.appendChild(el("h2", null, data.slate + " slate · " + data.lineups.length + " lineups"));
-    head.appendChild(el("p", { "class": "note" },
-      "Built " + eastern(data.built_at) + (data.first_kickoff ? " · first kickoff " + eastern(data.first_kickoff) : "")));
+    head.appendChild(el("h2", null, slates.length + " slates this week"));
+    head.appendChild(el("p", { "class": "note" }, "Built " + eastern(data.built_at)));
+    var choose = el("select", { "aria-label": "Slate", "class": "owner-slate" });
+    slates.forEach(function (s, i) { choose.appendChild(el("option", { value: String(i) }, slateName(s))); });
+    var main = slates.findIndex(function (s) { return s.game_type === "Classic" && s.label === "Main"; });
+    if (main >= 0) choose.value = String(main);
+    head.appendChild(choose);
     var actions = el("div", { "class": "lede-actions" });
-    var dl = el("button", { type: "button", "class": "button" }, "Download the DraftKings upload file");
-    dl.addEventListener("click", function () { download(data); });
+    var dl = el("button", { type: "button", "class": "button" }, "Download this slate's DraftKings upload file");
+    dl.addEventListener("click", function () { download(slates[Number(choose.value)]); });
     var close = el("button", { type: "button", "class": "button ghost" }, "Close");
     close.addEventListener("click", function () { out.textContent = ""; form.hidden = false; status.textContent = ""; });
     actions.appendChild(dl);
     actions.appendChild(close);
     head.appendChild(actions);
     out.appendChild(head);
-
-    data.lineups.forEach(function (lu, i) {
-      var card = el("div", { "class": "card card-pad top-gap" });
-      card.appendChild(el("h3", null, "Lineup " + (i + 1) + " · " + pts(lu.projection) + " projected · " + money(lu.salary)));
-      card.appendChild(table(["Slot", "Player", "Team", "Salary", "Proj", "Range"],
-        lu.slots.map(function (s) {
-          return [s.slot, s.name, s.team, money(s.salary), pts(s.projection), pts(s.low) + "–" + pts(s.high)];
-        })));
-      out.appendChild(card);
-    });
+    var holder = el("div");
+    out.appendChild(holder);
+    choose.addEventListener("change", function () { lineupCards(slates[Number(choose.value)], holder); });
+    if (slates.length) lineupCards(slates[Number(choose.value)], holder);
 
     var pool = el("div", { "class": "card card-pad top-gap" });
     pool.appendChild(el("h3", null, "Every player, by projection"));
     var pick = el("select", { "aria-label": "Position" });
     ["All", "QB", "RB", "WR", "TE", "DST"].forEach(function (p) { pick.appendChild(el("option", { value: p }, p)); });
     pool.appendChild(pick);
-    var holder = el("div");
-    pool.appendChild(holder);
+    var rowsHolder = el("div");
+    pool.appendChild(rowsHolder);
     function fill() {
-      holder.textContent = "";
+      rowsHolder.textContent = "";
       var rows = data.players.filter(function (p) { return pick.value === "All" || p.position === pick.value; })
         .slice(0, 80)
         .map(function (p) {
@@ -129,7 +153,7 @@
                   pts(p.projection), pts(p.low) + "–" + pts(p.high),
                   p.p_play === null || p.p_play === undefined ? "–" : Math.round(p.p_play * 100) + "%"];
         });
-      holder.appendChild(table(["Player", "Pos", "Team", "Salary", "Proj", "Range", "Plays"], rows));
+      rowsHolder.appendChild(table(["Player", "Pos", "Team", "Salary", "Proj", "Range", "Plays"], rows));
     }
     pick.addEventListener("change", fill);
     fill();
@@ -144,8 +168,15 @@
       input.value = "";
       form.hidden = true;
       status.textContent = "";
-      render(data);
-    }).catch(function () {
+      try {
+        render(data);
+      } catch (e) {
+        // Opened, but not shown: say so rather than blame the passphrase.
+        form.hidden = false;
+        status.textContent = "The lineups opened but could not be shown (" + e.name + ").";
+        if (window.console) console.error(e);
+      }
+    }, function () {
       status.textContent = "That passphrase does not open this week's lineups.";
     });
   });

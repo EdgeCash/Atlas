@@ -68,11 +68,11 @@ SCHEMA: dict[str, list[str]] = {
     # DraftKings keeps no history, so this is the only record of the market
     # the DFS model is measured against. Captured daily by the heavy refresh.
     "dfs_slates": [
-        "draft_group_id", "sport", "label", "game_count", "starts_at", "captured_at",
+        "draft_group_id", "sport", "label", "game_count", "starts_at", "captured_at", "game_type",
     ],
     "dfs_salaries": [
         "draft_group_id", "player_id", "name", "position", "team", "salary", "game", "game_start",
-        "status", "disabled", "captured_at", "draftable_id",
+        "status", "disabled", "captured_at", "draftable_id", "cpt_salary", "cpt_draftable_id", "tier",
     ],
     # Atlas's public DFS projections, each slate's last before its first
     # kickoff (atlas/dfs/record.py). Graded afterwards against what the

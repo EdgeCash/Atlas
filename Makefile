@@ -1,6 +1,6 @@
 PYTHON ?= python3
 
-.PHONY: help install ingest warehouse research all test lint clean-data dfs-capture dfs-history dfs-staging dfs-scoring dfs-benchmarks dfs-model dfs-lineups dfs-slate \
+.PHONY: help install ingest warehouse research all test lint clean-data dfs-capture dfs-history dfs-staging dfs-scoring dfs-benchmarks dfs-model dfs-lineups dfs-slate dfs-kickers \
 	live-refresh live-run live-report live-check live-reproduce \
 	site site-full site-serve site-audit site-shots launch-check \
 	ops-heavy ops-poll ops-social ops-health ops-status ops-crontab \
@@ -229,6 +229,11 @@ dfs-lineups:
 
 dfs-slate:
 	$(PYTHON) -m atlas.dfs.slate --capture
+
+# DFS, the NFL formats: the kicker model Showdown needs, walk-forward, with
+# its scoring checked against DraftKings' live points-per-game.
+dfs-kickers:
+	$(PYTHON) -m atlas.dfs.kicker --reconcile
 
 # NFL plan, step 1: point-in-time team-game tables in their own warehouse.
 nfl-warehouse:

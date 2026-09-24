@@ -61,6 +61,8 @@ def _brute(pool: pd.DataFrame, opts: op.Options) -> float:
                             continue
                         if opts.bring_back and not (team[offense[pos[offense] != "QB"]] == opp[q]).any():
                             continue
+                        if len({frozenset((team[i], opp[i])) for i in idx}) < 2:     # DraftKings: two games
+                            continue
                         best = total
     return best
 
@@ -77,6 +79,88 @@ def test_optimizer_matches_brute_force(seed, opts):
     lineup = op.optimize(pool, opts)[0]
     assert op.valid(lineup, opts) == []
     assert lineup["projection"].sum() == pytest.approx(best, abs=1e-6)
+
+
+def test_classic_never_takes_all_nine_from_one_game():
+    rows = []
+    for pos, n in (("QB", 1), ("RB", 3), ("WR", 4), ("TE", 2), ("DST", 1)):
+        for k in range(n):
+            for team, opp, proj in (("A", "B", 30.0), ("C", "D", 1.0)):     # one game far better than the other
+                side = team if k % 2 == 0 or pos in ("QB", "DST") else opp
+                rows.append({"id": f"{side}{pos}{k}", "position": pos, "team": side,
+                             "opponent": "B" if side == "A" else "A" if side == "B" else "D" if side == "C" else "C",
+                             "salary": 4000, "projection": proj})
+    pool = pd.DataFrame(rows).drop_duplicates("id")
+    lineup = op.optimize(pool, op.Options(no_defense_vs_offense=False))[0]
+    assert op.valid(lineup, op.Options(no_defense_vs_offense=False)) == []
+    assert (lineup["team"].isin(["C", "D"])).sum() >= 1
+
+
+def _showdown_pool(seed: int, n: int = 12) -> pd.DataFrame:
+    rng = np.random.default_rng(seed)
+    rows = []
+    for i in range(n):
+        team = "A" if i % 3 else "B"
+        flex = int(rng.integers(20, 120)) * 100
+        rows.append({"id": 100 + i, "draftable_id": 5000 + i, "cpt_draftable_id": 6000 + i,
+                     "position": ["QB", "RB", "WR", "TE", "K", "DST"][i % 6], "team": team,
+                     "opponent": "B" if team == "A" else "A", "salary": flex, "cpt_salary": int(flex * 1.5),
+                     "projection": float(np.round(rng.uniform(1, 30), 2))})
+    return pd.DataFrame(rows)
+
+
+def _showdown_brute(pool: pd.DataFrame, cap: int = op.SALARY_CAP) -> float:
+    best = -np.inf
+    rows = pool.to_dict(orient="records")
+    for c in rows:
+        others = [r for r in rows if r["id"] != c["id"]]
+        for flex in itertools.combinations(others, 5):
+            if c["cpt_salary"] + sum(r["salary"] for r in flex) > cap:
+                continue
+            if len({c["team"], *(r["team"] for r in flex)}) < 2:
+                continue
+            best = max(best, 1.5 * c["projection"] + sum(r["projection"] for r in flex))
+    return best
+
+
+@pytest.mark.parametrize("seed", range(5))
+def test_showdown_matches_brute_force(seed):
+    pool = _showdown_pool(seed)
+    lineup = op.showdown(pool)[0]
+    assert op.valid_showdown(lineup) == []
+    assert lineup["projection"].sum() == pytest.approx(_showdown_brute(pool), abs=1e-6)
+    captain = lineup.iloc[0]
+    source = pool.set_index("id").loc[captain["id"]]
+    assert captain["salary"] == source["cpt_salary"] and captain["draftable_id"] == source["cpt_draftable_id"]
+    assert captain["projection"] == pytest.approx(1.5 * source["projection"])
+
+
+def test_showdown_takes_both_teams_even_when_one_is_better():
+    pool = _showdown_pool(1).assign(salary=2000, cpt_salary=3000)
+    pool.loc[pool["team"] == "B", "projection"] = 0.1
+    lineup = op.showdown(pool)[0]
+    assert lineup["team"].nunique() == 2
+    several = op.showdown(pool, op.Options(n=3, min_unique=2))
+    assert len(several) == 3 and all(op.valid_showdown(lu) == [] for lu in several)
+    assert len(set(several[0]["id"]) - set(several[1]["id"])) >= 2
+    text = op.upload(several, "Showdown").splitlines()
+    assert text[0] == "CPT,FLEX,FLEX,FLEX,FLEX,FLEX" and int(text[1].split(",")[0]) >= 6000
+
+
+def test_tiers_takes_the_best_of_each_tier_across_two_games():
+    rows = []
+    for t in range(1, 7):
+        for k, (team, opp) in enumerate((("A", "B"), ("C", "D"), ("A", "B"))):
+            rows.append({"id": f"t{t}p{k}", "draftable_id": 10 * t + k, "position": "WR", "team": team,
+                         "opponent": opp, "tier": t, "projection": 20.0 - k if team == "A" else 5.0})
+    pool = pd.DataFrame(rows)
+    lineup = op.tiers(pool)[0]
+    assert op.valid_tiers(lineup) == []
+    brute = max(sum(combo_p for combo_p, _ in combo) for combo in itertools.product(
+        *[[(r["projection"], r["team"]) for r in rows if r["tier"] == t] for t in range(1, 7)])
+        if len({tm for _, tm in combo}) >= 2)
+    assert lineup["projection"].sum() == pytest.approx(brute)
+    assert op.upload([lineup], "Tiers").startswith("T1,T2,T3,T4,T5,T6\n")
 
 
 def test_several_lineups_differ_and_respect_exposure():
