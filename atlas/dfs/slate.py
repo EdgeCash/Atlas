@@ -253,10 +253,12 @@ def lineups(projected: pd.DataFrame, game_type: str = "Classic", opts: op.Option
 
 
 def upcoming(slates: pd.DataFrame, now: datetime | None = None) -> pd.DataFrame:
-    """Every captured slate that has not started, oldest first; a slate captured
-    before formats were recorded is a Classic one."""
+    """Every captured NFL slate that has not started, oldest first; a slate
+    captured before formats were recorded is a Classic one."""
     now = now or datetime.now(timezone.utc)
     s = slates.copy()
+    # The NFL's slates only: college slates are captured for their own model.
+    s = s[s["sport"].fillna("nfl") == "nfl"] if "sport" in s else s
     s["game_type"] = s["game_type"].fillna("Classic") if "game_type" in s else "Classic"
     s["start"] = pd.to_datetime(s["starts_at"], utc=True)
     return s[s["start"] > pd.Timestamp(now)].sort_values(["start", "game_type", "label"]).reset_index(drop=True)

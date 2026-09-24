@@ -1,0 +1,110 @@
+# Atlas — DFS Model Plan: college (DraftKings CFB)
+
+Status: **step 0 done** (see §5). The NFL DFS model (`docs/MODEL_PLAN_DFS.md`)
+is the template: the same lines, the same walk-forward standard, the same
+optimizer and owner page. This plan is what college changes.
+
+---
+
+## 1. What this is
+
+DraftKings' two college salary formats, for the **owner page** first:
+
+- **Classic** (contest type 94): QB, RB, RB, WR, WR, WR, FLEX (RB/WR),
+  SUPERFLEX (QB/RB/WR), $50,000 cap, players from at least two games. There
+  is no tight end slot (tight ends are listed as WR) and no defense.
+- **Showdown Captain Mode** (95): one game, a Captain at 1.5 times salary and
+  points and five UTIL, kickers included, both teams required.
+
+The lines are the NFL's: Atlas's own model, no outside projections, the
+betting market's team totals as an input (as the NFL model uses them),
+lineups only on the encrypted owner page. Public college projections come
+only after the model has a live record, and are a separate decision.
+
+---
+
+## 2. What the data is, measured 24 September 2026
+
+- **DraftKings' pools.** The 12-game Classic slate prices 857 players (121
+  QB, 180 RB, 556 WR); a Showdown about 70, kickers included. DraftKings
+  keeps no history, and there is **no free archive of past college
+  salaries** - so, unlike the NFL, there is no salary benchmark for the past.
+  Atlas's own capture (step 0) builds one from 2026 on.
+- **Player stats.** Atlas's college play-by-play (cfbfastR) is trimmed to
+  team-level fields: no player names. Two sources carry per-player games:
+  - ESPN's box score, one public call per game: passing (C/ATT, yards, TD,
+    INT), rushing, receiving, fumbles lost, return touchdowns, kicking; ESPN
+    athlete ids; field-goal distances from the scoring plays' text. No key;
+    about 870 games a season, so a 2014-2025 backfill is about 10,000 calls,
+    once.
+  - CFBD's `/games/players`, one call per week for every team (the key is
+    already a repository secret): about 200 calls for the same backfill,
+    inside the free tier if the endpoint is on it - untested, since the key
+    is only in GitHub.
+- **What college does not have**: targets, snap counts, an official injury
+  report or weekly depth charts. The NFL model leans on all four. College
+  opportunity has to be read from receptions, carries and yards shares, and
+  whether a player plays from whether he has been playing.
+- **The game.** Atlas's NCAAF game model projects every FBS game; the
+  market's lines are in Atlas's odds history. Both anchor a team's expected
+  points, as in the NFL.
+
+---
+
+## 3. Scoring
+
+DraftKings' college scoring is expected to be the NFL's without the
+defense (passing yards 0.04 and a 300-yard bonus, touchdowns 4 passing and 6
+otherwise, a point a reception, 0.1 a rushing or receiving yard and 100-yard
+bonuses, -1 an interception or fumble lost, 2 a two-point conversion, 6 a
+return touchdown; kickers as in the NFL Showdown). It is settled the way the
+NFL kickers were: Atlas's computed points per game against DraftKings' own
+FPPG for every player in the live pools who has played this season.
+
+---
+
+## 4. Model
+
+The NFL model's shape, with college's inputs:
+
+1. **The game**: each team's projected points from Atlas's NCAAF model and
+   from the line.
+2. **The role**: shrunk, exponentially weighted shares of the team's
+   receptions, receiving yards, carries and passing, and the player's recent
+   scoring - from earlier games only.
+3. **Whether he plays**: from how recently and how often he has played; a
+   transfer's history travels with him.
+4. **Kickers**: the NFL kicker model's form on college data.
+
+---
+
+## 5. Build order
+
+| Step | What | Gate |
+|---|---|---|
+| 0 | Capture DraftKings' college Classic and Showdown slates daily, beside the NFL's (`atlas/sources/draftkings.py`) | **done** — the heavy run's capture now takes both sports; college slates are kept apart from the NFL model's |
+| 1 | Source and scoring: the player-game table 2014-2026 (ESPN box scores, or CFBD if its endpoint is free); a one-time backfill in a manual workflow, then the current week in the heavy run | Atlas's points per game match DraftKings' FPPG for at least 98% of pool players who have played (within 0.1) |
+| 2 | Baseline: recent form shrunk to position, walk-forward | reported, by position |
+| 3 | Model and ranges | beats the baseline's CRPS at QB, RB and WR (and K), ranges cover 76-84% |
+| 4 | Optimizer: Classic with the SUPERFLEX, Showdown with UTIL | matches brute force |
+| 5 | College slates on the owner page | decrypts; every college slate listed |
+| 6 | Public college projections | a decision after the live record, not a step |
+
+---
+
+## 6. Risks, stated plainly
+
+- **Thinner signal.** Without targets, snaps, injury reports or depth charts
+  the college model will be weaker than the NFL's, and the plays-at-all
+  estimate weakest of all. The gates are against its own baseline; there is
+  no salary to be measured against until Atlas's capture has a season.
+- **Many players, little history.** 857 players on one slate, over a hundred
+  teams, transfers every year.
+- **Undocumented endpoints.** ESPN and DraftKings can change them; each
+  capture fails soft.
+
+---
+
+## 7. What the owner needs to do
+
+- Step 1: run one manual backfill workflow (it will be added then), once.

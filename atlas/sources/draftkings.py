@@ -1,4 +1,4 @@
-"""DraftKings NFL slates and salaries - Classic, Showdown and Tiers - captured into the record.
+"""DraftKings slates and salaries - NFL Classic, Showdown and Tiers; college Classic and Showdown.
 
     python -m atlas.sources.draftkings            # capture today's slates
 
@@ -36,7 +36,8 @@ from atlas.util import _guard_offline, get_logger, http_get, session
 
 LOG = get_logger(__name__)
 
-LOBBY = "https://www.draftkings.com/lobby/getcontests?sport=NFL"
+LOBBY_URL = "https://www.draftkings.com/lobby/getcontests?sport={sport}"
+LOBBY = LOBBY_URL.format(sport="NFL")
 DRAFTABLES = "https://api.draftkings.com/draftgroups/v1/draftgroups/{group}/draftables"
 
 #: DraftKings' contest types for the NFL formats Atlas builds for: the
@@ -45,6 +46,15 @@ DRAFTABLES = "https://api.draftkings.com/draftgroups/v1/draftgroups/{group}/draf
 #: Single Stat is not a lineup, so none of those is captured.
 CLASSIC, SHOWDOWN, TIERS = 21, 96, 51
 GAME_TYPES = {CLASSIC: "Classic", SHOWDOWN: "Showdown", TIERS: "Tiers"}
+#: College (DraftKings' "CFB"): Classic (94: QB / 2 RB / 3 WR / FLEX /
+#: SUPERFLEX, no tight end or defense) and Showdown (95: a Captain and five
+#: UTIL, kickers included). Captured from the start of the college DFS work
+#: (`docs/MODEL_PLAN_DFS_CFB.md`, step 0): DraftKings keeps no history.
+CFB_CLASSIC, CFB_SHOWDOWN = 94, 95
+SPORTS = {
+    "nfl": ("NFL", GAME_TYPES),
+    "cfb": ("CFB", {CFB_CLASSIC: "Classic", CFB_SHOWDOWN: "Showdown"}),
+}
 
 #: Slates further out than this are skipped: their pools and salaries are
 #: not final, and the week's capture will pick them up when they are.
@@ -59,27 +69,29 @@ SLATE_COLUMNS = ["draft_group_id", "sport", "label", "game_count", "starts_at", 
 
 
 def slates(lobby: dict, *, now: datetime | None = None, horizon_days: int = HORIZON_DAYS,
-           types: tuple[int, ...] = tuple(GAME_TYPES)) -> pd.DataFrame:
+           types: tuple[int, ...] = tuple(GAME_TYPES), sport: str = "nfl") -> pd.DataFrame:
     """The lobby's draft groups of these contest types starting within the horizon.
 
     A Classic group's label is DraftKings' suffix ("Thu-Mon", "Early Only"),
     or "Main" for the one it leaves unlabeled; a Showdown's is its game
     ("ATL @ GB"); Tiers is "Tiers"."""
     now = now or datetime.now(UTC)
+    names = SPORTS[sport][1]
     rows = []
     for group in lobby.get("DraftGroups", []) or []:
         kind = group.get("ContestTypeId")
-        if kind not in types:
+        if kind not in types or kind not in names:
             continue
         start = pd.to_datetime(group.get("StartDate"), utc=True, errors="coerce")
         if pd.isna(start) or start > pd.Timestamp(now) + timedelta(days=horizon_days):
             continue
         suffix = (group.get("ContestStartTimeSuffix") or "").strip().strip("()").strip()
-        label = {CLASSIC: suffix or "Main", SHOWDOWN: suffix or "Showdown", TIERS: "Tiers"}[kind]
+        kind_name = names[kind]
+        label = {"Classic": suffix or "Main", "Showdown": suffix or "Showdown", "Tiers": "Tiers"}[kind_name]
         rows.append({
-            "draft_group_id": int(group["DraftGroupId"]), "sport": "nfl", "label": label,
+            "draft_group_id": int(group["DraftGroupId"]), "sport": sport, "label": label,
             "game_count": int(group.get("GameCount") or 0), "starts_at": start.isoformat(),
-            "game_type": GAME_TYPES[kind],
+            "game_type": kind_name,
         })
     return pd.DataFrame(rows, columns=SLATE_COLUMNS)
 
@@ -161,10 +173,14 @@ def capture(store=None, *, fetch=None, now: datetime | None = None) -> dict[str,
             return http_get(url, sess=sess, timeout=30).json()
 
     captured = _now() if now is None else now.replace(microsecond=0).isoformat()
-    try:
-        groups = slates(fetch(LOBBY), now=now)
-    except Exception as error:  # noqa: BLE001 - never fail the run
-        LOG.warning("draftkings lobby unavailable: %s", error)
+    found = []
+    for sport, (code, names) in SPORTS.items():
+        try:
+            found.append(slates(fetch(LOBBY_URL.format(sport=code)), now=now, types=tuple(names), sport=sport))
+        except Exception as error:  # noqa: BLE001 - never fail the run
+            LOG.warning("draftkings %s lobby unavailable: %s", code, error)
+    groups = pd.concat(found, ignore_index=True) if found else pd.DataFrame(columns=SLATE_COLUMNS)
+    if groups.empty:
         return {"slates": 0, "players": 0}
 
     pools = []
@@ -179,13 +195,13 @@ def capture(store=None, *, fetch=None, now: datetime | None = None) -> dict[str,
         store.upsert("dfs_slates", groups.assign(captured_at=captured))
     if not players.empty:
         store.upsert("dfs_salaries", players.assign(captured_at=captured))
-    kinds = groups["game_type"].value_counts().to_dict() if not groups.empty else {}
+    kinds = (groups["sport"] + " " + groups["game_type"]).value_counts().to_dict() if not groups.empty else {}
     LOG.info("draftkings: %d slates %s, %d player rows", len(groups), kinds, len(players))
     return {"slates": int(len(groups)), "players": int(len(players))}
 
 
 def main() -> None:
-    argparse.ArgumentParser(description="Capture DraftKings NFL slates and salaries").parse_args()
+    argparse.ArgumentParser(description="Capture DraftKings NFL and college slates and salaries").parse_args()
     capture()
 
 

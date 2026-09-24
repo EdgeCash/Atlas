@@ -128,3 +128,27 @@ def test_tiers_pool_has_no_salary_and_numbers_its_tiers():
     pool = dk.player_pool(tiers, 8).set_index("player_id")
     assert pool["salary"].isna().all()
     assert pool["tier"].to_dict() == {10: 1, 11: 3, 12: 2}
+
+
+def test_college_slates_are_captured_as_their_own_sport(tmp_path, monkeypatch):
+    monkeypatch.setenv("ATLAS_TRACKING_DIR", str(tmp_path))
+    from atlas.dfs import slate
+    from atlas.live.store import Store
+
+    cfb = {"DraftGroups": [
+        {"DraftGroupId": 11, "ContestTypeId": 94, "ContestStartTimeSuffix": "", "GameCount": 12,
+         "StartDate": "2026-09-26T16:00:00.0000000Z"},
+        {"DraftGroupId": 12, "ContestTypeId": 95, "ContestStartTimeSuffix": " (LIB @ C-C)", "GameCount": 1,
+         "StartDate": "2026-09-24T23:30:00.0000000Z"},
+        {"DraftGroupId": 13, "ContestTypeId": 21, "ContestStartTimeSuffix": "", "GameCount": 13,   # an NFL type
+         "StartDate": "2026-09-27T17:00:00.0000000Z"},
+    ]}
+    got = dk.slates(cfb, now=NOW, types=tuple(dk.SPORTS["cfb"][1]), sport="cfb")
+    assert list(zip(got["draft_group_id"], got["game_type"], got["label"], got["sport"], strict=True)) == [
+        (11, "Classic", "Main", "cfb"), (12, "Showdown", "LIB @ C-C", "cfb")]
+    store = Store.open()
+    dk.capture(store, fetch=lambda url: cfb if "sport=CFB" in url else (LOBBY if "lobby" in url else POOL), now=NOW)
+    recorded = store.read("dfs_slates")
+    assert set(recorded.loc[recorded["sport"] == "cfb", "draft_group_id"]) == {11, 12}
+    # The NFL's slates only reach the NFL model.
+    assert set(slate.upcoming(recorded, NOW)["sport"]) == {"nfl"}
