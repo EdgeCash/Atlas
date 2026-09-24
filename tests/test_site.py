@@ -747,8 +747,11 @@ def test_a_board_offers_every_game_as_a_tile_and_as_a_row():
         card.game_id = 100 + i
     board = render.board_page(cards, sport="ncaaf")
     graded = sum(1 for c in cards if c.grade)
-    assert board.count('class="card card-pad feature game-tile"') == graded
-    assert board.count('class="card game-list view-list"') == board.count('class="featured view-tiles"') >= 1
+    assert board.count('class="card card-pad feature game-tile"') >= graded
+    # A view is one kind of thing: every list on the board has its tiles, so
+    # the Tiles view never mixes rows in among the tiles.
+    assert 'class="card game-list"' not in board
+    assert board.count('class="card game-list view-list"') == board.count('class="featured view-tiles"') >= 2
     for card in cards:
         if card.grade:
             assert board.count(f'data-game="{card.game_id}"') >= 2          # a row and a tile, at least
@@ -757,3 +760,16 @@ def test_a_board_offers_every_game_as_a_tile_and_as_a_row():
     assert 'class="view-btn" data-view="tiles"' in board and 'class="view-btn" data-view="list"' in board
     assert 'localStorage.getItem("atlas-view")' in board
     assert "view-btn" not in render.homepage([_card()], [_nfl_card()])
+
+
+def test_tiles_say_they_open_the_full_card_and_assets_are_versioned():
+    """Every tile carries a Details chip; the stylesheet and script are linked
+    by a content hash, so a deploy never pairs new pages with a cached old
+    stylesheet."""
+    tile = render._featured_cell(_card())
+    assert 'class="details-chip"' in tile and tile.startswith('<a class="card card-pad feature"')
+    board = render.board_page([_card()], sport="ncaaf")
+    assert re.search(r'href="assets/atlas\.css\?v=[0-9a-f]{10}"', board)
+    assert re.search(r'src="assets/atlas\.js\?v=[0-9a-f]{10}"', board)
+    deep = render.layout(title="t", body="", depth=2)
+    assert re.search(r'href="\.\./\.\./assets/atlas\.css\?v=[0-9a-f]{10}"', deep)

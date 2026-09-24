@@ -372,7 +372,10 @@ h3 { margin: 0 0 6px; }
 .featured { display: grid; gap: 10px; grid-template-columns: 1fr; }
 /* The home page's way from a sport's featured row to its full board. */
 .more-link { margin: 12px 0 0; }
-@media (min-width: 760px) { .featured { grid-template-columns: repeat(3, 1fr); } }
+/* Three across needs about 780px: a tile cannot shrink below its widest
+   number ("UMASS -21.5" does not wrap). Two across until there is room. */
+@media (min-width: 560px) { .featured { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 800px) { .featured { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .feature { text-decoration: none; color: inherit; display: block; }
 .feature:hover { border-color: var(--border-strong); }
 .feature-head { display: flex; align-items: center; justify-content: space-between; }
@@ -396,6 +399,15 @@ h3 { margin: 0 0 6px; }
 .feature-score-line > span { white-space: nowrap; }
 .feature-score-dash { color: var(--ink-3); font-weight: 500; }
 .feature-foot { margin: 10px 0 0; }
+/* The way into the full card. The whole tile is the link; the chip is where
+   it says so, so nobody has to guess that a tile opens anything. */
+.feature-end { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; }
+.feature-end > p { flex: 1 1 auto; min-width: 0; }
+.details-chip { flex: none; display: inline-flex; align-items: center; gap: 5px; margin-top: 10px;
+                padding: 5px 11px; border-radius: 99px; border: 1px solid var(--border-strong);
+                font-size: 12.5px; font-weight: 600; color: var(--ink); background: var(--surface); }
+.feature:hover .details-chip, .feature:focus-visible .details-chip {
+  background: var(--ink); color: var(--bg); border-color: var(--ink); }
 /* The one-line version of the same three numbers, for a phone. A featured
    card that is 400px tall means a reader never reaches the board. */
 .feature-line { display: none; }
@@ -729,6 +741,10 @@ footer { display: grid; gap: 4px; }
     font-size: 14px; font-weight: 620; font-variant-numeric: tabular-nums;
   }
   .feature-line-diff { margin-left: auto; font-weight: 500; color: var(--ink-3); }
+  /* On a phone the compact market line needs the tile's full width; the
+     chip takes its own line under it, at the right. */
+  .feature-end { flex-direction: column; align-items: stretch; gap: 0; }
+  .feature-end .details-chip { align-self: flex-end; margin-top: 9px; }
 }
 
 .crest.large { width: 46px; height: 46px; }

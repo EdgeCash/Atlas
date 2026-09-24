@@ -47,6 +47,22 @@ FEEDBACK_EMAIL = "beta@atlas.football"
 #: The default stays production, so nothing changes for a normal build.
 SITE_URL = os.environ.get("ATLAS_SITE_URL", "https://atlas.football").rstrip("/")
 
+
+def asset(name: str) -> str:
+    """``assets/<name>?v=<content hash>``.
+
+    Pages link the stylesheet and script by a name that changes whenever the
+    file does. Pages lets a browser reuse a cached asset for ten minutes and
+    Safari often longer, so a plain name served new pages with the old
+    stylesheet after every deploy - both board views at once, an unstyled
+    switch. A new name is a file the browser has never cached.
+    """
+    import hashlib
+    from pathlib import Path
+
+    body = (Path(__file__).resolve().parent / "assets" / name).read_bytes()
+    return f"assets/{name}?v={hashlib.sha256(body).hexdigest()[:10]}"
+
 #: The sentence that appears on every card, unchanged.
 CARD_DISCLOSURE = (
     "<b>What this card is.</b> Research, analytics and market context. Atlas "
@@ -145,7 +161,7 @@ def layout(*, title: str, body: str, depth: int = 0, description: str = "",
 <meta name="description" content="{esc(meta_description)}">
 <meta name="color-scheme" content="light dark">
 <title>{esc(title)}</title>
-<link rel="stylesheet" href="{root}assets/atlas.css">
+<link rel="stylesheet" href="{root}{asset("atlas.css")}">
 {f'<link rel="canonical" href="{esc(SITE_URL)}/{esc(canonical)}">' if canonical is not None else ""}
 {social}
 {structured}
@@ -1271,7 +1287,7 @@ def board_page(cards: list[Card], *, sport: str = "ncaaf", rivalries: set | None
 
 {_board_section("Rivalries", "played in at least eight of the last nine seasons", rivalry_cards, tiles=True)}
 
-{_board_section("Next kickoffs", "the next five games on the board", upcoming, dates=True)}
+{_board_section("Next kickoffs", "the next five games on the board", upcoming, dates=True, tiles=True)}
 
 {grade_blocks}"""
     else:
@@ -1316,7 +1332,7 @@ def board_page(cards: list[Card], *, sport: str = "ncaaf", rivalries: set | None
   {disclosure}
 </div>
 
-<script src="assets/atlas.js" defer></script>"""
+<script src="{asset("atlas.js")}" defer></script>"""
 
     description = (
         f"Every {info['short']} game this week: the market number, the Atlas "
@@ -1455,9 +1471,12 @@ def _featured_cell(card: Card, *, root: str = "", filterable: bool = False) -> s
       <span class="feature-num">{num(card.model_total)}</span></div>
   </div>
   {_feature_score(card)}
-  <p class="note feature-foot">Difference {signed(difference)} on the total</p>
-  <p class="feature-line">{esc(card.spread_text)} · total {num(card.total.current)}
-    <span class="feature-line-diff">Atlas {signed(difference)}</span></p>
+  <div class="feature-end">
+    <p class="note feature-foot">Difference {signed(difference)} on the total</p>
+    <p class="feature-line">{esc(card.spread_text)} · total {num(card.total.current)}
+      <span class="feature-line-diff">Atlas {signed(difference)}</span></p>
+    <span class="details-chip">Details <span aria-hidden="true">→</span></span>
+  </div>
 </a>"""
 
 
