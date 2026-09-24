@@ -105,28 +105,46 @@ def _slate_payload(out: Path) -> dict:
 
 def payload(index: Path, *, built_at: str | None = None) -> dict:
     """What the owner sees: every slate's lineups and upload file, and the
-    players of the biggest Classic slate by projection."""
+    players of the biggest Classic slate by projection (the NFL's, and
+    college's as well when there are both)."""
     slates = json.loads(index.read_text())["slates"]
     root = index.parent
     outs = [root / str(s["draft_group_id"]) for s in slates]
     classic = [o for o, s in zip(outs, slates, strict=True) if s.get("game_type", "Classic") == "Classic"]
-    biggest = max(classic or outs, key=lambda o: sum(1 for _ in (o / "projections.csv").open()))
-    pool = pd.read_csv(biggest / "projections.csv")
-    starts = pd.to_datetime(pool["game_start"], utc=True, errors="coerce") if "game_start" in pool else None
-    keep = ["name", "position", "team", "opponent", "salary", "status", "projection", "low", "high", "p_play"]
-    pool = pool[[c for c in keep if c in pool]].copy()
-    for c in ("projection", "low", "high"):
-        pool[c] = pool[c].round(1)
-    pool["p_play"] = pool["p_play"].round(2)
-    first = [s for s in slates if s.get("game_type") == "Classic" and s.get("label") == "Main"]
+    nfl = [o for o, s in zip(outs, slates, strict=True) if s.get("sport", "nfl") == "nfl"]
+    # The NFL's biggest Classic pool when there is one, college's otherwise;
+    # and college's beside it when there are both.
+    biggest = _biggest([o for o in classic if o in nfl] or classic or outs)
+    college = [o for o in classic if o not in nfl]
+    players, starts = _players(biggest)
+    extra = {"college_players": _players(_biggest(college))[0]} if college and biggest not in college else {}
+    first = [s for s in slates if s.get("game_type") == "Classic" and s.get("label") == "Main"
+             and s.get("sport", "nfl") == "nfl"]
     return {
         "built_at": built_at or _now(),
         "slate": "Main" if first else slates[0]["label"],
         "draft_group_id": int((first or slates)[0]["draft_group_id"]),
         "first_kickoff": starts.min().isoformat() if starts is not None and starts.notna().any() else None,
         "slates": [_slate_payload(o) for o in outs],
-        "players": json.loads(pool.to_json(orient="records")),
+        "players": players,
+        **extra,
     }
+
+
+def _biggest(outs: list[Path]) -> Path:
+    return max(outs, key=lambda o: sum(1 for _ in (o / "projections.csv").open()))
+
+
+def _players(out: Path) -> tuple[list[dict], pd.Series | None]:
+    """A slate's players by projection, and their kickoffs."""
+    pool = pd.read_csv(out / "projections.csv")
+    starts = pd.to_datetime(pool["game_start"], utc=True, errors="coerce") if "game_start" in pool else None
+    keep = ["name", "position", "team", "opponent", "salary", "status", "projection", "low", "high", "p_play"]
+    pool = pool[[c for c in keep if c in pool]].copy()
+    for c in ("projection", "low", "high"):
+        pool[c] = pool[c].round(1)
+    pool["p_play"] = pool["p_play"].round(2)
+    return json.loads(pool.to_json(orient="records")), starts
 
 
 def _now() -> str:
@@ -166,6 +184,7 @@ def refresh(*, rebuild: bool = True) -> Path:
             players.build()
             environment.build()
             context.build()
+            _college_table()
         from atlas.dfs import slate
 
         index = slate.run_all()
@@ -188,6 +207,17 @@ def refresh(*, rebuild: bool = True) -> Path:
     except Exception as error:  # noqa: BLE001
         LOG.error("owner page not built: %s", type(error).__name__)
         return write(None, reason=f"This refresh could not build the lineups ({type(error).__name__}).")
+
+
+def _college_table() -> None:
+    """College's player-game table from ESPN's box scores, rebuilt with the
+    week's games. A failure costs college its slates, never the NFL's."""
+    from atlas.dfs import cfb_players
+
+    try:
+        cfb_players.build()
+    except Exception as error:  # noqa: BLE001
+        LOG.error("college player table not built: %s", type(error).__name__)
 
 
 def _archive() -> None:

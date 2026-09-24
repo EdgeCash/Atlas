@@ -81,7 +81,8 @@
 
   function download(slate) {
     var blob = new Blob([slate.upload_csv], { type: "text/csv" });
-    var name = "atlas-dk-" + slate.draft_group_id + "-" + (slate.game_type || "Classic").toLowerCase() + ".csv";
+    var name = "atlas-dk-" + (slate.sport || "nfl") + "-" + slate.draft_group_id + "-" +
+      (slate.game_type || "Classic").toLowerCase() + ".csv";
     var a = el("a", { href: URL.createObjectURL(blob), download: name });
     document.body.appendChild(a);
     a.click();
@@ -90,7 +91,8 @@
 
   function slateName(s) {
     var kind = s.game_type || "Classic";
-    return kind + (s.label && s.label !== kind ? " · " + s.label : "") + " · " + eastern(s.starts_at);
+    var sport = s.sport === "cfb" ? "College" : "NFL";
+    return sport + " " + kind + (s.label && s.label !== kind ? " · " + s.label : "") + " · " + eastern(s.starts_at);
   }
 
   function lineupCards(slate, holder) {
@@ -112,6 +114,33 @@
     });
   }
 
+  function poolCard(title, players) {
+    var pool = el("div", { "class": "card card-pad top-gap" });
+    pool.appendChild(el("h3", null, title));
+    var pick = el("select", { "aria-label": "Position" });
+    var seen = {};
+    players.forEach(function (p) { seen[p.position] = true; });
+    ["All", "QB", "RB", "WR", "TE", "K", "DST"].filter(function (p) { return p === "All" || seen[p]; })
+      .forEach(function (p) { pick.appendChild(el("option", { value: p }, p)); });
+    pool.appendChild(pick);
+    var rowsHolder = el("div");
+    pool.appendChild(rowsHolder);
+    function fill() {
+      rowsHolder.textContent = "";
+      var rows = players.filter(function (p) { return pick.value === "All" || p.position === pick.value; })
+        .slice(0, 80)
+        .map(function (p) {
+          return [p.name + (p.status ? " (" + p.status + ")" : ""), p.position, p.team, money(p.salary),
+                  pts(p.projection), pts(p.low) + "–" + pts(p.high),
+                  p.p_play === null || p.p_play === undefined ? "–" : Math.round(p.p_play * 100) + "%"];
+        });
+      rowsHolder.appendChild(table(["Player", "Pos", "Team", "Salary", "Proj", "Range", "Plays"], rows));
+    }
+    pick.addEventListener("change", fill);
+    fill();
+    return pool;
+  }
+
   function render(data) {
     out.textContent = "";
     var slates = data.slates || [];
@@ -120,7 +149,9 @@
     head.appendChild(el("p", { "class": "note" }, "Built " + eastern(data.built_at)));
     var choose = el("select", { "aria-label": "Slate", "class": "owner-slate" });
     slates.forEach(function (s, i) { choose.appendChild(el("option", { value: String(i) }, slateName(s))); });
-    var main = slates.findIndex(function (s) { return s.game_type === "Classic" && s.label === "Main"; });
+    var main = slates.findIndex(function (s) {
+      return s.game_type === "Classic" && s.label === "Main" && (s.sport || "nfl") === "nfl";
+    });
     if (main >= 0) choose.value = String(main);
     head.appendChild(choose);
     var actions = el("div", { "class": "lede-actions" });
@@ -137,27 +168,8 @@
     choose.addEventListener("change", function () { lineupCards(slates[Number(choose.value)], holder); });
     if (slates.length) lineupCards(slates[Number(choose.value)], holder);
 
-    var pool = el("div", { "class": "card card-pad top-gap" });
-    pool.appendChild(el("h3", null, "Every player, by projection"));
-    var pick = el("select", { "aria-label": "Position" });
-    ["All", "QB", "RB", "WR", "TE", "DST"].forEach(function (p) { pick.appendChild(el("option", { value: p }, p)); });
-    pool.appendChild(pick);
-    var rowsHolder = el("div");
-    pool.appendChild(rowsHolder);
-    function fill() {
-      rowsHolder.textContent = "";
-      var rows = data.players.filter(function (p) { return pick.value === "All" || p.position === pick.value; })
-        .slice(0, 80)
-        .map(function (p) {
-          return [p.name + (p.status ? " (" + p.status + ")" : ""), p.position, p.team, money(p.salary),
-                  pts(p.projection), pts(p.low) + "–" + pts(p.high),
-                  p.p_play === null || p.p_play === undefined ? "–" : Math.round(p.p_play * 100) + "%"];
-        });
-      rowsHolder.appendChild(table(["Player", "Pos", "Team", "Salary", "Proj", "Range", "Plays"], rows));
-    }
-    pick.addEventListener("change", fill);
-    fill();
-    out.appendChild(pool);
+    out.appendChild(poolCard("Every player, by projection", data.players || []));
+    if (data.college_players) out.appendChild(poolCard("College: every player, by projection", data.college_players));
   }
 
   form.addEventListener("submit", function (ev) {

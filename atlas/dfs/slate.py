@@ -271,7 +271,8 @@ def index_path() -> Path:
 def run_all(*, capture: bool = False, now: datetime | None = None) -> Path:
     """Every upcoming Classic, Showdown and Tiers slate: one projection of every
     player in any of their pools, then each slate's lineups. The Main slate's
-    projections also go into the public record. Returns the index of what was built."""
+    projections also go into the public record. College's slates follow the
+    NFL's. Returns the index of what was built."""
     from atlas.live.store import Store
 
     store = Store.open()
@@ -279,9 +280,18 @@ def run_all(*, capture: bool = False, now: datetime | None = None) -> Path:
         from atlas.sources import draftkings
 
         draftkings.capture(store)
+    built = _nfl(store, now) + _cfb(store, now)
+    if not built:
+        raise NoSlate("no upcoming slate in the record")
+    index_path().write_text(json.dumps({"slates": built}, indent=1) + "\n")
+    return index_path()
+
+
+def _nfl(store, now: datetime | None) -> list[dict]:
+    """The NFL's upcoming slates: projections, lineups, and the Main slate's record."""
     todo = upcoming(store.read("dfs_slates"), now)
     if todo.empty:
-        raise NoSlate("no upcoming slate in the record")
+        return []
     salaries = store.read("dfs_salaries")
     salaries = salaries[salaries["draft_group_id"].isin(todo["draft_group_id"])]
     salaries = salaries.rename(columns={"player_id": "player_id_dk"})
@@ -312,7 +322,8 @@ def run_all(*, capture: bool = False, now: datetime | None = None) -> Path:
                 "draftable_id", "cpt_draftable_id", "game_start"]
         pool.sort_values("projection", ascending=False)[cols].to_csv(out / "projections.csv", index=False,
                                                                       float_format="%.2f")
-        meta = {"draft_group_id": group, "game_type": kind, "label": label, "starts_at": str(slate["starts_at"])}
+        meta = {"draft_group_id": group, "game_type": kind, "label": label, "starts_at": str(slate["starts_at"]),
+                "sport": "nfl"}
         (out / "slate.json").write_text(json.dumps(meta) + "\n")
         if kind == "Classic" and label == "Main":
             record.save(pool, slate, store, now=now)
@@ -330,10 +341,23 @@ def run_all(*, capture: bool = False, now: datetime | None = None) -> Path:
                 out / "lineups.csv", index=False)
         built.append({**meta, "lineups": len(made)})
         LOG.info("%s %s (%d): %d lineups", kind, label, group, len(made))
-    index_path().write_text(json.dumps({"slates": built}, indent=1) + "\n")
     LOG.info("DFS: %d slates, %d players projected (%d without history)", len(built),
              int(projected["projection"].notna().sum()), int((projected["matched_by"] == "none (no history)").sum()))
-    return index_path()
+    return built
+
+
+def _cfb(store, now: datetime | None) -> list[dict]:
+    """College's upcoming slates (`atlas/dfs/cfb_slate.py`). A failure there
+    is logged by type and passed over: it never costs the NFL its lineups."""
+    from atlas.dfs import cfb_players, cfb_slate
+
+    if not cfb_players.path().exists():
+        return []
+    try:
+        return cfb_slate.run(store, now=now)
+    except Exception as error:  # noqa: BLE001
+        LOG.error("college DFS slates not built: %s", type(error).__name__)
+        return []
 
 
 def main() -> None:

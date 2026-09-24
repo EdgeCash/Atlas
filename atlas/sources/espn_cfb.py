@@ -47,6 +47,9 @@ STAT_COLUMNS = ["pass_cmp", "pass_att", "pass_yds", "pass_td", "pass_int", "rush
                 "fg_0_39", "fg_40_49", "fg_50", "two_pt"]
 COLUMNS = ["season", "week", "season_type", "event", "team", "opponent", "home", "player_id", "name",
            *STAT_COLUMNS]
+#: A season's games: the season in progress is re-read each refresh, so its
+#: upcoming games carry their teams for the live college slates.
+GAME_COLUMNS = ["event", "season", "week", "season_type", "completed", "home", "away", "date"]
 
 
 def box_dir(raw: Path | None = None) -> Path:
@@ -174,11 +177,13 @@ def season_games(season: int, fetch, *, pause: float = PAUSE) -> pd.DataFrame:
             if not e.get("id") or int((e.get("season") or {}).get("year", season)) != season:
                 continue                     # an older board lists placeholders without an id
             comp = (e.get("competitions") or [{}])[0]
+            sides = {c.get("homeAway"): (c.get("team") or {}).get("abbreviation") for c in comp.get("competitors", [])}
             rows.append({"event": str(e["id"]), "season": season, "week": week if kind == 2 else 99,
                          "season_type": "regular" if kind == 2 else "postseason",
-                         "completed": bool(((comp.get("status") or {}).get("type") or {}).get("completed"))})
+                         "completed": bool(((comp.get("status") or {}).get("type") or {}).get("completed")),
+                         "home": sides.get("home"), "away": sides.get("away"), "date": e.get("date")})
         time.sleep(pause)
-    return pd.DataFrame(rows, columns=["event", "season", "week", "season_type", "completed"]).drop_duplicates("event")
+    return pd.DataFrame(rows, columns=GAME_COLUMNS).drop_duplicates("event")
 
 
 def refresh(raw: Path | None = None, *, budget: int = BUDGET, seasons: list[int] | None = None,

@@ -1,6 +1,6 @@
 PYTHON ?= python3
 
-.PHONY: help install ingest warehouse research all test lint clean-data dfs-capture dfs-history dfs-staging dfs-scoring dfs-benchmarks dfs-model dfs-lineups dfs-slate dfs-kickers cfb-players cfb-scoring cfb-baseline cfb-model \
+.PHONY: help install ingest warehouse research all test lint clean-data dfs-capture dfs-history dfs-staging dfs-scoring dfs-benchmarks dfs-model dfs-lineups dfs-slate dfs-kickers cfb-players cfb-scoring cfb-baseline cfb-model cfb-participation cfb-slate \
 	live-refresh live-run live-report live-check live-reproduce \
 	site site-full site-serve site-audit site-shots launch-check \
 	ops-heavy ops-poll ops-social ops-health ops-status ops-crontab \
@@ -250,6 +250,14 @@ cfb-baseline:
 # College DFS, step 3: the model and its ranges, walk-forward.
 cfb-model:
 	$(PYTHON) -m atlas.dfs.cfb_model
+
+# College DFS, step 5: who records a stat, walk-forward; then this week's
+# college slates projected and their lineups written under data/dfs/.
+cfb-participation:
+	$(PYTHON) -m atlas.dfs.cfb_participation
+
+cfb-slate:
+	$(PYTHON) -m atlas.dfs.cfb_slate
 
 # NFL plan, step 1: point-in-time team-game tables in their own warehouse.
 nfl-warehouse:
