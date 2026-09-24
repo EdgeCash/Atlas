@@ -336,6 +336,7 @@ market is v2's ambition, not v1's requirement.
 | 5 | Total model + joint grid (`atlas/models/nfl_total.py`, `make nfl-total`) | **done** — total CRPS 7.36 (naive 7.61, market 7.24); 60×60 grid with the points lattice; P(home) within 0.03 of observed where the NFL lives |
 | 6 | Wire into the card and the grade (`atlas/models/nfl_projection.py`; the live and site layers take a sport) | **done** — `nfl.html` is a board; 17 NFL cards this week; audit passes |
 | 7 | v2: state-dependent drive simulation, only if step 5's exact-score log-score is measurably short of the benchmark | **gate measured; not warranted.** v1.5 grid 6.89 nats against the market's grid through the same lattice at 6.84; the 0.05 is mean accuracy, not the score process |
+| 8 | Early-down EPA as a measurement channel (`atlas/research/nfl_early_down.py`, `nfl_state.EfficiencyRecord`, off by default) | **measured; fails.** Each offence's first- and second-down EPA per play, garbage time out, read as offence, quarterback and home advantage against the opposing defence; v1.2's hyperparameters held, only the weight tuned on the three seasons before each. The tuning switched it off in six seasons of seven; the one it chose it (2021) it cost. 2023–25 CRPS 7.290 either way; pooled 2020–26 7.332 against 7.306; the all-downs control is identical to v1.2. The points and the quarterback channel already carry what it measures (`reports/nfl_early_down.md`) |
 
 Steps 0–1 are done, in a session. What the build established:
 
