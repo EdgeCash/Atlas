@@ -294,3 +294,71 @@ def test_play_history_uses_only_earlier_games():
     assert list(h["games_before"]) == [2, 3, 0]
     assert list(h["weeks_since"]) == [1, 3, 99]
     assert h["snap_after"].iloc[0] == pytest.approx(0.8) and np.isnan(h["snap_after"].iloc[2])
+
+
+# ---------------------------------------------------------------------------
+# College: Classic with the SUPERFLEX, Showdown with UTIL
+# ---------------------------------------------------------------------------
+
+CFB = op.Options(roster=op.CFB_CLASSIC, no_defense_vs_offense=False)
+
+
+def _cfb_pool(seed: int, counts=(("QB", 4), ("RB", 5), ("WR", 7))) -> pd.DataFrame:
+    rng = np.random.default_rng(seed)
+    rows, i = [], 0
+    for position, n in counts:
+        for k in range(n):
+            i += 1
+            team = list(TEAMS)[k % len(TEAMS)] if position == "QB" else rng.choice(list(TEAMS))
+            rows.append({"id": 200 + i, "draftable_id": 7000 + i, "position": position, "team": team,
+                         "opponent": TEAMS[team], "salary": int(rng.integers(30, 90)) * 100,
+                         "projection": float(np.round(rng.uniform(2, 30), 2)),
+                         "game_start": f"2026-09-26T{12 + int(rng.integers(0, 10)):02d}:00:00Z"})
+    return pd.DataFrame(rows)
+
+
+def _cfb_brute(pool: pd.DataFrame, cap: int = op.SALARY_CAP) -> float:
+    """Every eight-player set with a legal shape: 1-2 QB, 2-4 RB, 3-5 WR, two games."""
+    best = -np.inf
+    rows = pool.to_dict(orient="records")
+    for combo in itertools.combinations(range(len(rows)), 8):
+        picked = [rows[i] for i in combo]
+        if sum(r["salary"] for r in picked) > cap:
+            continue
+        n = {p: sum(r["position"] == p for r in picked) for p in ("QB", "RB", "WR")}
+        if not (1 <= n["QB"] <= 2 and 2 <= n["RB"] <= 4 and 3 <= n["WR"] <= 5):
+            continue
+        if len({frozenset((r["team"], r["opponent"])) for r in picked}) < 2:
+            continue
+        best = max(best, sum(r["projection"] for r in picked))
+    return best
+
+
+@pytest.mark.parametrize("seed", range(4))
+def test_college_classic_matches_brute_force(seed):
+    pool = _cfb_pool(seed)
+    best = _cfb_brute(pool)
+    assert best > -np.inf
+    lineup = op.optimize(pool, CFB)[0]
+    assert op.valid(lineup, CFB) == []
+    assert list(lineup["slot"]) == ["QB", "RB", "RB", "WR", "WR", "WR", "FLEX", "S-FLEX"]
+    assert lineup["projection"].sum() == pytest.approx(best, abs=1e-6)
+
+
+def test_college_superflex_takes_a_second_quarterback_when_it_is_best():
+    pool = _cfb_pool(2).assign(salary=4000)
+    pool.loc[pool["position"] == "QB", "projection"] = 40.0                   # quarterbacks far ahead
+    lineup = op.optimize(pool, CFB)[0]
+    assert (lineup["position"] == "QB").sum() == 2
+    assert lineup.loc[lineup["slot"] == "S-FLEX", "position"].item() == "QB"
+    assert lineup.loc[lineup["slot"] == "FLEX", "position"].item() in ("RB", "WR")
+    assert op.upload([lineup], "Classic", "cfb").startswith("QB,RB,RB,WR,WR,WR,FLEX,S-FLEX\n")
+
+
+def test_college_showdown_uses_util_slots():
+    pool = _showdown_pool(3)
+    pool.loc[pool["position"].isin(["TE", "DST"]), "position"] = "WR"
+    lineup = op.showdown(pool, flex_label="UTIL")[0]
+    assert op.valid_showdown(lineup, flex_label="UTIL") == []
+    assert list(lineup["slot"]) == ["CPT"] + ["UTIL"] * 5
+    assert op.upload([lineup], "Showdown", "cfb").startswith("CPT,UTIL,UTIL,UTIL,UTIL,UTIL\n")

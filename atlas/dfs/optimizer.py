@@ -39,6 +39,26 @@ UPLOAD_SLOTS = ["QB", "RB", "RB", "WR", "WR", "WR", "TE", "FLEX", "DST"]
 PASS_CATCHERS = ("WR", "TE")
 
 
+@dataclass(frozen=True)
+class Roster:
+    """A Classic lineup's shape: how many players, how many at each position,
+    the upload file's slots in order, and which positions each flexible slot
+    takes (in the order they are filled - the narrowest first)."""
+    size: int
+    bounds: dict
+    slots: tuple
+    flex: tuple                   # ((slot name, positions), ...)
+
+
+#: NFL Classic: QB, 2 RB, 3 WR, TE, FLEX (RB/WR/TE), DST.
+NFL_CLASSIC = Roster(ROSTER, SLOTS, tuple(UPLOAD_SLOTS), (("FLEX", FLEX),))
+#: College Classic: QB, 2 RB, 3 WR, FLEX (RB/WR) and S-FLEX (QB/RB/WR); no
+#: tight end slot (DraftKings lists them as receivers) and no defense.
+CFB_CLASSIC = Roster(8, {"QB": (1, 2), "RB": (2, 4), "WR": (3, 5)},
+                     ("QB", "RB", "RB", "WR", "WR", "WR", "FLEX", "S-FLEX"),
+                     (("FLEX", ("RB", "WR")), ("S-FLEX", ("QB", "RB", "WR"))))
+
+
 @dataclass
 class Options:
     locks: list = field(default_factory=list)
@@ -51,6 +71,7 @@ class Options:
     min_unique: int = 1
     max_exposure: float = 1.0
     cap: int = SALARY_CAP
+    roster: Roster = NFL_CLASSIC
 
 
 class Infeasible(ValueError):
@@ -79,17 +100,19 @@ def _program(p: pd.DataFrame, opts: Options, earlier: list[set], banned: set):
         hi.append(high)
 
     pos = p["position"].to_numpy()
+    size = opts.roster.size
     add(p["salary"].to_numpy(dtype=float), 0, opts.cap)
-    add(np.ones(n), ROSTER, ROSTER)
-    for position, (least, most) in SLOTS.items():
+    add(np.ones(n), size, size)
+    for position, (least, most) in opts.roster.bounds.items():
         add((pos == position).astype(float), least, most)
+    add(~np.isin(pos, list(opts.roster.bounds)), 0, 0)          # no one the roster has no slot for
     teams = p["team"].to_numpy()
     for team in np.unique(teams):
         add((teams == team).astype(float), 0, opts.max_per_team)
     # DraftKings: players from at least two games - so never all nine from one.
     games = _games(p)
     for game in np.unique(games):
-        add((games == game).astype(float), 0, ROSTER - 1)
+        add((games == game).astype(float), 0, size - 1)
     offense = pos != "DST"
     if opts.no_defense_vs_offense:
         # A defense d rules out every offensive player on the team it faces:
@@ -113,7 +136,7 @@ def _program(p: pd.DataFrame, opts: Options, earlier: list[set], banned: set):
                 add(coef, 0, np.inf)
     ids = p["id"].to_numpy()
     for lineup in earlier:
-        add(np.isin(ids, list(lineup)).astype(float), 0, ROSTER - opts.min_unique)
+        add(np.isin(ids, list(lineup)).astype(float), 0, size - opts.min_unique)
     lower = np.isin(ids, list(opts.locks)).astype(float)
     upper = np.where(np.isin(ids, list(opts.excludes) + list(banned)), 0.0, 1.0)
     if (lower > upper).any():
@@ -149,7 +172,7 @@ def optimize(pool: pd.DataFrame, opts: Options | None = None) -> list[pd.DataFra
                 raise Infeasible(res.message)
             break
         chosen = p[np.round(res.x).astype(int) == 1]
-        lineup = assign_slots(chosen)
+        lineup = assign_slots(chosen, opts.roster)
         lineups.append(lineup)
         earlier.append(set(chosen["id"]))
         for pid in chosen["id"]:
@@ -157,48 +180,56 @@ def optimize(pool: pd.DataFrame, opts: Options | None = None) -> list[pd.DataFra
     return lineups
 
 
-def assign_slots(chosen: pd.DataFrame) -> pd.DataFrame:
-    """Nine players in DraftKings' slot order. The FLEX is the extra player
-    at whichever position has one - the latest to kick off where there is a
-    choice, which keeps the most room for DraftKings' late swap."""
+def assign_slots(chosen: pd.DataFrame, roster: Roster = NFL_CLASSIC) -> pd.DataFrame:
+    """The lineup in DraftKings' slot order. Each position's fixed slots take
+    its earliest kickoffs; the flexible slots take what is left - the latest
+    to kick off, which keeps the most room for DraftKings' late swap."""
     chosen = chosen.copy()
     start = chosen["game_start"] if "game_start" in chosen else pd.Series("", index=chosen.index)
     chosen["_start"] = start.fillna("").astype(str)
-    slots = []
-    flex = None
-    for position in FLEX:
-        g = chosen[chosen["position"] == position].sort_values(["_start", "projection"], ascending=[True, False])
-        least = SLOTS[position][0]
-        if len(g) > least:
-            flex = g.iloc[-1:]
-            g = g.iloc[:-1]
-        slots.append((position, g))
-    out = [chosen[chosen["position"] == "QB"].assign(slot="QB")]
-    for position, g in slots:
-        out.append(g.assign(slot=position))
-    if flex is not None:
-        out.append(flex.assign(slot="FLEX"))
-    out.append(chosen[chosen["position"] == "DST"].assign(slot="DST"))
-    lineup = pd.concat(out).drop(columns="_start").reset_index(drop=True)
-    if list(lineup["slot"]) != UPLOAD_SLOTS:
-        raise ValueError(f"not a Classic lineup: {list(lineup['slot'])}")
-    return lineup
+    chosen = chosen.sort_values(["_start", "projection"], ascending=[True, False])
+    fixed = {slot: roster.slots.count(slot) for slot in dict.fromkeys(roster.slots)
+             if slot not in {name for name, _ in roster.flex}}
+    placed: dict[str, list] = {}
+    left = chosen
+    for slot, count in fixed.items():
+        take = left[left["position"] == slot].head(count)
+        placed[slot] = [row for _, row in take.iterrows()]
+        left = left.drop(take.index)
+    for name, eligible in roster.flex:
+        take = left[left["position"].isin(eligible)].tail(roster.slots.count(name))
+        placed[name] = [row for _, row in take.iterrows()]
+        left = left.drop(take.index)
+    rows = []
+    for slot in roster.slots:
+        if not placed.get(slot):
+            raise ValueError(f"not a Classic lineup: no player for {slot}")
+        rows.append(placed[slot].pop(0).copy())
+        rows[-1]["slot"] = slot
+    if len(left):
+        raise ValueError("not a Classic lineup: players left over")
+    return pd.DataFrame(rows).drop(columns="_start").reset_index(drop=True)
 
 
 def valid(lineup: pd.DataFrame, opts: Options | None = None) -> list[str]:
     """Every rule the lineup breaks; empty when it is legal under ``opts``."""
     opts = opts or Options()
     problems = []
-    if len(lineup) != ROSTER:
+    if len(lineup) != opts.roster.size:
         problems.append(f"{len(lineup)} players")
     if lineup["id"].duplicated().any():
         problems.append("a player twice")
     if lineup["salary"].sum() > opts.cap:
         problems.append(f"salary {lineup['salary'].sum()}")
     counts = lineup["position"].value_counts()
-    for position, (least, most) in SLOTS.items():
+    for position, (least, most) in opts.roster.bounds.items():
         if not least <= counts.get(position, 0) <= most:
             problems.append(f"{counts.get(position, 0)} {position}")
+    if "slot" in lineup and list(lineup["slot"]) != list(opts.roster.slots):
+        problems.append(f"slots {list(lineup['slot'])}")
+    for name, eligible in opts.roster.flex:
+        if "slot" in lineup and not lineup.loc[lineup["slot"] == name, "position"].isin(eligible).all():
+            problems.append(f"{name} holds a position it cannot")
     if lineup["team"].value_counts().max() > opts.max_per_team:
         problems.append("too many from one team")
     if len(set(_games(lineup))) < 2:
@@ -256,7 +287,7 @@ class _Rows:
         return None if res.status != 0 or res.x is None else np.round(res.x).astype(int)
 
 
-def showdown(pool: pd.DataFrame, opts: Options | None = None) -> list[pd.DataFrame]:
+def showdown(pool: pd.DataFrame, opts: Options | None = None, *, flex_label: str = "FLEX") -> list[pd.DataFrame]:
     """Showdown Captain Mode: one game, a Captain and five FLEX under the cap.
 
     The Captain scores 1.5 times his points and costs his Captain salary
@@ -311,7 +342,7 @@ def showdown(pool: pd.DataFrame, opts: Options | None = None) -> list[pd.DataFra
         for col in ("low", "high"):                        # his range scales with his points
             if col in cpt:
                 cpt[col] = CAPTAIN * cpt[col]
-        flex = p[x[n:] == 1].sort_values("projection", ascending=False).assign(slot="FLEX")
+        flex = p[x[n:] == 1].sort_values("projection", ascending=False).assign(slot=flex_label)
         lineup = pd.concat([cpt, flex]).reset_index(drop=True)
         lineups.append(lineup)
         earlier.append(set(lineup["id"]))
@@ -320,10 +351,10 @@ def showdown(pool: pd.DataFrame, opts: Options | None = None) -> list[pd.DataFra
     return lineups
 
 
-def valid_showdown(lineup: pd.DataFrame, opts: Options | None = None) -> list[str]:
+def valid_showdown(lineup: pd.DataFrame, opts: Options | None = None, *, flex_label: str = "FLEX") -> list[str]:
     opts = opts or Options()
     problems = []
-    if list(lineup["slot"]) != SHOWDOWN_SLOTS:
+    if list(lineup["slot"]) != ["CPT"] + [flex_label] * (SHOWDOWN_SIZE - 1):
         problems.append(f"slots {list(lineup['slot'])}")
     if lineup["id"].duplicated().any():
         problems.append("a player twice")
@@ -381,9 +412,17 @@ def valid_tiers(lineup: pd.DataFrame) -> list[str]:
     return problems
 
 
-def upload(lineups: list[pd.DataFrame], game_type: str = "Classic") -> str:
-    """DraftKings' upload file for any of the three formats."""
-    header = {"Classic": UPLOAD_SLOTS, "Showdown": SHOWDOWN_SLOTS, "Tiers": TIER_SLOTS}[game_type]
+#: Each sport's Showdown slot name beside the Captain: DraftKings calls it
+#: FLEX in the NFL and UTIL in college.
+SHOWDOWN_FLEX = {"nfl": "FLEX", "cfb": "UTIL"}
+
+
+def upload(lineups: list[pd.DataFrame], game_type: str = "Classic", sport: str = "nfl") -> str:
+    """DraftKings' upload file for any format, either sport."""
+    header = {
+        ("nfl", "Classic"): UPLOAD_SLOTS, ("nfl", "Showdown"): SHOWDOWN_SLOTS, ("nfl", "Tiers"): TIER_SLOTS,
+        ("cfb", "Classic"): list(CFB_CLASSIC.slots), ("cfb", "Showdown"): ["CPT"] + ["UTIL"] * (SHOWDOWN_SIZE - 1),
+    }[(sport, game_type)]
     lines = [",".join(header)]
     for lineup in lineups:
         lines.append(",".join(str(int(v)) for v in lineup["draftable_id"]))
