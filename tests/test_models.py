@@ -730,3 +730,22 @@ def test_elo_attaches_a_margin_scale_difference():
     out = elo_mod.attach(_elo_games())
     assert {"home_pregame_elo", "away_pregame_elo", "elo_diff"} <= set(out.columns)
     assert out["elo_diff"].iloc[1] == pytest.approx((out["home_pregame_elo"].iloc[1] - out["away_pregame_elo"].iloc[1]) / 25)
+
+
+def test_row_update_generalises_the_sparse_update_and_the_state_can_grow():
+    """A three-term row (offence + quarterback - defence) updates all three,
+    and a two-term row through row_update matches the original sparse update."""
+    spec = _flat_spec()
+    a = kalman.initialise(np.array([1, 2]), np.zeros(2), np.zeros(2), spec)
+    b = kalman.initialise(np.array([1, 2]), np.zeros(2), np.zeros(2), spec)
+    kalman._sparse_update(a, 0, 3, 10.0, spec.sigma ** 2)
+    kalman.row_update(b, [0], [3], 10.0, spec.sigma ** 2)
+    assert np.allclose(a.x, b.x) and np.allclose(a.P, b.P)
+    q = b.add("qb-1", 0.0, 9.0)
+    assert b.value("qb-1") == 0.0 and b.variance("qb-1") == 9.0 and b.P.shape == (5, 5)
+    mean, var = kalman.row_forecast(b, [0, q], [3])
+    assert mean == pytest.approx(b.x[0] - b.x[3]) and var > 0
+    kalman.row_update(b, [0, q], [3], 20.0, spec.sigma ** 2)
+    assert b.value("qb-1") > 0 and b.x[0] > a.x[0]                 # the surprise is shared with the quarterback
+    with pytest.raises(KeyError):
+        b.add("qb-1", 0.0, 1.0)

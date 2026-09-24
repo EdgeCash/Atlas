@@ -49,12 +49,23 @@ TUNING_SEASONS = 3
 WINDOW_SEASONS = 3            # seasons behind the test season that set base points and home advantage
 
 GRID = {
-    "q": (0.0, 0.5, 1.0, 2.0, 4.0),
-    "phi": (0.5, 0.67, 0.85),
-    "p_season": (10.0, 25.0, 50.0),
-    "sigma": (8.5, 9.5, 10.5),
+    "q": (0.0, 0.25, 0.5, 1.0, 2.0),
+    "phi": (0.3, 0.4, 0.5, 0.67),
+    "p_season": (5.0, 10.0, 25.0),
+    "sigma": (7.5, 8.5, 9.5),
 }
-ORDER = ("naive", "elo", "atlas_epa", "state", "market")
+
+#: Step 4: the quarterback state. ``p0`` is a new quarterback's prior
+#: variance and ``new_mean`` its prior mean in points against the team's
+#: offence - the flat backup penalty, as a prior rather than a rule; the
+#: filter replaces it with the player's own record as it accumulates.
+QB_GRID = {"p0": (4.0, 9.0, 16.0), "new_mean": (0.0, -2.0, -4.0)}
+QB_Q = 0.05            # process variance per week on a quarterback
+QB_PHI = 0.9           # between-season regression on a quarterback
+QB_P_SEASON = 1.0      # between-season innovation on a quarterback
+HFA_P0 = 1.0           # prior variance on the fitted home advantage
+HFA_P_SEASON = 0.5     # how much the home advantage may drift between seasons
+ORDER = ("naive", "elo", "atlas_epa", "state", "state_qb", "market")
 
 
 @dataclass(frozen=True)
@@ -65,6 +76,17 @@ class Choice:
     sigma: float
     loglik: float
     seasons: tuple[int, ...]
+
+
+@dataclass(frozen=True)
+class QBChoice:
+    p0: float
+    new_mean: float
+    loglik: float
+    seasons: tuple[int, ...]
+
+
+HFA_KEY = "__hfa__"
 
 
 def _levels(train: pd.DataFrame, season: int) -> tuple[float, float]:
@@ -89,12 +111,156 @@ def _fresh(teams: np.ndarray, phi: float, p_season: float, spec: kalman.Spec) ->
     return kalman.initialise(teams, np.zeros(len(teams)), np.zeros(len(teams)), spec0)
 
 
-def new_season(state: kalman.State, phi: float, p_season: float) -> None:
-    """Regress every strength toward the mean and widen its uncertainty. In place."""
-    state.x *= phi
-    state.P *= phi ** 2
-    state.P[np.diag_indices_from(state.P)] += p_season
+def new_season(state: kalman.State, phi: float, p_season: float, *, qb_phi: float = QB_PHI,
+               qb_p_season: float = QB_P_SEASON, hfa_p_season: float = HFA_P_SEASON) -> None:
+    """Regress every strength toward the mean and widen its uncertainty. In place.
+
+    Team offences and defences use ``phi``/``p_season``; quarterbacks their own,
+    slower, regression; a fitted home advantage keeps its mean and drifts.
+    """
+    n2 = 2 * state.n
+    shrink = np.full(len(state.x), qb_phi)
+    shrink[:n2] = phi
+    add = np.full(len(state.x), qb_p_season)
+    add[:n2] = p_season
+    if HFA_KEY in state.extra:
+        i = state.extra[HFA_KEY]
+        shrink[i], add[i] = 1.0, hfa_p_season
+    state.x *= shrink
+    state.P *= np.outer(shrink, shrink)
+    state.P[np.diag_indices_from(state.P)] += add
     state.week = None
+
+
+# ---------------------------------------------------------------------------
+# Step 4: the quarterback state and a fitted home advantage
+# ---------------------------------------------------------------------------
+
+
+def _advance_qb(state: kalman.State, weeks: int, spec: kalman.Spec, qb_q: float) -> None:
+    """Process noise for teams (``spec``) and quarterbacks (``qb_q``); none on the home advantage."""
+    if weeks <= 0:
+        return
+    n2 = 2 * state.n
+    diag = np.full(len(state.x), qb_q * weeks)
+    diag[:state.n] = spec.q_off * weeks
+    diag[state.n:n2] = spec.q_def * weeks
+    if HFA_KEY in state.extra:
+        diag[state.extra[HFA_KEY]] = 0.0
+    state.P[np.diag_indices_from(state.P)] += diag
+
+
+def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *, p0: float, new_mean: float,
+                  qb_q: float = QB_Q, first_season: bool = False, starters: dict | None = None) -> pd.DataFrame:
+    """Forecast every game with each side's expected starter, then learn from the one who played.
+
+    The expected starter is the depth chart's QB1 for the week (knowable
+    before kickoff), else the last quarterback of record for that team. The
+    update uses the quarterback of record. A quarterback the state has not
+    seen enters at ``new_mean`` with variance ``p0`` - except in the first
+    season, where every starter is an incumbent and enters at zero.
+    ``starters`` carries each team's last quarterback of record across
+    seasons and is updated in place.
+    """
+    g = games.sort_values(["kickoff", "week"])
+    n = state.n
+    starters = {} if starters is None else starters
+    if HFA_KEY not in state.extra:
+        state.add(HFA_KEY, spec.boost, HFA_P0)
+    hfa = state.extra[HFA_KEY]
+    cols = {c: g[c].to_numpy() for c in ("home_team_id", "away_team_id", "home_qb_id", "away_qb_id", "home_qb1_id",
+                                          "away_qb1_id", "actual_margin", "actual_total")}
+    weeks = g["week"].to_numpy(dtype=int)
+    neutral = pd.to_numeric(g["neutral_site"], errors="coerce").fillna(0).to_numpy(dtype=float) \
+        if "neutral_site" in g else np.zeros(len(g))
+    means, sds, hps, aps = (np.full(len(g), np.nan) for _ in range(4))
+    r = spec.sigma ** 2
+
+    def qb_index(qb, team) -> int | None:
+        if qb is None or (isinstance(qb, float) and np.isnan(qb)) or qb is pd.NA:
+            qb = starters.get(team)
+        if qb is None:
+            return None
+        key = ("qb", str(qb))
+        if key not in state.extra:
+            state.add(key, 0.0 if first_season else new_mean, p0)
+        return state.extra[key]
+
+    for i in range(len(g)):
+        week = int(weeks[i])
+        if state.week is None:
+            state.week = week
+        elif week > state.week:
+            _advance_qb(state, week - state.week, spec, qb_q)
+            state.week = week
+        h, a = cols["home_team_id"][i], cols["away_team_id"][i]
+        if h not in state.index or a not in state.index:
+            continue
+        ih, ia = state.index[h], state.index[a]
+        is_home = 0.0 if neutral[i] else 1.0
+        qh = qb_index(cols["home_qb1_id"][i], h)
+        qa = qb_index(cols["away_qb1_id"][i], a)
+        home_plus = [ih] + ([qh] if qh is not None else []) + ([hfa] if is_home else [])
+        away_plus = [ia] + ([qa] if qa is not None else [])
+        mh, _ = kalman.row_forecast(state, home_plus, [n + ia])
+        ma, _ = kalman.row_forecast(state, away_plus, [n + ih])
+        _, var = kalman.row_forecast(state, home_plus + [n + ih], away_plus + [n + ia])
+        means[i], sds[i] = mh - ma, np.sqrt(var + 2.0 * r)
+        hps[i], aps[i] = spec.base + mh, spec.base + ma
+        m, t = cols["actual_margin"][i], cols["actual_total"][i]
+        if np.isnan(m) or np.isnan(t):
+            continue
+        # Learn from who actually played.
+        rh, ra = cols["home_qb_id"][i], cols["away_qb_id"][i]
+        qh_rec = qb_index(rh, h) if not pd.isna(rh) else qh
+        qa_rec = qb_index(ra, a) if not pd.isna(ra) else qa
+        if not pd.isna(rh):
+            starters[h] = rh
+        if not pd.isna(ra):
+            starters[a] = ra
+        home_plus = [ih] + ([qh_rec] if qh_rec is not None else []) + ([hfa] if is_home else [])
+        away_plus = [ia] + ([qa_rec] if qa_rec is not None else [])
+        kalman.row_update(state, home_plus, [n + ia], (t + m) / 2.0 - spec.base, r)
+        kalman.row_update(state, away_plus, [n + ih], (t - m) / 2.0 - spec.base, r)
+    out = pd.DataFrame({"mean": means, "sd": sds, "home_pts": hps, "away_pts": aps}, index=g.index)
+    return out.reindex(games.index)
+
+
+def run_qb(frame: pd.DataFrame, seasons: list[int], *, choice: Choice, p0: float, new_mean: float,
+           levels: dict[int, tuple[float, float]], state: kalman.State | None = None,
+           starters: dict | None = None, teams: np.ndarray | None = None):
+    """Like :func:`run`, with the quarterback state and the fitted home advantage."""
+    if teams is None:
+        teams = np.unique(np.r_[frame["home_team_id"], frame["away_team_id"]])
+    starters = {} if starters is None else starters
+    forecasts = {}
+    first = state is None
+    for i, season in enumerate(seasons):
+        base, hfa = levels[season]
+        spec = _spec(choice.q, choice.sigma, base, hfa)
+        if state is None:
+            state = _fresh(teams, choice.phi, choice.p_season, spec)
+        elif i > 0 or state.week is not None:
+            new_season(state, choice.phi, choice.p_season)
+        forecasts[season] = run_season_qb(frame[frame["season"] == season], state, spec, p0=p0, new_mean=new_mean,
+                                          first_season=(first and i == 0), starters=starters)
+    return forecasts, state, starters
+
+
+def tune_qb(frame: pd.DataFrame, season: int, choice: Choice, levels: dict[int, tuple[float, float]], *,
+            grid: dict = QB_GRID) -> QBChoice:
+    """Pick the quarterback prior on the training seasons, given the season's team hyperparameters."""
+    seasons = [int(s) for s in sorted(frame["season"].unique()) if s < season]
+    scored = seasons[-TUNING_SEASONS:]
+    train = frame[frame["season"] < season]
+    teams = np.unique(np.r_[train["home_team_id"], train["away_team_id"]])
+    best = None
+    for p0, new_mean in itertools.product(grid["p0"], grid["new_mean"]):
+        fcs, _, _ = run_qb(train, seasons, choice=choice, p0=p0, new_mean=new_mean, levels=levels, teams=teams)
+        ll = sum(_loglik(fcs[s], train[train["season"] == s]) for s in scored)
+        if best is None or ll > best.loglik:
+            best = QBChoice(p0, new_mean, ll, tuple(scored))
+    return best
 
 
 def run(frame: pd.DataFrame, seasons: list[int], *, q: float, phi: float, p_season: float, sigma: float,
@@ -152,11 +318,19 @@ def tune(frame: pd.DataFrame, season: int, levels: dict[int, tuple[float, float]
 
 
 def walk_forward(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON, grid: dict = GRID,
-                 min_train_seasons: int = 2):
-    """Tune on the past, forecast the season, score beside the references."""
+                 min_train_seasons: int = 2, qb: bool = True, qb_grid: dict = QB_GRID):
+    """Tune on the past, forecast the season, score beside the references.
+
+    With ``qb`` the quarterback model (step 4) is tuned and scored too, as
+    ``state_qb``, on the same team hyperparameters as ``state``.
+    """
     frame = nb.with_qb_change(elo.attach(frame)).sort_values(["kickoff", "game_id"]).reset_index(drop=True)
+    for c in ("home_qb_id", "away_qb_id", "home_qb1_id", "away_qb1_id"):
+        if c not in frame.columns:
+            frame[c] = pd.NA
     all_seasons = [int(s) for s in sorted(frame["season"].unique())]
     scored, choices, finals = [], {}, {}
+    qb_choices, qb_finals = {}, {}
     for season, train, test in ref.walk_forward(frame, first_test_season=first_test_season,
                                                 min_train_seasons=min_train_seasons):
         levels = {s: _levels(frame[frame["season"] < max(s, all_seasons[0] + 1)], s) for s in all_seasons}
@@ -174,13 +348,30 @@ def walk_forward(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEA
         keep = {k: refs[k] for k in ("naive", "elo", "atlas_epa", "market") if k in refs}
         state_fc = ref.Forecast("state", fc["mean"].to_numpy(dtype=float), fc["sd"].to_numpy(dtype=float),
                                 hfa=levels[season][1])
-        s = evaluate.score(test, {**keep, "state": state_fc}, grid_, season=season)
-        s["qb_change"] = np.tile(test["qb_change"].to_numpy(), len(keep) + 1)
+        models = {**keep, "state": state_fc}
+        if qb:
+            qb_choice = tune_qb(frame, season, choice, levels, grid=qb_grid)
+            qb_choices[season] = qb_choice
+            _, qstate, starters = run_qb(frame[frame["season"] < season], history, choice=choice, p0=qb_choice.p0,
+                                         new_mean=qb_choice.new_mean, levels=levels)
+            qfcs, qstate, _ = run_qb(frame, [season], choice=choice, p0=qb_choice.p0, new_mean=qb_choice.new_mean,
+                                     levels=levels, state=qstate, starters=starters)
+            qfc = qfcs[season]
+            qb_finals[season] = qstate
+            models["state_qb"] = ref.Forecast("state_qb", qfc["mean"].to_numpy(dtype=float),
+                                              qfc["sd"].to_numpy(dtype=float), hfa=qstate.value(HFA_KEY))
+        s = evaluate.score(test, models, grid_, season=season)
+        s["qb_change"] = np.tile(test["qb_change"].to_numpy(), len(models))
         scored.append(s)
-        LOG.info("season %s: q=%.1f phi=%.2f p_season=%.0f sigma=%.1f (tuned on %s); base %.1f hfa %.2f; %d games",
+        LOG.info("season %s: q=%.2f phi=%.2f p_season=%.0f sigma=%.1f (tuned on %s); base %.1f hfa %.2f; %d games%s",
                  season, choice.q, choice.phi, choice.p_season, choice.sigma, choice.seasons,
-                 levels[season][0], levels[season][1], len(test))
-    return pd.concat(scored, ignore_index=True), choices, finals, frame
+                 levels[season][0], levels[season][1], len(test),
+                 f"; qb p0={qb_choices[season].p0:.0f} new={qb_choices[season].new_mean:+.0f} "
+                 f"hfa fitted {qb_finals[season].value(HFA_KEY):.2f}" if qb else "")
+    out = pd.concat(scored, ignore_index=True)
+    out.attrs["qb_choices"] = {s: asdict(c) for s, c in qb_choices.items()}
+    out.attrs["hfa_fitted"] = {s: st.value(HFA_KEY) for s, st in qb_finals.items()}
+    return out, choices, finals, frame
 
 
 def render(scored: pd.DataFrame, choices: dict[int, Choice], finals: dict[int, kalman.State],
@@ -188,6 +379,8 @@ def render(scored: pd.DataFrame, choices: dict[int, Choice], finals: dict[int, k
     md, fmt, summarise = evaluate.markdown, evaluate.formatted, evaluate.summarise
     cols = ["crps", "brier", "log_margin", "mae", "ece"]
     seasons = sorted(choices)
+    qb_choices = scored.attrs.get("qb_choices", {})
+    hfa_fitted = scored.attrs.get("hfa_fitted", {})
     reg = scored[scored["season_type"] == "regular"]
     window = reg[reg["season"].isin(REPORT_SEASONS)]
     parts = [
@@ -195,11 +388,15 @@ def render(scored: pd.DataFrame, choices: dict[int, Choice], finals: dict[int, k
         f"Walk-forward, seasons {seasons[0]}-{seasons[-1]}. The filter runs continuously from 2011; each new "
         "season regresses every team's offence and defence toward the mean by `phi` and widens their "
         "uncertainty by `p_season`, and every game is forecast strictly before kickoff and then assimilated "
-        "(`atlas/models/kalman.py`). Hyperparameters are chosen on the earlier seasons only. No quarterback "
-        "state yet. Same lattice and scoring as the benchmarks.", "",
+        "(`atlas/models/kalman.py`). Hyperparameters are chosen on the earlier seasons only. `state` is the "
+        "team model alone (step 3); `state_qb` adds a quarterback state carried by the player and a fitted, "
+        "slowly drifting home advantage (step 4), forecast with the depth chart's QB1 and updated with the "
+        "quarterback of record. Same lattice and scoring as the benchmarks.", "",
         "## Hyperparameters chosen, per season", "",
         md(pd.DataFrame([{"season": s, "q per week": c.q, "phi": c.phi, "p_season": c.p_season,
-                          "sigma (pts)": c.sigma, "tuned on": ", ".join(map(str, c.seasons))}
+                          "sigma (pts)": c.sigma, "tuned on": ", ".join(map(str, c.seasons)),
+                          **({"QB prior var": qb_choices[s]["p0"], "new QB prior": qb_choices[s]["new_mean"],
+                              "HFA fitted": round(hfa_fitted[s], 2)} if s in qb_choices else {})}
                          for s, c in choices.items()])), "",
         f"## Reporting window, regular season {REPORT_SEASONS[0]}-{REPORT_SEASONS[-1]}", "",
         "The bar (`docs/MODEL_PLAN_NFL.md` §6): beat Elo on every row.", "",
@@ -220,14 +417,14 @@ def render(scored: pd.DataFrame, choices: dict[int, Choice], finals: dict[int, k
     if not q.empty:
         q["quarterback"] = np.where(q["qb_change"] == 1, "a side changed QB", "same quarterbacks")
         parts += ["## The quarterback test, regular season", "",
-                  "Without a quarterback state the model should lose about what Elo loses on these games; "
-                  "step 4 is judged on closing that gap.", "",
+                  "Without a quarterback state the model loses about what Elo loses on these games; "
+                  "step 4 (`state_qb`) is judged on closing that gap.", "",
                   md(fmt(summarise(q, ["quarterback"], order=ORDER), cols)), ""]
     playoffs = scored[scored["season_type"] != "regular"]
     if not playoffs.empty:
         parts += ["## Playoffs (never fitted, always scored)", "", md(fmt(summarise(playoffs, order=ORDER), cols)), ""]
     parts += ["## Reliability, home-win probability (regular season)", ""]
-    for name in ("state", "elo", "market"):
+    for name in ("state", "state_qb", "elo", "market"):
         d = reg[reg["model"] == name]
         if d.empty:
             continue

@@ -69,9 +69,38 @@ class State:
     def frame(self) -> pd.DataFrame:
         n = self.n
         sd = np.sqrt(np.diag(self.P))
-        return pd.DataFrame({"team_id": self.teams, "off": self.x[:n], "def": self.x[n:],
-                             "net": self.x[:n] + self.x[n:],
-                             "sd_off": sd[:n], "sd_def": sd[n:]})
+        return pd.DataFrame({"team_id": self.teams, "off": self.x[:n], "def": self.x[n:2 * n],
+                             "net": self.x[:n] + self.x[n:2 * n],
+                             "sd_off": sd[:n], "sd_def": sd[n:2 * n]})
+
+    # -- extra state elements (quarterbacks, a home advantage) ---------------
+    # Anything past index 2N is an extra element with its own key in ``extra``.
+
+    @property
+    def extra(self) -> dict:
+        if not hasattr(self, "_extra"):
+            object.__setattr__(self, "_extra", {})
+        return self._extra
+
+    def add(self, key, mean: float, variance: float) -> int:
+        """Append one state element, uncorrelated with everything, and return its index."""
+        if key in self.extra:
+            raise KeyError(f"{key!r} is already in the state")
+        k = len(self.x)
+        self.x = np.append(self.x, float(mean))
+        P = np.zeros((k + 1, k + 1))
+        P[:k, :k] = self.P
+        P[k, k] = float(variance)
+        self.P = P
+        self.extra[key] = k
+        return k
+
+    def value(self, key) -> float:
+        return float(self.x[self.extra[key]])
+
+    def variance(self, key) -> float:
+        i = self.extra[key]
+        return float(self.P[i, i])
 
 
 def initialise(teams: np.ndarray, off: np.ndarray, defense: np.ndarray, spec: Spec) -> State:
@@ -127,13 +156,31 @@ def _sparse_update(state: State, plus: int, minus: int, y: float, r: float) -> N
     rank-one covariance update is O(N²) - one BLAS call. This is what makes a
     season of ~750 games over ~270 states take well under a second.
     """
+    row_update(state, [plus], [minus], y, r)
+
+
+def row_update(state: State, plus: list[int], minus: list[int], y: float, r: float) -> None:
+    """Scalar Kalman update for a row with +1 at each of ``plus`` and -1 at each of ``minus``.
+
+    The general form of :func:`_sparse_update`: a home team's points are its
+    offence plus its quarterback plus the home advantage minus the opposing
+    defence, and every term is a column of P.
+    """
     P = state.P
-    Ph = P[:, plus] - P[:, minus]
-    s = float(Ph[plus] - Ph[minus]) + r
+    Ph = P[:, plus].sum(axis=1) - (P[:, minus].sum(axis=1) if minus else 0.0)
+    s = float(Ph[plus].sum() - Ph[minus].sum()) + r
     k = Ph / s
-    innovation = y - (state.x[plus] - state.x[minus])
+    innovation = y - float(state.x[plus].sum() - state.x[minus].sum())
     state.x += k * innovation
     P -= np.outer(k, Ph)
+
+
+def row_forecast(state: State, plus: list[int], minus: list[int]) -> tuple[float, float]:
+    """Mean and variance of ``sum(x[plus]) - sum(x[minus])`` under the state."""
+    idx = np.array([*plus, *minus])
+    sign = np.r_[np.ones(len(plus)), -np.ones(len(minus))]
+    sub = state.P[np.ix_(idx, idx)]
+    return float(state.x[plus].sum() - state.x[minus].sum()), float(sign @ sub @ sign)
 
 
 def update(state: State, home, away, home_pts: float, away_pts: float, is_home: float,

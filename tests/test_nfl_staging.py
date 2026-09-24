@@ -179,3 +179,32 @@ def test_the_nfl_state_runs_walk_forward_and_beats_naive(nfl_frame):
     final = finals[SEASONS[1]].frame()
     assert len(final) == 8 and final["net"].abs().max() > 0
     assert "## The quarterback test" in ns.render(scored, choices, finals, nfl_frame)
+
+
+def test_a_switch_to_an_unseen_quarterback_lowers_the_forecast():
+    """Two teams, one game a week. When the home side's expected starter is a
+    quarterback the state has never seen, the forecast drops by the new-QB
+    prior; when the incumbent is back, it recovers."""
+    from atlas.models import kalman, nfl_state as ns
+
+    spec = ns._spec(0.0, 9.0, 22.0, 2.0)
+    state = kalman.initialise(np.array([1, 2]), np.zeros(2), np.zeros(2),
+                              kalman.Spec(**{**spec.__dict__, "p0_off": 4.0, "p0_def": 4.0}))
+    kick = pd.Timestamp("2024-09-08", tz="UTC")
+
+    def game(week, home_qb1, home_qb, margin=3.0):
+        return {"game_id": f"g{week}", "season": 2024, "week": week, "kickoff": kick + pd.Timedelta(days=7 * week),
+                "home_team_id": 1, "away_team_id": 2, "home_qb1_id": home_qb1, "home_qb_id": home_qb,
+                "away_qb1_id": "qb-b", "away_qb_id": "qb-b", "actual_margin": margin, "actual_total": 44.0,
+                "neutral_site": 0}
+
+    games = pd.DataFrame([game(1, "qb-a", "qb-a"), game(2, "qb-a", "qb-a"), game(3, "qb-new", "qb-new"),
+                          game(4, "qb-a", "qb-a")])
+    starters: dict = {}
+    for incumbent in ("qb-a", "qb-b"):                           # seen in earlier seasons, so at zero
+        state.add(("qb", incumbent), 0.0, 9.0)
+    fc = ns.run_season_qb(games, state, spec, p0=9.0, new_mean=-4.0, first_season=False, starters=starters)
+    assert fc.loc[2, "mean"] < fc.loc[1, "mean"] - 2.0          # the unseen starter costs most of the prior
+    assert fc.loc[3, "mean"] > fc.loc[2, "mean"]                 # the incumbent's return gives it back
+    assert ("qb", "qb-new") in state.extra and state.value(("qb", "qb-new")) > -4.0   # it learned from week 3
+    assert starters[1] == "qb-a" and state.value(ns.HFA_KEY) > 0
