@@ -137,6 +137,7 @@ class Card:
     cautions: list[str] = field(default_factory=list)
     postseason: bool = False
     sport: str = "ncaaf"
+    matchup: object | None = None          # atlas.site.matchup.Matchup, attached by the build
 
     # -- derived -----------------------------------------------------------
 

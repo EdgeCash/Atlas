@@ -302,6 +302,7 @@ def card_page(card: Card, *, bands: dict, overall_band,
         '<div class="tier2">',
         _open_market(card),
         _open_projection(card),
+        _open_matchup(card),
         _open_grade(card),
         _open_drivers(card),
         _open_movement(card),
@@ -584,6 +585,90 @@ def _open_projection(card: Card) -> str:
     return _panel("Projection detail",
                   "the projected score, the chance of winning, the total's range and the most likely exact score",
                   _s3_projection(card, bare=True) + _s4_difference(card, bare=True))
+
+
+def _open_matchup(card: Card) -> str:
+    m = card.matchup
+    if m is None:
+        return ""
+    return _panel("Matchup",
+                  f"how each offence compares with the defence it faces, season to date, "
+                  f"ranked among {m.teams} {m.universe}",
+                  _matchup_body(card))
+
+
+def _matchup_value(stat, value: float | None) -> str:
+    if value is None:
+        return "—"
+    if stat.kind == "pct":
+        return pct(value, 0)
+    if stat.key == "turnover_margin":
+        return signed(value, 2)
+    return num(value, 2 if stat.kind == "rate" else 1)
+
+
+def _matchup_rank(stat, rank: int | None, teams: int) -> str:
+    if rank is None:
+        return ""
+    if stat.higher_is_better is None:
+        return f'<span class="mu-rank">{_ordinal(rank)} most</span>'
+    tier = " r-top" if rank <= teams / 3 else " r-low" if rank > 2 * teams / 3 else ""
+    return f'<span class="mu-rank{tier}">{_ordinal(rank)}</span>'
+
+
+def _matchup_row(label: str, left_stat, left, right_stat, right, teams: int, sides) -> str:
+    """One figure, the left team against the right. The better rank gets the
+    small crest beside the label; a tie, or a figure with no better (pace),
+    gets none."""
+    lv, lr = left.values.get(left_stat.key), left.ranks.get(left_stat.key)
+    rv, rr = right.values.get(right_stat.key), right.ranks.get(right_stat.key)
+    edge = ""
+    if left_stat.higher_is_better is not None and lr is not None and rr is not None and lr != rr:
+        side = sides[0] if lr < rr else sides[1]
+        mark = (f'<img class="crest tiny" src="../assets/logos/{esc(side.logo)}" alt="" width="18" height="18">'
+                if side.logo else "")
+        edge = f'<span class="mu-edge">{mark}<span class="sr">edge {esc(side.short)}</span></span>'
+    left_win = " win" if edge and lr < rr else ""
+    right_win = " win" if edge and rr < lr else ""
+    return f"""<div class="mu-row">
+  <div class="mu-val{left_win}">{_matchup_value(left_stat, lv)}{_matchup_rank(left_stat, lr, teams)}</div>
+  <div class="mu-stat">{esc(label)}{edge}</div>
+  <div class="mu-val right{right_win}">{_matchup_value(right_stat, rv)}{_matchup_rank(right_stat, rr, teams)}</div>
+</div>"""
+
+
+def _matchup_body(card: Card) -> str:
+    from atlas.site.matchup import PAIR_LABELS, PAIRS, SITUATIONAL
+
+    m = card.matchup
+    away, home = card.away, card.home
+
+    def head(left: str, right: str) -> str:
+        return f"""<div class="mu-head"><span>{left}</span><span class="mu-vs">vs</span>
+  <span class="right">{right}</span></div>"""
+
+    def group(off_side, off_line, def_side, def_line) -> str:
+        rows = "".join(
+            _matchup_row(PAIR_LABELS[o.key], o, off_line, d, def_line, m.teams, (off_side, def_side))
+            for o, d in PAIRS)
+        return (f'<div class="mu-group">{head(esc(off_side.short) + " offence", esc(def_side.short) + " defence")}'
+                f"{rows}</div>")
+
+    situational = "".join(
+        _matchup_row(s.label, s, m.away, s, m.home, m.teams, (away, home))
+        for s in SITUATIONAL if s.key in m.away.values and s.key in m.home.values)
+    through = f" through {esc(m.through)}" if m.through else ""
+    sacks = ("College counts sack yardage as rushing, as the NCAA does."
+             if card.sport == "ncaaf" else "Passing yards are net of sack yardage, as the NFL counts them.")
+    return f"""<p class="note">Season to date{through}: {esc(away.short)} {_plural(m.away.games, "game")},
+  {esc(home.short)} {_plural(m.home.games, "game")}. Ranks are among {m.teams} {esc(m.universe)}, 1st the best;
+  the crest marks which side ranks better on each line.</p>
+{group(away, m.away, home, m.home)}
+{group(home, m.home, away, m.away)}
+<div class="mu-group">{head(esc(away.short), esc(home.short))}
+  <div class="mu-sub">Situational</div>{situational}</div>
+<p class="note top-gap">Figures come from completed games only, so every one was known before kickoff. They are
+  raw, not adjusted for opponents - All drivers has Atlas's adjusted view. {esc(sacks)}</p>"""
 
 
 def _open_grade(card: Card) -> str:

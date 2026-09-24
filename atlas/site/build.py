@@ -43,6 +43,8 @@ def build(out: Path | None = None, *, social_cards: bool = True,
             "`python -m atlas.warehouse.build --include-scheduled`"
         )
     nfl_cards = _nfl_cards(horizon=horizon, refresh_meta=refresh_meta)
+    _attach_matchups(cards, "ncaaf")
+    _attach_matchups(nfl_cards, "nfl")
 
     bands = grading.calibration_bands()
     overall = grading.overall(bands)
@@ -218,6 +220,26 @@ def _nfl_context(nfl_cards) -> tuple[dict, dict, dict]:
     except Exception as error:  # noqa: BLE001 - a team page without a profile is still a page
         LOG.warning("NFL team pages without a profile or results: %s", error)
         return {}, {}, {}
+
+
+def _attach_matchups(cards, sport: str) -> None:
+    """The statistical matchup panel's figures. A failure costs the panel, never the card."""
+    if not cards:
+        return
+    from atlas.site import matchup
+
+    try:
+        if sport == "nfl":
+            from atlas.research.nfl_dataset import load_nfl_frame
+
+            frame = load_nfl_frame()
+        else:
+            from atlas.research.dataset import load_research_frame
+
+            frame = load_research_frame()
+        matchup.attach(cards, frame, sport)
+    except Exception as error:  # noqa: BLE001 - logged; the cards publish without the panel
+        LOG.warning("no %s matchup panels this build: %s", sport, error)
 
 
 def _pool() -> dict:
