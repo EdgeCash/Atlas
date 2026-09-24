@@ -100,6 +100,7 @@ def build(out: Path | None = None, *, social_cards: bool = True,
                 team, cards=nfl_cards, pool=nfl_pool, results=nfl_results.get(team.team_id, []),
                 freshness=stamps))
     (out / "premium.html").write_text(render.premium_page())
+    (out / "scoreboard.html").write_text(render.scoreboard_page())
 
     social_slugs = {c.slug for c in _spread_of_grades(
         [c for c in cards if c.grade], SOCIAL_LIMIT)} if social_cards else set()

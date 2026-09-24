@@ -140,6 +140,7 @@ def layout(*, title: str, body: str, depth: int = 0, description: str = "",
         ("Home", f"{root}index.html", "home"),
         ("NCAAF", f"{root}ncaaf.html", "ncaaf"),
         ("NFL", f"{root}nfl.html", "nfl"),
+        ("Scores", f"{root}scoreboard.html", "scores"),
         ("Research", f"{root}research.html", "research"),
         ("Premium", f"{root}premium.html", "premium"),
         ("About", f"{root}about.html", "about"),
@@ -162,6 +163,7 @@ def layout(*, title: str, body: str, depth: int = 0, description: str = "",
 <meta name="color-scheme" content="light dark">
 <title>{esc(title)}</title>
 <link rel="stylesheet" href="{root}{asset("atlas.css")}">
+<script src="{root}{asset("games.js")}" defer></script>
 {f'<link rel="canonical" href="{esc(SITE_URL)}/{esc(canonical)}">' if canonical is not None else ""}
 {social}
 {structured}
@@ -306,6 +308,7 @@ def card_page(card: Card, *, bands: dict, overall_band,
         _open_reliability(card, bands, overall_band),
         "</div>",
         f'<div class="disclosure card-foot">{CARD_DISCLOSURE}</div>',
+        games_blob([card]),
     ]))
     description = (
         f"{card.title}: market {card.spread_text}, total "
@@ -417,6 +420,7 @@ def _hero(card: Card, home_accent: str, away_accent: str) -> str:
     {_team_column(card.home, align="home")}
   </div>
   <div class="hero-meta-row">{esc(" · ".join(bits))}</div>
+  <div class="hero-follow">{_follow_button(card)}</div>
 </div>"""
 
 
@@ -1332,6 +1336,7 @@ def board_page(cards: list[Card], *, sport: str = "ncaaf", rivalries: set | None
   {disclosure}
 </div>
 
+{games_blob(cards)}
 <script src="{asset("atlas.js")}" defer></script>"""
 
     description = (
@@ -1387,6 +1392,7 @@ def homepage(cards: list[Card], nfl_cards: list[Card] | None = None, *, bands: d
 
 {"".join(sections)}
 
+{games_blob([*featured_cards(cards, "ncaaf"), *featured_cards(nfl_cards, "nfl")])}
 <div class="disclosure top-gap">
   <b>Why these games.</b> College matchups between ranked teams come first; in the NFL, the games between
   the highest-rated teams on Atlas's own model. The grade breaks ties. Being featured says a game is a big
@@ -1400,9 +1406,80 @@ def homepage(cards: list[Card], nfl_cards: list[Card] | None = None, *, bands: d
                   social=social_tags(title="Atlas Sports Intelligence", description=description, url=""))
 
 
+def scoreboard_page() -> str:
+    """My scoreboard: the games a reader follows, with live scores.
+
+    Nothing about it is on the server. The list lives in the reader's browser,
+    stored from the page the game was followed on, and the scores come to it
+    straight from ESPN's public scoreboard. It is a way to keep up with games
+    without leaving - no record, no tally, no projection and nothing about the
+    market.
+    """
+    body = """<div class="board-head">
+  <h1>My scoreboard</h1>
+  <span class="board-note">The games you follow, with live scores</span>
+</div>
+
+<p class="note" id="scores-status" aria-live="polite"></p>
+
+<div id="scoreboard" class="scoreboard"></div>
+
+<div class="card card-pad" id="scores-empty">
+  <p class="note banner-text">You are not following any games yet. Tap <b>☆ Follow</b> on any game on the
+    <a href="ncaaf.html">NCAAF</a> or <a href="nfl.html">NFL</a> board, or on a card, and it appears here
+    with its live score.</p>
+</div>
+
+<div class="disclosure top-gap">
+  <b>Saved on this device.</b> The games you follow are kept in this browser only - Atlas has no
+  accounts and never sees the list. Scores come to your browser directly from ESPN's public scoreboard and
+  refresh every minute while a game you follow is on. A game drops off four days after it is played.
+</div>"""
+    description = "Follow games from the Atlas boards and see their live scores in one place."
+    return layout(title="My scoreboard | Atlas", body=body, active="scores",
+                  description=description, canonical="scoreboard.html")
+
+
 def _row_crests(card: Card, root: str = "") -> str:
     return (f'<span class="row-crests">{_logo(card.away, size="small", root=root)}'
             f'{_logo(card.home, size="small", root=root)}</span>')
+
+
+def _follow_button(card: Card, *, compact: bool = False) -> str:
+    """Follow a game onto My scoreboard. Hidden until the script runs: without
+    it the button could do nothing, and a button that does nothing is a bug."""
+    cls = "follow compact" if compact else "follow"
+    return (f'<button class="{cls}" type="button" data-follow="{card.game_id}" aria-pressed="false" hidden '
+            f'aria-label="Follow {esc(card.title)} on My scoreboard">'
+            f'<span class="follow-icon" aria-hidden="true">☆</span><span class="follow-text">Follow</span></button>')
+
+
+def _game_record(card: Card) -> dict:
+    """What My scoreboard needs to show a followed game without this page:
+    stored in the reader's browser when they follow it.
+
+    Who, when and where the card is - never Atlas's numbers. A machine-readable
+    projection is one copy-paste from being a feed of numbers with no card
+    around them (the same rule as the structured data), and a scoreboard needs
+    the score, not the projection."""
+    def side(s) -> dict:
+        return {"abbr": s.abbr, "short": s.short, "logo": f"assets/logos/{s.logo}" if s.logo else None}
+
+    return {
+        "id": str(card.game_id), "sport": card.sport, "title": card.title,
+        "kickoff": card.kickoff.isoformat(), "date": eastern(card.kickoff).strftime("%Y%m%d"),
+        "when": day_clock(card.kickoff), "path": card.path,
+        "away": side(card.away), "home": side(card.home),
+    }
+
+
+def games_blob(cards: list[Card]) -> str:
+    """Every game on a page, for the Follow buttons, as one JSON block."""
+    import json
+
+    payload = json.dumps({str(c.game_id): _game_record(c) for c in cards}, separators=(",", ":"))
+    payload = payload.replace("</", "<\\/")          # a team name can never close the script
+    return f'<script type="application/json" id="atlas-games">{payload}</script>'
 
 
 def _game_attrs(card: Card) -> str:
@@ -1432,10 +1509,12 @@ def _game_row(card: Card, *, dates: bool = False) -> str:
     ranks = f' <span class="rank">#{best}</span>' if best else ""
     when = day_clock(card.kickoff) if dates else clock(card.kickoff)
     meta = " · ".join(filter(None, [when, card.tv]))
-    return f"""<a class="game-row" href="{esc(card.path)}" {_game_attrs(card)}>
+    # The row is a container whose title link stretches across it, so the
+    # whole row still opens the card and the Follow button is a real button.
+    return f"""<div class="game-row" {_game_attrs(card)}>
   <div class="game-main">
     <div class="row-teams">{_row_crests(card)}
-      <span class="game-teams">{esc(card.title)}{ranks}</span></div>
+      <a class="stretch game-teams" href="{esc(card.path)}">{esc(card.title)}</a>{ranks}</div>
     <div class="game-meta">{esc(meta)}</div>
   </div>
   <div class="game-right">
@@ -1444,8 +1523,9 @@ def _game_row(card: Card, *, dates: bool = False) -> str:
       <div class="game-meta">{esc(diff_text)}</div>
     </div>
     {grade_pill(card)}
+    {_follow_button(card, compact=True)}
   </div>
-</a>"""
+</div>"""
 
 
 def _plural(count: int, noun: str) -> str:
@@ -1458,9 +1538,9 @@ def _featured_cell(card: Card, *, root: str = "", filterable: bool = False) -> s
     difference = card.total_difference
     classes = "card card-pad feature game-tile" if filterable else "card card-pad feature"
     attrs = f" {_game_attrs(card)}" if filterable else ""
-    return f"""<a class="{classes}"{attrs} href="{root}{esc(card.path)}">
+    return f"""<article class="{classes}"{attrs}>
   <div class="feature-head">{_row_crests(card, root=root)}{grade_pill(card)}</div>
-  <h3 class="feature-title">{esc(card.title)}</h3>
+  <h3 class="feature-title"><a class="stretch" href="{root}{esc(card.path)}">{esc(card.title)}</a></h3>
   <p class="note feature-meta">{esc(day_clock(card.kickoff))}{esc(" · " + card.tv if card.tv else "")}</p>
   <div class="feature-nums">
     <div><span class="stat-label">Market</span>
@@ -1475,9 +1555,10 @@ def _featured_cell(card: Card, *, root: str = "", filterable: bool = False) -> s
     <p class="note feature-foot">Difference {signed(difference)} on the total</p>
     <p class="feature-line">{esc(card.spread_text)} · total {num(card.total.current)}
       <span class="feature-line-diff">Atlas {signed(difference)}</span></p>
-    <span class="details-chip">Details <span aria-hidden="true">→</span></span>
+    <div class="feature-actions">{_follow_button(card)}
+      <span class="details-chip">Details <span aria-hidden="true">→</span></span></div>
   </div>
-</a>"""
+</article>"""
 
 
 def _feature_score(card: Card) -> str:

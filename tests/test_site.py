@@ -266,14 +266,16 @@ def test_every_section_is_still_on_the_page_behind_a_panel():
 
 
 def test_the_panels_are_native_and_need_no_javascript():
-    """The card runs no code. The only <script> a card may carry is the
-    structured-data block, which browsers do not execute - it is markup for
-    search engines and it cannot open a panel."""
+    """The card's panels run no code: they are native <details>. The one script
+    a card loads is the deferred Follow script, and the Follow button is
+    hidden until it runs, so without it the card loses nothing it shows."""
     page = _page(_card())
     assert page.count("<details") >= 6
-    assert "<script src=" not in page
-    scripts = re.findall(r"<script[^>]*>", page)
-    assert all('type="application/ld+json"' in tag for tag in scripts), scripts
+    scripts = re.findall(r'<script src="([^"]+)"([^>]*)>', page)
+    assert [(src.split("?")[0], rest.strip()) for src, rest in scripts] == [("../assets/games.js", "defer")]
+    assert re.search(r'<button class="follow"[^>]* hidden ', page)
+    inline = [tag for tag in re.findall(r"<script[^>]*>", page) if "src=" not in tag]
+    assert all('type="application/ld+json"' in tag or 'type="application/json"' in tag for tag in inline), inline
 
 
 def test_a_card_carries_structured_data_for_the_game_and_nothing_more():
@@ -767,9 +769,39 @@ def test_tiles_say_they_open_the_full_card_and_assets_are_versioned():
     by a content hash, so a deploy never pairs new pages with a cached old
     stylesheet."""
     tile = render._featured_cell(_card())
-    assert 'class="details-chip"' in tile and tile.startswith('<a class="card card-pad feature"')
+    assert 'class="details-chip"' in tile and tile.startswith('<article class="card card-pad feature"')
+    assert f'<a class="stretch" href="{_card().path}">' in tile
     board = render.board_page([_card()], sport="ncaaf")
     assert re.search(r'href="assets/atlas\.css\?v=[0-9a-f]{10}"', board)
     assert re.search(r'src="assets/atlas\.js\?v=[0-9a-f]{10}"', board)
     deep = render.layout(title="t", body="", depth=2)
     assert re.search(r'href="\.\./\.\./assets/atlas\.css\?v=[0-9a-f]{10}"', deep)
+
+
+def test_every_game_can_be_followed_and_carries_its_details():
+    """Follow buttons on tiles, rows and the card, each backed by the page's
+    game data; the scoreboard page lists no games of its own and says where
+    the list lives."""
+    import json
+
+    cards = [_card(), _card(model_margin=4.0)]
+    for i, card in enumerate(cards):
+        card.game_id = 700 + i
+    board = render.board_page(cards, sport="ncaaf")
+    blob = json.loads(re.search(r'<script type="application/json" id="atlas-games">(.+?)</script>', board).group(1))
+    assert set(blob) == {"700", "701"}
+    record = blob["700"]
+    assert record["path"] == cards[0].path and record["date"].isdigit() and len(record["date"]) == 8
+    # Who, when and where - never Atlas's numbers or the market's.
+    assert set(record) == {"id", "sport", "title", "kickoff", "date", "when", "path", "away", "home"}
+    assert board.count('data-follow="700"') >= 2                       # its row and its tile
+    assert '<button class="follow compact"' in board                   # the row's star
+    assert "<a class=\"game-row\"" not in board                       # rows are containers now
+    home = render.homepage(cards, [])
+    assert 'data-follow="700"' in home and 'id="atlas-games"' in home
+    sb = render.scoreboard_page()
+    assert 'id="scoreboard"' in sb and 'id="scores-empty"' in sb and "Saved on this device" in sb
+    assert 'id="atlas-games"' not in sb
+    assert 'href="scoreboard.html" aria-current="page">Scores' in sb
+    text = _visible_text(sb)
+    assert not any(re.search(rf"\b{w}\b", text) for w in FORBIDDEN if w not in ("unit", "units")), text[:300]
