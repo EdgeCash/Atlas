@@ -48,7 +48,9 @@ FIRST_TEST_SEASON = 2021
 #: regression is toward *that*, not the league mean), whether the team opens
 #: under a new head coach, and the interaction of the two - a new coach's team
 #: regresses to the programme harder.
-PROGRAMME = ["sp_program_mean", "new_coach", "new_coach_x_overach"]
+#: The portal (v1.2): quality-weighted incoming transfers. Outgoing ones are
+#: what returning production already measures and add nothing beside it.
+PROGRAMME = ["sp_program_mean", "new_coach", "new_coach_x_overach", "portal_in"]
 FEATURES = {
     "net": ["sp_plus", "fpi", "talent", "recruiting_rank", "returning_production", *PROGRAMME],
     "off": ["sp_plus_off", "fpi", "talent", "recruiting_rank", "returning_production", *PROGRAMME],

@@ -39,6 +39,9 @@ def build_talent(raw: Path, staging: Path, games: pd.DataFrame, teams: pd.DataFr
 
     out = _attach(out, _coach_table(raw, teams, seasons), "new_coach")
     out = _attach(out, _program_table(raw, teams, seasons), "sp_program_mean")
+    portal = _portal_table(raw, teams, seasons)
+    out = _attach(out, portal[["season", "team_id", "value"]], "portal_in")
+    out = _attach(out, portal[["season", "team_id", "out"]].rename(columns={"out": "value"}), "portal_out")
 
     empty = [
         name
@@ -48,6 +51,7 @@ def build_talent(raw: Path, staging: Path, games: pd.DataFrame, teams: pd.DataFr
             ("returning production", "returning_production_diff"),
             ("coaches", "new_coach_diff"),
             ("SP+ history", "sp_program_mean_diff"),
+            ("transfer portal", "portal_in_diff"),
         )
         if out[col].isna().all()
     ]
@@ -168,6 +172,54 @@ def _program_table(raw: Path, teams: pd.DataFrame, seasons: list[int]) -> pd.Dat
                                     "value": mean.to_numpy()}))
     if not frames:
         return pd.DataFrame(columns=["season", "team_id", "value"])
+    return pd.concat(frames, ignore_index=True)
+
+
+#: A transfer's weight is his 247 composite rating where CFBD has one; where
+#: it has only stars, the typical rating for that many; where neither, the
+#: floor - most unrated transfers come up from FCS or below.
+STAR_RATING = {2: 0.78, 3: 0.84, 4: 0.90, 5: 0.97}
+UNRATED_TRANSFER = 0.75
+#: The portal opened at its current scale in 2021; CFBD has nothing before.
+#: Earlier seasons get zero on both sides - no transfers, not unknown ones -
+#: so the prior can be fitted across the boundary.
+PORTAL_FIRST_SEASON = 2021
+
+
+def _portal_table(raw: Path, teams: pd.DataFrame, seasons: list[int]) -> pd.DataFrame:
+    """Quality-weighted transfers in (``value``) and out (``out``) per team-season.
+
+    Both are pre-season facts: the portal's windows close before the season.
+    Incoming quality is the new information; outgoing is largely what
+    returning production already measures.
+    """
+    resolve = teams_stage.name_resolver(teams)
+    files = {s: raw / "cfbd" / f"portal_{s}.parquet" for s in seasons}
+    loaded = {s: pd.read_parquet(p) for s, p in files.items() if p.exists()}
+    if not any("origin" in df.columns and not df.empty for df in loaded.values()):
+        return pd.DataFrame(columns=["season", "team_id", "value", "out"])   # no portal data at all: nothing to stage
+    frames = []
+    for season in seasons:
+        df = loaded.get(season, pd.DataFrame())
+        if df.empty or "origin" not in df.columns:
+            if season >= PORTAL_FIRST_SEASON:
+                continue                                   # no file yet: unknown, not zero
+            ids = teams.loc[teams["season"] == season, "team_id"].dropna().astype("int64").unique()
+            frames.append(pd.DataFrame({"season": season, "team_id": ids, "value": 0.0, "out": 0.0}))
+            continue
+        weight = pd.to_numeric(df.get("rating"), errors="coerce")
+        weight = weight.fillna(pd.to_numeric(df.get("stars"), errors="coerce").map(STAR_RATING)).fillna(UNRATED_TRANSFER)
+        dest = resolve(season, df["destination"].astype("string"))
+        origin = resolve(season, df["origin"].astype("string"))
+        incoming = weight.groupby(dest).sum()
+        outgoing = weight.groupby(origin).sum()
+        table = pd.DataFrame({"value": incoming, "out": outgoing}).fillna(0.0)
+        table.index.name = "team_id"
+        table = table.reset_index()
+        table["team_id"] = table["team_id"].astype("int64")
+        frames.append(table.assign(season=season)[["season", "team_id", "value", "out"]])
+    if not frames:
+        return pd.DataFrame(columns=["season", "team_id", "value", "out"])
     return pd.concat(frames, ignore_index=True)
 
 

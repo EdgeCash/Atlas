@@ -145,8 +145,8 @@ def fetch_returning_production(raw: Path, season: int) -> Path:
 
 
 def fetch_portal(raw: Path, season: int) -> Path:
-    """Players who entered the portal ahead of ``season``. Cached for the
-    step-4 portal adjustment; nothing stages it until it has been measured."""
+    """Players who entered the portal ahead of ``season``. Staged by
+    `atlas/staging/talent.py` as quality-weighted transfers in and out."""
     return _cached(raw, "portal", season, "/player/portal", {"year": season})
 
 
@@ -213,6 +213,7 @@ STAGED: dict[str, tuple[str, str]] = {
     "recruiting": ("talent", "home_recruiting_rank"),
     "returning": ("talent", "home_returning_production"),
     "coaches": ("talent", "home_new_coach"),
+    "portal": ("talent", "home_portal_in"),
 }
 
 

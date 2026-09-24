@@ -189,3 +189,21 @@ def test_new_coach_and_program_mean_are_preseason_facts(tmp_path):
     assert out.loc[1, "home_sp_program_mean"] == 15.0   # 2019-2020: 2021 has not been played
     assert out.loc[2, "home_sp_program_mean"] == 20.0   # 2019-2021; 2022's 99 is the future
     assert out.loc[2, "away_sp_program_mean"] == -5.0
+
+
+def test_transfer_portal_quality_is_summed_in_and_out_and_zero_before_the_portal(tmp_path):
+    from atlas.staging import talent
+
+    raw = tmp_path / "raw"
+    (raw / "cfbd").mkdir(parents=True)
+    teams = pd.DataFrame({"season": [2020, 2020, 2022, 2022], "school": ["A", "B", "A", "B"], "team_id": [1, 2, 1, 2]})
+    pd.DataFrame({"season": 2022, "firstName": ["x"] * 3, "lastName": ["y"] * 3, "position": ["QB", "WR", "DL"],
+                  "origin": ["B", "Elsewhere", "A"], "destination": ["A", "A", "Elsewhere"],
+                  "transferDate": ["2022-01-05"] * 3, "rating": [0.90, None, None], "stars": [4, 3, None],
+                  "eligibility": ["Immediate"] * 3}).to_parquet(raw / "cfbd" / "portal_2022.parquet", index=False)
+    games = pd.DataFrame({"game_id": [1, 2], "season": [2020, 2022], "home_team_id": [1, 1], "away_team_id": [2, 2]})
+    out = talent.build_talent(raw, tmp_path, games, teams).set_index("game_id")
+    assert out.loc[2, "home_portal_in"] == pytest.approx(0.90 + 0.84)      # rating, then the three-star typical
+    assert out.loc[2, "home_portal_out"] == pytest.approx(0.75)            # unrated: the floor
+    assert out.loc[2, "away_portal_out"] == pytest.approx(0.90) and out.loc[2, "away_portal_in"] == 0.0
+    assert out.loc[1, "home_portal_in"] == 0.0 and out.loc[1, "away_portal_out"] == 0.0   # 2020: no portal
