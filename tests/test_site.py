@@ -736,3 +736,24 @@ def test_a_featured_tile_shows_the_projected_score_away_first():
     assert tile.index(f"{card.away.abbr} {away}") < tile.index(f"{card.home.abbr} {home}")
     card.projection = None
     assert "Atlas projects" not in render._featured_cell(card)
+
+
+def test_a_board_offers_every_game_as_a_tile_and_as_a_row():
+    """Tiles/List: each graded game is a row and a tile under its grade, both
+    carrying what the filters read; featured tiles are not filtered; the
+    switch sits in the filter bar."""
+    cards = [_card(), _card(model_margin=4.0), _card(model_margin=-12.0)]
+    for i, card in enumerate(cards):
+        card.game_id = 100 + i
+    board = render.board_page(cards, sport="ncaaf")
+    graded = sum(1 for c in cards if c.grade)
+    assert board.count('class="card card-pad feature game-tile"') == graded
+    assert board.count('class="card game-list view-list"') == board.count('class="featured view-tiles"') >= 1
+    for card in cards:
+        if card.grade:
+            assert board.count(f'data-game="{card.game_id}"') >= 2          # a row and a tile, at least
+    featured = re.search(r"<h2>Featured</h2>.*?</section>", board, re.S).group(0)
+    assert "data-game" not in featured
+    assert 'class="view-btn" data-view="tiles"' in board and 'class="view-btn" data-view="list"' in board
+    assert 'localStorage.getItem("atlas-view")' in board
+    assert "view-btn" not in render.homepage([_card()], [_nfl_card()])

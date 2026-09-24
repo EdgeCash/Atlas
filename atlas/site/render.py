@@ -1114,17 +1114,28 @@ def _is_rivalry(card: Card, pairs: set) -> bool:
     return is_rivalry(card, pairs)
 
 
+def _views(cards: list[Card], *, dates: bool) -> str:
+    """The same games twice, as rows and as tiles; the reader's view decides
+    which shows (the stylesheet, and the Tiles/List switch on the board)."""
+    rows = "".join(_game_row(c, dates=dates) for c in cards)
+    tiles = "".join(_featured_cell(c, filterable=True) for c in cards)
+    return (f'<div class="card game-list view-list">{rows}</div>'
+            f'<div class="featured view-tiles">{tiles}</div>')
+
+
 def _board_section(title: str, note: str, cards: list[Card], *,
-                   dates: bool = False) -> str:
-    """One block of rows. Silent when it has nothing in it - an empty section
-    with a heading tells a reader the product is broken."""
+                   dates: bool = False, tiles: bool = False) -> str:
+    """One block of games. Silent when it has nothing in it - an empty section
+    with a heading tells a reader the product is broken. ``tiles`` offers the
+    block in both views; without it, it is a list in either."""
     if not cards:
         return ""
-    rows = "".join(_game_row(c, dates=dates) for c in cards)
+    games = (_views(cards, dates=dates) if tiles
+             else f'<div class="card game-list">{"".join(_game_row(c, dates=dates) for c in cards)}</div>')
     return f"""<section class="section tight">
   <div class="section-head"><h2>{esc(title)}</h2>
     <span class="note">{esc(note)}</span></div>
-  <div class="card game-list">{rows}</div>
+  {games}
 </section>"""
 
 
@@ -1134,12 +1145,11 @@ def _grade_block(letters: tuple, label: str, caption: str,
     if not block:
         return ""
     block.sort(key=lambda c: (-c.grade.score, c.kickoff))
-    rows = "".join(_game_row(c, dates=True) for c in block)
     return f"""<section class="section tight">
   <div class="section-head"><h2>{esc(label)}</h2>
     <span class="note">{_plural(len(block), "card")}</span></div>
   <p class="note section-caption">{esc(caption)}</p>
-  <div class="card game-list">{rows}</div>
+  {_views(block, dates=True)}
 </section>"""
 
 
@@ -1245,16 +1255,21 @@ def board_page(cards: list[Card], *, sport: str = "ncaaf", rivalries: set | None
   <input class="search" type="search" id="q" placeholder="Search teams"
          aria-label="Search games" autocomplete="off">
   {conf_select}
+  <span class="bar-break" aria-hidden="true"></span>
   <button class="filter" data-grade="" aria-pressed="true">All</button>
   <button class="filter" data-grade="A" aria-pressed="false">A &amp; up</button>
   <button class="filter" data-grade="B" aria-pressed="false">B &amp; up</button>
   <button class="filter" data-grade="low" aria-pressed="false">Marked down</button>
+  <div class="view-toggle" role="group" aria-label="Show games as">
+    <button class="view-btn" data-view="tiles" aria-pressed="false">Tiles</button>
+    <button class="view-btn" data-view="list" aria-pressed="false">List</button>
+  </div>
 </div>
 <p class="note board-count" id="count" aria-live="polite"></p>
 
 {_featured_row(cards, sport)}
 
-{_board_section("Rivalries", "played in at least eight of the last nine seasons", rivalry_cards)}
+{_board_section("Rivalries", "played in at least eight of the last nine seasons", rivalry_cards, tiles=True)}
 
 {_board_section("Next kickoffs", "the next five games on the board", upcoming, dates=True)}
 
@@ -1277,7 +1292,10 @@ def board_page(cards: list[Card], *, sport: str = "ncaaf", rivalries: set | None
     disclosure += """ Atlas publishes research, analytics and market context; it does not publish selections,
   does not size anything and does not project returns."""
 
-    body = f"""<div class="board-head">
+    # A reader's Tiles/List choice is applied before the games paint, so a
+    # returning reader never sees the other view flash first.
+    body = f"""<script>try{{var v=localStorage.getItem("atlas-view");if(v==="tiles"||v==="list")document.documentElement.dataset.view=v}}catch(e){{}}</script>
+<div class="board-head">
   <h1>{esc(info["name"])}</h1>
   <span class="board-note">{esc(week)} · {_plural(len(cards), "card")} · {strong} graded A or better ·
     {weak} marked down</span>
@@ -1371,9 +1389,9 @@ def _row_crests(card: Card, root: str = "") -> str:
             f'{_logo(card.home, size="small", root=root)}</span>')
 
 
-def _game_row(card: Card, *, dates: bool = False) -> str:
-    """One board row. ``dates`` adds the day, which a section that is not
-    grouped by day needs and a day block does not."""
+def _game_attrs(card: Card) -> str:
+    """What the board's filters read, on a row and on a tile alike: the game,
+    the text a search matches, the conferences and the grade."""
     grade_letter = card.grade.letter if card.grade else ""
     grade_key = ("low" if card.grade and card.grade.low
                  else grade_letter.rstrip("+") if grade_letter else "")
@@ -1382,6 +1400,13 @@ def _game_row(card: Card, *, dates: bool = False) -> str:
         card.home.abbr, card.away.abbr, card.home.conference, card.away.conference,
     ])).lower()
     confs = "|".join(filter(None, [card.home.conference, card.away.conference]))
+    return (f'data-game="{card.game_id}" data-search="{esc(haystack)}" data-conf="{esc(confs)}" '
+            f'data-grade="{esc(grade_key)}"')
+
+
+def _game_row(card: Card, *, dates: bool = False) -> str:
+    """One board row. ``dates`` adds the day, which a section that is not
+    grouped by day needs and a day block does not."""
     difference = card.total_difference
     diff_text = (f"Atlas {signed(difference)}" if difference is not None
                  else "no Atlas number")
@@ -1391,8 +1416,7 @@ def _game_row(card: Card, *, dates: bool = False) -> str:
     ranks = f' <span class="rank">#{best}</span>' if best else ""
     when = day_clock(card.kickoff) if dates else clock(card.kickoff)
     meta = " · ".join(filter(None, [when, card.tv]))
-    return f"""<a class="game-row" href="{esc(card.path)}"
-   data-search="{esc(haystack)}" data-conf="{esc(confs)}" data-grade="{esc(grade_key)}">
+    return f"""<a class="game-row" href="{esc(card.path)}" {_game_attrs(card)}>
   <div class="game-main">
     <div class="row-teams">{_row_crests(card)}
       <span class="game-teams">{esc(card.title)}{ranks}</span></div>
@@ -1412,9 +1436,13 @@ def _plural(count: int, noun: str) -> str:
     return f"{count} {noun}" if count == 1 else f"{count} {noun}s"
 
 
-def _featured_cell(card: Card, *, root: str = "") -> str:
+def _featured_cell(card: Card, *, root: str = "", filterable: bool = False) -> str:
+    """One matchup tile. ``filterable`` makes it a board tile the search and
+    grade filters act on; a featured tile stays put while a reader filters."""
     difference = card.total_difference
-    return f"""<a class="card card-pad feature" href="{root}{esc(card.path)}">
+    classes = "card card-pad feature game-tile" if filterable else "card card-pad feature"
+    attrs = f" {_game_attrs(card)}" if filterable else ""
+    return f"""<a class="{classes}"{attrs} href="{root}{esc(card.path)}">
   <div class="feature-head">{_row_crests(card, root=root)}{grade_pill(card)}</div>
   <h3 class="feature-title">{esc(card.title)}</h3>
   <p class="note feature-meta">{esc(day_clock(card.kickoff))}{esc(" · " + card.tv if card.tv else "")}</p>

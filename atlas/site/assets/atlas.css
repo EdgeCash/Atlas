@@ -632,6 +632,15 @@ footer { display: grid; gap: 4px; }
 }
 .board-bar .search { flex: 1 1 190px; min-width: 0; padding: 7px 12px; font-size: 14px; }
 .board-bar .select, .board-bar .filter { flex: none; padding: 7px 12px; font-size: 13px; }
+/* The Tiles/List switch: one pill split in two, so it reads as a choice of
+   view and not as two more grade filters. */
+.bar-break { display: none; }
+.view-toggle { flex: none; display: flex; border: 1px solid var(--border-strong); border-radius: 99px;
+               overflow: hidden; background: var(--surface); }
+.view-btn { border: 0; background: transparent; color: var(--ink-2); cursor: pointer;
+            font: inherit; font-size: 13px; padding: 7px 12px; }
+.view-btn + .view-btn { border-left: 1px solid var(--border-strong); }
+.view-btn[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
 
 .game-row .crest { margin-right: 2px; }
 .row-teams { display: flex; align-items: center; gap: 7px; min-width: 0; }
@@ -735,6 +744,16 @@ footer { display: grid; gap: 4px; }
   .board-bar .search { flex: 3 1 150px; min-width: 0; }
   .board-bar .select { flex: 2 1 118px; min-width: 0; font-size: 12.5px; }
   .board-bar .filter { flex: 1 1 auto; font-size: 12.5px; padding: 7px 8px; }
+  /* Row one is the search (and the conference list); row two is the grade
+     filters and the Tiles/List switch - a forced break, so no button is ever
+     left alone on a row and stretched across it. */
+  .bar-break { display: block; flex: 0 0 100%; height: 0; }
+  .view-btn { font-size: 12.5px; padding: 7px 9px; }
+}
+@media (max-width: 360px) {
+  .board-bar { gap: 5px; }
+  .board-bar .filter { font-size: 12px; padding: 7px 6px; }
+  .view-btn { font-size: 12px; padding: 7px 7px; }
 }
 
 /* --------------------------------------------------------------- about --- */
@@ -842,4 +861,32 @@ footer { display: grid; gap: 4px; }
 }
 @media (max-width: 350px) {
   .nav-links { font-size: 12.5px; }
+}
+
+/* ----------------------------------------------------- tiles or list ---- */
+/* Every game on a board is rendered twice, as a row and as a tile; only one
+   shows. With no choice made, the width decides - tiles from 760px, where
+   they sit three across, and the list below, where a tile per game would
+   double the scroll. A reader's choice (html[data-view]) wins over both.
+   Last in the file so these win over .featured's own display. */
+.view-tiles { display: none; }
+@media (min-width: 760px) {
+  .view-list { display: none; }
+  .view-tiles { display: grid; }
+}
+html[data-view="list"] .view-list { display: block; }
+html[data-view="list"] .view-tiles { display: none; }
+html[data-view="tiles"] .view-tiles { display: grid; }
+html[data-view="tiles"] .view-list { display: none; }
+.game-tile[hidden] { display: none; }
+
+/* ----------------------------------------------------- menu and name ---- */
+/* Six menu entries and the full name do not share one row below 600px: the
+   name shortens to "Atlas". Below 460px the menu takes its own row, so the
+   sticky filter bar sits under a taller menu. */
+@media (max-width: 600px) {
+  .logo span { display: none; }
+}
+@media (max-width: 460px) {
+  .board-bar { top: 68px; }
 }
