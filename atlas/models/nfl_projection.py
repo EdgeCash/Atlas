@@ -72,7 +72,7 @@ class Projector:
 
 def _version(season, choice, qb, total, assimilated, last) -> str:
     payload = "|".join([MODEL_NAME, str(season), f"{choice.q},{choice.phi},{choice.p_season},{choice.sigma}",
-                        f"{qb.p0},{qb.new_mean}", ",".join(f"{c:.4f}" for c in total.coef), str(assimilated), last])
+                        f"{qb.p0},{qb.new_mean},{qb.k_epa},{qb.k_obs}", ",".join(f"{c:.4f}" for c in total.coef), str(assimilated), last])
     return hashlib.sha256(payload.encode()).hexdigest()[:12]
 
 
@@ -107,7 +107,7 @@ def fit(frame: pd.DataFrame, *, season: int | None = None, choices=None,
     choice, qb = _choices_for(season, choices, sample, levels)
     history = [s for s in all_seasons if s < season]
     fcs, state, starters = ns.run_qb(completed[completed["season"] < season], history, choice=choice, p0=qb.p0,
-                                     new_mean=qb.new_mean, levels=levels, k_epa=qb.k_epa, record=record)
+                                     new_mean=qb.new_mean, levels=levels, k_epa=qb.k_epa, record=record, k_obs=qb.k_obs)
     train_fc = pd.concat([nt._with_forecasts(completed[completed["season"] == s], fcs[s])
                           for s in history[-ns.TUNING_SEASONS:]], ignore_index=True)
     train_fc = train_fc[train_fc["season_type"] == "regular"]
@@ -119,7 +119,7 @@ def fit(frame: pd.DataFrame, *, season: int | None = None, choices=None,
     this_season = completed[completed["season"] == season]
     if not this_season.empty:
         ns.run_qb(frame, [season], choice=choice, p0=qb.p0, new_mean=qb.new_mean, levels=levels, state=state,
-                  starters=starters, k_epa=qb.k_epa, record=record)
+                  starters=starters, k_epa=qb.k_epa, record=record, k_obs=qb.k_obs)
     else:
         ns.new_season(state, choice.phi, choice.p_season)
     played = pd.concat([this_season["home_team_id"], this_season["away_team_id"]]).value_counts()
@@ -149,7 +149,7 @@ def project(projector: Projector, scheduled: pd.DataFrame) -> pd.DataFrame:
                          index=dict(p.state.index))
     state.extra.update(p.state.extra)
     fc = ns.run_season_qb(rows.assign(actual_margin=np.nan, actual_total=np.nan), state, p.spec, p0=p.qb.p0,
-                          new_mean=p.qb.new_mean, starters=dict(p.starters), k_epa=p.qb.k_epa, record=p.record)
+                          new_mean=p.qb.new_mean, starters=dict(p.starters), k_epa=p.qb.k_epa, record=p.record, k_obs=p.qb.k_obs)
     rows["state_total"] = (fc["home_pts"] + fc["away_pts"]).to_numpy()
     total_mean = p.total.mean(rows)
     support = tm.total_support(nt.MAX_POINTS)

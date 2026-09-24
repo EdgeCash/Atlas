@@ -75,13 +75,13 @@ def run(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON,
         qb = qb_choices.get(season) or ns.tune_qb(frame, season, choice, levels, record=record)
         history = [s for s in all_seasons if s < season]
         fcs, state, starters = ns.run_qb(frame[frame["season"] < season], history, choice=choice, p0=qb.p0,
-                                         new_mean=qb.new_mean, levels=levels, k_epa=qb.k_epa, record=record)
+                                         new_mean=qb.new_mean, levels=levels, k_epa=qb.k_epa, record=record, k_obs=qb.k_obs)
         train_fc = pd.concat([_with_forecasts(frame[frame["season"] == s], fcs[s])
                               for s in history[-ns.TUNING_SEASONS:]], ignore_index=True)
         train_fc = train_fc[train_fc["season_type"] == "regular"]
         tfit = tm.fit_total(train_fc, ADJUSTMENTS)
         tfcs, _, _ = ns.run_qb(frame, [season], choice=choice, p0=qb.p0, new_mean=qb.new_mean, levels=levels,
-                               state=state, starters=starters, k_epa=qb.k_epa, record=record)
+                               state=state, starters=starters, k_epa=qb.k_epa, record=record, k_obs=qb.k_obs)
         fc = _with_forecasts(test, tfcs[season])
         treg = train[train["season_type"] == "regular"]
         naive_mean, naive_sd = float(treg["actual_total"].mean()), float(treg["actual_total"].std(ddof=1))

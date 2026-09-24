@@ -298,3 +298,66 @@ def test_a_passer_record_is_strictly_before_kickoff():
     assert n == 60 and epa == pytest.approx(0.3 - rec.league)
     assert rec.before("x", pd.Timestamp("2023-09-10", tz="UTC")) == (0.0, 0.0)
     assert rec.before("nobody", pd.Timestamp("2024-01-01", tz="UTC")) == (0.0, 0.0)
+
+
+def test_a_passer_record_knows_each_game_line():
+    """v1.2: the record also answers for one passer in one game, and carries
+    the per-dropback variance the observation noise scales from."""
+    from atlas.models import nfl_state as ns
+
+    log = pd.DataFrame({
+        "passer_id": ["x", "x", "y"], "game_id": ["g1", "g2", "g1"], "passer_name": ["X", "X", "Y"],
+        "game_date": ["2023-09-10", "2023-09-17", "2023-09-10"],
+        "dropbacks": [30, 30, 30], "qb_epa_per_dropback": [0.4, 0.2, -0.2],
+    })
+    rec = ns.PasserRecord(log)
+    n, epa = rec.game("x", "g1")
+    assert n == 30 and epa == pytest.approx(0.4 - rec.league)
+    assert rec.game("x", "g9") == (0.0, 0.0) and rec.game("nobody", "g1") == (0.0, 0.0)
+    assert rec.play_var > 0 and rec.names == {"x": "X", "y": "Y"}
+    assert ns.PasserRecord(log.drop(columns=["game_id"])).by_game == {}
+
+
+def test_the_epa_channel_separates_the_quarterback_from_the_offence():
+    """v1.2: two sides score the same points all season, but the home passer's
+    EPA per dropback is high and the away passer's low. Without the channel
+    the quarterback states cannot tell; with it, they can."""
+    from atlas.models import kalman
+    from atlas.models import nfl_state as ns
+
+    kick = pd.Timestamp("2024-09-08", tz="UTC")
+    games = pd.DataFrame([{"game_id": f"g{w}", "season": 2024, "week": w, "kickoff": kick + pd.Timedelta(days=7 * w),
+                           "home_team_id": 1, "away_team_id": 2, "home_qb1_id": "qb-a", "home_qb_id": "qb-a",
+                           "away_qb1_id": "qb-b", "away_qb_id": "qb-b", "actual_margin": 0.0, "actual_total": 44.0,
+                           "neutral_site": 1} for w in range(1, 7)])
+    log = pd.DataFrame({"passer_id": ["qb-a", "qb-b"] * 6, "game_id": [f"g{w}" for w in range(1, 7) for _ in (0, 1)],
+                        "game_date": [str((kick + pd.Timedelta(days=7 * w)).date()) for w in range(1, 7) for _ in (0, 1)],
+                        "dropbacks": [35] * 12, "qb_epa_per_dropback": [0.3, -0.3] * 6})
+    rec = ns.PasserRecord(log)
+
+    def run(k_obs):
+        spec = ns._spec(0.0, 9.0, 22.0, 2.0)
+        state = kalman.initialise(np.array([1, 2]), np.zeros(2), np.zeros(2),
+                                  kalman.Spec(**{**spec.__dict__, "p0_off": 4.0, "p0_def": 4.0}))
+        for qb in ("qb-a", "qb-b"):
+            state.add(("qb", qb), 0.0, 9.0)
+        ns.run_season_qb(games, state, spec, p0=9.0, new_mean=-2.0, first_season=False, starters={},
+                         record=rec, k_obs=k_obs)
+        return state
+
+    off, on = run(0.0), run(20.0)
+    assert abs(off.value(("qb", "qb-a")) - off.value(("qb", "qb-b"))) < 0.5   # points alone: nothing to tell
+    assert on.value(("qb", "qb-a")) > 2.0 > -2.0 > on.value(("qb", "qb-b"))    # the channel tells
+    # A quarterback the log does not carry is untouched by the channel.
+    assert ns.quarterbacks(on, rec)["points"].iloc[0] == pytest.approx(on.value(("qb", "qb-a")))
+
+
+def test_qb_choices_round_trip_with_the_observation_gain(tmp_path):
+    from atlas.models import nfl_state as ns
+
+    team = {2024: ns.Choice(0.5, 0.4, 10.0, 8.5, -1.0, (2021, 2022, 2023))}
+    qb = {2024: {"p0": 9.0, "new_mean": -2.0, "loglik": -1.0, "seasons": [2021, 2022, 2023], "k_epa": 15.0,
+                 "k_obs": 20.0}}
+    ns.save_choices(team, qb, tmp_path / "c.json")
+    loaded_team, loaded_qb = ns.load_choices(tmp_path / "c.json")
+    assert loaded_team == team and loaded_qb[2024] == ns.QBChoice(9.0, -2.0, -1.0, (2021, 2022, 2023), 15.0, 20.0)

@@ -62,8 +62,15 @@ GRID = {
 #: filter replaces it with the player's own record as it accumulates.
 #: v1.1 adds ``k_epa``: points of prior per unit of the player's own career
 #: EPA per dropback above the league, shrunk by ``EPA_SHRINK`` dropbacks.
-QB_GRID = {"p0": (4.0, 9.0, 16.0), "new_mean": (0.0, -2.0, -4.0), "k_epa": (0.0, 15.0, 30.0)}
+#: v1.2 adds ``k_obs``: the quarterback's own observation channel. After each
+#: game the quarterback of record's EPA per dropback in it, above the league,
+#: is a second measurement of his state alone - ``k_obs`` points per unit,
+#: with noise variance ``k_obs**2 * play_var / dropbacks`` - so the
+#: quarterback/offence split is identified from more than the points.
+QB_GRID = {"p0": (4.0, 9.0, 16.0), "new_mean": (0.0, -2.0, -4.0), "k_epa": (0.0, 15.0, 30.0),
+           "k_obs": (0.0, 10.0, 20.0, 30.0)}
 EPA_SHRINK = 100.0
+OBS_MIN_DROPBACKS = 10  # fewer is a cameo, not a measurement of the starter
 QB_Q = 0.05            # process variance per week on a quarterback
 QB_PHI = 0.9           # between-season regression on a quarterback
 QB_P_SEASON = 1.0      # between-season innovation on a quarterback
@@ -89,25 +96,41 @@ class QBChoice:
     loglik: float
     seasons: tuple[int, ...]
     k_epa: float = 0.0
+    k_obs: float = 0.0
 
 
 class PasserRecord:
-    """A passer's career dropbacks and EPA per dropback *before* a kickoff.
+    """A passer's career dropbacks and EPA per dropback *before* a kickoff,
+    and his line in each game *after* it.
 
     Built once from the staged passer log; queried when the state meets a
-    quarterback for the first time. Strictly prior games only, by date.
+    quarterback for the first time (strictly prior games only, by date) and,
+    with v1.2, after every game he was the quarterback of record in.
     """
 
     def __init__(self, passers: pd.DataFrame | None) -> None:
         self.by_passer: dict[str, tuple[np.ndarray, np.ndarray, np.ndarray]] = {}
+        self.by_game: dict[tuple[str, str], tuple[float, float]] = {}
+        self.names: dict[str, str] = {}
         self.league = 0.0
+        self.play_var = 0.0
         if passers is None or passers.empty:
             return
         p = passers.dropna(subset=["passer_id", "game_date"]).copy()
         p["date"] = pd.to_datetime(p["game_date"], errors="coerce")
         p = p.dropna(subset=["date"]).sort_values("date")
         weights = p["dropbacks"].to_numpy(dtype=float)
-        self.league = float(np.average(p["qb_epa_per_dropback"].fillna(0).to_numpy(dtype=float), weights=weights))
+        epa = p["qb_epa_per_dropback"].fillna(0).to_numpy(dtype=float)
+        self.league = float(np.average(epa, weights=weights))
+        # Per-dropback variance implied by the game lines: a game's mean over
+        # n dropbacks has variance play_var / n, so its noise scales with the
+        # sample the way a measurement should.
+        self.play_var = float(np.mean(weights * (epa - self.league) ** 2))
+        if "game_id" in p.columns:
+            self.by_game = {(str(pid), str(gid)): (float(n), float(e - self.league))
+                            for pid, gid, n, e in zip(p["passer_id"], p["game_id"], weights, epa, strict=True)}
+        if "passer_name" in p.columns:
+            self.names = dict(zip(p["passer_id"].astype(str), p["passer_name"].astype(str), strict=True))
         for pid, g in p.groupby("passer_id"):
             n = g["dropbacks"].to_numpy(dtype=float)
             self.by_passer[str(pid)] = (g["date"].to_numpy(), np.cumsum(n),
@@ -123,6 +146,10 @@ class PasserRecord:
         if k == 0:
             return 0.0, 0.0
         return float(n[k - 1]), float(s[k - 1] / n[k - 1] - self.league)
+
+    def game(self, passer_id, game_id) -> tuple[float, float]:
+        """(dropbacks, EPA per dropback above league) for one passer in one game; zeros if absent."""
+        return self.by_game.get((str(passer_id), str(game_id)), (0.0, 0.0))
 
 
 HFA_KEY = "__hfa__"
@@ -146,7 +173,8 @@ def load_choices(path: Path) -> tuple[dict[int, Choice], dict[int, QBChoice]] | 
     choices = {int(s): Choice(q=c["q"], phi=c["phi"], p_season=c["p_season"], sigma=c["sigma"], loglik=c["loglik"],
                               seasons=tuple(int(x) for x in c["seasons"])) for s, c in raw.items()}
     qb = {int(s): QBChoice(p0=c["qb"]["p0"], new_mean=c["qb"]["new_mean"], loglik=c["qb"]["loglik"],
-                           seasons=tuple(int(x) for x in c["qb"]["seasons"]), k_epa=c["qb"].get("k_epa", 0.0))
+                           seasons=tuple(int(x) for x in c["qb"]["seasons"]), k_epa=c["qb"].get("k_epa", 0.0),
+                           k_obs=c["qb"].get("k_obs", 0.0))
           for s, c in raw.items() if c.get("qb")}
     return choices, qb
 
@@ -214,7 +242,7 @@ def _advance_qb(state: kalman.State, weeks: int, spec: kalman.Spec, qb_q: float)
 
 def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *, p0: float, new_mean: float,
                   qb_q: float = QB_Q, first_season: bool = False, starters: dict | None = None,
-                  k_epa: float = 0.0, record: PasserRecord | None = None) -> pd.DataFrame:
+                  k_epa: float = 0.0, record: PasserRecord | None = None, k_obs: float = 0.0) -> pd.DataFrame:
     """Forecast every game with each side's expected starter, then learn from the one who played.
 
     The expected starter is the depth chart's QB1 for the week (knowable
@@ -226,7 +254,9 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
     ``EPA_SHRINK`` dropbacks, with variance ``p0`` - except in the first
     season, where every starter is an incumbent and enters at zero.
     ``starters`` carries each team's last quarterback of record across
-    seasons and is updated in place.
+    seasons and is updated in place. With ``k_obs`` (v1.2) the quarterback
+    of record's own EPA per dropback in the game, from ``record``, is a
+    second measurement of his state after the points have been assimilated.
     """
     g = games.sort_values(["kickoff", "week"])
     n = state.n
@@ -241,6 +271,8 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
                                           "away_qb1_id", "home_qb2_id", "away_qb2_id", "home_qb1_out", "away_qb1_out",
                                           "actual_margin", "actual_total")}
     kickoffs = g["kickoff"].to_numpy()
+    game_ids = g["game_id"].to_numpy() if "game_id" in g.columns else np.full(len(g), None)
+    observe = bool(k_obs) and record is not None and bool(record.by_game)
     weeks = g["week"].to_numpy(dtype=int)
     neutral = pd.to_numeric(g["neutral_site"], errors="coerce").fillna(0).to_numpy(dtype=float) \
         if "neutral_site" in g else np.zeros(len(g))
@@ -306,6 +338,13 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
         away_plus = [ia] + ([qa_rec] if qa_rec is not None else [])
         kalman.row_update(state, home_plus, [n + ia], (t + m) / 2.0 - spec.base, r)
         kalman.row_update(state, away_plus, [n + ih], (t - m) / 2.0 - spec.base, r)
+        if observe:
+            for qb, q_idx in ((rh, qh_rec), (ra, qa_rec)):
+                if q_idx is None or pd.isna(qb):
+                    continue
+                n_db, epa = record.game(qb, game_ids[i])
+                if n_db >= OBS_MIN_DROPBACKS:
+                    kalman.row_update(state, [q_idx], [], k_obs * epa, k_obs ** 2 * record.play_var / n_db)
     out = pd.DataFrame({"mean": means, "sd": sds, "home_pts": hps, "away_pts": aps}, index=g.index)
     return out.reindex(games.index)
 
@@ -313,7 +352,7 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
 def run_qb(frame: pd.DataFrame, seasons: list[int], *, choice: Choice, p0: float, new_mean: float,
            levels: dict[int, tuple[float, float]], state: kalman.State | None = None,
            starters: dict | None = None, teams: np.ndarray | None = None, k_epa: float = 0.0,
-           record: PasserRecord | None = None):
+           record: PasserRecord | None = None, k_obs: float = 0.0):
     """Like :func:`run`, with the quarterback state and the fitted home advantage."""
     if teams is None:
         teams = np.unique(np.r_[frame["home_team_id"], frame["away_team_id"]])
@@ -329,7 +368,7 @@ def run_qb(frame: pd.DataFrame, seasons: list[int], *, choice: Choice, p0: float
             new_season(state, choice.phi, choice.p_season)
         forecasts[season] = run_season_qb(frame[frame["season"] == season], state, spec, p0=p0, new_mean=new_mean,
                                           first_season=(first and i == 0), starters=starters, k_epa=k_epa,
-                                          record=record)
+                                          record=record, k_obs=k_obs)
     return forecasts, state, starters
 
 
@@ -342,12 +381,13 @@ def tune_qb(frame: pd.DataFrame, season: int, choice: Choice, levels: dict[int, 
     teams = np.unique(np.r_[train["home_team_id"], train["away_team_id"]])
     best = None
     k_grid = grid.get("k_epa", (0.0,)) if record is not None else (0.0,)
-    for p0, new_mean, k_epa in itertools.product(grid["p0"], grid["new_mean"], k_grid):
+    obs_grid = grid.get("k_obs", (0.0,)) if record is not None and record.by_game else (0.0,)
+    for p0, new_mean, k_epa, k_obs in itertools.product(grid["p0"], grid["new_mean"], k_grid, obs_grid):
         fcs, _, _ = run_qb(train, seasons, choice=choice, p0=p0, new_mean=new_mean, levels=levels, teams=teams,
-                           k_epa=k_epa, record=record)
+                           k_epa=k_epa, record=record, k_obs=k_obs)
         ll = sum(_loglik(fcs[s], train[train["season"] == s]) for s in scored)
         if best is None or ll > best.loglik:
-            best = QBChoice(p0, new_mean, ll, tuple(scored), k_epa)
+            best = QBChoice(p0, new_mean, ll, tuple(scored), k_epa, k_obs)
     return best
 
 
@@ -445,10 +485,10 @@ def walk_forward(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEA
             qb_choices[season] = qb_choice
             _, qstate, starters = run_qb(frame[frame["season"] < season], history, choice=choice, p0=qb_choice.p0,
                                          new_mean=qb_choice.new_mean, levels=levels, k_epa=qb_choice.k_epa,
-                                         record=record)
+                                         record=record, k_obs=qb_choice.k_obs)
             qfcs, qstate, _ = run_qb(frame, [season], choice=choice, p0=qb_choice.p0, new_mean=qb_choice.new_mean,
                                      levels=levels, state=qstate, starters=starters, k_epa=qb_choice.k_epa,
-                                     record=record)
+                                     record=record, k_obs=qb_choice.k_obs)
             qfc = qfcs[season]
             qb_finals[season] = qstate
             models["state_qb"] = ref.Forecast("state_qb", qfc["mean"].to_numpy(dtype=float),
@@ -460,11 +500,22 @@ def walk_forward(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEA
                  season, choice.q, choice.phi, choice.p_season, choice.sigma, choice.seasons,
                  levels[season][0], levels[season][1], len(test),
                  f"; qb p0={qb_choices[season].p0:.0f} new={qb_choices[season].new_mean:+.0f} "
-                 f"k_epa={qb_choices[season].k_epa:.0f} hfa fitted {qb_finals[season].value(HFA_KEY):.2f}" if qb else "")
+                 f"k_epa={qb_choices[season].k_epa:.0f} k_obs={qb_choices[season].k_obs:.0f} "
+                 f"hfa fitted {qb_finals[season].value(HFA_KEY):.2f}" if qb else "")
     out = pd.concat(scored, ignore_index=True)
     out.attrs["qb_choices"] = {s: asdict(c) for s, c in qb_choices.items()}
     out.attrs["hfa_fitted"] = {s: st.value(HFA_KEY) for s, st in qb_finals.items()}
+    if qb_finals:
+        out.attrs["quarterbacks"] = quarterbacks(qb_finals[max(qb_finals)], record)
     return out, choices, finals, frame
+
+
+def quarterbacks(state: kalman.State, record: PasserRecord | None = None) -> pd.DataFrame:
+    """Every quarterback the state carries: his points against the offence and the filter's sd."""
+    rows = [{"passer_id": key[1], "quarterback": (record.names.get(key[1]) if record else None) or key[1],
+             "points": float(state.x[i]), "sd": float(np.sqrt(state.P[i, i]))}
+            for key, i in state.extra.items() if isinstance(key, tuple) and key[0] == "qb"]
+    return pd.DataFrame(rows, columns=["passer_id", "quarterback", "points", "sd"]).sort_values("points", ascending=False)
 
 
 def render(scored: pd.DataFrame, choices: dict[int, Choice], finals: dict[int, kalman.State],
@@ -484,12 +535,14 @@ def render(scored: pd.DataFrame, choices: dict[int, Choice], finals: dict[int, k
         "(`atlas/models/kalman.py`). Hyperparameters are chosen on the earlier seasons only. `state` is the "
         "team model alone (step 3); `state_qb` adds a quarterback state carried by the player and a fitted, "
         "slowly drifting home advantage (step 4), forecast with the depth chart's QB1 and updated with the "
-        "quarterback of record. Same lattice and scoring as the benchmarks.", "",
+        "quarterback of record, whose own EPA per dropback in the game is a second measurement of him "
+        "(v1.2, `pts per EPA/dropback, observed`). Same lattice and scoring as the benchmarks.", "",
         "## Hyperparameters chosen, per season", "",
         md(pd.DataFrame([{"season": s, "q per week": c.q, "phi": c.phi, "p_season": c.p_season,
                           "sigma (pts)": c.sigma, "tuned on": ", ".join(map(str, c.seasons)),
                           **({"QB prior var": qb_choices[s]["p0"], "new QB prior": qb_choices[s]["new_mean"],
                               "pts per EPA/dropback": qb_choices[s].get("k_epa", 0.0),
+                              "pts per EPA/dropback, observed": qb_choices[s].get("k_obs", 0.0),
                               "HFA fitted": round(hfa_fitted[s], 2)} if s in qb_choices else {})}
                          for s, c in choices.items()])), "",
         f"## Reporting window, regular season {REPORT_SEASONS[0]}-{REPORT_SEASONS[-1]}", "",
@@ -514,6 +567,15 @@ def render(scored: pd.DataFrame, choices: dict[int, Choice], finals: dict[int, k
                   "Without a quarterback state the model loses about what Elo loses on these games; "
                   "step 4 (`state_qb`) is judged on closing that gap.", "",
                   md(fmt(summarise(q, ["quarterback"], order=ORDER), cols)), ""]
+        qbs = scored.attrs.get("quarterbacks")
+        if qbs is not None and not qbs.empty:
+            show = pd.concat([qbs.head(8), qbs.tail(8)])[["quarterback", "points", "sd"]]
+            show["points"], show["sd"] = show["points"].map("{:+.1f}".format), show["sd"].map("{:.1f}".format)
+            parts += [f"### The quarterback states at the end of {seasons[-1]}", "",
+                      f"{len(qbs)} quarterbacks carried; sd of their means {qbs['points'].std(ddof=1):.2f} points, "
+                      f"middle 90% from {qbs['points'].quantile(0.05):+.1f} to {qbs['points'].quantile(0.95):+.1f}. "
+                      "A quarterback's number is points per game against his team's offence; the top and bottom eight.",
+                      "", md(show), ""]
     playoffs = scored[scored["season_type"] != "regular"]
     if not playoffs.empty:
         parts += ["## Playoffs (never fitted, always scored)", "", md(fmt(summarise(playoffs, order=ORDER), cols)), ""]
