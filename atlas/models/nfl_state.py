@@ -319,6 +319,8 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
     neutral = pd.to_numeric(g["neutral_site"], errors="coerce").fillna(0).to_numpy(dtype=float) \
         if "neutral_site" in g else np.zeros(len(g))
     means, sds, hps, aps = (np.full(len(g), np.nan) for _ in range(4))
+    # The quarterback's own state going in, in points (the DFS model reads it).
+    hqs, aqs = np.full(len(g), np.nan), np.full(len(g), np.nan)
     r = spec.sigma ** 2
 
     def qb_index(qb, team, kickoff=None) -> int | None:
@@ -362,6 +364,8 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
         _, var = kalman.row_forecast(state, home_plus + [n + ih], away_plus + [n + ia])
         means[i], sds[i] = mh - ma, np.sqrt(var + 2.0 * r)
         hps[i], aps[i] = spec.base + mh, spec.base + ma
+        hqs[i] = state.x[qh] if qh is not None else np.nan
+        aqs[i] = state.x[qa] if qa is not None else np.nan
         m, t = cols["actual_margin"][i], cols["actual_total"][i]
         if np.isnan(m) or np.isnan(t):
             continue
@@ -384,7 +388,8 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
                 n_db, epa = record.game(qb, game_ids[i])
                 if n_db >= OBS_MIN_DROPBACKS:
                     kalman.row_update(state, [q_idx], [], k_obs * epa, k_obs ** 2 * record.play_var / n_db)
-    out = pd.DataFrame({"mean": means, "sd": sds, "home_pts": hps, "away_pts": aps}, index=g.index)
+    out = pd.DataFrame({"mean": means, "sd": sds, "home_pts": hps, "away_pts": aps, "home_qb_state": hqs,
+                        "away_qb_state": aqs}, index=g.index)
     return out.reindex(games.index)
 
 

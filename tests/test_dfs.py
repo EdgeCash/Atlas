@@ -165,3 +165,147 @@ def test_regulars_are_each_teams_top_players_by_salary():
     top = f[(f["season"] == 2015) & (f["position"] == "QB")].groupby(["week", "team"])["dk_salary"].max()
     chosen = r[r["position"] == "QB"].set_index(["week", "team"])["dk_salary"]
     assert (chosen.sort_index() == top.sort_index()).all()
+
+
+# ---------------------------------------------------------------------------
+# Step 3: the week's news and the player model
+# ---------------------------------------------------------------------------
+
+
+def _write(path, frame):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    frame.to_parquet(path, index=False)
+
+
+def test_injury_report_keeps_the_worst_status_and_current_team_codes(tmp_path):
+    from atlas.dfs import context
+    from atlas.sources import nflverse
+
+    _write(nflverse.injuries_path(tmp_path, 2019), pd.DataFrame([
+        {"season": 2019, "game_type": "REG", "team": "OAK", "week": 3, "gsis_id": "p1", "report_status": "Questionable"},
+        {"season": 2019, "game_type": "REG", "team": "OAK", "week": 3, "gsis_id": "p1", "report_status": "Out"},
+        {"season": 2019, "game_type": "REG", "team": "BUF", "week": 3, "gsis_id": "p2", "report_status": None},
+        {"season": 2019, "game_type": "POST", "team": "BUF", "week": 19, "gsis_id": "p2", "report_status": "Out"},
+    ]))
+    r = context.injuries(tmp_path, [2019]).set_index("player_id")
+    assert r.loc["p1", "status"] == 3 and r.loc["p1", "team"] == "LV"
+    assert r.loc["p2", "status"] == 0 and len(r) == 2                 # the playoff row is not the regular season
+
+
+def _games(rows):
+    base = {"season_type": "REG", "position": "WR", "target_share": 0.0, "carry_share": 0.0, "pass_attempts": 0.0}
+    return pd.DataFrame([{**base, **r} for r in rows])
+
+
+def test_vacated_share_is_what_the_absent_player_held_going_in():
+    from atlas.dfs import context
+
+    games = _games([
+        {"season": 2020, "week": 1, "team": "BUF", "player_id": "wr1", "target_share": 0.30},
+        {"season": 2020, "week": 2, "team": "BUF", "player_id": "wr1", "target_share": 0.30},
+        {"season": 2020, "week": 3, "team": "BUF", "player_id": "wr1", "target_share": 0.90},   # week 3 is after
+        {"season": 2020, "week": 1, "team": "BUF", "player_id": "rb1", "position": "RB", "carry_share": 0.6},
+    ])
+    report = pd.DataFrame([
+        {"season": 2020, "week": 3, "team": "BUF", "player_id": "wr1", "status": 3},     # out
+        {"season": 2020, "week": 3, "team": "BUF", "player_id": "rb1", "status": 1},     # questionable: plays
+    ])
+    team, pos = context.vacated(report, games)
+    t = team.set_index(["season", "week", "team"]).loc[(2020, 3, "BUF")]
+    assert t["vacated_targets"] == pytest.approx(0.30) and t["vacated_carries"] == 0
+    assert pos.set_index("position").loc["WR", "vacated_pos_targets"] == pytest.approx(0.30)
+    # A player last seen seasons ago vacates nothing.
+    stale = report.assign(season=2023)
+    assert context.vacated(stale, games)[0].empty
+
+
+def test_usual_quarterback_is_the_one_throwing_and_lapses_when_gone():
+    from atlas.dfs import context
+
+    rows = []
+    for w in range(1, 13):
+        if w <= 3:
+            rows.append({"season": 2020, "week": w, "team": "BUF", "player_id": "starter", "position": "QB",
+                         "pass_attempts": 35.0})
+        rows.append({"season": 2020, "week": w, "team": "BUF", "player_id": "backup", "position": "QB",
+                     "pass_attempts": 3.0 if w <= 3 else 30.0})
+    q = context.usual_qb(_games(rows)).set_index("week")["qb1_id"]
+    assert q.loc[2] == "starter" and q.loc[4] == "starter"              # hurt in week 4: still the usual one
+    assert q.loc[11] == "starter" and q.loc[12] == "backup"              # missed QB_GAMES straight: lapsed
+
+
+def test_depth_chart_snapshots_take_the_latest_before_kickoff(tmp_path):
+    from atlas.dfs import context
+    from atlas.sources import nflverse
+
+    _write(nflverse.schedules_path(tmp_path), pd.DataFrame([
+        {"season": 2025, "game_type": "REG", "week": 1, "gameday": "2025-09-07", "gametime": "13:00",
+         "home_team": "BUF", "away_team": "MIA"}]))
+    snap = pd.DataFrame([
+        {"dt": "2025-09-01T10:00:00Z", "team": "BUF", "gsis_id": "rb1", "pos_abb": "RB", "pos_rank": 2},
+        {"dt": "2025-09-06T10:00:00Z", "team": "BUF", "gsis_id": "rb1", "pos_abb": "RB", "pos_rank": 1},
+        {"dt": "2025-09-08T10:00:00Z", "team": "BUF", "gsis_id": "rb1", "pos_abb": "RB", "pos_rank": 3},   # after
+        {"dt": "2025-09-06T10:00:00Z", "team": "BUF", "gsis_id": "lt", "pos_abb": "LT", "pos_rank": 1},    # not a slot
+    ])
+    _write(nflverse.depth_charts_path(tmp_path, 2025), snap)
+    d = context.depth(tmp_path, [2025])
+    assert list(d["player_id"]) == ["rb1"] and d["depth_rank"].iloc[0] == 1
+
+
+def _model_league(seasons=(2013, 2014, 2015, 2016), teams=8, weeks=17, seed=5):
+    """A league wide enough for the per-position fits, where the environment
+    carries real signal: a player's points rise with his team's projection."""
+    from atlas.dfs import model
+
+    rng = np.random.default_rng(seed)
+    rows = []
+    for s in seasons:
+        for t in range(teams):
+            for pos, n in (("QB", 2), ("RB", 2), ("WR", 3), ("TE", 1), ("DST", 1)):
+                for i in range(n):
+                    talent = rng.normal(0, 3)
+                    for w in range(1, weeks + 1):
+                        team_pts = 22 + rng.normal(0, 4)
+                        rows.append({"season": s, "week": w, "team": f"T{t}", "player_id": f"{t}{pos}{i}{s}",
+                                     "position": pos, "team_pts": team_pts, "depth_rank": i + 1,
+                                     "is_qb1": int(pos == "QB" and i == 0), "dk_salary": np.nan,
+                                     "target": 8 + talent + 0.5 * (team_pts - 22) - 3 * i + rng.normal(0, 3)})
+    f = pd.DataFrame(rows).sort_values(["player_id", "season", "week"])
+    by = f.groupby("player_id")
+    f["games_before"] = by.cumcount()
+    f["dk_points_trend"] = by["target"].transform(lambda s: s.shift(1).ewm(halflife=4).mean())
+    for c in set(model._cols("QB")) | set(model._cols("DST")):
+        if c not in f and c != "baseline":
+            f[c] = rng.normal(0, 1, len(f))
+    return f.reset_index(drop=True)
+
+
+def test_player_model_is_walk_forward_and_reads_the_environment():
+    from atlas.dfs import model
+
+    f = _model_league()
+    out = model.walk_forward(f, first_test=2015)
+    assert set(out["season"]) == {2015, 2016} and out["model"].notna().all() and (out["model_sd"] >= 1).all()
+    poisoned = f.copy()
+    poisoned.loc[poisoned["season"] == 2016, "target"] += 1000
+    again = model.walk_forward(poisoned, first_test=2015)
+    assert np.allclose(out.loc[out["season"] == 2015, "model"], again.loc[again["season"] == 2015, "model"])
+    # The environment is in the projection: a richer game projects more points.
+    rb = out[out["position"] == "RB"]
+    slope = np.polyfit(rb["team_pts"], rb["model"] - rb["baseline"], 1)[0]
+    assert slope > 0.1
+
+
+def test_gate_compares_crps_with_baseline_and_rank_with_salary():
+    from atlas.dfs import model
+
+    rng = np.random.default_rng(1)
+    rows = []
+    for w in range(1, 11):
+        for _i in range(8):
+            y = rng.normal(10, 5)
+            rows.append({"season": 2016, "week": w, "position": "WR", "target": y, "model": y + rng.normal(0, 1),
+                         "baseline": y + rng.normal(0, 4), "salary": y + rng.normal(0, 3), "model_sd": 2.0,
+                         "baseline_sd": 4.0, "salary_sd": 3.0})
+    g = model.gate(pd.DataFrame(rows)).set_index("position").loc["WR"]
+    assert g["beats baseline"] and g["ranks as well as salary"] and g["rank gap se"] > 0
