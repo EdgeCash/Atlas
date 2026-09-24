@@ -349,8 +349,9 @@ def _nfl(store, now: datetime | None) -> list[dict]:
 def _cfb(store, now: datetime | None) -> list[dict]:
     """College's upcoming slates (`atlas/dfs/cfb_slate.py`). A failure there
     is logged by type and passed over: it never costs the NFL its lineups."""
-    from atlas.dfs import cfb_players, cfb_slate
+    from atlas.dfs import cfb_players, cfb_record, cfb_slate
 
+    cfb_record.projections_path().unlink(missing_ok=True)     # the record takes in only this refresh's
     if not cfb_players.path().exists():
         return []
     try:

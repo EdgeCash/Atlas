@@ -103,10 +103,10 @@ def _slate_payload(out: Path) -> dict:
     }
 
 
-def payload(index: Path, *, built_at: str | None = None) -> dict:
+def payload(index: Path, *, built_at: str | None = None, college_record: dict | None = None) -> dict:
     """What the owner sees: every slate's lineups and upload file, and the
     players of the biggest Classic slate by projection (the NFL's, and
-    college's as well when there are both)."""
+    college's as well when there are both), and the private college record."""
     slates = json.loads(index.read_text())["slates"]
     root = index.parent
     outs = [root / str(s["draft_group_id"]) for s in slates]
@@ -128,6 +128,7 @@ def payload(index: Path, *, built_at: str | None = None) -> dict:
         "slates": [_slate_payload(o) for o in outs],
         "players": players,
         **extra,
+        **({"college_record": college_record} if college_record else {}),
     }
 
 
@@ -197,8 +198,12 @@ def refresh(*, rebuild: bool = True) -> Path:
     if not passphrase.strip():
         LOG.warning("no %s secret: the owner page is not built", SECRET)
         return write(None, reason="The owner key is not configured.")
+    from atlas.dfs import cfb_record
+
+    college = cfb_record.update(passphrase)
     try:
-        plain = json.dumps(_clean(payload(index)), separators=(",", ":"), allow_nan=False).encode("utf-8")
+        plain = json.dumps(_clean(payload(index, college_record=college)), separators=(",", ":"),
+                           allow_nan=False).encode("utf-8")
         box = encrypt(plain, passphrase)
         _check_sealed(box, plain)
         LOG.info("owner page: %d slates encrypted (%d bytes of ciphertext)", len(json.loads(plain)["slates"]),

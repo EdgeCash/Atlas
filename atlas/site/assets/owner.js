@@ -141,6 +141,29 @@
     return pool;
   }
 
+  function recordCard(r) {
+    var card = el("div", { "class": "card card-pad top-gap" });
+    card.appendChild(el("h3", null, "College record"));
+    if (!r.games) {
+      card.appendChild(el("p", { "class": "note" }, r.note ||
+        "No college game has been graded yet. Each player's projection is kept as it stood at his kickoff."));
+      return card;
+    }
+    card.appendChild(el("p", { "class": "note" }, r.games + " games over " + r.weeks +
+      (r.weeks === 1 ? " week" : " weeks") + ", each projection as it stood at kickoff. A player who recorded " +
+      "nothing counts as zero. The range is meant to hold 80%."));
+    function pct(n) { return n === null || n === undefined || isNaN(n) ? "–" : Math.round(n * 100) + "%"; }
+    function two(n) { return n === null || n === undefined || isNaN(n) ? "–" : Number(n).toFixed(2); }
+    card.appendChild(el("p", { "class": "note" }, "Regulars: each team's top projected QB, two RBs, three " +
+      "receivers and kicker. Miss: average points off. Rank: how well the order of projections matched the order of scores (1 is perfect)."));
+    card.appendChild(table(["", "Players", "Miss", "Range", "Rank"],
+      [["Regulars", r.regulars], ["All priced", r.all]].map(function (row) {
+        var n = row[1] || {};
+        return [row[0], String(n.players || 0), pts(n.mae), pct(n.coverage), two(n.rank)];
+      })));
+    return card;
+  }
+
   function render(data) {
     out.textContent = "";
     var slates = data.slates || [];
@@ -170,6 +193,7 @@
 
     out.appendChild(poolCard("Every player, by projection", data.players || []));
     if (data.college_players) out.appendChild(poolCard("College: every player, by projection", data.college_players));
+    if (data.college_record) out.appendChild(recordCard(data.college_record));
   }
 
   form.addEventListener("submit", function (ev) {

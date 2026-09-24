@@ -16,7 +16,9 @@ runs that same fit on the games about to be played:
    game cards), the projection and its range, and the chance he records a
    stat (`atlas/dfs/cfb_participation.py`);
 4. the owner's lineups for each slate: five for Classic (the SUPERFLEX
-   included) and five for each Showdown.
+   included) and five for each Showdown;
+5. every priced player's projection, for the private record
+   (`atlas/dfs/cfb_record.py`).
 
 Written under ``data/dfs/`` like the NFL's, never committed; the owner page
 seals them.
@@ -232,6 +234,14 @@ def run(store=None, *, now: datetime | None = None, raw: Path | None = None) -> 
         readable[cols].to_csv(out / "lineups.csv", index=False, float_format="%.2f")
         built.append({**meta, "lineups": len(made)})
         LOG.info("college %s %s (%d): %d lineups", kind, label, group, len(made))
+    # Every priced player's projection, for the private record (`atlas/dfs/cfb_record.py`).
+    classic = todo.loc[todo["game_type"] == "Classic", "draft_group_id"]
+    salary = salaries[salaries["draft_group_id"].isin(classic)].groupby("player_id_dk")["salary"].max()
+    from atlas.dfs import cfb_record
+
+    projected.assign(season=season, salary=projected["player_id_dk"].map(salary)).reindex(
+        columns=[c for c in cfb_record.COLUMNS if c != "projected_at"]).to_csv(
+        cfb_record.projections_path(), index=False, float_format="%.3f")
     unmatched = int((projected["matched_by"] == "none (no history)").sum())
     no_game = int(projected["event"].isna().sum())
     LOG.info("college DFS: %d slates, %d players (%d without history, %d without a game)", len(built),
