@@ -238,8 +238,8 @@ market is v2's ambition, not v1's requirement.
 
 | Step | Work | Output |
 |---|---|---|
-| 0 | `atlas/sources/nflverse.py`: fetch + cache pbp, schedules, injuries, depth charts, snap counts. Mirror `cfbd.py`'s `_cached()` | `data/raw/nfl/` |
-| 1 | `atlas/staging/nfl/`: team-game table (EPA off/def, drives, drive results, QB id, rest, roof, weather, market), point-in-time | `data/warehouse/nfl.duckdb` |
+| 0 | `atlas/sources/nflverse.py`: fetch + cache pbp, schedules, injuries, depth charts, snap counts, rosters (`make nfl-ingest`) | **done** — 80 files, 114 MB, 2011–2026; pbp trimmed to 145 columns |
+| 1 | `atlas/staging/nfl/`: games, team-game efficiency and drives, QB of record and QB1, injuries, opponent-adjusted and point-in-time features through the college modules unchanged (`make nfl-warehouse`) | **done** — `data/warehouse/nfl.duckdb`, 4,368 games (4,128 completed), 122 columns; reproduces §3 exactly |
 | 2 | Benchmarks: naive, Elo, market-in-lattice. Reproduce §3 and foundation §2 exactly | `reports/nfl_benchmarks.md` |
 | 3 | Kalman state model, off/def, no QB. Walk-forward 2011–25 | beats naive and Elo? |
 | 4 | Add QB state and HFA fit | the QB test |
@@ -247,7 +247,34 @@ market is v2's ambition, not v1's requirement.
 | 6 | Wire into the card and the grade | `nfl.html` becomes a board |
 | 7 | v2: state-dependent drive simulation, only if step 5's exact-score log-score is measurably short of the benchmark | |
 
-Steps 0–2 are mechanical and should take days, not weeks. Step 3 is where
+Steps 0–1 are done, in a session. What the build established:
+
+- **The frame reproduces §3 to the decimal.** Home margin +2.22 / sd 14.64
+  (2011–19) and +1.74 / 14.21 (2020–25); residual against the closing line
+  MAE 10.04, sd 13.01, bias +0.07 on 3,951 games. The same
+  `atlas/models` code that scores college scores this.
+- **Conventions match college**, so nothing in the model layer forks:
+  `closing_spread` is the book's home line (negative when the home side is
+  favoured; nflverse's `spread_line` is the opposite sign and is negated),
+  `season_type` is `regular`/`postseason`, kickoffs are UTC, team ids are
+  integers that follow a franchise through a relocation (STL→LA, SD→LAC,
+  OAK→LV).
+- **Two quarterback columns, deliberately.** `home_qb_id` is the
+  quarterback of record from the schedules file - who did start, knowable
+  at kickoff at the earliest - and `home_qb1_id` is the depth chart's QB1
+  for the week, which was knowable before it. They agree on 88% of
+  team-games from 2018; the other 12% are the QB test's material and the
+  QB state's job. nflverse changed the depth-chart feed in 2025 to daily
+  snapshots with no week; those are mapped to a game by the latest
+  snapshot before its kickoff.
+- **Elo is code, not a column.** `atlas/models/elo.py` is a walk-forward
+  Elo with FiveThirtyEight's parameters (K 20, home field 48, a third of
+  the way back to 1505 each season, margin-of-victory multiplier) that
+  attaches `elo_diff` in points to any game frame; step 2 uses it.
+- Coverage: adjusted and point-in-time metrics 99.6%, QB1 99.4%, injury
+  counts 94%, wind 64% (outdoor games only, as expected).
+
+Step 2 is next and reuses the college benchmark harness; step 3 is where
 the work is.
 
 ---

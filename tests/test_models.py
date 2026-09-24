@@ -685,3 +685,48 @@ def test_the_points_lattice_is_fitted_and_applied_walk_forward(research_frame):
     assert all(f is not None and f.shape == (joint_mod.DEFAULT_MAX_POINTS,) for f in lattices.values())
     assert {"cell_p_plain", "rank_plain", "cell_log_plain"} <= set(table.columns)
     assert (table["cell_p"] > 0).all()
+
+
+# ---------------------------------------------------------------------------
+# Elo, for the NFL benchmarks
+# ---------------------------------------------------------------------------
+
+from atlas.models import elo as elo_mod  # noqa: E402
+
+
+def _elo_games():
+    rows = []
+    kick = pd.Timestamp("2023-09-10", tz="UTC")
+    for i in range(6):
+        rows.append({"game_id": f"g{i}", "season": 2023, "kickoff": kick + pd.Timedelta(days=7 * i),
+                     "home_team_id": 1, "away_team_id": 2, "actual_margin": 14.0, "neutral_site": 0})
+    rows.append({"game_id": "next", "season": 2024, "kickoff": kick + pd.Timedelta(days=400),
+                 "home_team_id": 2, "away_team_id": 1, "actual_margin": np.nan, "neutral_site": 0})
+    return pd.DataFrame(rows)
+
+
+def test_elo_is_pregame_and_rewards_the_winner():
+    e = elo_mod.pregame(_elo_games())
+    assert e.loc[0, "home_elo"] == e.loc[0, "away_elo"] == 1505.0        # nobody has played
+    assert e["home_elo"].iloc[1] > 1505.0 > e["away_elo"].iloc[1]         # team 1 won game 0
+    assert (np.diff(e["home_elo"].iloc[:6]) > 0).all()                     # keeps winning, keeps rising
+    assert e.loc[6, "home_elo"] < 1505.0 < e.loc[6, "away_elo"]           # the unplayed game reads the ratings, sides swapped
+
+
+def test_elo_regresses_a_third_of_the_way_between_seasons():
+    g = _elo_games()
+    e = elo_mod.pregame(g)
+    # Team 1's rating after six wins, then the new-season reversion, is what the 2024 row shows for the away side.
+    after = e.loc[5, "home_elo"]
+    p = elo_mod.FIVETHIRTYEIGHT
+    # One more update happens after game 5; recompute it to check the reversion arithmetic.
+    diff = after - e.loc[5, "away_elo"] + p.home_field
+    shift = p.k * elo_mod._mov_multiplier(14.0, diff) * (1 - elo_mod._expected(diff))
+    final = after + shift
+    assert e.loc[6, "away_elo"] == pytest.approx(final + p.revert * (p.mean - final))
+
+
+def test_elo_attaches_a_margin_scale_difference():
+    out = elo_mod.attach(_elo_games())
+    assert {"home_pregame_elo", "away_pregame_elo", "elo_diff"} <= set(out.columns)
+    assert out["elo_diff"].iloc[1] == pytest.approx((out["home_pregame_elo"].iloc[1] - out["away_pregame_elo"].iloc[1]) / 25)
