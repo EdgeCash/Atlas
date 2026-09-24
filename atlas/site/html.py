@@ -17,7 +17,7 @@ from zoneinfo import ZoneInfo
 #: storage and unreadable on a card: "19:30 UTC" is a unit conversion, not a
 #: time, and a card that asks a sports fan to do arithmetic has already lost
 #: the five seconds it had. Eastern is the league's own clock, so it is the
-#: one the product prints, always labelled.
+#: one the product prints, always labeled.
 EASTERN = ZoneInfo("America/New_York")
 
 

@@ -6,7 +6,7 @@ among the 32 in the NFL. They are computed from completed games only, so for
 an upcoming game they are exactly what was knowable before kickoff, the same
 rule as every other number on a card.
 
-The card shows them paired, each offence against the defence it is about to
+The card shows them paired, each offense against the defense it is about to
 face, which is the question a reader is asking ("how do they match up"),
 plus a few situational figures. Raw figures, not opponent-adjusted: the
 drivers panel carries Atlas's adjusted view, and a reader comparing these to
@@ -34,7 +34,7 @@ class Stat:
     kind: str = "num"                  # "num" (one decimal), "pct", "rate" (two decimals)
 
 
-#: Each offence against the defence it faces: (offence stat, defence stat).
+#: Each offense against the defense it faces: (offense stat, defense stat).
 PAIRS: tuple[tuple[Stat, Stat], ...] = (
     (Stat("points_for", "Points per game", True), Stat("points_against", "Points allowed", False)),
     (Stat("yards_per_play", "Yards per play", True, "rate"), Stat("yards_per_play_allowed", "Yards per play allowed", False, "rate")),
@@ -53,7 +53,7 @@ SITUATIONAL: tuple[Stat, ...] = (
     Stat("penalty_yards", "Penalty yards per game", False),     # NFL only: college play-by-play has no penalty yards
 )
 
-#: What a pair row is called on the card: the offence's figure, named plainly.
+#: What a pair row is called on the card: the offense's figure, named plainly.
 PAIR_LABELS = {
     "points_for": "Points per game", "yards_per_play": "Yards per play", "rush_yards": "Rushing yards per game",
     "pass_yards": "Passing yards per game", "explosive": "20+ yard plays per game",
@@ -116,7 +116,7 @@ def _finish(off: pd.DataFrame, dfn: pd.DataFrame, points: pd.DataFrame, games: p
 
 
 def _side_sums(plays: pd.DataFrame, drives: pd.DataFrame, team_col: str, prefix: str) -> pd.DataFrame:
-    """Counts for one side of the ball: ``team_col`` is posteam (offence) or defteam (defence)."""
+    """Counts for one side of the ball: ``team_col`` is posteam (offense) or defteam (defense)."""
     by = plays.groupby(team_col)
     sums = pd.DataFrame({
         f"{prefix}_plays": by.size(),

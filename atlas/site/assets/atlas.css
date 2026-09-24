@@ -574,7 +574,7 @@ footer { display: grid; gap: 4px; }
   align-items: center; padding: 10px 0;
 }
 .why-row + .why-row { border-top: 1px solid var(--border); }
-/* The mark is the favoured team's crest, not a coloured dot: three identical
+/* The mark is the favored team's crest, not a coloured dot: three identical
    dots read as three negatives, and colour alone may never carry meaning. */
 .why-dot {
   width: 8px; height: 8px; border-radius: 99px; background: var(--ink-4);
@@ -960,7 +960,7 @@ html[data-view="tiles"] .view-list { display: none; }
 #scores-empty[hidden] { display: none; }
 
 /* ---------------------------------------------------------- matchup ---- */
-/* Each offence against the defence it faces: the left team's figure, the
+/* Each offense against the defense it faces: the left team's figure, the
    label, the right team's figure. Three columns hold on a phone. */
 .mu-group { margin-top: 16px; }
 .mu-head { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: baseline;

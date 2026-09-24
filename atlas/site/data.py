@@ -168,7 +168,7 @@ class Card:
     @property
     def market_margin(self) -> float | None:
         """The market's home margin. The live spread is captured home-oriented
-        (`atlas/live/provider.py`): positive when the home side is favoured,
+        (`atlas/live/provider.py`): positive when the home side is favored,
         the same convention as the model's ``margin_mean``."""
         return self.spread.current
 
@@ -217,7 +217,7 @@ class Card:
         return float(stats.norm.sf((self.market_margin - self.projection.margin_mean) / self.projection.margin_sd))
 
     @property
-    def model_favourite(self) -> Side:
+    def model_favorite(self) -> Side:
         return self.home if (self.model_margin or 0.0) >= 0 else self.away
 
     @property
@@ -230,7 +230,7 @@ class Card:
         return home / (home + away)
 
     @property
-    def favourite(self) -> Side:
+    def favorite(self) -> Side:
         margin = self.spread.current or 0.0
         return self.home if margin >= 0 else self.away
 
@@ -238,7 +238,7 @@ class Card:
     def spread_text(self) -> str:
         if self.spread.current is None:
             return "not posted"
-        return f"{self.favourite.abbr} −{abs(self.spread.current):.1f}"
+        return f"{self.favorite.abbr} −{abs(self.spread.current):.1f}"
 
 
 def _slug(name: str) -> str:
@@ -579,11 +579,11 @@ def team_win_loss(cards: list[Card], frame: pd.DataFrame) -> dict[int, str]:
     return {team: f"{won}-{lost}" + (f"-{tied}" if tied else "") for team, (won, lost, tied) in tally.items()}
 
 
-def offence_with_quarterback(view: dict) -> float | None:
-    """The side's offence as the forecast uses it: the team's own plus its expected starter's.
+def offense_with_quarterback(view: dict) -> float | None:
+    """The side's offense as the forecast uses it: the team's own plus its expected starter's.
 
-    The state carries the quarterback separately and adds him to the offence
-    for the game; a reader comparing offences should see what the forecast adds.
+    The state carries the quarterback separately and adds him to the offense
+    for the game; a reader comparing offenses should see what the forecast adds.
     """
     off = view.get("off")
     if off is None:

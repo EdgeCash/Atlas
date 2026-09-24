@@ -75,7 +75,7 @@ def test_rank_one_is_the_best_and_pace_ranks_the_most():
     assert list(r["plays"]) == [3, 1, 2]
 
 
-def test_the_matchup_panel_pairs_each_offence_with_the_defence_it_faces():
+def test_the_matchup_panel_pairs_each_offense_with_the_defense_it_faces():
     import sys
 
     sys.path.insert(0, "tests")
@@ -92,8 +92,8 @@ def test_the_matchup_panel_pairs_each_offence_with_the_defence_it_faces():
     page = ts._page(card)
     panel = re.search(r'<details class="panel">\s*<summary><span class="panel-title">Matchup</span>.*?</details>',
                       page, re.S).group(0)
-    assert f"{card.away.short} offence" in panel and f"{card.home.short} defence" in panel
-    assert f"{card.home.short} offence" in panel and "Situational" in panel
+    assert f"{card.away.short} offense" in panel and f"{card.home.short} defense" in panel
+    assert f"{card.home.short} offense" in panel and "Situational" in panel
     assert "37.7" in panel and ">1st<" in panel and "55%" in panel and "14.0" in panel
     assert panel.count('class="mu-row"') == 2 * len(mu.PAIRS) + 2       # no penalty row without penalty figures
     assert "through 20 September" in panel and "138 FBS teams" in panel

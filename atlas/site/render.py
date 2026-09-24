@@ -523,9 +523,9 @@ def _why_brief(card: Card) -> str:
     if not card.drivers:
         return ""
     def mark(driver) -> str:
-        if driver.favours == "home":
+        if driver.favors == "home":
             return _logo(card.home, size="tiny")
-        if driver.favours == "away":
+        if driver.favors == "away":
             return _logo(card.away, size="tiny")
         return '<span class="why-dot" aria-hidden="true"></span>'
 
@@ -592,7 +592,7 @@ def _open_matchup(card: Card) -> str:
     if m is None:
         return ""
     return _panel("Matchup",
-                  f"how each offence compares with the defence it faces, season to date, "
+                  f"how each offense compares with the defense it faces, season to date, "
                   f"ranked among {m.teams} {m.universe}",
                   _matchup_body(card))
 
@@ -651,7 +651,7 @@ def _matchup_body(card: Card) -> str:
         rows = "".join(
             _matchup_row(PAIR_LABELS[o.key], o, off_line, d, def_line, m.teams, (off_side, def_side))
             for o, d in PAIRS)
-        return (f'<div class="mu-group">{head(esc(off_side.short) + " offence", esc(def_side.short) + " defence")}'
+        return (f'<div class="mu-group">{head(esc(off_side.short) + " offense", esc(def_side.short) + " defense")}'
                 f"{rows}</div>")
 
     situational = "".join(
@@ -700,7 +700,7 @@ def _open_reliability(card: Card, bands: dict, overall_band) -> str:
 
 def _s2_market(card: Card, *, bare: bool = False) -> str:
     spread, total = card.spread, card.total
-    fav, dog = card.favourite, (card.home if card.favourite is card.away else card.away)
+    fav, dog = card.favorite, (card.home if card.favorite is card.away else card.away)
     spread_rows = []
     if spread.current is not None:
         spread_rows = [
@@ -796,7 +796,7 @@ def _s3_projection(card: Card, *, bare: bool = False) -> str:
     if card.projection is None:
         return ""
     p = card.projection
-    fav = card.model_favourite
+    fav = card.model_favorite
     score = f"{card.projected_away:.1f} – {card.projected_home:.1f}"
     over = card.over_probability
     over_label = "Over probability" if (over or 0) >= 0.5 else "Under probability"
@@ -834,7 +834,7 @@ def _s3_projection(card: Card, *, bare: bool = False) -> str:
     <b>How this number is made.</b> Every FBS team starts the season at a
     preseason expectation built from last season's ratings, roster talent,
     recruiting, returning production and the coaching situation. After every
-    game a filter updates each team's offence and defence, opponent-adjusted,
+    game a filter updates each team's offense and defense, opponent-adjusted,
     and the two teams' numbers meet here with the home advantage. The total
     adds the teams' pace and the wind. The market is never an input; it is
     shown so you can see where Atlas differs and read why.
@@ -857,8 +857,8 @@ def _s4_difference(card: Card, *, bare: bool = False) -> str:
                 else (model_prob - market_prob) * 100)
     rows_ = [
         ['<span class="lead">Spread</span>',
-         f"{esc(card.model_favourite.abbr)} {minus(-abs(card.model_margin)) if card.model_margin is not None else '—'}",
-         f"{esc(card.favourite.abbr)} {minus(-abs(card.spread.current)) if card.spread.current is not None else '—'}",
+         f"{esc(card.model_favorite.abbr)} {minus(-abs(card.model_margin)) if card.model_margin is not None else '—'}",
+         f"{esc(card.favorite.abbr)} {minus(-abs(card.spread.current)) if card.spread.current is not None else '—'}",
          _diff_cell(card.margin_difference)],
         ['<span class="lead">Total</span>', num(card.model_total),
          num(card.total.current), _diff_cell(card.total_difference)],
@@ -1107,7 +1107,7 @@ def _s8_reliability(card: Card, bands: dict, overall_band, *, bare: bool = False
       <div>
         <h3>Calibration by disagreement band</h3>
         {chart}
-        <p class="note top-gap-sm">Two series, labelled directly. The widening
+        <p class="note top-gap-sm">Two series, labeled directly. The widening
           gap is why Atlas grades large disagreements <em>down</em>.</p>
       </div>
       <div>
@@ -1164,7 +1164,7 @@ def _calibration_chart(bands: dict, active: str) -> str:
         f'<text x="{x:.0f}" y="132" class="axis" text-anchor="middle">{esc(label)}</text>'
         for x, label in zip(xs, order, strict=False)
         # A tick beside the "this card" marker collides with it, so the ends of
-        # the scale are labelled and the middle is left to the marker.
+        # the scale are labeled and the middle is left to the marker.
         if label in ("0-1", "10+") and (active_x is None or abs(x - active_x) > 48)
     )
     return f"""<svg viewBox="0 0 330 142" class="plot" role="img"
@@ -1285,7 +1285,7 @@ def featured_cards(cards: list[Card], sport: str, n: int = FEATURED) -> list[Car
         return card.grade.score if card.grade else 0.0
 
     if sport == "nfl":
-        from atlas.site.data import offence_with_quarterback
+        from atlas.site.data import offense_with_quarterback
 
         def strength(card: Card) -> float:
             p = card.projection
@@ -1293,7 +1293,7 @@ def featured_cards(cards: list[Card], sport: str, n: int = FEATURED) -> list[Car
                 return float("-inf")
             total = 0.0
             for view in (p.home, p.away):
-                off, dfn = offence_with_quarterback(view), view.get("def")
+                off, dfn = offense_with_quarterback(view), view.get("def")
                 if off is None or dfn is None:
                     return float("-inf")
                 total += off + dfn
@@ -1386,7 +1386,7 @@ def board_page(cards: list[Card], *, sport: str = "ncaaf", rivalries: set | None
 </div>"""
 
     if sport == "nfl":
-        disclosure = """<b>How the NFL number is made.</b> Every team's offence and defence are carried from
+        disclosure = """<b>How the NFL number is made.</b> Every team's offense and defense are carried from
   season to season, regressed toward the mean, and updated after every game by a filter that adjusts for the
   opponent; a quarterback state travels with the player; the home advantage is fitted, not assumed; the total
   adds the wind. The market is never an input. Measured out of sample on 2023-2025, the number is closer to the
@@ -1763,21 +1763,21 @@ def nfl_team_page(team, *, cards: list[Card], pool: dict, results: list | None =
     projected before kickoff beside how it finished.
 
     The rating and the quarterback are read from the team's next card, so the
-    page and the card can never disagree about the same number. The offence
+    page and the card can never disagree about the same number. The offense
     is the forecast's: the team's own plus its expected starter's, and the
     rank is by that net across every team with a card this week.
     """
-    from atlas.site.data import offence_with_quarterback, percentile
+    from atlas.site.data import offense_with_quarterback, percentile
 
     root = "../../"
     upcoming = [c for c in cards if team.team_id in (c.home.team_id, c.away.team_id)]
     views = _nfl_views(cards)
     view = views.get(team.team_id, {})
-    offence = offence_with_quarterback(view)
-    defence = view.get("def")
-    net = offence + defence if offence is not None and defence is not None else None
-    nets = sorted((offence_with_quarterback(v) + v["def"] for v in views.values()
-                   if offence_with_quarterback(v) is not None and v.get("def") is not None), reverse=True)
+    offense = offense_with_quarterback(view)
+    defense = view.get("def")
+    net = offense + defense if offense is not None and defense is not None else None
+    nets = sorted((offense_with_quarterback(v) + v["def"] for v in views.values()
+                   if offense_with_quarterback(v) is not None and v.get("def") is not None), reverse=True)
     rank_note = f"{_ordinal(nets.index(net) + 1)} of {len(nets)} with a card this week" if net is not None \
         else "not yet rated"
     games = view.get("games")
@@ -1790,20 +1790,20 @@ def nfl_team_page(team, *, cards: list[Card], pool: dict, results: list | None =
   <div class="stat-note">{esc(note)}</div></div>"""
 
     if qb and qb_pts is not None:
-        offence_note = f"team {signed(view.get('off'))} · {qb} {signed(qb_pts)}"
-        qb_line = (f"<b>Expected starter: {esc(qb)}.</b> {signed(qb_pts)} of that offence is his (± {num(qb_sd)}), "
+        offense_note = f"team {signed(view.get('off'))} · {qb} {signed(qb_pts)}"
+        qb_line = (f"<b>Expected starter: {esc(qb)}.</b> {signed(qb_pts)} of that offense is his (± {num(qb_sd)}), "
                    "and it travels with him: the model rates the quarterback and the team separately and adds "
                    "them for the game. He is the depth chart's first quarterback unless the injury report lists "
                    "him out.")
     elif qb:
-        offence_note = "points scored above average"
+        offense_note = "points scored above average"
         qb_line = (f"<b>Expected starter: {esc(qb)}.</b> The model has not rated him yet; until he plays, the "
-                   "offence carries a new quarterback's prior.")
+                   "offense carries a new quarterback's prior.")
     else:
-        offence_note = "points scored above average"
+        offense_note = "points scored above average"
         qb_line = "No expected starter is listed yet."
     sd_def = view.get("sd_def")
-    defence_note = (f"± {num(sd_def)} · " if sd_def is not None else "") + "points held below average"
+    defense_note = (f"± {num(sd_def)} · " if sd_def is not None else "") + "points held below average"
 
     def stat(metric: str, label: str, note: str, fmt) -> str:
         value = team.metrics.get(metric)
@@ -1865,14 +1865,14 @@ def nfl_team_page(team, *, cards: list[Card], pool: dict, results: list | None =
     <span class="note">points a game against an average NFL team · {esc(rank_note)}</span></div>
   <div class="card">
     <div class="grid-3">
-      {rating("Offence", offence, offence_note)}
-      {rating("Defence", defence, defence_note)}
-      {rating("Net", net, "offence plus defence")}
+      {rating("Offense", offense, offense_note)}
+      {rating("Defense", defense, defense_note)}
+      {rating("Net", net, "offense plus defense")}
     </div>
     <p class="note card-pad qb-line">{qb_line}</p>
   </div>
-  <p class="note top-gap">The rating is the model's own, {esc(evidence)}: every team's offence and
-    defence, and every quarterback, are carried from season to season and updated after each game,
+  <p class="note top-gap">The rating is the model's own, {esc(evidence)}: every team's offense and
+    defense, and every quarterback, are carried from season to season and updated after each game,
     adjusted for the opponent. The ± is how unsure the model still is. These are the numbers the
     team's card uses.</p>
 </section>
@@ -1917,7 +1917,7 @@ def nfl_team_page(team, *, cards: list[Card], pool: dict, results: list | None =
   much weight it deserves; it never says what to do with either.
 </div>"""
     path = team_path(team, "nfl")
-    description = (f"{team.name}: Atlas's NFL rating of the offence, defence and expected quarterback, the "
+    description = (f"{team.name}: Atlas's NFL rating of the offense, defense and expected quarterback, the "
                    "season profile, upcoming cards, and every projection this season beside the result.")
     return layout(title=f"{team.name} — Atlas NFL rating and cards", body=body, depth=2, active="nfl",
                   description=description, canonical=path,
@@ -2119,7 +2119,7 @@ def about_page(example: Card | None, *, card_count: int) -> str:
 #: The walkthrough's numbered notes, in the order a reader meets them.
 CARD_STEPS = (
     ("The game", "Both teams with their crests, rank, record and conference, "
-                 "then kickoff, broadcast and venue. You should recognise the "
+                 "then kickoff, broadcast and venue. You should recognize the "
                  "game before you read a word."),
     ("The market", "What the betting market currently says — the spread and "
                    "the game total. This is the reference everything else is "
@@ -2135,7 +2135,7 @@ CARD_STEPS = (
                   "itself: what the letter says, what Atlas did, and the "
                   "out-of-sample record behind it."),
     ("Why", "The three things the model is reading, each with the crest of the "
-            "team it favours."),
+            "team it favors."),
     ("Be careful about", "Up to three warnings computed from this game — a "
                          "thin market, a lopsided spread, a missing metric. A "
                          "card with nothing to flag says nothing."),
@@ -2185,9 +2185,9 @@ FAQ = (
         ("Do I need to know anything about betting?",
          "No. The market number is a reference point because it is the best "
          "public forecast of a game that exists. One thing does assume the "
-         "notation - \u201cMIA \u221241.5\u201d means Miami is favoured by "
+         "notation - \u201cMIA \u221241.5\u201d means Miami is favored by "
          "41.5 points \u2014 and everything else is in plain English."),
-        ("Do I need to understand modelling?",
+        ("Do I need to understand modeling?",
          "No. The card's first screen is written for somebody who does not, "
          "and the grade explains itself in three plain sentences on every "
          "card. The technical detail is behind panels and on the research "
@@ -2462,7 +2462,7 @@ def research_page(bands: dict, overall_band, *, card_count: int) -> str:
     <p>The projection is the model's own. Each team opens the season at a
       preseason expectation built from last season's ratings, talent,
       recruiting, returning production and the coaching situation; after every
-      game a filter updates its offence and defence, opponent-adjusted; the
+      game a filter updates its offense and defense, opponent-adjusted; the
       total adds pace and wind; and the score is the mean of a full
       distribution over every possible final, to one decimal.</p>
     <p>Then it does something most models do not. It compares itself to the

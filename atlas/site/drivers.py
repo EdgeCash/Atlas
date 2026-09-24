@@ -7,7 +7,7 @@ not.
 
 Drivers are ranked by how much they move the projection, so the list is the
 model's own reasoning rather than a fixed set of stats. The first candidates
-are the model's own terms - each team's offence and defence as the state
+are the model's own terms - each team's offense and defense as the state
 sees them, in points, with the home advantage and the total's pace and wind
 terms - and the efficiency metrics that explain *why* the state sees them
 that way come after.
@@ -34,11 +34,11 @@ class Driver:
     toward_home: bool
     scale_left: str
     scale_right: str
-    #: Which side this driver favours, or None where it favours neither -
+    #: Which side this driver favors, or None where it favors neither -
     #: pace belongs to the game, not to a team. The brief view shows the
-    #: favoured team's mark, because three identical dots read as three
+    #: favored team's mark, because three identical dots read as three
     #: negatives and colour alone may never carry meaning.
-    favours: str | None = None
+    favors: str | None = None
 
 
 def _ordinal(value: float | None) -> str:
@@ -67,10 +67,10 @@ def _model_drivers(card) -> list[tuple[float, Driver]]:
         h, a = p.home.get(key), p.away.get(key)
         if key == "off" and card.sport == "nfl":
             # The NFL forecast adds each side's expected quarterback to its
-            # offence; the driver compares what the forecast compares.
-            from atlas.site.data import offence_with_quarterback
+            # offense; the driver compares what the forecast compares.
+            from atlas.site.data import offense_with_quarterback
 
-            h, a = offence_with_quarterback(p.home), offence_with_quarterback(p.away)
+            h, a = offense_with_quarterback(p.home), offense_with_quarterback(p.away)
         if h is None or a is None:
             return
         gap = h - a
@@ -86,19 +86,19 @@ def _model_drivers(card) -> list[tuple[float, Driver]]:
             share=min(0.48, abs(gap) / 30.0),
             toward_home=gap >= 0,
             scale_left=away.short, scale_right=home.short,
-            favours=leader.key,
+            favors=leader.key,
         )))
 
-    strength("Offence, in points", "off",
-             "offence, with its expected quarterback," if card.sport == "nfl" else "offence")
-    strength("Defence, in points", "def", "defence")
+    strength("Offense, in points", "off",
+             "offense, with its expected quarterback," if card.sport == "nfl" else "offense")
+    strength("Defense, in points", "def", "defense")
     if p.hfa and not card.neutral:
         out.append((abs(p.hfa), Driver(
             name="Home advantage",
             magnitude=f"{home.abbr} +{p.hfa:.1f} pts",
             sentence=f"Playing at home is worth {p.hfa:.1f} points in this season's model, fitted, not assumed.",
             share=min(0.48, p.hfa / 12.0), toward_home=True,
-            scale_left=away.short, scale_right=home.short, favours=home.key,
+            scale_left=away.short, scale_right=home.short, favors=home.key,
         )))
     game_terms = p.pace_adj + p.wind_adj
     if abs(game_terms) >= 0.5:
@@ -130,7 +130,7 @@ def select(card, pool: dict) -> list[Driver]:
             name="Offensive efficiency",
             magnitude=f"{leader.abbr} +{abs(gap):.2f} EPA/play",
             sentence=(
-                f"{possessive(leader.short)} offence sits in the "
+                f"{possessive(leader.short)} offense sits in the "
                 f"{_ordinal(_pct(pool, 'adj_off_epa', max(h, a)))} of FBS on "
                 f"opponent-adjusted EPA; {possessive(trailer.short)} is "
                 f"{_ordinal(_pct(pool, 'adj_off_epa', min(h, a)))}."
@@ -138,7 +138,7 @@ def select(card, pool: dict) -> list[Driver]:
             share=min(0.48, abs(gap) * 1.6),
             toward_home=gap > 0,
             scale_left=away.short, scale_right=home.short,
-            favours=leader.key,
+            favors=leader.key,
         ))
 
     # --- success rate ----------------------------------------------------
@@ -158,13 +158,13 @@ def select(card, pool: dict) -> list[Driver]:
             share=min(0.48, abs(gap) * 2.4),
             toward_home=gap > 0,
             scale_left=away.short, scale_right=home.short,
-            favours=leader.key,
+            favors=leader.key,
         ))
 
-    # --- defence ---------------------------------------------------------
+    # --- defense ---------------------------------------------------------
     h, a = home.metrics.get("adj_def_success_rate"), away.metrics.get("adj_def_success_rate")
     if h is not None and a is not None:
-        # Lower is better on defence, so the sign flips.
+        # Lower is better on defense, so the sign flips.
         gap = a - h
         leader, trailer = (home, away) if gap > 0 else (away, home)
         best, worst = min(h, a), max(h, a)
@@ -179,7 +179,7 @@ def select(card, pool: dict) -> list[Driver]:
             share=min(0.48, abs(gap) * 2.4),
             toward_home=gap > 0,
             scale_left=away.short, scale_right=home.short,
-            favours=leader.key,
+            favors=leader.key,
         ))
 
     # --- pace and possessions -------------------------------------------
@@ -187,7 +187,7 @@ def select(card, pool: dict) -> list[Driver]:
     if h is not None and a is not None:
         combined = h + a
         share_of_league = _pct(pool, "plays_per_game", combined / 2) or 0.5
-        # The bar and the magnitude describe *pace*. Labelling this driver with
+        # The bar and the magnitude describe *pace*. Labeling this driver with
         # the total difference would put a number on it that the sentence then
         # contradicts - the bar has to mean what the words say.
         fast = share_of_league > 0.5
@@ -225,7 +225,7 @@ def select(card, pool: dict) -> list[Driver]:
             share=min(0.48, abs(gap) * 0.9),
             toward_home=gap > 0,
             scale_left=away.short, scale_right=home.short,
-            favours=leader.key,
+            favors=leader.key,
         ))
 
     candidates.sort(key=lambda pair: pair[0], reverse=True)

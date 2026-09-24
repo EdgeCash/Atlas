@@ -517,7 +517,7 @@ def test_every_card_repeats_the_difference_disclaimer():
     assert "A difference is not an edge" in _page(_card())
 
 
-def test_the_grade_is_labelled_as_information_quality():
+def test_the_grade_is_labeled_as_information_quality():
     page = _page(_card())
     flat = " ".join(page.split())
     assert "not a recommendation" in flat
@@ -632,7 +632,7 @@ def test_an_nfl_team_page_shows_the_rating_the_quarterback_and_the_record():
     page = render.nfl_team_page(card.home, cards=[card], pool=_POOL, results=results,
                                 freshness={"projection": "x", "market": "y"})
     text = _visible_text(page)
-    # The offence is the forecast's: the team's own plus its expected starter's.
+    # The offense is the forecast's: the team's own plus its expected starter's.
     assert "+7.6" in page and "team +3.2 · J.Allen +4.4" in page and "+8.7" in page
     assert "1st of 2 with a card this week" in text and "buffalo&#x27;s margin" in text
     assert possessive("Bills") == "Bills'" and possessive("Buffalo") == "Buffalo's"
@@ -682,13 +682,13 @@ def test_an_ungraded_card_still_carries_the_disclaimer_and_says_why():
     assert "not a recommendation" in text and "no market is posted yet" in text
 
 
-def test_the_nfl_offence_driver_includes_the_expected_quarterback():
-    """The forecast adds each side's quarterback to its offence; the driver must compare the same thing."""
+def test_the_nfl_offense_driver_includes_the_expected_quarterback():
+    """The forecast adds each side's quarterback to its offense; the driver must compare the same thing."""
     card = _nfl_team_card()
     card.projection.away.update({"off": 3.0, "def": 0.0, "qb_pts": -2.0})
-    offence = next(d for d in driving._model_drivers(card) if d[1].name.startswith("Offence"))
-    assert offence[0] == pytest.approx((3.2 + 4.4) - (3.0 - 2.0))
-    assert "with its expected quarterback" in offence[1].sentence and "the NFL average" in offence[1].sentence
+    offense = next(d for d in driving._model_drivers(card) if d[1].name.startswith("Offense"))
+    assert offense[0] == pytest.approx((3.2 + 4.4) - (3.0 - 2.0))
+    assert "with its expected quarterback" in offense[1].sentence and "the NFL average" in offense[1].sentence
 
 
 def test_team_win_loss_counts_this_seasons_regular_season_results():
