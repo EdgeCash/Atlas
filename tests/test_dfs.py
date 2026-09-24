@@ -103,3 +103,65 @@ def test_names_normalize_across_sources():
     assert players.norm_name("C.J. Uzomah") == players.norm_name("CJ Uzomah") == "cj uzomah"
     assert players.norm_name("Michael Carter II") == "michael carter"
     assert players.norm_name("Ja'Marr Chase") == "jamarr chase" and players.norm_name(None) == ""
+
+
+def test_crps_of_a_normal_behaves():
+    from atlas.dfs import benchmarks as bm
+
+    y = np.array([10.0, 20.0])
+    assert bm.crps_normal(np.array([10.0, 10.0]), np.array([1e-9, 1e-9]), y) == pytest.approx([0.0, 10.0], abs=1e-5)
+    wide, narrow = bm.crps_normal(np.array([10.0]), np.array([8.0]), np.array([10.0])), \
+        bm.crps_normal(np.array([10.0]), np.array([2.0]), np.array([10.0]))
+    assert narrow < wide                                         # a sharp forecast that is right scores better
+
+
+def _league(seasons=(2014, 2015, 2016), weeks=8, seed=3):
+    """Players whose points are exactly 2 + 0.003 x salary plus noise, and
+    whose form persists: both benchmarks have something to find."""
+    rng = np.random.default_rng(seed)
+    rows = []
+    for s in seasons:
+        for team in ("A", "B", "C"):
+            for pos, n in (("QB", 2), ("RB", 3), ("WR", 4), ("TE", 2), ("DST", 1)):
+                for i in range(n):
+                    talent = rng.normal(0, 4)
+                    for w in range(1, weeks + 1):
+                        salary = 4000 + 1000 * (n - i) + 200 * talent
+                        rows.append({"season": s, "week": w, "team": team, "player_id": f"{team}{pos}{i}{s}",
+                                     "position": pos, "dk_salary": salary,
+                                     "target": 2 + 0.003 * salary + talent + rng.normal(0, 3)})
+    f = pd.DataFrame(rows).sort_values(["player_id", "season", "week"])
+    by = f.groupby("player_id")
+    f["games_before"] = by.cumcount()
+    f["dk_points_trend"] = by["target"].transform(lambda s: s.shift(1).ewm(halflife=4).mean())
+    return f.reset_index(drop=True)
+
+
+def test_benchmarks_are_walk_forward_and_find_what_is_there():
+    from atlas.dfs import benchmarks as bm
+
+    f = _league()
+    scored = bm.walk_forward(f, first_test=2015)
+    assert set(scored["season"]) == {2015, 2016}
+    # A season's fit never sees that season: poison 2016's targets and 2015's predictions do not move.
+    poisoned = f.copy()
+    poisoned.loc[poisoned["season"] == 2016, "target"] += 1000
+    again = bm.walk_forward(poisoned, first_test=2015)
+    assert np.allclose(scored.loc[scored["season"] == 2015, "salary"], again.loc[again["season"] == 2015, "salary"])
+    fit = bm.fit(f[f["season"] < 2016])
+    assert all(slope > 0 for _, slope in fit.salary.values())          # pricier players score more
+    table = bm.summarise(scored, ("baseline", "salary"), ["position"])
+    assert (table["rank corr"].dropna() > 0).all() and (table["crps"] > 0).all()   # 3 defenses a week: no rank
+
+
+def test_regulars_are_each_teams_top_players_by_salary():
+    from atlas.dfs import benchmarks as bm
+
+    f = bm.predict(_league(seasons=(2014, 2015)), bm.fit(_league(seasons=(2014,))))
+    r = bm.regulars(f[f["season"] == 2015])
+    per_team = r.groupby(["week", "team", "position"]).size().unstack()
+    assert (per_team["QB"] == 1).all() and (per_team["RB"] == 2).all() and (per_team["WR"] == 3).all()
+    assert (per_team["TE"] == 1).all() and (per_team["DST"] == 1).all()
+    top = f[(f["season"] == 2015) & (f["position"] == "QB")].groupby(["week", "team"])["dk_salary"].max()
+    chosen = r[r["position"] == "QB"].set_index(["week", "team"])["dk_salary"]
+    assert (chosen.sort_index() == top.sort_index()).all()
