@@ -180,7 +180,9 @@ def test_nflverse_fetch_all_refreshes_only_the_current_season(monkeypatch, tmp_p
     first = len(calls)
     nflverse.fetch_all(tmp_path, [2011, 2024], current=2024)
     refetched = calls[first:]
-    assert all("2024" in u or "games.parquet" in u for u in refetched)
+    # The season in progress, and the two single files refreshed every run:
+    # the schedule and the master player list.
+    assert all("2024" in u or "games.parquet" in u or "players.parquet" in u for u in refetched)
     assert not any("2011" in u for u in refetched)
 
 

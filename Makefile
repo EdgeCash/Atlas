@@ -1,6 +1,6 @@
 PYTHON ?= python3
 
-.PHONY: help install ingest warehouse research all test lint clean-data dfs-capture dfs-history \
+.PHONY: help install ingest warehouse research all test lint clean-data dfs-capture dfs-history dfs-staging dfs-scoring \
 	live-refresh live-run live-report live-check live-reproduce \
 	site site-full site-serve site-audit site-shots launch-check \
 	ops-heavy ops-poll ops-social ops-health ops-status ops-crontab \
@@ -202,6 +202,14 @@ dfs-capture:
 
 dfs-history:
 	$(PYTHON) -m atlas.sources.rotoguru
+
+# DFS plan, step 1: the player-game and defense-game tables, and Atlas's
+# DraftKings scoring reconciled against DraftKings' own record.
+dfs-staging:
+	$(PYTHON) -m atlas.dfs.players
+
+dfs-scoring:
+	$(PYTHON) -m atlas.dfs.reconcile
 
 # NFL plan, step 1: point-in-time team-game tables in their own warehouse.
 nfl-warehouse:

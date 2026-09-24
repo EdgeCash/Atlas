@@ -20,6 +20,8 @@ release of ``nflverse/nflverse-data``, verified fetchable without a key:
                       rushing, receiving, targets, air yards, target share -
                       the raw material of the DFS player model
                       (`docs/MODEL_PLAN_DFS.md`)
+* ``stats_team``    - every team's box score per week, defense included: the
+                      DraftKings defense score's sacks, takeaways and returns
 
 Cached exactly as ``data/raw/cfbd`` is: a completed season is fetched once
 and kept; the current season is re-fetched on every ingest because its
@@ -49,7 +51,7 @@ FIRST_SEASON = 2011
 
 #: First season each per-season release exists for.
 FIRST_AVAILABLE = {"pbp": 1999, "injuries": 2009, "depth_charts": 2001, "snap_counts": 2012, "weekly_rosters": 2002,
-                   "stats_player": 1999}
+                   "stats_player": 1999, "stats_team": 1999}
 
 #: The play-by-play columns Atlas keeps. Everything the staging table, the
 #: drive model and the score-state tables need, and nothing per-tackler.
@@ -68,6 +70,8 @@ PBP_COLUMNS = [
     "yards_gained", "pass", "rush", "pass_attempt", "rush_attempt", "complete_pass", "incomplete_pass",
     "sack", "interception", "fumble", "fumble_lost", "touchdown", "pass_touchdown", "rush_touchdown",
     "return_touchdown", "safety", "penalty", "penalty_team", "penalty_yards", "first_down", "third_down_converted",
+    # who scored and who recovered: a DraftKings defense's touchdowns, takeaways and blocks
+    "td_team", "fumble_recovery_1_team", "punt_blocked", "defensive_two_point_conv", "defensive_extra_point_conv",
     "third_down_failed", "fourth_down_converted", "fourth_down_failed", "field_goal_attempt", "field_goal_result",
     "kick_distance", "extra_point_attempt", "extra_point_result", "two_point_attempt", "two_point_conv_result",
     "punt_attempt", "kickoff_attempt", "air_yards", "yards_after_catch", "pass_length", "pass_location",
@@ -104,6 +108,10 @@ def pbp_path(raw: Path, season: int) -> Path:
 
 def schedules_path(raw: Path) -> Path:
     return nfl_dir(raw) / "schedules.parquet"
+
+
+def players_path(raw: Path) -> Path:
+    return nfl_dir(raw) / "players.parquet"
 
 
 def injuries_path(raw: Path, season: int) -> Path:
@@ -169,6 +177,14 @@ def fetch_schedules(raw: Path, *, refresh: bool = True) -> Path:
     return download(_release("schedules", "games.parquet"), dest)
 
 
+def fetch_players(raw: Path, *, refresh: bool = True) -> Path:
+    """Every player nflverse knows, with every id he has: the translation
+    between the snap counts' ids and everything else's."""
+    dest = players_path(raw)
+    _fresh(dest, refresh)
+    return download(_release("players", "players.parquet"), dest)
+
+
 def fetch_injuries(raw: Path, season: int, *, refresh: bool = False) -> Path:
     dest = injuries_path(raw, season)
     _fresh(dest, refresh)
@@ -193,6 +209,16 @@ def fetch_rosters(raw: Path, season: int, *, refresh: bool = False) -> Path:
     return download(_release("weekly_rosters", f"roster_weekly_{season}.parquet"), dest)
 
 
+def team_stats_path(raw: Path, season: int) -> Path:
+    return nfl_dir(raw) / f"stats_team_{season}.parquet"
+
+
+def fetch_team_stats(raw: Path, season: int, *, refresh: bool = False) -> Path:
+    dest = team_stats_path(raw, season)
+    _fresh(dest, refresh)
+    return download(_release("stats_team", f"stats_team_week_{season}.parquet"), dest)
+
+
 def fetch_player_stats(raw: Path, season: int, *, refresh: bool = False) -> Path:
     dest = player_stats_path(raw, season)
     _fresh(dest, refresh)
@@ -206,6 +232,7 @@ FETCHERS = {
     "snap_counts": fetch_snap_counts,
     "weekly_rosters": fetch_rosters,
     "stats_player": fetch_player_stats,
+    "stats_team": fetch_team_stats,
 }
 
 
@@ -229,6 +256,10 @@ def fetch_all(raw: Path, seasons: list[int], *, current: int | None = None) -> d
         out["schedules"].append(fetch_schedules(raw, refresh=True))
     except Exception as exc:  # noqa: BLE001 - logged, the rest still runs
         LOG.warning("nflverse schedules failed: %s", exc)
+    try:
+        out["players"] = [fetch_players(raw, refresh=True)]
+    except Exception as exc:  # noqa: BLE001 - logged, the rest still runs
+        LOG.warning("nflverse players failed: %s", exc)
     for name, fn in FETCHERS.items():
         got = []
         for season in seasons:

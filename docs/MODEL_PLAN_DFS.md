@@ -1,6 +1,6 @@
 # Atlas — DFS Model Plan (DraftKings NFL Classic)
 
-Status: **step 0 done** (see §7). Scope v1: DraftKings NFL Classic,
+Status: **steps 0-1 done** (see §7). Scope v1: DraftKings NFL Classic,
 the Sunday main slate. College (DraftKings CFB Classic) waits on thinner
 player data and comes after the NFL model has a record.
 
@@ -108,6 +108,13 @@ return or defensive TD +6, safety +2, blocked kick +2; points allowed
 0 → +10, 1-6 → +7, 7-13 → +4, 14-20 → +1, 21-27 → 0, 28-34 → -1,
 35+ → -4.
 
+Settled by the record in step 1, not assumed: a fumble lost on a kick or
+punt return costs the returner 1; a blocked extra point counts as a
+blocked kick, like a punt or field goal; points allowed leave out a
+touchdown scored against the team's own offense (a pick-six or fumble
+return, removed at 6 points, not 7) and a safety its offense concedes,
+while a return touchdown against its kicking or punting unit counts.
+
 **Verified before use**: step 1 computes DraftKings points from nflverse
 stats with these rules and must reproduce RotoGuru's recorded DraftKings
 points for 2014-2021 on at least 99% of player-weeks to within 0.1. Any
@@ -189,13 +196,18 @@ slates are checked against brute force.
 | Step | What | Gate / result |
 |---|---|---|
 | 0 | Sources: nflverse player stats (2011+); DraftKings lobby and Classic draftables captured daily in the heavy run; the RotoGuru 2014-2021 archive, once (`atlas/sources/nflverse.py`, `atlas/sources/draftkings.py`, `atlas/sources/rotoguru.py`; `make dfs-capture`, `make dfs-history`) | **done** — player stats 2011-2026 cached; first capture 24 Sep: 6 Classic slates, 3,016 salaries (main slate 662 players, 26 defenses) in `tracking/dfs_salaries.csv`; the capture never fails the heavy run; RotoGuru archive 2014-2021 cached, 55,386 player-weeks (6,769-7,489 a season, 17 weeks, 18 in 2021) |
-| 1 | Staging: player-game table, DraftKings points from stats, opportunity shares, point-in-time features | reproduces RotoGuru's DraftKings points on ≥99% of player-weeks |
+| 1 | Staging: player-game table, DraftKings points from stats, opportunity shares, point-in-time features (`atlas/dfs/scoring.py`, `atlas/dfs/players.py`, `atlas/dfs/reconcile.py`; `make dfs-staging`, `make dfs-scoring`) | **done — gate passes: 99.26%** of 55,386 archive player-weeks agree within 0.1 (99.25% without the 137 matched by points); QB 99.10%, RB 99.44%, WR 99.62%, TE 99.77%, DST 95.64% (`reports/dfs_scoring.md`). `dfs_player_games` 90,224 rows and `dfs_dst_games` 8,256, 2011-2026, in the NFL warehouse; snap share covers 99.7%+ from 2013 (none exists for 2011-12); trends checked to use prior games only |
 | 2 | Benchmarks: baseline and salary | `reports/dfs_benchmarks.md` |
 | 3 | Projection model v1, team-anchored | beats baseline at every position |
 | 4 | Defenses and ranges | 80% ranges cover 76-84% |
 | 5 | Optimizer and DraftKings CSV | constraints always hold; brute-force check |
 | 6 | Owner page, encrypted, in the heavy run | decrypts on the iPad with the passphrase; nothing readable published |
 | 7 | Public DFS area: projections with ranges and the record; audit rules; About and FAQ reworded | audit passes |
+
+**Before DFS staging runs in the heavy refresh** (step 6): the GitHub
+runner's cached play-by-play for past seasons predates the fields step 1
+added (who scored, who recovered, blocked punts), and cached seasons are
+not re-fetched. One run with those seasons cleared re-fetches them.
 
 v1.1: the in-browser builder under the reader's settings, correlations
 and stacks, late swap. v2: DraftKings CFB Classic.
