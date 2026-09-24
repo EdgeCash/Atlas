@@ -1,18 +1,18 @@
 # NFL state model
 
-Walk-forward, seasons 2020-2026. The filter runs continuously from 2011; each new season regresses every team's offence and defence toward the mean by `phi` and widens their uncertainty by `p_season`, and every game is forecast strictly before kickoff and then assimilated (`atlas/models/kalman.py`). Hyperparameters are chosen on the earlier seasons only. `state` is the team model alone (step 3); `state_qb` adds a quarterback state carried by the player and a fitted, slowly drifting home advantage (step 4), forecast with the depth chart's QB1 and updated with the quarterback of record, whose own EPA per dropback in the game is a second measurement of him (v1.2, `pts per EPA/dropback, observed`). Same lattice and scoring as the benchmarks.
+Walk-forward, seasons 2020-2026. The filter runs continuously from 2011; each new season regresses every team's offence and defence toward the mean by `phi` and widens their uncertainty by `p_season`, and every game is forecast strictly before kickoff and then assimilated (`atlas/models/kalman.py`). Hyperparameters are chosen on the earlier seasons only. `state` is the team model alone (step 3); `state_qb` adds a quarterback state carried by the player and a fitted, slowly drifting home advantage (step 4), forecast with the depth chart's QB1 and updated with the quarterback of record, whose own EPA per dropback in the game is a second measurement of him (v1.2, `pts per EPA/dropback, observed`). A draft-slot prior for a quarterback with little record (`pts per draft score`) was measured and is switched off: it did not hold out of sample. Same lattice and scoring as the benchmarks.
 
 ## Hyperparameters chosen, per season
 
-| season | q per week | phi | p_season | sigma (pts) | tuned on | QB prior var | new QB prior | pts per EPA/dropback | pts per EPA/dropback, observed | HFA fitted |
-|---|---|---|---|---|---|---|---|---|---|---|
-| 2020 | 0.500 | 0.500 | 5.000 | 8.500 | 2017, 2018, 2019 | 16.000 | 0.000 | 0.000 | 0.000 | 0.610 |
-| 2021 | 0.250 | 0.670 | 5.000 | 8.500 | 2018, 2019, 2020 | 9.000 | 0.000 | 15.000 | 0.000 | 0.890 |
-| 2022 | 0.500 | 0.670 | 5.000 | 8.500 | 2019, 2020, 2021 | 4.000 | 0.000 | 15.000 | 0.000 | 1.290 |
-| 2023 | 0.500 | 0.500 | 5.000 | 8.500 | 2020, 2021, 2022 | 4.000 | 0.000 | 15.000 | 0.000 | 1.920 |
-| 2024 | 0.250 | 0.670 | 5.000 | 8.500 | 2021, 2022, 2023 | 4.000 | -2.000 | 0.000 | 10.000 | 1.990 |
-| 2025 | 0.250 | 0.500 | 5.000 | 8.500 | 2022, 2023, 2024 | 4.000 | -2.000 | 15.000 | 20.000 | 2.120 |
-| 2026 | 0.500 | 0.500 | 5.000 | 8.500 | 2023, 2024, 2025 | 4.000 | -4.000 | 15.000 | 30.000 | 1.680 |
+| season | q per week | phi | p_season | sigma (pts) | tuned on | QB prior var | new QB prior | pts per EPA/dropback | pts per EPA/dropback, observed | pts per draft score | HFA fitted |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 2020 | 0.500 | 0.500 | 5.000 | 8.500 | 2017, 2018, 2019 | 16.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.610 |
+| 2021 | 0.250 | 0.670 | 5.000 | 8.500 | 2018, 2019, 2020 | 9.000 | 0.000 | 15.000 | 0.000 | 0.000 | 0.890 |
+| 2022 | 0.500 | 0.670 | 5.000 | 8.500 | 2019, 2020, 2021 | 4.000 | 0.000 | 15.000 | 0.000 | 0.000 | 1.290 |
+| 2023 | 0.500 | 0.500 | 5.000 | 8.500 | 2020, 2021, 2022 | 4.000 | 0.000 | 15.000 | 0.000 | 0.000 | 1.920 |
+| 2024 | 0.250 | 0.670 | 5.000 | 8.500 | 2021, 2022, 2023 | 4.000 | -2.000 | 0.000 | 10.000 | 0.000 | 1.990 |
+| 2025 | 0.250 | 0.500 | 5.000 | 8.500 | 2022, 2023, 2024 | 4.000 | -2.000 | 15.000 | 20.000 | 0.000 | 2.120 |
+| 2026 | 0.500 | 0.500 | 5.000 | 8.500 | 2023, 2024, 2025 | 4.000 | -4.000 | 15.000 | 30.000 | 0.000 | 1.680 |
 
 ## Reporting window, regular season 2023-2025
 
