@@ -143,3 +143,39 @@ def test_nfl_benchmarks_score_the_synthetic_league(nfl_frame):
     assert np.isfinite(scored["crps"]).all()
     text = nb.render(scored)
     assert "## Regular season, every scored season pooled" in text and "quarterback" in text.lower()
+
+
+# ---------------------------------------------------------------------------
+# Step 3: the state, carried across seasons
+# ---------------------------------------------------------------------------
+
+SMALL_GRID = {"q": (0.0, 2.0), "phi": (0.67,), "p_season": (25.0,), "sigma": (9.5,)}
+
+
+def test_a_new_season_regresses_the_state_toward_the_mean():
+    from atlas.models import kalman
+    from atlas.models import nfl_state as ns
+
+    spec = ns._spec(1.0, 9.5, 22.0, 2.0)
+    state = kalman.initialise(np.array([1, 2]), np.array([10.0, -4.0]), np.array([2.0, 0.0]), spec)
+    state.P[:] = np.eye(4) * 4.0
+    state.week = 18
+    ns.new_season(state, phi=0.5, p_season=10.0)
+    assert state.off(1) == 5.0 and state.off(2) == -2.0 and state.defense(1) == 1.0
+    assert state.P[0, 0] == pytest.approx(4.0 * 0.25 + 10.0)
+    assert state.week is None
+
+
+def test_the_nfl_state_runs_walk_forward_and_beats_naive(nfl_frame):
+    from atlas.models import nfl_state as ns
+    from atlas.research.nfl_dataset import research_sample
+
+    sample = research_sample(nfl_frame)
+    scored, choices, finals, _ = ns.walk_forward(sample, first_test_season=SEASONS[1], grid=SMALL_GRID, min_train_seasons=1)
+    assert set(choices) == {SEASONS[1]}
+    pooled = ns.evaluate.summarise(scored[scored["season_type"] == "regular"], order=ns.ORDER).set_index("model")
+    assert pooled.loc["state", "crps"] < pooled.loc["naive", "crps"]
+    assert np.isfinite(scored[scored["model"] == "state"]["crps"]).all()
+    final = finals[SEASONS[1]].frame()
+    assert len(final) == 8 and final["net"].abs().max() > 0
+    assert "## The quarterback test" in ns.render(scored, choices, finals, nfl_frame)
