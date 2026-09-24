@@ -310,7 +310,7 @@ realised-versus-claimed accuracy walk-forward and out of sample. Its
 | 2 | Layer A+B, **NCAAF first** (the data is here) | beats Elo on CRPS and Brier out of sample |
 | 3 | Layer A+B, NFL | same |
 | 4 | Card: model number in the second slot, market open/move/now in the first, drivers third | language audit passes; grade uses the new distribution — **done for NCAAF** (`docs/MODEL_PLAN_NCAAF.md` step 6) |
-| 5 | v2 drive simulation, if phase 1's exact-score log-score leaves room | measurable gain on exact-score log-score — **NCAAF: gate measured, a points lattice (v1.5) took 7.54 → 7.10 first; a simulation must beat that** |
+| 5 | v2 drive simulation, if phase 1's exact-score log-score leaves room | measurable gain on exact-score log-score — **both sports: gate measured, a points lattice (v1.5) took the room first (NCAAF 7.54 → 7.10, NFL 7.16 → 6.89, 0.05 behind the market's grid through the same lattice); a simulation must beat those** |
 
 College goes first because its warehouse exists, its games are four times as
 numerous, and its team-strength spread is wide enough that a model has room to

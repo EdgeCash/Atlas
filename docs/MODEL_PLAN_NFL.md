@@ -245,6 +245,35 @@ from one, and the heavy job ingests nflverse and builds the NFL warehouse
 before the model step. `nfl.html` is the NFL board, grouped by day. The
 site audit passes on every page with the NFL cards counted as cards.
 
+**Step 7 — the gate, measured; no simulation.** The foundation's rule:
+build the state-dependent drive simulation only if the grid's exact-score
+log score is measurably short of the benchmark. Walk-forward, regular
+seasons 2023–2025, mean −log P(actual score) on the 60×60 grid:
+
+| grid | −log P | top-10 hit | median rank |
+|---|---|---|---|
+| two discretised normals, no lattice | 7.279 | 1.7% | 375 |
+| margin lattice only (v1) | 7.160 | 3.9% | 315 |
+| market's grid, margin lattice | 7.104 | 4.1% | 295 |
+| **v1 + points lattice (v1.5)** | **6.891** | **8.6%** | **233** |
+| market's grid + the same points lattice | 6.838 | 9.2% | 217 |
+
+Three things decide it. The points lattice took the exact-score gain
+(0.27 nats, three times the margin lattice's 0.12), and it is exactly
+the score-state structure a simulation was meant to capture: the fitted
+multipliers say 3, 6, 10, 13, 17 and 20 land and 14, 21 and 28 do not,
+which is two-point conversions and late-game decisions read off the
+finals. Against the market's own grid through the same lattice the
+residual gap is 0.05 nats, the same gap the margin CRPS shows; that is
+where the *mean* sits, not how the score process is modelled, and it is
+step 3–4's problem (the quarterback v1.1). And the one structural signal
+left - the grid's cell probabilities run slightly peaked, its ≥0.5% cells
+landing 84% as often as claimed and its <0.1% cells 118% - is worth
+0.008 nats when a dispersion parameter is fitted walk-forward and applied
+out of sample, which is below the noise of a season. A drive simulation
+would have to beat 6.89 on the exact score and could not move the mean.
+It stays unbuilt, with the bar written down.
+
 ---
 
 ## 6. Validation — NFL specifics
@@ -306,7 +335,7 @@ market is v2's ambition, not v1's requirement.
 | 4 | Add QB state and HFA fit | **done — beats Elo on every row** (CRPS 7.351, Brier 0.222, MAE 10.20, ECE 0.027); the QB test gap did not close, and the report says why |
 | 5 | Total model + joint grid (`atlas/models/nfl_total.py`, `make nfl-total`) | **done** — total CRPS 7.36 (naive 7.61, market 7.24); 60×60 grid with the points lattice; P(home) within 0.03 of observed where the NFL lives |
 | 6 | Wire into the card and the grade (`atlas/models/nfl_projection.py`; the live and site layers take a sport) | **done** — `nfl.html` is a board; 17 NFL cards this week; audit passes |
-| 7 | v2: state-dependent drive simulation, only if step 5's exact-score log-score is measurably short of the benchmark | |
+| 7 | v2: state-dependent drive simulation, only if step 5's exact-score log-score is measurably short of the benchmark | **gate measured; not warranted.** v1.5 grid 6.89 nats against the market's grid through the same lattice at 6.84; the 0.05 is mean accuracy, not the score process |
 
 Steps 0–1 are done, in a session. What the build established:
 
