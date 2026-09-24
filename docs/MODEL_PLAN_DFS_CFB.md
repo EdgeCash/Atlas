@@ -1,6 +1,6 @@
 # Atlas — DFS Model Plan: college (DraftKings CFB)
 
-Status: **step 0 done** (see §5). The NFL DFS model (`docs/MODEL_PLAN_DFS.md`)
+Status: **steps 0-1 done** (see §5). The NFL DFS model (`docs/MODEL_PLAN_DFS.md`)
 is the template: the same lines, the same walk-forward standard, the same
 optimizer and owner page. This plan is what college changes.
 
@@ -32,7 +32,8 @@ only after the model has a live record, and are a separate decision.
   Atlas's own capture (step 0) builds one from 2026 on.
 - **Player stats.** Atlas's college play-by-play (cfbfastR) is trimmed to
   team-level fields: no player names. Two sources carry per-player games:
-  - ESPN's box score, one public call per game: passing (C/ATT, yards, TD,
+  - ESPN's box score, one public call per game (chosen: testable without a
+    key, and it carries the field-goal distances DraftKings scores): passing (C/ATT, yards, TD,
     INT), rushing, receiving, fumbles lost, return touchdowns, kicking; ESPN
     athlete ids; field-goal distances from the scoring plays' text. No key;
     about 870 games a season, so a 2014-2025 backfill is about 10,000 calls,
@@ -83,7 +84,7 @@ The NFL model's shape, with college's inputs:
 | Step | What | Gate |
 |---|---|---|
 | 0 | Capture DraftKings' college Classic and Showdown slates daily, beside the NFL's (`atlas/sources/draftkings.py`) | **done** — the heavy run's capture now takes both sports; college slates are kept apart from the NFL model's |
-| 1 | Source and scoring: the player-game table 2014-2026 (ESPN box scores, or CFBD if its endpoint is free); a one-time backfill in a manual workflow, then the current week in the heavy run | Atlas's points per game match DraftKings' FPPG for at least 98% of pool players who have played (within 0.1) |
+| 1 | Source and scoring: the player-game table 2014-2026 from ESPN's box scores (`atlas/sources/espn_cfb.py`), scored with DraftKings' college rules (`atlas/dfs/cfb.py`; `make cfb-players`, `make cfb-scoring`) | Atlas's points per game match DraftKings' FPPG for at least 98% of pool players who have played — **done, gate passes: 1,320 of 1,337 (98.7%)** (`reports/dfs_cfb_scoring.md`); QB 98.1%, RB 98.7%, WR 98.8%, K 100%. DraftKings divides by every game a player appeared in, a stat or not, and a box score lists only games with a stat, so agreement is a total that gives DraftKings' figure over some count of games between the two; the strict subset with a stat line every game agrees 97.9% within 0.1, the rest the size of stat corrections. The rules match the NFL's without a defense, kickers included. No separate backfill workflow: each heavy run fetches up to 2,000 games it lacks, the season in progress first and then the newest seasons back, and the raw cache keeps them - about five runs for 2014-2025 |
 | 2 | Baseline: recent form shrunk to position, walk-forward | reported, by position |
 | 3 | Model and ranges | beats the baseline's CRPS at QB, RB and WR (and K), ranges cover 76-84% |
 | 4 | Optimizer: Classic with the SUPERFLEX, Showdown with UTIL | matches brute force |
@@ -107,4 +108,5 @@ The NFL model's shape, with college's inputs:
 
 ## 7. What the owner needs to do
 
-- Step 1: run one manual backfill workflow (it will be added then), once.
+- Nothing for step 1: the history arrives with the daily heavy runs (about
+  five). Running site heavy by hand a few times speeds it up.

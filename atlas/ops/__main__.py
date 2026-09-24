@@ -63,6 +63,10 @@ def heavy(*, skip_warehouse: bool = False) -> int:
         # DraftKings' Classic salaries for the DFS model's record. It never
         # fails the run: a missed capture is logged, the site still builds.
         ("dfs-capture", ["atlas.sources.draftkings"]),
+        # College player box scores from ESPN for the college DFS model: the
+        # season in progress, then up to a budget of the history each run,
+        # newest seasons first, kept by the raw cache. Never fails the run.
+        ("cfb-players", ["atlas.sources.espn_cfb"]),
         # DFS: every upcoming Classic, Showdown and Tiers slate projected;
         # the Main slate's projections recorded in tracking/dfs_projections.csv
         # for the public DFS page until its first kickoff; and the owner's

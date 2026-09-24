@@ -1,6 +1,6 @@
 PYTHON ?= python3
 
-.PHONY: help install ingest warehouse research all test lint clean-data dfs-capture dfs-history dfs-staging dfs-scoring dfs-benchmarks dfs-model dfs-lineups dfs-slate dfs-kickers \
+.PHONY: help install ingest warehouse research all test lint clean-data dfs-capture dfs-history dfs-staging dfs-scoring dfs-benchmarks dfs-model dfs-lineups dfs-slate dfs-kickers cfb-players cfb-scoring \
 	live-refresh live-run live-report live-check live-reproduce \
 	site site-full site-serve site-audit site-shots launch-check \
 	ops-heavy ops-poll ops-social ops-health ops-status ops-crontab \
@@ -234,6 +234,14 @@ dfs-slate:
 # its scoring checked against DraftKings' live points-per-game.
 dfs-kickers:
 	$(PYTHON) -m atlas.dfs.kicker --reconcile
+
+# College DFS, step 1: ESPN's college box scores (budgeted; newest first) and
+# DraftKings' college scoring checked against its live points per game.
+cfb-players:
+	$(PYTHON) -m atlas.sources.espn_cfb
+
+cfb-scoring:
+	$(PYTHON) -m atlas.dfs.cfb --reconcile
 
 # NFL plan, step 1: point-in-time team-game tables in their own warehouse.
 nfl-warehouse:

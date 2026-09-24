@@ -168,11 +168,12 @@ def reconcile(pools: list[dict], g: pd.DataFrame, season: int) -> pd.DataFrame:
     seen, rows = set(), []
     this = g[g["season"] == season].assign(key=lambda x: x["name"].map(players.norm_name))
     for pool in pools:
+        stat = next((s.get("id") for s in pool.get("draftStats", []) or [] if s.get("abbr") == "FPPG"), 90)
         for d in pool.get("draftables", []) or []:
             if d.get("position") != "K" or d.get("playerId") in seen:
                 continue
             seen.add(d.get("playerId"))
-            fppg = next((a.get("value") for a in d.get("draftStatAttributes", []) or [] if a.get("id") == 90), None)
+            fppg = next((a.get("value") for a in d.get("draftStatAttributes", []) or [] if a.get("id") == stat), None)
             try:
                 fppg = float(fppg)
             except (TypeError, ValueError):
