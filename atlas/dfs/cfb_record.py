@@ -27,7 +27,6 @@ record when projected is found in the box score by name and team.
 from __future__ import annotations
 
 import argparse
-import gzip
 import json
 import os
 from datetime import datetime, timezone
@@ -38,6 +37,8 @@ import pandas as pd
 
 from atlas.dfs import cfb
 from atlas.dfs import cfb_players as cp
+from atlas.owner import sealed
+from atlas.owner.sealed import Unreadable
 from atlas.util import get_logger
 
 LOG = get_logger(__name__)
@@ -53,10 +54,6 @@ def path() -> Path:
     return tracking_dir() / "dfs_cfb_record"
 
 
-def _week_file(where: Path, season, week) -> Path:
-    return where / f"{int(season)}-{int(week):02d}.enc.json"
-
-
 def projections_path() -> Path:
     """This refresh's college projections, readable, for the record to take in. Never kept."""
     from atlas.dfs import slate
@@ -64,25 +61,12 @@ def projections_path() -> Path:
     return slate.index_path().parent / "cfb_projections.csv"
 
 
-class Unreadable(Exception):
-    """The record exists but the key does not open it."""
-
-
 def load(passphrase: str, where: Path | None = None) -> pd.DataFrame:
     """The record, opened; empty when there is none yet."""
-    from atlas.dfs import owner
-
-    where = where or path()
-    parts = []
-    for f in sorted(where.glob("*.enc.json")) if where.exists() else []:
-        try:
-            plain = gzip.decompress(owner.decrypt(json.loads(f.read_text()), passphrase))
-        except Exception as error:  # noqa: BLE001 - the type only: never the content
-            raise Unreadable(type(error).__name__) from None
-        parts.append(pd.DataFrame(json.loads(plain)["rows"], columns=COLUMNS))
-    if not parts:
+    rows = sealed.load(where or path(), passphrase)
+    if not rows:
         return pd.DataFrame(columns=COLUMNS)
-    return pd.concat(parts, ignore_index=True).astype({"event": str, "player_id": str})
+    return pd.DataFrame(rows, columns=COLUMNS).astype({"event": str, "player_id": str})
 
 
 def merge(record: pd.DataFrame, fresh: pd.DataFrame, now: datetime) -> tuple[pd.DataFrame, set]:
@@ -109,24 +93,13 @@ def merge(record: pd.DataFrame, fresh: pd.DataFrame, now: datetime) -> tuple[pd.
 
 def seal(record: pd.DataFrame, passphrase: str, weeks: set, where: Path | None = None) -> list[Path]:
     """The given weeks' rows, compressed and sealed, one file each."""
-    from atlas.dfs import owner
-
     where = where or path()
-    where.mkdir(parents=True, exist_ok=True)
     written = []
     for season, week in sorted(weeks):
         part = record[(record["season"].astype(int) == season) & (record["week"].astype(int) == week)]
         rows = json.loads(part.reindex(columns=COLUMNS).to_json(orient="records"))
-        plain = json.dumps({"rows": rows}, separators=(",", ":"), allow_nan=False).encode("utf-8")
-        packed = gzip.compress(plain, mtime=0)
-        box = owner.encrypt(packed, passphrase)
-        published = json.dumps(box)
-        if owner.decrypt(box, passphrase) != packed or any(
-                isinstance(r["name"], str) and len(r["name"]) > 4 and r["name"] in published for r in rows):
-            raise RuntimeError("the college record did not seal")
-        f = _week_file(where, season, week)
-        f.write_text(published + "\n")
-        written.append(f)
+        written.append(sealed.seal(rows, passphrase, sealed.week_file(where, season, week),
+                                   names=[r["name"] for r in rows]))
     return written
 
 

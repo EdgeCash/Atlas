@@ -149,21 +149,24 @@ class EspnScoreboard:
                 # home handicap, so the home-oriented margin is its negation.
                 home_now, home_price = _line_block(spread.get("home"), "close")
                 home_open, home_open_price = _line_block(spread.get("home"), "open")
+                # The other side's price: the away side's, the under's. Its line is the same number.
+                _, away_price = _line_block(spread.get("away"), "close")
                 if home_now is not None or home_open is not None:
                     out.append({
                         **base, "book": book, "market": "margin",
                         "line": -home_now if home_now is not None else None,
-                        "price": home_price,
+                        "price": home_price, "other_price": away_price,
                         "open_line": -home_open if home_open is not None else None,
                         "open_price": home_open_price,
                     })
 
                 over_now, over_price = _line_block(total.get("over"), "close")
                 over_open, over_open_price = _line_block(total.get("over"), "open")
+                _, under_price = _line_block(total.get("under"), "close")
                 if over_now is not None or over_open is not None:
                     out.append({
                         **base, "book": book, "market": "total",
-                        "line": over_now, "price": over_price,
+                        "line": over_now, "price": over_price, "other_price": under_price,
                         "open_line": over_open, "open_price": over_open_price,
                     })
         return out

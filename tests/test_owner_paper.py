@@ -13,10 +13,11 @@ from atlas.owner import paper
 
 
 def _signal(sid, game, market, direction, line, *, price=-110.0, selection="primary", book="DraftKings",
-            created="2026-09-22T12:00:00+00:00"):
+            created="2026-09-22T12:00:00+00:00", side="own"):
     return {"signal_id": sid, "created_at": created, "game_id": game, "season": 2026, "week": 4, "market": market,
             "book": book, "open_line": line, "entry_line": line, "entry_price": price, "atlas_number": 0.0,
-            "disagreement": 0.0, "direction": direction, "selection": selection, "model_version": "x"}
+            "disagreement": 0.0, "direction": direction, "selection": selection, "model_version": "x",
+            "entry_price_side": direction if side == "own" else side}
 
 
 def test_prices_pay_and_break_even_as_the_odds_say():
@@ -80,8 +81,9 @@ def test_the_tracker_rides_only_inside_the_ciphertext(tmp_path, monkeypatch):
     assert sealed["box"] is not None                                          # no slate, still opens
     data = json.loads(owner.decrypt(sealed["box"], "horse battery"))
     assert data["slates"] == [] and data["note"] == "No upcoming slate is posted yet."
-    tracker = data["sections"][0]
-    assert tracker["title"] == "Paper tracker" and "record" not in tracker
+    assert [s["title"] for s in data["sections"]] == ["Curated plays", "Paper tracker"]
+    tracker = data["sections"][1]
+    assert "record" not in tracker
     rows = {r[0]: r[1] for r in tracker["tables"][0]["rows"]}
     assert rows["Won-lost-push"] == "1-0-0" and rows["Graded"] == "1"
     assert "Paper" not in json.dumps(sealed)
@@ -89,3 +91,15 @@ def test_the_tracker_rides_only_inside_the_ciphertext(tmp_path, monkeypatch):
     script = (Path(owner.__file__).resolve().parents[1] / "site" / "assets" / "owner.js").read_text().lower()
     for word in ("paper", "wager", "units", "stake", "profit", "break-even", "roi"):
         assert word not in script, word
+
+
+def test_a_price_counts_only_for_the_side_it_belongs_to():
+    signals = pd.DataFrame([
+        _signal("u", 1, "total", "under", 50.0, price=+150, side=None),     # before both prices: the over's
+        _signal("o", 2, "total", "over", 50.0, price=+150),
+    ])
+    finals = paper.results(pd.DataFrame({"game_id": [1, 2], "actual_margin": [0.0, 0.0],
+                                         "actual_total": [40.0, 60.0]}), pd.DataFrame())
+    w = paper.wagers(signals, finals).set_index("signal_id")
+    assert w.loc["u", "profit"] == pytest.approx(100 / 110) and bool(w.loc["u", "price_assumed"])
+    assert w.loc["o", "profit"] == pytest.approx(1.5) and not bool(w.loc["o", "price_assumed"])

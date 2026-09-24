@@ -53,10 +53,10 @@ def _games_frame(quotes: pd.DataFrame, now: str) -> pd.DataFrame:
 
 
 def _snapshot_frame(quotes: pd.DataFrame, now: str) -> pd.DataFrame:
-    block = quotes[[
+    block = quotes.reindex(columns=[
         "captured_at", "game_id", "book", "market", "line", "price",
-        "open_line", "open_price", "status",
-    ]].copy()
+        "open_line", "open_price", "status", "other_price",
+    ]).copy()
     block["last_seen_at"] = now
     return block
 

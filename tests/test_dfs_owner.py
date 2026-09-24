@@ -80,7 +80,9 @@ def test_a_failure_records_its_kind_and_nothing_else(tmp_path, monkeypatch):
     monkeypatch.setattr(slate, "run_all", boom)
     owner.refresh(rebuild=False)
     record = owner.read(tmp_path / "owner.enc.json")
-    assert record["box"] is None and "KeyError" in record["reason"]
+    # The curated plays still open the page; the failure is named inside it, by its kind alone.
+    note = json.loads(owner.decrypt(record["box"], "horse battery"))["note"]
+    assert "KeyError" in note and "Josh" not in note and "8000" not in note
     assert "Josh" not in json.dumps(record) and "8000" not in json.dumps(record)
 
 
@@ -173,7 +175,8 @@ def test_no_upcoming_slate_says_so(tmp_path, monkeypatch):
 
     monkeypatch.setattr(slate, "run_all", none)
     owner.refresh(rebuild=False)
-    assert owner.read(tmp_path / "owner.enc.json")["reason"] == "No upcoming slate is posted yet."
+    record = owner.read(tmp_path / "owner.enc.json")
+    assert json.loads(owner.decrypt(record["box"], "horse battery"))["note"] == "No upcoming slate is posted yet."
 
 
 # ---------------------------------------------------------------------------

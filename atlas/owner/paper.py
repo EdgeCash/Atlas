@@ -92,7 +92,13 @@ def wagers(signals: pd.DataFrame, finals: pd.DataFrame, grades: pd.DataFrame | N
         return pd.DataFrame(columns=["game_id", "market", "selection", "outcome", "profit"])
     s = signals.assign(game_id=signals["game_id"].astype(str)).sort_values(["created_at", "signal_id"])
     w = s.drop_duplicates(["game_id", "market"], keep="first").copy()
-    w["price"] = pd.to_numeric(w["entry_price"], errors="coerce").fillna(DEFAULT_PRICE)
+    # The recorded price counts only when it is the price of the side taken: a
+    # signal formed before both prices were captured holds the home side's or
+    # the over's whichever way it ran, and is priced at the standard -110.
+    side = w["entry_price_side"] if "entry_price_side" in w else pd.Series(None, index=w.index)
+    own = side.astype("string").eq(w["direction"].astype("string")).fillna(False)
+    w["price"] = pd.to_numeric(w["entry_price"], errors="coerce").where(own).fillna(DEFAULT_PRICE)
+    w["price_assumed"] = ~own | pd.to_numeric(w["entry_price"], errors="coerce").isna()
     w = w.merge(finals, on="game_id", how="left")
     final = np.where(w["market"] == "total", w["final_total"], w["final_margin"])
     sign = np.where(w["direction"].isin(["over", "home"]), 1.0, -1.0)
@@ -188,7 +194,8 @@ def section(w: pd.DataFrame, games: pd.DataFrame | None = None) -> dict:
                                                                                             strict=True)) + ".",
         "The historical test of the same idea: " + HISTORY,
         "Units are profit in stakes of one; per wager is units over graded wagers; CLV is the average points "
-        "the closing line moved toward the side taken.",
+        "the closing line moved toward the side taken. Signals formed before both sides' prices were captured "
+        "(24 September 2026) are priced at the standard -110.",
     ]
     tables = [{"head": head, "rows": rows}]
     if recent_rows:

@@ -207,15 +207,18 @@ def refresh(*, rebuild: bool = True) -> Path:
         LOG.warning("no %s secret: the owner page is not built", SECRET)
         return write(None, reason=reason or "The owner key is not configured.")
     from atlas.dfs import cfb_record
-    from atlas.owner import paper
+    from atlas.owner import paper, plays
 
-    # The paper tracker opens the page even on a day with no slate.
+    # The curated plays are logged every morning, slate or none; they and the
+    # paper tracker open the page even on a day with no slate.
+    curated = plays.build(passphrase)
     tracker = paper.build()
-    if index is None and tracker is None:
+    sections = [s for s in (curated, tracker) if s]
+    if index is None and not sections:
         return write(None, reason=reason)
     college = cfb_record.update(passphrase) if index is not None else None
     try:
-        data = payload(index, college_record=college, sections=[tracker] if tracker else [], note=reason)
+        data = payload(index, college_record=college, sections=sections, note=reason)
         plain = json.dumps(_clean(data), separators=(",", ":"), allow_nan=False).encode("utf-8")
         box = encrypt(plain, passphrase)
         _check_sealed(box, plain)

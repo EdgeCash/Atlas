@@ -89,11 +89,17 @@ SCHEMA: dict[str, list[str]] = {
     "snapshots": [
         "captured_at", "game_id", "book", "market", "line", "price",
         "open_line", "open_price", "status", "last_seen_at",
+        # The other side's price (away, under); ``price`` is the home side's and the over's.
+        "other_price",
     ],
     "signals": [
         "signal_id", "created_at", "run_id", "game_id", "season", "week", "market", "book",
         "open_line", "entry_line", "entry_price", "atlas_number", "disagreement",
         "direction", "selection", "model_version",
+        # Which side ``entry_price`` is the price of. Empty on signals formed
+        # before both prices were captured: theirs was always the home side's
+        # or the over's, whichever way the signal ran.
+        "entry_price_side",
     ],
     "grades": [
         "signal_id", "graded_at", "close_line", "clv_points", "result",

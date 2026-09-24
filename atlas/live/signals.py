@@ -174,7 +174,6 @@ def form_signals(numbers: pd.DataFrame, quotes: pd.DataFrame,
     merged["run_id"] = run_id
     merged["atlas_number"] = merged["prediction"].astype(float)
     merged["entry_line"] = merged["line"].astype(float)
-    merged["entry_price"] = merged["price"]
     merged["disagreement"] = merged["atlas_number"] - merged["entry_line"]
 
     merged["direction"] = np.where(
@@ -182,6 +181,11 @@ def form_signals(numbers: pd.DataFrame, quotes: pd.DataFrame,
         np.where(merged["disagreement"] > 0, "over", "under"),
         np.where(merged["disagreement"] > 0, "home", "away"),
     )
+    # The price of the side the signal runs to, and which side that is.
+    other = merged["other_price"] if "other_price" in merged else pd.Series(np.nan, index=merged.index)
+    first_side = merged["direction"].isin(["over", "home"])
+    merged["entry_price"] = np.where(first_side, merged["price"], other)
+    merged["entry_price_side"] = np.where(pd.notna(merged["entry_price"]), merged["direction"], None)
     merged["selection"] = [
         _selection(row) for row in merged.itertuples(index=False)
     ]

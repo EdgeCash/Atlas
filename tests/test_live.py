@@ -323,3 +323,15 @@ def test_criteria_ignore_the_observed_population():
     criteria = sc.kill_criteria(frame)
     assert criteria[0].passing
     assert criteria[0].graded == 130
+
+
+def test_a_signal_records_the_price_of_its_own_side():
+    """The over's price for an over, the under's for an under, and which it is."""
+    quotes = _quotes().assign(price=-115.0, other_price=-105.0)
+    formed = signalling.form_signals(_numbers(), quotes).set_index("game_id")
+    over, under = formed.loc[100], formed.loc[102]                    # 62 over 50; 41 under 52
+    assert (over["direction"], over["entry_price"], over["entry_price_side"]) == ("over", -115.0, "over")
+    assert (under["direction"], under["entry_price"], under["entry_price_side"]) == ("under", -105.0, "under")
+    # A feed without the other side's price records none, rather than the wrong one.
+    bare = signalling.form_signals(_numbers(), _quotes()).set_index("game_id")
+    assert pd.isna(bare.loc[102, "entry_price"]) and pd.isna(bare.loc[102, "entry_price_side"])
