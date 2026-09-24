@@ -110,4 +110,7 @@ def table(headers: list[str], body_rows: list[list[str]]) -> str:
         "<tr>" + "".join(f"<td>{cell}</td>" for cell in row) + "</tr>"
         for row in body_rows
     )
-    return f'<table class="rows"><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table>'
+    # A wide table scrolls inside its own box; without it, one table pushes the
+    # whole page sideways on a phone (and on Research, on a desktop too).
+    return (f'<div class="table-scroll"><table class="rows"><thead><tr>{head}</tr></thead>'
+            f'<tbody>{body}</tbody></table></div>')
