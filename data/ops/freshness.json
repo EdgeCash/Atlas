@@ -1,6 +1,42 @@
 {
   "history": [
     {
+      "at": "2026-09-24T21:24:15.268847+00:00",
+      "detail": "60 cards, 17 NFL cards, 118 teams, 32 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-24T21:24:15.267302+00:00",
+      "detail": "12 files",
+      "name": "social",
+      "ok": true
+    },
+    {
+      "at": "2026-09-24T21:24:09.656875+00:00",
+      "detail": "captured during the heavy refresh",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-24T21:24:09.654952+00:00",
+      "detail": "warehouse in 28s; nfl-ingest in 4s; nfl-warehouse in 20s; model in 25s; market in 5s; dfs-capture in 11s; cfb-players in 694s; dfs in 136s; site in 12s",
+      "name": "heavy",
+      "ok": true
+    },
+    {
+      "at": "2026-09-24T21:24:09.509488+00:00",
+      "detail": "60 cards, 17 NFL cards, 118 teams, 32 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-24T21:24:09.507924+00:00",
+      "detail": "12 files",
+      "name": "social",
+      "ok": true
+    },
+    {
       "at": "2026-09-24T19:15:27.489661+00:00",
       "detail": "60 cards, 17 NFL cards, 118 teams, 32 NFL teams",
       "name": "build",
@@ -792,25 +828,25 @@
   ],
   "last": {
     "build": {
-      "at": "2026-09-24T19:15:27.489661+00:00",
+      "at": "2026-09-24T21:24:15.268847+00:00",
       "detail": "60 cards, 17 NFL cards, 118 teams, 32 NFL teams",
       "name": "build",
       "ok": true
     },
     "heavy": {
-      "at": "2026-09-24T19:15:22.509245+00:00",
-      "detail": "warehouse in 26s; nfl-ingest in 2s; nfl-warehouse in 19s; model in 23s; market in 3s; dfs-capture in 4s; dfs in 60s; site in 7s",
+      "at": "2026-09-24T21:24:09.654952+00:00",
+      "detail": "warehouse in 28s; nfl-ingest in 4s; nfl-warehouse in 20s; model in 25s; market in 5s; dfs-capture in 11s; cfb-players in 694s; dfs in 136s; site in 12s",
       "name": "heavy",
       "ok": true
     },
     "poll": {
-      "at": "2026-09-24T19:15:22.511548+00:00",
+      "at": "2026-09-24T21:24:09.656875+00:00",
       "detail": "captured during the heavy refresh",
       "name": "poll",
       "ok": true
     },
     "social": {
-      "at": "2026-09-24T19:15:27.488032+00:00",
+      "at": "2026-09-24T21:24:15.267302+00:00",
       "detail": "12 files",
       "name": "social",
       "ok": true
@@ -818,25 +854,25 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-09-24T19:15:27.489661+00:00",
+      "at": "2026-09-24T21:24:15.268847+00:00",
       "detail": "60 cards, 17 NFL cards, 118 teams, 32 NFL teams",
       "name": "build",
       "ok": true
     },
     "heavy": {
-      "at": "2026-09-24T19:15:22.509245+00:00",
-      "detail": "warehouse in 26s; nfl-ingest in 2s; nfl-warehouse in 19s; model in 23s; market in 3s; dfs-capture in 4s; dfs in 60s; site in 7s",
+      "at": "2026-09-24T21:24:09.654952+00:00",
+      "detail": "warehouse in 28s; nfl-ingest in 4s; nfl-warehouse in 20s; model in 25s; market in 5s; dfs-capture in 11s; cfb-players in 694s; dfs in 136s; site in 12s",
       "name": "heavy",
       "ok": true
     },
     "poll": {
-      "at": "2026-09-24T19:15:22.511548+00:00",
+      "at": "2026-09-24T21:24:09.656875+00:00",
       "detail": "captured during the heavy refresh",
       "name": "poll",
       "ok": true
     },
     "social": {
-      "at": "2026-09-24T19:15:27.488032+00:00",
+      "at": "2026-09-24T21:24:15.267302+00:00",
       "detail": "12 files",
       "name": "social",
       "ok": true

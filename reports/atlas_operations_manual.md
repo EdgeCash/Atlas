@@ -1,6 +1,6 @@
 # Atlas Operations Manual
 
-*Generated 2026-09-24 19:14 UTC by `python -m atlas.live check`. Atlas research is
+*Generated 2026-09-24 21:09 UTC by `python -m atlas.live check`. Atlas research is
 complete; this document is about keeping the live tracker alive and honest for
 two seasons.*
 
@@ -17,8 +17,8 @@ two seasons.*
 |---|---|
 | Signals recorded | 232 |
 | Grades recorded | 0 |
-| Line snapshots | 545 |
-| Tracker runs logged | 23 |
+| Line snapshots | 617 |
+| Tracker runs logged | 24 |
 | Blocking data-quality exceptions | 0 |
 | Monitor alerts firing | 0 |
 | Replays clean | 2 of 3 |
@@ -100,15 +100,15 @@ trace(Store.open(), "<signal_id>")   # signal, grade, full line history, run
 
 | Table | Rows | Columns | Primary key |
 |---|---|---|---|
-| runs | 23 | 14 | run_id |
+| runs | 24 | 14 | run_id |
 | numbers | 1,210 | 8 | game_id, market, model_version |
 | projections | 3,376 | 46 | sport, game_id, model_version |
 | calibration | 11,178 | 9 | sport, game_id, market |
-| dfs_slates | 6 | 7 | draft_group_id |
-| dfs_salaries | 3,051 | 15 | draft_group_id, player_id |
-| dfs_projections | 0 | 18 | draft_group_id, player_id_dk |
+| dfs_slates | 22 | 7 | draft_group_id |
+| dfs_salaries | 3,875 | 15 | draft_group_id, player_id |
+| dfs_projections | 671 | 18 | draft_group_id, player_id_dk |
 | games | 88 | 14 | game_id |
-| snapshots | 545 | 10 | game_id, book, market, line, price |
+| snapshots | 617 | 10 | game_id, book, market, line, price |
 | signals | 232 | 16 | signal_id |
 | grades | 0 | 10 | signal_id |
 
