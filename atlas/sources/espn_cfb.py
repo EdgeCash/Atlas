@@ -171,8 +171,8 @@ def season_games(season: int, fetch, *, pause: float = PAUSE) -> pd.DataFrame:
             LOG.warning("espn cfb %s week %s: %s", season, week, type(error).__name__)
             continue
         for e in board.get("events", []) or []:
-            if int((e.get("season") or {}).get("year", season)) != season:
-                continue
+            if not e.get("id") or int((e.get("season") or {}).get("year", season)) != season:
+                continue                     # an older board lists placeholders without an id
             comp = (e.get("competitions") or [{}])[0]
             rows.append({"event": str(e["id"]), "season": season, "week": week if kind == 2 else 99,
                          "season_type": "regular" if kind == 2 else "postseason",
@@ -196,33 +196,45 @@ def refresh(raw: Path | None = None, *, budget: int = BUDGET, seasons: list[int]
     for season in seasons:
         if fetched >= budget:
             break
-        gpath, bpath = games_path(raw, season), box_path(raw, season)
-        games = pd.read_parquet(gpath) if gpath.exists() else None
-        # A finished season's list of games is final; the one in progress is re-read.
-        if games is None or season == current or not games["completed"].all():
-            games = season_games(season, fetch, pause=pause)
-            if games.empty:
-                continue
-            write_parquet(games, gpath)
-        have = pd.read_parquet(bpath) if bpath.exists() else pd.DataFrame(columns=COLUMNS)
-        done = set(have["event"].astype(str))
-        todo = games[games["completed"] & ~games["event"].astype(str).isin(done)]
-        parts = []
-        for g in todo.itertuples():
-            if fetched >= budget:
-                break
-            try:
-                parts.append(parse(fetch(SUMMARY.format(event=g.event)), season, int(g.week), g.season_type))
-                fetched += 1
-            except Exception as error:  # noqa: BLE001 - tried again next time
-                failed += 1
-                LOG.debug("espn cfb game %s: %s", g.event, type(error).__name__)
-            time.sleep(pause)
-        if parts:
-            new = pd.concat([p for p in parts if not p.empty], ignore_index=True)
-            write_parquet(pd.concat([have, new], ignore_index=True) if len(have) else new, bpath)
-        LOG.info("espn cfb %s: %d of %d completed games cached", season,
-                 len(done) + sum(1 for p in parts if not p.empty), int(games["completed"].sum()))
+        try:
+            got = _refresh_season(raw, season, current, budget - fetched, pause, fetch)
+        except Exception as error:  # noqa: BLE001 - one season must not cost the rest
+            LOG.warning("espn cfb %s: %s", season, type(error).__name__)
+            continue
+        fetched += got["fetched"]
+        failed += got["failed"]
+    return {"fetched": fetched, "failed": failed}
+
+
+def _refresh_season(raw: Path, season: int, current: int, budget: int, pause: float, fetch) -> dict:
+    fetched = failed = 0
+    gpath, bpath = games_path(raw, season), box_path(raw, season)
+    games = pd.read_parquet(gpath) if gpath.exists() else None
+    # A finished season's list of games is final; the one in progress is re-read.
+    if games is None or season == current or not games["completed"].all():
+        games = season_games(season, fetch, pause=pause)
+        if games.empty:
+            return {"fetched": 0, "failed": 0}
+        write_parquet(games, gpath)
+    have = pd.read_parquet(bpath) if bpath.exists() else pd.DataFrame(columns=COLUMNS)
+    done = set(have["event"].astype(str))
+    todo = games[games["completed"] & ~games["event"].astype(str).isin(done)]
+    parts = []
+    for g in todo.itertuples():
+        if fetched >= budget:
+            break
+        try:
+            parts.append(parse(fetch(SUMMARY.format(event=g.event)), season, int(g.week), g.season_type))
+            fetched += 1
+        except Exception as error:  # noqa: BLE001 - tried again next time
+            failed += 1
+            LOG.debug("espn cfb game %s: %s", g.event, type(error).__name__)
+        time.sleep(pause)
+    if parts:
+        new = pd.concat([p for p in parts if not p.empty], ignore_index=True)
+        write_parquet(pd.concat([have, new], ignore_index=True) if len(have) else new, bpath)
+    LOG.info("espn cfb %s: %d of %d completed games cached", season,
+             len(done) + sum(1 for p in parts if not p.empty), int(games["completed"].sum()))
     return {"fetched": fetched, "failed": failed}
 
 

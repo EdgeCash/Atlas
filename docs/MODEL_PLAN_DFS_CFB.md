@@ -1,6 +1,6 @@
 # Atlas — DFS Model Plan: college (DraftKings CFB)
 
-Status: **steps 0-1 done** (see §5). The NFL DFS model (`docs/MODEL_PLAN_DFS.md`)
+Status: **steps 0-2 done** (see §5). The NFL DFS model (`docs/MODEL_PLAN_DFS.md`)
 is the template: the same lines, the same walk-forward standard, the same
 optimizer and owner page. This plan is what college changes.
 
@@ -85,7 +85,7 @@ The NFL model's shape, with college's inputs:
 |---|---|---|
 | 0 | Capture DraftKings' college Classic and Showdown slates daily, beside the NFL's (`atlas/sources/draftkings.py`) | **done** — the heavy run's capture now takes both sports; college slates are kept apart from the NFL model's |
 | 1 | Source and scoring: the player-game table 2014-2026 from ESPN's box scores (`atlas/sources/espn_cfb.py`), scored with DraftKings' college rules (`atlas/dfs/cfb.py`; `make cfb-players`, `make cfb-scoring`) | Atlas's points per game match DraftKings' FPPG for at least 98% of pool players who have played — **done, gate passes: 1,320 of 1,337 (98.7%)** (`reports/dfs_cfb_scoring.md`); QB 98.1%, RB 98.7%, WR 98.8%, K 100%. DraftKings divides by every game a player appeared in, a stat or not, and a box score lists only games with a stat, so agreement is a total that gives DraftKings' figure over some count of games between the two; the strict subset with a stat line every game agrees 97.9% within 0.1, the rest the size of stat corrections. The rules match the NFL's without a defense, kickers included. No separate backfill workflow: each heavy run fetches up to 2,000 games it lacks, the season in progress first and then the newest seasons back, and the raw cache keeps them - about five runs for 2014-2025 |
-| 2 | Baseline: recent form shrunk to position, walk-forward | reported, by position |
+| 2 | Baseline: recent form shrunk to position, walk-forward (`atlas/dfs/cfb_players.py`; `make cfb-baseline`) | reported, by position — **done** (`reports/dfs_cfb_benchmarks.md`). The player-game table from 11,700 box scores, 2014-2026: 234,000 player-games, 22,100 players, with each player's position read from his season (DraftKings lists tight ends as receivers; kickers kick), his shares of his team's carries, catches, receiving yards and passes, and trends from earlier games only, carried across transfers. FCS opponents (a team-season under six games in the record) count toward histories but are not scored. Each team's regulars by prior form, 2016-2025 - the bar the model has to clear: CRPS QB 6.35, RB 5.02, WR 4.48, K 2.16; ranking QB 0.340, RB 0.454, WR 0.388, K 0.208 |
 | 3 | Model and ranges | beats the baseline's CRPS at QB, RB and WR (and K), ranges cover 76-84% |
 | 4 | Optimizer: Classic with the SUPERFLEX, Showdown with UTIL | matches brute force |
 | 5 | College slates on the owner page | decrypts; every college slate listed |

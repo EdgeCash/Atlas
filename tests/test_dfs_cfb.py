@@ -116,3 +116,80 @@ def test_a_game_without_a_stat_still_counts_in_draftkings_average():
     rec = cfb.reconcile(pools, box, 2026).set_index("name")
     assert rec.loc["Jeremiah Smith", "games"] == 1 and rec.loc["Jeremiah Smith", "team_games"] == 2
     assert bool(rec.loc["Jeremiah Smith", "agrees"]) and not bool(rec.loc["Jeremiah Smith", "strict"])
+
+
+# ---------------------------------------------------------------------------
+# Step 2: the player-game table and the baseline
+# ---------------------------------------------------------------------------
+
+
+def _box_rows(season, week, event, team, rows):
+    base = {c: 0.0 for c in espn_cfb.STAT_COLUMNS}
+    return [{"season": season, "week": week, "season_type": "regular", "event": event, "team": team,
+             "opponent": "X", "home": 1, **base, **r} for r in rows]
+
+
+def test_positions_come_from_what_a_player_did_and_defenders_are_left_out():
+    from atlas.dfs import cfb_players as cp
+
+    rows = []
+    for w in range(1, 7):
+        rows += _box_rows(2025, w, f"e{w}", "OSU", [
+            {"player_id": "qb", "name": "Q", "pass_att": 30, "pass_yds": 250, "rush_car": 6},
+            {"player_id": "rb", "name": "R", "rush_car": 18, "rush_yds": 90, "rec": 2},
+            {"player_id": "te", "name": "T", "rec": 4, "rec_yds": 40},
+            {"player_id": "k", "name": "K", "fg_att": 2, "fg_made": 2, "fg_0_39": 2, "xp_att": 3, "xp_made": 3},
+            {"player_id": "lb", "name": "L"},                                  # a tackler: no DraftKings line
+        ])
+    rows += _box_rows(2025, 1, "e1", "FCS", [{"player_id": "f", "name": "F", "rush_car": 5}])
+    g = cp.games(pd.DataFrame(rows))
+    pos = g.drop_duplicates("player_id").set_index("player_id")["position"].to_dict()
+    assert pos == {"qb": "QB", "rb": "RB", "te": "WR", "k": "K", "f": "RB"}
+    assert "lb" not in set(g["player_id"])
+    assert bool(g.loc[g["team"] == "OSU", "fbs"].all()) and not bool(g.loc[g["team"] == "FCS", "fbs"].any())
+    shares = g[(g["event"] == "e1") & (g["team"] == "OSU")].set_index("player_id")
+    assert shares.loc["rb", "rush_share"] == pytest.approx(18 / 24)
+
+
+def test_college_trends_and_baseline_are_walk_forward():
+    from atlas.dfs import cfb_players as cp
+
+    rng = __import__("numpy").random.default_rng(3)
+    rows = []
+    for s in range(2014, 2018):
+        for w in range(1, 11):
+            for t in range(8):
+                team = f"T{t}"
+                rows += _box_rows(s, w, f"{s}{w}{t}", team, [
+                    {"player_id": f"{team}qb", "name": "Q", "pass_att": 30, "pass_yds": float(rng.normal(250, 60))},
+                    {"player_id": f"{team}wr", "name": "W", "rec": float(rng.integers(1, 9)), "rec_yds": 60.0},
+                ])
+    table = cp.with_trends(cp.games(pd.DataFrame(rows)))
+    first = table.sort_values("order").groupby("player_id").head(1)
+    assert first["dk_points_trend"].isna().all()                         # no history before the first game
+    f = cp.frame(table)
+    scored = cp.walk_forward(f, first_test=2016)
+    poisoned = f.copy()
+    poisoned.loc[poisoned["season"] == 2017, "target"] += 100
+    again = cp.walk_forward(poisoned, first_test=2016)
+    assert (scored.loc[scored["season"] == 2016, "baseline"].to_numpy()
+            == again.loc[again["season"] == 2016, "baseline"].to_numpy()).all()
+    regs = cp.regulars(scored)
+    assert (regs.groupby(["event", "team", "position"]).size() == 1).all()   # one QB and one WR here
+
+
+def test_one_bad_season_does_not_stop_the_rest(tmp_path):
+    def fetch(url):
+        if "scoreboard" in url and "dates=2024" in url:
+            raise RuntimeError("down")
+        if "scoreboard" in url:
+            week = int(url.split("week=")[1].split("&")[0])
+            if "seasontype=2" in url and week == 1:
+                return {"events": [{"season": {"year": 2023}},                         # no id: skipped
+                                   {"id": "9001", "season": {"year": 2023},
+                                    "competitions": [{"status": {"type": {"completed": True}}}]}]}
+            return {"events": []}
+        return {**SUMMARY, "header": {**SUMMARY["header"], "id": "9001"}}
+
+    got = espn_cfb.refresh(tmp_path, budget=10, seasons=[2024, 2023], current=2026, pause=0, fetch=fetch)
+    assert got["fetched"] == 1 and set(espn_cfb.load(tmp_path)["season"]) == {2023}
