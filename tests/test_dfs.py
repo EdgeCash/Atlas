@@ -321,3 +321,63 @@ def test_market_team_totals_split_the_line(tmp_path):
     t = model.market_totals(tmp_path).set_index("team")
     assert t.loc["LV", "mkt_pts"] == pytest.approx(21.5) and t.loc["KC", "mkt_pts"] == pytest.approx(28.5)
     assert t.loc["LV", "mkt_opp"] == pytest.approx(28.5)
+
+
+# ---------------------------------------------------------------------------
+# Step 4: defenses from their parts, and ranges
+# ---------------------------------------------------------------------------
+
+
+def test_quantile_line_finds_a_known_spread():
+    from atlas.dfs import ranges
+
+    rng = np.random.default_rng(0)
+    x = rng.uniform(5, 25, 20000)
+    y = rng.normal(0, 1, len(x)) * (1 + 0.2 * x)                  # misses widen with the projection
+    a_hi, b_hi = ranges.quantile_line(x, y, 0.9)
+    a_lo, b_lo = ranges.quantile_line(x, y, 0.1)
+    assert a_hi == pytest.approx(1.2816, abs=0.15) and b_hi == pytest.approx(0.2 * 1.2816, abs=0.02)
+    assert a_lo == pytest.approx(-1.2816, abs=0.15) and b_lo == pytest.approx(-0.2 * 1.2816, abs=0.02)
+
+
+def test_ranges_are_walk_forward_and_cover_what_they_claim():
+    from atlas.dfs import ranges
+
+    rng = np.random.default_rng(1)
+    rows = []
+    for s in (2014, 2015, 2016):
+        for i in range(3000):
+            proj = rng.uniform(4, 20)
+            rows.append({"season": s, "week": 1 + i % 17, "player_id": f"p{i}", "position": "WR", "model": proj,
+                         "target": proj + rng.gamma(2.0, 0.4 * proj) - 0.8 * proj})       # skewed, like DFS
+    oos = pd.DataFrame(rows)
+    out = ranges.walk_forward(oos, first=2015)
+    assert set(out["season"]) == {2015, 2016} and (out["model_hi"] >= out["model_lo"]).all()
+    cov = ranges.coverage(oos.merge(out, on=["season", "week", "player_id"]))
+    assert 0.77 <= cov["coverage"].iloc[0] <= 0.83
+    assert abs(cov["below"].iloc[0] - cov["above"].iloc[0]) < 0.03       # the skew is in the ends, not the misses
+    poisoned = oos.copy()
+    poisoned.loc[poisoned["season"] == 2016, "target"] += 50
+    again = ranges.walk_forward(poisoned, first=2015)
+    assert np.allclose(out.loc[out["season"] == 2015, "model_hi"], again.loc[again["season"] == 2015, "model_hi"])
+
+
+def test_defense_from_parts_reads_its_form_and_averages_the_bonus():
+    from atlas.dfs import defense
+
+    rng = np.random.default_rng(2)
+    n = 3000
+    train = pd.DataFrame({c: rng.normal(0, 1, n) for c in defense.RATE_FEATURES})
+    train["sacks_trend"] = rng.uniform(1, 4, n)
+    train["sacks"] = rng.poisson(train["sacks_trend"])
+    for c in ("takeaways", "tds", "safeties", "blocked_kicks", "conversion_returns"):
+        train[c] = rng.poisson(0.2, n)
+    train["opp_pts"] = rng.uniform(14, 30, n)
+    train["points_allowed"] = train["opp_pts"]                          # a line with no misses
+    test = train.head(2).copy()
+    test["sacks_trend"] = [1.0, 4.0]
+    test["opp_pts"] = [6.0, 30.0]
+    out = defense.fit_predict(train, test)
+    assert out["exp_sacks"].iloc[1] > 2 * out["exp_sacks"].iloc[0]      # a pass rush in form projects more sacks
+    # No misses around the line: the bonus is the table's value at the projected score.
+    assert out["exp_pa_bonus"].tolist() == pytest.approx([7.0, -1.0], abs=0.05)

@@ -8,7 +8,7 @@ Beat the baseline's CRPS at every position, and rank each position's regulars at
 
 | position | crps model | crps baseline | rank model | rank salary | rank gap se | beats baseline | ranks as well as salary |
 |---|---|---|---|---|---|---|---|
-| DST | 3.251 | 3.322 | 0.270 | 0.243 | 0.011 | yes | yes |
+| DST | 3.230 | 3.322 | 0.274 | 0.243 | 0.011 | yes | yes |
 | QB | 4.576 | 4.746 | 0.341 | 0.330 | 0.011 | yes | yes |
 | RB | 4.140 | 4.227 | 0.523 | 0.506 | 0.007 | yes | yes |
 | TE | 3.578 | 3.614 | 0.420 | 0.403 | 0.008 | yes | yes |
@@ -20,7 +20,7 @@ The same model with the line's team totals left out - Atlas's game model the onl
 
 | position | crps model | crps baseline | rank model | rank salary | rank gap se | beats baseline | ranks as well as salary |
 |---|---|---|---|---|---|---|---|
-| DST | 3.280 | 3.322 | 0.241 | 0.243 | 0.013 | yes | no |
+| DST | 3.241 | 3.322 | 0.265 | 0.243 | 0.012 | yes | yes |
 | QB | 4.614 | 4.746 | 0.315 | 0.330 | 0.011 | yes | no |
 | RB | 4.145 | 4.227 | 0.524 | 0.506 | 0.007 | yes | yes |
 | TE | 3.580 | 3.614 | 0.423 | 0.403 | 0.008 | yes | yes |
@@ -36,11 +36,72 @@ Each team's projected points alone, as a ranking of its regulars against the wee
 | TE | 0.129 | 0.160 |
 | WR | 0.096 | 0.121 |
 
+## Ranges, 2015-2021, each team's regulars: the gate passes
+
+Each projection carries a range from its 10th to its 90th percentile (`atlas/dfs/ranges.py`): per position, a linear quantile regression of the model's out-of-sample misses on the projection, fitted on the seasons before. DraftKings points are lopsided - a floor near zero, a long tail of touchdown weeks - so the two ends are fitted separately rather than drawn as a normal curve. The gate (plan §7, step 4): the 80% range holds 76%-84% of outcomes at every position. Overall: 80.2%. `below` and `above` should each be near 10%; `width` is the range in points.
+
+| position | player-weeks | coverage | below | above | width |
+|---|---|---|---|---|---|
+| DST | 3616 | 80.0% | 11.9% | 8.0% | 15.3 |
+| QB | 3607 | 81.0% | 7.5% | 11.5% | 21.3 |
+| RB | 7187 | 80.0% | 7.6% | 12.5% | 17.8 |
+| TE | 3600 | 81.2% | 6.9% | 12.0% | 15.6 |
+| WR | 10798 | 79.9% | 8.8% | 11.3% | 18.4 |
+
+### Everyone who played, 2015-2021
+
+| position | player-weeks | coverage | below | above | width |
+|---|---|---|---|---|---|
+| DST | 3616 | 80.0% | 11.9% | 8.0% | 15.3 |
+| QB | 4256 | 77.4% | 12.6% | 9.9% | 21.2 |
+| RB | 11094 | 80.5% | 9.1% | 10.4% | 15.0 |
+| TE | 7863 | 81.6% | 8.7% | 9.7% | 12.2 |
+| WR | 15649 | 80.7% | 9.1% | 10.1% | 15.9 |
+
+### Regulars, 2022-2025
+
+| position | player-weeks | coverage | below | above | width |
+|---|---|---|---|---|---|
+| DST | 2174 | 82.1% | 10.2% | 7.7% | 14.5 |
+| QB | 2174 | 83.1% | 6.9% | 10.0% | 22.0 |
+| RB | 4339 | 80.1% | 9.3% | 10.6% | 17.7 |
+| TE | 2168 | 80.9% | 7.8% | 11.3% | 15.5 |
+| WR | 6505 | 80.2% | 10.0% | 9.7% | 18.1 |
+
+### Regulars by season
+
+| season | player-weeks | coverage | below | above | width |
+|---|---|---|---|---|---|
+| 2015 | 4087 | 78.6% | 9.3% | 12.0% | 17.6 |
+| 2016 | 4078 | 81.8% | 7.9% | 10.3% | 18.0 |
+| 2017 | 4077 | 81.2% | 8.2% | 10.6% | 17.7 |
+| 2018 | 4077 | 79.8% | 8.5% | 11.7% | 17.8 |
+| 2019 | 4073 | 79.5% | 8.8% | 11.7% | 17.9 |
+| 2020 | 4077 | 80.9% | 7.8% | 11.3% | 18.0 |
+| 2021 | 4339 | 80.0% | 8.7% | 11.3% | 17.9 |
+| 2022 | 4329 | 79.9% | 10.1% | 9.9% | 17.9 |
+| 2023 | 4342 | 81.8% | 8.5% | 9.7% | 17.7 |
+| 2024 | 4340 | 80.8% | 8.8% | 10.4% | 17.7 |
+| 2025 | 4349 | 81.0% | 9.3% | 9.7% | 17.5 |
+
+## Defenses
+
+A defense's projection is the average of the player model's and one built from its parts (`atlas/dfs/defense.py`): expected sacks, takeaways and return touchdowns, each a Poisson rate on the defense's form, the opposing offense's and both teams' projected points; the league's rate for safeties, blocks and returned conversions; and DraftKings' points-allowed bonus averaged over the spread of the opponent's score. Chosen on 2015-2021 from three candidates (the player model alone, the parts alone, the average); 2022-2025 is the unchosen test.
+
+| seasons | projection | mae | rank corr |
+|---|---|---|---|
+| 2015-2021 | blend (published) | 4.517 | 0.274 |
+| 2015-2021 | parts alone | 4.502 | 0.264 |
+| 2015-2021 | baseline | 4.652 | 0.131 |
+| 2022-2025 | blend (published) | 4.254 | 0.296 |
+| 2022-2025 | parts alone | 4.227 | 0.305 |
+| 2022-2025 | baseline | 4.420 | 0.111 |
+
 ## Salary era, 2015-2021, regulars
 
 | model | player-weeks | mae | crps | rank corr |
 |---|---|---|---|---|
-| model | 28808 | 5.646 | 4.021 | 0.409 |
+| model | 28808 | 5.638 | 4.019 | 0.410 |
 | baseline | 28808 | 5.769 | 4.107 | 0.367 |
 | salary | 28808 | 5.833 | 4.148 | 0.393 |
 
@@ -48,7 +109,7 @@ Each team's projected points alone, as a ranking of its regulars against the wee
 
 | position | model | player-weeks | mae | crps | rank corr |
 |---|---|---|---|---|---|
-| DST | model | 3616 | 4.584 | 3.251 | 0.270 |
+| DST | model | 3616 | 4.517 | 3.230 | 0.274 |
 | DST | baseline | 3616 | 4.652 | 3.322 | 0.131 |
 | DST | salary | 3616 | 4.702 | 3.311 | 0.243 |
 | QB | model | 3607 | 6.457 | 4.576 | 0.341 |
@@ -68,25 +129,25 @@ Each team's projected points alone, as a ranking of its regulars against the wee
 
 | season | model | player-weeks | mae | crps | rank corr |
 |---|---|---|---|---|---|
-| 2015 | model | 4087 | 5.814 | 4.146 | 0.367 |
+| 2015 | model | 4087 | 5.793 | 4.142 | 0.367 |
 | 2015 | baseline | 4087 | 5.857 | 4.184 | 0.352 |
 | 2015 | salary | 4087 | 5.990 | 4.304 | 0.358 |
-| 2016 | model | 4078 | 5.492 | 3.910 | 0.424 |
+| 2016 | model | 4078 | 5.481 | 3.906 | 0.422 |
 | 2016 | baseline | 4078 | 5.630 | 4.000 | 0.369 |
 | 2016 | salary | 4078 | 5.671 | 4.035 | 0.407 |
-| 2017 | model | 4077 | 5.442 | 3.868 | 0.381 |
+| 2017 | model | 4077 | 5.435 | 3.865 | 0.386 |
 | 2017 | baseline | 4077 | 5.539 | 3.945 | 0.339 |
 | 2017 | salary | 4077 | 5.655 | 4.029 | 0.357 |
-| 2018 | model | 4077 | 5.713 | 4.077 | 0.428 |
+| 2018 | model | 4077 | 5.711 | 4.076 | 0.429 |
 | 2018 | baseline | 4077 | 5.846 | 4.176 | 0.367 |
 | 2018 | salary | 4077 | 5.816 | 4.160 | 0.415 |
-| 2019 | model | 4073 | 5.775 | 4.132 | 0.426 |
+| 2019 | model | 4073 | 5.772 | 4.131 | 0.426 |
 | 2019 | baseline | 4073 | 5.939 | 4.238 | 0.377 |
 | 2019 | salary | 4073 | 5.931 | 4.235 | 0.404 |
-| 2020 | model | 4077 | 5.656 | 4.031 | 0.423 |
+| 2020 | model | 4077 | 5.648 | 4.027 | 0.426 |
 | 2020 | baseline | 4077 | 5.808 | 4.127 | 0.385 |
 | 2020 | salary | 4077 | 5.940 | 4.211 | 0.408 |
-| 2021 | model | 4339 | 5.630 | 3.987 | 0.415 |
+| 2021 | model | 4339 | 5.624 | 3.985 | 0.415 |
 | 2021 | baseline | 4339 | 5.765 | 4.083 | 0.377 |
 | 2021 | salary | 4339 | 5.825 | 4.067 | 0.402 |
 
@@ -94,7 +155,7 @@ Each team's projected points alone, as a ranking of its regulars against the wee
 
 | position | model | player-weeks | mae | crps | rank corr |
 |---|---|---|---|---|---|
-| DST | model | 2174 | 4.308 | 3.051 | 0.277 |
+| DST | model | 2174 | 4.254 | 3.023 | 0.296 |
 | DST | baseline | 2174 | 4.420 | 3.155 | 0.111 |
 | QB | model | 2174 | 6.337 | 4.523 | 0.340 |
 | QB | baseline | 2174 | 6.636 | 4.726 | 0.292 |
@@ -108,5 +169,6 @@ Each team's projected points alone, as a ranking of its regulars against the wee
 ## Caveats
 
 - **The game model's history.** The environment is Atlas's NFL game model run from 2011. From 2020 each season uses settings tuned on earlier seasons only; before 2020 it uses 2020's, tuned on 2017-2019 - a look-ahead of four smoothing constants, not of results, for those three seasons. The 2022-2025 table carries no such caveat.
+- **The line** is the closing line for past games; live, it is the line as it stands at the refresh, which moves toward the close through the week.
 - **The wind** is the recorded game-time wind; live, it is the forecast, which is close by kickoff and less so earlier in the week.
 - **The model's settings** (the boosting's size, the starters-only quarterback rows) were chosen on 2015-2021, the seasons this gate scores, from four candidates. The 2022-2025 table is the unchosen test.
