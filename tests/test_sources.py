@@ -130,3 +130,88 @@ def test_offline_mode_still_serves_cached_files(monkeypatch, tmp_path):
     cached = tmp_path / "cached.bin"
     cached.write_bytes(b"already here")
     assert download("https://example.invalid/x", cached) == cached
+
+
+# ---------------------------------------------------------------------------
+# nflverse (NFL plan, step 0)
+# ---------------------------------------------------------------------------
+
+
+def _fake_nflverse(monkeypatch, calls: list[str]):
+    """Stand in for the release downloads: a tiny parquet per file, logged."""
+    from atlas.sources import nflverse
+
+    def fake_download(url, dest, **_):
+        if dest.exists() and dest.stat().st_size > 0:      # the real helper serves the cache
+            return dest
+        calls.append(url)
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        if "play_by_play" in url:
+            frame = pd.DataFrame({"play_id": [1, 2], "game_id": ["2024_01_A_B"] * 2, "epa": [0.1, -0.2],
+                                  "desc": ["a long description"] * 2, "season": [2024, 2024]})
+        else:
+            frame = pd.DataFrame({"season": [2024], "week": [1]})
+        frame.to_parquet(dest, index=False)
+        return dest
+
+    monkeypatch.setattr(nflverse, "download", fake_download)
+    return nflverse
+
+
+def test_nflverse_trims_play_by_play_and_drops_the_full_file(monkeypatch, tmp_path):
+    calls: list[str] = []
+    nflverse = _fake_nflverse(monkeypatch, calls)
+    path = nflverse.fetch_play_by_play(tmp_path, 2024)
+    df = pd.read_parquet(path)
+    assert set(df.columns) == {"play_id", "game_id", "epa", "season"}     # desc is not kept
+    assert not (tmp_path / "nfl" / "_full_play_by_play_2024.parquet").exists()
+    assert nflverse.fetch_play_by_play(tmp_path, 2024) == path and len(calls) == 1   # cached
+    nflverse.fetch_play_by_play(tmp_path, 2024, refresh=True)
+    assert len(calls) == 2                                                  # refreshed on request
+
+
+def test_nflverse_fetch_all_refreshes_only_the_current_season(monkeypatch, tmp_path):
+    calls: list[str] = []
+    nflverse = _fake_nflverse(monkeypatch, calls)
+    got = nflverse.fetch_all(tmp_path, [2011, 2024], current=2024)
+    assert len(got["schedules"]) == 1
+    assert len(got["pbp"]) == 2 and len(got["injuries"]) == 2
+    assert len(got["snap_counts"]) == 1                                     # snaps start in 2012
+    first = len(calls)
+    nflverse.fetch_all(tmp_path, [2011, 2024], current=2024)
+    refetched = calls[first:]
+    assert all("2024" in u or "games.parquet" in u for u in refetched)
+    assert not any("2011" in u for u in refetched)
+
+
+def test_nflverse_one_failure_does_not_stop_the_rest(monkeypatch, tmp_path):
+    calls: list[str] = []
+    nflverse = _fake_nflverse(monkeypatch, calls)
+    real = nflverse.download
+
+    def flaky(url, dest, **kw):
+        if "injuries_2024" in url:
+            raise RuntimeError("release not cut yet")
+        return real(url, dest, **kw)
+
+    monkeypatch.setattr(nflverse, "download", flaky)
+    got = nflverse.fetch_all(tmp_path, [2024], current=2024)
+    assert got["injuries"] == [] and len(got["pbp"]) == 1
+
+
+def test_nflverse_current_season_turns_over_in_august():
+    from datetime import datetime
+
+    from atlas.sources import nflverse
+
+    assert nflverse.current_season(datetime(2026, 9, 24)) == 2026
+    assert nflverse.current_season(datetime(2026, 2, 8)) == 2025
+    assert nflverse.current_season(datetime(2026, 8, 1)) == 2026
+
+
+def test_nflverse_is_offline_safe(monkeypatch, tmp_path):
+    from atlas.sources import nflverse
+
+    monkeypatch.setenv("ATLAS_OFFLINE", "1")
+    with pytest.raises(OfflineError):
+        nflverse.fetch_schedules(tmp_path)

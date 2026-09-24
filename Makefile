@@ -4,7 +4,7 @@ PYTHON ?= python3
 	live-refresh live-run live-report live-check live-reproduce \
 	site site-full site-serve site-audit site-shots launch-check \
 	ops-heavy ops-poll ops-social ops-health ops-status ops-crontab \
-	ops-backup ops-analytics perf seo ncaaf-benchmarks ncaaf-prior ncaaf-state ncaaf-total
+	ops-backup ops-analytics perf seo ncaaf-benchmarks ncaaf-prior ncaaf-state ncaaf-total nfl-ingest
 
 help:
 	@echo "Atlas Phase 1A - research warehouse"
@@ -37,6 +37,7 @@ help:
 	@echo "  make ncaaf-prior       fit and score the NCAAF preseason prior"
 	@echo "  make ncaaf-state       run and score the NCAAF Kalman state model"
 	@echo "  make ncaaf-total       calibrate the NCAAF total and score the joint score grid"
+	@echo "  make nfl-ingest        fetch and cache nflverse play-by-play, schedules, injuries, depth charts, snaps"
 	@echo "  make perf       measure load time and LCP at three viewports"
 	@echo "  make seo        validate canonicals, meta, OpenGraph and sitemap"
 	@echo "  make site-full  warehouse + numbers + market + site, from scratch"
@@ -185,6 +186,10 @@ ncaaf-state:
 # The total and the joint (home, away) grid on top of the state.
 ncaaf-total:
 	$(PYTHON) -m atlas.models.ncaaf_total
+
+# NFL plan, step 0: the raw data, cached one season per file, no key.
+nfl-ingest:
+	$(PYTHON) -m atlas.sources.nflverse
 
 perf: site
 	$(PYTHON) scripts/measure_performance.py
