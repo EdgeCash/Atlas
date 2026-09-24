@@ -392,6 +392,33 @@ Steps 3 and 4 are done (`reports/nfl_state.md`). What they established:
   new quarterback a prior from his own `qb_epa`/CPOE per dropback rather
   than a flat number; the tuned flat prior came out at 0 to −2, tight.
 
+**Quarterback v1.1 — built, and what it found.** Two mechanisms, both
+measured first. The expected starter is now the depth chart's QB2 when
+the injury report lists the QB1 as Out or Doubtful, by the player's own
+id: that lifts the share of quarterback-change games where the forecast
+knows the starter from 37–42% to **56–59%**, and leaves the 97% on
+games with no change alone. A quarterback the state has not seen enters
+at the flat prior plus a tuned number of points per unit of his own
+career EPA per dropback above the league, shrunk by a hundred dropbacks,
+from a staged log of every passer's dropbacks per game, mop-up
+appearances included; 93–95% of new starters have such a record, median
+800–1,000 dropbacks. The tuning chose 15 points per EPA/dropback in five
+seasons of seven.
+
+The model as a whole is better for it: regular season 2023–25, CRPS
+**7.313** (was 7.351; Elo 7.372), Brier 0.2205, MAE 10.18, ECE 0.026 -
+the clearest margin over Elo yet, and weeks 1–3 at 6.89. But the
+quarterback-change games themselves moved from 7.614 to **7.610**, the
+gap to the same-quarterback games still 0.38. Knowing the starter was
+not the binding constraint after all: the differences the state assigns
+between quarterbacks are one to two points, because the tuning keeps the
+QB prior tight (variance 4) and the quarterback/offence split is weakly
+identified from points alone, while the true swing on a change is three
+to seven and the market moves 3.7. That is the v1.2 question, and it is
+a modelling one: give the quarterback state its own observation channel
+(EPA per dropback, which reads the passer and not the team) so it can
+carry a larger, better-identified share of the offence.
+
 ---
 
 ## 8. Risks, stated plainly
