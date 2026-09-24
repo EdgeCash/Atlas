@@ -16,6 +16,10 @@ release of ``nflverse/nflverse-data``, verified fetchable without a key:
 * ``depth_charts``  - who is QB1 this week, 2001 on
 * ``snap_counts``   - offence/defence/special-teams snaps per player-game, 2012 on
 * ``weekly_rosters``- status and experience per player-week, 2002 on
+* ``stats_player``  - every player's box score per week, 1999 on: passing,
+                      rushing, receiving, targets, air yards, target share -
+                      the raw material of the DFS player model
+                      (`docs/MODEL_PLAN_DFS.md`)
 
 Cached exactly as ``data/raw/cfbd`` is: a completed season is fetched once
 and kept; the current season is re-fetched on every ingest because its
@@ -44,7 +48,8 @@ RELEASES = "https://github.com/nflverse/nflverse-data/releases/download"
 FIRST_SEASON = 2011
 
 #: First season each per-season release exists for.
-FIRST_AVAILABLE = {"pbp": 1999, "injuries": 2009, "depth_charts": 2001, "snap_counts": 2012, "weekly_rosters": 2002}
+FIRST_AVAILABLE = {"pbp": 1999, "injuries": 2009, "depth_charts": 2001, "snap_counts": 2012, "weekly_rosters": 2002,
+                   "stats_player": 1999}
 
 #: The play-by-play columns Atlas keeps. Everything the staging table, the
 #: drive model and the score-state tables need, and nothing per-tackler.
@@ -117,6 +122,10 @@ def rosters_path(raw: Path, season: int) -> Path:
     return nfl_dir(raw) / f"rosters_{season}.parquet"
 
 
+def player_stats_path(raw: Path, season: int) -> Path:
+    return nfl_dir(raw) / f"stats_player_{season}.parquet"
+
+
 # ---------------------------------------------------------------------------
 # Fetching
 # ---------------------------------------------------------------------------
@@ -184,12 +193,19 @@ def fetch_rosters(raw: Path, season: int, *, refresh: bool = False) -> Path:
     return download(_release("weekly_rosters", f"roster_weekly_{season}.parquet"), dest)
 
 
+def fetch_player_stats(raw: Path, season: int, *, refresh: bool = False) -> Path:
+    dest = player_stats_path(raw, season)
+    _fresh(dest, refresh)
+    return download(_release("stats_player", f"stats_player_week_{season}.parquet"), dest)
+
+
 FETCHERS = {
     "pbp": fetch_play_by_play,
     "injuries": fetch_injuries,
     "depth_charts": fetch_depth_charts,
     "snap_counts": fetch_snap_counts,
     "weekly_rosters": fetch_rosters,
+    "stats_player": fetch_player_stats,
 }
 
 

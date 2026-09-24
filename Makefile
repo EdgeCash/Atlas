@@ -1,6 +1,6 @@
 PYTHON ?= python3
 
-.PHONY: help install ingest warehouse research all test lint clean-data \
+.PHONY: help install ingest warehouse research all test lint clean-data dfs-capture dfs-history \
 	live-refresh live-run live-report live-check live-reproduce \
 	site site-full site-serve site-audit site-shots launch-check \
 	ops-heavy ops-poll ops-social ops-health ops-status ops-crontab \
@@ -194,6 +194,14 @@ ncaaf-total:
 # NFL plan, step 0: the raw data, cached one season per file, no key.
 nfl-ingest:
 	$(PYTHON) -m atlas.sources.nflverse
+
+# DFS plan, step 0: DraftKings' Classic slates and salaries into the record
+# (daily in the heavy refresh), and RotoGuru's 2014-2021 DraftKings archive.
+dfs-capture:
+	$(PYTHON) -m atlas.sources.draftkings
+
+dfs-history:
+	$(PYTHON) -m atlas.sources.rotoguru
 
 # NFL plan, step 1: point-in-time team-game tables in their own warehouse.
 nfl-warehouse:

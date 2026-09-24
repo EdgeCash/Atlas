@@ -64,6 +64,16 @@ SCHEMA: dict[str, list[str]] = {
     "calibration": [
         "game_id", "sport", "season", "week", "season_type", "market", "abs_edge", "claimed", "won",
     ],
+    # DraftKings NFL Classic slates and their salaries (`atlas/sources/draftkings.py`):
+    # DraftKings keeps no history, so this is the only record of the market
+    # the DFS model is measured against. Captured daily by the heavy refresh.
+    "dfs_slates": [
+        "draft_group_id", "sport", "label", "game_count", "starts_at", "captured_at",
+    ],
+    "dfs_salaries": [
+        "draft_group_id", "player_id", "name", "position", "team", "salary", "game", "game_start",
+        "status", "disabled", "captured_at",
+    ],
     "games": [
         "game_id", "season", "week", "kickoff", "home_team", "away_team",
         "home_team_id", "away_team_id", "status", "completed",
@@ -95,6 +105,10 @@ KEYS: dict[str, list[str]] = {
     "numbers": ["game_id", "market", "model_version"],
     "projections": ["sport", "game_id", "model_version"],
     "calibration": ["sport", "game_id", "market"],
+    "dfs_slates": ["draft_group_id"],
+    # Last capture wins: a player's status (questionable, out) is worth
+    # having as of the latest look before the slate locks.
+    "dfs_salaries": ["draft_group_id", "player_id"],
     "games": ["game_id"],
     "snapshots": ["game_id", "book", "market", "line", "price"],
     "signals": ["signal_id"],
@@ -106,6 +120,8 @@ SORT: dict[str, list[str]] = {
     "numbers": ["season", "week", "game_id", "market", "model_version"],
     "projections": ["sport", "season", "week", "game_id", "model_version"],
     "calibration": ["sport", "season", "week", "game_id", "market"],
+    "dfs_slates": ["starts_at", "draft_group_id"],
+    "dfs_salaries": ["draft_group_id", "position", "salary", "player_id"],
     "games": ["kickoff", "game_id"],
     "snapshots": ["game_id", "market", "book", "captured_at"],
     "signals": ["created_at", "game_id", "market", "book"],

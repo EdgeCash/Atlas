@@ -1,6 +1,6 @@
 # Atlas — DFS Model Plan (DraftKings NFL Classic)
 
-Status: **plan written, nothing built.** Scope v1: DraftKings NFL Classic,
+Status: **step 0 done** (see §7). Scope v1: DraftKings NFL Classic,
 the Sunday main slate. College (DraftKings CFB Classic) waits on thinner
 player data and comes after the NFL model has a record.
 
@@ -11,6 +11,13 @@ projections into lineups is the small part. The projections are the work,
 and they are held to the same standard as everything else in Atlas:
 walk-forward, out of sample, against a baseline and against the market's
 own number - here, DraftKings' salaries.
+
+**Atlas's own model only.** Decided with the owner, 24 September 2026: no
+outside projections (FantasyPros, BettingPros or any other proprietary
+model) are inputs. Atlas builds its player model from public data and its
+own game model, and is measured honestly against the baseline and against
+salary. If it is not up to par, outside projections are revisited - first
+as a benchmark, then, for the owner page only, as a blend - and not before.
 
 ---
 
@@ -181,7 +188,7 @@ slates are checked against brute force.
 
 | Step | What | Gate / result |
 |---|---|---|
-| 0 | Sources: nflverse player stats (2011+); DraftKings lobby and Classic draftables captured daily in the heavy run; the RotoGuru 2014-2021 archive, once | files cached; capture fails soft |
+| 0 | Sources: nflverse player stats (2011+); DraftKings lobby and Classic draftables captured daily in the heavy run; the RotoGuru 2014-2021 archive, once (`atlas/sources/nflverse.py`, `atlas/sources/draftkings.py`, `atlas/sources/rotoguru.py`; `make dfs-capture`, `make dfs-history`) | **done** — player stats 2011-2026 cached; first capture 24 Sep: 6 Classic slates, 3,016 salaries (main slate 662 players, 26 defenses) in `tracking/dfs_salaries.csv`; the capture never fails the heavy run; RotoGuru archive 2014-2021 cached, 55,386 player-weeks (6,769-7,489 a season, 17 weeks, 18 in 2021) |
 | 1 | Staging: player-game table, DraftKings points from stats, opportunity shares, point-in-time features | reproduces RotoGuru's DraftKings points on ≥99% of player-weeks |
 | 2 | Benchmarks: baseline and salary | `reports/dfs_benchmarks.md` |
 | 3 | Projection model v1, team-anchored | beats baseline at every position |

@@ -60,6 +60,9 @@ def heavy(*, skip_warehouse: bool = False) -> int:
         ("nfl-warehouse", ["atlas.staging.nfl.build"]),
         ("model", ["atlas.live", "refresh", "--no-rebuild"]),
         ("market", ["atlas.live", "run"]),
+        # DraftKings' Classic salaries for the DFS model's record. It never
+        # fails the run: a missed capture is logged, the site still builds.
+        ("dfs-capture", ["atlas.sources.draftkings"]),
         ("site", ["atlas.site.build"]),
     ]
     details = []
