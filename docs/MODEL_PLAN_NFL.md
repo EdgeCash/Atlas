@@ -332,7 +332,7 @@ market is v2's ambition, not v1's requirement.
 | 1 | `atlas/staging/nfl/`: games, team-game efficiency and drives, QB of record and QB1, injuries, opponent-adjusted and point-in-time features through the college modules unchanged (`make nfl-warehouse`) | **done** — `data/warehouse/nfl.duckdb`, 4,368 games (4,128 completed), 122 columns; reproduces §3 exactly |
 | 2 | Benchmarks: naive, Elo, adjusted EPA, market-in-lattice, plus the quarterback test (`atlas/models/nfl_benchmarks.py`, `make nfl-benchmarks`) | **done** — `reports/nfl_benchmarks.md`; 2023–25 regular season: naive 8.02, Elo 7.37, market 7.08 CRPS |
 | 3 | Kalman state model, off/def, no QB, carried across seasons (`atlas/models/nfl_state.py`, `make nfl-state`) | **done** — ties Elo (2023–25: CRPS 7.375 to 7.372) |
-| 4 | Add QB state and HFA fit | **done — beats Elo on every row** (CRPS 7.351, Brier 0.222, MAE 10.20, ECE 0.027); the QB test gap did not close, and the report says why |
+| 4 | Add QB state and HFA fit | **done, v1.2 — beats Elo on every row** (CRPS 7.290, Brier 0.220, MAE 10.13, ECE 0.032; v1 7.351, v1.1 7.313); the QB test gap did not close, and the report says why |
 | 5 | Total model + joint grid (`atlas/models/nfl_total.py`, `make nfl-total`) | **done** — total CRPS 7.36 (naive 7.61, market 7.24); 60×60 grid with the points lattice; P(home) within 0.03 of observed where the NFL lives |
 | 6 | Wire into the card and the grade (`atlas/models/nfl_projection.py`; the live and site layers take a sport) | **done** — `nfl.html` is a board; 17 NFL cards this week; audit passes |
 | 7 | v2: state-dependent drive simulation, only if step 5's exact-score log-score is measurably short of the benchmark | **gate measured; not warranted.** v1.5 grid 6.89 nats against the market's grid through the same lattice at 6.84; the 0.05 is mean accuracy, not the score process |
@@ -418,6 +418,34 @@ to seven and the market moves 3.7. That is the v1.2 question, and it is
 a modelling one: give the quarterback state its own observation channel
 (EPA per dropback, which reads the passer and not the team) so it can
 carry a larger, better-identified share of the offence.
+
+**Quarterback v1.2 — built, and what it found.** After every game the
+quarterback of record's EPA per dropback in it, above the league, is a
+second measurement of his state and of nothing else: `k_obs` points per
+unit, with noise variance `k_obs² × play_var / dropbacks` so a full game
+is a sharper reading than a half, and cameos under ten dropbacks are
+ignored. The gain is tuned beside the prior's parameters on the training
+seasons. The tuning wanted it more each year as the log grew: 0 through
+2023, 10 for 2024, 20 for 2025, 30 for 2026, always with the tight prior
+variance of 4 - so the channel, not a looser prior, is what now moves a
+quarterback. The states did spread: sd 1.4 → 1.8 points, Allen +4.4 to
+the worst rookies −5.8, every one of them with a name the record
+supplies.
+
+The model as a whole: reporting window CRPS **7.290** (v1.1 7.313, Elo
+7.372), Brier 0.2195, MAE 10.13, ECE 0.032; 2024 7.200 → 7.173, 2025
+7.192 → 7.153, and better in every week and spread bucket that has more
+than a few games. But the gain came where quarterbacks do *not* change:
+same-quarterback games 7.227 → 7.212, quarterback-change games 7.610 →
+7.611, the gap now 0.40. Reading the passer better prices the starter
+who plays every week; it does nothing for the game where he is replaced,
+because the replacement's number is still the new-quarterback prior
+(−2 to −4, variance 4) until he has thrown. The remaining change-game
+gap is therefore about the prior for a quarterback with no NFL record -
+a rookie or a career backup - and the honest options are a draft-slot or
+college-production prior, or accepting that the market's 3.7-point
+adjustment on a change encodes information (practice reports, the
+coaching staff's own view) that no public record carries before kickoff.
 
 ---
 

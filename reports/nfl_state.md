@@ -1,18 +1,18 @@
 # NFL state model
 
-Walk-forward, seasons 2020-2026. The filter runs continuously from 2011; each new season regresses every team's offence and defence toward the mean by `phi` and widens their uncertainty by `p_season`, and every game is forecast strictly before kickoff and then assimilated (`atlas/models/kalman.py`). Hyperparameters are chosen on the earlier seasons only. `state` is the team model alone (step 3); `state_qb` adds a quarterback state carried by the player and a fitted, slowly drifting home advantage (step 4), forecast with the depth chart's QB1 and updated with the quarterback of record. Same lattice and scoring as the benchmarks.
+Walk-forward, seasons 2020-2026. The filter runs continuously from 2011; each new season regresses every team's offence and defence toward the mean by `phi` and widens their uncertainty by `p_season`, and every game is forecast strictly before kickoff and then assimilated (`atlas/models/kalman.py`). Hyperparameters are chosen on the earlier seasons only. `state` is the team model alone (step 3); `state_qb` adds a quarterback state carried by the player and a fitted, slowly drifting home advantage (step 4), forecast with the depth chart's QB1 and updated with the quarterback of record, whose own EPA per dropback in the game is a second measurement of him (v1.2, `pts per EPA/dropback, observed`). Same lattice and scoring as the benchmarks.
 
 ## Hyperparameters chosen, per season
 
-| season | q per week | phi | p_season | sigma (pts) | tuned on | QB prior var | new QB prior | pts per EPA/dropback | HFA fitted |
-|---|---|---|---|---|---|---|---|---|---|
-| 2020 | 0.500 | 0.500 | 5.000 | 8.500 | 2017, 2018, 2019 | 16.000 | 0.000 | 0.000 | 0.610 |
-| 2021 | 0.250 | 0.670 | 5.000 | 8.500 | 2018, 2019, 2020 | 9.000 | 0.000 | 15.000 | 0.890 |
-| 2022 | 0.500 | 0.670 | 5.000 | 8.500 | 2019, 2020, 2021 | 4.000 | 0.000 | 15.000 | 1.290 |
-| 2023 | 0.500 | 0.500 | 5.000 | 8.500 | 2020, 2021, 2022 | 4.000 | 0.000 | 15.000 | 1.920 |
-| 2024 | 0.250 | 0.670 | 5.000 | 8.500 | 2021, 2022, 2023 | 4.000 | -2.000 | 0.000 | 2.010 |
-| 2025 | 0.250 | 0.500 | 5.000 | 8.500 | 2022, 2023, 2024 | 4.000 | -2.000 | 15.000 | 2.170 |
-| 2026 | 0.500 | 0.500 | 5.000 | 8.500 | 2023, 2024, 2025 | 9.000 | -4.000 | 15.000 | 1.840 |
+| season | q per week | phi | p_season | sigma (pts) | tuned on | QB prior var | new QB prior | pts per EPA/dropback | pts per EPA/dropback, observed | HFA fitted |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 2020 | 0.500 | 0.500 | 5.000 | 8.500 | 2017, 2018, 2019 | 16.000 | 0.000 | 0.000 | 0.000 | 0.610 |
+| 2021 | 0.250 | 0.670 | 5.000 | 8.500 | 2018, 2019, 2020 | 9.000 | 0.000 | 15.000 | 0.000 | 0.890 |
+| 2022 | 0.500 | 0.670 | 5.000 | 8.500 | 2019, 2020, 2021 | 4.000 | 0.000 | 15.000 | 0.000 | 1.290 |
+| 2023 | 0.500 | 0.500 | 5.000 | 8.500 | 2020, 2021, 2022 | 4.000 | 0.000 | 15.000 | 0.000 | 1.920 |
+| 2024 | 0.250 | 0.670 | 5.000 | 8.500 | 2021, 2022, 2023 | 4.000 | -2.000 | 0.000 | 10.000 | 1.990 |
+| 2025 | 0.250 | 0.500 | 5.000 | 8.500 | 2022, 2023, 2024 | 4.000 | -2.000 | 15.000 | 20.000 | 2.120 |
+| 2026 | 0.500 | 0.500 | 5.000 | 8.500 | 2023, 2024, 2025 | 4.000 | -4.000 | 15.000 | 30.000 | 1.680 |
 
 ## Reporting window, regular season 2023-2025
 
@@ -24,7 +24,7 @@ The bar (`docs/MODEL_PLAN_NFL.md` §6): beat Elo on every row.
 | elo | 816 | 7.372 | 0.223 | 3.880 | 10.24 | 0.042 |
 | atlas_epa | 816 | 7.391 | 0.224 | 3.883 | 10.31 | 0.041 |
 | state | 816 | 7.375 | 0.223 | 3.881 | 10.24 | 0.039 |
-| state_qb | 816 | 7.313 | 0.221 | 3.871 | 10.18 | 0.026 |
+| state_qb | 816 | 7.290 | 0.220 | 3.868 | 10.13 | 0.032 |
 | market | 816 | 7.075 | 0.211 | 3.839 | 9.74 | 0.049 |
 
 ## Regular season, every scored season pooled
@@ -35,7 +35,7 @@ The bar (`docs/MODEL_PLAN_NFL.md` §6): beat Elo on every row.
 | elo | 1647 | 7.340 | 0.223 | 3.890 | 10.23 | 0.041 |
 | atlas_epa | 1647 | 7.378 | 0.225 | 3.895 | 10.32 | 0.031 |
 | state | 1647 | 7.349 | 0.224 | 3.891 | 10.23 | 0.031 |
-| state_qb | 1647 | 7.317 | 0.222 | 3.886 | 10.21 | 0.034 |
+| state_qb | 1647 | 7.306 | 0.221 | 3.885 | 10.19 | 0.033 |
 | market | 1647 | 7.070 | 0.211 | 3.854 | 9.80 | 0.038 |
 
 ## By season, regular
@@ -74,9 +74,9 @@ The bar (`docs/MODEL_PLAN_NFL.md` §6): beat Elo on every row.
 | state_qb | 2021 | 272 | 7.920 | 0.225 | 4.010 | 11.11 | 0.048 |
 | state_qb | 2022 | 271 | 6.646 | 0.226 | 3.803 | 9.20 | 0.037 |
 | state_qb | 2023 | 272 | 7.545 | 0.228 | 3.901 | 10.41 | 0.043 |
-| state_qb | 2024 | 272 | 7.200 | 0.210 | 3.879 | 9.98 | 0.090 |
-| state_qb | 2025 | 272 | 7.192 | 0.223 | 3.832 | 10.15 | 0.064 |
-| state_qb | 2026 | 32 | 8.303 | 0.226 | 3.991 | 12.19 | 0.076 |
+| state_qb | 2024 | 272 | 7.173 | 0.209 | 3.875 | 9.90 | 0.065 |
+| state_qb | 2025 | 272 | 7.153 | 0.221 | 3.828 | 10.09 | 0.065 |
+| state_qb | 2026 | 32 | 8.300 | 0.226 | 3.991 | 12.24 | 0.103 |
 | market | 2020 | 256 | 7.061 | 0.203 | 3.855 | 9.83 | 0.070 |
 | market | 2021 | 272 | 7.663 | 0.217 | 3.976 | 10.78 | 0.117 |
 | market | 2022 | 271 | 6.358 | 0.210 | 3.767 | 8.74 | 0.046 |
@@ -105,10 +105,10 @@ The bar (`docs/MODEL_PLAN_NFL.md` §6): beat Elo on every row.
 | state | wk 3-7 | 365 | 7.635 | 0.236 | 3.947 | 10.71 | 0.040 |
 | state | wk 7-13 | 517 | 7.283 | 0.222 | 3.848 | 10.07 | 0.055 |
 | state | wk 13+ | 541 | 7.396 | 0.218 | 3.907 | 10.37 | 0.040 |
-| state_qb | wk 1-3 | 224 | 6.886 | 0.221 | 3.859 | 9.40 | 0.071 |
-| state_qb | wk 3-7 | 365 | 7.603 | 0.235 | 3.942 | 10.68 | 0.060 |
-| state_qb | wk 7-13 | 517 | 7.230 | 0.218 | 3.839 | 10.04 | 0.049 |
-| state_qb | wk 13+ | 541 | 7.385 | 0.217 | 3.905 | 10.40 | 0.044 |
+| state_qb | wk 1-3 | 224 | 6.856 | 0.219 | 3.855 | 9.34 | 0.082 |
+| state_qb | wk 3-7 | 365 | 7.589 | 0.234 | 3.940 | 10.67 | 0.049 |
+| state_qb | wk 7-13 | 517 | 7.225 | 0.218 | 3.838 | 10.01 | 0.043 |
+| state_qb | wk 13+ | 541 | 7.378 | 0.217 | 3.904 | 10.39 | 0.037 |
 | market | wk 1-3 | 224 | 6.747 | 0.218 | 3.839 | 9.21 | 0.056 |
 | market | wk 3-7 | 365 | 7.334 | 0.221 | 3.908 | 10.18 | 0.046 |
 | market | wk 7-13 | 517 | 7.060 | 0.212 | 3.818 | 9.76 | 0.026 |
@@ -134,10 +134,10 @@ The bar (`docs/MODEL_PLAN_NFL.md` §6): beat Elo on every row.
 | state | |spread| 3-6 | 631 | 7.222 | 0.242 | 3.847 | 9.91 | 0.046 |
 | state | |spread| 6-10 | 433 | 7.504 | 0.211 | 3.953 | 10.56 | 0.088 |
 | state | |spread| 10+ | 199 | 8.073 | 0.133 | 4.003 | 11.28 | 0.132 |
-| state_qb | |spread| 0-3 | 384 | 7.013 | 0.256 | 3.837 | 9.84 | 0.059 |
-| state_qb | |spread| 3-6 | 631 | 7.248 | 0.241 | 3.849 | 9.94 | 0.054 |
-| state_qb | |spread| 6-10 | 433 | 7.416 | 0.205 | 3.940 | 10.53 | 0.087 |
-| state_qb | |spread| 10+ | 199 | 7.906 | 0.129 | 3.979 | 11.12 | 0.119 |
+| state_qb | |spread| 0-3 | 384 | 7.018 | 0.256 | 3.838 | 9.84 | 0.058 |
+| state_qb | |spread| 3-6 | 631 | 7.227 | 0.241 | 3.846 | 9.90 | 0.046 |
+| state_qb | |spread| 6-10 | 433 | 7.400 | 0.204 | 3.938 | 10.50 | 0.080 |
+| state_qb | |spread| 10+ | 199 | 7.905 | 0.129 | 3.980 | 11.13 | 0.119 |
 | market | |spread| 0-3 | 384 | 6.864 | 0.246 | 3.819 | 9.48 | 0.037 |
 | market | |spread| 3-6 | 631 | 7.097 | 0.236 | 3.830 | 9.68 | 0.017 |
 | market | |spread| 6-10 | 433 | 7.020 | 0.187 | 3.891 | 9.87 | 0.053 |
@@ -157,10 +157,33 @@ Without a quarterback state the model loses about what Elo loses on these games;
 | atlas_epa | same quarterbacks | 1262 | 7.290 | 0.224 | 3.865 | 10.21 | 0.035 |
 | state | a side changed QB | 385 | 7.624 | 0.226 | 3.993 | 10.50 | 0.049 |
 | state | same quarterbacks | 1262 | 7.265 | 0.224 | 3.860 | 10.15 | 0.028 |
-| state_qb | a side changed QB | 385 | 7.610 | 0.221 | 3.989 | 10.51 | 0.070 |
-| state_qb | same quarterbacks | 1262 | 7.227 | 0.222 | 3.855 | 10.13 | 0.043 |
+| state_qb | a side changed QB | 385 | 7.611 | 0.221 | 3.990 | 10.52 | 0.068 |
+| state_qb | same quarterbacks | 1262 | 7.212 | 0.221 | 3.853 | 10.09 | 0.038 |
 | market | a side changed QB | 385 | 7.109 | 0.201 | 3.918 | 9.90 | 0.053 |
 | market | same quarterbacks | 1262 | 7.058 | 0.214 | 3.835 | 9.77 | 0.034 |
+
+### The quarterback states at the end of 2026
+
+222 quarterbacks carried; sd of their means 1.81 points, middle 90% from -4.6 to +1.1. A quarterback's number is points per game against his team's offence; the top and bottom eight.
+
+| quarterback | points | sd |
+|---|---|---|
+| J.Allen | +4.4 | 1.7 |
+| J.Goff | +4.0 | 1.6 |
+| B.Purdy | +3.3 | 1.7 |
+| M.Stafford | +3.1 | 1.6 |
+| D.Prescott | +3.0 | 1.7 |
+| L.Jackson | +2.8 | 1.7 |
+| P.Mahomes | +2.7 | 1.7 |
+| J.Love | +2.2 | 1.7 |
+| C.Ward | -4.8 | 1.7 |
+| J.McCarthy | -5.0 | 1.9 |
+| I.Book | -5.4 | 2.7 |
+| S.Sanders | -5.5 | 1.9 |
+| B.Cook | -5.5 | 2.0 |
+| C.Tune | -5.7 | 2.4 |
+| M.Brosmer | -5.8 | 2.0 |
+| C.Oladokun | -5.8 | 2.0 |
 
 ## Playoffs (never fitted, always scored)
 
@@ -170,7 +193,7 @@ Without a quarterback state the model loses about what Elo loses on these games;
 | elo | 78 | 7.199 | 0.212 | 3.712 | 9.85 | 0.087 |
 | atlas_epa | 78 | 7.231 | 0.214 | 3.718 | 9.94 | 0.095 |
 | state | 78 | 7.269 | 0.217 | 3.724 | 9.93 | 0.123 |
-| state_qb | 78 | 7.331 | 0.213 | 3.732 | 10.01 | 0.127 |
+| state_qb | 78 | 7.337 | 0.213 | 3.733 | 10.01 | 0.108 |
 | market | 78 | 7.184 | 0.208 | 3.714 | 9.81 | 0.146 |
 
 ## Reliability, home-win probability (regular season)
@@ -194,14 +217,14 @@ Without a quarterback state the model loses about what Elo loses on these games;
 | bin | n | forecast | observed | gap |
 |---|---|---|---|---|
 | 0.0-0.1 | 4 | 0.084 | 0.500 | +0.416 |
-| 0.1-0.2 | 35 | 0.172 | 0.314 | +0.142 |
-| 0.2-0.3 | 93 | 0.256 | 0.366 | +0.110 |
-| 0.3-0.4 | 214 | 0.358 | 0.283 | -0.076 |
-| 0.4-0.5 | 352 | 0.454 | 0.418 | -0.036 |
-| 0.5-0.6 | 365 | 0.549 | 0.560 | +0.011 |
-| 0.6-0.7 | 301 | 0.649 | 0.648 | -0.001 |
-| 0.7-0.8 | 198 | 0.743 | 0.770 | +0.027 |
-| 0.8-0.9 | 75 | 0.839 | 0.853 | +0.014 |
+| 0.1-0.2 | 37 | 0.173 | 0.324 | +0.152 |
+| 0.2-0.3 | 92 | 0.256 | 0.348 | +0.092 |
+| 0.3-0.4 | 210 | 0.357 | 0.281 | -0.076 |
+| 0.4-0.5 | 368 | 0.454 | 0.423 | -0.032 |
+| 0.5-0.6 | 357 | 0.551 | 0.550 | -0.001 |
+| 0.6-0.7 | 296 | 0.650 | 0.659 | +0.009 |
+| 0.7-0.8 | 198 | 0.744 | 0.780 | +0.036 |
+| 0.8-0.9 | 75 | 0.842 | 0.853 | +0.012 |
 | 0.9-1.0 | 10 | 0.918 | 0.900 | -0.018 |
 
 ### elo
