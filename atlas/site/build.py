@@ -53,7 +53,7 @@ def build(out: Path | None = None, *, social_cards: bool = True,
     if out.exists():
         shutil.rmtree(out)
     (out / "ncaaf").mkdir(parents=True)
-    (out / "nfl").mkdir(parents=True)
+    (out / "nfl" / "team").mkdir(parents=True)
     (out / "team").mkdir(parents=True)
 
     assets_src = Path(__file__).resolve().parent / "assets"
@@ -86,10 +86,18 @@ def build(out: Path | None = None, *, social_cards: bool = True,
         render.about_page(_example_card(cards), card_count=len(cards)))
     (out / "faq.html").write_text(render.faq_page())
     (out / "404.html").write_text(render.not_found_page())
-    (out / "nfl.html").write_text(render.nfl_page(nfl_cards, bands=nfl_bands, freshness=stamps))
+    nfl_teams = _teams(nfl_cards)
+    (out / "nfl.html").write_text(render.nfl_page(nfl_cards, bands=nfl_bands, freshness=stamps, teams=nfl_teams))
     for card in nfl_cards:
         (out / card.path).write_text(render.card_page(
             card, bands=nfl_bands, overall_band=nfl_overall, freshness=stamps))
+    if nfl_teams:
+        nfl_pool, nfl_results, nfl_records = _nfl_context(nfl_cards)
+        for team in nfl_teams.values():
+            team.record = team.record or nfl_records.get(team.team_id)
+            (out / render.team_path(team, "nfl")).write_text(render.nfl_team_page(
+                team, cards=nfl_cards, pool=nfl_pool, results=nfl_results.get(team.team_id, []),
+                freshness=stamps))
     (out / "premium.html").write_text(render.premium_page())
 
     social_slugs = {c.slug for c in _spread_of_grades(
@@ -118,15 +126,17 @@ def build(out: Path | None = None, *, social_cards: bool = True,
     # advertises itself as complete.
     if social_cards:
         ops_freshness.record("social", detail=f"{len(images)} files")
-    ops_freshness.record("build", detail=f"{len(cards)} cards, {len(nfl_cards)} NFL cards, {len(teams)} teams")
+    ops_freshness.record("build", detail=f"{len(cards)} cards, {len(nfl_cards)} NFL cards, {len(teams)} teams, "
+                                         f"{len(nfl_teams)} NFL teams")
     # Written last, so it reports the run that just happened rather than the
     # one before it.
     (out / "status.html").write_text(render.status_page(ops_status.summary()))
     _write_robots(out)
-    _write_sitemap(out, [*cards, *nfl_cards], teams)
-    LOG.info("site: %d cards, %d NFL cards, %d teams, %d images -> %s",
-             len(cards), len(nfl_cards), len(teams), len(images), out)
-    return {"cards": len(cards), "nfl_cards": len(nfl_cards), "teams": len(teams), "images": len(images), "out": out}
+    _write_sitemap(out, [*cards, *nfl_cards], teams, nfl_teams)
+    LOG.info("site: %d cards, %d NFL cards, %d teams, %d NFL teams, %d images -> %s",
+             len(cards), len(nfl_cards), len(teams), len(nfl_teams), len(images), out)
+    return {"cards": len(cards), "nfl_cards": len(nfl_cards), "teams": len(teams), "nfl_teams": len(nfl_teams),
+            "images": len(images), "out": out}
 
 
 def _nfl_cards(*, horizon: int, refresh_meta: bool) -> list:
@@ -190,6 +200,24 @@ def _teams(cards) -> dict:
     return teams
 
 
+def _nfl_context(nfl_cards) -> tuple[dict, dict, dict]:
+    """The NFL percentile pool, each team's results and its record this season; empty on any failure."""
+    from atlas.live.store import Store
+    from atlas.research.nfl_dataset import load_nfl_frame
+    from atlas.site.data import team_results, team_win_loss
+
+    try:
+        frame = load_nfl_frame()
+        season = max(c.season for c in nfl_cards)
+        projections = Store.open().read("projections")
+        projections = projections[projections["sport"].fillna("ncaaf").astype(str) == "nfl"]
+        return (percentile_pool(frame, season), team_results(nfl_cards, frame, projections),
+                team_win_loss(nfl_cards, frame))
+    except Exception as error:  # noqa: BLE001 - a team page without a profile is still a page
+        LOG.warning("NFL team pages without a profile or results: %s", error)
+        return {}, {}, {}
+
+
 def _pool() -> dict:
     from atlas.research.dataset import load_research_frame
 
@@ -228,7 +256,7 @@ SITEMAP_PRIORITY = {"": "1.0", "about.html": "0.9", "research.html": "0.8",
                     "ncaaf": "0.8", "team": "0.6"}
 
 
-def _write_sitemap(out: Path, cards, teams: dict) -> None:
+def _write_sitemap(out: Path, cards, teams: dict, nfl_teams: dict | None = None) -> None:
     """Every public page, once, with the day it was built.
 
     A card's content changes whenever the market does, so `changefreq` is
@@ -250,6 +278,8 @@ def _write_sitemap(out: Path, cards, teams: dict) -> None:
     urls += [(card.path, "daily", SITEMAP_PRIORITY.get(card.sport, SITEMAP_PRIORITY["ncaaf"])) for card in cards]
     urls += [(f"team/{slug}.html", "weekly", SITEMAP_PRIORITY["team"])
              for slug in sorted(teams)]
+    urls += [(render.team_path(side, "nfl"), "weekly", SITEMAP_PRIORITY["team"])
+             for _, side in sorted((nfl_teams or {}).items())]
 
     entries = "".join(
         f"<url><loc>{render.SITE_URL}/{path}</loc>"

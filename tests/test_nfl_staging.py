@@ -256,6 +256,7 @@ def test_the_nfl_projector_projects_the_scheduled_slate(nfl_frame):
     assert out["home_rank"].between(1, 8).all() and out["teams"].iloc[0] == 8
     assert projector.quarterback("qb-KC") is not None
     assert (out["top_home"] < 60).all()
+    assert out["home_qb"].notna().all() and out["home_qb_pts"].notna().all() and (out["home_qb_sd"] > 0).all()
 
 
 def test_the_expected_starter_is_the_qb2_when_the_report_lists_the_qb1_out():

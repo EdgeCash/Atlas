@@ -272,6 +272,13 @@ def _advance_qb(state: kalman.State, weeks: int, spec: kalman.Spec, qb_q: float)
     state.P[np.diag_indices_from(state.P)] += diag
 
 
+def expected_starter(qb1, qb2, qb1_out):
+    """The depth chart's QB1, unless the injury report lists him Out or Doubtful and a QB2 is listed."""
+    if not pd.isna(qb1_out) and float(qb1_out) == 1.0 and not pd.isna(qb2):
+        return qb2
+    return qb1
+
+
 def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *, p0: float, new_mean: float,
                   qb_q: float = QB_Q, first_season: bool = False, starters: dict | None = None,
                   k_epa: float = 0.0, record: PasserRecord | None = None, k_obs: float = 0.0,
@@ -332,11 +339,7 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
         return state.extra[key]
 
     def expected(side: str, i: int, team):
-        """The QB1 unless the report says he is out and a QB2 is listed."""
-        qb1, qb2, out = cols[f"{side}_qb1_id"][i], cols[f"{side}_qb2_id"][i], cols[f"{side}_qb1_out"][i]
-        if not pd.isna(out) and float(out) == 1.0 and not pd.isna(qb2):
-            return qb2
-        return qb1
+        return expected_starter(cols[f"{side}_qb1_id"][i], cols[f"{side}_qb2_id"][i], cols[f"{side}_qb1_out"][i])
 
     for i in range(len(g)):
         week = int(weeks[i])

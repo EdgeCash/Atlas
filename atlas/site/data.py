@@ -353,8 +353,12 @@ def _projection(projections: pd.DataFrame, game_id: int) -> Projection | None:
         return None
 
     def side(prefix: str) -> dict:
-        out = {k: _num(row.get(f"{prefix}_{k}")) for k in ("off", "def", "net", "sd_off", "sd_def", "rank", "games")}
-        return {k: (int(v) if k in ("rank", "games") and v is not None else v) for k, v in out.items()}
+        out = {k: _num(row.get(f"{prefix}_{k}")) for k in ("off", "def", "net", "sd_off", "sd_def", "rank", "games",
+                                                            "qb_pts", "qb_sd")}
+        out = {k: (int(v) if k in ("rank", "games") and v is not None else v) for k, v in out.items()}
+        name = row.get(f"{prefix}_qb")
+        out["qb"] = None if name is None or pd.isna(name) or not str(name).strip() else str(name)
+        return out
 
     teams = _num(row.get("teams"))
     return Projection(
@@ -462,6 +466,128 @@ def _card(row, info, projections, snapshots, pool, bands, curve, sport: str = "n
     card.drivers = driving.select(card, pool)
     card.cautions = cautions(card)
     return card
+
+
+@dataclass
+class Result:
+    """One completed game, from one team's side: what Atlas said before kickoff and what happened.
+
+    Margins are the team's own, positive when it wins by that much.
+    """
+
+    kickoff: datetime
+    opponent: str
+    home: bool
+    atlas: float
+    market: float | None
+    final: float
+
+    @property
+    def atlas_error(self) -> float:
+        return abs(self.final - self.atlas)
+
+    @property
+    def market_error(self) -> float | None:
+        return None if self.market is None else abs(self.final - self.market)
+
+
+def team_results(cards: list[Card], frame: pd.DataFrame, projections: pd.DataFrame) -> dict[int, list[Result]]:
+    """This season's completed games that Atlas projected *before* kickoff, per team, newest first.
+
+    Keyed by ESPN's team id, as a card's sides are. A projection counts only
+    if it was published before the game started: the last one before kickoff
+    is the number Atlas stood behind, and a later one is not a forecast.
+    """
+    if not cards or frame.empty or projections.empty or "espn_id" not in frame:
+        return {}
+    season = max(c.season for c in cards)
+    games, ids, names = _team_map(cards, frame)
+    done = games[(games["season"] == season) & games["actual_margin"].notna()]
+    if done.empty:
+        return {}
+    proj = projections.copy()
+    proj["game_id"] = pd.to_numeric(proj["game_id"], errors="coerce").astype("Int64")
+    proj["published"] = pd.to_datetime(proj["refreshed_at"], utc=True, errors="coerce")
+    done = done.assign(kick=pd.to_datetime(done["kickoff"], utc=True, errors="coerce"))
+    merged = proj.merge(done[["espn", "kick", "home_team_id", "away_team_id", "home_team", "away_team",
+                              "actual_margin", "closing_spread"]],
+                        left_on="game_id", right_on="espn", suffixes=("", "_game"))
+    merged = merged[merged["published"] < merged["kick"]].sort_values("published")
+    last = merged.drop_duplicates("game_id", keep="last")
+    out: dict[int, list[Result]] = {}
+    for _, g in last.iterrows():
+        margin = _num(g["margin_mean"])
+        if margin is None:
+            continue
+        close = _num(g["closing_spread"])
+        for prefix, other, sign in (("home", "away", 1.0), ("away", "home", -1.0)):
+            espn_team = ids.get(int(g[f"{prefix}_team_id_game"]))
+            if espn_team is None:
+                continue
+            opponent = names.get(int(g[f"{other}_team_id_game"])) or str(g[f"{other}_team"])
+            out.setdefault(espn_team, []).append(Result(
+                kickoff=g["kick"].to_pydatetime(), opponent=opponent, home=prefix == "home",
+                atlas=sign * margin, market=None if close is None else -sign * close,
+                final=sign * float(g["actual_margin"])))
+    for rows in out.values():
+        rows.sort(key=lambda r: r.kickoff, reverse=True)
+    return out
+
+
+def _team_map(cards: list[Card], frame: pd.DataFrame) -> tuple[pd.DataFrame, dict[int, int], dict[int, str]]:
+    """(games keyed by ESPN id, warehouse team id -> ESPN team id, warehouse team id -> short name).
+
+    The warehouse numbers NFL teams its own way and the cards carry ESPN's;
+    a card's game is the one place both are known.
+    """
+    games = frame.dropna(subset=["espn_id"]).assign(espn=lambda d: d["espn_id"].astype("int64"))
+    by_espn = games.set_index("espn")
+    ids: dict[int, int] = {}
+    names: dict[int, str] = {}
+    for card in cards:
+        if card.game_id not in by_espn.index:
+            continue
+        row = by_espn.loc[card.game_id]
+        for side, prefix in ((card.home, "home"), (card.away, "away")):
+            ids[int(row[f"{prefix}_team_id"])] = side.team_id
+            names[int(row[f"{prefix}_team_id"])] = side.short
+    return games, ids, names
+
+
+def team_win_loss(cards: list[Card], frame: pd.DataFrame) -> dict[int, str]:
+    """Each team's regular-season record this season, from the warehouse, keyed by ESPN team id.
+
+    ESPN's scoreboard carries no record on a game that has not started, so the
+    record is counted from the results rather than left blank.
+    """
+    if not cards or frame.empty or "espn_id" not in frame:
+        return {}
+    season = max(c.season for c in cards)
+    games, ids, _ = _team_map(cards, frame)
+    done = games[(games["season"] == season) & games["actual_margin"].notna()
+                 & (games.get("season_type", "regular") == "regular")]
+    tally: dict[int, list[int]] = {}
+    for _, g in done.iterrows():
+        m = float(g["actual_margin"])
+        for prefix, sign in (("home", 1.0), ("away", -1.0)):
+            espn_team = ids.get(int(g[f"{prefix}_team_id"]))
+            if espn_team is None:
+                continue
+            counts = tally.setdefault(espn_team, [0, 0, 0])
+            counts[0 if sign * m > 0 else 1 if sign * m < 0 else 2] += 1
+    return {team: f"{won}-{lost}" + (f"-{tied}" if tied else "") for team, (won, lost, tied) in tally.items()}
+
+
+def offence_with_quarterback(view: dict) -> float | None:
+    """The side's offence as the forecast uses it: the team's own plus its expected starter's.
+
+    The state carries the quarterback separately and adds him to the offence
+    for the game; a reader comparing offences should see what the forecast adds.
+    """
+    off = view.get("off")
+    if off is None:
+        return None
+    return off + (view.get("qb_pts") or 0.0)
 
 
 def cautions(card: Card) -> list[str]:

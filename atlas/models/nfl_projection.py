@@ -75,6 +75,21 @@ class Projector:
         return self.state.value(key) if key in self.state.extra else None
 
 
+def _starter(p: Projector, state: kalman.State, qb1, qb2, qb1_out, team) -> tuple[str | None, float, float]:
+    """(name, points against his team's offence, sd) for the side's expected starter, by the forecast's own rule."""
+    qb = ns.expected_starter(qb1, qb2, qb1_out)
+    if pd.isna(qb):
+        qb = p.starters.get(team)
+    if qb is None or pd.isna(qb):
+        return None, np.nan, np.nan
+    name = (p.record.names.get(str(qb)) if p.record is not None else None) or str(qb)
+    key = ("qb", str(qb))
+    if key not in state.extra:
+        return name, np.nan, np.nan
+    i = state.extra[key]
+    return name, float(state.x[i]), float(np.sqrt(state.P[i, i]))
+
+
 def _version(season, choice, qb, total, assimilated, last) -> str:
     payload = "|".join([MODEL_NAME, str(season), f"{choice.q},{choice.phi},{choice.p_season},{choice.sigma}",
                         f"{qb.p0},{qb.new_mean},{qb.k_epa},{qb.k_obs},{qb.k_draft}", ",".join(f"{c:.4f}" for c in total.coef), str(assimilated), last])
@@ -193,6 +208,13 @@ def project(projector: Projector, scheduled: pd.DataFrame) -> pd.DataFrame:
     for side in ("home", "away"):
         for key in ("off", "def", "net", "sd_off", "sd_def", "rank", "games"):
             out[f"{side}_{key}"] = [v[key] if v else np.nan for v in views[side]]
+    for side in ("home", "away"):
+        cols = [rows[c].to_numpy() if c in rows else np.full(len(rows), pd.NA)
+                for c in (f"{side}_qb1_id", f"{side}_qb2_id", f"{side}_qb1_out", f"{side}_team_id")]
+        starters = [_starter(p, state, *vals) for vals in zip(*cols, strict=True)]
+        out[f"{side}_qb"] = [s[0] for s in starters]
+        out[f"{side}_qb_pts"] = [s[1] for s in starters]
+        out[f"{side}_qb_sd"] = [s[2] for s in starters]
     out["teams"] = views["home"][0]["teams"] if views["home"] and views["home"][0] else np.nan
     out["nfl_game_id"] = rows["game_id"].to_numpy()
     return out.dropna(subset=["game_id"])

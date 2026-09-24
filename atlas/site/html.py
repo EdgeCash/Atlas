@@ -65,6 +65,11 @@ def num(value: float | None, digits: int = 1, dash: str = "—") -> str:
     return f"{value:.{digits}f}"
 
 
+def possessive(name: str) -> str:
+    """"Bills'", "Aggies'", "Buffalo's": a name ending in s takes the apostrophe alone."""
+    return f"{name}'" if name.endswith("s") else f"{name}'s"
+
+
 def signed(value: float | None, digits: int = 1, dash: str = "—") -> str:
     if value is None:
         return dash

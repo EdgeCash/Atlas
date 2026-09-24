@@ -21,6 +21,7 @@ from atlas.site.html import (
     minus,
     num,
     pct,
+    possessive,
     price,
     signed,
     table,
@@ -316,8 +317,7 @@ def _card_schema(card: Card) -> str:
     them, and the card is the thing that makes a letter mean anything.
     """
     competitors = [
-        {"@type": "SportsTeam", "name": side.name,
-         **({"url": f"{SITE_URL}/team/{_team_slug(side)}.html"} if card.sport == "ncaaf" else {})}
+        {"@type": "SportsTeam", "name": side.name, "url": f"{SITE_URL}/{team_path(side, card.sport)}"}
         for side in (card.away, card.home)
     ]
     payload = {
@@ -349,6 +349,11 @@ def _team_slug(side) -> str:
     from atlas.site.data import _slug
 
     return _slug(side.name)
+
+
+def team_path(side, sport: str = "ncaaf") -> str:
+    """Where a team's page lives: ``team/`` for college, ``nfl/team/`` for the NFL."""
+    return f"nfl/team/{_team_slug(side)}.html" if sport == "nfl" else f"team/{_team_slug(side)}.html"
 
 
 # ---------------------------------------------------------------------------
@@ -462,10 +467,17 @@ def _diff_class(value: float | None) -> str:
 def _grade_hero(card: Card) -> str:
     """Rule 4: the grade is the centrepiece, not the spread."""
     if card.grade is None:
-        return """<div class="card grade-hero none">
+        # An ungraded card is still a card: it carries the same disclaimer, and
+        # it says why there is no grade rather than implying a lack of history
+        # when the real reason is that no book has priced the game yet.
+        reason = ("No market is posted yet, so there is nothing to grade Atlas's number against."
+                  if card.spread.current is None else "Not enough history to grade this card.")
+        return f"""<div class="card grade-hero none">
   <div class="grade-mark">–</div>
   <div class="grade-words"><div class="grade-title">Not graded</div>
-    <p class="grade-line">Not enough history to grade this card.</p></div>
+    <p class="grade-line">{esc(reason)}</p>
+    <p class="grade-foot">A grade is how much weight a card's information deserves —
+      not a recommendation.</p></div>
 </div>"""
     g = card.grade
     # Rule 4: the grade teaches. A letter is a symbol, and a symbol a reader
@@ -1405,6 +1417,196 @@ def team_page(team, *, cards: list[Card], pool: dict) -> str:
                   }))
 
 
+def nfl_team_page(team, *, cards: list[Card], pool: dict, results: list | None = None,
+                  freshness: dict | None = None) -> str:
+    """One NFL team: Atlas's rating of it, its expected quarterback, its
+    season profile, the cards it is on, and every game this season Atlas
+    projected before kickoff beside how it finished.
+
+    The rating and the quarterback are read from the team's next card, so the
+    page and the card can never disagree about the same number. The offence
+    is the forecast's: the team's own plus its expected starter's, and the
+    rank is by that net across every team with a card this week.
+    """
+    from atlas.site.data import offence_with_quarterback, percentile
+
+    root = "../../"
+    upcoming = [c for c in cards if team.team_id in (c.home.team_id, c.away.team_id)]
+    views = _nfl_views(cards)
+    view = views.get(team.team_id, {})
+    offence = offence_with_quarterback(view)
+    defence = view.get("def")
+    net = offence + defence if offence is not None and defence is not None else None
+    nets = sorted((offence_with_quarterback(v) + v["def"] for v in views.values()
+                   if offence_with_quarterback(v) is not None and v.get("def") is not None), reverse=True)
+    rank_note = f"{_ordinal(nets.index(net) + 1)} of {len(nets)} with a card this week" if net is not None \
+        else "not yet rated"
+    games = view.get("games")
+    qb, qb_pts, qb_sd = view.get("qb"), view.get("qb_pts"), view.get("qb_sd")
+    who = possessive(team.short)
+
+    def rating(label: str, value: float | None, note: str) -> str:
+        return f"""<div class="stat"><div class="stat-label">{esc(label)}</div>
+  <div class="stat-value">{signed(value)}</div>
+  <div class="stat-note">{esc(note)}</div></div>"""
+
+    if qb and qb_pts is not None:
+        offence_note = f"team {signed(view.get('off'))} · {qb} {signed(qb_pts)}"
+        qb_line = (f"<b>Expected starter: {esc(qb)}.</b> {signed(qb_pts)} of that offence is his (± {num(qb_sd)}), "
+                   "and it travels with him: the model rates the quarterback and the team separately and adds "
+                   "them for the game. He is the depth chart's first quarterback unless the injury report lists "
+                   "him out.")
+    elif qb:
+        offence_note = "points scored above average"
+        qb_line = (f"<b>Expected starter: {esc(qb)}.</b> The model has not rated him yet; until he plays, the "
+                   "offence carries a new quarterback's prior.")
+    else:
+        offence_note = "points scored above average"
+        qb_line = "No expected starter is listed yet."
+    sd_def = view.get("sd_def")
+    defence_note = (f"± {num(sd_def)} · " if sd_def is not None else "") + "points held below average"
+
+    def stat(metric: str, label: str, note: str, fmt) -> str:
+        value = team.metrics.get(metric)
+        pct_rank = percentile(pool, metric, value)
+        return f"""<div class="stat"><div class="stat-label">{esc(label)}</div>
+  <div class="stat-value">{fmt(value)}</div>
+  <div class="stat-note">{esc(_ordinal_note(pct_rank, note))}</div></div>"""
+
+    schedule_rows = []
+    for card in upcoming:
+        opponent = card.away if card.home.team_id == team.team_id else card.home
+        prefix = "vs" if card.home.team_id == team.team_id else "at"
+        schedule_rows.append([
+            esc(eastern(card.kickoff).strftime("%-d %b")),
+            f"{prefix} {esc(opponent.short)}",
+            esc(card.spread_text),
+            num(card.total.current),
+            f'<a href="{root}{esc(card.path)}">{grade_pill(card)}</a>',
+        ])
+
+    results = results or []
+    result_rows = [[
+        esc(eastern(r.kickoff).strftime("%-d %b")),
+        f"{'vs' if r.home else 'at'} {esc(r.opponent)}",
+        signed(r.atlas), signed(r.market) if r.market is not None else "—", signed(r.final, 0),
+        "Atlas" if r.market is not None and r.atlas_error < r.market_error
+        else "Market" if r.market is not None and r.market_error < r.atlas_error else "Level",
+    ] for r in results]
+    if results:
+        atlas_mae = sum(r.atlas_error for r in results) / len(results)
+        paired = [r for r in results if r.market is not None]
+        market_mae = sum(r.market_error for r in paired) / len(paired) if paired else None
+        summary = (f"Over {_plural(len(results), 'game')}, Atlas missed the final margin by {num(atlas_mae)} "
+                   f"points on average" + (f" and the closing line by {num(market_mae)}." if market_mae is not None
+                                           else "."))
+        record_block = (table(["Date", "Opponent", "Atlas margin", "Closing margin", "Final", "Closer"],
+                              result_rows) + f'<p class="note top-gap">{esc(summary)} A handful of games '
+                        "says little about a model; the full record is on the Research page.</p>")
+    else:
+        record_block = ('<p class="note">No completed game this season has a projection Atlas published '
+                        "before kickoff yet. Each one is added here after it is played.</p>")
+
+    stamp_line = freshness_badge(("Projection built", (freshness or {}).get("projection", "")),
+                                 ("Market updated", (freshness or {}).get("market", "")), root=root)
+    evidence = (f"after {_plural(games, 'game')} this season" if games
+                else "before any game this season, so it is still mostly last season carried forward")
+    body = f"""<div class="card game-head" style="--team-home:{esc(team.colour)};--team-away:#9aa1aa">
+  <div class="team-head">
+    {_logo(team, size="large", root=root)}
+    <div>
+      <h1>{esc(team.name)}</h1>
+      <p class="sub">{esc(" · ".join(filter(None, ["NFL", team.record])))}</p>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="section-head"><h2>How Atlas rates them</h2>
+    <span class="note">points a game against an average NFL team · {esc(rank_note)}</span></div>
+  <div class="card">
+    <div class="grid-3">
+      {rating("Offence", offence, offence_note)}
+      {rating("Defence", defence, defence_note)}
+      {rating("Net", net, "offence plus defence")}
+    </div>
+    <p class="note card-pad qb-line">{qb_line}</p>
+  </div>
+  <p class="note top-gap">The rating is the model's own, {esc(evidence)}: every team's offence and
+    defence, and every quarterback, are carried from season to season and updated after each game,
+    adjusted for the opponent. The ± is how unsure the model still is. These are the numbers the
+    team's card uses.</p>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Season profile</h2>
+    <span class="note">opponent-adjusted · percentile of the NFL this season</span></div>
+  <div class="card">
+    <div class="grid-3">
+      {stat("adj_off_epa", "Offensive EPA / play", "", lambda v: signed(v, 2))}
+      {stat("adj_success_rate", "Success rate", "", lambda v: pct(v))}
+      {stat("adj_explosiveness", "Explosiveness", "", lambda v: num(v, 2))}
+    </div>
+    <div class="grid-3 divided">
+      {stat("adj_def_success_rate", "Defensive success allowed", "lower is better", lambda v: pct(v))}
+      {stat("adj_pace", "Pace", "seconds per play", lambda v: num(v, 1) + "s" if v else "—")}
+      {stat("plays_per_game", "Plays per game", "", lambda v: num(v, 1))}
+    </div>
+  </div>
+  <p class="note top-gap">Every figure is point-in-time: it uses only games played before the
+    team's next kickoff.</p>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Upcoming</h2>
+    <span class="note">cards Atlas has published</span></div>
+  <div class="card card-pad">
+    {table(["Date", "Opponent", "Market", "Total", "Card"], schedule_rows)
+     if schedule_rows else '<p class="note">No upcoming cards.</p>'}
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>This season, before and after</h2>
+    <span class="note">{esc(who)} margin · what Atlas published before kickoff</span></div>
+  <div class="card card-pad">{record_block}</div>
+</section>
+
+{stamp_line}
+<div class="disclosure top-gap">
+  <b>A rating is not a recommendation.</b> Atlas publishes its own number beside the market's and grades how
+  much weight it deserves; it never says what to do with either.
+</div>"""
+    path = team_path(team, "nfl")
+    description = (f"{team.name}: Atlas's NFL rating of the offence, defence and expected quarterback, the "
+                   "season profile, upcoming cards, and every projection this season beside the result.")
+    return layout(title=f"{team.name} — Atlas NFL rating and cards", body=body, depth=2, active="nfl",
+                  description=description, canonical=path,
+                  social=social_tags(title=f"{team.name} · Atlas", description=description, url=path),
+                  structured=json_ld({
+                      "@context": "https://schema.org", "@type": "SportsTeam", "name": team.name,
+                      "sport": "American Football", "url": f"{SITE_URL}/{path}",
+                      "memberOf": {"@type": "SportsOrganization", "name": "NFL"},
+                  }))
+
+
+def _nfl_views(cards: list[Card]) -> dict[int, dict]:
+    """Each team's side of the projection on its earliest card, keyed by ESPN team id."""
+    views: dict[int, dict] = {}
+    for card in sorted(cards, key=lambda c: c.kickoff):
+        if card.projection is None:
+            continue
+        for side, view in ((card.home, card.projection.home), (card.away, card.projection.away)):
+            if side.team_id is not None and view:
+                views.setdefault(side.team_id, view)
+    return views
+
+
+def _ordinal(n: int) -> str:
+    suffix = "th" if 11 <= n % 100 <= 13 else {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
+    return f"{n}{suffix}"
+
+
 def _ordinal_note(rank: float | None, extra: str) -> str:
     if rank is None:
         return extra or "no data"
@@ -2045,7 +2247,7 @@ def research_page(bands: dict, overall_band, *, card_count: int) -> str:
 
 
 def nfl_page(cards: list[Card] | None = None, *, bands: dict | None = None,
-             freshness: dict | None = None) -> str:
+             freshness: dict | None = None, teams: dict | None = None) -> str:
     """The NFL board: the same rows as the college board, grouped by day.
 
     With no cards - before the season, or a build without the NFL warehouse -
@@ -2072,6 +2274,7 @@ def nfl_page(cards: list[Card] | None = None, *, bands: dict | None = None,
     football, from the NFL's own model.</p>
 </header>
 {sections}
+{_team_strip(teams)}
 {stamp_line}
 <div class="disclosure top-gap">
   <b>How the NFL number is made.</b> Every team's offence and defence are carried from season to season,
@@ -2084,6 +2287,21 @@ def nfl_page(cards: list[Card] | None = None, *, bands: dict | None = None,
                    "and a grade for how much weight it deserves.")
     return layout(title="NFL cards this week | Atlas", body=body, active="nfl", canonical="nfl.html",
                   description=description)
+
+
+def _team_strip(teams: dict | None) -> str:
+    """Every NFL team with a page this week, by name, so the pages can be reached from the site."""
+    if not teams:
+        return ""
+    links = "".join(
+        f'<a class="team-link" href="{esc(team_path(side, "nfl"))}">{_logo(side, size="small", root="")}'
+        f"<span>{esc(side.short)}</span></a>"
+        for _, side in sorted(teams.items(), key=lambda kv: kv[1].short)
+    )
+    return f"""<section class="section">
+  <div class="section-head"><h2>Teams</h2><span class="note">Atlas's rating of each, and its season</span></div>
+  <div class="card card-pad team-strip">{links}</div>
+</section>"""
 
 
 def premium_page() -> str:

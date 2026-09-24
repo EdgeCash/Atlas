@@ -17,6 +17,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from atlas.site.html import possessive
 from atlas.util import get_logger
 
 LOG = get_logger(__name__)
@@ -64,6 +65,12 @@ def _model_drivers(card) -> list[tuple[float, Driver]]:
 
     def strength(name: str, key: str, note: str) -> None:
         h, a = p.home.get(key), p.away.get(key)
+        if key == "off" and card.sport == "nfl":
+            # The NFL forecast adds each side's expected quarterback to its
+            # offence; the driver compares what the forecast compares.
+            from atlas.site.data import offence_with_quarterback
+
+            h, a = offence_with_quarterback(p.home), offence_with_quarterback(p.away)
         if h is None or a is None:
             return
         gap = h - a
@@ -72,8 +79,9 @@ def _model_drivers(card) -> list[tuple[float, Driver]]:
         out.append((abs(gap), Driver(
             name=name,
             magnitude=f"{leader.abbr} +{abs(gap):.1f} pts",
-            sentence=(f"Atlas rates {leader.short}'s {note} at {lead:+.1f} points a game against FBS average "
-                      f"and {trailer.short}'s at {trail:+.1f}, opponent-adjusted, after "
+            sentence=(f"Atlas rates {possessive(leader.short)} {note} at {lead:+.1f} points a game against "
+                      f"{'the NFL' if card.sport == 'nfl' else 'FBS'} average "
+                      f"and {possessive(trailer.short)} at {trail:+.1f}, opponent-adjusted, after "
                       f"{p.home.get('games', 0) if leader is home else p.away.get('games', 0)} games this season."),
             share=min(0.48, abs(gap) / 30.0),
             toward_home=gap >= 0,
@@ -81,7 +89,8 @@ def _model_drivers(card) -> list[tuple[float, Driver]]:
             favours=leader.key,
         )))
 
-    strength("Offence, in points", "off", "offence")
+    strength("Offence, in points", "off",
+             "offence, with its expected quarterback," if card.sport == "nfl" else "offence")
     strength("Defence, in points", "def", "defence")
     if p.hfa and not card.neutral:
         out.append((abs(p.hfa), Driver(
@@ -121,9 +130,9 @@ def select(card, pool: dict) -> list[Driver]:
             name="Offensive efficiency",
             magnitude=f"{leader.abbr} +{abs(gap):.2f} EPA/play",
             sentence=(
-                f"{leader.short}'s offence sits in the "
+                f"{possessive(leader.short)} offence sits in the "
                 f"{_ordinal(_pct(pool, 'adj_off_epa', max(h, a)))} of FBS on "
-                f"opponent-adjusted EPA; {trailer.short}'s is "
+                f"opponent-adjusted EPA; {possessive(trailer.short)} is "
                 f"{_ordinal(_pct(pool, 'adj_off_epa', min(h, a)))}."
             ),
             share=min(0.48, abs(gap) * 1.6),
@@ -143,7 +152,7 @@ def select(card, pool: dict) -> list[Driver]:
             sentence=(
                 f"{leader.short} succeeds on {max(h, a) * 100:.1f}% of plays "
                 f"({_ordinal(_pct(pool, 'adj_success_rate', max(h, a)))}) against "
-                f"{trailer.short}'s {min(h, a) * 100:.1f}% "
+                f"{possessive(trailer.short)} {min(h, a) * 100:.1f}% "
                 f"({_ordinal(_pct(pool, 'adj_success_rate', min(h, a)))})."
             ),
             share=min(0.48, abs(gap) * 2.4),
@@ -208,9 +217,9 @@ def select(card, pool: dict) -> list[Driver]:
             name="Explosiveness",
             magnitude=f"{leader.abbr} +{abs(gap):.2f}",
             sentence=(
-                f"{leader.short}'s explosiveness is "
+                f"{possessive(leader.short)} explosiveness is "
                 f"{_ordinal(_pct(pool, 'adj_explosiveness', max(h, a)))} against "
-                f"{trailer.short}'s "
+                f"{possessive(trailer.short)} "
                 f"{_ordinal(_pct(pool, 'adj_explosiveness', min(h, a)))}."
             ),
             share=min(0.48, abs(gap) * 0.9),

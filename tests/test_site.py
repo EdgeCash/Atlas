@@ -11,12 +11,14 @@ import re
 from datetime import UTC, datetime, timedelta
 
 import numpy as np
+import pandas as pd
 import pytest
 
 from atlas.site import data, render, social
 from atlas.site import drivers as driving
 from atlas.site import grade as grading
 from atlas.site.data import Card, Line, Side
+from atlas.site.html import possessive
 
 #: A synthetic percentile pool, so drivers render without a warehouse.
 _POOL = {
@@ -562,10 +564,10 @@ def _nfl_card(**kw) -> Card:
     return card
 
 
-def test_an_nfl_card_lives_under_nfl_and_links_no_team_page():
+def test_an_nfl_card_lives_under_nfl_and_links_its_team_pages():
     """Same card, a different sport: it publishes under nfl/, its structured
-    data names no team page (there are none for the NFL), and every word of
-    the card is the same audited copy."""
+    data points each team at its NFL team page, and every word of the card is
+    the same audited copy."""
     import json
 
     card = _nfl_card()
@@ -574,7 +576,8 @@ def test_an_nfl_card_lives_under_nfl_and_links_no_team_page():
     block = re.search(r'<script type="application/ld\+json">(.+?)</script>', page, re.S).group(1)
     payload = json.loads(block)
     assert "NFL" in payload["description"]
-    assert all("url" not in team for team in payload["competitor"])
+    assert [team["url"].split("/", 3)[-1] for team in payload["competitor"]] == [
+        "nfl/team/kansas-city-chiefs.html", "nfl/team/buffalo-bills.html"]
     assert 'href="../nfl.html" aria-current="page"' in page
     assert "Atlas projects" in page and "not a recommendation" in page.lower()
 
@@ -590,3 +593,98 @@ def test_the_nfl_board_lists_cards_by_day_and_says_so_when_empty():
     for page in (board, empty):
         text = _visible_text(page)
         assert not any(re.search(rf"\b{w}\b", text) for w in FORBIDDEN if w not in ("unit", "units")), page[:200]
+
+
+def _nfl_team_card():
+    card = _nfl_card()
+    card.home.team_id, card.away.team_id = 2, 12
+    card.projection.home.update({"off": 3.2, "def": 1.1, "net": 4.3, "sd_off": 1.6, "sd_def": 1.5, "rank": 3,
+                                 "games": 2, "qb": "J.Allen", "qb_pts": 4.4, "qb_sd": 1.7})
+    card.projection.teams = 32
+    return card
+
+
+def test_an_nfl_team_page_shows_the_rating_the_quarterback_and_the_record():
+    """The rating and quarterback come from the team's next card; the record is
+    what Atlas published before kickoff beside the final; every word is audited."""
+    from datetime import UTC, datetime
+
+    from atlas.site.data import Result
+
+    card = _nfl_team_card()
+    results = [Result(kickoff=datetime(2026, 9, 14, 17, tzinfo=UTC), opponent="Jets", home=True,
+                      atlas=6.5, market=4.5, final=10.0),
+               Result(kickoff=datetime(2026, 9, 7, 17, tzinfo=UTC), opponent="Dolphins", home=False,
+                      atlas=-1.0, market=2.0, final=3.0)]
+    page = render.nfl_team_page(card.home, cards=[card], pool=_POOL, results=results,
+                                freshness={"projection": "x", "market": "y"})
+    text = _visible_text(page)
+    # The offence is the forecast's: the team's own plus its expected starter's.
+    assert "+7.6" in page and "team +3.2 · J.Allen +4.4" in page and "+8.7" in page
+    assert "1st of 2 with a card this week" in text and "buffalo&#x27;s margin" in text
+    assert possessive("Bills") == "Bills'" and possessive("Buffalo") == "Buffalo's"
+    assert page.count("<tr>") >= 3 and "Closer" in page and "Atlas missed the final margin by 3.8" in page
+    assert 'href="../../nfl/' in page and 'href="../../nfl.html" aria-current="page"' in page
+    assert 'rel="canonical"' in page and "nfl/team/buffalo-bills.html" in page
+    assert "not a recommendation" in text and 'class="freshness"' in page
+    assert not any(re.search(rf"\b{w}\b", text) for w in FORBIDDEN if w not in ("unit", "units")), text[:300]
+    empty = render.nfl_team_page(card.home, cards=[card], pool=_POOL, results=[])
+    assert "No completed game this season" in empty
+
+
+def test_the_nfl_board_links_every_team_page():
+    card = _nfl_team_card()
+    board = render.nfl_page([card], bands={}, freshness=None,
+                            teams={"buffalo-bills": card.home, "kansas-city-chiefs": card.away})
+    assert 'href="nfl/team/buffalo-bills.html"' in board and 'href="nfl/team/kansas-city-chiefs.html"' in board
+
+
+def test_team_results_keep_only_projections_published_before_kickoff():
+    from atlas.site.data import team_results
+
+    card = _nfl_team_card()
+    card.season = 2026
+    frame = pd.DataFrame({
+        "espn_id": [card.game_id, 900], "season": [2026, 2026], "home_team_id": [4, 4], "away_team_id": [16, 20],
+        "home_team": ["BUF", "BUF"], "away_team": ["KC", "NYJ"], "kickoff": [card.kickoff, "2026-09-14T17:00:00Z"],
+        "actual_margin": [np.nan, 7.0], "closing_spread": [np.nan, -4.5]})
+    projections = pd.DataFrame({
+        "game_id": [900, 900, 900], "sport": "nfl", "home_team_id": 4, "away_team_id": 20,
+        "margin_mean": [5.0, 6.0, 9.9],
+        "refreshed_at": ["2026-09-12T08:00:00Z", "2026-09-13T08:00:00Z", "2026-09-15T08:00:00Z"]})
+    out = team_results([card], frame, projections)
+    assert list(out) == [card.home.team_id]                     # the Jets have no card, so no page
+    r = out[card.home.team_id][0]
+    assert r.atlas == 6.0 and r.market == 4.5 and r.final == 7.0 and r.opponent == "NYJ" and r.home
+    assert team_results([card], frame, projections.iloc[2:]) == {}   # published after kickoff: not a forecast
+
+
+def test_an_ungraded_card_still_carries_the_disclaimer_and_says_why():
+    """The launch audit blocks a card without the disclaimer; a game no book has
+    priced yet is ungraded, and must not fail the deploy or blame history."""
+    card = _nfl_card()
+    card.grade = None
+    card.spread = Line("margin", None, None, None, None)
+    text = _visible_text(_page(card))
+    assert "not a recommendation" in text and "no market is posted yet" in text
+
+
+def test_the_nfl_offence_driver_includes_the_expected_quarterback():
+    """The forecast adds each side's quarterback to its offence; the driver must compare the same thing."""
+    card = _nfl_team_card()
+    card.projection.away.update({"off": 3.0, "def": 0.0, "qb_pts": -2.0})
+    offence = next(d for d in driving._model_drivers(card) if d[1].name.startswith("Offence"))
+    assert offence[0] == pytest.approx((3.2 + 4.4) - (3.0 - 2.0))
+    assert "with its expected quarterback" in offence[1].sentence and "the NFL average" in offence[1].sentence
+
+
+def test_team_win_loss_counts_this_seasons_regular_season_results():
+    from atlas.site.data import team_win_loss
+
+    card = _nfl_team_card()
+    card.season = 2026
+    frame = pd.DataFrame({
+        "espn_id": [card.game_id, 900, 901, 902], "season": [2026, 2026, 2026, 2025],
+        "season_type": ["regular"] * 4, "home_team_id": [4, 4, 16, 4], "away_team_id": [16, 20, 4, 20],
+        "actual_margin": [np.nan, 7.0, 3.0, -10.0]})
+    assert team_win_loss([card], frame) == {card.home.team_id: "1-1", card.away.team_id: "1-0"}

@@ -54,6 +54,9 @@ SCHEMA: dict[str, list[str]] = {
         "total_lo", "total_hi", "top_home", "top_away", "top_p", "hfa", "pace_adj", "wind_adj",
         "home_off", "home_def", "home_net", "home_sd_off", "home_sd_def", "home_rank", "home_games",
         "away_off", "away_def", "away_net", "away_sd_off", "away_sd_def", "away_rank", "away_games",
+        # The NFL's expected starter and his state (points against his team's
+        # offence), by the forecast's own rule. Empty for college.
+        "home_qb", "home_qb_pts", "home_qb_sd", "away_qb", "away_qb_pts", "away_qb_sd",
         "teams", "model_version", "refreshed_at",
     ],
     # The model against the closing number, walk-forward over completed

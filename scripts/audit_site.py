@@ -132,10 +132,16 @@ def main() -> None:
                 failed = True
         print()
 
-    kinds = Counter(
-        "card" if p.match("ncaaf/*") else "nfl card" if p.match("nfl/*") else "team" if p.match("team/*") else "other"
-        for p in (q.relative_to(args.site) for q in args.site.rglob("*.html"))
-    )
+    def kind(rel: str) -> str:
+        if rel.startswith("nfl/team/"):
+            return "nfl team"
+        if rel.startswith("nfl/"):
+            return "nfl card"
+        if rel.startswith("ncaaf/"):
+            return "card"
+        return "team" if rel.startswith("team/") else "other"
+
+    kinds = Counter(kind(q.relative_to(args.site).as_posix()) for q in args.site.rglob("*.html"))
     print(f"coverage: {dict(kinds)}")
     sys.exit(1 if failed else 0)
 
