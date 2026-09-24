@@ -1,7 +1,7 @@
 """The DFS player projection model: opportunity inside Atlas's own game.
 
     python -m atlas.dfs.model                  # walk-forward; writes reports/dfs_projections.md
-    python -m atlas.dfs.model --market-check   # also the closing-line diagnostic, in the report
+    python -m atlas.dfs.model --atlas-only     # also the model without the market, in the report
 
 Step 3 of `docs/MODEL_PLAN_DFS.md`. A player's projected DraftKings points
 from what was knowable before kickoff:
@@ -9,7 +9,8 @@ from what was knowable before kickoff:
 * the step 2 baseline - his own recent scoring, shrunk to his position -
   which the model corrects rather than replaces;
 * the game, as Atlas's game model projected it - his team's points, the
-  opponent's, the quarterback states, the wind (`atlas/dfs/environment.py`);
+  opponent's, the quarterback states, the wind (`atlas/dfs/environment.py`) -
+  and as the betting market sees it: each team's points implied by the line;
 * his role, from his earlier games only - snap, target, carry, red-zone and
   air-yards shares, volume - and each share times his team's projected
   points, the plan's "opportunity times efficiency" in a form a model learns;
@@ -21,8 +22,11 @@ from what was knowable before kickoff:
 
 One gradient-boosted model per position (scikit-learn's histogram
 boosting), fitted to the baseline's residual with fixed, conservative
-settings. No outside projection is an input (the owner's decision), and no
-market number either.
+settings. No outside projection is an input (the owner's decision). The
+market's team totals are: Atlas-only, the model fell short of salary's
+ranking at quarterback and defense, and the gap was the game environment,
+so the owner added them (24 September 2026). The report keeps the
+Atlas-only result beside it.
 
 Walk-forward: each season fitted on the seasons before it (2013 on, when
 snap counts begin). The spread of each projection is fitted on a held-out
@@ -69,6 +73,9 @@ QB_FEATURES = ["passing_yards_trend", "passing_tds_trend", "rushing_yards_trend"
 DST_FEATURES = ["team_pts", "opp_pts", "proj_total", "proj_margin", "home", "games_before", "dk_points_trend",
                 "dk_points_long", "sacks_trend", "takeaways_trend", "points_allowed_trend",
                 "opp_sacks_taken_trend", "opp_giveaways_trend", "opp_dst_points_trend", "opp_qb_state", "wind", "baseline"]
+#: The market's view of the game, beside Atlas's own (the owner's decision,
+#: 24 September 2026, after the step 3 gate showed it was what the model lacked).
+MARKET_FEATURES = ["mkt_pts", "mkt_opp"]
 #: Stats of the player's own record, trended like the rest (players.py's halflife).
 QB_TRENDS = ("passing_yards", "passing_tds", "rushing_yards", "rushing_tds", "passing_interceptions", "passing_epa")
 
@@ -86,8 +93,9 @@ STARTERS_ONLY = ("QB",)
 
 
 def market_totals(raw=None) -> pd.DataFrame:
-    """Each team's points as the closing line implies them: half the total,
-    plus or minus half the spread. A diagnostic only, never a model input."""
+    """Each team's points as the line implies them: half the total, plus or
+    minus half the spread. nflverse carries the closing line for played games
+    and the current line for upcoming ones."""
     s = pd.read_parquet(nflverse.schedules_path(raw or config.paths().raw))
     s = s[s["game_type"] == "REG"]
     parts = [pd.DataFrame({"season": s["season"], "week": s["week"], "team": s[side].replace(FRANCHISE),
@@ -119,6 +127,7 @@ def features(frame: pd.DataFrame, env: pd.DataFrame) -> pd.DataFrame:
     envr = env[["season", "week", "team", "game_id", "team_pts", "opp_pts", "proj_total", "proj_margin",
                 "team_pts_trend", "home", "qb_state", "opp_qb_state", "wind"]]
     f = f.merge(envr.drop(columns=["game_id"]), on=["season", "week", "team"], how="left")
+    f = f.merge(market_totals(), on=["season", "week", "team"], how="left")
     f["env_lift"] = f["team_pts"] - f["team_pts_trend"]
     pts = f["team_pts"]
     f["x_targets"] = f.get("target_share_trend") * pts
@@ -129,10 +138,9 @@ def features(frame: pd.DataFrame, env: pd.DataFrame) -> pd.DataFrame:
     return f
 
 
-def _cols(position: str, extra: tuple[str, ...] = ()) -> list[str]:
-    if position == "DST":
-        return DST_FEATURES + list(extra)
-    return (OFFENSE_FEATURES + QB_FEATURES if position == "QB" else OFFENSE_FEATURES) + list(extra)
+def _cols(position: str, market: bool = True) -> list[str]:
+    cols = DST_FEATURES if position == "DST" else OFFENSE_FEATURES + (QB_FEATURES if position == "QB" else [])
+    return cols + (MARKET_FEATURES if market else [])
 
 
 def _ewm(frame: pd.DataFrame, by: str, col: str, halflife: float) -> pd.Series:
@@ -178,18 +186,18 @@ def _training_rows(train: pd.DataFrame, position: str) -> pd.DataFrame:
     return g
 
 
-def _fit(train: pd.DataFrame, position: str, extra: tuple[str, ...] = ()) -> HistGradientBoostingRegressor:
+def _fit(train: pd.DataFrame, position: str, market: bool = True) -> HistGradientBoostingRegressor:
     """The correction to the baseline: what the game, the role and the week's
     news add to a player's own recent scoring."""
     g = _training_rows(train, position)
     model = HistGradientBoostingRegressor(**PARAMS)
-    model.fit(g[_cols(position, extra)].to_numpy(dtype=float), (g["target"] - g["baseline"]).to_numpy(dtype=float))
+    model.fit(g[_cols(position, market)].to_numpy(dtype=float), (g["target"] - g["baseline"]).to_numpy(dtype=float))
     return model
 
 
 def _predict(model: HistGradientBoostingRegressor, rows: pd.DataFrame, position: str,
-             extra: tuple[str, ...] = ()) -> np.ndarray:
-    return rows["baseline"].to_numpy(dtype=float) + model.predict(rows[_cols(position, extra)].to_numpy(dtype=float))
+             market: bool = True) -> np.ndarray:
+    return rows["baseline"].to_numpy(dtype=float) + model.predict(rows[_cols(position, market)].to_numpy(dtype=float))
 
 
 def _with_baseline(rows: pd.DataFrame, history: pd.DataFrame) -> pd.DataFrame:
@@ -198,7 +206,7 @@ def _with_baseline(rows: pd.DataFrame, history: pd.DataFrame) -> pd.DataFrame:
     return rows.assign(baseline=bm._baseline(rows, f.shrink, f.mean))
 
 
-def predict_season(frame: pd.DataFrame, season: int, extra: tuple[str, ...] = ()) -> pd.DataFrame:
+def predict_season(frame: pd.DataFrame, season: int, market: bool = True) -> pd.DataFrame:
     """Fit on the seasons before ``season``, predict it; the spread from a held-out season."""
     history = frame[frame["season"] < season]
     train = _with_baseline(history[history["season"] >= FIRST_TRAIN], history)
@@ -211,43 +219,37 @@ def predict_season(frame: pd.DataFrame, season: int, extra: tuple[str, ...] = ()
     for position in bm.POSITIONS:
         if len(_training_rows(train, position)) < 200:
             continue
-        model = _fit(train, position, extra)
+        model = _fit(train, position, market)
         m = test["position"] == position
-        test.loc[m, "model"] = _predict(model, test[m], position, extra)
+        test.loc[m, "model"] = _predict(model, test[m], position, market)
         # The spread: a model fitted without the held-out season, scored on it.
         h = holdout[holdout["position"] == position]
         if len(_training_rows(inner, position)) >= 200 and len(h):
-            a, b = bm._spread(_predict(_fit(inner, position, extra), h, position, extra),
+            a, b = bm._spread(_predict(_fit(inner, position, market), h, position, market),
                               h["target"].to_numpy(dtype=float))
         else:
             g = train[train["position"] == position]
-            a, b = bm._spread(_predict(model, g, position, extra), g["target"].to_numpy(dtype=float))
+            a, b = bm._spread(_predict(model, g, position, market), g["target"].to_numpy(dtype=float))
         test.loc[m, "model_sd"] = np.maximum(a + b * test.loc[m, "model"].to_numpy(dtype=float), 1.0)
     return test
 
 
-def walk_forward(frame: pd.DataFrame, *, first_test: int = FIRST_TEST, extra: tuple[str, ...] = ()) -> pd.DataFrame:
+def walk_forward(frame: pd.DataFrame, *, first_test: int = FIRST_TEST, market: bool = True) -> pd.DataFrame:
     seasons = sorted(int(s) for s in frame["season"].unique())
-    return pd.concat([predict_season(frame, s, extra) for s in seasons if s >= first_test], ignore_index=True)
+    return pd.concat([predict_season(frame, s, market) for s in seasons if s >= first_test], ignore_index=True)
 
 
-def run(*, market: bool = False) -> pd.DataFrame:
+def run(*, market: bool = True) -> pd.DataFrame:
     """Benchmarks and model on the same rows, walk-forward.
 
-    ``market`` adds the closing line's team totals as two more inputs - the
-    diagnostic that says how much of what the model lacks is the game
-    environment. The published model never runs with it.
+    ``market=False`` refits without the closing line's team totals: the
+    Atlas-only model, kept as the record of what the market adds.
     """
     frame = bm.load()
     scored = bm.walk_forward(frame)
     env = pd.read_parquet(environment.path())
-    full = features(frame, env)
-    extra: tuple[str, ...] = ()
-    if market:
-        full = full.merge(market_totals(), on=["season", "week", "team"], how="left")
-        extra = ("mkt_pts", "mkt_opp")
-    model = walk_forward(full, extra=extra)
-    keep = ["season", "week", "player_id", "model", "model_sd", "team_pts", "opp_pts", *extra]
+    model = walk_forward(features(frame, env), market=market)
+    keep = ["season", "week", "player_id", "model", "model_sd", "team_pts", "opp_pts", *MARKET_FEATURES]
     return scored.merge(model[keep], on=["season", "week", "player_id"], how="left")
 
 
@@ -276,7 +278,7 @@ def gate(regulars: pd.DataFrame) -> pd.DataFrame:
     return out.reset_index()
 
 
-def render(scored: pd.DataFrame, market: pd.DataFrame | None = None) -> str:
+def render(scored: pd.DataFrame, atlas_only: pd.DataFrame | None = None) -> str:
     from atlas.models.evaluate import markdown
 
     def fmt(t: pd.DataFrame) -> pd.DataFrame:
@@ -304,11 +306,11 @@ def render(scored: pd.DataFrame, market: pd.DataFrame | None = None) -> str:
     three = ("model", "baseline", "salary")
     parts = [
         "# DFS player projections", "",
-        "Atlas's own player model (`atlas/dfs/model.py`, step 3 of `docs/MODEL_PLAN_DFS.md`): the step 2 baseline, "
-        "corrected by one gradient-boosted model per position that reads the game Atlas's own game model projected, "
-        "each player's role from his earlier games, and the week's injury report and depth chart. No outside "
-        "projection and no market number is an input. Walk-forward: every season predicted from the seasons before "
-        "it. Scored on players who recorded a stat, beside the step 2 benchmarks on the same rows.", "",
+        "Atlas's player model (`atlas/dfs/model.py`, step 3 of `docs/MODEL_PLAN_DFS.md`): the step 2 baseline, "
+        "corrected by one gradient-boosted model per position that reads the game as Atlas's own game model projected "
+        "it and as the line implies it, each player's role from his earlier games, and the week's injury report and "
+        "depth chart. No outside projection is an input. Walk-forward: every season predicted from the seasons "
+        "before it. Scored on players who recorded a stat, beside the step 2 benchmarks on the same rows.", "",
         f"## The gate, 2015-2021, each team's regulars: {'passes' if passed else 'does not pass'}", "",
         "Beat the baseline's CRPS at every position, and rank each position's regulars at least as well as "
         "DraftKings' salary does. `rank gap se` is the standard error of the model-minus-salary rank correlation, "
@@ -316,22 +318,22 @@ def render(scored: pd.DataFrame, market: pd.DataFrame | None = None) -> str:
     ]
     if missed:
         parts += [f"Short of salary's ranking at: {', '.join(missed)}.", ""]
-    if market is not None:
-        mg = gate(bm.regulars(market[market["season"].isin(bm.SALARY_SEASONS) & market["dk_salary"].notna()]))
-        mregs = bm.regulars(market[market["season"].isin(bm.SALARY_SEASONS) & market["dk_salary"].notna()])
+    if atlas_only is not None:
+        ao = atlas_only[atlas_only["season"].isin(bm.SALARY_SEASONS) & atlas_only["dk_salary"].notna()]
+        aregs = bm.regulars(ao)
         env = pd.DataFrame([{"position": pos, "Atlas team points": bm.rank_correlation(r, "team_pts"),
-                             "closing-line team points": bm.rank_correlation(r, "mkt_pts")}
-                            for pos, r in mregs.groupby("position")])
-        for c in ("Atlas team points", "closing-line team points"):
+                             "line's team points": bm.rank_correlation(r, "mkt_pts")}
+                            for pos, r in aregs.groupby("position")])
+        for c in ("Atlas team points", "line's team points"):
             env[c] = env[c].map("{:.3f}".format)
         parts += [
-            "## Where the gap is: the game environment", "",
-            "A diagnostic, not the model. The same model refitted with the closing line's team totals (half the "
-            "total, plus or minus half the spread) as two more inputs:", "", markdown(fmt_gate(mg)), "",
-            "And each team's projected points alone, as a ranking of that team's regulars against the week's "
-            "others:", "", markdown(env), "",
-            "What salary knows that the model does not is mostly the market's view of the game. Atlas's player "
-            "model is not the constraint; Atlas's game model is.", "",
+            "## Without the market", "",
+            "The same model with the line's team totals left out - Atlas's game model the only view of the game. "
+            "It beat the baseline everywhere but fell short of salary's ranking at quarterback and defense:", "",
+            markdown(fmt_gate(gate(aregs))), "",
+            "Each team's projected points alone, as a ranking of its regulars against the week's others, show why: "
+            "the line knows more about how many points a team will score than Atlas's game model does, and salary "
+            "carries that knowledge.", "", markdown(env), "",
         ]
     parts += [
         "## Salary era, 2015-2021, regulars", "", markdown(fmt(bm.summarise(regs, three))), "",
@@ -347,6 +349,8 @@ def render(scored: pd.DataFrame, market: pd.DataFrame | None = None) -> str:
               "each season uses settings tuned on earlier seasons only; before 2020 it uses 2020's, tuned on "
               "2017-2019 - a look-ahead of four smoothing constants, not of results, for those three seasons. The "
               "2022-2025 table carries no such caveat.",
+              "- **The line** is the closing line for past games; live, it is the line as it stands at the "
+              "refresh, which moves toward the close through the week.",
               "- **The wind** is the recorded game-time wind; live, it is the forecast, which is close by kickoff "
               "and less so earlier in the week.",
               "- **The model's settings** (the boosting's size, the starters-only quarterback rows) were chosen on "
@@ -357,13 +361,13 @@ def render(scored: pd.DataFrame, market: pd.DataFrame | None = None) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="DFS player projections, walk-forward")
-    parser.add_argument("--market-check", action="store_true",
-                        help="also refit with the closing line's team totals, a diagnostic for the report")
+    parser.add_argument("--atlas-only", action="store_true",
+                        help="also refit without the market's team totals, for the report")
     args = parser.parse_args()
     scored = run()
-    market = run(market=True) if args.market_check else None
+    atlas_only = run(market=False) if args.atlas_only else None
     out = config.paths().root / "reports" / "dfs_projections.md"
-    out.write_text(render(scored, market))
+    out.write_text(render(scored, atlas_only))
     salaried = scored[scored["season"].isin(bm.SALARY_SEASONS) & scored["dk_salary"].notna()]
     LOG.info("wrote %s\n%s", out, gate(bm.regulars(salaried)).round(3).to_string(index=False))
 

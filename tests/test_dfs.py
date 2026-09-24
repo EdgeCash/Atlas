@@ -309,3 +309,15 @@ def test_gate_compares_crps_with_baseline_and_rank_with_salary():
                          "baseline_sd": 4.0, "salary_sd": 3.0})
     g = model.gate(pd.DataFrame(rows)).set_index("position").loc["WR"]
     assert g["beats baseline"] and g["ranks as well as salary"] and g["rank gap se"] > 0
+
+
+def test_market_team_totals_split_the_line(tmp_path):
+    from atlas.dfs import model
+    from atlas.sources import nflverse
+
+    _write(nflverse.schedules_path(tmp_path), pd.DataFrame([
+        {"season": 2020, "game_type": "REG", "week": 1, "home_team": "OAK", "away_team": "KC",
+         "total_line": 50.0, "spread_line": -7.0}]))                      # the away side favored by 7
+    t = model.market_totals(tmp_path).set_index("team")
+    assert t.loc["LV", "mkt_pts"] == pytest.approx(21.5) and t.loc["KC", "mkt_pts"] == pytest.approx(28.5)
+    assert t.loc["LV", "mkt_opp"] == pytest.approx(28.5)

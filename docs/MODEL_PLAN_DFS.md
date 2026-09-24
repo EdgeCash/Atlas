@@ -1,6 +1,6 @@
 # Atlas — DFS Model Plan (DraftKings NFL Classic)
 
-Status: **steps 0-2 done; step 3 built, its gate short at QB and DST** (see §7). Scope v1: DraftKings NFL Classic,
+Status: **steps 0-3 done** (see §7). Scope v1: DraftKings NFL Classic,
 the Sunday main slate. College (DraftKings CFB Classic) waits on thinner
 player data and comes after the NFL model has a record.
 
@@ -18,6 +18,9 @@ model) are inputs. Atlas builds its player model from public data and its
 own game model, and is measured honestly against the baseline and against
 salary. If it is not up to par, outside projections are revisited - first
 as a benchmark, then, for the owner page only, as a blend - and not before.
+The betting line is not a projection in that sense: after step 3 showed
+the Atlas-only model's gap was the game environment, the owner added the
+line's implied team totals as an input (24 September 2026).
 
 ---
 
@@ -131,7 +134,9 @@ game projection**.
 1. **The game environment** comes from the NFL projector already on the
    cards: each team's projected points, and a pass rate and play volume
    from the team's point-in-time tendencies. This is the anchor that
-   makes the projections Atlas's rather than a trailing average.
+   makes the projections Atlas's rather than a trailing average. Beside
+   it, each team's points as the betting line implies them (added after
+   step 3; see §7).
 2. **Opportunity**: each player's share of his team's snaps, targets,
    carries and red-zone touches, as shrunk exponentially weighted
    estimates over recent games, pulled toward a prior by position and
@@ -198,7 +203,7 @@ slates are checked against brute force.
 | 0 | Sources: nflverse player stats (2011+); DraftKings lobby and Classic draftables captured daily in the heavy run; the RotoGuru 2014-2021 archive, once (`atlas/sources/nflverse.py`, `atlas/sources/draftkings.py`, `atlas/sources/rotoguru.py`; `make dfs-capture`, `make dfs-history`) | **done** — player stats 2011-2026 cached; first capture 24 Sep: 6 Classic slates, 3,016 salaries (main slate 662 players, 26 defenses) in `tracking/dfs_salaries.csv`; the capture never fails the heavy run; RotoGuru archive 2014-2021 cached, 55,386 player-weeks (6,769-7,489 a season, 17 weeks, 18 in 2021) |
 | 1 | Staging: player-game table, DraftKings points from stats, opportunity shares, point-in-time features (`atlas/dfs/scoring.py`, `atlas/dfs/players.py`, `atlas/dfs/reconcile.py`; `make dfs-staging`, `make dfs-scoring`) | **done — gate passes: 99.26%** of 55,386 archive player-weeks agree within 0.1 (99.25% without the 137 matched by points); QB 99.10%, RB 99.44%, WR 99.62%, TE 99.77%, DST 95.64% (`reports/dfs_scoring.md`). `dfs_player_games` 90,224 rows and `dfs_dst_games` 8,256, 2011-2026, in the NFL warehouse; snap share covers 99.7%+ from 2013 (none exists for 2011-12); trends checked to use prior games only |
 | 2 | Benchmarks: baseline and salary (`atlas/dfs/benchmarks.py`, `make dfs-benchmarks`) | **done** — `reports/dfs_benchmarks.md`. Among each team's regulars (top QB, 2 RB, 3 WR, TE by salary; every defense), 2015-21: the two are nearly tied. Baseline has the lower error everywhere (MAE QB 6.70 / RB 5.91 / WR 5.98 / TE 5.05 / DST 4.65 against salary's 6.77 / 6.06 / 6.00 / 5.09 / 4.70); salary ranks better at QB (0.330 vs 0.297) and DST (0.243 vs 0.131), level elsewhere. DraftKings' prices hold about what a player's recent scoring holds. Scored on everyone who played, the fringe flatters the baseline; the report shows both |
-| 3 | Projection model v1, team-anchored (`atlas/dfs/environment.py`, `atlas/dfs/context.py`, `atlas/dfs/model.py`; `make dfs-model`) | beats the baseline's CRPS at every position among the regulars, and ranks each position's regulars at least as well as salary does (the step 2 finding makes both bars real). **Built; the gate holds at RB, WR and TE and falls short at QB and DST** (`reports/dfs_projections.md`). CRPS beats the baseline at every position (QB 4.61 vs 4.75, RB 4.15 vs 4.23, WR 4.16 vs 4.24, TE 3.58 vs 3.61, DST 3.28 vs 3.32), and 2022-25 holds the same margins. Rank: RB 0.524 vs salary's 0.506, WR 0.492 vs 0.484, TE 0.423 vs 0.403; QB 0.315 vs 0.330, DST 0.241 vs 0.243 (within one standard error). Across all regulars the model ranks better than salary in every season 2015-21 (0.399 vs 0.393). The diagnostic: refitted with the closing line's team totals, every position passes (QB 0.341, DST 0.270) - the gap is Atlas's game environment, not the player model. Whether the market total may be an input is the owner's decision |
+| 3 | Projection model v1, team-anchored (`atlas/dfs/environment.py`, `atlas/dfs/context.py`, `atlas/dfs/model.py`; `make dfs-model`) | **done — gate passes** (`reports/dfs_projections.md`). 2015-21 regulars, CRPS against the baseline: QB 4.58 vs 4.75, RB 4.14 vs 4.23, WR 4.16 vs 4.24, TE 3.58 vs 3.61, DST 3.25 vs 3.32; rank against salary: QB 0.341 vs 0.330, RB 0.523 vs 0.506, WR 0.493 vs 0.484, TE 0.420 vs 0.403, DST 0.270 vs 0.243. 2022-25 holds the same margins over the baseline. Atlas-only, the model fell short of salary's ranking at QB (0.315) and DST (0.241); the gap was the game environment - the line's team totals rank a team's players better than Atlas's projected points - so the owner added them as an input (24 September 2026). The report keeps the Atlas-only result |
 | 4 | Defenses and ranges | 80% ranges cover 76-84% |
 | 5 | Optimizer and DraftKings CSV | constraints always hold; brute-force check |
 | 6 | Owner page, encrypted, in the heavy run | decrypts on the iPad with the passphrase; nothing readable published |

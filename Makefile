@@ -216,11 +216,11 @@ dfs-benchmarks:
 	$(PYTHON) -m atlas.dfs.benchmarks
 
 # DFS plan, step 3: the game environment and the week's news per player,
-# then the player model, walk-forward, with the closing-line diagnostic.
+# then the player model, walk-forward, beside its Atlas-only version.
 dfs-model:
 	$(PYTHON) -m atlas.dfs.environment
 	$(PYTHON) -m atlas.dfs.context
-	$(PYTHON) -m atlas.dfs.model --market-check
+	$(PYTHON) -m atlas.dfs.model --atlas-only
 
 # NFL plan, step 1: point-in-time team-game tables in their own warehouse.
 nfl-warehouse:
