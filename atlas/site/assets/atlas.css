@@ -1012,6 +1012,7 @@ html[data-view="tiles"] .view-list { display: none; }
 .owner-table td:first-child, .owner-table td:nth-child(2),
 .owner-table th:nth-child(2) { text-align: left; }
 .owner-table td:nth-child(2) { padding-left: 10px; }
+.owner-table td:first-child { white-space: normal; }    /* long names wrap rather than push the numbers off */
 #owner-out select { margin: 6px 0 10px; min-height: 36px; font-size: 15px; }
 
 /* -------------------------------------------------------------- dfs ---- */

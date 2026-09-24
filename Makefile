@@ -1,6 +1,6 @@
 PYTHON ?= python3
 
-.PHONY: help install ingest warehouse research all test lint clean-data dfs-capture dfs-history dfs-staging dfs-scoring dfs-benchmarks dfs-model dfs-lineups dfs-slate dfs-kickers cfb-players cfb-scoring cfb-baseline cfb-model cfb-participation cfb-slate cfb-record \
+.PHONY: help install ingest warehouse research all test lint clean-data dfs-capture dfs-history dfs-staging dfs-scoring dfs-benchmarks dfs-model dfs-lineups dfs-slate dfs-kickers cfb-players cfb-scoring cfb-baseline cfb-model cfb-participation cfb-slate cfb-record owner-paper \
 	live-refresh live-run live-report live-check live-reproduce \
 	site site-full site-serve site-audit site-shots launch-check \
 	ops-heavy ops-poll ops-social ops-health ops-status ops-crontab \
@@ -262,6 +262,11 @@ cfb-slate:
 # The private college record's summary (needs ATLAS_OWNER_KEY to open it).
 cfb-record:
 	$(PYTHON) -m atlas.dfs.cfb_record
+
+# The owner's paper tracker: the live signals graded as flat paper wagers.
+# Shown only inside the owner page's ciphertext.
+owner-paper:
+	$(PYTHON) -m atlas.owner.paper
 
 # NFL plan, step 1: point-in-time team-game tables in their own warehouse.
 nfl-warehouse:

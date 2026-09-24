@@ -103,10 +103,17 @@ def _slate_payload(out: Path) -> dict:
     }
 
 
-def payload(index: Path, *, built_at: str | None = None, college_record: dict | None = None) -> dict:
+def payload(index: Path | None, *, built_at: str | None = None, college_record: dict | None = None,
+            sections: list[dict] | None = None, note: str | None = None) -> dict:
     """What the owner sees: every slate's lineups and upload file, and the
     players of the biggest Classic slate by projection (the NFL's, and
-    college's as well when there are both), and the private college record."""
+    college's as well when there are both), the private college record, and
+    any further sections (the paper tracker), each carrying its own words."""
+    extra_sections = {"sections": [{k: v for k, v in s.items() if k != "record"} for s in sections]} \
+        if sections else {}
+    if index is None:
+        return {"built_at": built_at or _now(), "slate": None, "draft_group_id": None, "first_kickoff": None,
+                "slates": [], "players": [], "note": note, **extra_sections}
     slates = json.loads(index.read_text())["slates"]
     root = index.parent
     outs = [root / str(s["draft_group_id"]) for s in slates]
@@ -129,6 +136,7 @@ def payload(index: Path, *, built_at: str | None = None, college_record: dict | 
         "players": players,
         **extra,
         **({"college_record": college_record} if college_record else {}),
+        **extra_sections,
     }
 
 
@@ -188,22 +196,27 @@ def refresh(*, rebuild: bool = True) -> Path:
             _college_table()
         from atlas.dfs import slate
 
-        index = slate.run_all()
+        index, reason = slate.run_all(), None
     except Exception as error:  # noqa: BLE001 - the site must still build
         # The type only: a message could quote a player or a number.
         LOG.error("DFS slate not built: %s", type(error).__name__)
+        index = None
         reason = ("No upcoming slate is posted yet." if type(error).__name__ == "NoSlate"
                   else f"This refresh could not build the lineups ({type(error).__name__}).")
-        return write(None, reason=reason)
     if not passphrase.strip():
         LOG.warning("no %s secret: the owner page is not built", SECRET)
-        return write(None, reason="The owner key is not configured.")
+        return write(None, reason=reason or "The owner key is not configured.")
     from atlas.dfs import cfb_record
+    from atlas.owner import paper
 
-    college = cfb_record.update(passphrase)
+    # The paper tracker opens the page even on a day with no slate.
+    tracker = paper.build()
+    if index is None and tracker is None:
+        return write(None, reason=reason)
+    college = cfb_record.update(passphrase) if index is not None else None
     try:
-        plain = json.dumps(_clean(payload(index, college_record=college)), separators=(",", ":"),
-                           allow_nan=False).encode("utf-8")
+        data = payload(index, college_record=college, sections=[tracker] if tracker else [], note=reason)
+        plain = json.dumps(_clean(data), separators=(",", ":"), allow_nan=False).encode("utf-8")
         box = encrypt(plain, passphrase)
         _check_sealed(box, plain)
         LOG.info("owner page: %d slates encrypted (%d bytes of ciphertext)", len(json.loads(plain)["slates"]),

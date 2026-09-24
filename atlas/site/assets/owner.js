@@ -168,21 +168,22 @@
     out.textContent = "";
     var slates = data.slates || [];
     var head = el("div", { "class": "card card-pad" });
-    head.appendChild(el("h2", null, slates.length + " slates this week"));
+    head.appendChild(el("h2", null, slates.length ? slates.length + " slates this week" : "No slate this week"));
     head.appendChild(el("p", { "class": "note" }, "Built " + eastern(data.built_at)));
+    if (!slates.length && data.note) head.appendChild(el("p", { "class": "note" }, data.note));
     var choose = el("select", { "aria-label": "Slate", "class": "owner-slate" });
     slates.forEach(function (s, i) { choose.appendChild(el("option", { value: String(i) }, slateName(s))); });
     var main = slates.findIndex(function (s) {
       return s.game_type === "Classic" && s.label === "Main" && (s.sport || "nfl") === "nfl";
     });
     if (main >= 0) choose.value = String(main);
-    head.appendChild(choose);
+    if (slates.length) head.appendChild(choose);
     var actions = el("div", { "class": "lede-actions" });
     var dl = el("button", { type: "button", "class": "button" }, "Download this slate's DraftKings upload file");
     dl.addEventListener("click", function () { download(slates[Number(choose.value)]); });
     var close = el("button", { type: "button", "class": "button ghost" }, "Close");
     close.addEventListener("click", function () { out.textContent = ""; form.hidden = false; status.textContent = ""; });
-    actions.appendChild(dl);
+    if (slates.length) actions.appendChild(dl);
     actions.appendChild(close);
     head.appendChild(actions);
     out.appendChild(head);
@@ -191,9 +192,22 @@
     choose.addEventListener("change", function () { lineupCards(slates[Number(choose.value)], holder); });
     if (slates.length) lineupCards(slates[Number(choose.value)], holder);
 
-    out.appendChild(poolCard("Every player, by projection", data.players || []));
+    if ((data.players || []).length) out.appendChild(poolCard("Every player, by projection", data.players));
     if (data.college_players) out.appendChild(poolCard("College: every player, by projection", data.college_players));
     if (data.college_record) out.appendChild(recordCard(data.college_record));
+    (data.sections || []).forEach(function (sec) { out.appendChild(sectionCard(sec)); });
+  }
+
+  // A section brings its own words: the page's script holds none of them.
+  function sectionCard(sec) {
+    var card = el("div", { "class": "card card-pad top-gap" });
+    card.appendChild(el("h3", null, sec.title || ""));
+    (sec.notes || []).forEach(function (n) { card.appendChild(el("p", { "class": "note" }, n)); });
+    (sec.tables || []).forEach(function (t) {
+      if (t.title) card.appendChild(el("h4", { "class": "top-gap" }, t.title));
+      card.appendChild(table(t.head || [], t.rows || []));
+    });
+    return card;
   }
 
   form.addEventListener("submit", function (ev) {
