@@ -193,3 +193,67 @@ def test_one_bad_season_does_not_stop_the_rest(tmp_path):
 
     got = espn_cfb.refresh(tmp_path, budget=10, seasons=[2024, 2023], current=2026, pause=0, fetch=fetch)
     assert got["fetched"] == 1 and set(espn_cfb.load(tmp_path)["season"]) == {2023}
+
+
+# ---------------------------------------------------------------------------
+# Step 3: the model
+# ---------------------------------------------------------------------------
+
+
+def test_odds_codes_are_learned_from_games_where_one_side_agrees():
+    from atlas.dfs import cfb_model as cm
+
+    odds = pd.DataFrame([{"game_id": 1, "abbr": "TCU"}, {"game_id": 1, "abbr": "UTH"},
+                         {"game_id": 2, "abbr": "UTH"}, {"game_id": 2, "abbr": "BYU"}])
+    box = pd.DataFrame([{"game_id": 1, "team": "TCU"}, {"game_id": 1, "team": "UTAH"},
+                        {"game_id": 2, "team": "UTAH"}, {"game_id": 2, "team": "BYU"}])
+    assert cm.abbr_map(odds, box) == {"TCU": "TCU", "UTH": "UTAH", "BYU": "BYU"}
+
+
+def test_a_teams_implied_points_are_half_the_total_less_half_its_spread(tmp_path):
+    from atlas.dfs import cfb_model as cm
+
+    (tmp_path / "odds").mkdir()
+    pd.DataFrame([
+        {"game_id": 7.0, "market_type": "spread", "abbr": "OSU", "lines": -7.0},
+        {"game_id": 7.0, "market_type": "spread", "abbr": "GRAM", "lines": 7.0},
+        {"game_id": 7.0, "market_type": "total", "abbr": "over", "lines": 51.0},
+        {"game_id": 7.0, "market_type": "total", "abbr": "under", "lines": 51.0},
+    ]).to_parquet(tmp_path / "odds" / "cfb_line_odds.parquet")
+    env = cm.environment(pd.DataFrame({"event": ["7", "7"], "team": ["OSU", "GRAM"]}), raw=tmp_path).set_index("team")
+    assert env.loc["OSU", "team_pts"] == pytest.approx(29.0) and env.loc["GRAM", "team_pts"] == pytest.approx(22.0)
+    assert env.loc["OSU", "proj_margin"] == pytest.approx(7.0)
+
+
+def test_college_model_is_walk_forward_and_reads_the_game():
+    import numpy as np
+
+    from atlas.dfs import cfb_model as cm
+    from atlas.dfs import cfb_players as cp
+
+    rng = np.random.default_rng(8)
+    rows, env = [], []
+    for s in range(2014, 2019):
+        for w in range(1, 11):
+            for t in range(10):
+                team, ev = f"T{t}", f"{s}{w:02d}{t}"
+                pts = float(rng.normal(30, 9))
+                env.append({"event": ev, "team": team, "team_pts": pts, "opp_pts": 25.0, "proj_total": pts + 25,
+                            "proj_margin": pts - 25})
+                for k, pos in enumerate(("QB", "RB", "RB", "WR", "WR", "WR", "K")):
+                    stats = {"QB": {"pass_att": 30.0, "pass_yds": 8 * pts + rng.normal(0, 40)},
+                             "RB": {"rush_car": 15.0, "rush_yds": 3 * pts + rng.normal(0, 30)},
+                             "WR": {"rec": 4.0, "rec_yds": 2 * pts + rng.normal(0, 25)},
+                             "K": {"fg_att": 1.0, "xp_att": pts / 7, "xp_made": round(pts / 7), "fg_0_39": 1.0}}[pos]
+                    rows += _box_rows(s, w, ev, team, [{"player_id": f"{team}{pos}{k}", "name": f"{pos}{k}", **stats}])
+    table = cp.with_trends(cp.games(pd.DataFrame(rows)))
+    f = cm.features(table, pd.DataFrame(env))
+    out = cm.walk_forward(f, first_test=2017)
+    assert out["model"].notna().all() and (out["model_sd"] >= 1).all()
+    poisoned = f.copy()
+    poisoned.loc[poisoned["season"] == 2018, "target"] += 100
+    again = cm.walk_forward(poisoned, first_test=2017)
+    a, b = out[out["season"] == 2017], again[again["season"] == 2017]
+    assert np.allclose(a["model"].to_numpy(), b["model"].to_numpy())
+    qb = out[out["position"] == "QB"]
+    assert np.polyfit(qb["team_pts"], qb["model"] - qb["baseline"], 1)[0] > 0.1     # a richer game projects more
