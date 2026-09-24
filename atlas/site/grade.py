@@ -353,7 +353,7 @@ def _headline(letter: str, band: Band, disagreement: float) -> str:
 GRADED_MARKET = "margin"
 
 
-def calibration_bands(market_name: str = GRADED_MARKET) -> dict[str, Band]:
+def calibration_bands(market_name: str = GRADED_MARKET, sport: str = "ncaaf") -> dict[str, Band]:
     """Claimed vs realised accuracy by band, from the model's own record.
 
     The record is the model walked forward over every completed season it
@@ -361,7 +361,7 @@ def calibration_bands(market_name: str = GRADED_MARKET) -> dict[str, Band]:
     written to the tracking store by the weekly refresh so a build never
     drifts from it. Recomputed here on every build, never transcribed.
     """
-    frame = _scored(market_name)
+    frame = _scored(market_name, sport)
     frame["band"] = frame["abs_edge"].map(band_label)
     bands: dict[str, Band] = {}
     for label, block in frame.groupby("band"):
@@ -377,7 +377,7 @@ def calibration_bands(market_name: str = GRADED_MARKET) -> dict[str, Band]:
             seasons=int(len(per_season)),
             seasons_above=int((per_season["mean"] > 0.5).sum()),
         )
-    LOG.info("calibration bands: %d computed for %s", len(bands), market_name)
+    LOG.info("calibration bands: %d computed for %s (%s)", len(bands), market_name, sport)
     return bands
 
 
@@ -388,7 +388,7 @@ SLICE = 0.5
 MIN_SLICE_GAMES = 40
 
 
-def calibration_curve(market_name: str = GRADED_MARKET) -> Curve:
+def calibration_curve(market_name: str = GRADED_MARKET, sport: str = "ncaaf") -> Curve:
     """Fit ``gap(d) = -a * d ** p`` to seven seasons, out of sample.
 
     The seven-band table this replaced was a reporting convention, not a
@@ -397,7 +397,7 @@ def calibration_curve(market_name: str = GRADED_MARKET) -> Curve:
     close to linear. Refitted on every build, because the coefficient moves by
     about 2.5x across seasons and a transcribed constant would drift.
     """
-    frame = _scored(market_name)
+    frame = _scored(market_name, sport)
 
     edges, gaps, weights = [], [], []
     upper = float(frame["abs_edge"].quantile(0.995))
@@ -430,25 +430,33 @@ def calibration_curve(market_name: str = GRADED_MARKET) -> Curve:
     return curve
 
 
-def _scored(market_name: str) -> pd.DataFrame:
-    """The model's record against the closing number, for one market.
+def _scored(market_name: str, sport: str = "ncaaf") -> pd.DataFrame:
+    """The model's record against the closing number, for one market and sport.
 
     Read from the tracking store's ``calibration`` table, which the weekly
-    refresh writes. If it is missing - a fresh checkout, a test - the record
-    is built in process from the warehouse, which is slower but the same.
+    refresh writes. If the sport has no rows there - a fresh checkout, a
+    test - the record is built in process from that sport's warehouse, which
+    is slower but the same.
     """
     from atlas.live.store import Store
 
     table = Store.open().read("calibration")
+    if not table.empty:
+        table = table[table["sport"].fillna("ncaaf").astype(str) == sport]
     if table.empty:
-        from atlas.models import ncaaf_projection, ncaaf_state
-        from atlas.research.dataset import load_research_frame
-
         paths = config.paths()
-        LOG.warning("no calibration table; building the model's record in process")
-        table = ncaaf_projection.history(
-            load_research_frame(paths.warehouse),
-            choices=ncaaf_state.load_choices(ncaaf_state.choices_path(paths.root)))
+        LOG.warning("no calibration rows for %s; building the model's record in process", sport)
+        if sport == "nfl":
+            from atlas.models import nfl_projection
+
+            table = nfl_projection.history(paths)
+        else:
+            from atlas.models import ncaaf_projection, ncaaf_state
+            from atlas.research.dataset import load_research_frame
+
+            table = ncaaf_projection.history(
+                load_research_frame(paths.warehouse),
+                choices=ncaaf_state.load_choices(ncaaf_state.choices_path(paths.root)))
     frame = table[table["market"] == market_name].copy()
     for column in ("abs_edge", "claimed", "won", "season"):
         frame[column] = pd.to_numeric(frame[column], errors="coerce")

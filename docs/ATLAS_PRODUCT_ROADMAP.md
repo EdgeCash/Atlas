@@ -24,7 +24,7 @@ to consumer product. This is the plan.
 **Not built, and named as such in the product**
 
 - Payments. The premium page is a comparison table and a framework.
-- NFL cards. Staged behind calibration; the NFL page explains the three stages.
+- NFL team pages. NFL cards publish from the NFL model; team pages are college only for now.
 - Player pages. Reserved. Atlas has no player-level model.
 - A public reliability record that updates between slates.
 

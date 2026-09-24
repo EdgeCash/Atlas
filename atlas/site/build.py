@@ -42,14 +42,18 @@ def build(out: Path | None = None, *, social_cards: bool = True,
             "no cards to publish - rebuild the warehouse with "
             "`python -m atlas.warehouse.build --include-scheduled`"
         )
+    nfl_cards = _nfl_cards(horizon=horizon, refresh_meta=refresh_meta)
 
     bands = grading.calibration_bands()
     overall = grading.overall(bands)
+    nfl_bands = grading.calibration_bands(sport="nfl") if nfl_cards else {}
+    nfl_overall = grading.overall(nfl_bands) if nfl_bands else overall
     stamps = _freshness(social_cards=social_cards)
 
     if out.exists():
         shutil.rmtree(out)
     (out / "ncaaf").mkdir(parents=True)
+    (out / "nfl").mkdir(parents=True)
     (out / "team").mkdir(parents=True)
 
     assets_src = Path(__file__).resolve().parent / "assets"
@@ -61,11 +65,18 @@ def build(out: Path | None = None, *, social_cards: bool = True,
         espn_meta.fetch(espn_meta.days_ahead(horizon)),
         config.paths().data / "site" / "logos",
     )
-    if logos:
+    nfl_logos = espn_meta.cache_logos(
+        espn_meta.fetch(espn_meta.days_ahead(horizon), sport="nfl"),
+        config.paths().data / "site" / "logos", prefix="nfl-",
+    ) if nfl_cards else {}
+    if logos or nfl_logos:
         shutil.copytree(config.paths().data / "site" / "logos", out / "assets" / "logos")
     for card in cards:
         for side in (card.home, card.away):
             side.logo = logos.get(side.team_id)
+    for card in nfl_cards:
+        for side in (card.home, card.away):
+            side.logo = nfl_logos.get(side.team_id)
 
     (out / "index.html").write_text(render.homepage(
         cards, bands=bands, rivalries=rivalry_pairs(), freshness=stamps))
@@ -75,7 +86,10 @@ def build(out: Path | None = None, *, social_cards: bool = True,
         render.about_page(_example_card(cards), card_count=len(cards)))
     (out / "faq.html").write_text(render.faq_page())
     (out / "404.html").write_text(render.not_found_page())
-    (out / "nfl.html").write_text(render.nfl_page())
+    (out / "nfl.html").write_text(render.nfl_page(nfl_cards, bands=nfl_bands, freshness=stamps))
+    for card in nfl_cards:
+        (out / card.path).write_text(render.card_page(
+            card, bands=nfl_bands, overall_band=nfl_overall, freshness=stamps))
     (out / "premium.html").write_text(render.premium_page())
 
     social_slugs = {c.slug for c in _spread_of_grades(
@@ -104,15 +118,24 @@ def build(out: Path | None = None, *, social_cards: bool = True,
     # advertises itself as complete.
     if social_cards:
         ops_freshness.record("social", detail=f"{len(images)} files")
-    ops_freshness.record("build", detail=f"{len(cards)} cards, {len(teams)} teams")
+    ops_freshness.record("build", detail=f"{len(cards)} cards, {len(nfl_cards)} NFL cards, {len(teams)} teams")
     # Written last, so it reports the run that just happened rather than the
     # one before it.
     (out / "status.html").write_text(render.status_page(ops_status.summary()))
     _write_robots(out)
-    _write_sitemap(out, cards, teams)
-    LOG.info("site: %d cards, %d teams, %d images -> %s",
-             len(cards), len(teams), len(images), out)
-    return {"cards": len(cards), "teams": len(teams), "images": len(images), "out": out}
+    _write_sitemap(out, [*cards, *nfl_cards], teams)
+    LOG.info("site: %d cards, %d NFL cards, %d teams, %d images -> %s",
+             len(cards), len(nfl_cards), len(teams), len(images), out)
+    return {"cards": len(cards), "nfl_cards": len(nfl_cards), "teams": len(teams), "images": len(images), "out": out}
+
+
+def _nfl_cards(*, horizon: int, refresh_meta: bool) -> list:
+    """The NFL slate, or nothing: an NFL failure never takes the college board down."""
+    try:
+        return build_cards(horizon=horizon, refresh_meta=refresh_meta, sport="nfl")
+    except Exception as error:  # noqa: BLE001 - logged; the page says so
+        LOG.warning("no NFL cards this build: %s", error)
+        return []
 
 
 def _freshness(*, social_cards: bool = True) -> dict:
@@ -224,7 +247,7 @@ def _write_sitemap(out: Path, cards, teams: dict) -> None:
         ("nfl.html", "monthly", "0.4"),
         ("premium.html", "monthly", "0.5"),
     ]
-    urls += [(card.path, "daily", SITEMAP_PRIORITY["ncaaf"]) for card in cards]
+    urls += [(card.path, "daily", SITEMAP_PRIORITY.get(card.sport, SITEMAP_PRIORITY["ncaaf"])) for card in cards]
     urls += [(f"team/{slug}.html", "weekly", SITEMAP_PRIORITY["team"])
              for slug in sorted(teams)]
 

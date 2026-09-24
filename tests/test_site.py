@@ -544,3 +544,49 @@ def test_social_templates_use_the_declared_canvas():
     card = _card()
     assert 'width="1200" height="675"' in social.wide(card)
     assert 'width="1080" height="1080"' in social.square(card)
+
+
+# ---------------------------------------------------------------------------
+# The NFL card and board (NFL plan step 6)
+# ---------------------------------------------------------------------------
+
+
+def _nfl_card(**kw) -> Card:
+    card = _card(**kw)
+    card.sport = "nfl"
+    card.home = _side("home", "Buffalo Bills", "#00338D")
+    card.away = _side("away", "Kansas City Chiefs", "#E31837")
+    card.home.conference, card.away.conference = None, None
+    card.drivers = driving.select(card, _POOL)
+    card.cautions = data.cautions(card)
+    return card
+
+
+def test_an_nfl_card_lives_under_nfl_and_links_no_team_page():
+    """Same card, a different sport: it publishes under nfl/, its structured
+    data names no team page (there are none for the NFL), and every word of
+    the card is the same audited copy."""
+    import json
+
+    card = _nfl_card()
+    assert card.path.startswith("nfl/") and card.path.endswith(".html")
+    page = _page(card)
+    block = re.search(r'<script type="application/ld\+json">(.+?)</script>', page, re.S).group(1)
+    payload = json.loads(block)
+    assert "NFL" in payload["description"]
+    assert all("url" not in team for team in payload["competitor"])
+    assert 'href="../nfl.html" aria-current="page"' in page
+    assert "Atlas projects" in page and "not a recommendation" in page.lower()
+
+
+def test_the_nfl_board_lists_cards_by_day_and_says_so_when_empty():
+    bands = {label: _band(label) for label in BAND_STATS}
+    cards = [_nfl_card(), _nfl_card(model_margin=4.0)]
+    board = render.nfl_page(cards, bands=bands, freshness={"projection": "x", "market": "y"})
+    assert board.count('class="game-row"') == 2
+    assert "2 cards this week" in board and 'href="nfl/' in board
+    empty = render.nfl_page([], bands={}, freshness=None)
+    assert "No NFL games are scheduled" in empty
+    for page in (board, empty):
+        text = _visible_text(page)
+        assert not any(re.search(rf"\b{w}\b", text) for w in FORBIDDEN if w not in ("unit", "units")), page[:200]

@@ -77,7 +77,7 @@ def audit(site: Path) -> tuple[dict, dict]:
                     f"{rel}: {word!r} in ...{' '.join(window.split())}...")
         if SIDE.search(html):
             blocking["a named side"].append(rel)
-        if rel.startswith("ncaaf/") and "not a recommendation" not in text:
+        if rel.startswith(("ncaaf/", "nfl/")) and "not a recommendation" not in text:
             blocking["card missing the grade disclaimer"].append(rel)
         if MOTION.search(html):
             blocking["motion or urgency"].append(rel)
@@ -88,12 +88,12 @@ def audit(site: Path) -> tuple[dict, dict]:
             advisory["missing canonical"].append(rel)
         if 'name="description"' not in html:
             advisory["missing meta description"].append(rel)
-        if rel.startswith(("ncaaf/", "team/")) and "application/ld+json" not in html:
+        if rel.startswith(("ncaaf/", "nfl/", "team/")) and "application/ld+json" not in html:
             advisory["missing structured data"].append(rel)
-        if rel.startswith("ncaaf/") and 'property="og:title"' not in html:
+        if rel.startswith(("ncaaf/", "nfl/")) and 'property="og:title"' not in html:
             advisory["missing social tags"].append(rel)
         # Track 6: a reader must never have to guess how old a number is.
-        if (rel == "index.html" or rel.startswith("ncaaf/")) \
+        if (rel == "index.html" or rel.startswith(("ncaaf/", "nfl/"))) \
                 and 'class="freshness"' not in html:
             advisory["missing freshness stamp"].append(rel)
         # A clock time with no zone is a number a reader has to guess about.
@@ -133,7 +133,7 @@ def main() -> None:
         print()
 
     kinds = Counter(
-        "card" if p.match("ncaaf/*") else "team" if p.match("team/*") else "other"
+        "card" if p.match("ncaaf/*") else "nfl card" if p.match("nfl/*") else "team" if p.match("team/*") else "other"
         for p in (q.relative_to(args.site) for q in args.site.rglob("*.html"))
     )
     print(f"coverage: {dict(kinds)}")

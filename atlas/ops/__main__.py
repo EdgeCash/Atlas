@@ -54,6 +54,10 @@ def heavy(*, skip_warehouse: bool = False) -> int:
     if not skip_warehouse:
         steps.append(("warehouse", ["atlas.warehouse.build", "--include-scheduled"]))
     steps += [
+        # The NFL's raw files and warehouse. `nflverse` re-fetches only the
+        # season in progress; the build is a couple of minutes.
+        ("nfl-ingest", ["atlas.sources.nflverse"]),
+        ("nfl-warehouse", ["atlas.staging.nfl.build"]),
         ("model", ["atlas.live", "refresh", "--no-rebuild"]),
         ("market", ["atlas.live", "run"]),
         ("site", ["atlas.site.build"]),

@@ -233,3 +233,25 @@ def test_the_nfl_total_and_grid_run_walk_forward(nfl_frame):
     assert ((table["top_home"] < nt.MAX_POINTS) & (table["top_away"] < nt.MAX_POINTS)).all()
     assert fits[SEASONS[1]].points_factor.shape == (nt.MAX_POINTS,)
     assert "## The exact score" in nt.render(scored, table, fits)
+
+
+def test_the_nfl_projector_projects_the_scheduled_slate(nfl_frame):
+    """Step 6: one row per scheduled game keyed by ESPN's id, sport nfl, means
+    that add up, and the state's view of each team for the drivers."""
+    from atlas.models import nfl_projection as pj
+    from atlas.models import nfl_state as ns
+
+    frame = nfl_frame.copy()
+    frame["espn_id"] = pd.Series(range(400000000, 400000000 + len(frame)), index=frame.index, dtype="Int64")
+    fixed = ({SEASONS[1]: ns.Choice(0.0, 0.67, 25.0, 9.5, 0.0, ())},
+             {SEASONS[1]: ns.QBChoice(9.0, -2.0, 0.0, ())})
+    projector = pj.fit(frame, choices=fixed)
+    scheduled = frame[frame["actual_margin"].isna() & (frame["season"] == projector.season)]
+    out = pj.project(projector, scheduled)
+    assert len(out) == len(scheduled) and (out["sport"] == "nfl").all()
+    assert set(out["game_id"]) == set(scheduled["espn_id"].astype(int))
+    assert (out["home_mean"] + out["away_mean"] - out["total_mean"]).abs().max() < 1e-6
+    assert ((out["p_home"] > 0) & (out["p_home"] < 1)).all()
+    assert out["home_rank"].between(1, 8).all() and out["teams"].iloc[0] == 8
+    assert projector.quarterback("qb-KC") is not None
+    assert (out["top_home"] < 60).all()

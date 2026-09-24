@@ -27,4 +27,9 @@ def load_nfl_frame(warehouse: Path | None = None) -> pd.DataFrame:
     df["market_margin"] = -df["closing_spread"]
     if "home_days_rest" in df and "away_days_rest" in df:
         df["rest_diff"] = df["home_days_rest"] - df["away_days_rest"]
+    # The card's drivers read the same metric names as college; the NFL's
+    # season-to-date plays per game is the point-in-time column.
+    for side in ("home", "away"):
+        if f"{side}_plays_per_game_pit" in df and f"{side}_plays_per_game" not in df:
+            df[f"{side}_plays_per_game"] = df[f"{side}_plays_per_game_pit"]
     return df

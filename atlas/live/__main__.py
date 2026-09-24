@@ -25,7 +25,7 @@ from atlas.live import drift as drifting
 from atlas.live import grade as grading
 from atlas.live import report as reporting
 from atlas.live import signals as signalling
-from atlas.live.provider import get_provider
+from atlas.live.provider import POLLED, get_provider
 from atlas.live.store import Store
 from atlas.util import get_logger
 
@@ -84,6 +84,25 @@ def load_numbers(store: Store) -> pd.DataFrame:
     return signalling.atlas_numbers(signalling.build_models())
 
 
+def _fetch_quotes(provider: str, days: list[date]) -> pd.DataFrame:
+    """The default provider means every sport Atlas publishes; a named one, itself.
+
+    The NFL feed failing must not cost the college capture, or the reverse,
+    so each is fetched on its own and an empty frame stands in for a failure.
+    """
+    names = list(POLLED) if provider == "espn" else [provider]
+    frames = []
+    for name in names:
+        try:
+            frames.append(get_provider(name).fetch(days))
+        except Exception as error:  # noqa: BLE001 - one feed's failure is logged, not fatal
+            if len(names) == 1:
+                raise
+            LOG.warning("%s quotes unavailable this poll: %s", name, error)
+    frames = [f for f in frames if not f.empty]
+    return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+
+
 def poll(horizon: int = DEFAULT_HORIZON_DAYS, *, provider: str = "espn",
          sign: bool = True) -> dict:
     """One capture pass, logged as a single auditable run.
@@ -96,7 +115,7 @@ def poll(horizon: int = DEFAULT_HORIZON_DAYS, *, provider: str = "espn",
     run = audit.Run(command="poll", provider=provider)
     try:
         now = datetime.now(UTC).replace(microsecond=0).isoformat()
-        quotes = get_provider(provider).fetch(_days(horizon))
+        quotes = _fetch_quotes(provider, _days(horizon))
         run.quotes = len(quotes)
         if quotes.empty:
             run.finish(store, "empty", "provider returned no quotes")
@@ -174,20 +193,40 @@ def publish_projections(store: Store) -> int:
     from atlas.research.dataset import load_research_frame
 
     paths = config.paths()
+    now = datetime.now(UTC).replace(microsecond=0).isoformat()
     frame = load_research_frame(paths.warehouse)
     choices = state_mod.load_choices(state_mod.choices_path(paths.root))
     projector = projecting.fit(frame, choices=choices)
     scheduled = frame[frame["actual_margin"].isna() & (frame["season"] == projector.season)]
     rows = projecting.project(projector, scheduled)
+    published = 0
     if rows.empty:
-        LOG.warning("refresh produced no projections")
-        return 0
-    rows = rows.copy()
-    rows["refreshed_at"] = datetime.now(UTC).replace(microsecond=0).isoformat()
-    store.upsert("projections", rows)
-    store.write("calibration", projecting.history(frame, choices=choices))
-    LOG.info("published %d projections, model %s", len(rows), projector.version)
-    return len(rows)
+        LOG.warning("refresh produced no college projections")
+    else:
+        rows = rows.assign(sport="ncaaf", refreshed_at=now)
+        store.upsert("projections", rows)
+        published += len(rows)
+        LOG.info("published %d college projections, model %s", len(rows), projector.version)
+    calibration = [projecting.history(frame, choices=choices).assign(sport="ncaaf")]
+    # The NFL, when its warehouse is there. Its absence or failure is logged
+    # and never takes the college publish down with it.
+    try:
+        from atlas.models import nfl_projection
+        from atlas.research.nfl_dataset import load_nfl_frame
+
+        nfl_frame = load_nfl_frame(paths.warehouse)
+        nfl = nfl_projection.fit(nfl_frame)
+        nfl_rows = nfl_projection.project(nfl, nfl_frame[nfl_frame["actual_margin"].isna()
+                                                         & (nfl_frame["season"] == nfl.season)])
+        if not nfl_rows.empty:
+            store.upsert("projections", nfl_rows.assign(refreshed_at=now))
+            published += len(nfl_rows)
+            LOG.info("published %d NFL projections, model %s", len(nfl_rows), nfl.version)
+        calibration.append(nfl_projection.history(paths))
+    except Exception as error:  # noqa: BLE001 - logged; the college publish stands
+        LOG.warning("no NFL projections this refresh: %s", error)
+    store.write("calibration", pd.concat(calibration, ignore_index=True))
+    return published
 
 
 def check(store: Store | None = None) -> dict:

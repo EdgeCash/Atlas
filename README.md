@@ -167,10 +167,10 @@ on it:
 * The **reliability record is free, forever**. Paywalling the caveat while
   selling the claim is what a picks service does.
 
-Phase 1 is NFL and NCAAF only. Atlas has no NFL model yet, so the NFL section
-ships in stages with its stage stated on the page rather than shipping an
-untested model behind a grade framework whose credibility comes from having
-been tested.
+Phase 1 is NFL and NCAAF only. Each sport has its own model
+(`docs/MODEL_PLAN_NCAAF.md`, `docs/MODEL_PLAN_NFL.md`), fitted and
+back-tested to the same standard, and each card is graded from its own
+sport's out-of-sample record.
 
 The language rules are enforced, not trusted:
 `tests/test_product_language.py` scans every product surface for the

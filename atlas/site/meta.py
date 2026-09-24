@@ -26,8 +26,15 @@ FBS_GROUP = "80"
 CACHE_HOURS = 6
 
 
-def cache_path() -> Path:
-    return config.paths().data / "site" / "espn_meta.json"
+SCOREBOARDS = {
+    "ncaaf": SCOREBOARD,
+    "nfl": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+}
+
+
+def cache_path(sport: str = "ncaaf") -> Path:
+    name = "espn_meta.json" if sport == "ncaaf" else f"espn_meta_{sport}.json"
+    return config.paths().data / "site" / name
 
 
 def _fresh(path: Path) -> bool:
@@ -37,22 +44,23 @@ def _fresh(path: Path) -> bool:
     return age < CACHE_HOURS * 3600
 
 
-def fetch(days: list[date], *, refresh: bool = False) -> dict[int, dict]:
+def fetch(days: list[date], *, refresh: bool = False, sport: str = "ncaaf") -> dict[int, dict]:
     """One record per game: venue, broadcast, colours, records, rank."""
-    path = cache_path()
+    path = cache_path(sport)
     if not refresh and _fresh(path):
         cached = json.loads(path.read_text())
-        LOG.info("espn metadata: %d games from cache", len(cached))
+        LOG.info("espn metadata (%s): %d games from cache", sport, len(cached))
         return {int(k): v for k, v in cached.items()}
 
-    _guard_offline(SCOREBOARD)
+    url = SCOREBOARDS[sport]
+    _guard_offline(url)
     sess = session()
     out: dict[int, dict] = {}
     for day in days:
-        payload = http_get(
-            SCOREBOARD, sess=sess, timeout=30,
-            params={"limit": 200, "groups": FBS_GROUP, "dates": day.strftime("%Y%m%d")},
-        ).json()
+        params = {"limit": 200, "dates": day.strftime("%Y%m%d")}
+        if sport == "ncaaf":
+            params["groups"] = FBS_GROUP
+        payload = http_get(url, sess=sess, timeout=30, params=params).json()
         for event in payload.get("events", []) or []:
             record = _event(event)
             if record:
@@ -60,7 +68,7 @@ def fetch(days: list[date], *, refresh: bool = False) -> dict[int, dict]:
 
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps({str(k): v for k, v in out.items()}, indent=1, sort_keys=True))
-    LOG.info("espn metadata: %d games fetched", len(out))
+    LOG.info("espn metadata (%s): %d games fetched", sport, len(out))
     return out
 
 
@@ -150,8 +158,12 @@ def days_ahead(horizon: int = 8) -> list[date]:
 LOGO_SIZE = 200
 
 
-def cache_logos(records: dict[int, dict], out: Path) -> dict[int, str]:
-    """Download each team's logo into ``out``. Returns team id -> filename."""
+def cache_logos(records: dict[int, dict], out: Path, *, prefix: str = "") -> dict[int, str]:
+    """Download each team's logo into ``out``. Returns team id -> filename.
+
+    ``prefix`` keeps two sports apart: ESPN numbers NFL and college teams from
+    one, so Buffalo and Auburn are both team 2.
+    """
     out.mkdir(parents=True, exist_ok=True)
     wanted: dict[int, str] = {}
     for record in records.values():
@@ -163,7 +175,7 @@ def cache_logos(records: dict[int, dict], out: Path) -> dict[int, str]:
     sess = session()
     saved: dict[int, str] = {}
     for team_id, url in sorted(wanted.items()):
-        name = f"{team_id}.png"
+        name = f"{prefix}{team_id}.png"
         path = out / name
         if not path.exists():
             try:

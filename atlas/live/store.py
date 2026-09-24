@@ -49,7 +49,7 @@ SCHEMA: dict[str, list[str]] = {
     # refresh: the numbers the card shows. Keyed by model version like
     # ``numbers``, so a card can always be traced to the fit that made it.
     "projections": [
-        "game_id", "season", "week", "kickoff", "home_team_id", "away_team_id", "neutral_site",
+        "game_id", "sport", "season", "week", "kickoff", "home_team_id", "away_team_id", "neutral_site",
         "margin_mean", "margin_sd", "total_mean", "total_sd", "home_mean", "away_mean", "p_home",
         "total_lo", "total_hi", "top_home", "top_away", "top_p", "hfa", "pace_adj", "wind_adj",
         "home_off", "home_def", "home_net", "home_sd_off", "home_sd_def", "home_rank", "home_games",
@@ -59,7 +59,7 @@ SCHEMA: dict[str, list[str]] = {
     # The model against the closing number, walk-forward over completed
     # seasons: what the grade is computed from. Replaced whole on each refresh.
     "calibration": [
-        "game_id", "season", "week", "season_type", "market", "abs_edge", "claimed", "won",
+        "game_id", "sport", "season", "week", "season_type", "market", "abs_edge", "claimed", "won",
     ],
     "games": [
         "game_id", "season", "week", "kickoff", "home_team", "away_team",
@@ -90,8 +90,8 @@ KEYS: dict[str, list[str]] = {
     # overwriting the number a past signal was formed from. Without that
     # history a historical replay silently uses today's model.
     "numbers": ["game_id", "market", "model_version"],
-    "projections": ["game_id", "model_version"],
-    "calibration": ["game_id", "market"],
+    "projections": ["sport", "game_id", "model_version"],
+    "calibration": ["sport", "game_id", "market"],
     "games": ["game_id"],
     "snapshots": ["game_id", "book", "market", "line", "price"],
     "signals": ["signal_id"],
@@ -101,8 +101,8 @@ KEYS: dict[str, list[str]] = {
 SORT: dict[str, list[str]] = {
     "runs": ["started_at", "run_id"],
     "numbers": ["season", "week", "game_id", "market", "model_version"],
-    "projections": ["season", "week", "game_id", "model_version"],
-    "calibration": ["season", "week", "game_id", "market"],
+    "projections": ["sport", "season", "week", "game_id", "model_version"],
+    "calibration": ["sport", "season", "week", "game_id", "market"],
     "games": ["kickoff", "game_id"],
     "snapshots": ["game_id", "market", "book", "captured_at"],
     "signals": ["created_at", "game_id", "market", "book"],

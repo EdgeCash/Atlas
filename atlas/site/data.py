@@ -136,6 +136,7 @@ class Card:
     missing: list[str] = field(default_factory=list)
     cautions: list[str] = field(default_factory=list)
     postseason: bool = False
+    sport: str = "ncaaf"
 
     # -- derived -----------------------------------------------------------
 
@@ -145,7 +146,7 @@ class Card:
 
     @property
     def path(self) -> str:
-        return f"ncaaf/{self.slug}.html"
+        return f"{self.sport}/{self.slug}.html"
 
     @property
     def title(self) -> str:
@@ -286,23 +287,35 @@ def percentile(pool: dict[str, np.ndarray], metric: str, value: float | None) ->
     return float(np.searchsorted(values, value) / len(values))
 
 
-def build_cards(*, horizon: int = 8, refresh_meta: bool = False) -> list[Card]:
-    """Every scheduled game Atlas can publish a card for."""
+def _scheduled(sport: str) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """(the sport's research frame, its scheduled rows keyed by ESPN's game id)."""
+    if sport == "nfl":
+        from atlas.research.nfl_dataset import load_nfl_frame
+
+        frame = load_nfl_frame()
+        scheduled = frame[frame["actual_margin"].isna()].copy()
+        # The NFL frame is keyed by nflverse's id; the live layer by ESPN's.
+        scheduled = scheduled.dropna(subset=["espn_id"]).assign(game_id=lambda d: d["espn_id"].astype("int64"))
+        return frame, scheduled
     frame = load_research_frame()
-    scheduled = frame[frame["actual_margin"].isna()].copy()
+    return frame, frame[frame["actual_margin"].isna()].copy()
+
+
+def build_cards(*, horizon: int = 8, refresh_meta: bool = False, sport: str = "ncaaf") -> list[Card]:
+    """Every scheduled game Atlas can publish a card for, in one sport."""
+    frame, scheduled = _scheduled(sport)
     if scheduled.empty:
-        LOG.warning(
-            "no scheduled games in the warehouse - "
-            "run `python -m atlas.warehouse.build --include-scheduled`"
-        )
+        LOG.warning("no scheduled %s games in the warehouse - rebuild it with scheduled games", sport)
         return []
 
     store = Store.open()
     projections = store.read("projections")
+    if not projections.empty:
+        projections = projections[projections["sport"].fillna("ncaaf").astype(str) == sport]
     snapshots = store.read("snapshots")
-    metadata = espn_meta.fetch(espn_meta.days_ahead(horizon), refresh=refresh_meta)
-    bands = grading.calibration_bands()
-    curve = grading.calibration_curve()
+    metadata = espn_meta.fetch(espn_meta.days_ahead(horizon), refresh=refresh_meta, sport=sport)
+    bands = grading.calibration_bands(sport=sport)
+    curve = grading.calibration_curve(sport=sport)
 
     season = int(scheduled["season"].max())
     pool = percentile_pool(frame, season)
@@ -317,12 +330,12 @@ def build_cards(*, horizon: int = 8, refresh_meta: bool = False) -> list[Card]:
         kickoff = pd.to_datetime(info["kickoff"], utc=True, errors="coerce")
         if pd.isna(kickoff) or kickoff < now:
             continue
-        card = _card(row, info, projections, snapshots, pool, bands, curve)
+        card = _card(row, info, projections, snapshots, pool, bands, curve, sport=sport)
         if card is not None:
             cards.append(card)
 
     cards.sort(key=lambda c: (c.kickoff, c.title))
-    LOG.info("built %d cards", len(cards))
+    LOG.info("built %d %s cards", len(cards), sport)
     return cards
 
 
@@ -354,7 +367,7 @@ def _projection(projections: pd.DataFrame, game_id: int) -> Projection | None:
     )
 
 
-def _card(row, info, projections, snapshots, pool, bands, curve) -> Card | None:
+def _card(row, info, projections, snapshots, pool, bands, curve, sport: str = "ncaaf") -> Card | None:
     from atlas.site import drivers as driving
 
     game_id = int(row["game_id"])
@@ -434,6 +447,7 @@ def _card(row, info, projections, snapshots, pool, bands, curve) -> Card | None:
         completeness=completeness,
         missing=missing,
         postseason=str(row.get("season_type") or "regular") != "regular",
+        sport=sport,
     )
 
     difference = card.margin_difference
@@ -471,8 +485,10 @@ def cautions(card: Card) -> list[str]:
         )
     if card.postseason:
         out.append(
-            "A bowl or playoff game. Atlas is fitted on the regular season only; "
-            "opt-outs and motivation are not in its number."
+            ("A playoff game. " if card.sport == "nfl" else "A bowl or playoff game. ")
+            + "Atlas is fitted on the regular season only; "
+            + ("motivation and rest are not in its number." if card.sport == "nfl"
+               else "opt-outs and motivation are not in its number.")
         )
     if band and difference is not None and abs(difference) >= 6:
         # The grade block directly above already gives this game's

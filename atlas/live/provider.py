@@ -27,6 +27,10 @@ LOG = get_logger(__name__)
 SCOREBOARD = (
     "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard"
 )
+SCOREBOARDS = {
+    "ncaaf": SCOREBOARD,
+    "nfl": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+}
 
 #: ESPN groups: 80 is all FBS. Without it the feed is mostly FCS noise.
 FBS_GROUP = "80"
@@ -68,27 +72,40 @@ def _line_block(block: dict | None, key: str) -> tuple[float | None, float | Non
 
 @dataclass(frozen=True)
 class EspnScoreboard:
-    """ESPN's public scoreboard. No key, no quota, one book."""
+    """ESPN's public scoreboard. No key, no quota, one book.
+
+    The same feed serves college (``sport="ncaaf"``, FBS only) and the NFL;
+    event ids are ESPN's and unique across the two.
+    """
 
     name: str = "espn"
     group: str = FBS_GROUP
 
+    sport: str = "ncaaf"
+
+    def __post_init__(self) -> None:
+        if self.sport not in SCOREBOARDS:
+            raise KeyError(f"unknown sport {self.sport!r}; have {sorted(SCOREBOARDS)}")
+        # A frozen dataclass: the derived fields go in through the back door.
+        object.__setattr__(self, "name", "espn" if self.sport == "ncaaf" else f"espn-{self.sport}")
+
+    @property
+    def url(self) -> str:
+        return SCOREBOARDS[self.sport]
+
     def fetch(self, days: list[date]) -> pd.DataFrame:
-        _guard_offline(SCOREBOARD)
+        _guard_offline(self.url)
         sess = session()
         rows: list[dict] = []
         for day in days:
-            payload = http_get(
-                SCOREBOARD,
-                sess=sess,
-                params={"limit": 200, "groups": self.group,
-                        "dates": day.strftime("%Y%m%d")},
-                timeout=30,
-            ).json()
+            params = {"limit": 200, "dates": day.strftime("%Y%m%d")}
+            if self.sport == "ncaaf":
+                params["groups"] = self.group
+            payload = http_get(self.url, sess=sess, params=params, timeout=30).json()
             captured = datetime.now(UTC).replace(microsecond=0).isoformat()
             rows.extend(self._events(payload, captured))
         frame = pd.DataFrame(rows)
-        LOG.info("espn: %d quotes over %d days", len(frame), len(days))
+        LOG.info("%s: %d quotes over %d days", self.name, len(frame), len(days))
         return frame
 
     def _events(self, payload: dict, captured: str) -> list[dict]:
@@ -150,7 +167,10 @@ class EspnScoreboard:
         return out
 
 
-PROVIDERS: dict[str, OddsProvider] = {"espn": EspnScoreboard()}
+PROVIDERS: dict[str, OddsProvider] = {"espn": EspnScoreboard(sport="ncaaf"), "espn-nfl": EspnScoreboard(sport="nfl")}
+
+#: What one poll captures: every sport Atlas publishes a card for.
+POLLED: tuple[str, ...] = ("espn", "espn-nfl")
 
 
 def get_provider(name: str = "espn") -> OddsProvider:

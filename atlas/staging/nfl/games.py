@@ -31,7 +31,7 @@ TEAMS = ["ARI", "ATL", "BAL", "BUF", "CAR", "CHI", "CIN", "CLE", "DAL", "DEN", "
 TEAM_ID = {code: i + 1 for i, code in enumerate(TEAMS)}
 
 GAME_COLUMNS = [
-    "game_id", "season", "week", "season_type", "game_type", "kickoff", "home_team", "away_team",
+    "game_id", "espn_id", "season", "week", "season_type", "game_type", "kickoff", "home_team", "away_team",
     "home_team_id", "away_team_id", "neutral_site", "home_score", "away_score", "actual_margin", "actual_total",
     "overtime", "closing_spread", "closing_total", "moneyline_home", "moneyline_away", "home_days_rest",
     "away_days_rest", "div_game", "roof", "venue_dome", "surface", "weather_temp", "weather_wind", "stadium",
@@ -68,6 +68,8 @@ def normalise(sched: pd.DataFrame, *, include_scheduled: bool = True) -> pd.Data
     roof = s["roof"].fillna("").astype(str)
     out = pd.DataFrame({
         "game_id": s["game_id"].astype(str),
+        # ESPN's event id: what the odds poll, the metadata and the site key on.
+        "espn_id": pd.to_numeric(s["espn"], errors="coerce").astype("Int64") if "espn" in s else pd.NA,
         "season": s["season"].astype(int),
         "week": s["week"].astype(int),
         "season_type": np.where(s["game_type"] == "REG", "regular", "postseason"),

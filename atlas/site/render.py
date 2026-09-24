@@ -297,7 +297,7 @@ def card_page(card: Card, *, bands: dict, overall_band,
     )
     return layout(
         title=f"{card.title} — Atlas projection and grade",
-        body=body, depth=1, description=description, active="ncaaf",
+        body=body, depth=1, description=description, active=card.sport,
         canonical=card.path,
         social=social_tags(title=f"{card.title} · Atlas", description=description,
                            url=card.path,
@@ -317,14 +317,15 @@ def _card_schema(card: Card) -> str:
     """
     competitors = [
         {"@type": "SportsTeam", "name": side.name,
-         "url": f"{SITE_URL}/team/{_team_slug(side)}.html"}
+         **({"url": f"{SITE_URL}/team/{_team_slug(side)}.html"} if card.sport == "ncaaf" else {})}
         for side in (card.away, card.home)
     ]
     payload = {
         "@context": "https://schema.org",
         "@type": "SportsEvent",
         "name": card.title,
-        "description": f"{card.away.name} at {card.home.name}, college football.",
+        "description": f"{card.away.name} at {card.home.name}, "
+                       f"{'NFL' if card.sport == 'nfl' else 'college football'}.",
         "startDate": card.kickoff.isoformat(),
         "eventStatus": "https://schema.org/EventScheduled",
         "sport": "American Football",
@@ -1212,10 +1213,10 @@ def homepage(cards: list[Card], *, bands: dict, rivalries: set | None = None,
 
 <div class="card card-pad nfl-strip">
   <div class="banner-row">
-    <span class="badge mute">NFL · calibration in progress</span>
-    <p class="note banner-text">Atlas's model is built and validated on college
-      football. NFL cards do not publish until the model has been fitted and
-      back-tested to the same standard. <a href="nfl.html">What that involves</a>.</p>
+    <span class="badge mute">NFL</span>
+    <p class="note banner-text">The same card for the NFL, from the NFL's own model:
+      the market first, Atlas's number second, and a grade fitted to its own
+      out-of-sample record. <a href="nfl.html">This week's NFL board</a>.</p>
   </div>
 </div>
 
@@ -1711,13 +1712,14 @@ FAQ = (
     )),
     ("Coverage", (
         ("Which sports?",
-         "College football only. NFL is staged behind calibration \u2014 the model "
-         "has to be fitted and back-tested to the same standard before NFL "
-         "cards publish. No other sports are planned."),
-        ("Why not publish NFL projections now, without grades?",
-         "Because the grade framework is the product, and its credibility "
-         "comes entirely from having been tested. Putting an untested model "
-         "behind it would spend that credibility to fill a page."),
+         "College football and the NFL, each from its own model, fitted and "
+         "back-tested to the same standard and graded from its own record. "
+         "No other sports are planned."),
+        ("Is the NFL card the same as the college one?",
+         "The same card: the market first, Atlas's own number second, the "
+         "drivers third, and a grade. The model underneath differs where the "
+         "sport does \u2014 the NFL carries a quarterback state and a fitted "
+         "home advantage, and no preseason recruiting or talent inputs."),
     )),
     ("Money", (
         ("Is Atlas free?",
@@ -2042,51 +2044,46 @@ def research_page(bands: dict, overall_band, *, card_count: int) -> str:
                                      url="research.html"))
 
 
-def nfl_page() -> str:
-    body = """<header class="page-head">
-  <h1>NFL</h1>
-  <p class="sub">Calibration in progress. Atlas does not publish NFL cards yet,
-    and this page explains exactly why rather than saying "coming soon".</p>
-</header>
+def nfl_page(cards: list[Card] | None = None, *, bands: dict | None = None,
+             freshness: dict | None = None) -> str:
+    """The NFL board: the same rows as the college board, grouped by day.
 
-<div class="card card-pad banner-low">
-  <div class="banner-row">
-    <span class="badge mute">Stage 1 of 3</span>
-    <p class="note banner-text">Schedules and market context are the work of a
-      data feed. Projections need a model. Grades need a model that has been
-      measured across seasons it never saw — and until that sentence is true for the NFL,
-      a grade would be decoration.</p>
-  </div>
-</div>
-
-<section class="section">
-  <div class="section-head"><h2>The three stages</h2></div>
-  <div class="card card-pad">
-""" + table(["Stage", "What ships", "What it needs"], [
-        ['<span class="lead">1 — now</span>',
-         "schedules, scores, team pages, market snapshot",
-         "an odds and schedule feed"],
-        ['<span class="lead">2</span>', "projections and drivers",
-         "NFL play-by-play from 2018, the warehouse rebuilt, the model refitted"],
-        ['<span class="lead">3</span>', "grades",
-         "the same out-of-sample calibration study college football has"],
-    ]) + """
-    <p class="note top-gap">The warehouse, feature and model layers are
-      sport-agnostic, so most of the college pipeline carries over. The binding
-      constraint is the calibration study, which needs completed seasons and
-      cannot be hurried.</p>
-  </div>
-</section>
-
-<div class="disclosure top-gap">
-  <b>Why not ship projections now?</b> Because the grade framework is the
-  product, and its entire credibility comes from having been tested. Putting an
-  untested model behind it would spend that credibility to fill a page.
+    With no cards - before the season, or a build without the NFL warehouse -
+    the page says so in one sentence rather than pretending.
+    """
+    cards = cards or []
+    graded = [c for c in cards if c.grade]
+    by_day: dict[str, list[Card]] = {}
+    for card in cards:
+        by_day.setdefault(day_and_clock(card.kickoff).split(",")[0], []).append(card)
+    sections = "".join(_board_section(day, _plural(len(block), "game"), block) for day, block in by_day.items())
+    if not cards:
+        sections = """<div class="card card-pad banner-low">
+  <p class="note banner-text">No NFL games are scheduled in the next week, or the NFL warehouse has not
+    been built yet. The model, its record and how it is graded are the same as college football's;
+    see <a href="research.html">Research</a>.</p>
 </div>"""
-    return layout(title="NFL — why Atlas has not published cards yet | Atlas",
-                  body=body, active="nfl", canonical="nfl.html",
-                  description="Atlas NFL cards are in calibration. The three "
-                              "stages, and why grades come last.")
+    stamp_line = freshness_badge(("Projection built", (freshness or {}).get("projection", "")),
+                                 ("Market updated", (freshness or {}).get("market", "")))
+    body = f"""<header class="page-head">
+  <h1>NFL</h1>
+  <p class="sub">{_plural(len(cards), "card")} this week, {_plural(len(graded), "grade")}. The market first,
+    Atlas's own number second, and a grade for how much weight it deserves - the same card as college
+    football, from the NFL's own model.</p>
+</header>
+{sections}
+{stamp_line}
+<div class="disclosure top-gap">
+  <b>How the NFL number is made.</b> Every team's offence and defence are carried from season to season,
+  regressed toward the mean, and updated after every game by a filter that adjusts for the opponent; a
+  quarterback state travels with the player; the home advantage is fitted, not assumed; the total adds the
+  wind. The market is never an input. Measured out of sample on 2023-2025, the number is closer to the
+  final margin than Elo and not as close as the closing line, and the grade is built from that record.
+</div>"""
+    description = (f"Atlas NFL cards this week: {len(cards)} games with the market, Atlas's own projection "
+                   "and a grade for how much weight it deserves.")
+    return layout(title="NFL cards this week | Atlas", body=body, active="nfl", canonical="nfl.html",
+                  description=description)
 
 
 def premium_page() -> str:
