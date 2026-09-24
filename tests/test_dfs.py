@@ -376,7 +376,7 @@ def test_defense_from_parts_reads_its_form_and_averages_the_bonus():
     train["points_allowed"] = train["opp_pts"]                          # a line with no misses
     test = train.head(2).copy()
     test["sacks_trend"] = [1.0, 4.0]
-    test["opp_pts"] = [6.0, 30.0]
+    test["opp_pts"] = [4.0, 30.0]                                         # clear of the table's edges
     out = defense.fit_predict(train, test)
     assert out["exp_sacks"].iloc[1] > 2 * out["exp_sacks"].iloc[0]      # a pass rush in form projects more sacks
     # No misses around the line: the bonus is the table's value at the projected score.

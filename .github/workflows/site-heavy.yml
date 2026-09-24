@@ -26,6 +26,15 @@ permissions:
   pages: write         # deploy
   id-token: write      # the OIDC token deploy-pages signs with
 
+# Pages allows one deployment at a time, and a heavy run and a poll must never
+# interleave on the tracking store - the second's commit cannot rebase onto
+# the first's. Both callers share this group, so one waits for the other.
+# Never cancel in progress: a half-finished poll that has captured the market
+# but not recorded it is the one state worth avoiding.
+concurrency:
+  group: atlas-publish
+  cancel-in-progress: false
+
 jobs:
   publish:
     uses: ./.github/workflows/publish.yml

@@ -39,12 +39,11 @@ permissions:
   pages: write
   id-token: write
 
-# Pages allows one deployment at a time, and two polls must never interleave
-# on the tracking store. Never cancel in progress: a half-finished poll that
-# has captured the market but not recorded it is the one state worth avoiding.
-concurrency:
-  group: atlas-publish
-  cancel-in-progress: false
+# One run at a time is enforced by the callers (site-heavy.yml and
+# site-poll.yml share the group `atlas-publish`), not here: GitHub does not
+# apply a called workflow's own top-level concurrency, and a heavy run and a
+# poll that overlapped on 24 September 2026 both committed the tracking store
+# and the second could not rebase.
 
 jobs:
   build:
