@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-23T23:14:25+00:00",
+  "generated_at": "2026-09-24T01:44:15+00:00",
   "atlas_version": "0.1.0",
   "seasons_requested": [
     2018,
@@ -61,6 +61,13 @@
         "non_null": 7588,
         "rows": 21968,
         "coverage": 0.3454
+      },
+      "portal": {
+        "present": true,
+        "measured_on": "talent.home_portal_in",
+        "non_null": 13204,
+        "rows": 21968,
+        "coverage": 0.6011
       }
     }
   },
@@ -91,7 +98,7 @@
     },
     "talent": {
       "rows": 21968,
-      "columns": 19
+      "columns": 25
     },
     "context": {
       "rows": 21968,

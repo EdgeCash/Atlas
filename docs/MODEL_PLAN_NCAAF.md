@@ -204,7 +204,7 @@ game's EPA) is weaker than a good preseason projection would be.
 | 5 | Garbage-time exclusion | 11.1% of plays; already in staging | yes (in place) |
 | 6 | Between-season regression | AR ≈ 0.67 by analogy; **fit it** — college turnover is higher | yes |
 | 7 | **Coaching change** | literature: corr −0.56 between overachievement vs the 20-yr programme mean and the next SP+ change. Measured here on the prior's out-of-sample residual: every team under-regresses toward its programme mean (t −3.9) and a new coach's team regresses harder (interaction t −2.6 to −4.2) | **done, step 4** |
-| 8 | **Transfer portal** | unquantified in the literature beyond "large"; CFBD `/player/portal` is free and is now fetched, but nothing is cached yet (the raw store predates the fetch) | fetch added; measure when the next keyed run caches it |
+| 8 | **Transfer portal** | measured: quality-weighted *incoming* transfers explain the prior's out-of-sample residual (t 2.8); outgoing ones add nothing beside returning production. Staged from CFBD's portal file, 2021 on; +1.19 pts/sd in the prior; weeks 1–4 CRPS 9.47 → 9.44, weeks 1–2 9.25 → 9.16 | **done, v1.2** |
 | 9 | QB | measured, retrospectively: a change of quarterback of record moves the state's residual **−3.2 points** (t −6.4) on 20% of team-games, the NFL's −3.3 again. Not modelled: the series is known only at kickoff and is barred from the warehouse; a live signal needs a pre-kickoff starter source Atlas does not have | measured, not in v1 |
 | 10 | Bowl opt-outs / motivation | lines move 3–9 points on opt-outs; **exclude bowls from fitting**, flag on the card | v1: exclude |
 | 11 | Rest, travel | rest_diff, travel_distance in warehouse; expect small | total model / v2 |
@@ -269,6 +269,23 @@ four seasons thin. Through the state it is worth 0.02 CRPS pooled and
 0.07 in weeks 3–4, winning 2022–2025 and losing 2021 by 0.05. Returning
 *passing* production was tested and adds nothing once total returning
 production is in. The quarterback and the portal are in §4, rows 8–9.
+
+**v1.2 (portal) — built.** CFBD's portal file starts in 2021; the fetch
+was already in place and the raw store now holds 2021–2026 (1,770 to
+4,499 transfers a season, the number doubling in five years). Each
+transfer is weighted by his composite rating, by the typical rating for
+his stars where only stars are known, and by a floor where neither is;
+`atlas/staging/talent.py` sums the weight into and out of every
+team-season, with seasons before 2021 at zero on both sides so the prior
+is fitted across the boundary. Measured on the prior's out-of-sample
+residual, incoming quality matters (t 2.8) and outgoing quality does not
+once incoming is in (t −0.4): departures are what returning production
+already measures. So the prior gained one feature, incoming quality, and
+learned +1.19 points per sd on it. Weeks 1–4 CRPS 9.472 → 9.443, weeks
+1–2 9.247 → 9.164; better in 2023, 2024 and 2025, worse by 0.04 in 2022,
+unchanged in 2021, which had no portal. Small, in the direction the data
+said, and it will grow: the portal's scale has doubled since 2021 and
+the feature's sd with it.
 
 **State — built, `reports/ncaaf_state.md`.** One joint Kalman filter over
 every team's `off` and `def` with a full covariance, which is the opponent
@@ -466,9 +483,10 @@ bucket**, and the ECE row holds.
 | 6 | Wire into the card (model number second slot, market open/move/now first, drivers third) and the grade (`atlas/models/ncaaf_projection.py`, `tracking/projections.csv`, `tracking/calibration.csv`) | **done — audit passes on 182 pages; grade fitted to this model's record** |
 | 7 | v2 drive simulation, if warranted | **gate measured; not warranted yet.** A points lattice (v1.5, `joint.fit_points`) took the exact-score log score 7.54 → 7.10 with no simulation; a simulation has to beat 7.10 |
 
-Steps 0–7 are done, step 7 by measuring its own gate. What remains is the
-portal once the next keyed run caches it, a v2 simulation only if it can
-beat the v1.5 grid on the exact score, and the NFL plan.
+Steps 0–7 are done, step 7 by measuring its own gate, and the portal (factor
+8, v1.2) is in the prior. What remains is a v2 simulation only if it can beat
+the v1.5 grid on the exact score. The NFL plan (`docs/MODEL_PLAN_NFL.md`) is
+built through its own step 7.
 
 ---
 

@@ -6,56 +6,59 @@ Walk-forward, seasons 2021-2025: each season's prior is fitted on every earlier 
 
 Points of home margin per one standard deviation of each preseason feature, fitted directly on games. `sp_plus_def` is the SP+ defensive *rating* (points allowed), so a lower value is a better defence and its `def` coefficient is expected to be negative.
 
-### net  -  game-level R² 0.316, residual sd 17.25 points, home advantage +2.52, n=4882 games
+### net  -  game-level R² 0.318, residual sd 17.22 points, home advantage +2.52, n=4882 games
 
 | feature | points_per_sd |
 |---|---|
-| sp_plus | +4.24 |
-| fpi | +3.20 |
-| talent | +2.09 |
-| returning_production | +1.62 |
-| new_coach_x_overach | -1.41 |
-| new_coach | -1.11 |
-| sp_program_mean | +0.94 |
-| recruiting_rank | -0.78 |
+| sp_plus | +4.31 |
+| fpi | +3.29 |
+| returning_production | +1.73 |
+| talent | +1.62 |
+| new_coach_x_overach | -1.36 |
+| new_coach | -1.21 |
+| portal_in | +1.19 |
+| sp_program_mean | +1.01 |
+| recruiting_rank | -0.98 |
 
-### off  -  from one stacked points regression, R² 0.221, residual sd 12.18 points per team-game, n=9764 team-games
+### off  -  from one stacked points regression, R² 0.223, residual sd 12.17 points per team-game, n=9764 team-games
 
 | feature | points_per_sd |
 |---|---|
-| talent | +1.93 |
-| sp_plus_off | +1.83 |
-| fpi | +1.40 |
+| talent | +1.88 |
+| sp_plus_off | +1.73 |
+| fpi | +1.56 |
 | sp_program_mean | +1.04 |
 | returning_production | +1.01 |
-| new_coach_x_overach | -0.61 |
-| new_coach | -0.58 |
-| recruiting_rank | +0.23 |
+| new_coach | -0.63 |
+| new_coach_x_overach | -0.58 |
+| portal_in | +0.47 |
+| recruiting_rank | +0.26 |
 
-### def  -  from one stacked points regression, R² 0.221, residual sd 12.18 points per team-game, n=9764 team-games
+### def  -  from one stacked points regression, R² 0.223, residual sd 12.17 points per team-game, n=9764 team-games
 
 | feature | points_per_sd |
 |---|---|
-| fpi | +2.46 |
-| sp_plus_def | -2.31 |
-| recruiting_rank | -1.05 |
-| new_coach_x_overach | -0.74 |
-| returning_production | +0.59 |
-| new_coach | -0.53 |
-| talent | +0.18 |
-| sp_program_mean | +0.10 |
+| fpi | +2.49 |
+| sp_plus_def | -2.41 |
+| recruiting_rank | -1.29 |
+| portal_in | +0.81 |
+| new_coach_x_overach | -0.71 |
+| returning_production | +0.69 |
+| new_coach | -0.59 |
+| talent | -0.25 |
+| sp_program_mean | +0.17 |
 
-A team's prior net has sd 10.29 points across the 136 FBS teams of 2025; the game residual sd of 17.25 is the prior's own uncertainty and the state model's starting variance.
+A team's prior net has sd 10.18 points across the 136 FBS teams of 2025; the game residual sd of 17.22 is the prior's own uncertainty and the state model's starting variance.
 
 ## How well the prior tracked the eventual rating, team level
 
 | season | corr def | corr net | corr off |
 |---|---|---|---|
 | 2021 | 0.649 | 0.695 | 0.565 |
-| 2022 | 0.718 | 0.799 | 0.720 |
-| 2023 | 0.737 | 0.806 | 0.656 |
-| 2024 | 0.708 | 0.736 | 0.639 |
-| 2025 | 0.694 | 0.754 | 0.645 |
+| 2022 | 0.698 | 0.796 | 0.728 |
+| 2023 | 0.723 | 0.801 | 0.660 |
+| 2024 | 0.709 | 0.743 | 0.646 |
+| 2025 | 0.679 | 0.749 | 0.647 |
 
 ## Game-level scores, weeks 1-4 (where a prior is the whole forecast)
 
@@ -66,7 +69,7 @@ A team's prior net has sd 10.29 points across the 136 FBS teams of 2025; the gam
 | prior_sp | 1020 | 9.893 | 0.181 | 4.162 | 13.99 | 0.036 |
 | elo | 1020 | 9.951 | 0.178 | 4.171 | 13.92 | 0.034 |
 | market | 1020 | 8.544 | 0.158 | 4.018 | 12.10 | 0.026 |
-| prior | 1020 | 9.472 | 0.174 | 4.123 | 13.42 | 0.022 |
+| prior | 1020 | 9.443 | 0.173 | 4.121 | 13.35 | 0.030 |
 
 ## By week bucket, regular season
 
@@ -97,11 +100,11 @@ A team's prior net has sd 10.29 points across the 136 FBS teams of 2025; the gam
 | market | wk 5-8 | 1075 | 8.507 | 0.188 | 4.012 | 11.95 | 0.032 |
 | market | wk 9-12 | 1131 | 8.639 | 0.179 | 4.049 | 12.13 | 0.021 |
 | market | wk 13+ | 504 | 8.886 | 0.181 | 4.089 | 12.50 | 0.062 |
-| prior | wk 1-2 | 480 | 9.247 | 0.165 | 4.101 | 13.05 | 0.038 |
-| prior | wk 3-4 | 540 | 9.671 | 0.182 | 4.142 | 13.75 | 0.019 |
-| prior | wk 5-8 | 1075 | 9.368 | 0.212 | 4.113 | 13.23 | 0.031 |
-| prior | wk 9-12 | 1131 | 9.879 | 0.209 | 4.181 | 13.92 | 0.035 |
-| prior | wk 13+ | 504 | 10.765 | 0.228 | 4.298 | 15.10 | 0.070 |
+| prior | wk 1-2 | 480 | 9.164 | 0.163 | 4.095 | 12.90 | 0.045 |
+| prior | wk 3-4 | 540 | 9.690 | 0.182 | 4.144 | 13.75 | 0.027 |
+| prior | wk 5-8 | 1075 | 9.354 | 0.212 | 4.112 | 13.19 | 0.030 |
+| prior | wk 9-12 | 1131 | 9.896 | 0.209 | 4.183 | 13.90 | 0.040 |
+| prior | wk 13+ | 504 | 10.804 | 0.231 | 4.301 | 15.18 | 0.079 |
 
 ## By season, weeks 1-4
 
@@ -133,32 +136,32 @@ A team's prior net has sd 10.29 points across the 136 FBS teams of 2025; the gam
 | market | 2024 | 194 | 9.303 | 0.163 | 4.154 | 13.03 | 0.103 |
 | market | 2025 | 195 | 8.721 | 0.160 | 4.063 | 12.13 | 0.052 |
 | prior | 2021 | 205 | 9.860 | 0.176 | 4.193 | 14.00 | 0.046 |
-| prior | 2022 | 210 | 9.147 | 0.173 | 4.050 | 13.13 | 0.043 |
-| prior | 2023 | 216 | 8.407 | 0.164 | 3.968 | 12.05 | 0.066 |
-| prior | 2024 | 194 | 10.289 | 0.177 | 4.243 | 14.60 | 0.100 |
-| prior | 2025 | 195 | 9.778 | 0.180 | 4.179 | 13.48 | 0.058 |
+| prior | 2022 | 210 | 9.183 | 0.173 | 4.054 | 13.08 | 0.039 |
+| prior | 2023 | 216 | 8.273 | 0.161 | 3.954 | 11.87 | 0.057 |
+| prior | 2024 | 194 | 10.274 | 0.176 | 4.242 | 14.54 | 0.120 |
+| prior | 2025 | 195 | 9.753 | 0.179 | 4.181 | 13.42 | 0.066 |
 
 ## The 2025 prior, top and bottom ten by net
 
 | team | net | off | def |
 |---|---|---|---|
-| Ohio State | +23.8 | +11.1 | +12.9 |
-| Alabama | +21.3 | +10.8 | +10.5 |
-| Georgia | +20.4 | +10.3 | +10.1 |
-| Penn State | +19.9 | +9.6 | +10.5 |
-| Texas | +19.5 | +8.8 | +11.8 |
-| Notre Dame | +19.4 | +9.3 | +10.7 |
-| Oregon | +18.1 | +8.7 | +8.9 |
-| Ole Miss | +16.9 | +6.5 | +9.9 |
-| Clemson | +15.7 | +9.4 | +7.1 |
-| LSU | +15.5 | +8.6 | +6.8 |
-| Middle Tennessee | -15.9 | -7.2 | -8.0 |
-| New Mexico State | -16.7 | -7.9 | -9.4 |
-| Bowling Green | -17.0 | -9.1 | -7.7 |
-| Charlotte | -17.2 | -7.4 | -10.2 |
-| Ball State | -17.3 | -7.5 | -10.1 |
-| Rice | -17.3 | -9.1 | -7.6 |
-| Kent State | -20.1 | -9.6 | -10.3 |
-| New Mexico | -20.7 | -7.9 | -12.7 |
-| Massachusetts | -22.3 | -9.5 | -12.3 |
-| Kennesaw State | -24.1 | -12.8 | -11.1 |
+| Ohio State | +24.5 | +11.5 | +13.4 |
+| Alabama | +22.0 | +11.2 | +10.9 |
+| Georgia | +20.9 | +10.6 | +10.3 |
+| Ole Miss | +20.6 | +8.1 | +12.4 |
+| Penn State | +20.2 | +9.8 | +10.8 |
+| Texas | +20.1 | +9.2 | +12.2 |
+| Notre Dame | +19.6 | +9.6 | +10.8 |
+| Oregon | +18.7 | +9.1 | +9.3 |
+| LSU | +17.5 | +9.4 | +8.1 |
+| Texas A&M | +16.0 | +7.8 | +8.1 |
+| New Mexico State | -14.6 | -7.1 | -8.1 |
+| Bowling Green | -15.0 | -8.2 | -6.4 |
+| Middle Tennessee | -15.3 | -6.8 | -7.7 |
+| Central Michigan | -15.4 | -7.8 | -7.7 |
+| Ball State | -15.5 | -6.6 | -9.0 |
+| New Mexico | -17.1 | -6.2 | -10.6 |
+| Rice | -17.2 | -8.8 | -7.6 |
+| Massachusetts | -18.9 | -7.9 | -10.2 |
+| Kent State | -20.3 | -9.7 | -10.5 |
+| Kennesaw State | -21.5 | -11.5 | -9.4 |
