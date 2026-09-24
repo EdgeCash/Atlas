@@ -12,11 +12,12 @@ column conventions as the college ``research_games`` so
   (``home_adj_off_epa`` and so on), from the college network solve;
 * each side's season-to-date raw metrics shrunk toward last season
   (``home_off_epa_pit`` and so on), from the college point-in-time builder;
-* the depth chart's QB1 for the week (``home_qb1_id``), which is what was
-  knowable before kickoff, beside the quarterback of record
-  (``home_qb_id``), which was not;
-* the injury report's count of players Out or Doubtful, and whether one of
-  them was the QB1.
+* the depth chart's QB1 and QB2 for the week (``home_qb1_id``,
+  ``home_qb2_id``), which is what was knowable before kickoff, beside the
+  quarterback of record (``home_qb_id``), which was not;
+* the injury report's count of players Out or Doubtful, and whether the
+  QB1 or the QB2 was one of them (``home_qb1_out``, ``home_qb2_out``), by
+  the player's own id.
 """
 
 from __future__ import annotations
@@ -59,7 +60,7 @@ def build(seasons: list[int] | None = None, *, include_scheduled: bool = True) -
 
     games = games_stage.build_games(paths.raw, staging.parent, seasons, include_scheduled=include_scheduled)
     eff = eff_stage.build_efficiency(paths.raw, staging.parent, seasons)
-    frame = assemble(games, eff, qb1=depth_chart_qb1(paths.raw, seasons, games=games),
+    frame = assemble(games, eff, qb1=depth_chart_qbs(paths.raw, seasons, games=games),
                      injuries=injury_counts(paths.raw, seasons))
     write_parquet(frame, staging / "research_games.parquet")
 
@@ -72,6 +73,9 @@ def build(seasons: list[int] | None = None, *, include_scheduled: bool = True) -
         con.execute("CREATE OR REPLACE TABLE games AS SELECT * FROM games")
         con.register("eff", eff)
         con.execute("CREATE OR REPLACE TABLE team_game_efficiency AS SELECT * FROM eff")
+        passers = eff_stage.load_passers(staging.parent)
+        con.register("passers", passers)
+        con.execute("CREATE OR REPLACE TABLE passer_games AS SELECT * FROM passers")
     finally:
         con.close()
     manifest = {"generated_at": datetime.now(UTC).isoformat(timespec="seconds"), "seasons": seasons,
@@ -126,31 +130,39 @@ def assemble(games: pd.DataFrame, eff: pd.DataFrame, *, qb1: pd.DataFrame | None
         if "home_adj_off_epa" in out and "home_adj_def_epa" in out else np.nan
     out["min_prior_games"] = out[["home_n_prior_games", "away_n_prior_games"]].min(axis=1)
 
-    # --- the quarterback: expected (QB1) beside of record --------------------
-    if qb1 is not None and not qb1.empty:
-        for side in ("home", "away"):
-            q = qb1.rename(columns={"team_id": f"{side}_team_id", "qb1_id": f"{side}_qb1_id", "qb1_name": f"{side}_qb1_name"})
-            out = out.merge(q, on=["season", "week", f"{side}_team_id"], how="left")
-    else:
-        for side in ("home", "away"):
-            out[f"{side}_qb1_id"] = pd.NA
-            out[f"{side}_qb1_name"] = pd.NA
-    if injuries is not None and not injuries.empty:
-        for side in ("home", "away"):
+    # --- the quarterback: expected (QB1, QB2) beside of record ---------------
+    qb_cols = ("qb1_id", "qb1_name", "qb2_id", "qb2_name")
+    for side in ("home", "away"):
+        if qb1 is not None and not qb1.empty:
+            q = qb1.rename(columns={"team_id": f"{side}_team_id", **{c: f"{side}_{c}" for c in qb_cols}})
+            out = out.merge(q[["season", "week", f"{side}_team_id", *[f"{side}_{c}" for c in qb_cols]]],
+                            on=["season", "week", f"{side}_team_id"], how="left")
+        else:
+            for c in qb_cols:
+                out[f"{side}_{c}"] = pd.NA
+    for side in ("home", "away"):
+        if injuries is not None and not injuries.empty:
             i = injuries.rename(columns={"team_id": f"{side}_team_id", "injured_out": f"{side}_injured_out",
-                                         "qb1_out": f"{side}_qb1_out"})
+                                         "out_ids": f"{side}_out_ids"})
             out = out.merge(i, on=["season", "week", f"{side}_team_id"], how="left")
-    else:
-        for side in ("home", "away"):
+            outs = out[f"{side}_out_ids"].apply(lambda v: v if isinstance(v, (set, frozenset)) else frozenset())
+            # By the player's own id: the QB1 is out when the report says *he* is.
+            out[f"{side}_qb1_out"] = [float(q in ids) if pd.notna(q) else np.nan
+                                      for q, ids in zip(out[f"{side}_qb1_id"], outs, strict=True)]
+            out[f"{side}_qb2_out"] = [float(q in ids) if pd.notna(q) else np.nan
+                                      for q, ids in zip(out[f"{side}_qb2_id"], outs, strict=True)]
+            out = out.drop(columns=[f"{side}_out_ids"])
+        else:
             out[f"{side}_injured_out"] = np.nan
             out[f"{side}_qb1_out"] = np.nan
+            out[f"{side}_qb2_out"] = np.nan
     out = out.sort_values(["kickoff", "game_id"]).reset_index(drop=True)
     LOG.info("nfl research_games: %d rows, %d columns", len(out), out.shape[1])
     return out
 
 
-def depth_chart_qb1(raw: Path, seasons: list[int], games: pd.DataFrame | None = None) -> pd.DataFrame:
-    """The QB listed first on each team's depth chart for the week.
+def depth_chart_qbs(raw: Path, seasons: list[int], games: pd.DataFrame | None = None) -> pd.DataFrame:
+    """The QB1 and QB2 on each team's depth chart for the week.
 
     nflverse changed the depth-chart feed in 2025: to 2024 a file is one row
     per (season, week, team, position, depth); from 2025 it is a daily
@@ -172,37 +184,54 @@ def depth_chart_qb1(raw: Path, seasons: list[int], games: pd.DataFrame | None = 
                 continue
             frames.append(_snapshot_qb1(d, games[games["season"] == season]))
             continue
-        d = d[(d["position"].astype(str) == "QB") & (d["depth_team"].astype(str) == "1")].copy()
+        d = d[(d["position"].astype(str) == "QB") & (d["depth_team"].astype(str).isin(["1", "2"]))].copy()
         d["team_id"] = team_id(d["club_code"])
         d["week"] = pd.to_numeric(d["week"], errors="coerce")
         d = d.dropna(subset=["team_id", "week"])
-        d = d.drop_duplicates(["season", "week", "team_id"])
-        frames.append(pd.DataFrame({"season": d["season"].astype(int), "week": d["week"].astype(int),
-                                    "team_id": d["team_id"].astype("Int64"),
-                                    "qb1_id": d["gsis_id"].astype("string"), "qb1_name": d["player_name" if "player_name" in d else "full_name"].astype("string")}))
+        d["rank"] = d["depth_team"].astype(int)
+        d = d.drop_duplicates(["season", "week", "team_id", "rank"])
+        d["name"] = d["player_name" if "player_name" in d else "full_name"].astype("string")
+        frames.append(_pivot_qbs(d.assign(season=d["season"].astype(int), week=d["week"].astype(int),
+                                          team_id=d["team_id"].astype("Int64"))))
     frames = [f for f in frames if f is not None and not f.empty]
     return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame(
-        columns=["season", "week", "team_id", "qb1_id", "qb1_name"])
+        columns=["season", "week", "team_id", "qb1_id", "qb1_name", "qb2_id", "qb2_name"])
+
+
+def _pivot_qbs(d: pd.DataFrame) -> pd.DataFrame:
+    """Rows of (season, week, team_id, rank, gsis_id, name) to one row per team-week."""
+    out = None
+    for rank in (1, 2):
+        r = d[d["rank"] == rank][["season", "week", "team_id", "gsis_id", "name"]].rename(
+            columns={"gsis_id": f"qb{rank}_id", "name": f"qb{rank}_name"})
+        r[f"qb{rank}_id"] = r[f"qb{rank}_id"].astype("string")
+        out = r if out is None else out.merge(r, on=["season", "week", "team_id"], how="outer")
+    return out
 
 
 def _snapshot_qb1(snapshots: pd.DataFrame, games: pd.DataFrame) -> pd.DataFrame:
-    """Daily depth-chart snapshots to one QB1 per team-week: the latest snapshot before kickoff."""
-    q = snapshots[(snapshots["pos_abb"].astype(str) == "QB") & (pd.to_numeric(snapshots["pos_rank"], errors="coerce") == 1)].copy()
+    """Daily depth-chart snapshots to one QB1 and QB2 per team-week: the latest snapshot before kickoff."""
+    rank = pd.to_numeric(snapshots["pos_rank"], errors="coerce")
+    q = snapshots[(snapshots["pos_abb"].astype(str) == "QB") & rank.isin([1, 2])].copy()
+    q["rank"] = rank[q.index].astype(int)
     q["team_id"] = team_id(q["team"])
     q["dt"] = pd.to_datetime(q["dt"], errors="coerce", utc=True)
     q = q.dropna(subset=["team_id", "dt"]).sort_values("dt")
-    q = q.drop_duplicates(["team_id", "dt"], keep="last")[["team_id", "dt", "gsis_id", "player_name"]]
+    q = q.drop_duplicates(["team_id", "rank", "dt"], keep="last")[["team_id", "rank", "dt", "gsis_id", "player_name"]]
     long = games_stage.to_long(games)[["season", "week", "team_id", "kickoff"]].copy()
     long["kickoff"] = pd.to_datetime(long["kickoff"], utc=True)
     long = long.dropna(subset=["kickoff"]).sort_values("kickoff")
-    q["team_id"] = q["team_id"].astype("int64")
     long["team_id"] = long["team_id"].astype("int64")
-    merged = pd.merge_asof(long, q.rename(columns={"dt": "snapshot_at"}), left_on="kickoff", right_on="snapshot_at",
-                           by="team_id", direction="backward")
-    out = merged.dropna(subset=["gsis_id"]).drop_duplicates(["season", "week", "team_id"])
-    return pd.DataFrame({"season": out["season"].astype(int), "week": out["week"].astype(int),
-                         "team_id": out["team_id"].astype("Int64"), "qb1_id": out["gsis_id"].astype("string"),
-                         "qb1_name": out["player_name"].astype("string")})
+    q["team_id"] = q["team_id"].astype("int64")
+    parts = []
+    for r in (1, 2):
+        qr = q[q["rank"] == r].rename(columns={"dt": "snapshot_at"})
+        merged = pd.merge_asof(long, qr, left_on="kickoff", right_on="snapshot_at", by="team_id", direction="backward")
+        merged = merged.dropna(subset=["gsis_id"]).drop_duplicates(["season", "week", "team_id"])
+        parts.append(pd.DataFrame({"season": merged["season"].astype(int), "week": merged["week"].astype(int),
+                                   "team_id": merged["team_id"].astype("Int64"), "rank": r,
+                                   "gsis_id": merged["gsis_id"].astype("string"), "name": merged["player_name"].astype("string")}))
+    return _pivot_qbs(pd.concat(parts, ignore_index=True))
 
 
 def injury_counts(raw: Path, seasons: list[int]) -> pd.DataFrame:
@@ -217,12 +246,13 @@ def injury_counts(raw: Path, seasons: list[int]) -> pd.DataFrame:
         i["week"] = pd.to_numeric(i["week"], errors="coerce")
         i = i.dropna(subset=["team_id", "week"])
         out_flag = i["report_status"].astype("string").isin(["Out", "Doubtful"])
-        i = i.assign(out=out_flag.astype(float), qb_out=(out_flag & (i["position"].astype(str) == "QB")).astype(float))
-        g = i.groupby(["season", "week", "team_id"], as_index=False).agg(injured_out=("out", "sum"), qb1_out=("qb_out", "max"))
+        i = i.assign(out=out_flag.astype(float), out_id=np.where(out_flag, i["gsis_id"].astype("string"), None))
+        g = i.groupby(["season", "week", "team_id"], as_index=False).agg(
+            injured_out=("out", "sum"), out_ids=("out_id", lambda s: frozenset(x for x in s if x is not None)))
         g["season"], g["week"] = g["season"].astype(int), g["week"].astype(int)
         frames.append(g)
     return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame(
-        columns=["season", "week", "team_id", "injured_out", "qb1_out"])
+        columns=["season", "week", "team_id", "injured_out", "out_ids"])
 
 
 def main() -> None:

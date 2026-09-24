@@ -215,7 +215,7 @@ def publish_projections(store: Store) -> int:
         from atlas.research.nfl_dataset import load_nfl_frame
 
         nfl_frame = load_nfl_frame(paths.warehouse)
-        nfl = nfl_projection.fit(nfl_frame)
+        nfl = nfl_projection.fit(nfl_frame, passers=nfl_projection._passers(paths))
         nfl_rows = nfl_projection.project(nfl, nfl_frame[nfl_frame["actual_margin"].isna()
                                                          & (nfl_frame["season"] == nfl.season)])
         if not nfl_rows.empty:

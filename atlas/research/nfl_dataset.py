@@ -16,6 +16,15 @@ from atlas.research.dataset import research_sample  # noqa: F401 - re-exported f
 from atlas.staging.nfl.build import warehouse_path
 
 
+def load_passer_games(warehouse: Path | None = None) -> pd.DataFrame:
+    """Every passer's dropbacks per game, for the quarterback prior."""
+    con = duckdb.connect(str(warehouse_path(warehouse)), read_only=True)
+    try:
+        return con.execute("SELECT * FROM passer_games").df()
+    finally:
+        con.close()
+
+
 def load_nfl_frame(warehouse: Path | None = None) -> pd.DataFrame:
     con = duckdb.connect(str(warehouse_path(warehouse)), read_only=True)
     try:

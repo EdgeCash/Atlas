@@ -60,7 +60,10 @@ GRID = {
 #: variance and ``new_mean`` its prior mean in points against the team's
 #: offence - the flat backup penalty, as a prior rather than a rule; the
 #: filter replaces it with the player's own record as it accumulates.
-QB_GRID = {"p0": (4.0, 9.0, 16.0), "new_mean": (0.0, -2.0, -4.0)}
+#: v1.1 adds ``k_epa``: points of prior per unit of the player's own career
+#: EPA per dropback above the league, shrunk by ``EPA_SHRINK`` dropbacks.
+QB_GRID = {"p0": (4.0, 9.0, 16.0), "new_mean": (0.0, -2.0, -4.0), "k_epa": (0.0, 15.0, 30.0)}
+EPA_SHRINK = 100.0
 QB_Q = 0.05            # process variance per week on a quarterback
 QB_PHI = 0.9           # between-season regression on a quarterback
 QB_P_SEASON = 1.0      # between-season innovation on a quarterback
@@ -85,6 +88,41 @@ class QBChoice:
     new_mean: float
     loglik: float
     seasons: tuple[int, ...]
+    k_epa: float = 0.0
+
+
+class PasserRecord:
+    """A passer's career dropbacks and EPA per dropback *before* a kickoff.
+
+    Built once from the staged passer log; queried when the state meets a
+    quarterback for the first time. Strictly prior games only, by date.
+    """
+
+    def __init__(self, passers: pd.DataFrame | None) -> None:
+        self.by_passer: dict[str, tuple[np.ndarray, np.ndarray, np.ndarray]] = {}
+        self.league = 0.0
+        if passers is None or passers.empty:
+            return
+        p = passers.dropna(subset=["passer_id", "game_date"]).copy()
+        p["date"] = pd.to_datetime(p["game_date"], errors="coerce")
+        p = p.dropna(subset=["date"]).sort_values("date")
+        weights = p["dropbacks"].to_numpy(dtype=float)
+        self.league = float(np.average(p["qb_epa_per_dropback"].fillna(0).to_numpy(dtype=float), weights=weights))
+        for pid, g in p.groupby("passer_id"):
+            n = g["dropbacks"].to_numpy(dtype=float)
+            self.by_passer[str(pid)] = (g["date"].to_numpy(), np.cumsum(n),
+                                        np.cumsum(n * g["qb_epa_per_dropback"].fillna(0).to_numpy(dtype=float)))
+
+    def before(self, passer_id, kickoff) -> tuple[float, float]:
+        """(dropbacks, mean EPA per dropback above league) strictly before ``kickoff``."""
+        rec = self.by_passer.get(str(passer_id))
+        if rec is None:
+            return 0.0, 0.0
+        dates, n, s = rec
+        k = int(np.searchsorted(dates, np.datetime64(pd.Timestamp(kickoff).tz_localize(None).normalize()), side="left"))
+        if k == 0:
+            return 0.0, 0.0
+        return float(n[k - 1]), float(s[k - 1] / n[k - 1] - self.league)
 
 
 HFA_KEY = "__hfa__"
@@ -108,7 +146,8 @@ def load_choices(path: Path) -> tuple[dict[int, Choice], dict[int, QBChoice]] | 
     choices = {int(s): Choice(q=c["q"], phi=c["phi"], p_season=c["p_season"], sigma=c["sigma"], loglik=c["loglik"],
                               seasons=tuple(int(x) for x in c["seasons"])) for s, c in raw.items()}
     qb = {int(s): QBChoice(p0=c["qb"]["p0"], new_mean=c["qb"]["new_mean"], loglik=c["qb"]["loglik"],
-                           seasons=tuple(int(x) for x in c["qb"]["seasons"])) for s, c in raw.items() if c.get("qb")}
+                           seasons=tuple(int(x) for x in c["qb"]["seasons"]), k_epa=c["qb"].get("k_epa", 0.0))
+          for s, c in raw.items() if c.get("qb")}
     return choices, qb
 
 
@@ -174,13 +213,17 @@ def _advance_qb(state: kalman.State, weeks: int, spec: kalman.Spec, qb_q: float)
 
 
 def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *, p0: float, new_mean: float,
-                  qb_q: float = QB_Q, first_season: bool = False, starters: dict | None = None) -> pd.DataFrame:
+                  qb_q: float = QB_Q, first_season: bool = False, starters: dict | None = None,
+                  k_epa: float = 0.0, record: PasserRecord | None = None) -> pd.DataFrame:
     """Forecast every game with each side's expected starter, then learn from the one who played.
 
     The expected starter is the depth chart's QB1 for the week (knowable
-    before kickoff), else the last quarterback of record for that team. The
-    update uses the quarterback of record. A quarterback the state has not
-    seen enters at ``new_mean`` with variance ``p0`` - except in the first
+    before kickoff) - unless the injury report lists him Out or Doubtful,
+    when it is the QB2 - else the last quarterback of record for that team.
+    The update uses the quarterback of record. A quarterback the state has
+    not seen enters at ``new_mean`` plus ``k_epa`` times his own career EPA
+    per dropback above the league before that kickoff, shrunk by
+    ``EPA_SHRINK`` dropbacks, with variance ``p0`` - except in the first
     season, where every starter is an incumbent and enters at zero.
     ``starters`` carries each team's last quarterback of record across
     seasons and is updated in place.
@@ -191,23 +234,41 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
     if HFA_KEY not in state.extra:
         state.add(HFA_KEY, spec.boost, HFA_P0)
     hfa = state.extra[HFA_KEY]
+    for c in ("home_qb2_id", "away_qb2_id", "home_qb1_out", "away_qb1_out"):
+        if c not in g.columns:
+            g = g.assign(**{c: pd.NA})
     cols = {c: g[c].to_numpy() for c in ("home_team_id", "away_team_id", "home_qb_id", "away_qb_id", "home_qb1_id",
-                                          "away_qb1_id", "actual_margin", "actual_total")}
+                                          "away_qb1_id", "home_qb2_id", "away_qb2_id", "home_qb1_out", "away_qb1_out",
+                                          "actual_margin", "actual_total")}
+    kickoffs = g["kickoff"].to_numpy()
     weeks = g["week"].to_numpy(dtype=int)
     neutral = pd.to_numeric(g["neutral_site"], errors="coerce").fillna(0).to_numpy(dtype=float) \
         if "neutral_site" in g else np.zeros(len(g))
     means, sds, hps, aps = (np.full(len(g), np.nan) for _ in range(4))
     r = spec.sigma ** 2
 
-    def qb_index(qb, team) -> int | None:
-        if qb is None or (isinstance(qb, float) and np.isnan(qb)) or qb is pd.NA:
+    def qb_index(qb, team, kickoff=None) -> int | None:
+        if pd.isna(qb):
             qb = starters.get(team)
         if qb is None:
             return None
         key = ("qb", str(qb))
         if key not in state.extra:
-            state.add(key, 0.0 if first_season else new_mean, p0)
+            mean = 0.0
+            if not first_season:
+                mean = new_mean
+                if k_epa and record is not None and kickoff is not None:
+                    n, epa = record.before(qb, kickoff)
+                    mean += k_epa * epa * (n / (n + EPA_SHRINK))
+            state.add(key, mean, p0)
         return state.extra[key]
+
+    def expected(side: str, i: int, team):
+        """The QB1 unless the report says he is out and a QB2 is listed."""
+        qb1, qb2, out = cols[f"{side}_qb1_id"][i], cols[f"{side}_qb2_id"][i], cols[f"{side}_qb1_out"][i]
+        if not pd.isna(out) and float(out) == 1.0 and not pd.isna(qb2):
+            return qb2
+        return qb1
 
     for i in range(len(g)):
         week = int(weeks[i])
@@ -221,8 +282,8 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
             continue
         ih, ia = state.index[h], state.index[a]
         is_home = 0.0 if neutral[i] else 1.0
-        qh = qb_index(cols["home_qb1_id"][i], h)
-        qa = qb_index(cols["away_qb1_id"][i], a)
+        qh = qb_index(expected("home", i, h), h, kickoffs[i])
+        qa = qb_index(expected("away", i, a), a, kickoffs[i])
         home_plus = [ih] + ([qh] if qh is not None else []) + ([hfa] if is_home else [])
         away_plus = [ia] + ([qa] if qa is not None else [])
         mh, _ = kalman.row_forecast(state, home_plus, [n + ia])
@@ -235,8 +296,8 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
             continue
         # Learn from who actually played.
         rh, ra = cols["home_qb_id"][i], cols["away_qb_id"][i]
-        qh_rec = qb_index(rh, h) if not pd.isna(rh) else qh
-        qa_rec = qb_index(ra, a) if not pd.isna(ra) else qa
+        qh_rec = qb_index(rh, h, kickoffs[i]) if not pd.isna(rh) else qh
+        qa_rec = qb_index(ra, a, kickoffs[i]) if not pd.isna(ra) else qa
         if not pd.isna(rh):
             starters[h] = rh
         if not pd.isna(ra):
@@ -251,7 +312,8 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
 
 def run_qb(frame: pd.DataFrame, seasons: list[int], *, choice: Choice, p0: float, new_mean: float,
            levels: dict[int, tuple[float, float]], state: kalman.State | None = None,
-           starters: dict | None = None, teams: np.ndarray | None = None):
+           starters: dict | None = None, teams: np.ndarray | None = None, k_epa: float = 0.0,
+           record: PasserRecord | None = None):
     """Like :func:`run`, with the quarterback state and the fitted home advantage."""
     if teams is None:
         teams = np.unique(np.r_[frame["home_team_id"], frame["away_team_id"]])
@@ -266,23 +328,26 @@ def run_qb(frame: pd.DataFrame, seasons: list[int], *, choice: Choice, p0: float
         elif i > 0 or state.week is not None:
             new_season(state, choice.phi, choice.p_season)
         forecasts[season] = run_season_qb(frame[frame["season"] == season], state, spec, p0=p0, new_mean=new_mean,
-                                          first_season=(first and i == 0), starters=starters)
+                                          first_season=(first and i == 0), starters=starters, k_epa=k_epa,
+                                          record=record)
     return forecasts, state, starters
 
 
 def tune_qb(frame: pd.DataFrame, season: int, choice: Choice, levels: dict[int, tuple[float, float]], *,
-            grid: dict = QB_GRID) -> QBChoice:
+            grid: dict = QB_GRID, record: PasserRecord | None = None) -> QBChoice:
     """Pick the quarterback prior on the training seasons, given the season's team hyperparameters."""
     seasons = [int(s) for s in sorted(frame["season"].unique()) if s < season]
     scored = seasons[-TUNING_SEASONS:]
     train = frame[frame["season"] < season]
     teams = np.unique(np.r_[train["home_team_id"], train["away_team_id"]])
     best = None
-    for p0, new_mean in itertools.product(grid["p0"], grid["new_mean"]):
-        fcs, _, _ = run_qb(train, seasons, choice=choice, p0=p0, new_mean=new_mean, levels=levels, teams=teams)
+    k_grid = grid.get("k_epa", (0.0,)) if record is not None else (0.0,)
+    for p0, new_mean, k_epa in itertools.product(grid["p0"], grid["new_mean"], k_grid):
+        fcs, _, _ = run_qb(train, seasons, choice=choice, p0=p0, new_mean=new_mean, levels=levels, teams=teams,
+                           k_epa=k_epa, record=record)
         ll = sum(_loglik(fcs[s], train[train["season"] == s]) for s in scored)
         if best is None or ll > best.loglik:
-            best = QBChoice(p0, new_mean, ll, tuple(scored))
+            best = QBChoice(p0, new_mean, ll, tuple(scored), k_epa)
     return best
 
 
@@ -341,16 +406,19 @@ def tune(frame: pd.DataFrame, season: int, levels: dict[int, tuple[float, float]
 
 
 def walk_forward(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON, grid: dict = GRID,
-                 min_train_seasons: int = 2, qb: bool = True, qb_grid: dict = QB_GRID):
+                 min_train_seasons: int = 2, qb: bool = True, qb_grid: dict = QB_GRID,
+                 passers: pd.DataFrame | None = None):
     """Tune on the past, forecast the season, score beside the references.
 
     With ``qb`` the quarterback model (step 4) is tuned and scored too, as
     ``state_qb``, on the same team hyperparameters as ``state``.
     """
     frame = nb.with_qb_change(elo.attach(frame)).sort_values(["kickoff", "game_id"]).reset_index(drop=True)
-    for c in ("home_qb_id", "away_qb_id", "home_qb1_id", "away_qb1_id"):
+    for c in ("home_qb_id", "away_qb_id", "home_qb1_id", "away_qb1_id", "home_qb2_id", "away_qb2_id",
+              "home_qb1_out", "away_qb1_out"):
         if c not in frame.columns:
             frame[c] = pd.NA
+    record = PasserRecord(passers) if passers is not None else None
     all_seasons = [int(s) for s in sorted(frame["season"].unique())]
     scored, choices, finals = [], {}, {}
     qb_choices, qb_finals = {}, {}
@@ -373,12 +441,14 @@ def walk_forward(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEA
                                 hfa=levels[season][1])
         models = {**keep, "state": state_fc}
         if qb:
-            qb_choice = tune_qb(frame, season, choice, levels, grid=qb_grid)
+            qb_choice = tune_qb(frame, season, choice, levels, grid=qb_grid, record=record)
             qb_choices[season] = qb_choice
             _, qstate, starters = run_qb(frame[frame["season"] < season], history, choice=choice, p0=qb_choice.p0,
-                                         new_mean=qb_choice.new_mean, levels=levels)
+                                         new_mean=qb_choice.new_mean, levels=levels, k_epa=qb_choice.k_epa,
+                                         record=record)
             qfcs, qstate, _ = run_qb(frame, [season], choice=choice, p0=qb_choice.p0, new_mean=qb_choice.new_mean,
-                                     levels=levels, state=qstate, starters=starters)
+                                     levels=levels, state=qstate, starters=starters, k_epa=qb_choice.k_epa,
+                                     record=record)
             qfc = qfcs[season]
             qb_finals[season] = qstate
             models["state_qb"] = ref.Forecast("state_qb", qfc["mean"].to_numpy(dtype=float),
@@ -390,7 +460,7 @@ def walk_forward(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEA
                  season, choice.q, choice.phi, choice.p_season, choice.sigma, choice.seasons,
                  levels[season][0], levels[season][1], len(test),
                  f"; qb p0={qb_choices[season].p0:.0f} new={qb_choices[season].new_mean:+.0f} "
-                 f"hfa fitted {qb_finals[season].value(HFA_KEY):.2f}" if qb else "")
+                 f"k_epa={qb_choices[season].k_epa:.0f} hfa fitted {qb_finals[season].value(HFA_KEY):.2f}" if qb else "")
     out = pd.concat(scored, ignore_index=True)
     out.attrs["qb_choices"] = {s: asdict(c) for s, c in qb_choices.items()}
     out.attrs["hfa_fitted"] = {s: st.value(HFA_KEY) for s, st in qb_finals.items()}
@@ -419,6 +489,7 @@ def render(scored: pd.DataFrame, choices: dict[int, Choice], finals: dict[int, k
         md(pd.DataFrame([{"season": s, "q per week": c.q, "phi": c.phi, "p_season": c.p_season,
                           "sigma (pts)": c.sigma, "tuned on": ", ".join(map(str, c.seasons)),
                           **({"QB prior var": qb_choices[s]["p0"], "new QB prior": qb_choices[s]["new_mean"],
+                              "pts per EPA/dropback": qb_choices[s].get("k_epa", 0.0),
                               "HFA fitted": round(hfa_fitted[s], 2)} if s in qb_choices else {})}
                          for s, c in choices.items()])), "",
         f"## Reporting window, regular season {REPORT_SEASONS[0]}-{REPORT_SEASONS[-1]}", "",
@@ -478,7 +549,13 @@ def main() -> None:
     args = ap.parse_args()
     paths = config.paths()
     frame = research_sample(load_nfl_frame(paths.warehouse))
-    scored, choices, finals, frame = walk_forward(frame, first_test_season=args.first_test_season)
+    from atlas.research.nfl_dataset import load_passer_games
+    try:
+        passers = load_passer_games(paths.warehouse)
+    except Exception as error:  # noqa: BLE001 - an older warehouse has no passer log
+        LOG.warning("no passer log in the warehouse (%s); new quarterbacks get the flat prior", error)
+        passers = None
+    scored, choices, finals, frame = walk_forward(frame, first_test_season=args.first_test_season, passers=passers)
     out = args.out or (paths.root / "reports" / "nfl_state.md")
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(render(scored, choices, finals, frame))

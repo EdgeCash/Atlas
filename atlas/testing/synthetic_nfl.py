@@ -61,7 +61,7 @@ def write_synthetic_nfl_raw(raw: Path, seasons: list[int], *, seed: int = 7) -> 
                                        "gsis_id": f"qb-{team}", "full_name": f"QB {team}"})
                     if week == 4 and team == home:
                         injury_rows.append({"season": season, "team": _code(team, season, first), "week": week,
-                                            "position": "QB", "report_status": "Out"})
+                                            "gsis_id": f"qb-{team}", "position": "QB", "report_status": "Out"})
                 if not played:
                     continue
                 # ~40 plays a side, EPA around the strength gap; a garbage-time tail in the fourth quarter
@@ -72,7 +72,7 @@ def write_synthetic_nfl_raw(raw: Path, seasons: list[int], *, seed: int = 7) -> 
                             pid += 1
                             gt = drive == 5
                             plays.append({
-                                "play_id": pid, "game_id": gid, "week": week,
+                                "play_id": pid, "game_id": gid, "week": week, "game_date": f"{season}-09-{7 + week:02d}",
                                 "posteam": _code(off, season, first), "defteam": _code(de, season, first),
                                 "home_team": _code(home, season, first), "rush": int(rng.random() < 0.45),
                                 "pass": 0, "play_type": "run", "epa": (strength[off] - strength[de]) / 40 + rng.normal(0, 1) + (5.0 if gt else 0.0),

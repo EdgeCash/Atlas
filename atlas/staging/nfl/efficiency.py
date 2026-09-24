@@ -42,18 +42,49 @@ DRIVE_RESULTS = {
 
 
 def build_efficiency(raw: Path, staging: Path, seasons: list[int]) -> pd.DataFrame:
-    frames = []
+    frames, passers = [], []
     for season in seasons:
         path = nflverse.pbp_path(raw, season)
         if not path.exists():
             LOG.warning("no NFL play-by-play for %s", season)
             continue
-        frames.append(season_efficiency(pd.read_parquet(path), season))
+        pbp = pd.read_parquet(path)
+        frames.append(season_efficiency(pbp, season))
+        passers.append(passer_games(pbp, season))
     if not frames:
         raise FileNotFoundError("no NFL play-by-play found - run `make nfl-ingest` first")
     eff = pd.concat(frames, ignore_index=True)
     write_parquet(eff, staging / "nfl" / "team_game_efficiency.parquet")
+    write_parquet(pd.concat(passers, ignore_index=True), staging / "nfl" / "passer_games.parquet")
     return eff
+
+
+def passer_games(pbp: pd.DataFrame, season: int) -> pd.DataFrame:
+    """Every passer's dropbacks in every game: the quarterback's own record.
+
+    The quarterback of record is one row of this; the backup who threw
+    eleven mop-up passes is another, and those eleven are the only evidence
+    a new starter's prior can be built from. Garbage time is kept - a backup's
+    record is mostly garbage time.
+    """
+    pbp = pbp.dropna(subset=["game_id", "posteam"]).copy()
+    plays = _scrimmage_plays(pbp)
+    drop = plays[(plays["qb_dropback"].fillna(0) == 1) & plays["passer_player_id"].notna()].copy()
+    drop["team_id"] = team_id(drop["posteam"])
+    out = drop.groupby(["game_id", "team_id", "passer_player_id"], as_index=False).agg(
+        dropbacks=("epa", "size"), qb_epa_per_dropback=("qb_epa", "mean"), qb_cpoe=("cpoe", "mean"),
+        passer_name=("passer_player_name", "first"))
+    out = out.rename(columns={"passer_player_id": "passer_id"})
+    out["season"] = season
+    weeks = pbp.drop_duplicates("game_id").set_index("game_id")
+    out["week"] = out["game_id"].map(pd.to_numeric(weeks["week"], errors="coerce")).astype("Int64")
+    out["game_date"] = out["game_id"].map(weeks["game_date"].astype(str)) if "game_date" in weeks else pd.NA
+    return out[["game_id", "season", "week", "game_date", "team_id", "passer_id", "passer_name", "dropbacks",
+                "qb_epa_per_dropback", "qb_cpoe"]]
+
+
+def load_passers(staging: Path) -> pd.DataFrame:
+    return pd.read_parquet(staging / "nfl" / "passer_games.parquet")
 
 
 def season_efficiency(pbp: pd.DataFrame, season: int) -> pd.DataFrame:

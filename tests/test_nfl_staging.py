@@ -84,7 +84,8 @@ def test_efficiency_excludes_garbage_time_and_names_the_quarterback_of_record(nf
 def test_the_research_frame_is_point_in_time(nfl_frame):
     f = nfl_frame
     for c in ("home_adj_off_epa", "away_adj_def_epa", "adj_net_epa_diff", "home_off_epa_pit", "home_n_prior_games",
-              "home_qb1_id", "home_qb_id", "home_injured_out", "home_qb1_out", "closing_spread", "actual_margin"):
+              "home_qb1_id", "home_qb2_id", "home_qb_id", "home_injured_out", "home_qb1_out", "home_qb2_out",
+              "closing_spread", "actual_margin"):
         assert c in f.columns, c
     week1 = f[f["week"] == 1]
     assert (week1["home_n_prior_games"] == 0).all()                    # nothing from this season yet
@@ -255,3 +256,45 @@ def test_the_nfl_projector_projects_the_scheduled_slate(nfl_frame):
     assert out["home_rank"].between(1, 8).all() and out["teams"].iloc[0] == 8
     assert projector.quarterback("qb-KC") is not None
     assert (out["top_home"] < 60).all()
+
+
+def test_the_expected_starter_is_the_qb2_when_the_report_lists_the_qb1_out():
+    """v1.1: the forecast follows the injury report, the update follows who played."""
+    from atlas.models import kalman
+    from atlas.models import nfl_state as ns
+
+    spec = ns._spec(0.0, 9.0, 22.0, 2.0)
+    state = kalman.initialise(np.array([1, 2]), np.zeros(2), np.zeros(2),
+                              kalman.Spec(**{**spec.__dict__, "p0_off": 4.0, "p0_def": 4.0}))
+    for incumbent in ("qb-a", "qb-b"):
+        state.add(("qb", incumbent), 0.0, 9.0)
+    kick = pd.Timestamp("2024-09-08", tz="UTC")
+
+    def game(week, qb1, qb2, out, played):
+        return {"game_id": f"g{week}", "season": 2024, "week": week, "kickoff": kick + pd.Timedelta(days=7 * week),
+                "home_team_id": 1, "away_team_id": 2, "home_qb1_id": qb1, "home_qb2_id": qb2, "home_qb1_out": out,
+                "home_qb_id": played, "away_qb1_id": "qb-b", "away_qb2_id": pd.NA, "away_qb1_out": 0.0,
+                "away_qb_id": "qb-b", "actual_margin": 3.0, "actual_total": 44.0, "neutral_site": 0}
+
+    games = pd.DataFrame([game(1, "qb-a", "qb-c", 0.0, "qb-a"), game(2, "qb-a", "qb-c", 1.0, "qb-c"),
+                          game(3, "qb-a", "qb-c", 0.0, "qb-a")])
+    fc = ns.run_season_qb(games, state, spec, p0=9.0, new_mean=-4.0, first_season=False, starters={})
+    assert fc.loc[1, "mean"] < fc.loc[0, "mean"] - 2.0        # the report said the QB1 was out: the QB2 was expected
+    assert fc.loc[2, "mean"] > fc.loc[1, "mean"]               # back to the QB1
+
+
+def test_a_passer_record_is_strictly_before_kickoff():
+    from atlas.models import nfl_state as ns
+
+    log = pd.DataFrame({
+        "passer_id": ["x", "x", "y"], "game_date": ["2023-09-10", "2023-09-17", "2023-09-10"],
+        "dropbacks": [30, 30, 30], "qb_epa_per_dropback": [0.4, 0.2, -0.2],
+    })
+    rec = ns.PasserRecord(log)
+    assert rec.league == pytest.approx((0.4 + 0.2 - 0.2) / 3)
+    n, epa = rec.before("x", pd.Timestamp("2023-09-17", tz="UTC"))
+    assert n == 30 and epa == pytest.approx(0.4 - rec.league)       # the 17 September game is not yet played
+    n, epa = rec.before("x", pd.Timestamp("2023-09-24", tz="UTC"))
+    assert n == 60 and epa == pytest.approx(0.3 - rec.league)
+    assert rec.before("x", pd.Timestamp("2023-09-10", tz="UTC")) == (0.0, 0.0)
+    assert rec.before("nobody", pd.Timestamp("2024-01-01", tz="UTC")) == (0.0, 0.0)
