@@ -384,6 +384,16 @@ h3 { margin: 0 0 6px; }
 .feature-num { display: block; font-size: 17px; font-weight: 660;
                letter-spacing: -.02em; font-variant-numeric: tabular-nums;
                white-space: nowrap; }
+/* Atlas's projected score: the product's headline number, so it reads as a
+   scoreline in its own row rather than a fourth cell squeezed into three. */
+.feature-score { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+.feature-score .stat-label { display: block; margin-bottom: 2px; }
+/* Each side stays whole ("TEX 28.1"); the line may break at the dash in a
+   narrow three-column tile rather than push the page sideways. */
+.feature-score-line { display: flex; flex-wrap: wrap; column-gap: 6px; font-size: 17px; font-weight: 660;
+                      letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.feature-score-line > span { white-space: nowrap; }
+.feature-score-dash { color: var(--ink-3); font-weight: 500; }
 .feature-foot { margin: 10px 0 0; }
 /* The one-line version of the same three numbers, for a phone. A featured
    card that is 400px tall means a reader never reaches the board. */
@@ -437,8 +447,6 @@ footer { display: grid; gap: 4px; }
    nothing the first half does not. */
 @media (max-width: 420px) {
   .logo span { display: none; }
-  .nav-inner { gap: 12px; }
-  .nav-links { gap: 13px; font-size: 13.5px; }
 }
 
 /* ========================================================================
@@ -640,7 +648,8 @@ footer { display: grid; gap: 4px; }
   .wide-only { display: none; }
   .narrow-only { display: inline; }
 
-  /* Five links and a wordmark is the most a 390px bar holds. */
+  /* A tighter bar between phone and tablet; below 420px the menu takes its
+     own row (end of file). */
   .nav-links { gap: 11px; font-size: 13px; }
 
   /* Head to head, not a stacked list. Two crests either side of "at" is the
@@ -701,6 +710,8 @@ footer { display: grid; gap: 4px; }
   .rank { font-size: .78em; }
 
   .feature-meta { margin-bottom: 9px; }
+  .feature-score { margin-top: 9px; padding-top: 9px; }
+  .feature-score-line { font-size: 15px; }
   .feature-nums, .feature-foot { display: none; }
   .feature-line {
     display: flex; align-items: baseline; gap: 8px; margin: 9px 0 0;
@@ -816,4 +827,18 @@ footer { display: grid; gap: 4px; }
   .status-row { grid-template-columns: 220px 1fr auto; }
   .status-note { grid-column: 2; text-align: left; }
   .status-value { grid-column: 3; }
+}
+
+/* ------------------------------------------------------ phone menu ---- */
+/* Six entries do not fit beside the name on a phone: below 460px - every
+   phone, the largest included - the menu takes its own full-width row, every
+   entry visible, rather than running off the edge or hiding behind a scroll.
+   Last in the file so it wins over the wider breakpoints above. */
+@media (max-width: 460px) {
+  .logo span { display: none; }
+  .nav-inner { flex-wrap: wrap; row-gap: 7px; column-gap: 10px; padding-top: 9px; padding-bottom: 9px; }
+  .nav-links { margin-left: 0; width: 100%; justify-content: space-between; gap: 6px; font-size: 13.5px; }
+}
+@media (max-width: 350px) {
+  .nav-links { font-size: 12.5px; }
 }

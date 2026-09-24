@@ -118,9 +118,10 @@ def layout(*, title: str, body: str, depth: int = 0, description: str = "",
            active: str = "", social: str = "", canonical: str | None = None,
            structured: str = "") -> str:
     root = "../" * depth
-    # One entry per sport, each its full board; the name at the left is home,
-    # which shows the best matchups from both.
+    # Home shows the best matchups from both sports; then one entry per
+    # sport, each its full board. The name at the left is home too.
     nav_items = [
+        ("Home", f"{root}index.html", "home"),
         ("NCAAF", f"{root}ncaaf.html", "ncaaf"),
         ("NFL", f"{root}nfl.html", "nfl"),
         ("Research", f"{root}research.html", "research"),
@@ -1425,10 +1426,24 @@ def _featured_cell(card: Card, *, root: str = "") -> str:
     <div><span class="stat-label">Atlas</span>
       <span class="feature-num">{num(card.model_total)}</span></div>
   </div>
+  {_feature_score(card)}
   <p class="note feature-foot">Difference {signed(difference)} on the total</p>
   <p class="feature-line">{esc(card.spread_text)} · total {num(card.total.current)}
     <span class="feature-line-diff">Atlas {signed(difference)}</span></p>
 </a>"""
+
+
+def _feature_score(card: Card) -> str:
+    """Atlas's projected score on a featured tile: away first, as the title
+    reads, each to one decimal and named by its abbreviation - the same number
+    the card's own projection shows, never rounded to a scoreline."""
+    if card.projected_home is None or card.projected_away is None:
+        return ""
+    return f"""<div class="feature-score">
+    <span class="stat-label">Atlas projects</span>
+    <span class="feature-score-line"><span>{esc(card.away.abbr)} {num(card.projected_away)}</span>
+      <span class="feature-score-dash">–</span><span>{esc(card.home.abbr)} {num(card.projected_home)}</span></span>
+  </div>"""
 
 
 # ---------------------------------------------------------------------------

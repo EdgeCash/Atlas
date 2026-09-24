@@ -716,7 +716,8 @@ def test_the_home_page_features_the_best_matchups_in_each_sport():
     assert 'href="nfl.html">All 4 NFL games this week' in home
     assert render.featured_cards(college, "ncaaf")[0] is college[3]          # the ranked matchup leads
     assert render.featured_cards(nfl, "nfl")[0] is nfl[0]                   # the best-rated teams lead
-    assert 'aria-current="page"' not in home                                  # home is the name, not a tab
+    assert 'href="index.html" aria-current="page">Home' in home
+    assert "Atlas projects" in home and home.count('class="feature-score"') == 6
     empty = render.homepage([_card()], [])
     assert "No NFL games are scheduled in the next week" in empty
 
@@ -724,4 +725,14 @@ def test_the_home_page_features_the_best_matchups_in_each_sport():
 def test_the_nav_names_both_sports():
     page = render.layout(title="t", body="", depth=1, active="nfl")
     assert 'href="../ncaaf.html">NCAAF' in page and 'href="../nfl.html" aria-current="page">NFL' in page
-    assert 'class="logo" href="../index.html"' in page
+    assert 'class="logo" href="../index.html"' in page and 'href="../index.html">Home' in page
+
+
+def test_a_featured_tile_shows_the_projected_score_away_first():
+    card = _card()
+    tile = render._featured_cell(card)
+    assert "Atlas projects" in tile
+    away, home = f"{card.projected_away:.1f}", f"{card.projected_home:.1f}"
+    assert tile.index(f"{card.away.abbr} {away}") < tile.index(f"{card.home.abbr} {home}")
+    card.projection = None
+    assert "Atlas projects" not in render._featured_cell(card)
