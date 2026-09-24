@@ -447,6 +447,36 @@ college-production prior, or accepting that the market's 3.7-point
 adjustment on a change encodes information (practice reports, the
 coaching staff's own view) that no public record carries before kickoff.
 
+**Quarterback v1.3, a draft-slot prior — built, measured, switched off.**
+The staging now writes a `players` table from the weekly rosters: every
+quarterback's draft pick, empty for an undrafted one, and every starter
+2011–26 is covered. Measured first, the slot carries a real signal: on
+128 debuts with 100+ early dropbacks, first-rounders opened 0.084 EPA per
+dropback below the league and day-three picks and undrafted players
+about 0.165 (t 2.5 on log pick, R² 0.05). A new quarterback's prior took
+`k_draft` points per unit of `log 64 − log pick`, weighted by the share
+of the hundred-dropback shrinkage his own record had not filled, and was
+tuned in a second pass beside the intercept.
+
+The tuning chose it in six seasons of seven, and it made the model
+worse. Reporting window CRPS 7.290 → 7.300, weeks 1–3 6.856 → 6.911,
+quarterback-change games 7.611 → 7.626. Holding everything else fixed
+and switching only the draft term, it cost 0.075 CRPS on the 197 games
+where it moved the forecast by more than a quarter point, and 0.167 on
+the 59 quarterback changes among them - most of it in 2023, the season
+with the most highly drafted rookie starters. It was also never going
+to reach far: in 2023–25 change games only 13% of the quarterbacks of
+record had fewer than 100 prior dropbacks, where the slot has weight.
+An R² of 0.05 at the population level is too little to price one
+rookie, and in-sample tuning on three seasons finds a slope that is not
+there the next year.
+
+So the parameter and the table stay, tested, with the grid holding only
+zero; the model that ships is v1.2. The change-game gap, 0.40, is not a
+prior problem that public pre-draft information solves. What is left is
+the market's own adjustment on a change, which is information the
+record does not carry before kickoff.
+
 ---
 
 ## 8. Risks, stated plainly

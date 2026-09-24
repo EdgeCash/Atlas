@@ -67,12 +67,17 @@ GRID = {
 #: is a second measurement of his state alone - ``k_obs`` points per unit,
 #: with noise variance ``k_obs**2 * play_var / dropbacks`` - so the
 #: quarterback/offence split is identified from more than the points.
-#: v1.3 adds ``k_draft``: points of prior per unit of draft score (see
-#: :func:`draft_score`), weighted by how little NFL record the quarterback
-#: has, so it speaks for a rookie and fades as his own dropbacks arrive. It
-#: is tuned in a second pass beside ``new_mean``, the others held.
+#: ``k_draft`` (v1.3, measured and switched off): points of prior per unit
+#: of draft score (see :func:`draft_score`), weighted by how little NFL record
+#: the quarterback has. Tuned in a second pass beside ``new_mean`` over
+#: :data:`DRAFT_GRID`, the tuning chose it in six seasons of seven, and out of
+#: sample it cost 0.075 CRPS on the games it moved and 0.167 on the
+#: quarterback changes among them (2023-25; `docs/MODEL_PLAN_NFL.md`). The
+#: grid holds only zero, so the second pass never runs; pass
+#: ``{**QB_GRID, "k_draft": DRAFT_GRID}`` to re-measure it.
+DRAFT_GRID = (0.0, 0.4, 0.8, 1.2)
 QB_GRID = {"p0": (4.0, 9.0, 16.0), "new_mean": (0.0, -2.0, -4.0), "k_epa": (0.0, 15.0, 30.0),
-           "k_obs": (0.0, 10.0, 20.0, 30.0), "k_draft": (0.0, 0.4, 0.8, 1.2)}
+           "k_obs": (0.0, 10.0, 20.0, 30.0), "k_draft": (0.0,)}
 EPA_SHRINK = 100.0
 OBS_MIN_DROPBACKS = 10  # fewer is a cameo, not a measurement of the starter
 #: Undrafted prices as the last pick: measured on 128 debuts 2011-26 with 100+
@@ -580,9 +585,9 @@ def render(scored: pd.DataFrame, choices: dict[int, Choice], finals: dict[int, k
         "team model alone (step 3); `state_qb` adds a quarterback state carried by the player and a fitted, "
         "slowly drifting home advantage (step 4), forecast with the depth chart's QB1 and updated with the "
         "quarterback of record, whose own EPA per dropback in the game is a second measurement of him "
-        "(v1.2, `pts per EPA/dropback, observed`); a quarterback with little NFL record also opens on his "
-        "draft slot (v1.3, `pts per draft score`, where the score is log 64 minus log pick). Same lattice and "
-        "scoring as the benchmarks.", "",
+        "(v1.2, `pts per EPA/dropback, observed`). A draft-slot prior for a quarterback with little record "
+        "(`pts per draft score`) was measured and is switched off: it did not hold out of sample. Same "
+        "lattice and scoring as the benchmarks.", "",
         "## Hyperparameters chosen, per season", "",
         md(pd.DataFrame([{"season": s, "q per week": c.q, "phi": c.phi, "p_season": c.p_season,
                           "sigma (pts)": c.sigma, "tuned on": ", ".join(map(str, c.seasons)),
