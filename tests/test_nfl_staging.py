@@ -185,7 +185,8 @@ def test_a_switch_to_an_unseen_quarterback_lowers_the_forecast():
     """Two teams, one game a week. When the home side's expected starter is a
     quarterback the state has never seen, the forecast drops by the new-QB
     prior; when the incumbent is back, it recovers."""
-    from atlas.models import kalman, nfl_state as ns
+    from atlas.models import kalman
+    from atlas.models import nfl_state as ns
 
     spec = ns._spec(0.0, 9.0, 22.0, 2.0)
     state = kalman.initialise(np.array([1, 2]), np.zeros(2), np.zeros(2),
