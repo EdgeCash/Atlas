@@ -221,7 +221,30 @@ def row_update(state: State, plus: list[int], minus: list[int], y: float, r: flo
     k = Ph / s
     innovation = y - float(state.x[plus].sum() - state.x[minus].sum())
     state.x += k * innovation
-    P -= np.outer(k, Ph)
+    joseph(P, k, Ph, s)
+
+
+def joseph(P: np.ndarray, k: np.ndarray, Ph: np.ndarray, s: float) -> None:
+    """The Joseph-form covariance update for a scalar observation. In place.
+
+    ``P+ = (I - k h') P (I - k h')' + r k k'``, expanded for a sparse row so
+    it stays O(N²). With ``v = P h`` and the innovation variance
+    ``s = h' P h + r``:
+
+        P+ = P - (k v' + v k') + s k k'
+
+    The textbook ``P - k v'`` is the same matrix in exact arithmetic, but it
+    is not symmetric by construction, and when an observation is much sharper
+    than the state (a small ``r``, as in the quarterback EPA channel) its
+    rounding can leave P with a negative eigenvalue. Every term here is
+    symmetric by construction, and the form stays positive semi-definite for
+    any gain, the optimal one included.
+    """
+    # c + c' = k v' + v k' - s k k', summed before it touches P so both
+    # triangles take the same rounding.
+    c = np.outer(k, Ph - 0.5 * s * k)
+    c += c.T
+    P -= c
 
 
 def row_forecast(state: State, plus: list[int], minus: list[int]) -> tuple[float, float]:

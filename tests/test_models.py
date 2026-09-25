@@ -920,3 +920,57 @@ def test_the_walk_forward_fits_rho_and_scores_it_against_independent_noise(resea
         assert not scored.attrs["totals"].empty
     _, flat, _ = state_mod.run(research_frame, first_test_season=2021, grid=SMALL_GRID, fit_rho=False)
     assert all(c.rho == 0.0 for c in flat.values())
+
+
+# ---------------------------------------------------------------------------
+# Joseph-form covariance update
+# ---------------------------------------------------------------------------
+
+
+def _random_state(n: int, seed: int) -> kalman.State:
+    rng = np.random.default_rng(seed)
+    A = rng.normal(size=(2 * n, 2 * n))
+    return kalman.State(teams=np.arange(n), x=rng.normal(size=2 * n), P=A @ A.T / n + np.eye(2 * n),
+                        index={i: i for i in range(n)})
+
+
+def test_the_covariance_stays_exactly_symmetric():
+    st = _random_state(40, 1)
+    rng = np.random.default_rng(2)
+    for _ in range(2000):
+        h, a = rng.choice(40, 2, replace=False)
+        kalman.row_update(st, [h], [40 + a], rng.normal(), float(rng.choice([1e-4, 1.0, 121.0])))
+    assert np.array_equal(st.P, st.P.T)
+    assert np.linalg.eigvalsh(st.P).min() > 0
+
+
+def test_the_joseph_form_is_the_textbook_update_at_the_optimal_gain():
+    st = _random_state(10, 3)
+    P0 = st.P.copy()
+    kalman.row_update(st, [0, 4], [12], 3.0, 50.0)
+    h = np.zeros(20)
+    h[[0, 4]], h[12] = 1.0, -1.0
+    k = P0 @ h / (h @ P0 @ h + 50.0)
+    assert np.allclose(st.P, P0 - np.outer(k, h @ P0), atol=1e-12)
+
+
+def test_the_joseph_form_stays_positive_with_a_wrong_gain():
+    """Its defining property: P stays positive semi-definite for any gain,
+    where the textbook form, fed the same rounding-sized error, need not."""
+    st = _random_state(10, 4)
+    P = st.P.copy()
+    h = np.zeros(20)
+    h[0], h[11] = 1.0, -1.0
+    Ph = P @ h
+    r = 1e-8
+    s = float(h @ Ph) + r
+    k = Ph / s * 1.5                                  # a gain well away from optimal
+    joseph_P = P.copy()
+    kalman.joseph(joseph_P, k, Ph, s)
+    # The expanded form equals the explicit Joseph product for any gain.
+    A = np.eye(20) - np.outer(k, h)
+    explicit = A @ P @ A.T + r * np.outer(k, k)
+    assert np.allclose(joseph_P, explicit, atol=1e-9)
+    assert np.linalg.eigvalsh(joseph_P).min() > -1e-9
+    textbook = P - np.outer(k, Ph)
+    assert np.linalg.eigvalsh((textbook + textbook.T) / 2).min() < -1e-3
