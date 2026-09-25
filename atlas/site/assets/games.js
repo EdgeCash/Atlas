@@ -22,6 +22,33 @@
   navHeight();
   window.addEventListener("resize", navHeight);
 
+  /* "Game started" on a tile, a row or a card whose kickoff has passed. A
+     card leaves the site at the next build after kickoff; until then, and on
+     a page left open, this says the game is on rather than letting it read
+     as upcoming. One quiet change at kickoff: the next check is timed to the
+     next kickoff on the page, capped at half an hour so a sleeping laptop or
+     a changed clock is caught, and re-run whenever the tab comes back. */
+  (function started() {
+    var chips = Array.prototype.slice.call(document.querySelectorAll(".started-chip[data-kickoff]"));
+    if (!chips.length) return;
+    var timer = null;
+    function mark() {
+      var now = Date.now();
+      var next = Infinity;
+      chips.forEach(function (chip) {
+        var kickoff = Date.parse(chip.dataset.kickoff);
+        if (isNaN(kickoff)) return;
+        if (kickoff <= now) chip.hidden = false;
+        else if (kickoff < next) next = kickoff;
+      });
+      window.clearTimeout(timer);
+      if (next !== Infinity) timer = window.setTimeout(mark, Math.min(next - now + 1000, 30 * 6e4));
+    }
+    mark();
+    document.addEventListener("visibilitychange", function () { if (!document.hidden) mark(); });
+    window.addEventListener("pageshow", mark);
+  })();
+
   var KEY = "atlas-following";
   var KEEP_DAYS = 4;
   var DAY = 864e5;
