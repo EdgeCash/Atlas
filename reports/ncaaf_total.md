@@ -1,6 +1,6 @@
 # NCAAF total and joint score grid
 
-Walk-forward, seasons 2021-2025. The total is the state model's implied home-plus-away points, recalibrated on the training seasons' own state forecasts with the two adjustments that measured as real (combined adjusted pace, effective wind). The margin (state mean and sd through the key-number lattice) and the total (discretised normal) are combined on an 80x80 grid over (home, away) points, `atlas/models/joint.py`; every headline number below is a mean of that grid.
+Walk-forward, seasons 2021-2026. The total is the state model's implied home-plus-away points, recalibrated on the training seasons' own state forecasts with the two adjustments that measured as real (combined adjusted pace, effective wind). The margin (state mean and sd through the key-number lattice) and the total (discretised normal) are combined on an 80x80 grid over (home, away) points, `atlas/models/joint.py`; every headline number below is a mean of that grid.
 
 ## Calibration fitted, per season
 
@@ -8,11 +8,12 @@ Walk-forward, seasons 2021-2025. The total is the state model's implied home-plu
 
 | season | intercept | slope on state total | adj_pace_sum | weather_wind_effective | sigma | raw sigma | train games |
 |---|---|---|---|---|---|---|---|
-| 2021 | +83.6 | 0.534 | -1.073 | -0.182 | 17.17 | 17.73 | 1914 |
-| 2022 | +57.7 | 0.508 | -0.549 | -0.148 | 16.85 | 17.32 | 1939 |
-| 2023 | +44.2 | 0.661 | -0.455 | -0.146 | 16.62 | 16.83 | 1974 |
-| 2024 | +34.5 | 0.673 | -0.287 | -0.196 | 16.25 | 16.43 | 2216 |
-| 2025 | +41.9 | 0.659 | -0.413 | -0.173 | 16.15 | 16.33 | 2236 |
+| 2021 | +82.8 | 0.520 | -1.042 | -0.184 | 17.21 | 17.81 | 1975 |
+| 2022 | +57.1 | 0.517 | -0.547 | -0.161 | 16.90 | 17.35 | 1974 |
+| 2023 | +42.4 | 0.688 | -0.449 | -0.145 | 16.61 | 16.79 | 1974 |
+| 2024 | +33.4 | 0.691 | -0.282 | -0.194 | 16.25 | 16.41 | 2216 |
+| 2025 | +40.9 | 0.679 | -0.409 | -0.171 | 16.15 | 16.31 | 2236 |
+| 2026 | +51.7 | 0.591 | -0.529 | -0.143 | 16.00 | 16.23 | 2264 |
 
 ## Total, regular season, pooled
 
@@ -21,8 +22,8 @@ Walk-forward, seasons 2021-2025. The total is the state model's implied home-plu
 | model | games | crps | mae | over_brier | over_ece |
 |---|---|---|---|---|---|
 | naive | 3730 | 9.616 | 13.63 | 0.264 | 0.106 |
-| state_raw | 3730 | 9.187 | 12.96 | 0.257 | 0.082 |
-| total | 3730 | 9.132 | 12.91 | 0.255 | 0.075 |
+| state_raw | 3730 | 9.183 | 12.96 | 0.257 | 0.083 |
+| total | 3730 | 9.126 | 12.90 | 0.255 | 0.080 |
 | market | 3730 | 8.847 | 12.47 | 0.247 | 0.005 |
 
 ## Total by season, regular
@@ -34,16 +35,16 @@ Walk-forward, seasons 2021-2025. The total is the state model's implied home-plu
 | naive | 2023 | 750 | 9.834 | 14.05 | 0.268 | 0.103 |
 | naive | 2024 | 752 | 9.493 | 13.37 | 0.250 | 0.083 |
 | naive | 2025 | 762 | 9.383 | 13.36 | 0.265 | 0.101 |
-| state_raw | 2021 | 732 | 9.362 | 13.06 | 0.261 | 0.075 |
-| state_raw | 2022 | 734 | 9.059 | 12.79 | 0.262 | 0.110 |
-| state_raw | 2023 | 750 | 9.290 | 13.19 | 0.257 | 0.077 |
-| state_raw | 2024 | 752 | 9.232 | 12.94 | 0.249 | 0.071 |
-| state_raw | 2025 | 762 | 8.996 | 12.80 | 0.258 | 0.077 |
-| total | 2021 | 732 | 9.520 | 13.38 | 0.264 | 0.106 |
-| total | 2022 | 734 | 9.066 | 12.81 | 0.263 | 0.117 |
-| total | 2023 | 750 | 9.162 | 13.06 | 0.252 | 0.064 |
-| total | 2024 | 752 | 9.089 | 12.73 | 0.244 | 0.058 |
-| total | 2025 | 762 | 8.837 | 12.60 | 0.252 | 0.070 |
+| state_raw | 2021 | 732 | 9.435 | 13.23 | 0.264 | 0.091 |
+| state_raw | 2022 | 734 | 9.036 | 12.76 | 0.261 | 0.107 |
+| state_raw | 2023 | 750 | 9.280 | 13.19 | 0.256 | 0.072 |
+| state_raw | 2024 | 752 | 9.200 | 12.90 | 0.248 | 0.066 |
+| state_raw | 2025 | 762 | 8.970 | 12.75 | 0.257 | 0.083 |
+| total | 2021 | 732 | 9.494 | 13.35 | 0.264 | 0.106 |
+| total | 2022 | 734 | 9.058 | 12.80 | 0.262 | 0.117 |
+| total | 2023 | 750 | 9.170 | 13.06 | 0.252 | 0.052 |
+| total | 2024 | 752 | 9.083 | 12.73 | 0.244 | 0.062 |
+| total | 2025 | 762 | 8.839 | 12.59 | 0.252 | 0.076 |
 | market | 2021 | 732 | 8.914 | 12.47 | 0.248 | 0.034 |
 | market | 2022 | 734 | 8.546 | 11.95 | 0.246 | 0.010 |
 | market | 2023 | 750 | 9.001 | 12.80 | 0.247 | 0.009 |
@@ -59,16 +60,16 @@ Walk-forward, seasons 2021-2025. The total is the state model's implied home-plu
 | naive | wk 5-8 | 1075 | 9.705 | 13.74 | 0.271 | 0.123 |
 | naive | wk 9-12 | 1131 | 9.725 | 13.81 | 0.266 | 0.111 |
 | naive | wk 13+ | 504 | 9.478 | 13.43 | 0.260 | 0.101 |
-| state_raw | wk 1-2 | 480 | 9.437 | 13.37 | 0.259 | 0.137 |
-| state_raw | wk 3-4 | 540 | 9.192 | 12.88 | 0.251 | 0.067 |
-| state_raw | wk 5-8 | 1075 | 9.074 | 12.79 | 0.257 | 0.074 |
-| state_raw | wk 9-12 | 1131 | 9.210 | 13.04 | 0.261 | 0.088 |
-| state_raw | wk 13+ | 504 | 9.134 | 12.81 | 0.256 | 0.093 |
-| total | wk 1-2 | 480 | 9.500 | 13.49 | 0.260 | 0.113 |
-| total | wk 3-4 | 540 | 9.180 | 12.96 | 0.251 | 0.074 |
-| total | wk 5-8 | 1075 | 9.051 | 12.76 | 0.255 | 0.071 |
-| total | wk 9-12 | 1131 | 9.079 | 12.89 | 0.255 | 0.071 |
-| total | wk 13+ | 504 | 9.026 | 12.69 | 0.254 | 0.072 |
+| state_raw | wk 1-2 | 480 | 9.376 | 13.26 | 0.256 | 0.136 |
+| state_raw | wk 3-4 | 540 | 9.192 | 12.92 | 0.251 | 0.070 |
+| state_raw | wk 5-8 | 1075 | 9.085 | 12.82 | 0.257 | 0.070 |
+| state_raw | wk 9-12 | 1131 | 9.222 | 13.08 | 0.262 | 0.090 |
+| state_raw | wk 13+ | 504 | 9.113 | 12.78 | 0.255 | 0.082 |
+| total | wk 1-2 | 480 | 9.462 | 13.43 | 0.258 | 0.116 |
+| total | wk 3-4 | 540 | 9.180 | 12.96 | 0.251 | 0.083 |
+| total | wk 5-8 | 1075 | 9.054 | 12.77 | 0.255 | 0.073 |
+| total | wk 9-12 | 1131 | 9.077 | 12.88 | 0.256 | 0.076 |
+| total | wk 13+ | 504 | 9.014 | 12.67 | 0.253 | 0.073 |
 | market | wk 1-2 | 480 | 8.957 | 12.63 | 0.247 | 0.067 |
 | market | wk 3-4 | 540 | 8.958 | 12.57 | 0.246 | 0.017 |
 | market | wk 5-8 | 1075 | 8.746 | 12.38 | 0.247 | 0.016 |
@@ -80,8 +81,8 @@ Walk-forward, seasons 2021-2025. The total is the state model's implied home-plu
 | model | games | crps | mae | over_brier | over_ece |
 |---|---|---|---|---|---|
 | naive | 134 | 9.738 | 14.08 | 0.269 | 0.150 |
-| state_raw | 134 | 9.704 | 13.97 | 0.261 | 0.109 |
-| total | 134 | 9.413 | 13.57 | 0.254 | 0.052 |
+| state_raw | 134 | 9.694 | 13.95 | 0.261 | 0.114 |
+| total | 134 | 9.408 | 13.58 | 0.255 | 0.076 |
 | market | 134 | 9.253 | 13.51 | 0.250 | 0.009 |
 
 ## Reliability, P(over the closing total), regular season
@@ -90,15 +91,15 @@ Walk-forward, seasons 2021-2025. The total is the state model's implied home-plu
 
 | bin | n | forecast | observed | gap |
 |---|---|---|---|---|
-| 0.0-0.1 | 1 | 0.069 | 0.000 | -0.069 |
-| 0.1-0.2 | 15 | 0.165 | 0.333 | +0.168 |
-| 0.2-0.3 | 114 | 0.263 | 0.474 | +0.210 |
-| 0.3-0.4 | 396 | 0.357 | 0.484 | +0.127 |
-| 0.4-0.5 | 1047 | 0.456 | 0.489 | +0.033 |
-| 0.5-0.6 | 1419 | 0.548 | 0.500 | -0.049 |
-| 0.6-0.7 | 651 | 0.639 | 0.505 | -0.135 |
-| 0.7-0.8 | 86 | 0.727 | 0.587 | -0.140 |
-| 0.8-0.9 | 1 | 0.838 | 0.000 | -0.838 |
+| 0.0-0.1 | 1 | 0.066 | 0.000 | -0.066 |
+| 0.1-0.2 | 14 | 0.165 | 0.357 | +0.193 |
+| 0.2-0.3 | 114 | 0.263 | 0.465 | +0.202 |
+| 0.3-0.4 | 426 | 0.357 | 0.479 | +0.122 |
+| 0.4-0.5 | 1064 | 0.457 | 0.501 | +0.045 |
+| 0.5-0.6 | 1395 | 0.548 | 0.487 | -0.060 |
+| 0.6-0.7 | 641 | 0.638 | 0.516 | -0.123 |
+| 0.7-0.8 | 74 | 0.726 | 0.601 | -0.124 |
+| 0.8-0.9 | 1 | 0.823 | 0.000 | -0.823 |
 
 ### market
 
@@ -113,25 +114,25 @@ The 28+ row is the plan's check on the tails; it overlaps the 21+ row.
 
 | bucket | games | grid P(home) | observed | grid gap | market P(home) | market gap |
 |---|---|---|---|---|---|---|
-| |spread| 0-3 | 538 | 0.529 | 0.487 | +0.042 | 0.527 | +0.040 |
-| |spread| 3-7 | 1023 | 0.535 | 0.543 | -0.007 | 0.535 | -0.008 |
-| |spread| 7-14 | 1022 | 0.551 | 0.538 | +0.013 | 0.549 | +0.011 |
-| |spread| 14-21 | 598 | 0.640 | 0.644 | -0.004 | 0.648 | +0.004 |
-| |spread| 21+ | 549 | 0.755 | 0.780 | -0.024 | 0.772 | -0.008 |
-| |spread| 28+ | 224 | 0.831 | 0.848 | -0.017 | 0.846 | -0.002 |
+| |spread| 0-3 | 538 | 0.529 | 0.487 | +0.042 | 0.529 | +0.042 |
+| |spread| 3-7 | 1023 | 0.536 | 0.543 | -0.006 | 0.538 | -0.004 |
+| |spread| 7-14 | 1022 | 0.552 | 0.538 | +0.014 | 0.552 | +0.014 |
+| |spread| 14-21 | 598 | 0.642 | 0.644 | -0.001 | 0.651 | +0.007 |
+| |spread| 21+ | 549 | 0.757 | 0.780 | -0.022 | 0.774 | -0.006 |
+| |spread| 28+ | 224 | 0.832 | 0.848 | -0.016 | 0.847 | -0.001 |
 
 ## The margin through the grid
 
-Margin CRPS from the grid's own margin marginal, points lattice applied: 8.950; from the state's lattice pmf directly: 8.940. The grid's 0-79 bounds and the points lattice together cost +0.010.
+Margin CRPS from the grid's own margin marginal, points lattice applied: 8.934; from the state's lattice pmf directly: 8.923. The grid's 0-79 bounds and the points lattice together cost +0.012.
 
 ## The exact score, for what it is
 
-The headline is the mean, to one decimal. With a team's points uncertain by eleven or so, the most probable exact score is a fraction-of-a-percent event (mean 0.0090 with the points lattice), and the card shows it as such. The points lattice is step 7's answer to the plan's gate: a fitted multiplier on each side's own key numbers, no simulation.
+The headline is the mean, to one decimal. With a team's points uncertain by eleven or so, the most probable exact score is a fraction-of-a-percent event (mean 0.0093 with the points lattice), and the card shows it as such. The points lattice is step 7's answer to the plan's gate: a fitted multiplier on each side's own key numbers, no simulation.
 
 | grid | games | top score was right | actual score in the top 10 cells | actual score in the top 50 cells | mean -log P(actual score) | median rank of the actual score |
 |---|---|---|---|---|---|---|
-| margin lattice only (v1) | 3730 | 0.0035 | 0.0308 | 0.1161 | 7.535 | 478 |
-| with the points lattice (v1.5) | 3730 | 0.0067 | 0.0566 | 0.1995 | 7.099 | 239 |
+| margin lattice only (v1) | 3730 | 0.0035 | 0.0308 | 0.1166 | 7.515 | 467 |
+| with the points lattice (v1.5) | 3730 | 0.0064 | 0.0566 | 0.2019 | 7.076 | 232 |
 
 ### Points lattice fitted for 2025
 
@@ -139,23 +140,11 @@ Observed over expected frequency of a team scoring exactly this many points, shr
 
 | 0 | 3 | 6 | 7 | 10 | 13 | 14 | 17 | 20 | 21 | 24 | 27 | 28 | 31 | 35 | 38 | 42 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 3.51 | 2.66 | 1.33 | 2.99 | 2.69 | 1.78 | 2.47 | 1.98 | 1.62 | 1.49 | 1.95 | 1.46 | 1.26 | 1.67 | 1.14 | 1.76 | 1.56 |
+| 3.47 | 2.63 | 1.32 | 2.96 | 2.67 | 1.77 | 2.46 | 1.98 | 1.63 | 1.50 | 1.97 | 1.48 | 1.27 | 1.68 | 1.14 | 1.75 | 1.55 |
 
-## What the card would have said: the last 12 regular-season games of 2025
+## What the card would have said: the last 0 regular-season games of 2026
 
 Decimal means, never rounded integers; the market column is the closing line for comparison, not an input.
 
 | game | projection | P(home) | total 80% range | most likely score | market (spread / total) | actual |
 |---|---|---|---|---|---|---|
-| Fresno State at San José State | 22.2-28.0, total 50.2 | 36% | 30-72 | 24-31 (0.8%) | +3.5 / 45.5 | 14-41 |
-| Wyoming at Hawai'i | 26.6-19.1, total 45.7 | 70% | 26-66 | 24-17 (1.0%) | -8.5 / 44.5 | 27-7 |
-| Kennesaw State at Jacksonville State | 30.5-28.6, total 59.0 | 56% | 37-81 | 31-24 (0.9%) | +3.0 / 62.5 | 15-19 |
-| Troy at James Madison | 36.8-15.2, total 52.0 | 92% | 33-72 | 38-10 (1.0%) | -24.5 / 47.5 | 31-14 |
-| North Texas at Tulane | 30.1-33.7, total 63.9 | 42% | 42-86 | 31-38 (0.8%) | +1.5 / 66.5 | 34-21 |
-| UNLV at Boise State | 31.5-25.8, total 57.3 | 65% | 35-79 | 31-24 (0.9%) | -6.0 / 59.5 | 38-21 |
-| Miami (OH) vs Western Michigan | 21.3-21.2, total 42.5 | 51% | 23-63 | 17-14 (1.1%) | -2.5 / 44.2 | 23-13 |
-| BYU vs Texas Tech | 30.0-20.5, total 50.5 | 74% | 30-72 | 31-24 (0.9%) | -12.5 / 50.5 | 34-7 |
-| Georgia vs Alabama | 24.2-22.8, total 47.0 | 55% | 27-69 | 24-17 (0.9%) | +1.5 / 48.5 | 7-28 |
-| Indiana vs Ohio State | 22.6-22.2, total 44.8 | 52% | 24-66 | 17-14 (0.9%) | -3.5 / 45.8 | 10-13 |
-| Duke vs Virginia | 29.1-26.3, total 55.5 | 58% | 34-77 | 31-24 (0.9%) | -3.5 / 58.5 | 20-27 |
-| Army vs Navy | 22.7-18.1, total 40.8 | 63% | 21-61 | 17-14 (1.2%) | -6.0 / 37.8 | 17-16 |
