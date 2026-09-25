@@ -33,6 +33,26 @@ def default_out() -> Path:
     return config.paths().root / "site"
 
 
+def _record(out: Path) -> None:
+    """The public model record (`atlas/site/record.py`): the page, and every graded game as a CSV."""
+    import math
+
+    from atlas.site import record
+
+    graded = record.build()
+    graded.to_csv(out / "record.csv", index=False)
+
+    def clean(rows):
+        return [{k: (None if isinstance(v, float) and math.isnan(v) else v) for k, v in r.items()} for r in rows]
+
+    sports = {}
+    for sport in ("ncaaf", "nfl"):
+        g = graded[graded["sport"] == sport]
+        sports[sport] = {"summary": record.summary(g), "weekly": clean(record.weekly(g).to_dict("records")),
+                         "latest": clean(g.head(40).to_dict("records"))}
+    (out / "record.html").write_text(render.record_page(sports, since="with the week of 24 September 2026"))
+
+
 def build(out: Path | None = None, *, social_cards: bool = True,
           refresh_meta: bool = False, horizon: int = 8) -> dict:
     out = out or default_out()
@@ -101,6 +121,7 @@ def build(out: Path | None = None, *, social_cards: bool = True,
             (out / render.team_path(team, "nfl")).write_text(render.nfl_team_page(
                 team, cards=nfl_cards, pool=nfl_pool, results=nfl_results.get(team.team_id, []),
                 freshness=stamps))
+    _record(out)
     (out / "premium.html").write_text(render.premium_page())
     (out / "scoreboard.html").write_text(render.scoreboard_page())
     # The owner's DFS page: ciphertext only (atlas/dfs/owner.py). Not linked,
@@ -327,6 +348,7 @@ def _write_sitemap(out: Path, cards, teams: dict, nfl_teams: dict | None = None)
         ("faq.html", "monthly", "0.7"),
         ("status.html", "daily", "0.4"),
         ("research.html", "weekly", SITEMAP_PRIORITY["research.html"]),
+        ("record.html", "daily", "0.8"),
         ("ncaaf.html", "daily", "0.9"),
         ("nfl.html", "daily", "0.9"),
         ("premium.html", "monthly", "0.5"),

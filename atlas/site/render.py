@@ -143,6 +143,7 @@ def layout(*, title: str, body: str, depth: int = 0, description: str = "",
         ("NFL", f"{root}nfl.html", "nfl"),
         ("DFS", f"{root}dfs.html", "dfs"),
         ("Scores", f"{root}scoreboard.html", "scores"),
+        ("Record", f"{root}record.html", "record"),
         ("Research", f"{root}research.html", "research"),
         ("Premium", f"{root}premium.html", "premium"),
         ("About", f"{root}about.html", "about"),
@@ -1701,6 +1702,109 @@ def dfs_page(slate: dict | None, players: list[dict], *, history: dict | None, l
                    "chance he plays, and the model's out-of-sample record.")
     return layout(title="DFS projections | Atlas", body=body, active="dfs", description=description,
                   canonical="dfs.html")
+
+
+def record_page(sports: dict[str, dict], *, since: str) -> str:
+    """The public model record (`atlas/site/record.py`): every projection Atlas
+    published before kickoff, against the final score, with the market's
+    pre-kickoff number beside it where Atlas captured one. Facts only: every
+    graded game is in it, nothing is chosen or highlighted, and nothing says
+    what to do with it."""
+    names = {"ncaaf": "College football", "nfl": "NFL"}
+    parts = []
+    for sport in ("ncaaf", "nfl"):
+        data = sports.get(sport) or {}
+        s = data.get("summary") or {"games": 0}
+        parts.append(f'''<section class="section" id="{sport}">
+  <div class="section-head"><h2>{names[sport]}</h2></div>
+  <div class="card card-pad prose">{_record_summary(s)}</div>
+  {_record_weeks(data.get("weekly") or [])}
+  {_record_games(data.get("latest") or [], s.get("games", 0))}
+</section>''')
+    body = f"""<div class="board-head">
+  <h1>Model record</h1>
+  <span class="board-note">Every projection, graded against the final score</span>
+</div>
+
+<div class="disclosure">
+  <b>What this page is.</b> Each game's projection as Atlas published it before kickoff, the final score, and how
+  far apart they were - with the market's number from before kickoff beside it where Atlas captured one. Every game
+  Atlas projected before kickoff and has a final score for is here; none is left out and none is featured. The record
+  starts {esc(since)}, with the first games Atlas projected before kickoff.
+</div>
+
+{"".join(parts)}
+
+<section class="section" id="how">
+  <div class="section-head"><h2>How the record is kept</h2></div>
+  <div class="card card-pad prose">
+    <p><b>Before kickoff, and only then.</b> A projection counts only if it was made before its game kicked off. Each
+      refresh records a new projection for every game still to be played; a change to the model adds a new row rather
+      than replacing one, and a game in progress is never projected again. A game whose only projection was made after
+      kickoff is left out, not graded.</p>
+    <p><b>The miss.</b> How far the projected margin (home points less away points) and the projected total were from
+      the final ones, in points. <b>Winner</b> is how often the side Atlas had ahead won; a projected or final tie is
+      not counted.</p>
+    <p><b>The market.</b> DraftKings' last margin and total before kickoff, as Atlas captured them, graded the same
+      way on the same games. A game with no captured line is graded for Atlas alone, and the comparison uses only the
+      games that have both.</p>
+    <p><b>Before this season.</b> How the models did on past seasons they never saw is on <a href="research.html">
+      Research</a>; this page is the live record only.</p>
+    <p><a href="record.csv" download>Download every graded game (CSV)</a></p>
+  </div>
+</section>"""
+    description = ("Atlas's model record: every projection published before kickoff, graded against the final "
+                   "score, with the market's pre-kickoff number beside it.")
+    return layout(title="Model record | Atlas", body=body, active="record", description=description,
+                  canonical="record.html")
+
+
+def _record_summary(s: dict) -> str:
+    if not s.get("games"):
+        return "<p>No game is graded yet. The first games are graded the morning after they are final.</p>"
+    lines = [f"<p><b>{s['games']}</b> games graded. Atlas's projected margin was <b>{num(s['margin_miss'])}</b> "
+             f"points from the final one on average, its total <b>{num(s['total_miss'])}</b>; the side it had ahead "
+             f"won <b>{pct(s['winner_right'], 0)}</b> of {s['winner_games']} games.</p>"]
+    if s.get("with_market"):
+        lines.append(f"<p>On the {s['with_market']} games with a captured market margin, Atlas's margin was "
+                     f"{num(s['atlas_margin_miss_there'])} points from the final one on average and the market's "
+                     f"{num(s['market_margin_miss'])}; Atlas's was the closer of the two in {s['atlas_closer']} of "
+                     f"{s['closer_of']} games where they differed.")
+        if s.get("with_market_total"):
+            lines[-1] += (f" On the {s['with_market_total']} with a captured market total, Atlas's total missed by "
+                          f"{num(s['atlas_total_miss_there'])} and the market's by {num(s['market_total_miss'])}.")
+        lines[-1] += "</p>"
+    return "".join(lines)
+
+
+def _pair(a, b) -> str:
+    """"12.4 · 12.9": a margin miss and a total miss, together."""
+    return "—" if a is None and b is None else f"{num(a)} · {num(b)}"
+
+
+def _record_weeks(weeks: list[dict]) -> str:
+    if not weeks:
+        return ""
+    rows = [[f"Wk {w['week']}<br><span class=\"note\">{w['games']} games</span>",
+             _pair(w["margin_miss"], w["total_miss"]), pct(w["winner_right"], 0),
+             _pair(w.get("market_margin_miss"), w.get("market_total_miss"))] for w in weeks]
+    return ('<div class="card card-pad top-gap record-table"><h3>By week</h3>'
+            '<p class="note">Misses are margin · total, in points, averaged over the week.</p>'
+            + table(["Week", "Atlas miss", "Winner", "Market miss"], rows) + "</div>")
+
+
+def _record_games(games: list[dict], total: int) -> str:
+    if not games:
+        return ""
+    rows = [[f"{esc(g['away'] or '?')} @ {esc(g['home'] or '?')}<br><span class=\"note\">projected "
+             f"{num(g['proj_away'])}–{num(g['proj_home'])} · final {g['final_away']}–{g['final_home']}</span>",
+             _pair(g["margin_miss"], g["total_miss"]), _pair(g.get("market_margin_miss"), g.get("market_total_miss"))]
+            for g in games]
+    shown = (f"The latest {len(games)} of {total}; every one is in the download below."
+             if total > len(games) else "Every graded game.")
+    return (f'<div class="card card-pad top-gap record-table"><h3>Game by game</h3><p class="note">{shown} Scores '
+            'are away–home; misses are margin · total, in points.</p>'
+            + table(["Game", "Atlas miss", "Market miss"], rows) + "</div>")
 
 
 def owner_page(record: dict | None) -> str:

@@ -204,7 +204,7 @@ def publish_projections(store: Store) -> int:
     if rows.empty:
         LOG.warning("refresh produced no college projections")
     else:
-        rows = rows.assign(sport="ncaaf", refreshed_at=now)
+        rows = _before_kickoff(rows.assign(sport="ncaaf", refreshed_at=now), now)
         store.upsert("projections", rows)
         published += len(rows)
         LOG.info("published %d college projections, model %s", len(rows), projector.version)
@@ -220,8 +220,9 @@ def publish_projections(store: Store) -> int:
                                  passers=nfl_projection._passers(paths), players=nfl_projection._players(paths))
         nfl_rows = nfl_projection.project(nfl, nfl_frame[nfl_frame["actual_margin"].isna()
                                                          & (nfl_frame["season"] == nfl.season)])
+        nfl_rows = _before_kickoff(nfl_rows.assign(refreshed_at=now), now)
         if not nfl_rows.empty:
-            store.upsert("projections", nfl_rows.assign(refreshed_at=now))
+            store.upsert("projections", nfl_rows)
             published += len(nfl_rows)
             LOG.info("published %d NFL projections, model %s", len(nfl_rows), nfl.version)
         calibration.append(nfl_projection.history(paths))
@@ -229,6 +230,17 @@ def publish_projections(store: Store) -> int:
         LOG.warning("no NFL projections this refresh: %s", error)
     store.write("calibration", pd.concat(calibration, ignore_index=True))
     return published
+
+
+def _before_kickoff(rows: pd.DataFrame, now: str) -> pd.DataFrame:
+    """Only games still to kick off. A game in progress is not final, so the
+    warehouse still counts it as scheduled; projecting it again would put a
+    number made after kickoff in the record (`atlas/site/record.py` reads each
+    game's last projection before kickoff)."""
+    if rows.empty or "kickoff" not in rows:
+        return rows
+    kick = pd.to_datetime(rows["kickoff"], utc=True, errors="coerce")
+    return rows[kick > pd.Timestamp(now)]
 
 
 def check(store: Store | None = None) -> dict:

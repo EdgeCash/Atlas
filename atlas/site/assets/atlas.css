@@ -188,6 +188,9 @@ h3 { font-size: 15px; font-weight: 640; letter-spacing: -.01em; margin: 0; }
 .rows td:first-child { text-align: left; color: var(--ink-2); }
 .rows tr:first-child td { border-top: 1px solid var(--border-strong); }
 .rows .lead { font-weight: 640; color: var(--ink); }
+/* The model record: a game's name and scores wrap rather than push the misses off a phone. */
+.record-table td:first-child { white-space: normal; }
+.record-table td + td, .record-table th + th { padding-left: 12px; }
 
 .move-up   { color: var(--data-pos); font-weight: 620; }
 .move-down { color: var(--data-neg); font-weight: 620; }
@@ -873,11 +876,11 @@ footer { display: grid; gap: 4px; }
    entry visible, rather than running off the edge or hiding behind a scroll.
    Last in the file so it wins over the wider breakpoints above. */
 /* Eight entries do not fit one row on a phone, and none may be hidden or
-   scrolled out of sight: two rows of four. */
+   scrolled out of sight: two rows of five. */
 @media (max-width: 520px) {
   .logo span { display: none; }
   .nav-inner { flex-wrap: wrap; row-gap: 7px; column-gap: 10px; padding-top: 9px; padding-bottom: 9px; }
-  .nav-links { margin-left: 0; width: 100%; display: grid; grid-template-columns: repeat(4, auto);
+  .nav-links { margin-left: 0; width: 100%; display: grid; grid-template-columns: repeat(5, auto);
                justify-content: space-between; column-gap: 8px; row-gap: 5px; font-size: 14px; }
 }
 @media (max-width: 340px) {
