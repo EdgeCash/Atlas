@@ -423,7 +423,7 @@ def _hero(card: Card, home_accent: str, away_accent: str) -> str:
     <div class="hero-at">at</div>
     {_team_column(card.home, align="home")}
   </div>
-  <div class="hero-meta-row">{esc(" · ".join(bits))}</div>
+  <div class="hero-meta-row">{esc(" · ".join(bits))} {_started_chip(card)}</div>
   <div class="hero-follow">{_follow_button(card)}</div>
 </div>"""
 
@@ -1921,6 +1921,24 @@ def _game_attrs(card: Card) -> str:
             f'data-grade="{esc(grade_key)}"')
 
 
+def _started_chip(card: Card) -> str:
+    """"Game started", shown by the browser from kickoff on.
+
+    A card leaves the site at the first build after kickoff, but a build can
+    be fifteen minutes away on a game day and longer when a scheduled run is
+    late, and a page already open does not rebuild at all. Until then the
+    game still reads as upcoming, with a market that is no longer the market.
+    So the chip is rendered hidden with the kickoff time, and games.js shows
+    it once the reader's clock passes kickoff. Without the script nothing
+    shows, which is the page as it was.
+
+    Not "locked": that is the one word for this a reader would expect, and it
+    is also a tout's word (audit_site.FORBIDDEN)."""
+    return (f'<span class="started-chip" data-kickoff="{esc(card.kickoff.isoformat())}" hidden '
+            f'title="Kicked off {esc(day_clock(card.kickoff))}. These numbers are from before '
+            f'kickoff and no longer update.">Game started</span>')
+
+
 def _game_row(card: Card, *, dates: bool = False) -> str:
     """One board row. ``dates`` adds the day, which a section that is not
     grouped by day needs and a day block does not."""
@@ -1939,7 +1957,7 @@ def _game_row(card: Card, *, dates: bool = False) -> str:
   <div class="game-main">
     <div class="row-teams">{_row_crests(card)}
       <a class="stretch game-teams" href="{esc(card.path)}">{esc(card.title)}</a>{ranks}</div>
-    <div class="game-meta">{esc(meta)}</div>
+    <div class="game-meta">{esc(meta)} {_started_chip(card)}</div>
   </div>
   <div class="game-right">
     <div class="game-numbers">
@@ -1965,7 +1983,8 @@ def _featured_cell(card: Card, *, root: str = "", filterable: bool = False) -> s
     return f"""<article class="{classes}"{attrs}>
   <div class="feature-head">{_row_crests(card, root=root)}{grade_pill(card)}</div>
   <h3 class="feature-title"><a class="stretch" href="{root}{esc(card.path)}">{esc(card.title)}</a></h3>
-  <p class="note feature-meta">{esc(day_clock(card.kickoff))}{esc(" · " + card.tv if card.tv else "")}</p>
+  <p class="note feature-meta">{esc(day_clock(card.kickoff))}{esc(" · " + card.tv if card.tv else "")}
+    {_started_chip(card)}</p>
   <div class="feature-nums">
     <div><span class="stat-label">Market</span>
       <span class="feature-num">{esc(card.spread_text)}</span></div>

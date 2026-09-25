@@ -792,6 +792,26 @@ def test_tiles_say_they_open_the_full_card_and_assets_are_versioned():
     assert re.search(r'href="\.\./\.\./assets/atlas\.css\?v=[0-9a-f]{10}"', deep)
 
 
+def test_a_game_says_it_has_started_once_it_kicks_off():
+    """The tile, the row and the card each carry a hidden "Game started" chip
+    with the kickoff, for games.js to show at kickoff; never the word a tout
+    would use."""
+    card = _card()
+    card.game_id = 900
+    kickoff = f'data-kickoff="{card.kickoff.isoformat()}" hidden'
+    chip = re.compile(r'<span class="started-chip" ([^>]*)>Game started</span>')
+    tile, row, page = render._featured_cell(card), render._game_row(card), _page(card)
+    for html in (tile, row, page):
+        found = chip.findall(html)
+        assert len(found) == 1 and found[0].startswith(kickoff), html[:200]
+    hero = re.search(r'<div class="hero-meta-row">.*?</div>', page, re.S).group(0)
+    assert "started-chip" in hero
+    board = render.board_page([card], sport="ncaaf")
+    # Every row and tile, and the featured tile, which the filters leave alone.
+    assert board.count('class="started-chip"') == board.count('data-game="900"') + 1
+    assert "lock" not in chip.search(page).group(0).lower()
+
+
 def test_every_game_can_be_followed_and_carries_its_details():
     """Follow buttons on tiles, rows and the card, each backed by the page's
     game data; the scoreboard page lists no games of its own and says where

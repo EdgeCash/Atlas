@@ -415,6 +415,19 @@ h3 { margin: 0 0 6px; }
    card that is 400px tall means a reader never reaches the board. */
 .feature-line { display: none; }
 
+/* "Game started": a fact about the clock, not about the numbers, so it is
+   neutral ink rather than a data or status colour. games.js unhides it at
+   kickoff; the [hidden] rule is restated because display: inline-flex would
+   otherwise override the attribute. */
+.started-chip { display: inline-flex; align-items: center; gap: 5px; margin-left: 4px;
+                padding: 1px 8px; border-radius: 99px; border: 1px solid var(--border-strong);
+                background: var(--surface-sunk); color: var(--ink-2);
+                font-size: 11px; font-weight: 600; line-height: 1.5; white-space: nowrap;
+                vertical-align: 1px; }
+.started-chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%;
+                        background: var(--ink-3); }
+.started-chip[hidden] { display: none; }
+
 /* ------------------------------------------------------------ banner ---- */
 
 .banner-low { border-color: var(--border-strong); }
