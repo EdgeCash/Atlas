@@ -58,6 +58,16 @@ ZERO_PRIOR_P0 = 100.0
 #: the point - the game drifts - and it bounds the cost of the grid.
 TUNING_SEASONS = 3
 
+#: ``p0`` is pooled over every training season with a real prior, not only
+#: the recency window: an older season adds its first ``EARLY_WEEKS`` weeks,
+#: where the prior variance decides the forecast and ``q`` has barely acted.
+EARLY_WEEKS = 4
+
+#: Below this many seasons with a real prior, the likelihood cannot choose
+#: ``p0`` (one season - 2020's, for 2021 - would pick it alone). It is then
+#: measured instead, from the prior's own early-week error (:func:`moment_p0`).
+MIN_P0_SEASONS = 2
+
 
 @dataclass(frozen=True)
 class Choice:
@@ -70,6 +80,10 @@ class Choice:
     #: it, ``sigma`` is rescaled so the margin's noise is what the tuning
     #: chose. Choices saved before it existed read as 0: independent noise.
     rho: float = 0.0
+    #: The seasons that chose ``p0``, and how: "grid" (the likelihood, pooled
+    #: over every real-prior season) or "moment" (the prior's own error).
+    p0_seasons: tuple[int, ...] = ()
+    p0_source: str = "grid"
 
 
 def choices_path(root: Path) -> Path:
@@ -88,7 +102,9 @@ def load_choices(path: Path) -> dict[int, Choice] | None:
         return None
     raw = json.loads(path.read_text())
     return {int(s): Choice(q=c["q"], p0=c["p0"], sigma=c["sigma"], loglik=c["loglik"],
-                           seasons=tuple(int(x) for x in c["seasons"]), rho=float(c.get("rho", 0.0)))
+                           seasons=tuple(int(x) for x in c["seasons"]), rho=float(c.get("rho", 0.0)),
+                           p0_seasons=tuple(int(x) for x in c.get("p0_seasons", ())),
+                           p0_source=str(c.get("p0_source", "grid")))
             for s, c in raw.items()}
 
 
@@ -126,6 +142,38 @@ def _zero_prior(games: pd.DataFrame, like: prior_mod.Prior, season: int) -> prio
     return prior_mod.Prior(season=season, net=like.net, points=like.points, teams=table)
 
 
+def _early(games: pd.DataFrame) -> pd.DataFrame:
+    return games[pd.to_numeric(games["week"], errors="coerce") <= EARLY_WEEKS]
+
+
+def moment_p0(early: list[tuple[pd.DataFrame, prior_mod.Prior]], sigma: float,
+              bounds: tuple[float, float]) -> float:
+    """The prior variance the prior's own early-season error implies.
+
+    At week one the state's margin is ``off_h + def_h - off_a - def_a +
+    boost``, straight from the prior. Its error is four teams' strengths,
+    each off by variance ``p0``, plus the game's margin noise ``2 sigma²``;
+    so ``p0 = (E[r²] - 2 sigma²) / 4`` over the early weeks, where little
+    has been learnt in-season. Each season is read against its own
+    point-in-time prior, so nothing here is in-sample. Clipped to the grid.
+    """
+    resid = []
+    for games, prior in early:
+        teams = prior.teams.set_index("team_id")
+        off, dfn = teams["off"], teams["def"]
+        h, a = games["home_team_id"], games["away_team_id"]
+        home = 1.0 - pd.to_numeric(games["neutral_site"], errors="coerce").fillna(0) if "neutral_site" in games \
+            else pd.Series(1.0, index=games.index)
+        mean = (h.map(off).fillna(0) + h.map(dfn).fillna(0) - a.map(off).fillna(0) - a.map(dfn).fillna(0)
+                + prior.points.boost * home)
+        resid.append((games["actual_margin"] - mean).to_numpy(dtype=float))
+    r = np.concatenate(resid) if resid else np.array([])
+    r = r[np.isfinite(r)]
+    if len(r) < 30:
+        return float(np.median(bounds))
+    return float(np.clip((np.mean(r ** 2) - 2.0 * sigma ** 2) / 4.0, *bounds))
+
+
 def tune(frame: pd.DataFrame, feats: pd.DataFrame, season: int, *, grid: dict = GRID,
          like: prior_mod.Prior | None = None, fit_rho: bool = True) -> Choice:
     """Pick hyperparameters on the training seasons.
@@ -141,6 +189,11 @@ def tune(frame: pd.DataFrame, feats: pd.DataFrame, season: int, *, grid: dict = 
     ``p0`` is chosen only by seasons that really use it. ``like`` supplies
     base points and home boost for the zero-prior case; it must be fitted on
     seasons before ``season``, which the caller's prior is.
+
+    ``p0`` is pooled: every older training season with a real prior adds its
+    first ``EARLY_WEEKS`` weeks to the likelihood. With fewer than
+    ``MIN_P0_SEASONS`` real-prior seasons in all, ``p0`` is measured from the
+    prior's early error (:func:`moment_p0`) for each ``sigma`` on the grid.
     """
     train_seasons = [int(s) for s in sorted(frame["season"].unique()) if s < season][-TUNING_SEASONS:]
     if not train_seasons:
@@ -155,18 +208,41 @@ def tune(frame: pd.DataFrame, feats: pd.DataFrame, season: int, *, grid: dict = 
         except ValueError:
             usable.append((s, _zero_prior(games[s], like, s), True))
     any_real = any(not zero for _, _, zero in usable)
-    p0_grid = grid["p0"] if any_real else (float(np.median(grid["p0"])),)
-    best = None
-    for q, p0, sigma in itertools.product(grid["q"], p0_grid, grid["sigma"]):
-        ll = 0.0
-        for s, p, zero in usable:
-            spec = _spec(q, ZERO_PRIOR_P0 if zero else p0, sigma, p)
-            fc, _ = _season_forecasts(games[s], p, spec)
-            ll += _gaussian_loglik(fc, games[s]["actual_margin"].to_numpy(dtype=float)) * len(fc)
-        if not np.isfinite(ll):
+    # Older seasons with a prior of their own: their early weeks pool into p0.
+    older = [int(s) for s in sorted(frame["season"].unique()) if s < train_seasons[0]]
+    pooled = []
+    for s in older:
+        try:
+            p = prior_mod.fit(frame, feats, season=s)
+        except ValueError:
             continue
-        if best is None or ll > best.loglik:
-            best = Choice(q, p0, sigma, ll, tuple(int(s) for s, _, _ in usable))
+        g = _early(frame[(frame["season"] == s) & (frame["season_type"] == "regular")])
+        if len(g):
+            pooled.append((s, p, g))
+    real = sorted([s for s, _, zero in usable if not zero] + [s for s, _, _ in pooled])
+    by_moment = any_real and len(real) < MIN_P0_SEASONS
+    bounds = (float(min(grid["p0"])), float(max(grid["p0"])))
+    early = [(_early(games[s]), p) for s, p, zero in usable if not zero] + [(g, p) for _, p, g in pooled]
+    best = None
+    for q, sigma in itertools.product(grid["q"], grid["sigma"]):
+        if by_moment:
+            p0_grid = (moment_p0(early, sigma, bounds),)
+        else:
+            p0_grid = grid["p0"] if any_real else (float(np.median(grid["p0"])),)
+        for p0 in p0_grid:
+            ll = 0.0
+            for s, p, zero in usable:
+                spec = _spec(q, ZERO_PRIOR_P0 if zero else p0, sigma, p)
+                fc, _ = _season_forecasts(games[s], p, spec)
+                ll += _gaussian_loglik(fc, games[s]["actual_margin"].to_numpy(dtype=float)) * len(fc)
+            for _, p, g in pooled:
+                fc, _ = _season_forecasts(g, p, _spec(q, p0, sigma, p))
+                ll += _gaussian_loglik(fc, g["actual_margin"].to_numpy(dtype=float)) * len(fc)
+            if not np.isfinite(ll):
+                continue
+            if best is None or ll > best.loglik:
+                best = Choice(q, p0, sigma, ll, tuple(int(s) for s, _, _ in usable),
+                              p0_seasons=tuple(real), p0_source="moment" if by_moment else "grid")
     if best is None or not fit_rho:
         return best
     fcs, margins, totals, spec = [], [], [], None
@@ -247,8 +323,9 @@ def render(scored: pd.DataFrame, choices: dict[int, Choice], finals: dict[int, k
         "",
         "## Hyperparameters chosen, per season",
         "",
-        md(pd.DataFrame([{"season": s, "q per week": c.q, "prior var p0": c.p0, "sigma (pts)": round(c.sigma, 2),
-                          "noise corr rho": round(c.rho, 3),
+        md(pd.DataFrame([{"season": s, "q per week": c.q, "prior var p0": round(c.p0, 1),
+                          "p0 from": f"{c.p0_source}: " + (", ".join(map(str, c.p0_seasons)) or "-"),
+                          "sigma (pts)": round(c.sigma, 2), "noise corr rho": round(c.rho, 3),
                           "tuned on": ", ".join(map(str, c.seasons))} for s, c in choices.items()])),
         "",
         *_correlation_section(scored.attrs.get("totals", pd.DataFrame())),
