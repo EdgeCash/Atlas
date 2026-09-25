@@ -81,16 +81,23 @@ def _block(frame: pd.DataFrame) -> dict:
 
 def scorecard(frame: pd.DataFrame, *, by: str, selection: str | None = "primary"
               ) -> pd.DataFrame:
-    """Aggregate the graded record. ``by`` is a column such as date or week."""
+    """Aggregate the graded record. ``by`` is a column such as date or week.
+
+    A week is a week of one season: grouped by ``week`` alone, week 3 of this
+    season and week 3 of last would be one row. So ``by="week"`` groups by
+    season and week, and the frame keeps both columns.
+    """
     if frame.empty:
         return pd.DataFrame()
     block = frame if selection is None else frame[frame["selection"] == selection]
     if block.empty or by not in block.columns:
         return pd.DataFrame()
+    keys = ["season", "week"] if by == "week" and "season" in block.columns else [by]
     rows = []
-    for key, sub in block.groupby(by, observed=True, dropna=False):
-        rows.append({by: key, **_block(sub)})
-    return pd.DataFrame(rows).sort_values(by).reset_index(drop=True)
+    for key, sub in block.groupby(keys, observed=True, dropna=False):
+        key = key if isinstance(key, tuple) else (key,)
+        rows.append({**dict(zip(keys, key, strict=True)), **_block(sub)})
+    return pd.DataFrame(rows).sort_values(keys).reset_index(drop=True)
 
 
 def by_book(frame: pd.DataFrame, *, selection: str | None = "primary") -> pd.DataFrame:

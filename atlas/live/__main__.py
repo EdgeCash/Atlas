@@ -42,9 +42,15 @@ DEFAULT_HORIZON_DAYS = 8
 EASTERN = ZoneInfo("America/New_York")
 
 
+#: Days back the poll still asks for. A game drops out of a forward-only
+#: window the morning after it is played, before its final is recorded, and
+#: would read as scheduled in tracking/games.csv for ever.
+LOOKBACK_DAYS = 2
+
+
 def _days(horizon: int) -> list[date]:
     today = datetime.now(EASTERN).date()
-    return [today + timedelta(days=i) for i in range(horizon)]
+    return [today + timedelta(days=i) for i in range(-LOOKBACK_DAYS, horizon)]
 
 
 def _games_frame(quotes: pd.DataFrame, now: str) -> pd.DataFrame:

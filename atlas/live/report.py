@@ -118,7 +118,7 @@ signal existed. They are checked, never tuned.
 
 ### By week
 
-{_or_empty(bundle["weekly"], ["week", "signals", "graded", "pushes", "beat_rate", "mean_clv", "median_clv", "flagged"], ["Week", "Signals", "Graded", "Pushes", "Beat rate", "Mean CLV", "Median CLV", "Flagged"])}
+{_or_empty(bundle["weekly"], ["season", "week", "signals", "graded", "pushes", "beat_rate", "mean_clv", "median_clv", "flagged"], ["Season", "Week", "Signals", "Graded", "Pushes", "Beat rate", "Mean CLV", "Median CLV", "Flagged"])}
 
 ### By day
 

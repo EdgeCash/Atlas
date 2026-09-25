@@ -89,3 +89,11 @@ def test_a_play_carries_the_starter_flag_to_the_page():
     section = plays.section(plays.RULE_V1, g, NOW, {"20": ("Georgia", "Oklahoma")})
     assert "Georgia QB Gunner Stockton: Out" in section["tables"][0]["rows"][0][0]
     assert any("starter flag" in n for n in section["notes"])
+
+
+def test_a_report_is_read_in_the_zone_it_was_posted_in():
+    a = pd.DataFrame({"publish_date": ["2026-09-24", "2026-09-24"], "posted_time": ["19:10:00", "20:00:00"],
+                      "time_zone": ["CT", "ET"]})
+    out = starters._published(a)
+    assert out.iloc[0] == pd.Timestamp("2026-09-25T00:10:00Z")
+    assert out.iloc[1] == pd.Timestamp("2026-09-25T00:00:00Z")

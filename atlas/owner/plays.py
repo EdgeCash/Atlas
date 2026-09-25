@@ -306,10 +306,12 @@ def _moved_note(moved, when: str) -> str:
 
 
 def verdict(r: dict) -> str:
-    if r["graded"] < MIN_GRADED:
-        return (f"Collecting: {r['graded']} graded. Fewer than {MIN_GRADED} say nothing; proving a rule that "
+    # Decided results: a push is graded but says nothing about the win rate.
+    decided = r.get("decided", r["graded"])
+    if decided < MIN_GRADED:
+        return (f"Collecting: {decided} decided. Fewer than {MIN_GRADED} say nothing; proving a rule that "
                 "truly wins 54% takes about 2,400.")
-    return paper.verdict({**r, "graded": max(r["graded"], paper.MIN_GRADED)})
+    return paper.verdict({**r, "decided": max(decided, paper.MIN_GRADED)})
 
 
 def section(rule: Rule, g: pd.DataFrame, now: datetime, schools: dict | None = None) -> dict:

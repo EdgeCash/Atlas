@@ -223,7 +223,10 @@ def test_the_poll_asks_for_eastern_dates(monkeypatch):
             return real(2026, 9, 27, 1, 0, tzinfo=UTC).astimezone(tz) if tz else real(2026, 9, 27, 1, 0)
 
     monkeypatch.setattr(live, "datetime", Clock)
-    assert live._days(2)[0].isoformat() == "2026-09-26"
+    days = [d.isoformat() for d in live._days(2)]
+    assert "2026-09-26" in days and "2026-09-28" not in days
+    # And the two days before, so a final score is still recorded the morning after.
+    assert days[0] == "2026-09-24"
 
 
 def test_no_signal_forms_after_the_scheduled_kickoff():
@@ -423,3 +426,35 @@ def test_a_signal_records_the_price_of_its_own_side():
     # A feed without the other side's price records none, rather than the wrong one.
     bare = signalling.form_signals(_numbers(), _quotes()).set_index("game_id")
     assert pd.isna(bare.loc[102, "entry_price"]) and pd.isna(bare.loc[102, "entry_price_side"])
+
+
+def test_a_new_seasons_week_one_is_the_latest_week():
+    from atlas.live import drift
+
+    frame = pd.DataFrame({"season": [2025] * 3 + [2026], "week": [15, 15, 15, 1], "selection": "primary",
+                          "created_ts": pd.Timestamp("2026-09-01", tz="UTC")})
+    frame["period"] = frame["season"] * 100 + frame["week"]
+    recent, history = drift._split(frame)
+    assert list(recent["season"]) == [2026] and len(history) == 3
+    alert = drift.volume_alerts(frame)[0]
+    assert alert.detail.startswith("week 1:")
+
+
+def test_the_weekly_scorecard_keeps_seasons_apart():
+    frame = pd.concat([_frame(3, 1).assign(season=2025, week=3), _frame(1, 3).assign(season=2026, week=3)])
+    weekly = sc.scorecard(frame, by="week")
+    assert list(zip(weekly["season"], weekly["week"], strict=True)) == [(2025, 3), (2026, 3)]
+
+
+def test_a_started_game_with_no_close_is_an_exception(store):
+    from atlas.live import quality
+
+    formed = signalling.form_signals(_numbers(), _quotes())
+    store.append_new_only("signals", formed)
+    kicked = datetime.now(UTC) - timedelta(hours=1)
+    store.upsert("games", pd.DataFrame({"game_id": range(100, 104), "kickoff": kicked.isoformat()}))
+    # Only captured after kickoff: an in-play number, never a close.
+    late = _snaps(((kicked + timedelta(minutes=30)).isoformat(), 50.0, -110.0, -110.0))
+    store.append_on_change("snapshots", late)
+    found = quality.check_signals(store)
+    assert (found["check"] == "closing line exists").sum() == len(formed)
