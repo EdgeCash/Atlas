@@ -128,7 +128,9 @@ def current_lines(snapshots: pd.DataFrame, market: str) -> pd.DataFrame:
     if s.empty:
         return pd.DataFrame(columns=["game_id", "book", "line", "price", "other_price"])
     s["ts"] = pd.to_datetime(s["captured_at"], utc=True, errors="coerce")
-    last = s.sort_values("ts").groupby("game_id", as_index=False).last()
+    # tail(1), not last(): last() fills each column from its latest non-null
+    # value separately, pairing one snapshot's line with another's price.
+    last = s.sort_values("ts", kind="stable").groupby("game_id", as_index=False).tail(1)
     for c in ("other_price", "open_line"):
         if c not in last:
             last[c] = np.nan
@@ -304,10 +306,12 @@ def _moved_note(moved, when: str) -> str:
 
 
 def verdict(r: dict) -> str:
-    if r["graded"] < MIN_GRADED:
-        return (f"Collecting: {r['graded']} graded. Fewer than {MIN_GRADED} say nothing; proving a rule that "
+    # Decided results: a push is graded but says nothing about the win rate.
+    decided = r.get("decided", r["graded"])
+    if decided < MIN_GRADED:
+        return (f"Collecting: {decided} decided. Fewer than {MIN_GRADED} say nothing; proving a rule that "
                 "truly wins 54% takes about 2,400.")
-    return paper.verdict({**r, "graded": max(r["graded"], paper.MIN_GRADED)})
+    return paper.verdict({**r, "decided": max(decided, paper.MIN_GRADED)})
 
 
 def section(rule: Rule, g: pd.DataFrame, now: datetime, schools: dict | None = None) -> dict:

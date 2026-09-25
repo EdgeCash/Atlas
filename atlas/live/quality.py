@@ -62,7 +62,8 @@ def check_signals(store: Store | None = None) -> pd.DataFrame:
     if signals.empty:
         return pd.DataFrame(columns=["check", "severity", "signal_id", "detail"])
 
-    games = set(store.read("games")["game_id"].astype(str))
+    game_rows = store.read("games")
+    games = set(game_rows["game_id"].astype(str))
     snapshots = store.read("snapshots")
     quoted = set(
         snapshots[["game_id", "book", "market"]].astype(str).agg("|".join, axis=1)
@@ -93,6 +94,23 @@ def check_signals(store: Store | None = None) -> pd.DataFrame:
     key = frame[["game_id", "book", "market"]].astype(str).agg("|".join, axis=1)
     found += _rows(frame, ~key.isin(quoted), "line history exists", "blocking",
                    "no snapshot for this game/book/market")
+
+    # A game that has kicked off with no line captured before it can never be
+    # graded: without this it would sit under "awaiting kickoff" for ever.
+    if not game_rows.empty:
+        from atlas.live.grade import closing_lines
+
+        kickoff = pd.to_datetime(game_rows.set_index(game_rows["game_id"].astype(str))["kickoff"],
+                                 utc=True, errors="coerce")
+        started = frame["game_id"].astype("Int64").astype(str).map(kickoff) <= pd.Timestamp.now(tz="UTC")
+        closes = closing_lines(snapshots, game_rows) if not snapshots.empty else pd.DataFrame(
+            columns=["game_id", "book", "market"])
+        closed = set(closes[["game_id", "book", "market"]].astype(str).agg("|".join, axis=1)) \
+            if len(closes) else set()
+        key_int = frame["game_id"].astype("Int64").astype(str) + "|" + frame["book"].astype(str) + "|" \
+            + frame["market"].astype(str)
+        found += _rows(frame, started.fillna(False) & ~key_int.isin(closed), "closing line exists", "warning",
+                       "the game has kicked off with no line captured before it; the signal cannot be graded")
 
     # Plausibility.
     for market, (low, high) in BOUNDS.items():
@@ -213,6 +231,7 @@ _CHECK_REGISTRY: tuple[tuple[str, str, str], ...] = (
     ("opening line exists", "warning", "signals"),
     ("entry line exists", "blocking", "signals"),
     ("line history exists", "blocking", "signals"),
+    ("closing line exists", "warning", "signals"),
     ("entry line in range", "blocking", "signals"),
     ("opening line in range", "warning", "signals"),
     ("entry price in range", "warning", "signals"),

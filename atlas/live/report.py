@@ -114,11 +114,11 @@ signal existed. They are checked, never tuned.
 
 ### By season
 
-{_or_empty(bundle["season"], ["season", "signals", "graded", "pushes", "beat_rate", "mean_clv", "median_clv", "flagged"], ["Season", "Signals", "Graded", "Pushes", "Beat rate", "Mean CLV", "Median CLV", "Flagged"])}
+{_or_empty(bundle["season"], ["season", "signals", "graded", "pushes", "beat_rate", "beat_low", "beat_high", "p_value", "mean_clv", "median_clv", "flagged"], ["Season", "Signals", "Graded", "Pushes", "Beat rate", "95% low", "95% high", "p vs 50%", "Mean CLV", "Median CLV", "Flagged"])}
 
 ### By week
 
-{_or_empty(bundle["weekly"], ["week", "signals", "graded", "pushes", "beat_rate", "mean_clv", "median_clv", "flagged"], ["Week", "Signals", "Graded", "Pushes", "Beat rate", "Mean CLV", "Median CLV", "Flagged"])}
+{_or_empty(bundle["weekly"], ["season", "week", "signals", "graded", "pushes", "beat_rate", "mean_clv", "median_clv", "flagged"], ["Season", "Week", "Signals", "Graded", "Pushes", "Beat rate", "Mean CLV", "Median CLV", "Flagged"])}
 
 ### By day
 
@@ -130,7 +130,7 @@ signal existed. They are checked, never tuned.
 
 ### Every population, including the ones the criteria ignore
 
-{_or_empty(bundle["selections"], ["selection", "signals", "graded", "pushes", "beat_rate", "mean_clv", "median_clv", "flagged"], ["Population", "Signals", "Graded", "Pushes", "Beat rate", "Mean CLV", "Median CLV", "Flagged"])}
+{_or_empty(bundle["selections"], ["selection", "signals", "graded", "pushes", "beat_rate", "beat_low", "beat_high", "p_value", "mean_clv", "median_clv", "flagged"], ["Population", "Signals", "Graded", "Pushes", "Beat rate", "95% low", "95% high", "p vs 50%", "Mean CLV", "Median CLV", "Flagged"])}
 
 `primary` is the population the criteria are evaluated on: totals at or above
 the historical 90th percentile of disagreement. `secondary` is the same cut on

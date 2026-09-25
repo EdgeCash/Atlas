@@ -103,7 +103,10 @@ def _season_forecasts(games: pd.DataFrame, prior: prior_mod.Prior, spec: kalman.
 def _gaussian_loglik(fc: pd.DataFrame, margin: np.ndarray) -> float:
     r = margin - fc["mean"].to_numpy()
     v = fc["sd"].to_numpy() ** 2
-    return float(np.mean(-0.5 * np.log(2 * np.pi * v) - r ** 2 / (2 * v)))
+    # A game the state could not forecast (a team it does not carry) is left
+    # out rather than turning the whole score into NaN, which ``ll > best``
+    # would then never beat, silently keeping the first grid point.
+    return float(np.nanmean(-0.5 * np.log(2 * np.pi * v) - r ** 2 / (2 * v)))
 
 
 def _zero_prior(games: pd.DataFrame, like: prior_mod.Prior, season: int) -> prior_mod.Prior:
@@ -149,6 +152,8 @@ def tune(frame: pd.DataFrame, feats: pd.DataFrame, season: int, *, grid: dict = 
             spec = _spec(q, ZERO_PRIOR_P0 if zero else p0, sigma, p)
             fc, _ = _season_forecasts(games[s], p, spec)
             ll += _gaussian_loglik(fc, games[s]["actual_margin"].to_numpy(dtype=float)) * len(fc)
+        if not np.isfinite(ll):
+            continue
         if best is None or ll > best.loglik:
             best = Choice(q, p0, sigma, ll, tuple(int(s) for s, _, _ in usable))
     return best

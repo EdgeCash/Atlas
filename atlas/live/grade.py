@@ -46,12 +46,15 @@ def closing_lines(snapshots: pd.DataFrame, games: pd.DataFrame) -> pd.DataFrame:
     block["kickoff_ts"] = pd.to_datetime(
         block["game_id"].map(kickoff), utc=True, errors="coerce"
     )
-    block = block[block["captured_ts"] <= block["kickoff_ts"]]
+    # A board taken down before kickoff leaves the last real number as the close.
+    block = block[(block["captured_ts"] <= block["kickoff_ts"]) & block["line"].notna()]
     if block.empty:
         return pd.DataFrame(columns=["game_id", "book", "market", "close_line"])
 
     block = block.sort_values("captured_ts")
-    last = block.groupby(["game_id", "book", "market"], as_index=False).last()
+    # tail(1), not last(): last() takes each column's last non-null value
+    # separately and can stitch one row together from two snapshots.
+    last = block.groupby(["game_id", "book", "market"], as_index=False).tail(1)
     return last.rename(columns={"line": "close_line"})[
         ["game_id", "book", "market", "close_line"]
     ]

@@ -46,11 +46,15 @@ class OddsProvider(Protocol):
         ...
 
 
-def _to_float(value: object) -> float | None:
+def _to_float(value: object, *, even: float | None = None) -> float | None:
+    """A number from ESPN's text. ``even`` is what "EVEN" or "PK" means here:
+    +100 for a price, 0 for a pick'em spread, nothing for a score."""
     if value is None:
         return None
     text = str(value).strip().replace("+", "")
-    if text in ("", "EVEN", "even", "OFF", "off", "None", "nan"):
+    if text.upper() in ("EVEN", "PK", "PICK"):
+        return even
+    if text in ("", "OFF", "off", "None", "nan"):
         return None
     try:
         return float(text)
@@ -68,7 +72,7 @@ def _line_block(block: dict | None, key: str) -> tuple[float | None, float | Non
     raw_line = inner.get("line")
     if isinstance(raw_line, str):
         raw_line = raw_line.lstrip("ou")
-    return _to_float(raw_line), _to_float(inner.get("odds"))
+    return _to_float(raw_line, even=0.0), _to_float(inner.get("odds"), even=100.0)
 
 
 @dataclass(frozen=True)

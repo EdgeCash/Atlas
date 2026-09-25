@@ -164,7 +164,13 @@ def optimize(pool: pd.DataFrame, opts: Options | None = None) -> list[pd.DataFra
     earlier: list[set] = []
     for _ in range(opts.n):
         banned = {pid for pid, count in used.items() if count >= cap_each}
-        A, lo, hi, bounds = _program(p, opts, earlier, banned)
+        try:
+            A, lo, hi, bounds = _program(p, opts, earlier, banned)
+        except Infeasible:
+            # A locked player at his exposure cap: the lineups already built stand.
+            if not lineups:
+                raise
+            break
         res = milp(-p["projection"].to_numpy(dtype=float), constraints=LinearConstraint(A, lo, hi),
                    integrality=np.ones(len(p)), bounds=bounds)
         if res.status != 0 or res.x is None:

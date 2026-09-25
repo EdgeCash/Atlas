@@ -92,11 +92,13 @@ def wagers(signals: pd.DataFrame, finals: pd.DataFrame, grades: pd.DataFrame | N
         return pd.DataFrame(columns=["game_id", "market", "selection", "outcome", "profit"])
     s = signals.assign(game_id=signals["game_id"].astype(str)).sort_values(["created_at", "signal_id"])
     w = s.drop_duplicates(["game_id", "market"], keep="first").copy()
-    # The recorded price counts only when it is the price of the side taken: a
+    # The recorded price counts only when it is the price of the side taken. A
     # signal formed before both prices were captured holds the home side's or
-    # the over's whichever way it ran, and is priced at the standard -110.
+    # the over's whichever way it ran: right for a home or over signal, and
+    # priced at the standard -110 for an away or under one.
     side = w["entry_price_side"] if "entry_price_side" in w else pd.Series(None, index=w.index)
-    own = side.astype("string").eq(w["direction"].astype("string")).fillna(False)
+    first_side = w["direction"].isin(["over", "home"])
+    own = side.astype("string").eq(w["direction"].astype("string")).fillna(False) | (side.isna() & first_side)
     w["price"] = pd.to_numeric(w["entry_price"], errors="coerce").where(own).fillna(DEFAULT_PRICE)
     w["price_assumed"] = ~own | pd.to_numeric(w["entry_price"], errors="coerce").isna()
     w = w.merge(finals, on="game_id", how="left")
@@ -129,8 +131,11 @@ def record(w: pd.DataFrame) -> dict:
     decided = done[done["outcome"] != "push"]
     wins = int((decided["outcome"] == "win").sum())
     lo, hi = wilson(wins, len(decided))
-    be = float(decided["price"].map(break_even).mean()) if len(decided) else float("nan")
-    return {"wagers": len(w), "graded": len(done), "open": int((w["outcome"] == "open").sum()),
+    # Flat stakes at mixed prices break even where wins * mean payout equals
+    # losses: n / sum(1 + payout), not the mean of each price's break-even.
+    be = float(len(decided) / (1.0 + decided["price"].map(payout)).sum()) if len(decided) else float("nan")
+    return {"wagers": len(w), "graded": len(done), "decided": len(decided),
+            "open": int((w["outcome"] == "open").sum()),
             "wins": wins, "losses": int((decided["outcome"] == "loss").sum()),
             "pushes": int((done["outcome"] == "push").sum()),
             "win_rate": wins / len(decided) if len(decided) else float("nan"), "low": lo, "high": hi,
@@ -140,8 +145,11 @@ def record(w: pd.DataFrame) -> dict:
 
 
 def verdict(r: dict) -> str:
-    if r["graded"] < MIN_GRADED:
-        return (f"Collecting: {r['graded']} of {MIN_GRADED} graded. Nothing can be read from fewer; "
+    # Decided results only, as the live scorecard counts toward its 124: a
+    # push is graded but says nothing about the win rate.
+    decided = r.get("decided", r["graded"])
+    if decided < MIN_GRADED:
+        return (f"Collecting: {decided} of {MIN_GRADED} decided. Nothing can be read from fewer; "
                 "treat every number below as noise until then.")
     if r["low"] > r["break_even"] and r["units"] > 0:
         return ("Clears: the win rate's 95% interval sits above break-even at the prices taken. "

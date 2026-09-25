@@ -178,13 +178,23 @@ class PasserRecord:
         weights = p["dropbacks"].to_numpy(dtype=float)
         epa = p["qb_epa_per_dropback"].fillna(0).to_numpy(dtype=float)
         self.league = float(np.average(epa, weights=weights))
+        # The league level as it stood before each date: league EPA per
+        # dropback has drifted over the years, and a mean over the whole file
+        # would centre every walk-forward season on seasons still to come.
+        self._dates = p["date"].to_numpy()
+        self._cum_n, self._cum_s = np.cumsum(weights), np.cumsum(weights * epa)
+        first = p["date"].dt.year == p["date"].dt.year.iloc[0]
+        self._opening = float(np.average(epa[first.to_numpy()], weights=weights[first.to_numpy()])) \
+            if weights[first.to_numpy()].sum() > 0 else self.league
+        league_then = np.array([self.league_at(d, inclusive=True) for d in self._dates])
         # Per-dropback variance implied by the game lines: a game's mean over
         # n dropbacks has variance play_var / n, so its noise scales with the
         # sample the way a measurement should.
-        self.play_var = float(np.mean(weights * (epa - self.league) ** 2))
+        self.play_var = float(np.mean(weights * (epa - league_then) ** 2))
         if "game_id" in p.columns:
-            self.by_game = {(str(pid), str(gid)): (float(n), float(e - self.league))
-                            for pid, gid, n, e in zip(p["passer_id"], p["game_id"], weights, epa, strict=True)}
+            self.by_game = {(str(pid), str(gid)): (float(n), float(e - lg))
+                            for pid, gid, n, e, lg in zip(p["passer_id"], p["game_id"], weights, epa, league_then,
+                                                          strict=True)}
         if "passer_name" in p.columns:
             self.names.update(dict(zip(p["passer_id"].astype(str), p["passer_name"].astype(str), strict=True)))
         for pid, g in p.groupby("passer_id"):
@@ -192,16 +202,35 @@ class PasserRecord:
             self.by_passer[str(pid)] = (g["date"].to_numpy(), np.cumsum(n),
                                         np.cumsum(n * g["qb_epa_per_dropback"].fillna(0).to_numpy(dtype=float)))
 
+    def league_at(self, date, *, inclusive: bool = False) -> float:
+        """League EPA per dropback over every game before ``date`` (through it with ``inclusive``)."""
+        if not hasattr(self, "_dates") or len(self._dates) == 0:
+            return self.league
+        k = int(np.searchsorted(self._dates, np.datetime64(date), side="right" if inclusive else "left"))
+        return self._opening if k == 0 else float(self._cum_s[k - 1] / self._cum_n[k - 1])
+
+    @staticmethod
+    def game_date(kickoff) -> np.datetime64:
+        """The local (US Eastern) date of a kickoff, which is how the passer log dates a game.
+
+        Kickoffs are stored in UTC: a Sunday night game kicks off on Monday in
+        UTC, and "strictly before Monday" would include the game itself.
+        """
+        ts = pd.Timestamp(kickoff)
+        ts = ts.tz_localize("UTC") if ts.tzinfo is None else ts
+        return np.datetime64(ts.tz_convert("America/New_York").tz_localize(None).normalize())
+
     def before(self, passer_id, kickoff) -> tuple[float, float]:
-        """(dropbacks, mean EPA per dropback above league) strictly before ``kickoff``."""
+        """(dropbacks, mean EPA per dropback above league) strictly before ``kickoff``'s date."""
         rec = self.by_passer.get(str(passer_id))
         if rec is None:
             return 0.0, 0.0
         dates, n, s = rec
-        k = int(np.searchsorted(dates, np.datetime64(pd.Timestamp(kickoff).tz_localize(None).normalize()), side="left"))
+        day = self.game_date(kickoff)
+        k = int(np.searchsorted(dates, day, side="left"))
         if k == 0:
             return 0.0, 0.0
-        return float(n[k - 1]), float(s[k - 1] / n[k - 1] - self.league)
+        return float(n[k - 1]), float(s[k - 1] / n[k - 1] - self.league_at(day))
 
     def draft_of(self, passer_id) -> float:
         """The quarterback's draft score; 0 (the centre) when the rosters never listed him."""
@@ -246,7 +275,7 @@ def _levels(train: pd.DataFrame, season: int) -> tuple[float, float]:
     if recent.empty:
         recent = train
     base = float(recent["actual_total"].mean() / 2.0)
-    home = recent[pd.to_numeric(recent.get("neutral_site", 0), errors="coerce").fillna(0) == 0]
+    home = recent[pd.to_numeric(recent.get("neutral_site", pd.Series(0, index=recent.index)), errors="coerce").fillna(0) == 0]
     return base, float(home["actual_margin"].mean())
 
 
@@ -371,16 +400,10 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
     def expected(side: str, i: int, team):
         return expected_starter(cols[f"{side}_qb1_id"][i], cols[f"{side}_qb2_id"][i], cols[f"{side}_qb1_out"][i])
 
-    for i in range(len(g)):
-        week = int(weeks[i])
-        if state.week is None:
-            state.week = week
-        elif week > state.week:
-            _advance_qb(state, week - state.week, spec, qb_q)
-            state.week = week
+    def forecast(i: int):
         h, a = cols["home_team_id"][i], cols["away_team_id"][i]
         if h not in state.index or a not in state.index:
-            continue
+            return None
         ih, ia = state.index[h], state.index[a]
         is_home = 0.0 if neutral[i] else 1.0
         qh = qb_index(expected("home", i, h), h, kickoffs[i])
@@ -394,9 +417,12 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
         hps[i], aps[i] = spec.base + mh, spec.base + ma
         hqs[i] = state.x[qh] if qh is not None else np.nan
         aqs[i] = state.x[qa] if qa is not None else np.nan
+        return h, a, ih, ia, is_home, qh, qa
+
+    def _learn(i, h, a, ih, ia, is_home, qh, qa) -> None:
         m, t = cols["actual_margin"][i], cols["actual_total"][i]
         if np.isnan(m) or np.isnan(t):
-            continue
+            return
         # Learn from who actually played.
         rh, ra = cols["home_qb_id"][i], cols["away_qb_id"][i]
         qh_rec = qb_index(rh, h, kickoffs[i]) if not pd.isna(rh) else qh
@@ -423,6 +449,19 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
                 if n_pl >= EFF_MIN_PLAYS:
                     plus = [state.index[off]] + ([off_qb] if off_qb is not None else []) + ([hfa] if at_home else [])
                     kalman.row_update(state, plus, [n + opp], k_eff * e, k_eff ** 2 * eff.play_var / n_pl)
+
+    # Every game at one kickoff is forecast before any of them is learnt from:
+    # the 1pm slate cannot see its own results.
+    for group in kalman.kickoff_groups(kickoffs):
+        week = int(weeks[group].max())
+        if state.week is None:
+            state.week = week
+        elif week > state.week:
+            _advance_qb(state, week - state.week, spec, qb_q)
+            state.week = week
+        seen = [(i, f) for i in group if (f := forecast(i)) is not None]
+        for i, (h, a, ih, ia, is_home, qh, qa) in seen:
+            _learn(i, h, a, ih, ia, is_home, qh, qa)
     out = pd.DataFrame({"mean": means, "sd": sds, "home_pts": hps, "away_pts": aps, "home_qb_state": hqs,
                         "away_qb_state": aqs}, index=g.index)
     return out.reindex(games.index)

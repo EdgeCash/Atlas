@@ -5,7 +5,7 @@
 Step 6 of `docs/MODEL_PLAN_NFL.md`, the NFL twin of
 :mod:`atlas.models.ncaaf_projection`: the quarterback state model carried
 through every game already played (steps 3-4), the calibrated total and
-the 60x60 grid with its points lattice (step 5), one row per scheduled
+the 80x80 grid with its points lattice (step 5), one row per scheduled
 game. Rows are keyed by ESPN's event id, which is what the odds poll, the
 game metadata and the card key on, and carry ``sport = "nfl"``.
 
@@ -139,7 +139,11 @@ def fit(frame: pd.DataFrame, *, season: int | None = None, choices=None,
     total = replace(total, points_factor=tm.fit_points_lattice(train_fc, grid, total, nt.MAX_POINTS))
     this_season = completed[completed["season"] == season]
     if not this_season.empty:
-        ns.run_qb(frame, [season], choice=choice, p0=qb.p0, new_mean=qb.new_mean, levels=levels, state=state,
+        # Played games only: the filter adds a week's process noise before it
+        # looks for a result, so carrying it through the unplayed schedule
+        # would leave the state at week 18 with every remaining week's noise
+        # already in it, and project() would add it all again.
+        ns.run_qb(completed, [season], choice=choice, p0=qb.p0, new_mean=qb.new_mean, levels=levels, state=state,
                   starters=starters, k_epa=qb.k_epa, record=record, k_obs=qb.k_obs, k_draft=qb.k_draft)
     else:
         ns.new_season(state, choice.phi, choice.p_season)
@@ -188,7 +192,7 @@ def project(projector: Projector, scheduled: pd.DataFrame) -> pd.DataFrame:
     wind = pd.to_numeric(rows.get("wind_effective"), errors="coerce").to_numpy(dtype=float)
     wind_adj = coef.get("wind_effective", 0.0) * (np.where(np.isnan(wind), fill.get("wind_effective", 0.0), wind)
                                                  - fill.get("wind_effective", 0.0))
-    neutral = pd.to_numeric(rows.get("neutral_site", 0), errors="coerce").fillna(0).to_numpy(dtype=float)
+    neutral = pd.to_numeric(rows.get("neutral_site", pd.Series(0, index=rows.index)), errors="coerce").fillna(0).to_numpy(dtype=float)
     hfa = state.value(ns.HFA_KEY) if ns.HFA_KEY in state.extra else p.spec.boost
     views = {side: [p.team(int(t)) for t in rows[f"{side}_team_id"]] for side in ("home", "away")}
     out = pd.DataFrame({

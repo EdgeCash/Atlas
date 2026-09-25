@@ -238,7 +238,7 @@ def fit(games: pd.DataFrame, feats: pd.DataFrame, *, season: int, ridge: float =
     if train["season"].nunique() < 2:
         raise ValueError(f"need at least two training seasons before {season}")
     tf = feats[feats["season"] < season]
-    is_home = 1.0 - pd.to_numeric(train.get("neutral_site", 0), errors="coerce").fillna(0).to_numpy(dtype=float)
+    is_home = 1.0 - pd.to_numeric(train.get("neutral_site", pd.Series(0, index=train.index)), errors="coerce").fillna(0).to_numpy(dtype=float)
     margin = train["actual_margin"].to_numpy(dtype=float)
     total = train["actual_total"].to_numpy(dtype=float)
 
@@ -303,7 +303,7 @@ def game_forecast(prior: Prior, test: pd.DataFrame, sigma: float | None = None,
     """Home margin = net_home - net_away + hfa (0 at a neutral site)."""
     home = _lookup(prior.teams, test, "home")
     away = _lookup(prior.teams, test, "away")
-    is_home = 1.0 - pd.to_numeric(test.get("neutral_site", 0), errors="coerce").fillna(0).to_numpy(dtype=float)
+    is_home = 1.0 - pd.to_numeric(test.get("neutral_site", pd.Series(0, index=test.index)), errors="coerce").fillna(0).to_numpy(dtype=float)
     mean = home - away + prior.net.hfa * is_home
     return ref.Forecast(name, mean, prior.net.resid_sd if sigma is None else sigma, hfa=prior.net.hfa)
 

@@ -8,8 +8,13 @@ carried across seasons (`atlas/models/nfl_state.py`); the one game-level
 term that measured as real on the implied total's residual is the wind
 (-0.34 points per mph, t = -5.6; a dome is zero wind, and once wind is in
 the dome itself adds nothing, nor do temperature, pace, rest or a division
-game); and the grid is 60 points a side, which is every NFL final since
-1966. The points lattice is fitted the same way and applied the same way.
+game); and the grid is 80 points a side (0-79). Sixty was not enough: the
+Dolphins scored 70 in 2023 and the Saints 62 in 2011. The points lattice is
+fitted the same way and applied the same way.
+
+The wind is the game-time wind as recorded, not a forecast made before
+kickoff: in the walk-forward it is a mild look-ahead, and live it is only as
+good as the forecast that stands in for it.
 """
 
 from __future__ import annotations
@@ -35,7 +40,7 @@ LOG = get_logger(__name__)
 
 FIRST_TEST_SEASON = ns.FIRST_TEST_SEASON
 REPORT_SEASONS = nb.REPORT_SEASONS
-MAX_POINTS = 60
+MAX_POINTS = 80
 ADJUSTMENTS = ("wind_effective",)
 SPREAD_BUCKETS = nb.SPREAD_BUCKETS
 TAIL_SPREAD = 10
@@ -138,7 +143,8 @@ def render(scored: pd.DataFrame, table: pd.DataFrame, fits: dict[int, tm.TotalFi
         "home-plus-away points, recalibrated on the training seasons' own state forecasts with the wind "
         "(zero in a dome) as the one game-level term. The margin (state mean and sd through the key-number "
         f"lattice) and the total (discretised normal) meet on a {MAX_POINTS}x{MAX_POINTS} grid over (home, away) "
-        "points, reweighted by the points lattice; every headline number below is a mean of that grid.", "",
+        "points, reweighted by the points lattice; every headline number below is a mean of that grid. The wind "
+        "is the recorded game-time wind, not a pre-kickoff forecast - a mild look-ahead in these numbers.", "",
         "## Calibration fitted, per season", "",
         md(pd.DataFrame(coef_rows)), "",
         f"## Total, regular season {REPORT_SEASONS[0]}-{REPORT_SEASONS[-1]}", "",
@@ -198,7 +204,7 @@ def render(scored: pd.DataFrame, table: pd.DataFrame, fits: dict[int, tm.TotalFi
         last = last.sort_values("kickoff").tail(10)
     cards = pd.DataFrame({
         "game": [f"{a} {'vs' if n else 'at'} {h}" for h, a, n in zip(last["home_team"], last["away_team"],
-                 pd.to_numeric(last.get("neutral_site", 0), errors="coerce").fillna(0), strict=True)],
+                 pd.to_numeric(last.get("neutral_site", pd.Series(0, index=last.index)), errors="coerce").fillna(0), strict=True)],
         "projection": [f"{h:.1f}-{a:.1f}, total {t:.1f}" for h, a, t in zip(last["home_mean"], last["away_mean"], last["total_mean"], strict=True)],
         "P(home)": last["p_home"].map("{:.0%}".format),
         "total 80% range": [f"{lo:.0f}-{hi:.0f}" for lo, hi in zip(last["total_lo"], last["total_hi"], strict=True)],

@@ -40,14 +40,29 @@ def expected(box: pd.DataFrame, research: pd.DataFrame, now: datetime) -> dict[s
     return dict(zip(qb["school"], qb["name"], strict=True))
 
 
+#: The conferences post in their own local time, named by these abbreviations.
+ZONES = {"ET": "America/New_York", "CT": "America/Chicago", "MT": "America/Denver", "PT": "America/Los_Angeles"}
+
+
+def _published(a: pd.DataFrame) -> pd.Series:
+    """When each report was posted, in UTC, read in the zone it was posted in (Eastern when unnamed)."""
+    local = pd.to_datetime(a["publish_date"].astype(str) + " " + a["posted_time"].fillna("00:00:00").astype(str),
+                           errors="coerce")
+    zones = (a["time_zone"] if "time_zone" in a else pd.Series("ET", index=a.index)).fillna("ET")
+    zones = zones.astype(str).str.upper().map(ZONES).fillna(ZONES["ET"])
+    out = pd.Series(pd.NaT, index=a.index, dtype="datetime64[ns, UTC]")
+    for zone, rows in zones.groupby(zones).groups.items():
+        out.loc[rows] = local.loc[rows].dt.tz_localize(zone, ambiguous="NaT", nonexistent="NaT").dt.tz_convert("UTC")
+    return out
+
+
 def latest_reports(availability: pd.DataFrame, now: datetime) -> pd.DataFrame:
     """Each team's quarterback rows from its most recent report captured by ``now`` and not stale."""
     if availability.empty:
         return availability
     a = availability.copy()
     a["captured"] = pd.to_datetime(a["captured_at"], utc=True, errors="coerce")
-    a["published"] = pd.to_datetime(a["publish_date"].astype(str) + " " + a["posted_time"].fillna("00:00:00").astype(str),
-                                    errors="coerce").dt.tz_localize("UTC")
+    a["published"] = _published(a)
     a = a[(a["captured"] <= pd.Timestamp(now)) & (a["published"] >= pd.Timestamp(now) - FRESH)]
     if a.empty:
         return a

@@ -70,8 +70,11 @@ def _signals(store: Store) -> pd.DataFrame:
     frame = frame.copy()
     frame["created_ts"] = pd.to_datetime(frame["created_at"], utc=True, errors="coerce")
     frame["created_date"] = frame["created_ts"].dt.date.astype("string")
-    for column in ("disagreement", "atlas_number", "entry_line", "week"):
+    for column in ("disagreement", "atlas_number", "entry_line", "week", "season"):
         frame[column] = pd.to_numeric(frame[column], errors="coerce")
+    # One ordered key per season and week: grouped on the week alone, a new
+    # season's week 1 would sort before last season's week 15.
+    frame["period"] = frame["season"].fillna(0) * 100 + frame["week"]
     return frame.dropna(subset=["created_ts"])
 
 
@@ -89,7 +92,7 @@ def volume_alerts(frame: pd.DataFrame) -> list[Alert]:
     if frame.empty or frame["week"].notna().sum() == 0:
         return [Alert("signal volume", "ok", 0.0, VOLUME_CHANGE,
                       "no signals recorded yet")]
-    counts = frame.groupby("week").size().sort_index()
+    counts = frame.groupby("period" if "period" in frame else "week").size().sort_index()
     if len(counts) < 2:
         return [Alert("signal volume", "ok", float(counts.iloc[-1]), VOLUME_CHANGE,
                       f"only {len(counts)} week(s) of record; nothing to compare")]
@@ -99,7 +102,7 @@ def volume_alerts(frame: pd.DataFrame) -> list[Alert]:
     severity = "alarm" if abs(change) > VOLUME_CHANGE else "ok"
     return [Alert(
         "signal volume", severity, change, VOLUME_CHANGE,
-        f"week {counts.index[-1]}: {latest:.0f} signals against "
+        f"week {int(counts.index[-1]) % 100}: {latest:.0f} signals against "
         f"{previous:.0f} the week before ({change:+.0%})",
     )]
 
@@ -147,10 +150,11 @@ def concentration_alerts(frame: pd.DataFrame) -> list[Alert]:
 
 def _split(frame: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Most recent week against everything before it."""
-    weeks = sorted(frame["week"].dropna().unique())
+    key = "period" if "period" in frame else "week"
+    weeks = sorted(frame[key].dropna().unique())
     if len(weeks) < 2:
         return pd.DataFrame(), pd.DataFrame()
-    return frame[frame["week"] == weeks[-1]], frame[frame["week"] < weeks[-1]]
+    return frame[frame[key] == weeks[-1]], frame[frame[key] < weeks[-1]]
 
 
 def output_drift(frame: pd.DataFrame) -> list[Alert]:

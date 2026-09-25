@@ -155,3 +155,28 @@ def test_unknown_method_is_rejected():
     obs, _, _ = _synthetic_league(teams=8, games_per_team=4)
     with pytest.raises(ValueError, match="unknown method"):
         fit(obs, method="magic")
+
+
+def test_the_bowls_stay_out_of_the_regular_seasons_ratings(tmp_path, monkeypatch):
+    """Postseason weeks restart at 1. A week-2 rating must not see December."""
+    from atlas.staging import adjusted_efficiency as adj
+
+    rows, eff = [], []
+    teams = [1, 2, 3, 4]
+    games = [(101, 1, "regular", 1, 2), (102, 1, "regular", 3, 4),
+             (201, 2, "regular", 1, 3), (202, 2, "regular", 2, 4),
+             (301, 1, "postseason", 1, 4)]
+    for gid, week, kind, home, away in games:
+        for team, opp, is_home in ((home, away, True), (away, home, False)):
+            rows.append({"game_id": gid, "season": 2024, "week": week, "season_type": kind,
+                         "kickoff": pd.Timestamp("2024-09-01", tz="UTC"), "team_id": team,
+                         "opponent_id": opp, "is_home": is_home})
+            # Every regular-season game is dead level; only the bowl is not.
+            eff.append({"game_id": gid, "team_id": team, "off_epa": 5.0 if (kind == "postseason" and team == 1)
+                        else 0.0, "off_plays": 60})
+    monkeypatch.setattr(adj.games_stage, "load_long", lambda staging: pd.DataFrame(rows))
+    monkeypatch.setattr(adj.efficiency_stage, "load", lambda staging: pd.DataFrame(eff))
+    out = adj.build_adjusted(tmp_path, tmp_path, methods=(adj.PRIMARY_METHOD,))
+    week2 = out[(out["week"] == 2) & (out["team_id"] == 1)]
+    assert len(week2) and week2["adj_off_epa"].abs().max() < 1e-9
+    assert set(teams) >= set(out["team_id"])

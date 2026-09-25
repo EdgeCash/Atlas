@@ -58,7 +58,7 @@ class Forecast:
 
 def _home(frame: pd.DataFrame) -> np.ndarray:
     """1 for a true home game, 0 at a neutral site."""
-    neutral = pd.to_numeric(frame.get("neutral_site", 0), errors="coerce").fillna(0).astype(float)
+    neutral = pd.to_numeric(frame.get("neutral_site", pd.Series(0, index=frame.index)), errors="coerce").fillna(0).astype(float)
     return 1.0 - neutral.to_numpy()
 
 

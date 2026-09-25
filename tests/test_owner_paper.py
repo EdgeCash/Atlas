@@ -48,7 +48,10 @@ def test_one_wager_per_game_graded_on_the_final_score():
     r = paper.record(w.reset_index().query("selection == 'primary'"))
     assert (r["graded"], r["wins"], r["losses"], r["pushes"], r["open"]) == (3, 1, 1, 1, 1)
     assert r["win_rate"] == 0.5 and r["units"] == pytest.approx(100 / 110 - 1)
-    assert r["break_even"] == pytest.approx((110 / 210 + 120 / 220) / 2)
+    # Flat stakes: one win at 100/110 pays for 100/110 of a loss, so break-even
+    # is n / sum(1 + payout) - not the mean of the two prices' break-evens.
+    assert r["break_even"] == pytest.approx(2 / ((1 + 100 / 110) + (1 + 100 / 120)))
+    assert r["decided"] == 2
     assert "Collecting" in paper.verdict(r)
 
 
@@ -104,3 +107,17 @@ def test_a_price_counts_only_for_the_side_it_belongs_to():
     w = paper.wagers(signals, finals).set_index("signal_id")
     assert w.loc["u", "profit"] == pytest.approx(100 / 110) and bool(w.loc["u", "price_assumed"])
     assert w.loc["o", "profit"] == pytest.approx(1.5) and not bool(w.loc["o", "price_assumed"])
+
+
+def test_an_older_home_or_over_signal_keeps_its_recorded_price():
+    """Before both prices were captured, entry_price was the home side's or
+    the over's: the price of a home or over signal, not of an away or under."""
+    signals = pd.DataFrame([
+        _signal("o", 1, "total", "over", 50.5, price=-125, side=None),
+        _signal("u", 2, "total", "under", 50.5, price=-125, side=None),
+    ])
+    finals = paper.results(pd.DataFrame({"game_id": [1, 2], "actual_margin": [3.0, 3.0],
+                                         "actual_total": [55.0, 55.0]}), pd.DataFrame(columns=["game_id"]))
+    w = paper.wagers(signals, finals).set_index("signal_id")
+    assert w.loc["o", "price"] == -125 and not w.loc["o", "price_assumed"]
+    assert w.loc["u", "price"] == paper.DEFAULT_PRICE and w.loc["u", "price_assumed"]

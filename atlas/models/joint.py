@@ -149,7 +149,9 @@ def fit_points(joints: list[Joint], home: np.ndarray, away: np.ndarray, *,
         n = J.n
         expected += J.home_marginal().sum(axis=0) + J.away_marginal().sum(axis=0)
         h, a = home[seen:seen + n], away[seen:seen + n]
-        observed += np.bincount(np.clip(h, 0, P - 1), minlength=P) + np.bincount(np.clip(a, 0, P - 1), minlength=P)
+        # A score past the grid is left out, not piled onto its last value.
+        h, a = h[(h >= 0) & (h < P)], a[(a >= 0) & (a < P)]
+        observed += np.bincount(h, minlength=P) + np.bincount(a, minlength=P)
         seen += n
     if seen != len(home):
         raise ValueError("joints and actual points describe different numbers of games")

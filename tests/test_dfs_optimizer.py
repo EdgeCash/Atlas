@@ -362,3 +362,10 @@ def test_college_showdown_uses_util_slots():
     assert op.valid_showdown(lineup, flex_label="UTIL") == []
     assert list(lineup["slot"]) == ["CPT"] + ["UTIL"] * 5
     assert op.upload([lineup], "Showdown", "cfb").startswith("CPT,UTIL,UTIL,UTIL,UTIL,UTIL\n")
+
+
+def test_a_locked_player_at_his_cap_keeps_the_lineups_already_built():
+    pool = _pool(5, counts=(("QB", 4), ("RB", 8), ("WR", 12), ("TE", 5), ("DST", 4)))
+    locked = pool[pool["position"] == "RB"]["id"].iloc[0]
+    lineups = op.optimize(pool, op.Options(n=4, locks=[locked], max_exposure=0.5, min_unique=1))
+    assert len(lineups) == 2 and all(locked in set(x["id"]) for x in lineups)

@@ -223,6 +223,9 @@ def mixture_quantile(p, if_plays, low, high, level: float) -> np.ndarray:
     up = mid + (hi - mid) * (cond - 0.5) / span
     down = mid + (mid - lo) * (cond - 0.5) / (0.5 - ranges.LOW)
     q = np.where(cond >= 0.5, up, down)
+    # Below the range's low end the line is extrapolated; it must not run
+    # past zero (or past the range's own negative floor, for a defense).
+    q = np.maximum(q, np.minimum(lo, 0.0))
     return np.where(cond <= 0, 0.0, q)
 
 

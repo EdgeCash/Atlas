@@ -401,7 +401,7 @@ def render(scored: pd.DataFrame, table: pd.DataFrame, fits: dict[int, TotalFit])
         last = last.sort_values("kickoff").tail(12)
     cards = pd.DataFrame({
         "game": [f"{a} {'vs' if n else 'at'} {h}" for h, a, n in zip(last["home_team"], last["away_team"],
-                 pd.to_numeric(last.get("neutral_site", 0), errors="coerce").fillna(0), strict=True)]
+                 pd.to_numeric(last.get("neutral_site", pd.Series(0, index=last.index)), errors="coerce").fillna(0), strict=True)]
                 if "home_team" in last else last.index,
         "projection": [f"{h:.1f}-{a:.1f}, total {t:.1f}" for h, a, t in zip(last["home_mean"], last["away_mean"], last["total_mean"], strict=True)],
         "P(home)": last["p_home"].map("{:.0%}".format),
