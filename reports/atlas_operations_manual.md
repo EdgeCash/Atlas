@@ -1,6 +1,6 @@
 # Atlas Operations Manual
 
-*Generated 2026-09-25 21:13 UTC by `python -m atlas.live check`. Atlas research is
+*Generated 2026-09-25 23:25 UTC by `python -m atlas.live check`. Atlas research is
 complete; this document is about keeping the live tracker alive and honest for
 two seasons.*
 
@@ -16,9 +16,9 @@ two seasons.*
 | | |
 |---|---|
 | Signals recorded | 120 |
-| Grades recorded | 4 |
-| Line snapshots | 683 |
-| Tracker runs logged | 31 |
+| Grades recorded | 6 |
+| Line snapshots | 709 |
+| Tracker runs logged | 32 |
 | Blocking data-quality exceptions | 0 |
 | Monitor alerts firing | 2 |
 | Replays clean | 6 of 6 |
@@ -100,7 +100,7 @@ trace(Store.open(), "<signal_id>")   # signal, grade, full line history, run
 
 | Table | Rows | Columns | Primary key |
 |---|---|---|---|
-| runs | 31 | 14 | run_id |
+| runs | 32 | 14 | run_id |
 | numbers | 2,420 | 8 | game_id, market, model_version |
 | projections | 4,218 | 48 | sport, game_id, model_version |
 | calibration | 11,180 | 9 | sport, game_id, market |
@@ -109,9 +109,9 @@ trace(Store.open(), "<signal_id>")   # signal, grade, full line history, run
 | dfs_projections | 671 | 18 | draft_group_id, player_id_dk |
 | availability | 137 | 13 | conference, report_id, team, player |
 | games | 90 | 14 | game_id |
-| snapshots | 683 | 11 | game_id, book, market, captured_at |
+| snapshots | 709 | 11 | game_id, book, market, captured_at |
 | signals | 120 | 17 | signal_id |
-| grades | 4 | 14 | signal_id |
+| grades | 6 | 14 | signal_id |
 | market_shape | 324 | 5 | sport, market, point |
 
 Storage is CSV, not a database file: it survives the container, a scheduled
