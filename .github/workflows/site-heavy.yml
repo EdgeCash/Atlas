@@ -2,13 +2,22 @@ name: site heavy
 
 # 04:00 ET daily: warehouse, model, market, every page, social assets.
 #
-# Cron here is UTC and has no notion of daylight saving, so both candidate
-# hours fire and publish.yml's Eastern-time gate lets exactly one through.
-# 08:00 UTC is 04:00 EDT (Mar-Nov); 09:00 UTC is 04:00 EST (Nov-Mar).
+# Cron here is UTC and has no notion of daylight saving, so several candidate
+# hours fire and publish.yml's Eastern-time gate lets exactly one through: the
+# first that is at or after 04:00 ET on a day with no heavy run yet. 08:12 UTC
+# is 04:12 EDT (Mar-Nov); 09:12 UTC is 04:12 EST (Nov-Mar).
+#
+# 10 and 11 UTC are backups. GitHub drops and delays scheduled runs under
+# load - the 04:00 run landed after 09:00 ET on 24 and 25 September 2026 - and
+# a backup that finds the day's heavy run done stops at the gate in seconds.
+#
+# Minute 12, off the hour where GitHub is busiest, and midway between the
+# poll's ticks (4, 19, 34, 49): the two share a concurrency group, and a heavy
+# run left pending behind a poll is cancelled if another poll queues behind it.
 
 on:
   schedule:
-    - cron: "0 8,9 * * *"
+    - cron: "12 8,9,10,11 * * *"
   workflow_dispatch:
     inputs:
       force:

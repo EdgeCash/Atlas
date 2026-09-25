@@ -31,6 +31,12 @@ twice a season. So the crons fire a deliberate superset and
 freshness stamp. A run that is not due stops at the gate in a few seconds,
 before installing anything.
 
+The superset is also what survives GitHub dropping scheduled runs, which it
+does under load and most at the top of the hour. Both crons sit off the hour:
+the poll fires at :04, :19, :34 and :49 every day, and the heavy run at :12
+past 08:00-11:00 UTC, the later hours being backups the gate turns away once
+the day's heavy run has succeeded.
+
 ### The gate asks "is it due", not "is it the minute"
 
 GitHub documents that a scheduled workflow "can be delayed during periods of

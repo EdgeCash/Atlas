@@ -8,11 +8,19 @@ name: site poll
 # a UTC approximation that silently goes wrong in November, fire often and let
 # should_poll() decide in Eastern time. A run that is not a poll minute stops
 # at the gate in a few seconds, before installing anything.
+#
+# Every fifteen minutes, every day, and off the hour. GitHub drops scheduled
+# runs under load and the top of the hour is when it is most loaded: on 23-25
+# September 2026 an hourly "0 * * * *" delivered about five runs a day, hours
+# apart, against a health check that calls a poll stale after two hours. Four
+# chances an hour means a dropped tick costs fifteen minutes, not the hour, and
+# schedule.due() still decides the cadence - hourly, or every fifteen minutes
+# inside a game-day window - so the extra ticks cost seconds, not provider
+# requests.
 
 on:
   schedule:
-    - cron: "0 * * * *"          # the hourly cadence, every day
-    - cron: "*/15 * * * 6,0"     # game days: Saturday and Sunday, both zones
+    - cron: "4,19,34,49 * * * *"
   workflow_dispatch:
     inputs:
       force:
