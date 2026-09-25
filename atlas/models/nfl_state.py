@@ -28,7 +28,7 @@ from __future__ import annotations
 import argparse
 import itertools
 import json
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 
 import numpy as np
@@ -107,6 +107,10 @@ class Choice:
     sigma: float
     loglik: float
     seasons: tuple[int, ...]
+    #: Correlation between the two teams' point noise (kalman.py); ``sigma``
+    #: is rescaled with it so the margin's noise is what the tuning chose.
+    #: Choices saved before it existed read as 0.
+    rho: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -260,7 +264,8 @@ def load_choices(path: Path) -> tuple[dict[int, Choice], dict[int, QBChoice]] | 
         return None
     raw = json.loads(path.read_text())
     choices = {int(s): Choice(q=c["q"], phi=c["phi"], p_season=c["p_season"], sigma=c["sigma"], loglik=c["loglik"],
-                              seasons=tuple(int(x) for x in c["seasons"])) for s, c in raw.items()}
+                              seasons=tuple(int(x) for x in c["seasons"]), rho=float(c.get("rho", 0.0)))
+               for s, c in raw.items()}
     qb = {int(s): QBChoice(p0=c["qb"]["p0"], new_mean=c["qb"]["new_mean"], loglik=c["qb"]["loglik"],
                            seasons=tuple(int(x) for x in c["qb"]["seasons"]), k_epa=c["qb"].get("k_epa", 0.0),
                            k_obs=c["qb"].get("k_obs", 0.0), k_draft=c["qb"].get("k_draft", 0.0))
@@ -279,8 +284,8 @@ def _levels(train: pd.DataFrame, season: int) -> tuple[float, float]:
     return base, float(home["actual_margin"].mean())
 
 
-def _spec(q: float, sigma: float, base: float, hfa: float) -> kalman.Spec:
-    return kalman.Spec(q_off=q, q_def=q, p0_off=0.0, p0_def=0.0, sigma=sigma, base=base, boost=hfa)
+def _spec(q: float, sigma: float, base: float, hfa: float, rho: float = 0.0) -> kalman.Spec:
+    return kalman.Spec(q_off=q, q_def=q, p0_off=0.0, p0_def=0.0, sigma=sigma, base=base, boost=hfa, rho=rho)
 
 
 def _fresh(teams: np.ndarray, phi: float, p_season: float, spec: kalman.Spec) -> kalman.State:
@@ -375,7 +380,7 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
     weeks = g["week"].to_numpy(dtype=int)
     neutral = pd.to_numeric(g["neutral_site"], errors="coerce").fillna(0).to_numpy(dtype=float) \
         if "neutral_site" in g else np.zeros(len(g))
-    means, sds, hps, aps = (np.full(len(g), np.nan) for _ in range(4))
+    means, sds, hps, aps, tsds = (np.full(len(g), np.nan) for _ in range(5))
     # The quarterback's own state going in, in points (the DFS model reads it).
     hqs, aqs = np.full(len(g), np.nan), np.full(len(g), np.nan)
     r = spec.sigma ** 2
@@ -413,7 +418,9 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
         mh, _ = kalman.row_forecast(state, home_plus, [n + ia])
         ma, _ = kalman.row_forecast(state, away_plus, [n + ih])
         _, var = kalman.row_forecast(state, home_plus + [n + ih], away_plus + [n + ia])
-        means[i], sds[i] = mh - ma, np.sqrt(var + 2.0 * r)
+        _, tvar = kalman.row_forecast(state, home_plus + away_plus, [n + ia, n + ih])
+        means[i], sds[i] = mh - ma, np.sqrt(var + spec.margin_noise)
+        tsds[i] = np.sqrt(tvar + spec.total_noise)
         hps[i], aps[i] = spec.base + mh, spec.base + ma
         hqs[i] = state.x[qh] if qh is not None else np.nan
         aqs[i] = state.x[qa] if qa is not None else np.nan
@@ -433,8 +440,8 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
             starters[a] = ra
         home_plus = [ih] + ([qh_rec] if qh_rec is not None else []) + ([hfa] if is_home else [])
         away_plus = [ia] + ([qa_rec] if qa_rec is not None else [])
-        kalman.row_update(state, home_plus, [n + ia], (t + m) / 2.0 - spec.base, r)
-        kalman.row_update(state, away_plus, [n + ih], (t - m) / 2.0 - spec.base, r)
+        kalman.pair_update(state, (home_plus, [n + ia]), (away_plus, [n + ih]),
+                           (t + m) / 2.0 - spec.base, (t - m) / 2.0 - spec.base, r, spec.rho)
         if observe:
             for qb, q_idx in ((rh, qh_rec), (ra, qa_rec)):
                 if q_idx is None or pd.isna(qb):
@@ -462,8 +469,8 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
         seen = [(i, f) for i in group if (f := forecast(i)) is not None]
         for i, (h, a, ih, ia, is_home, qh, qa) in seen:
             _learn(i, h, a, ih, ia, is_home, qh, qa)
-    out = pd.DataFrame({"mean": means, "sd": sds, "home_pts": hps, "away_pts": aps, "home_qb_state": hqs,
-                        "away_qb_state": aqs}, index=g.index)
+    out = pd.DataFrame({"mean": means, "sd": sds, "home_pts": hps, "away_pts": aps, "total_sd": tsds,
+                        "home_qb_state": hqs, "away_qb_state": aqs}, index=g.index)
     return out.reindex(games.index)
 
 
@@ -480,7 +487,7 @@ def run_qb(frame: pd.DataFrame, seasons: list[int], *, choice: Choice, p0: float
     first = state is None
     for i, season in enumerate(seasons):
         base, hfa = levels[season]
-        spec = _spec(choice.q, choice.sigma, base, hfa)
+        spec = _spec(choice.q, choice.sigma, base, hfa, choice.rho)
         if state is None:
             state = _fresh(teams, choice.phi, choice.p_season, spec)
         elif i > 0 or state.week is not None:
@@ -524,7 +531,7 @@ def tune_qb(frame: pd.DataFrame, season: int, choice: Choice, levels: dict[int, 
 
 def run(frame: pd.DataFrame, seasons: list[int], *, q: float, phi: float, p_season: float, sigma: float,
         levels: dict[int, tuple[float, float]], state: kalman.State | None = None,
-        teams: np.ndarray | None = None) -> tuple[dict[int, pd.DataFrame], kalman.State]:
+        teams: np.ndarray | None = None, rho: float = 0.0) -> tuple[dict[int, pd.DataFrame], kalman.State]:
     """Run the filter through ``seasons`` in order, from ``state`` or from scratch.
 
     ``levels`` gives (base points, home advantage) per season. Returns the
@@ -535,7 +542,7 @@ def run(frame: pd.DataFrame, seasons: list[int], *, q: float, phi: float, p_seas
     forecasts = {}
     for i, season in enumerate(seasons):
         base, hfa = levels[season]
-        spec = _spec(q, sigma, base, hfa)
+        spec = _spec(q, sigma, base, hfa, rho)
         if state is None:
             state = _fresh(teams, phi, p_season, spec)
         elif i > 0 or state.week is not None:
@@ -553,7 +560,7 @@ def _loglik(fc: pd.DataFrame, games: pd.DataFrame) -> float:
 
 
 def tune(frame: pd.DataFrame, season: int, levels: dict[int, tuple[float, float]], *, grid: dict = GRID,
-         min_train_seasons: int = 2) -> Choice:
+         min_train_seasons: int = 2, fit_rho: bool = True) -> Choice:
     """Pick hyperparameters on the training seasons before ``season``.
 
     Every candidate runs the filter from the first season in the frame; only
@@ -573,12 +580,24 @@ def tune(frame: pd.DataFrame, season: int, levels: dict[int, tuple[float, float]
         ll = sum(_loglik(fcs[s], train[train["season"] == s]) for s in scored)
         if best is None or ll > best.loglik:
             best = Choice(q, phi, p_season, sigma, ll, tuple(scored))
-    return best
+    if best is None or not fit_rho:
+        return best
+    # The noise correlation, measured on the chosen filter's one-step
+    # forecasts of the scored seasons (kalman.noise_correlation); sigma is
+    # rescaled so the margin's noise stays what the grid chose.
+    fcs, _ = run(train, seasons, q=best.q, phi=best.phi, p_season=best.p_season, sigma=best.sigma, levels=levels,
+                 teams=teams)
+    block = train[train["season"].isin(scored)]
+    fc = pd.concat([fcs[s] for s in scored]).reindex(block.index)
+    spec = _spec(best.q, best.sigma, *levels[scored[-1]])
+    rho = kalman.noise_correlation(fc, block["actual_margin"].to_numpy(dtype=float),
+                                   block["actual_total"].to_numpy(dtype=float), spec)
+    return replace(best, sigma=kalman.with_correlation(spec, rho).sigma, rho=rho)
 
 
 def walk_forward(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON, grid: dict = GRID,
                  min_train_seasons: int = 2, qb: bool = True, qb_grid: dict = QB_GRID,
-                 passers: pd.DataFrame | None = None, players: pd.DataFrame | None = None):
+                 passers: pd.DataFrame | None = None, players: pd.DataFrame | None = None, fit_rho: bool = True):
     """Tune on the past, forecast the season, score beside the references.
 
     With ``qb`` the quarterback model (step 4) is tuned and scored too, as
@@ -596,13 +615,13 @@ def walk_forward(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEA
     for season, train, test in ref.walk_forward(frame, first_test_season=first_test_season,
                                                 min_train_seasons=min_train_seasons):
         levels = {s: _levels(frame[frame["season"] < max(s, all_seasons[0] + 1)], s) for s in all_seasons}
-        choice = tune(frame, season, levels, grid=grid, min_train_seasons=min_train_seasons)
+        choice = tune(frame, season, levels, grid=grid, min_train_seasons=min_train_seasons, fit_rho=fit_rho)
         choices[season] = choice
         history = [s for s in all_seasons if s < season]
         _, state = run(frame[frame["season"] < season], history, q=choice.q, phi=choice.phi,
-                       p_season=choice.p_season, sigma=choice.sigma, levels=levels)
+                       p_season=choice.p_season, sigma=choice.sigma, levels=levels, rho=choice.rho)
         fcs, state = run(frame, [season], q=choice.q, phi=choice.phi, p_season=choice.p_season,
-                         sigma=choice.sigma, levels=levels, state=state)
+                         sigma=choice.sigma, levels=levels, state=state, rho=choice.rho)
         fc = fcs[season]
         finals[season] = state
         refs = ref.all_references(train, test)
@@ -611,6 +630,15 @@ def walk_forward(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEA
         state_fc = ref.Forecast("state", fc["mean"].to_numpy(dtype=float), fc["sd"].to_numpy(dtype=float),
                                 hfa=levels[season][1])
         models = {**keep, "state": state_fc}
+        if choice.rho != 0.0:
+            # The same filter with independent noise, so the report measures the correlation.
+            flat = replace(choice, sigma=choice.sigma * np.sqrt(1.0 - choice.rho), rho=0.0)
+            _, flat_state = run(frame[frame["season"] < season], history, q=flat.q, phi=flat.phi,
+                                p_season=flat.p_season, sigma=flat.sigma, levels=levels)
+            flat_fcs, _ = run(frame, [season], q=flat.q, phi=flat.phi, p_season=flat.p_season, sigma=flat.sigma,
+                              levels=levels, state=flat_state)
+            models["state_indep"] = ref.Forecast("state_indep", flat_fcs[season]["mean"].to_numpy(dtype=float),
+                                                 flat_fcs[season]["sd"].to_numpy(dtype=float), hfa=levels[season][1])
         if qb:
             qb_choice = tune_qb(frame, season, choice, levels, grid=qb_grid, record=record)
             qb_choices[season] = qb_choice
@@ -627,8 +655,9 @@ def walk_forward(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEA
         s = evaluate.score(test, models, grid_, season=season)
         s["qb_change"] = np.tile(test["qb_change"].to_numpy(), len(models))
         scored.append(s)
-        LOG.info("season %s: q=%.2f phi=%.2f p_season=%.0f sigma=%.1f (tuned on %s); base %.1f hfa %.2f; %d games%s",
-                 season, choice.q, choice.phi, choice.p_season, choice.sigma, choice.seasons,
+        LOG.info("season %s: q=%.2f phi=%.2f p_season=%.0f sigma=%.1f rho=%.2f (tuned on %s); base %.1f hfa %.2f; "
+                 "%d games%s",
+                 season, choice.q, choice.phi, choice.p_season, choice.sigma, choice.rho, choice.seasons,
                  levels[season][0], levels[season][1], len(test),
                  f"; qb p0={qb_choices[season].p0:.0f} new={qb_choices[season].new_mean:+.0f} "
                  f"k_epa={qb_choices[season].k_epa:.0f} k_obs={qb_choices[season].k_obs:.0f} "
@@ -673,7 +702,8 @@ def render(scored: pd.DataFrame, choices: dict[int, Choice], finals: dict[int, k
         "lattice and scoring as the benchmarks.", "",
         "## Hyperparameters chosen, per season", "",
         md(pd.DataFrame([{"season": s, "q per week": c.q, "phi": c.phi, "p_season": c.p_season,
-                          "sigma (pts)": c.sigma, "tuned on": ", ".join(map(str, c.seasons)),
+                          "sigma (pts)": round(c.sigma, 2), "noise corr rho": round(c.rho, 3),
+                          "tuned on": ", ".join(map(str, c.seasons)),
                           **({"QB prior var": qb_choices[s]["p0"], "new QB prior": qb_choices[s]["new_mean"],
                               "pts per EPA/dropback": qb_choices[s].get("k_epa", 0.0),
                               "pts per EPA/dropback, observed": qb_choices[s].get("k_obs", 0.0),
@@ -743,6 +773,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="NFL state model, walk-forward")
     ap.add_argument("--out", type=Path, default=None)
     ap.add_argument("--first-test-season", type=int, default=FIRST_TEST_SEASON)
+    ap.add_argument("--no-rho", action="store_true", help="independent home/away noise, as before")
     args = ap.parse_args()
     paths = config.paths()
     frame = research_sample(load_nfl_frame(paths.warehouse))
@@ -753,7 +784,7 @@ def main() -> None:
         LOG.warning("no passer log in the warehouse (%s); new quarterbacks get the flat prior", error)
         passers = None
     scored, choices, finals, frame = walk_forward(frame, first_test_season=args.first_test_season, passers=passers,
-                                                  players=load_players(paths.warehouse))
+                                                  players=load_players(paths.warehouse), fit_rho=not args.no_rho)
     out = args.out or (paths.root / "reports" / "nfl_state.md")
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(render(scored, choices, finals, frame))

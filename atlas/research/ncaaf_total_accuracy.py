@@ -99,7 +99,7 @@ def run(frame: pd.DataFrame, *, first_test_season: int = total_mod.FIRST_TEST_SE
     for season, _train, test in ref.walk_forward(frame, first_test_season=first_test_season):
         prior = prior_mod.fit(frame, feats, season=season)
         choice = choices.get(season) or state_mod.tune(frame, feats, season, like=prior)
-        fc = total_mod._with_forecasts(test, prior, state_mod._spec(choice.q, choice.p0, choice.sigma, prior))
+        fc = total_mod._with_forecasts(test, prior, state_mod._spec(choice.q, choice.p0, choice.sigma, prior, choice.rho))
         fc = fc[fc["season_type"] == "regular"] if "season_type" in fc else fc
         tr3 = _training(frame, feats, season, choice, prior, 3)
         tr5 = _training(frame, feats, season, choice, prior, 5)

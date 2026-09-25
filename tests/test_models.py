@@ -838,3 +838,85 @@ def test_a_score_past_the_grid_is_not_piled_on_its_edge():
     J = joint_mod.build(m / m.sum(), support_m, t / t.sum(), support_t, max_points=30)
     factor = joint_mod.fit_points([J], np.array([45]), np.array([10]), min_expected=1e-9)
     assert factor[-1] <= 1.0          # 45 on a 0-29 grid used to count as a 29
+
+
+# ---------------------------------------------------------------------------
+# Correlated home/away noise
+# ---------------------------------------------------------------------------
+
+
+def test_the_pair_update_is_the_bivariate_kalman_update():
+    """Margin-then-total scalar updates equal the joint update with a 2x2 R."""
+    rng = np.random.default_rng(0)
+    n = 3
+    A = rng.normal(size=(2 * n, 2 * n))
+    P0 = A @ A.T + np.eye(2 * n)
+    x0 = rng.normal(size=2 * n)
+    r, rho, yh, ya = 121.0, 0.35, 4.0, -2.0
+    st = kalman.State(teams=np.arange(n), x=x0.copy(), P=P0.copy(), index={i: i for i in range(n)})
+    kalman.pair_update(st, ([0], [n + 1]), ([1], [n + 0]), yh, ya, r, rho)
+    H = np.zeros((2, 2 * n))
+    H[0, 0], H[0, n + 1], H[1, 1], H[1, n + 0] = 1, -1, 1, -1
+    R = r * np.array([[1, rho], [rho, 1]])
+    K = P0 @ H.T @ np.linalg.inv(H @ P0 @ H.T + R)
+    assert np.allclose(st.x, x0 + K @ (np.array([yh, ya]) - H @ x0))
+    assert np.allclose(st.P, P0 - K @ H @ P0)
+
+
+def test_independent_noise_is_unchanged_by_the_new_update():
+    spec = _flat_spec()
+    a = kalman.initialise(np.array([1, 2]), [1.0, -1.0], [0.5, 0.0], spec)
+    b = kalman.initialise(np.array([1, 2]), [1.0, -1.0], [0.5, 0.0], spec)
+    kalman.update(a, 1, 2, 31.0, 17.0, 1.0, spec)
+    n = b.n
+    kalman.row_update(b, [0], [n + 1], 31.0 - spec.base - spec.boost, spec.sigma ** 2)
+    kalman.row_update(b, [1], [n + 0], 17.0 - spec.base, spec.sigma ** 2)
+    assert np.allclose(a.x, b.x) and np.allclose(a.P, b.P)
+
+
+def test_the_margin_noise_is_held_while_rho_moves():
+    spec = _flat_spec(sigma=11.0)
+    moved = kalman.with_correlation(spec, 0.3)
+    assert moved.rho == 0.3 and moved.margin_noise == pytest.approx(spec.margin_noise)
+    assert moved.total_noise > spec.total_noise
+    assert kalman.with_correlation(moved, 0.0).sigma == pytest.approx(11.0)
+
+
+def test_the_noise_correlation_is_recovered_from_a_simulated_league():
+    rng = np.random.default_rng(11)
+    teams = np.arange(20)
+    off, dfn = rng.normal(0, 5, 20), rng.normal(0, 5, 20)
+    rho, sigma, base = 0.4, 10.0, 27.0
+    rows, week = [], 0
+    for _ in range(12):
+        week += 1
+        order = rng.permutation(teams)
+        for h, a in zip(order[::2], order[1::2], strict=True):
+            e = rng.multivariate_normal([0, 0], sigma ** 2 * np.array([[1, rho], [rho, 1]]))
+            hp, ap = base + off[h] - dfn[a] + e[0], base + off[a] - dfn[h] + e[1]
+            rows.append((h, a, week, f"2024-09-{week:02d}T16:00Z", hp - ap, hp + ap))
+    games = _games(rows)
+    spec = kalman.Spec(q_off=0.0, q_def=0.0, p0_off=25.0, p0_def=25.0, sigma=sigma, base=base, boost=0.0)
+    state = kalman.initialise(teams, np.zeros(20), np.zeros(20), spec)
+    fc = kalman.run_season(games, state, spec)
+    est = kalman.noise_correlation(fc, games["actual_margin"].to_numpy(), games["actual_total"].to_numpy(), spec)
+    assert est == pytest.approx(rho, abs=0.12)
+
+
+def test_choices_saved_before_rho_read_as_independent(tmp_path):
+    path = tmp_path / "choices.json"
+    path.write_text('{"2024": {"q": 1.0, "p0": 10.0, "sigma": 11.0, "loglik": -1.0, "seasons": [2022, 2023]}}')
+    assert state_mod.load_choices(path)[2024].rho == 0.0
+    state_mod.save_choices({2025: state_mod.Choice(1.0, 10.0, 11.5, -1.0, (2023, 2024), rho=0.2)}, path)
+    assert state_mod.load_choices(path)[2025].rho == 0.2
+
+
+def test_the_walk_forward_fits_rho_and_scores_it_against_independent_noise(research_frame):
+    scored, choices, _ = state_mod.run(research_frame, first_test_season=2021, grid=SMALL_GRID)
+    lo, hi = kalman.RHO_BOUNDS
+    assert all(lo <= c.rho <= hi for c in choices.values())
+    if any(c.rho != 0.0 for c in choices.values()):
+        assert "state_indep" in set(scored["model"])
+        assert not scored.attrs["totals"].empty
+    _, flat, _ = state_mod.run(research_frame, first_test_season=2021, grid=SMALL_GRID, fit_rho=False)
+    assert all(c.rho == 0.0 for c in flat.values())

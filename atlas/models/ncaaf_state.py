@@ -23,7 +23,7 @@ from __future__ import annotations
 import argparse
 import itertools
 import json
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 
 import numpy as np
@@ -66,6 +66,10 @@ class Choice:
     sigma: float
     loglik: float
     seasons: tuple[int, ...]
+    #: The correlation between the two teams' point noise (kalman.py). With
+    #: it, ``sigma`` is rescaled so the margin's noise is what the tuning
+    #: chose. Choices saved before it existed read as 0: independent noise.
+    rho: float = 0.0
 
 
 def choices_path(root: Path) -> Path:
@@ -84,13 +88,14 @@ def load_choices(path: Path) -> dict[int, Choice] | None:
         return None
     raw = json.loads(path.read_text())
     return {int(s): Choice(q=c["q"], p0=c["p0"], sigma=c["sigma"], loglik=c["loglik"],
-                           seasons=tuple(int(x) for x in c["seasons"])) for s, c in raw.items()}
+                           seasons=tuple(int(x) for x in c["seasons"]), rho=float(c.get("rho", 0.0)))
+            for s, c in raw.items()}
 
 
-def _spec(q: float, p0: float, sigma: float, prior: prior_mod.Prior) -> kalman.Spec:
+def _spec(q: float, p0: float, sigma: float, prior: prior_mod.Prior, rho: float = 0.0) -> kalman.Spec:
     """Off and def share q and p0 in v1; base and boost come from the prior's points fit."""
     return kalman.Spec(q_off=q, q_def=q, p0_off=p0, p0_def=p0, sigma=sigma,
-                       base=prior.points.intercept, boost=prior.points.boost)
+                       base=prior.points.intercept, boost=prior.points.boost, rho=rho)
 
 
 def _season_forecasts(games: pd.DataFrame, prior: prior_mod.Prior, spec: kalman.Spec) -> pd.DataFrame:
@@ -122,8 +127,14 @@ def _zero_prior(games: pd.DataFrame, like: prior_mod.Prior, season: int) -> prio
 
 
 def tune(frame: pd.DataFrame, feats: pd.DataFrame, season: int, *, grid: dict = GRID,
-         like: prior_mod.Prior | None = None) -> Choice:
+         like: prior_mod.Prior | None = None, fit_rho: bool = True) -> Choice:
     """Pick hyperparameters on the training seasons.
+
+    ``q``, ``p0`` and ``sigma`` are chosen on the margin's likelihood with
+    independent noise. Then, with ``fit_rho``, the correlation between the
+    two teams' noise is measured on the same seasons' one-step forecasts
+    (:func:`atlas.models.kalman.noise_correlation`) and ``sigma`` rescaled so
+    the margin's noise stays exactly what the grid chose.
 
     A training season is run from its own point-in-time prior where one
     exists, and from a zero prior at ``ZERO_PRIOR_P0`` where it does not, so
@@ -156,19 +167,44 @@ def tune(frame: pd.DataFrame, feats: pd.DataFrame, season: int, *, grid: dict = 
             continue
         if best is None or ll > best.loglik:
             best = Choice(q, p0, sigma, ll, tuple(int(s) for s, _, _ in usable))
-    return best
+    if best is None or not fit_rho:
+        return best
+    fcs, margins, totals, spec = [], [], [], None
+    for s, p, zero in usable:
+        spec = _spec(best.q, ZERO_PRIOR_P0 if zero else best.p0, best.sigma, p)
+        fc, _ = _season_forecasts(games[s], p, spec)
+        fcs.append(fc)
+        margins.append(games[s]["actual_margin"].to_numpy(dtype=float))
+        totals.append(games[s]["actual_total"].to_numpy(dtype=float))
+    rho = kalman.noise_correlation(pd.concat(fcs, ignore_index=True), np.concatenate(margins),
+                                   np.concatenate(totals), spec)
+    return replace(best, sigma=kalman.with_correlation(spec, rho).sigma, rho=rho)
 
 
-def run(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON, grid: dict = GRID):
-    """Walk-forward: tune on the past, forecast the season, score beside everything."""
+def run(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON, grid: dict = GRID,
+        fit_rho: bool = True):
+    """Walk-forward: tune on the past, forecast the season, score beside everything.
+
+    With ``fit_rho`` the state runs with its fitted noise correlation and is
+    scored beside the same filter with independent noise (``state_indep``),
+    so the report measures what the correlation bought rather than assuming it.
+    """
     feats = prior_mod.team_seasons(frame)
     scored, choices, finals = [], {}, {}
+    totals = []
     for season, train, test in ref.walk_forward(frame, first_test_season=first_test_season):
         prior = prior_mod.fit(frame, feats, season=season)
-        choice = tune(frame, feats, season, grid=grid, like=prior)
+        choice = tune(frame, feats, season, grid=grid, like=prior, fit_rho=fit_rho)
         choices[season] = choice
-        spec = _spec(choice.q, choice.p0, choice.sigma, prior)
+        spec = _spec(choice.q, choice.p0, choice.sigma, prior, choice.rho)
         fc, state = _season_forecasts(test, prior, spec)
+        extra = {}
+        if choice.rho != 0.0:
+            indep, _ = _season_forecasts(test, prior, kalman.with_correlation(spec, 0.0))
+            extra["state_indep"] = ref.Forecast("state_indep", indep["mean"].to_numpy(dtype=float),
+                                                indep["sd"].to_numpy(dtype=float))
+            totals.append(pd.DataFrame({"season": season, "season_type": test["season_type"].to_numpy(),
+                                        "correlated": _total_loglik(fc, test), "independent": _total_loglik(indep, test)}))
         finals[season] = state
         refs = ref.all_references(train, test)
         grid_ = lat.fit(train["actual_margin"].to_numpy(), -train["closing_spread"].to_numpy(),
@@ -176,10 +212,23 @@ def run(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON, grid
         keep = {k: refs[k] for k in ("naive", "prior_fpi", "elo", "atlas_epa", "market") if k in refs}
         state_fc = ref.Forecast("state", fc["mean"].to_numpy(dtype=float), fc["sd"].to_numpy(dtype=float))
         prior_fc = prior_mod.game_forecast(prior, test)
-        scored.append(evaluate.score(test, {**keep, "prior": prior_fc, "state": state_fc}, grid_, season=season))
-        LOG.info("season %s: q=%.1f p0=%.0f sigma=%.0f (tuned on %s); %d games", season, choice.q,
-                 choice.p0, choice.sigma, choice.seasons, len(test))
-    return pd.concat(scored, ignore_index=True), choices, finals
+        scored.append(evaluate.score(test, {**keep, "prior": prior_fc, "state": state_fc, **extra}, grid_,
+                                     season=season))
+        LOG.info("season %s: q=%.1f p0=%.0f sigma=%.1f rho=%.2f (tuned on %s); %d games", season, choice.q,
+                 choice.p0, choice.sigma, choice.rho, choice.seasons, len(test))
+    out = pd.concat(scored, ignore_index=True)
+    # The total's comparison rides with the scores for render() to report.
+    out.attrs["totals"] = pd.concat(totals, ignore_index=True) if totals else pd.DataFrame()
+    return out, choices, finals
+
+
+def _total_loglik(fc: pd.DataFrame, games: pd.DataFrame) -> np.ndarray:
+    """Per game, the log density of the actual total under the state's own
+    total: mean home + away points, sd from the state and the total's noise."""
+    mean = (fc["home_pts"] + fc["away_pts"]).to_numpy(dtype=float)
+    sd = fc["total_sd"].to_numpy(dtype=float)
+    y = games["actual_total"].to_numpy(dtype=float)
+    return -0.5 * np.log(2 * np.pi * sd ** 2) - (y - mean) ** 2 / (2 * sd ** 2)
 
 
 def render(scored: pd.DataFrame, choices: dict[int, Choice], finals: dict[int, kalman.State],
@@ -198,9 +247,11 @@ def render(scored: pd.DataFrame, choices: dict[int, Choice], finals: dict[int, k
         "",
         "## Hyperparameters chosen, per season",
         "",
-        md(pd.DataFrame([{"season": s, "q per week": c.q, "prior var p0": c.p0, "sigma (pts)": c.sigma,
+        md(pd.DataFrame([{"season": s, "q per week": c.q, "prior var p0": c.p0, "sigma (pts)": round(c.sigma, 2),
+                          "noise corr rho": round(c.rho, 3),
                           "tuned on": ", ".join(map(str, c.seasons))} for s, c in choices.items()])),
         "",
+        *_correlation_section(scored.attrs.get("totals", pd.DataFrame())),
         "## Regular season, pooled",
         "",
         md(fmt(evaluate.summarise(reg, order=order))),
@@ -249,14 +300,38 @@ def render(scored: pd.DataFrame, choices: dict[int, Choice], finals: dict[int, k
     return "\n".join(parts).rstrip() + "\n"
 
 
+def _correlation_section(totals: pd.DataFrame) -> list[str]:
+    """Correlated against independent noise, on the regular season."""
+    if totals.empty:
+        return []
+    reg = totals[totals["season_type"] == "regular"]
+    rows = reg.groupby("season")[["correlated", "independent"]].mean().reset_index()
+    rows.loc[len(rows)] = {"season": "pooled", "correlated": reg["correlated"].mean(),
+                           "independent": reg["independent"].mean()}
+    rows["gain"] = rows["correlated"] - rows["independent"]
+    return [
+        "## Correlated home/away noise",
+        "",
+        "The two teams' points share noise (pace, weather, game script). `rho` is measured on the "
+        "training seasons' one-step forecasts: the margin's noise is `2 sigma^2 (1 - rho)` and the "
+        "total's `2 sigma^2 (1 + rho)`, and the margin's is held at what the grid chose. `state` below "
+        "runs with it; `state_indep` is the same filter with independent noise. The total's mean log "
+        "density per game under each (higher is better):",
+        "",
+        evaluate.markdown(rows.round(4)),
+        "",
+    ]
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description="NCAAF state model, walk-forward")
     ap.add_argument("--out", type=Path, default=None)
     ap.add_argument("--first-test-season", type=int, default=FIRST_TEST_SEASON)
+    ap.add_argument("--no-rho", action="store_true", help="independent home/away noise, as before")
     args = ap.parse_args()
     paths = config.paths()
     frame = research_sample(load_research_frame(paths.warehouse))
-    scored, choices, finals = run(frame, first_test_season=args.first_test_season)
+    scored, choices, finals = run(frame, first_test_season=args.first_test_season, fit_rho=not args.no_rho)
     out = args.out or (paths.root / "reports" / "ncaaf_state.md")
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(render(scored, choices, finals, frame))

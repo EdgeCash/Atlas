@@ -135,7 +135,7 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
         ma, _ = kalman.row_forecast(state, ap, [n + ih])
         _, var = kalman.row_forecast(state, hp + [n + ih], ap + [n + ia])
         mh, ma = spec.base + boost + mh, spec.base + ma
-        means[i], sds[i], hps[i], aps[i] = mh - ma, np.sqrt(var + 2.0 * r), mh, ma
+        means[i], sds[i], hps[i], aps[i] = mh - ma, np.sqrt(var + spec.margin_noise), mh, ma
         return h, a, ih, ia, boost, qh, qa
 
     def learn(i, h, a, ih, ia, boost, qh, qa) -> None:
@@ -149,9 +149,9 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
             starters[h] = rh
         if ra is not None and not pd.isna(ra):
             starters[a] = ra
-        kalman.row_update(state, [ih] + ([qh_rec] if qh_rec is not None else []), [n + ia],
-                          (t + m) / 2.0 - spec.base - boost, r)
-        kalman.row_update(state, [ia] + ([qa_rec] if qa_rec is not None else []), [n + ih], (t - m) / 2.0 - spec.base, r)
+        kalman.pair_update(state, ([ih] + ([qh_rec] if qh_rec is not None else []), [n + ia]),
+                           ([ia] + ([qa_rec] if qa_rec is not None else []), [n + ih]),
+                           (t + m) / 2.0 - spec.base - boost, (t - m) / 2.0 - spec.base, r, spec.rho)
 
     # Games at one kickoff are all forecast before any is learnt from.
     for group in kalman.kickoff_groups(g["kickoff"].to_numpy()):
@@ -200,7 +200,7 @@ def tune(frame: pd.DataFrame, feats: pd.DataFrame, season: int, choice: state_mo
     for p0, new_mean in itertools.product(grid["p0"], grid["new_mean"]):
         ll = 0.0
         for _, games, p, zero in usable:
-            spec = state_mod._spec(choice.q, state_mod.ZERO_PRIOR_P0 if zero else choice.p0, choice.sigma, p)
+            spec = state_mod._spec(choice.q, state_mod.ZERO_PRIOR_P0 if zero else choice.p0, choice.sigma, p, choice.rho)
             fc = season_forecasts(games, p, spec, QBChoice(p0, new_mean, 0.0))
             ll += state_mod._gaussian_loglik(fc, games["actual_margin"].to_numpy(dtype=float)) * len(fc)
         if best is None or ll > best.loglik:
@@ -212,7 +212,7 @@ def _training_totals(frame, feats, season, choice, like, qb):
     """The training seasons' state forecasts, as the total model fits its calibration on them."""
     parts = []
     for _, games, p, zero in _training(frame, feats, season, like):
-        spec = state_mod._spec(choice.q, state_mod.ZERO_PRIOR_P0 if zero else choice.p0, choice.sigma, p)
+        spec = state_mod._spec(choice.q, state_mod.ZERO_PRIOR_P0 if zero else choice.p0, choice.sigma, p, choice.rho)
         fc = season_forecasts(games, p, spec, qb)
         parts.append(_with(games, fc))
     return pd.concat(parts, ignore_index=True)
@@ -235,7 +235,7 @@ def evaluate_qb(frame: pd.DataFrame, *, first_test_season: int = 2021) -> tuple[
         choice = choices.get(season) or state_mod.tune(frame, feats, season, like=prior)
         qb = tune(frame, feats, season, choice, prior)
         picked[season] = qb
-        spec = state_mod._spec(choice.q, choice.p0, choice.sigma, prior)
+        spec = state_mod._spec(choice.q, choice.p0, choice.sigma, prior, choice.rho)
         test = test[test["season_type"] == "regular"]
         refs = ref.all_references(train, test)
         grid_ = lat.fit(train["actual_margin"].to_numpy(), -train["closing_spread"].to_numpy(), refs["market"].sigma)

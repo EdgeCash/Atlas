@@ -91,7 +91,7 @@ def _starter(p: Projector, state: kalman.State, qb1, qb2, qb1_out, team) -> tupl
 
 
 def _version(season, choice, qb, total, assimilated, last) -> str:
-    payload = "|".join([MODEL_NAME, str(season), f"{choice.q},{choice.phi},{choice.p_season},{choice.sigma}",
+    payload = "|".join([MODEL_NAME, str(season), f"{choice.q},{choice.phi},{choice.p_season},{choice.sigma}" + (f",{choice.rho}" if choice.rho else ""),
                         f"{qb.p0},{qb.new_mean},{qb.k_epa},{qb.k_obs},{qb.k_draft}", ",".join(f"{c:.4f}" for c in total.coef), str(assimilated), last])
     return hashlib.sha256(payload.encode()).hexdigest()[:12]
 
@@ -149,7 +149,7 @@ def fit(frame: pd.DataFrame, *, season: int | None = None, choices=None,
         ns.new_season(state, choice.phi, choice.p_season)
     played = pd.concat([this_season["home_team_id"], this_season["away_team_id"]]).value_counts()
     base, hfa = levels[season]
-    spec = ns._spec(choice.q, choice.sigma, base, hfa)
+    spec = ns._spec(choice.q, choice.sigma, base, hfa, choice.rho)
     last = str(this_season["kickoff"].max()) if not this_season.empty else ""
     version = _version(season, choice, qb, total, len(this_season), last)
     LOG.info("nfl projector %s: season %s, %d games assimilated, hfa fitted %.2f, total sigma %.2f",

@@ -73,7 +73,7 @@ class Projector:
 
 def _version(season: int, choice: state_mod.Choice, total: total_mod.TotalFit,
              assimilated: int, last_kickoff: str) -> str:
-    payload = "|".join([MODEL_NAME, "points-lattice", str(season), f"{choice.q:.3f},{choice.p0:.3f},{choice.sigma:.3f}",
+    payload = "|".join([MODEL_NAME, "points-lattice", str(season), f"{choice.q:.3f},{choice.p0:.3f},{choice.sigma:.3f}" + (f",{choice.rho:.3f}" if choice.rho else ""),
                         ",".join(f"{c:.4f}" for c in total.coef), str(assimilated), last_kickoff])
     return hashlib.sha256(payload.encode()).hexdigest()[:12]
 
@@ -106,7 +106,7 @@ def fit(frame: pd.DataFrame, *, season: int | None = None,
     feats = prior_mod.team_seasons(frame)
     prior = prior_mod.fit(sample, feats, season=season)
     choice = _choice_for(season, choices, sample, feats, prior)
-    spec = state_mod._spec(choice.q, choice.p0, choice.sigma, prior)
+    spec = state_mod._spec(choice.q, choice.p0, choice.sigma, prior, choice.rho)
 
     teams = prior.teams
     state = kalman.initialise(teams["team_id"].to_numpy(), teams["off"].to_numpy(),
