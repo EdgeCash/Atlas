@@ -9,7 +9,12 @@ term that measured as real on the implied total's residual is the wind
 (-0.34 points per mph, t = -5.6; a dome is zero wind, and once wind is in
 the dome itself adds nothing, nor do temperature, pace, rest or a division
 game); and the grid is 80 points a side (0-79). Sixty was not enough: the
-Dolphins scored 70 in 2023 and the Saints 62 in 2011. The points lattice is fitted the same way and applied the same way.
+Dolphins scored 70 in 2023 and the Saints 62 in 2011. The points lattice is
+fitted the same way and applied the same way.
+
+The wind is the game-time wind as recorded, not a forecast made before
+kickoff: in the walk-forward it is a mild look-ahead, and live it is only as
+good as the forecast that stands in for it.
 """
 
 from __future__ import annotations
@@ -138,7 +143,8 @@ def render(scored: pd.DataFrame, table: pd.DataFrame, fits: dict[int, tm.TotalFi
         "home-plus-away points, recalibrated on the training seasons' own state forecasts with the wind "
         "(zero in a dome) as the one game-level term. The margin (state mean and sd through the key-number "
         f"lattice) and the total (discretised normal) meet on a {MAX_POINTS}x{MAX_POINTS} grid over (home, away) "
-        "points, reweighted by the points lattice; every headline number below is a mean of that grid.", "",
+        "points, reweighted by the points lattice; every headline number below is a mean of that grid. The wind "
+        "is the recorded game-time wind, not a pre-kickoff forecast - a mild look-ahead in these numbers.", "",
         "## Calibration fitted, per season", "",
         md(pd.DataFrame(coef_rows)), "",
         f"## Total, regular season {REPORT_SEASONS[0]}-{REPORT_SEASONS[-1]}", "",

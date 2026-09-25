@@ -127,3 +127,16 @@ def to_long(games: pd.DataFrame) -> pd.DataFrame:
 
 def load(staging: Path) -> pd.DataFrame:
     return pd.read_parquet(staging / "nfl" / "games.parquet")
+
+
+def snapshot_time(dt: pd.Series) -> pd.Series:
+    """When a depth-chart snapshot is known to exist, in UTC.
+
+    A stamp with a time is taken as it is. A bare date parses as midnight,
+    which would let a snapshot taken on game day - possibly after a 1pm
+    kickoff - count as known before it; a bare date is read as the end of
+    that day instead.
+    """
+    ts = pd.to_datetime(pd.Series(dt), errors="coerce", utc=True, format="ISO8601")
+    bare = ts.notna() & (ts == ts.dt.normalize())
+    return ts.where(~bare, ts + pd.Timedelta(days=1) - pd.Timedelta(seconds=1))

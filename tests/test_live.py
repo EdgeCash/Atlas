@@ -458,3 +458,11 @@ def test_a_started_game_with_no_close_is_an_exception(store):
     store.append_on_change("snapshots", late)
     found = quality.check_signals(store)
     assert (found["check"] == "closing line exists").sum() == len(formed)
+
+
+def test_the_beat_rate_carries_its_interval():
+    low, high, p = sc.beat_interval(60, 100)
+    assert low < 0.60 < high and 0.49 < low < 0.51
+    assert p == pytest.approx(0.0284, abs=1e-3)
+    row = sc.by_selection(_frame(60, 40)).set_index("selection").loc["primary"]
+    assert row["beat_low"] == pytest.approx(low) and row["p_value"] == pytest.approx(p)

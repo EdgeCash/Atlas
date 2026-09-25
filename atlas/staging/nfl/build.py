@@ -224,7 +224,7 @@ def _snapshot_qb1(snapshots: pd.DataFrame, games: pd.DataFrame) -> pd.DataFrame:
     q = snapshots[(snapshots["pos_abb"].astype(str) == "QB") & rank.isin([1, 2])].copy()
     q["rank"] = rank[q.index].astype(int)
     q["team_id"] = team_id(q["team"])
-    q["dt"] = pd.to_datetime(q["dt"], errors="coerce", utc=True)
+    q["dt"] = games_stage.snapshot_time(q["dt"])
     q = q.dropna(subset=["team_id", "dt"]).sort_values("dt")
     q = q.drop_duplicates(["team_id", "rank", "dt"], keep="last")[["team_id", "rank", "dt", "gsis_id", "player_name"]]
     long = games_stage.to_long(games)[["season", "week", "team_id", "kickoff"]].copy()

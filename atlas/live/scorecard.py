@@ -11,6 +11,7 @@ from dataclasses import dataclass
 
 import numpy as np
 import pandas as pd
+from scipy import stats
 
 from atlas.util import get_logger
 
@@ -62,16 +63,32 @@ def graded_frame(signals: pd.DataFrame, grades: pd.DataFrame) -> pd.DataFrame:
     return frame.dropna(subset=["clv_points"])
 
 
+def beat_interval(beats: int, n: int, z: float = 1.96) -> tuple[float, float, float]:
+    """(low, high, p) for a beat rate: the Wilson 95% interval, and the
+    one-sided binomial p-value against a coin flip. With a few dozen graded
+    signals a 60% beat rate is well inside noise; the interval says so."""
+    if n == 0:
+        return np.nan, np.nan, np.nan
+    p = beats / n
+    centre = (p + z * z / (2 * n)) / (1 + z * z / n)
+    half = z * np.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / (1 + z * z / n)
+    return float(centre - half), float(centre + half), float(stats.binom.sf(beats - 1, n, 0.5))
+
+
 def _block(frame: pd.DataFrame) -> dict:
     clv = frame["clv_points"]
     decided = frame[frame["result"] != "push"]
     beats = (decided["result"] == "beat").sum()
     n = len(decided)
+    low, high, p_value = beat_interval(int(beats), n)
     return {
         "signals": int(len(frame)),
         "graded": n,
         "pushes": int((frame["result"] == "push").sum()),
         "beat_rate": float(beats / n) if n else np.nan,
+        "beat_low": low,
+        "beat_high": high,
+        "p_value": p_value,
         "mean_clv": float(clv.mean()),
         "median_clv": float(clv.median()),
         "flagged": int(frame["execution_flagged"].astype("string").str.lower()

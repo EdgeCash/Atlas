@@ -489,3 +489,11 @@ def test_the_efficiency_channel_reads_an_offence_through_its_plays():
     assert gap(thick) > gap(thin) > gap(base) + 0.1
     assert ns.EfficiencyRecord(pd.DataFrame({"game_id": ["g"], "team_id": [1], "epa": [0.1], "plays": [5],
                                              "play_var": 1.0})).game("g", 1) == (5.0, 0.0)   # centred on the league
+
+
+def test_a_bare_date_snapshot_is_not_known_before_that_days_kickoff():
+    from atlas.staging.nfl.games import snapshot_time
+
+    out = snapshot_time(pd.Series(["2025-09-07", "2025-09-05T12:00:00Z"]))
+    assert out.iloc[0] == pd.Timestamp("2025-09-07T23:59:59Z")
+    assert out.iloc[1] == pd.Timestamp("2025-09-05T12:00:00Z")

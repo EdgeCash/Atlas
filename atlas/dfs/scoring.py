@@ -26,6 +26,11 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
+from atlas.util import get_logger
+
+LOG = get_logger(__name__)
+_MISSING: set[str] = set()
+
 #: The four offensive positions a Classic lineup uses (a fullback plays RB).
 OFFENSE = ("QB", "RB", "WR", "TE")
 POSITION = {"FB": "RB", "HB": "RB"}
@@ -36,7 +41,13 @@ POINTS_ALLOWED_OVER = -4
 
 
 def _col(frame: pd.DataFrame, name: str) -> pd.Series:
-    return frame[name].fillna(0).astype(float) if name in frame else pd.Series(0.0, index=frame.index)
+    if name in frame:
+        return frame[name].fillna(0).astype(float)
+    # A column nflverse renamed would otherwise score as nothing, silently.
+    if len(frame) and name not in _MISSING:
+        _MISSING.add(name)
+        LOG.warning("scoring: column %r is missing and counts as zero", name)
+    return pd.Series(0.0, index=frame.index)
 
 
 def offense_points(stats: pd.DataFrame) -> pd.Series:

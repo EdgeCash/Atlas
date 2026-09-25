@@ -30,7 +30,7 @@ import pandas as pd
 
 from atlas import config
 from atlas.sources import nflverse
-from atlas.staging.nfl.games import FRANCHISE
+from atlas.staging.nfl.games import FRANCHISE, snapshot_time
 from atlas.util import get_logger, write_parquet
 
 LOG = get_logger(__name__)
@@ -92,7 +92,7 @@ def depth(raw: Path, seasons: list[int]) -> pd.DataFrame:
             snapshots.append(pd.DataFrame({
                 "team": d["team"].replace(FRANCHISE), "player_id": d["gsis_id"],
                 "depth_rank": pd.to_numeric(d["pos_rank"], errors="coerce"),
-                "dt": pd.to_datetime(d["dt"], errors="coerce", utc=True)}).dropna())
+                "dt": snapshot_time(d["dt"])}).dropna())
             continue
         d = d[(d["formation"] == "Offense") & d["depth_position"].astype(str).str.strip().isin(list(OFFENSE))]
         if "game_type" in d:
