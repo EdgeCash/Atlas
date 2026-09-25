@@ -144,6 +144,94 @@ def test_an_unchanged_quote_adds_no_row(store):
     assert store.upsert("snapshots", snapshot) == 0
 
 
+def _snaps(*quotes):
+    """(captured_at, line, price, other_price) sightings of one stream."""
+    return pd.DataFrame([
+        {"captured_at": at, "game_id": 100, "book": "TestBook", "market": "total", "line": line,
+         "price": price, "other_price": other, "status": "STATUS_SCHEDULED", "last_seen_at": at}
+        for at, line, price, other in quotes
+    ])
+
+
+def test_a_resighted_quote_keeps_its_first_capture_time(store):
+    """The close, seen again after kickoff, must stay stamped before it: a
+    re-stamped close drops out of the grader's window and an older line
+    grades in its place."""
+    store.append_on_change("snapshots", _snaps(("2026-09-26T15:00:00+00:00", 52.5, -110.0, -110.0)))
+    assert store.append_on_change(
+        "snapshots", _snaps(("2026-09-26T17:00:00+00:00", 52.5, -110.0, -110.0))) == 0
+    row = store.read("snapshots").iloc[0]
+    assert row["captured_at"] == "2026-09-26T15:00:00+00:00"
+    assert row["last_seen_at"] == "2026-09-26T17:00:00+00:00"
+
+
+def test_a_line_that_returns_is_a_new_row(store):
+    for at, line in (("2026-09-26T10:00:00+00:00", 50.0), ("2026-09-26T11:00:00+00:00", 51.0),
+                     ("2026-09-26T12:00:00+00:00", 50.0), ("2026-09-26T13:00:00+00:00", 50.0)):
+        store.append_on_change("snapshots", _snaps((at, line, -110.0, -110.0)))
+    history = store.read("snapshots")
+    assert list(history["line"]) == [50.0, 51.0, 50.0]
+    assert history["last_seen_at"].iloc[-1] == "2026-09-26T13:00:00+00:00"
+
+
+def test_a_price_change_alone_is_a_change(store):
+    store.append_on_change("snapshots", _snaps(("2026-09-26T10:00:00+00:00", 50.0, -110.0, -110.0)))
+    assert store.append_on_change(
+        "snapshots", _snaps(("2026-09-26T11:00:00+00:00", 50.0, -120.0, float("nan")))) == 1
+
+
+def test_the_close_survives_being_seen_after_kickoff(store):
+    """End to end: entry 50, close 52.5, 52.5 seen again after kickoff."""
+    formed, _, games = _graded_fixture()
+    kickoff = pd.Timestamp(games["kickoff"].iloc[0])
+    for minutes, line in ((-90, 50.0), (-30, 52.5), (+60, 52.5)):
+        at = (kickoff + pd.Timedelta(minutes=minutes)).isoformat()
+        store.append_on_change("snapshots", _snaps((at, line, -110.0, -110.0)))
+    graded = grading.grade(formed, store.read("snapshots"), games).set_index("signal_id")
+    row = graded.loc[formed.set_index("game_id").loc[100, "signal_id"]]
+    assert row["close_line"] == 52.5
+    assert row["result"] == "beat"
+
+
+def test_the_close_is_one_whole_snapshot():
+    """groupby().last() fills each column from its own last non-null value;
+    the close and its price must come from one row."""
+    from atlas.owner.plays import current_lines
+    snaps = pd.DataFrame({
+        "captured_at": ["2026-09-26T10:00:00+00:00", "2026-09-26T11:00:00+00:00"],
+        "game_id": 100, "book": "TestBook", "market": "total",
+        "line": [53.5, 54.5], "price": [-110.0, -108.0], "other_price": [-105.0, float("nan")],
+    })
+    row = current_lines(snaps, "total").iloc[0]
+    assert row["line"] == 54.5 and row["price"] == -108.0 and pd.isna(row["other_price"])
+
+
+def test_even_money_is_plus_100_and_pickem_is_zero():
+    from atlas.live.provider import _line_block
+    assert _line_block({"close": {"line": "PK", "odds": "EVEN"}}, "close") == (0.0, 100.0)
+    assert _line_block({"close": {"line": "o52.5", "odds": "-110"}}, "close") == (52.5, -110.0)
+
+
+def test_the_poll_asks_for_eastern_dates(monkeypatch):
+    """At 9pm ET the UTC date is tomorrow; tonight's slate must still be asked for."""
+    from atlas.live import __main__ as live
+    real = datetime
+
+    class Clock(real):
+        @classmethod
+        def now(cls, tz=None):
+            return real(2026, 9, 27, 1, 0, tzinfo=UTC).astimezone(tz) if tz else real(2026, 9, 27, 1, 0)
+
+    monkeypatch.setattr(live, "datetime", Clock)
+    assert live._days(2)[0].isoformat() == "2026-09-26"
+
+
+def test_no_signal_forms_after_the_scheduled_kickoff():
+    """A delayed game still reads as scheduled; its close is already fixed."""
+    past = _quotes().assign(kickoff=(datetime.now(UTC) - timedelta(minutes=5)).isoformat())
+    assert signalling.form_signals(_numbers(), past).empty
+
+
 def test_writes_are_deterministic(store):
     quotes = _quotes()
     store.upsert("games", quotes.assign(first_seen_at="t", updated_at="t"))

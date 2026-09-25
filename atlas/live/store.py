@@ -133,7 +133,9 @@ KEYS: dict[str, list[str]] = {
     # One row per report and player: a report re-read keeps its first capture's rows current.
     "availability": ["conference", "report_id", "team", "player"],
     "games": ["game_id"],
-    "snapshots": ["game_id", "book", "market", "line", "price"],
+    # One row per observed change. captured_at is when a quote was first
+    # seen and is never rewritten; later sightings move last_seen_at.
+    "snapshots": ["game_id", "book", "market", "captured_at"],
     "signals": ["signal_id"],
     "grades": ["signal_id"],
 }
@@ -152,6 +154,55 @@ SORT: dict[str, list[str]] = {
     "signals": ["created_at", "game_id", "market", "book"],
     "grades": ["graded_at", "signal_id"],
 }
+
+
+#: A snapshot's stream, and what has to change in it to earn a new row.
+SNAPSHOT_STREAM = ["game_id", "book", "market"]
+SNAPSHOT_QUOTE = ["line", "price", "other_price"]
+
+
+def _same(a, b) -> bool:
+    a, b = pd.to_numeric(a, errors="coerce"), pd.to_numeric(b, errors="coerce")
+    return bool(pd.isna(a) and pd.isna(b)) or bool(a == b)
+
+
+def changes(existing: pd.DataFrame, incoming: pd.DataFrame) -> tuple[pd.DataFrame, int]:
+    """Fold observations into a snapshot history, oldest first; append-on-change.
+
+    Returns the new history and how many rows were appended.
+    """
+    history = existing.reset_index(drop=True).copy() if len(existing) else \
+        pd.DataFrame(columns=incoming.columns)
+    stream = lambda f: f[SNAPSHOT_STREAM].astype(str).agg("|".join, axis=1)  # noqa: E731
+    when = pd.to_datetime(history["captured_at"], utc=True, errors="coerce")
+    ordered = history.assign(_k=stream(history) if len(history) else [], _t=when)
+    ordered = ordered.sort_values("_t", kind="stable").drop_duplicates("_k", keep="last")
+    # The latest row per stream: a stored row, or one appended by this call.
+    latest: dict[str, dict] = {}
+    stored: dict[str, int] = dict(zip(ordered["_k"], ordered.index, strict=True))
+    for key, at in stored.items():
+        latest[key] = history.loc[at].to_dict()
+
+    obs = incoming.assign(_t=pd.to_datetime(incoming["captured_at"], utc=True, errors="coerce"))
+    obs = obs.sort_values("_t", kind="stable").drop(columns="_t")
+    appended: list[dict] = []
+    for key, row in zip(stream(obs), obs.to_dict("records"), strict=True):
+        held = latest.get(key)
+        if held is not None and all(_same(held.get(c), row.get(c)) for c in SNAPSHOT_QUOTE):
+            for c in ("last_seen_at", "status"):
+                held[c] = row.get(c)
+                if key in stored:
+                    history.at[stored[key], c] = row.get(c)
+            continue
+        new = dict(row)
+        appended.append(new)
+        latest[key] = new
+        stored.pop(key, None)
+    if appended:
+        new = pd.DataFrame(appended).reindex(columns=history.columns)
+        history = new if history.empty else pd.concat([history, new], ignore_index=True)
+    history = history.drop_duplicates(subset=KEYS["snapshots"], keep="first")
+    return history, len(appended)
 
 
 def tracking_dir() -> Path:
@@ -222,6 +273,25 @@ class Store:
         added = len(combined) - len(existing)
         self.write(table, combined)
         LOG.info("%s: %d rows in, %d new, %d total", table, len(incoming), added, len(combined))
+        return added
+
+    def append_on_change(self, table: str, rows: pd.DataFrame) -> int:
+        """Append a quote only when it differs from the latest one stored.
+
+        An unchanged quote moves the stored row's ``last_seen_at`` and status
+        and nothing else. Keying on the quote itself and letting the last
+        write win would rewrite ``captured_at`` on every sighting: the closing
+        line, seen again after kickoff, would be stamped post-kickoff and the
+        grader would fall back to an earlier line; and a line that went
+        A -> B -> A would lose the return to A altogether.
+        """
+        if rows.empty:
+            return 0
+        existing = self.read(table)
+        incoming = rows.reindex(columns=SCHEMA[table])
+        combined, added = changes(existing, incoming)
+        self.write(table, combined)
+        LOG.info("%s: %d rows in, %d changed, %d total", table, len(incoming), added, len(combined))
         return added
 
     def append_new_only(self, table: str, rows: pd.DataFrame) -> int:

@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 from datetime import UTC, date, datetime, timedelta
+from zoneinfo import ZoneInfo
 
 import pandas as pd
 
@@ -36,8 +37,13 @@ LOG = get_logger(__name__)
 DEFAULT_HORIZON_DAYS = 8
 
 
+#: ESPN's scoreboard ``dates=`` are US Eastern dates. From 8pm ET the UTC date
+#: is already tomorrow, and a UTC window would stop asking for tonight's games.
+EASTERN = ZoneInfo("America/New_York")
+
+
 def _days(horizon: int) -> list[date]:
-    today = datetime.now(UTC).date()
+    today = datetime.now(EASTERN).date()
     return [today + timedelta(days=i) for i in range(horizon)]
 
 
@@ -126,7 +132,7 @@ def poll(horizon: int = DEFAULT_HORIZON_DAYS, *, provider: str = "espn",
         store.upsert("games", _games_frame(quotes, now))
         # Append-on-change: a quote that has not moved does not earn a new row,
         # which keeps the committed history readable and its diffs meaningful.
-        run.snapshots_added = store.upsert("snapshots", _snapshot_frame(quotes, now))
+        run.snapshots_added = store.append_on_change("snapshots", _snapshot_frame(quotes, now))
 
         if sign:
             numbers = load_numbers(store)

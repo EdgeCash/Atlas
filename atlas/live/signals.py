@@ -165,6 +165,12 @@ def form_signals(numbers: pd.DataFrame, quotes: pd.DataFrame,
 
     live = quotes[quotes["status"] == "STATUS_SCHEDULED"].copy()
     live = live.dropna(subset=["line"])
+    # A delayed game still reads as scheduled after its kickoff, but the
+    # grader closes the line at the scheduled kickoff: a signal formed after
+    # it would be graded against a "close" older than its own entry.
+    if "kickoff" in live:
+        kickoff = pd.to_datetime(live["kickoff"], utc=True, errors="coerce")
+        live = live[kickoff.isna() | (kickoff > pd.Timestamp.now(tz="UTC"))]
     merged = live.merge(numbers, on=["game_id", "market"], how="inner", suffixes=("", "_n"))
     if merged.empty:
         return pd.DataFrame()

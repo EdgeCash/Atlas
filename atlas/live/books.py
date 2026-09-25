@@ -53,7 +53,7 @@ def reconcile(store) -> dict:
 
             merged = set(snaps.loc[changed, "game_id"].astype(str))
             snaps = snaps.assign(book=names).sort_values("captured_at", kind="stable")
-            # As an upsert would have kept it: the latest look at each line and price.
+            # Two spellings seen by the same poll are one observation.
             store.write("snapshots", snaps.drop_duplicates(KEYS["snapshots"], keep="last"))
             out["snapshots_renamed"] = int(changed.sum())
 
