@@ -1067,3 +1067,20 @@ def test_the_projector_learns_from_unpriced_games(research_frame):
     projector = projecting.fit(frame, choices=_FIXED)
     played = frame[frame["actual_margin"].notna() & (frame["season"] == projector.season)]
     assert projector.assimilated == len(played)
+
+
+def test_a_season_with_no_closing_lines_yet_is_learnt_from_and_skipped_in_scoring(research_frame):
+    """The current season's games are played before the odds file carries
+    their lines: every walk-forward must learn from them and score nothing,
+    not fail on an empty table (the retune of 25 September 2026 did)."""
+    frame = research_frame.copy()
+    last = frame["season"].max()
+    frame.loc[frame["season"] == last, ["closing_spread", "closing_total"]] = np.nan
+    every = state_mod.every_game(frame)
+    choices = {s: state_mod.Choice(q=1.0, p0=20.0, sigma=11.0, loglik=0.0, seasons=()) for s in (2021, 2022)}
+    scored, table, fits = total_mod.run(every, first_test_season=2021, choices=choices)
+    assert set(table["season"]) == {2021} and last in fits
+    state_scored, _, finals = state_mod.run(every, first_test_season=2021, grid=SMALL_GRID, fit_rho=False)
+    assert set(state_scored["season"]) == {2021} and last in finals
+    h = projecting.history(frame, choices=choices, first_test_season=2021)
+    assert set(h["season"]) == {2021}

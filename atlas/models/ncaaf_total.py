@@ -265,6 +265,13 @@ def run(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON,
         fc = _with_forecasts(test, prior, state_mod._spec(choice.q, choice.p0, choice.sigma, prior, choice.rho))
         fc = fc[state_mod.has_market(fc)]
         train = train[state_mod.has_market(train)]
+        if fc.empty:
+            # A season played before the odds file carries its lines (the
+            # current one, usually): its games taught the state and the total
+            # through the training forecasts, and there is nothing to score.
+            LOG.info("season %s: total = %.2f + %.3f state; no game with a closing line yet, nothing scored",
+                     season, tfit.coef[0], tfit.coef[1])
+            continue
         treg = train[train["season_type"] == "regular"] if "season_type" in train else train
         naive_mean, naive_sd = float(treg["actual_total"].mean()), float(treg["actual_total"].std(ddof=1))
         total_mean = tfit.mean(fc)
@@ -291,6 +298,8 @@ def run(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON,
         LOG.info("season %s: total = %.2f + %.3f state%s; sigma %.2f (raw %.2f); %d games", season, tfit.coef[0],
                  tfit.coef[1], "".join(f" {c:+.3f} {n}" for n, c in zip(tfit.names[1:], tfit.coef[2:], strict=True)),
                  tfit.sigma, tfit.raw_sigma, len(fc))
+    if not scored:
+        raise ValueError("no test season has a game with a closing line to score")
     return pd.concat(scored, ignore_index=True), pd.concat(tables, ignore_index=True), fits
 
 
