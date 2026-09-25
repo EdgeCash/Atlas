@@ -17,6 +17,17 @@ five seasons, uneven by season, against 52.4% needed at -110: a lead, not a
 proven edge. At a true 54% it takes about 2,400 plays to show; the record
 says only what its numbers support.
 
+**Rule v2** (``cfb-total-top5-v2``, frozen 25 September 2026): each week, at
+the first heavy refresh on its Saturday (Eastern), the five college
+regular-season games still to kick off with the largest gap between Atlas's
+total and the line the book is quoting; Atlas's side, one flat unit, one set
+per week. Measured before it was frozen as each week's top five against the
+closing total: 208-152-5, 57.8%, its 95% range 52.6-62.8% - the one of ten
+weekly variants tried that cleared break-even on its range, so possibly the
+lucky one, and uneven by season. Its live test differs from that history in
+two stated ways: Thursday and Friday games are not in it, and the line is the
+Saturday morning one rather than the close.
+
 The plays are the owner's alone: sealed with the owner key, one file a week
 in ``tracking/owner_plays/`` (`atlas/owner/sealed.py`), and shown only inside
 the owner page's ciphertext.
@@ -57,15 +68,21 @@ class Rule:
     sport: str
     market: str
     threshold: float
+    top_n: int = 0                    # a weekly rule: this many games, the largest gaps
+    weekday: int | None = None        # and the Eastern weekday it chooses on (Monday 0)
 
 
 RULE_V1 = Rule(id="cfb-total-5-v1", frozen="2026-09-24", sport="ncaaf", market="total", threshold=5.0,
                label="College totals, regular season: Atlas's total 5+ points from the line")
-RULES = (RULE_V1,)
+RULE_V2 = Rule(id="cfb-total-top5-v2", frozen="2026-09-25", sport="ncaaf", market="total", threshold=0.0,
+               top_n=5, weekday=5,
+               label="College totals, regular season: each Saturday morning, the week's five largest gaps "
+                     "between Atlas's total and the line")
+RULES = (RULE_V1, RULE_V2)
 
-#: Rule v1's walk-forward history as measured before it was frozen (wins,
-#: losses, pushes), against the opening and the closing total. Regular season;
-#: the model fitted only on the seasons before each one.
+#: Each rule's walk-forward history as measured before it was frozen (wins,
+#: losses, pushes) against the lines named in ``HISTORY_COLUMNS``. Regular
+#: season; the model fitted only on the seasons before each one.
 HISTORY = {
     RULE_V1.id: {
         2021: ((146, 124, 4), (140, 143, 3)),
@@ -74,7 +91,17 @@ HISTORY = {
         2024: ((79, 42, 0), (92, 49, 1)),
         2025: ((56, 46, 0), (67, 44, 0)),
     },
+    RULE_V2.id: {
+        2021: ((34, 35, 2),),
+        2022: ((43, 28, 0),),
+        2023: ((35, 34, 2),),
+        2024: ((52, 23, 1),),
+        2025: ((44, 32, 0),),
+    },
 }
+HISTORY_COLUMNS = {RULE_V1.id: ("Vs open", "Vs close"), RULE_V2.id: ("Vs close",)}
+#: A weekly rule's weekend: the games from its choosing morning to this long after.
+WEEKEND = pd.Timedelta(days=3)
 
 
 def path() -> Path:
@@ -101,8 +128,11 @@ def current_lines(snapshots: pd.DataFrame, market: str) -> pd.DataFrame:
 
 
 def candidates(rule: Rule, projections: pd.DataFrame, snapshots: pd.DataFrame, games: pd.DataFrame,
-               season_types: dict, now: datetime) -> pd.DataFrame:
-    """The games the rule selects right now: not started, regular season, far enough from the line."""
+               season_types: dict, now: datetime, logged_weeks: set | None = None) -> pd.DataFrame:
+    """The games the rule selects right now: not started, regular season, and far enough from the line
+    - or, for a weekly rule on its choosing morning, the week's ``top_n`` largest gaps, once a week."""
+    if rule.top_n and now.astimezone(EASTERN).weekday() != rule.weekday:
+        return pd.DataFrame(columns=COLUMNS)
     p = projections[projections["sport"] == rule.sport].copy()
     if p.empty:
         return pd.DataFrame(columns=COLUMNS)
@@ -114,7 +144,18 @@ def candidates(rule: Rule, projections: pd.DataFrame, snapshots: pd.DataFrame, g
     lines = current_lines(snapshots, rule.market)
     p = p.merge(lines, on="game_id", how="inner").dropna(subset=["line", "total_mean"])
     p["gap"] = p["total_mean"].astype(float) - p["line"].astype(float)
-    p = p[p["gap"].abs() >= rule.threshold]
+    if rule.top_n:
+        p = p[p["kickoff_ts"] <= pd.Timestamp(now) + WEEKEND]
+        if p.empty:
+            return pd.DataFrame(columns=COLUMNS)
+        season, week = (int(v) for v in p[["season", "week"]].mode().iloc[0])
+        if (season, week) in (logged_weeks or set()):
+            return pd.DataFrame(columns=COLUMNS)
+        p = p[(p["season"] == season) & (p["week"] == week)]
+        p = p.assign(size=p["gap"].abs()).sort_values(["size", "kickoff_ts"], ascending=[False, True])
+        p = p.head(rule.top_n)
+    else:
+        p = p[p["gap"].abs() >= rule.threshold]
     if p.empty:
         return pd.DataFrame(columns=COLUMNS)
     over = p["gap"] > 0
@@ -189,7 +230,11 @@ def _team(name) -> str:
     return str(name).split(" ")[-1] if isinstance(name, str) and name else "?"
 
 
-def _game(row) -> str:
+def _game(row, schools: dict | None = None) -> str:
+    """"Away @ Home" by school name where the warehouse has it: a mascot alone is ambiguous (two Cowboys)."""
+    known = (schools or {}).get(str(row.game_id))
+    if known:
+        return f"{known[1]} @ {known[0]}"
     return f"{_team(row.away_team)} @ {_team(row.home_team)}"
 
 
@@ -200,7 +245,7 @@ def verdict(r: dict) -> str:
     return paper.verdict({**r, "graded": max(r["graded"], paper.MIN_GRADED)})
 
 
-def section(rule: Rule, g: pd.DataFrame, now: datetime) -> dict:
+def section(rule: Rule, g: pd.DataFrame, now: datetime, schools: dict | None = None) -> dict:
     """The owner page's view of one rule, every word in the ciphertext."""
     upcoming = g[(g["outcome"] == "open")
                  & (pd.to_datetime(g["kickoff"], utc=True) > pd.Timestamp(now))].sort_values("kickoff")
@@ -209,7 +254,7 @@ def section(rule: Rule, g: pd.DataFrame, now: datetime) -> dict:
     if len(upcoming):
         tables.append({"title": f"This week: {len(upcoming)} play{'s' if len(upcoming) != 1 else ''}",
                        "head": ["Game", "Play"],
-                       "rows": [[f"{_game(x)} · {_eastern(x.kickoff)} · Atlas {x.atlas_total:.1f}",
+                       "rows": [[f"{_game(x, schools)} · {_eastern(x.kickoff)} · Atlas {x.atlas_total:.1f}",
                                  f"{x.side} {x.line:g} ({'-110?' if x.price_assumed else f'{x.price:+.0f}'})"]
                                 for x in upcoming.itertuples()]})
     else:
@@ -224,40 +269,46 @@ def section(rule: Rule, g: pd.DataFrame, now: datetime) -> dict:
     done = g[g["outcome"] != "open"].sort_values("kickoff", ascending=False).head(15)
     if len(done):
         tables.append({"title": "Latest graded", "head": ["Game", "Play", "Result"],
-                       "rows": [[_game(x), f"{x.side} {x.line:g}", f"{x.outcome} {x.profit:+.2f}"]
+                       "rows": [[_game(x, schools), f"{x.side} {x.line:g}", f"{x.outcome} {x.profit:+.2f}"]
                                 for x in done.itertuples()]})
-    hist = HISTORY.get(rule.id, {})
+    hist, heads = HISTORY.get(rule.id, {}), HISTORY_COLUMNS.get(rule.id, ())
     if hist:
         def cell(w, l_, p):
             n = w + l_
             return f"{w / n:.1%} of {n}" if n else "–"
-        rows = [[str(season), cell(*o), cell(*c)] for season, (o, c) in sorted(hist.items())]
-        tot_o = [sum(v[0][i] for v in hist.values()) for i in range(3)]
-        tot_c = [sum(v[1][i] for v in hist.values()) for i in range(3)]
-        rows.append(["All", cell(*tot_o), cell(*tot_c)])
+        rows = [[str(season), *(cell(*c) for c in cols)] for season, cols in sorted(hist.items())]
+        totals = [[sum(v[j][i] for v in hist.values()) for i in range(3)] for j in range(len(heads))]
+        rows.append(["All", *(cell(*t) for t in totals)])
         tables.append({"title": "History before the freeze (walk-forward; pushes left out)",
-                       "head": ["Season", "Vs open", "Vs close"], "rows": rows})
+                       "head": ["Season", *heads], "rows": rows})
+    logged = ("Each play is logged once, the first morning its game qualifies, at the line and price the book "
+              "was quoting then, and never changed or removed.") if not rule.top_n else (
+        "The week's plays are chosen once, at the first refresh on its Saturday morning, at the lines and prices "
+        "then, and never changed or removed. Thursday and Friday games are not in it.")
+    caveat = ("The history below is what the rule was frozen on: a lead, uneven by season, not a proven edge."
+              if not rule.top_n else
+              "The history below is what the rule was frozen on, against the closing total: the one of ten weekly "
+              "variants tried that cleared break-even, so possibly the lucky one, and uneven by season.")
     notes = [
         f"Rule {rule.id}, frozen {rule.frozen}: {rule.label}. Atlas's side, one flat unit. Never tuned: a change "
         "is a new rule with its own record from the day it is frozen.",
-        "Each play is logged once, the first morning its game qualifies, at the line and price the book was "
-        "quoting then, and never changed or removed. A price the feed did not give is graded at -110 and marked.",
+        logged + " A price the feed did not give is graded at -110 and marked.",
         verdict(rec),
-        "Break-even at -110 is 52.4%. The history below is what the rule was frozen on: a lead, uneven by "
-        "season, not a proven edge.",
+        "Break-even at -110 is 52.4%. " + caveat,
     ]
-    return {"title": "Curated plays", "notes": notes, "tables": tables, "record": rec}
+    short = rule.id.rsplit("-", 1)[-1]
+    return {"title": f"Curated plays, rule {short}", "notes": notes, "tables": tables, "record": rec}
 
 
 def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, now: datetime | None = None,
-          where: Path | None = None) -> dict | None:
-    """Log today's plays, grade the record, and return the owner page's section. Never raises."""
+          where: Path | None = None) -> list[dict]:
+    """Log today's plays, grade the record, and return the owner page's sections, one per rule. Never raises."""
     now = now or datetime.now(UTC)
     try:
         record = load(passphrase, where)
     except sealed.Unreadable as error:
         LOG.error("curated plays: the owner key does not open them (%s); left as they are", error)
-        return {"title": "Curated plays", "notes": ["The plays could not be opened with this key."], "tables": []}
+        return [{"title": "Curated plays", "notes": ["The plays could not be opened with this key."], "tables": []}]
     try:
         if store is None:
             from atlas.live.store import Store
@@ -274,18 +325,24 @@ def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, 
                         if research is not None and "season_type" in research else {})
         games = store.read("games")
         for rule in RULES:
-            fresh = candidates(rule, store.read("projections"), store.read("snapshots"), games, season_types, now)
+            mine = record[record["rule"] == rule.id] if len(record) else record
+            weeks_logged = {(int(a), int(b)) for a, b in mine[["season", "week"]].itertuples(index=False)} \
+                if len(mine) else set()
+            fresh = candidates(rule, store.read("projections"), store.read("snapshots"), games, season_types, now,
+                               weeks_logged)
             before = len(record)
             record, weeks = log(record, fresh)
             if weeks:
                 seal(record, passphrase, weeks, where)
                 LOG.info("curated plays: %s logged %d new", rule.id, len(record) - before)
         g = graded(record, paper.results(research, games))
-        sections = [section(rule, g[g["rule"] == rule.id], now) for rule in RULES]
-        return sections[0]
+        schools = ({str(k): (h, a) for k, h, a in zip(research["game_id"], research["home_team"], research["away_team"],
+                                                     strict=True)}
+                   if research is not None and {"home_team", "away_team"} <= set(research.columns) else {})
+        return [section(rule, g[g["rule"] == rule.id], now, schools) for rule in RULES]
     except Exception as error:  # noqa: BLE001
         LOG.error("curated plays not built: %s", type(error).__name__)
-        return None
+        return []
 
 
 def main() -> None:
@@ -295,8 +352,8 @@ def main() -> None:
     passphrase = os.environ.get(owner.SECRET, "")
     if not passphrase.strip():
         raise SystemExit(f"{owner.SECRET} is not set")
-    s = build(passphrase)
-    print(json.dumps(s["record"] if s and "record" in s else s, indent=1, default=str))
+    for s in build(passphrase):
+        print(s["title"], json.dumps(s.get("record", s.get("notes")), indent=1, default=str))
 
 
 if __name__ == "__main__":

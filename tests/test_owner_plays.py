@@ -104,7 +104,7 @@ def test_the_plays_are_sealed_and_only_the_owner_key_opens_them(tmp_path):
                              "actual_total": [None] * 6,
                              "season_type": ["regular"] * 4 + ["postseason", "regular"]})
     where = tmp_path / "owner_plays"
-    out = plays.build(KEY, store=store, research=research, now=NOW, where=where)
+    out = plays.build(KEY, store=store, research=research, now=NOW, where=where)[0]
     upcoming = out["tables"][0]
     assert upcoming["title"] == "This week: 2 plays"
     assert upcoming["rows"][0][1] == "over 50 (-115)" and "Chippewas @ Hurricanes" in upcoming["rows"][0][0]
@@ -116,4 +116,52 @@ def test_the_plays_are_sealed_and_only_the_owner_key_opens_them(tmp_path):
     with pytest.raises(sealed.Unreadable):
         plays.load("another key", where)
     refused = plays.build("another key", store=store, research=research, now=NOW, where=where)
-    assert "could not be opened" in refused["notes"][0] and (where / "2026-04.enc.json").read_text() == text
+    assert "could not be opened" in refused[0]["notes"][0] and (where / "2026-04.enc.json").read_text() == text
+
+
+def test_rule_v2_is_frozen():
+    assert plays.RULE_V2 == plays.Rule(
+        id="cfb-total-top5-v2", frozen="2026-09-25", sport="ncaaf", market="total", threshold=0.0, top_n=5,
+        weekday=5, label="College totals, regular season: each Saturday morning, the week's five largest gaps "
+                         "between Atlas's total and the line")
+    hist = plays.HISTORY["cfb-total-top5-v2"]
+    assert [sum(v[0][i] for v in hist.values()) for i in range(3)] == [208, 152, 5]
+    assert plays.HISTORY_COLUMNS["cfb-total-top5-v2"] == ("Vs close",)
+
+
+def test_rule_v2_takes_the_weeks_five_largest_gaps_once_on_saturday_morning():
+    saturday = datetime(2026, 9, 26, 8, tzinfo=UTC)                    # 4 AM Eastern
+    gaps = [9.0, -8.0, 7.0, 6.5, -6.0, 5.5, 1.0]                         # seven Saturday games
+    projections = pd.DataFrame([_projection(i, 50.0 + g, kickoff="2026-09-26T16:00:00Z")
+                                for i, g in enumerate(gaps, start=10)]
+                               + [_projection(99, 70.0, kickoff="2026-09-25T23:00:00Z")])   # Friday: played
+    snapshots = pd.DataFrame([_snap(i, 50.0) for i in range(10, 17)] + [_snap(99, 50.0)])
+    types = {str(i): "regular" for i in [*range(10, 17), 99]}
+    got = plays.candidates(plays.RULE_V2, projections, snapshots, pd.DataFrame(), types, saturday, set())
+    assert list(got["game_id"]) == [10, 11, 12, 13, 14]                   # 9, 8, 7, 6.5, 6 - not 5.5, not Friday's
+    assert list(got["side"]) == ["over", "under", "over", "over", "under"]
+    # Once a week: the second Saturday refresh adds nothing; any other day chooses nothing.
+    assert plays.candidates(plays.RULE_V2, projections, snapshots, pd.DataFrame(), types, saturday,
+                            {(2026, 4)}).empty
+    friday = datetime(2026, 9, 25, 8, tzinfo=UTC)
+    assert plays.candidates(plays.RULE_V2, projections, snapshots, pd.DataFrame(), types, friday, set()).empty
+
+
+def test_each_rule_keeps_its_own_record(tmp_path):
+    store = Store.open(tmp_path / "tracking")
+    saturday = datetime(2026, 9, 26, 8, tzinfo=UTC)
+    store.write("projections", pd.DataFrame([_projection(1, 60.0), _projection(2, 52.0)]))
+    store.write("snapshots", pd.DataFrame([_snap(1, 50.0), _snap(2, 50.0)]))
+    store.write("games", pd.DataFrame({"game_id": [1, 2], "home_team": ["A B", "C D"], "away_team": ["E F", "G H"],
+                                       "kickoff": "2026-09-26T16:00:00Z"}))
+    research = pd.DataFrame({"game_id": [1, 2], "actual_margin": [None] * 2, "actual_total": [None] * 2,
+                             "season_type": ["regular"] * 2, "home_team": ["Oklahoma State", "Wyoming"],
+                             "away_team": ["West Virginia", "Hawai'i"]})
+    where = tmp_path / "owner_plays"
+    sections = plays.build(KEY, store=store, research=research, now=saturday, where=where)
+    assert sections[1]["tables"][0]["rows"][0][0].startswith("West Virginia @ Oklahoma State")   # schools, not mascots
+    assert [s["title"] for s in sections] == ["Curated plays, rule v1", "Curated plays, rule v2"]
+    record = plays.load(KEY, where)
+    assert sorted(zip(record["rule"], record["game_id"], strict=True)) == [
+        ("cfb-total-5-v1", 1), ("cfb-total-top5-v2", 1), ("cfb-total-top5-v2", 2)]
+    assert sections[1]["tables"][0]["title"] == "This week: 2 plays"

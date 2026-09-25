@@ -213,7 +213,7 @@ def refresh(*, rebuild: bool = True) -> Path:
     # paper tracker open the page even on a day with no slate.
     curated = plays.build(passphrase)
     tracker = paper.build()
-    sections = [s for s in (curated, tracker) if s]
+    sections = [*curated, *([tracker] if tracker else [])]
     if index is None and not sections:
         return write(None, reason=reason)
     college = cfb_record.update(passphrase) if index is not None else None
