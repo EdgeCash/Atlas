@@ -15,6 +15,8 @@ Tables
 ``snapshots``  append-on-change line observations (Track 2)
 ``signals``    immutable opinions (Track 1)
 ``grades``     one row per graded signal (Track 3)
+``availability`` the SEC's and the ACC's availability reports, their quarterbacks,
+               captured each heavy refresh (`atlas/sources/availability.py`)
 """
 
 from __future__ import annotations
@@ -81,6 +83,11 @@ SCHEMA: dict[str, list[str]] = {
         "draft_group_id", "slate", "starts_at", "season", "week", "player_id_dk", "player_id", "name", "position",
         "team", "opponent", "salary", "status", "projection", "low", "high", "p_play", "projected_at",
     ],
+    # The conferences' availability reports, quarterbacks only (atlas/sources/availability.py).
+    "availability": [
+        "captured_at", "conference", "report_id", "publish_date", "posted_time", "time_zone", "report_type",
+        "team", "opponent", "number", "player", "status", "exempt",
+    ],
     "games": [
         "game_id", "season", "week", "kickoff", "home_team", "away_team",
         "home_team_id", "away_team_id", "status", "completed",
@@ -123,6 +130,8 @@ KEYS: dict[str, list[str]] = {
     # having as of the latest look before the slate locks.
     "dfs_salaries": ["draft_group_id", "player_id"],
     "dfs_projections": ["draft_group_id", "player_id_dk"],
+    # One row per report and player: a report re-read keeps its first capture's rows current.
+    "availability": ["conference", "report_id", "team", "player"],
     "games": ["game_id"],
     "snapshots": ["game_id", "book", "market", "line", "price"],
     "signals": ["signal_id"],
@@ -137,6 +146,7 @@ SORT: dict[str, list[str]] = {
     "dfs_slates": ["starts_at", "draft_group_id"],
     "dfs_salaries": ["draft_group_id", "position", "salary", "player_id"],
     "dfs_projections": ["starts_at", "draft_group_id", "position", "player_id_dk"],
+    "availability": ["publish_date", "conference", "report_id", "team", "player"],
     "games": ["kickoff", "game_id"],
     "snapshots": ["game_id", "market", "book", "captured_at"],
     "signals": ["created_at", "game_id", "market", "book"],

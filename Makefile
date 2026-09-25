@@ -1,6 +1,6 @@
 PYTHON ?= python3
 
-.PHONY: help install ingest warehouse research all test lint clean-data dfs-capture dfs-history dfs-staging dfs-scoring dfs-benchmarks dfs-model dfs-lineups dfs-slate dfs-kickers cfb-players cfb-scoring cfb-baseline cfb-model cfb-participation cfb-slate cfb-record owner-paper owner-plays ncaaf-qb \
+.PHONY: help install ingest warehouse research all test lint clean-data dfs-capture dfs-history dfs-staging dfs-scoring dfs-benchmarks dfs-model dfs-lineups dfs-slate dfs-kickers cfb-players cfb-scoring cfb-baseline cfb-model cfb-participation cfb-slate cfb-record owner-paper owner-plays ncaaf-qb availability \
 	live-refresh live-run live-report live-check live-reproduce \
 	site site-full site-serve site-audit site-shots launch-check \
 	ops-heavy ops-poll ops-social ops-health ops-status ops-crontab \
@@ -267,6 +267,10 @@ cfb-record:
 # Shown only inside the owner page's ciphertext.
 owner-paper:
 	$(PYTHON) -m atlas.owner.paper
+
+# The SEC's and the ACC's availability reports: their quarterbacks into tracking/availability.csv.
+availability:
+	$(PYTHON) -m atlas.sources.availability
 
 # The owner's curated plays under the frozen rules, and their record (needs ATLAS_OWNER_KEY).
 owner-plays:

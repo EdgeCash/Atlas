@@ -67,6 +67,10 @@ def heavy(*, skip_warehouse: bool = False) -> int:
         # season in progress, then up to a budget of the history each run,
         # newest seasons first, kept by the raw cache. Never fails the run.
         ("cfb-players", ["atlas.sources.espn_cfb"]),
+        # The SEC's and the ACC's availability reports, their quarterbacks,
+        # into tracking/availability.csv before the curated plays are logged
+        # (they read the starters' statuses from it). Never fails the run.
+        ("availability", ["atlas.sources.availability"]),
         # DFS: every upcoming Classic, Showdown and Tiers slate projected;
         # the Main slate's projections recorded in tracking/dfs_projections.csv
         # for the public DFS page until its first kickoff; and the owner's

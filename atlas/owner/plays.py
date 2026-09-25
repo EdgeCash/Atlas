@@ -55,7 +55,8 @@ LOG = get_logger(__name__)
 EASTERN = ZoneInfo("America/New_York")
 PLAY_NAMESPACE = uuid.UUID("5d0f3a51-8c1e-4e8b-9a52-0e3c6b7f2a10")
 COLUMNS = ["play_id", "rule", "game_id", "season", "week", "kickoff", "away_team", "home_team", "book", "side",
-           "line", "price", "atlas_total", "gap", "model_version", "formed_at", "open_line", "moved_against"]
+           "line", "price", "atlas_total", "gap", "model_version", "formed_at", "open_line", "moved_against",
+           "home_qb", "home_qb_status", "away_qb", "away_qb_status"]
 #: The line movement flag: the total moved this many points against Atlas's
 #: side between the book's opener and the close. Tested on the rules' history
 #: before it was recorded (v1: 49.9% flagged against 55.6%, z -1.76; v2: 55.2%
@@ -135,7 +136,8 @@ def current_lines(snapshots: pd.DataFrame, market: str) -> pd.DataFrame:
 
 
 def candidates(rule: Rule, projections: pd.DataFrame, snapshots: pd.DataFrame, games: pd.DataFrame,
-               season_types: dict, now: datetime, logged_weeks: set | None = None) -> pd.DataFrame:
+               season_types: dict, now: datetime, logged_weeks: set | None = None,
+               qbs: dict | None = None) -> pd.DataFrame:
     """The games the rule selects right now: not started, regular season, and far enough from the line
     - or, for a weekly rule on its choosing morning, the week's ``top_n`` largest gaps, once a week."""
     if rule.top_n and now.astimezone(EASTERN).weekday() != rule.weekday:
@@ -182,6 +184,10 @@ def candidates(rule: Rule, projections: pd.DataFrame, snapshots: pd.DataFrame, g
         "moved_against": (np.where(over, -1.0, 1.0)
                           * (p["line"].astype(float) - pd.to_numeric(p["open_line"], errors="coerce"))).round(1),
     })
+    # Each side's expected quarterback and his status in the latest availability report (atlas/owner/starters.py).
+    found = [(qbs or {}).get(str(g), (None, "unknown", None, "unknown")) for g in p["game_id"]]
+    for i, col in enumerate(("home_qb", "home_qb_status", "away_qb", "away_qb_status")):
+        out[col] = [f[i] for f in found]
     return out.reindex(columns=COLUMNS).reset_index(drop=True)
 
 
@@ -274,6 +280,20 @@ def _game(row, schools: dict | None = None) -> str:
     return f"{_team(row.away_team)} @ {_team(row.home_team)}"
 
 
+def _starter_note(x, schools: dict | None = None) -> str:
+    """" · Georgia QB Gunner Stockton: Out" for a starter the report does not expect to play."""
+    from atlas.owner import starters
+
+    known = (schools or {}).get(str(x.game_id))
+    notes = []
+    for side, i in (("home", 0), ("away", 1)):
+        qb, st = getattr(x, f"{side}_qb", None), getattr(x, f"{side}_qb_status", None)
+        if str(st) in starters.OUT:
+            team = known[i] if known else _team(getattr(x, f"{side}_team", None))
+            notes.append(f" · {team} QB {qb}: {st}")
+    return "".join(notes)
+
+
 def _moved_note(moved, when: str) -> str:
     """" · line moved 2.5 against" when the flag is up; nothing otherwise."""
     try:
@@ -300,7 +320,7 @@ def section(rule: Rule, g: pd.DataFrame, now: datetime, schools: dict | None = N
         tables.append({"title": f"This week: {len(upcoming)} play{'s' if len(upcoming) != 1 else ''}",
                        "head": ["Game", "Play"],
                        "rows": [[f"{_game(x, schools)} · {_eastern(x.kickoff)} · Atlas {x.atlas_total:.1f}"
-                                 + _moved_note(x.moved_against, "so far"),
+                                 + _moved_note(x.moved_against, "so far") + _starter_note(x, schools),
                                  f"{x.side} {x.line:g} ({'-110?' if x.price_assumed else f'{x.price:+.0f}'})"]
                                 for x in upcoming.itertuples()]})
     else:
@@ -325,10 +345,21 @@ def section(rule: Rule, g: pd.DataFrame, now: datetime, schools: dict | None = N
         tables.append({"title": f"Split by the line movement flag ({MOVED_AGAINST:g}+ against by the close)",
                        "head": ["", "Record"], "rows": [["Line moved against Atlas", line(flagged)],
                                                         ["Everything else", line(rest)]]})
+        from atlas.owner import starters
+
+        out_flag = graded_.apply(lambda x: starters.flagged(x.get("home_qb_status"), x.get("away_qb_status")), axis=1)
+        known = graded_.apply(lambda x: any(str(x.get(c)) not in ("no report", "unknown", "nan", "None")
+                                            for c in ("home_qb_status", "away_qb_status")), axis=1)
+        tables.append({"title": "Split by the starter flag (a starter reported Out or Doubtful when logged)",
+                       "head": ["", "Record"],
+                       "rows": [["A starter reported out", line(graded_[out_flag])],
+                                ["Starters reported available", line(graded_[known & ~out_flag])],
+                                ["No report (not SEC or ACC, or not a conference game)", line(graded_[~known])]]})
     done = g[g["outcome"] != "open"].sort_values("kickoff", ascending=False).head(15)
     if len(done):
         tables.append({"title": "Latest graded", "head": ["Game", "Play", "Result"],
-                       "rows": [[_game(x, schools) + _moved_note(x.moved_at_close, "by the close"),
+                       "rows": [[_game(x, schools) + _moved_note(x.moved_at_close, "by the close")
+                                 + _starter_note(x, schools),
                                  f"{x.side} {x.line:g}", f"{x.outcome} {x.profit:+.2f}"]
                                 for x in done.itertuples()]})
     hist, heads = HISTORY.get(rule.id, {}), HISTORY_COLUMNS.get(rule.id, ())
@@ -355,12 +386,32 @@ def section(rule: Rule, g: pd.DataFrame, now: datetime, schools: dict | None = N
         logged + " A price the feed did not give is graded at -110 and marked.",
         verdict(rec),
         "Break-even at -110 is 52.4%. " + caveat,
+        "The starter flag marks a play where either team's expected quarterback (last game's quarterback of "
+        "record) was Out or Doubtful in its conference's latest availability report when the play was logged. "
+        "Only SEC and ACC conference games have a report Atlas reads. A label, recorded to be tested, not a filter.",
         f"The line movement flag marks a play whose total moved {MOVED_AGAINST:g} or more points against Atlas's "
         "side from the opener - news the market may have and Atlas does not. In the history flagged plays won "
         "less (v1 49.9% against 55.6%; v2 55.2% against 59.4%) but not beyond noise, so it is a label, not a filter.",
     ]
     short = rule.id.rsplit("-", 1)[-1]
     return {"title": f"Curated plays, rule {short}", "notes": notes, "tables": tables, "record": rec}
+
+
+def _quarterbacks(schools: dict, research: pd.DataFrame | None, store, now: datetime) -> dict:
+    """The upcoming games' expected starters and their reported statuses; none when a source is missing."""
+    try:
+        from atlas.owner import starters
+        from atlas.sources import espn_cfb
+
+        if research is None or research.empty:
+            return {}
+        season = int(research["season"].max())
+        upcoming = research[pd.to_datetime(research["kickoff"], utc=True, errors="coerce") > pd.Timestamp(now)]
+        wanted = {str(g): schools[str(g)] for g in upcoming["game_id"] if str(g) in schools}
+        return starters.for_games(wanted, espn_cfb.load(seasons=[season]), research, store.read("availability"), now)
+    except Exception as error:  # noqa: BLE001 - the plays are logged without it
+        LOG.info("curated plays: starters not read (%s)", type(error).__name__)
+        return {}
 
 
 def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, now: datetime | None = None,
@@ -387,12 +438,16 @@ def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, 
         season_types = ({str(k): v for k, v in zip(research["game_id"], research["season_type"], strict=True)}
                         if research is not None and "season_type" in research else {})
         games = store.read("games")
+        schools = ({str(k): (h, a) for k, h, a in zip(research["game_id"], research["home_team"], research["away_team"],
+                                                     strict=True)}
+                   if research is not None and {"home_team", "away_team"} <= set(research.columns) else {})
+        qbs = _quarterbacks(schools, research, store, now)
         for rule in RULES:
             mine = record[record["rule"] == rule.id] if len(record) else record
             weeks_logged = {(int(a), int(b)) for a, b in mine[["season", "week"]].itertuples(index=False)} \
                 if len(mine) else set()
             fresh = candidates(rule, store.read("projections"), store.read("snapshots"), games, season_types, now,
-                               weeks_logged)
+                               weeks_logged, qbs)
             before = len(record)
             record, weeks = log(record, fresh)
             if weeks:
@@ -400,9 +455,6 @@ def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, 
                 LOG.info("curated plays: %s logged %d new", rule.id, len(record) - before)
         g = graded(record, paper.results(research, games),
                    closing_movement(record, store.read("snapshots"), games, now))
-        schools = ({str(k): (h, a) for k, h, a in zip(research["game_id"], research["home_team"], research["away_team"],
-                                                     strict=True)}
-                   if research is not None and {"home_team", "away_team"} <= set(research.columns) else {})
         return [section(rule, g[g["rule"] == rule.id], now, schools) for rule in RULES]
     except Exception as error:  # noqa: BLE001
         LOG.error("curated plays not built: %s", type(error).__name__)
