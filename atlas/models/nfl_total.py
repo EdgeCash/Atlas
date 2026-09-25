@@ -10,7 +10,8 @@ term that measured as real on the implied total's residual is the wind
 the dome itself adds nothing, nor do temperature, pace, rest or a division
 game); and the grid is 80 points a side (0-79). Sixty was not enough: the
 Dolphins scored 70 in 2023 and the Saints 62 in 2011. The points lattice is
-fitted the same way and applied the same way.
+fitted the same way and applied the same way. P(over a line) is read given
+the line, as the college total reads it (``fit_over``).
 
 The wind is the game-time wind as recorded, not a forecast made before
 kickoff: in the walk-forward it is a mild look-ahead, and live it is only as
@@ -86,7 +87,7 @@ def run(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON,
         train_fc = pd.concat([_with_forecasts(frame[frame["season"] == s], fcs[s])
                               for s in history[-ns.TUNING_SEASONS:]], ignore_index=True)
         train_fc = train_fc[train_fc["season_type"] == "regular"]
-        tfit = tm.fit_total(train_fc, ADJUSTMENTS)
+        tfit = tm.fit_over(train_fc, tm.fit_total(train_fc, ADJUSTMENTS))
         tfcs, _, _ = ns.run_qb(frame, [season], choice=choice, p0=qb.p0, new_mean=qb.new_mean, levels=levels,
                                state=state, starters=starters, k_epa=qb.k_epa, record=record, k_obs=qb.k_obs,
                                k_draft=qb.k_draft)
@@ -103,7 +104,7 @@ def run(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON,
         refs = ref.market(train, fc)
         grid_ = lat.fit(train["actual_margin"].to_numpy(), -train["closing_spread"].to_numpy(), refs.sigma)
         market_pmf = grid_.pmf(refs.mean, refs.sigma)
-        scored.append(tm._score_total(fc, models, season, support=tm.total_support(MAX_POINTS)))
+        scored.append(tm._score_total(fc, models, season, support=tm.total_support(MAX_POINTS), over={"total": tfit}))
         points_factor = tm.fit_points_lattice(train_fc, grid_, tfit, MAX_POINTS)
         fits[season] = replace(tfit, points_factor=points_factor)
         margin_pmf = grid_.pmf(fc["m_mean"].to_numpy(dtype=float), fc["m_sd"].to_numpy(dtype=float))
@@ -135,7 +136,8 @@ def render(scored: pd.DataFrame, table: pd.DataFrame, fits: dict[int, tm.TotalFi
         row = {"season": s, "intercept": f"{f.coef[0]:+.1f}", "slope on state total": f"{f.coef[1]:.3f}"}
         for n, c in zip(f.names[1:], f.coef[2:], strict=True):
             row[n] = f"{c:+.3f}"
-        row.update({"sigma": f"{f.sigma:.2f}", "raw sigma": f"{f.raw_sigma:.2f}", "train games": f.n})
+        row.update({"sigma": f"{f.sigma:.2f}", "raw sigma": f"{f.raw_sigma:.2f}", "train games": f.n,
+                    **tm.over_fit_columns(f)})
         coef_rows.append(row)
     parts = [
         "# NFL total and joint score grid", "",
@@ -146,11 +148,12 @@ def render(scored: pd.DataFrame, table: pd.DataFrame, fits: dict[int, tm.TotalFi
         "points, reweighted by the points lattice; every headline number below is a mean of that grid. The wind "
         "is the recorded game-time wind, not a pre-kickoff forecast - a mild look-ahead in these numbers.", "",
         "## Calibration fitted, per season", "",
+        tm.OVER_FIT_NOTE, "",
         md(pd.DataFrame(coef_rows)), "",
         f"## Total, regular season {REPORT_SEASONS[0]}-{REPORT_SEASONS[-1]}", "",
-        "`over_brier` and `over_ece` score P(over the closing total); a push counts half. A model weaker than "
-        "the market is over-confident on P(over) by construction, so that ECE measures the gap to the market, "
-        "not the total's own distribution, which CRPS does.", "",
+        "`over_brier` and `over_ece` score P(over the closing total); a push counts half. The total's P(over) "
+        "is read given the line (`over shrink`, `over sigma`); the other models' off their own distribution. "
+        "CRPS and MAE score the total's own distribution, which the line does not touch.", "",
         md(fmt(tm.summarise_total(window))), "",
         "## Total, every scored season pooled", "",
         md(fmt(tm.summarise_total(reg))), "",
@@ -160,6 +163,8 @@ def render(scored: pd.DataFrame, table: pd.DataFrame, fits: dict[int, tm.TotalFi
     r = reg.copy()
     r["week_bucket"] = evaluate.bucket(r["week"], nb.WEEK_BUCKETS, "wk")
     parts += ["## Total by week bucket, regular season", "", md(fmt(tm.summarise_total(r, ["week_bucket"]))), ""]
+    parts += tm.over_comparison(window, f"regular season {REPORT_SEASONS[0]}-{REPORT_SEASONS[-1]}")
+    parts += tm.over_comparison(reg, "regular season, every scored season")
     playoffs = scored[scored["season_type"] != "regular"]
     if not playoffs.empty:
         parts += ["## Total, playoffs (never fitted, always scored)", "", md(fmt(tm.summarise_total(playoffs))), ""]

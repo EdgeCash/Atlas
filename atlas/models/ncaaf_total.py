@@ -386,6 +386,34 @@ def _reliability_by_spread(table: pd.DataFrame, buckets: list[tuple[int, int]] =
     return out.sort_values("bucket").reset_index(drop=True)
 
 
+def over_fit_columns(f: TotalFit) -> dict:
+    """The per-season fit table's columns for the line-given P(over)."""
+    return {"over shrink": "" if f.over_shrink is None else f"{f.over_shrink:.3f}",
+            "over sigma": "" if f.over_sigma is None else f"{f.over_sigma:.2f}",
+            "lined train games": f.over_n}
+
+
+OVER_FIT_NOTE = ("`over shrink` and `over sigma` read P(over a line): `actual - line = shrink * (total - line) + e`, "
+                 "fitted on the training games with a closing total (`fit_over`).")
+
+
+def over_comparison(reg: pd.DataFrame, label: str = "regular season") -> list[str]:
+    """The report section scoring the total's P(over) alone against given the line."""
+    tot = reg[reg["model"] == "total"].dropna(subset=["p_over", "over"])
+    if tot.empty or "p_over_alone" not in tot:
+        return []
+
+    def scores(col: str) -> dict:
+        return {"brier": f"{np.mean((tot[col] - tot['over']) ** 2):.4f}",
+                "ece": f"{scoring.expected_calibration_error(tot[col], tot['over']):.3f}",
+                "mean P(side)": f"{np.maximum(tot[col], 1 - tot[col]).mean():.3f}"}
+    seen = [{"P(over) from": "the total alone", "games": len(tot), **scores("p_over_alone")},
+            {"P(over) from": "the total given the line", "games": len(tot), **scores("p_over")}]
+    return [f"## P(over): the total alone against the total given the line, {label}", "",
+            "The same games and the same total; only how a line is read differs. `mean P(side)` is the "
+            "confidence the model states in its own side.", "", evaluate.markdown(pd.DataFrame(seen)), ""]
+
+
 def render(scored: pd.DataFrame, table: pd.DataFrame, fits: dict[int, TotalFit]) -> str:
     md = evaluate.markdown
     seasons = sorted(fits)
@@ -405,9 +433,7 @@ def render(scored: pd.DataFrame, table: pd.DataFrame, fits: dict[int, TotalFit])
         for n, c in zip(f.names[1:], f.coef[2:], strict=True):
             row[n] = f"{c:+.3f}"
         row.update({"sigma": f"{f.sigma:.2f}", "raw sigma": f"{f.raw_sigma:.2f}", "train games": f.n,
-                    "over shrink": "" if f.over_shrink is None else f"{f.over_shrink:.3f}",
-                    "over sigma": "" if f.over_sigma is None else f"{f.over_sigma:.2f}",
-                    "lined train games": f.over_n})
+                    **over_fit_columns(f)})
         coef_rows.append(row)
     parts = [
         "# NCAAF total and joint score grid", "",
@@ -418,8 +444,7 @@ def render(scored: pd.DataFrame, table: pd.DataFrame, fits: dict[int, TotalFit])
         "(home, away) points, `atlas/models/joint.py`; every headline number below is a mean of that grid.", "",
         "## Calibration fitted, per season", "",
         "`raw sigma` is the residual sd of the uncalibrated state total; `sigma` is after calibration and is the total's forecast sd. "
-        "`over shrink` and `over sigma` read P(over a line): `actual - line = shrink * (total - line) + e`, "
-        "fitted on the training games with a closing total (`fit_over`).", "",
+        + OVER_FIT_NOTE, "",
         md(pd.DataFrame(coef_rows)), "",
         "## Total, regular season, pooled", "",
         "`over_brier` and `over_ece` score P(over the closing total) against what happened; a push counts half. "
@@ -435,17 +460,7 @@ def render(scored: pd.DataFrame, table: pd.DataFrame, fits: dict[int, TotalFit])
     bowls = scored[scored["season_type"] != "regular"]
     if not bowls.empty:
         parts += ["## Total, bowls and playoffs (never fitted, always scored)", "", md(fmt(summarise_total(bowls))), ""]
-    tot = reg[reg["model"] == "total"].dropna(subset=["p_over", "over"])
-    if not tot.empty and "p_over_alone" in tot:
-        def scores(d: pd.DataFrame, col: str) -> dict:
-            return {"brier": f"{np.mean((d[col] - d['over']) ** 2):.4f}",
-                    "ece": f"{scoring.expected_calibration_error(d[col], d['over']):.3f}",
-                    "mean P(side)": f"{np.maximum(d[col], 1 - d[col]).mean():.3f}"}
-        seen = [{"P(over) from": "the total alone", "games": len(tot), **scores(tot, "p_over_alone")},
-                {"P(over) from": "the total given the line", "games": len(tot), **scores(tot, "p_over")}]
-        parts += ["## P(over): the total alone against the total given the line, regular season", "",
-                  "The same games and the same total; only how a line is read differs. `mean P(side)` is the "
-                  "confidence the model states in its own side.", "", md(pd.DataFrame(seen)), ""]
+    parts += over_comparison(reg)
     parts += ["## Reliability, P(over the closing total), regular season", ""]
     for name in ("total", "market"):
         d = reg[(reg["model"] == name)].dropna(subset=["p_over", "over"])
