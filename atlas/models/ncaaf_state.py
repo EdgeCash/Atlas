@@ -142,6 +142,22 @@ def _zero_prior(games: pd.DataFrame, like: prior_mod.Prior, season: int) -> prio
     return prior_mod.Prior(season=season, net=like.net, points=like.points, teams=table)
 
 
+def has_market(games: pd.DataFrame) -> pd.Series:
+    """Games with both closing lines: the ones scored against the market."""
+    return games["closing_spread"].notna() & games["closing_total"].notna()
+
+
+def every_game(frame: pd.DataFrame) -> pd.DataFrame:
+    """Every completed FBS-vs-FBS game, with or without a closing line.
+
+    The prior, the tuning and the filter learn from all of them: a result is
+    evidence about both teams whether or not a book priced it. Only the
+    comparison with the market, and the key-number lattice fitted from
+    closing lines, need the line, and they select :func:`has_market` rows.
+    """
+    return research_sample(frame, require_market=False)
+
+
 def _early(games: pd.DataFrame) -> pd.DataFrame:
     return games[pd.to_numeric(games["week"], errors="coerce") <= EARLY_WEEKS]
 
@@ -261,6 +277,11 @@ def run(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON, grid
         fit_rho: bool = True):
     """Walk-forward: tune on the past, forecast the season, score beside everything.
 
+    ``frame`` is every completed game (:func:`every_game`): the prior, the
+    tuning and the filter see all of it. Scores, the references and the
+    lattice are on the games with a closing line, the same sample the
+    benchmarks score, so the comparison with the market is unchanged.
+
     With ``fit_rho`` the state runs with its fitted noise correlation and is
     scored beside the same filter with independent noise (``state_indep``),
     so the report measures what the correlation bought rather than assuming it.
@@ -273,25 +294,30 @@ def run(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON, grid
         choice = tune(frame, feats, season, grid=grid, like=prior, fit_rho=fit_rho)
         choices[season] = choice
         spec = _spec(choice.q, choice.p0, choice.sigma, prior, choice.rho)
+        # The filter runs through every game of the season; the market sample is scored.
         fc, state = _season_forecasts(test, prior, spec)
+        lined, train_lined = test[has_market(test)], train[has_market(train)]
+        fc = fc.loc[lined.index]
         extra = {}
         if choice.rho != 0.0:
             indep, _ = _season_forecasts(test, prior, kalman.with_correlation(spec, 0.0))
+            indep = indep.loc[lined.index]
             extra["state_indep"] = ref.Forecast("state_indep", indep["mean"].to_numpy(dtype=float),
                                                 indep["sd"].to_numpy(dtype=float))
-            totals.append(pd.DataFrame({"season": season, "season_type": test["season_type"].to_numpy(),
-                                        "correlated": _total_loglik(fc, test), "independent": _total_loglik(indep, test)}))
+            totals.append(pd.DataFrame({"season": season, "season_type": lined["season_type"].to_numpy(),
+                                        "correlated": _total_loglik(fc, lined),
+                                        "independent": _total_loglik(indep, lined)}))
         finals[season] = state
-        refs = ref.all_references(train, test)
-        grid_ = lat.fit(train["actual_margin"].to_numpy(), -train["closing_spread"].to_numpy(),
+        refs = ref.all_references(train_lined, lined)
+        grid_ = lat.fit(train_lined["actual_margin"].to_numpy(), -train_lined["closing_spread"].to_numpy(),
                         refs["market"].sigma)
         keep = {k: refs[k] for k in ("naive", "prior_fpi", "elo", "atlas_epa", "market") if k in refs}
         state_fc = ref.Forecast("state", fc["mean"].to_numpy(dtype=float), fc["sd"].to_numpy(dtype=float))
-        prior_fc = prior_mod.game_forecast(prior, test)
-        scored.append(evaluate.score(test, {**keep, "prior": prior_fc, "state": state_fc, **extra}, grid_,
+        prior_fc = prior_mod.game_forecast(prior, lined)
+        scored.append(evaluate.score(lined, {**keep, "prior": prior_fc, "state": state_fc, **extra}, grid_,
                                      season=season))
-        LOG.info("season %s: q=%.1f p0=%.0f sigma=%.1f rho=%.2f (tuned on %s); %d games", season, choice.q,
-                 choice.p0, choice.sigma, choice.rho, choice.seasons, len(test))
+        LOG.info("season %s: q=%.1f p0=%.0f sigma=%.1f rho=%.2f (tuned on %s); %d games learnt from, %d scored",
+                 season, choice.q, choice.p0, choice.sigma, choice.rho, choice.seasons, len(test), len(lined))
     out = pd.concat(scored, ignore_index=True)
     # The total's comparison rides with the scores for render() to report.
     out.attrs["totals"] = pd.concat(totals, ignore_index=True) if totals else pd.DataFrame()
@@ -407,7 +433,7 @@ def main() -> None:
     ap.add_argument("--no-rho", action="store_true", help="independent home/away noise, as before")
     args = ap.parse_args()
     paths = config.paths()
-    frame = research_sample(load_research_frame(paths.warehouse))
+    frame = every_game(load_research_frame(paths.warehouse))
     scored, choices, finals = run(frame, first_test_season=args.first_test_season, fit_rho=not args.no_rho)
     out = args.out or (paths.root / "reports" / "ncaaf_state.md")
     out.parent.mkdir(parents=True, exist_ok=True)
