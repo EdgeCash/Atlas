@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from datetime import UTC, datetime
 
+import numpy as np
 import pandas as pd
 import pytest
 
@@ -165,3 +166,39 @@ def test_each_rule_keeps_its_own_record(tmp_path):
     assert sorted(zip(record["rule"], record["game_id"], strict=True)) == [
         ("cfb-total-5-v1", 1), ("cfb-total-top5-v2", 1), ("cfb-total-top5-v2", 2)]
     assert sections[1]["tables"][0]["title"] == "This week: 2 plays"
+
+
+def test_each_play_carries_the_line_movement_flag():
+    """Logged with how far the line had moved against it from the opener; graded with the move by the close."""
+    projections = pd.DataFrame([_projection(1, 60.0), _projection(2, 40.0)])
+    snapshots = pd.DataFrame([
+        {**_snap(1, 49.0), "open_line": 52.0},        # an over, the total down 3 from the opener: against
+        {**_snap(2, 50.0), "open_line": 49.5},        # an under, the total up 0.5: not much
+    ])
+    games = pd.DataFrame({"game_id": [1, 2], "home_team": ["A B", "C D"], "away_team": ["E F", "G H"]})
+    types = {"1": "regular", "2": "regular"}
+    got = plays.candidates(plays.RULE_V1, projections, snapshots, games, types, NOW).set_index("game_id")
+    assert (got.loc[1, "open_line"], got.loc[1, "moved_against"]) == (52.0, 3.0)
+    assert got.loc[2, "moved_against"] == 0.5
+
+    # By the close the over's total fell further, to 48; the under's came back to 49.5. Both have kicked off.
+    closing = pd.concat([snapshots, pd.DataFrame([
+        {**_snap(1, 48.0, at="2026-09-26T15:00:00+00:00"), "open_line": 52.0},
+        {**_snap(2, 49.5, at="2026-09-26T15:00:00+00:00"), "open_line": 49.5}])], ignore_index=True)
+    kicked = games.assign(kickoff="2026-09-26T16:00:00Z")
+    moved = plays.closing_movement(got.reset_index(), closing, kicked, datetime(2026, 9, 26, 17, tzinfo=UTC))
+    assert moved[plays.play_id(plays.RULE_V1, 1)] == 4.0 and moved[plays.play_id(plays.RULE_V1, 2)] == 0.0
+    # A play logged without its opener takes the book's from the line history.
+    bare = got.reset_index().assign(open_line=np.nan)
+    assert plays.closing_movement(bare, closing, kicked, datetime(2026, 9, 26, 17, tzinfo=UTC))[
+        plays.play_id(plays.RULE_V1, 1)] == 4.0
+    # Before kickoff there is no close yet.
+    assert plays.closing_movement(got.reset_index(), closing, kicked, NOW).isna().all()
+
+    finals = pd.DataFrame({"game_id": ["1", "2"], "final_margin": [0.0, 0.0], "final_total": [40.0, 44.0]})
+    g = plays.graded(got.reset_index(), finals, moved)
+    section = plays.section(plays.RULE_V1, g, datetime(2026, 9, 27, tzinfo=UTC))
+    split = next(t for t in section["tables"] if t["title"].startswith("Split by the line movement flag"))
+    assert split["rows"] == [["Line moved against Atlas", "0-1-0 (0.0%)"], ["Everything else", "1-0-0 (100.0%)"]]
+    graded_rows = next(t for t in section["tables"] if t["title"] == "Latest graded")["rows"]
+    assert any("line moved 4 against by the close" in r[0] for r in graded_rows)

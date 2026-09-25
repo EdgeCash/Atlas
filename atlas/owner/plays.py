@@ -55,7 +55,13 @@ LOG = get_logger(__name__)
 EASTERN = ZoneInfo("America/New_York")
 PLAY_NAMESPACE = uuid.UUID("5d0f3a51-8c1e-4e8b-9a52-0e3c6b7f2a10")
 COLUMNS = ["play_id", "rule", "game_id", "season", "week", "kickoff", "away_team", "home_team", "book", "side",
-           "line", "price", "atlas_total", "gap", "model_version", "formed_at"]
+           "line", "price", "atlas_total", "gap", "model_version", "formed_at", "open_line", "moved_against"]
+#: The line movement flag: the total moved this many points against Atlas's
+#: side between the book's opener and the close. Tested on the rules' history
+#: before it was recorded (v1: 49.9% flagged against 55.6%, z -1.76; v2: 55.2%
+#: against 59.4%, z -0.79): the direction expected of news the market has and
+#: Atlas does not, but not significant. A label on each play, never a filter.
+MOVED_AGAINST = 2.0
 #: Graded plays before the record says anything at all.
 MIN_GRADED = 100
 
@@ -122,9 +128,10 @@ def current_lines(snapshots: pd.DataFrame, market: str) -> pd.DataFrame:
         return pd.DataFrame(columns=["game_id", "book", "line", "price", "other_price"])
     s["ts"] = pd.to_datetime(s["captured_at"], utc=True, errors="coerce")
     last = s.sort_values("ts").groupby("game_id", as_index=False).last()
-    if "other_price" not in last:
-        last["other_price"] = np.nan
-    return last[["game_id", "book", "line", "price", "other_price"]]
+    for c in ("other_price", "open_line"):
+        if c not in last:
+            last[c] = np.nan
+    return last[["game_id", "book", "line", "price", "other_price", "open_line"]]
 
 
 def candidates(rule: Rule, projections: pd.DataFrame, snapshots: pd.DataFrame, games: pd.DataFrame,
@@ -170,6 +177,10 @@ def candidates(rule: Rule, projections: pd.DataFrame, snapshots: pd.DataFrame, g
         "price": np.where(over, p["price"], p["other_price"]).astype(float),
         "atlas_total": p["total_mean"].astype(float).round(1), "gap": p["gap"].round(1),
         "model_version": p["model_version"], "formed_at": now.replace(microsecond=0).isoformat(),
+        # How far the line had already moved against Atlas's side from the opener, when logged.
+        "open_line": pd.to_numeric(p["open_line"], errors="coerce"),
+        "moved_against": (np.where(over, -1.0, 1.0)
+                          * (p["line"].astype(float) - pd.to_numeric(p["open_line"], errors="coerce"))).round(1),
     })
     return out.reindex(columns=COLUMNS).reset_index(drop=True)
 
@@ -202,12 +213,37 @@ def seal(record: pd.DataFrame, passphrase: str, weeks: set, where: Path | None =
     return out
 
 
-def graded(record: pd.DataFrame, finals: pd.DataFrame) -> pd.DataFrame:
-    """Each play with its outcome (``open`` until the game is final) and units won or lost."""
+def closing_movement(record: pd.DataFrame, snapshots: pd.DataFrame, games: pd.DataFrame,
+                     now: datetime | None = None) -> pd.Series:
+    """Points the total moved against each play's side from the opener to its close (the last line before
+    kickoff), by play id; empty until the game has started."""
+    from atlas.live.grade import closing_lines
+
+    if record.empty or snapshots.empty or games.empty:
+        return pd.Series(dtype=float)
+    closes = closing_lines(snapshots, games)
+    closes = closes[closes["market"] == "total"].assign(game_id=lambda d: d["game_id"].astype(str))
+    started = pd.to_datetime(games["kickoff"], utc=True, errors="coerce") <= pd.Timestamp(now or datetime.now(UTC))
+    done = set(games.loc[started, "game_id"].astype(str))
+    r = record.assign(game_id=record["game_id"].astype(str)).merge(
+        closes[["game_id", "book", "close_line"]], on=["game_id", "book"], how="left")
+    # A play logged before openers were recorded with it takes the book's opener from the line history.
+    opener = current_lines(snapshots.assign(game_id=snapshots["game_id"].astype(str)), "total").set_index(
+        "game_id")["open_line"]
+    opened = pd.to_numeric(r["open_line"], errors="coerce").fillna(r["game_id"].map(opener))
+    sign = np.where(r["side"] == "over", -1.0, 1.0)
+    moved = sign * (r["close_line"].astype(float) - opened)
+    return pd.Series(np.where(r["game_id"].isin(done), moved, np.nan), index=r["play_id"].to_numpy())
+
+
+def graded(record: pd.DataFrame, finals: pd.DataFrame, moved_at_close: pd.Series | None = None) -> pd.DataFrame:
+    """Each play with its outcome (``open`` until the game is final), units won or lost, and the line
+    movement against its side at the close where the game has started."""
     if record.empty:
         return record.assign(outcome=pd.Series(dtype=str), profit=pd.Series(dtype=float),
-                             price_assumed=pd.Series(dtype=bool))
+                             price_assumed=pd.Series(dtype=bool), moved_at_close=pd.Series(dtype=float))
     r = record.assign(game_id=record["game_id"].astype(str)).merge(finals, on="game_id", how="left")
+    r["moved_at_close"] = r["play_id"].map(moved_at_close) if moved_at_close is not None else np.nan
     sign = np.where(r["side"] == "over", 1.0, -1.0)
     edge = (r["final_total"].astype(float) - r["line"].astype(float)) * sign
     r["outcome"] = np.select([np.isnan(edge), edge > 0, edge < 0], ["open", "win", "loss"], "push")
@@ -238,6 +274,15 @@ def _game(row, schools: dict | None = None) -> str:
     return f"{_team(row.away_team)} @ {_team(row.home_team)}"
 
 
+def _moved_note(moved, when: str) -> str:
+    """" · line moved 2.5 against" when the flag is up; nothing otherwise."""
+    try:
+        m = float(moved)
+    except (TypeError, ValueError):
+        return ""
+    return f" · line moved {m:g} against {when}" if m >= MOVED_AGAINST else ""
+
+
 def verdict(r: dict) -> str:
     if r["graded"] < MIN_GRADED:
         return (f"Collecting: {r['graded']} graded. Fewer than {MIN_GRADED} say nothing; proving a rule that "
@@ -254,7 +299,8 @@ def section(rule: Rule, g: pd.DataFrame, now: datetime, schools: dict | None = N
     if len(upcoming):
         tables.append({"title": f"This week: {len(upcoming)} play{'s' if len(upcoming) != 1 else ''}",
                        "head": ["Game", "Play"],
-                       "rows": [[f"{_game(x, schools)} · {_eastern(x.kickoff)} · Atlas {x.atlas_total:.1f}",
+                       "rows": [[f"{_game(x, schools)} · {_eastern(x.kickoff)} · Atlas {x.atlas_total:.1f}"
+                                 + _moved_note(x.moved_against, "so far"),
                                  f"{x.side} {x.line:g} ({'-110?' if x.price_assumed else f'{x.price:+.0f}'})"]
                                 for x in upcoming.itertuples()]})
     else:
@@ -266,10 +312,24 @@ def section(rule: Rule, g: pd.DataFrame, now: datetime, schools: dict | None = N
         ["95% range", f"{paper._pct(rec['low'])}–{paper._pct(rec['high'])}" if rec["wins"] + rec["losses"] else "–"],
         ["Break-even at the prices taken", paper._pct(rec["break_even"])],
         ["Units", paper._num(rec["units"])], ["Per play", paper._num(rec["roi"], "{:+.1%}")]]})
+    moved = pd.to_numeric(g["moved_at_close"], errors="coerce") if "moved_at_close" in g else pd.Series(
+        np.nan, index=g.index)
+    graded_ = g[g["outcome"] != "open"]
+    if len(graded_):
+        flagged = graded_[moved.loc[graded_.index] >= MOVED_AGAINST]
+        rest = graded_[~(moved.loc[graded_.index] >= MOVED_AGAINST)]
+
+        def line(part):
+            r = paper.record(part.assign(clv=np.nan))
+            return f"{r['wins']}-{r['losses']}-{r['pushes']} ({paper._pct(r['win_rate'])})"
+        tables.append({"title": f"Split by the line movement flag ({MOVED_AGAINST:g}+ against by the close)",
+                       "head": ["", "Record"], "rows": [["Line moved against Atlas", line(flagged)],
+                                                        ["Everything else", line(rest)]]})
     done = g[g["outcome"] != "open"].sort_values("kickoff", ascending=False).head(15)
     if len(done):
         tables.append({"title": "Latest graded", "head": ["Game", "Play", "Result"],
-                       "rows": [[_game(x, schools), f"{x.side} {x.line:g}", f"{x.outcome} {x.profit:+.2f}"]
+                       "rows": [[_game(x, schools) + _moved_note(x.moved_at_close, "by the close"),
+                                 f"{x.side} {x.line:g}", f"{x.outcome} {x.profit:+.2f}"]
                                 for x in done.itertuples()]})
     hist, heads = HISTORY.get(rule.id, {}), HISTORY_COLUMNS.get(rule.id, ())
     if hist:
@@ -295,6 +355,9 @@ def section(rule: Rule, g: pd.DataFrame, now: datetime, schools: dict | None = N
         logged + " A price the feed did not give is graded at -110 and marked.",
         verdict(rec),
         "Break-even at -110 is 52.4%. " + caveat,
+        f"The line movement flag marks a play whose total moved {MOVED_AGAINST:g} or more points against Atlas's "
+        "side from the opener - news the market may have and Atlas does not. In the history flagged plays won "
+        "less (v1 49.9% against 55.6%; v2 55.2% against 59.4%) but not beyond noise, so it is a label, not a filter.",
     ]
     short = rule.id.rsplit("-", 1)[-1]
     return {"title": f"Curated plays, rule {short}", "notes": notes, "tables": tables, "record": rec}
@@ -335,7 +398,8 @@ def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, 
             if weeks:
                 seal(record, passphrase, weeks, where)
                 LOG.info("curated plays: %s logged %d new", rule.id, len(record) - before)
-        g = graded(record, paper.results(research, games))
+        g = graded(record, paper.results(research, games),
+                   closing_movement(record, store.read("snapshots"), games, now))
         schools = ({str(k): (h, a) for k, h, a in zip(research["game_id"], research["home_team"], research["away_team"],
                                                      strict=True)}
                    if research is not None and {"home_team", "away_team"} <= set(research.columns) else {})
