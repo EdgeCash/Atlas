@@ -54,6 +54,8 @@ def graded_frame(signals: pd.DataFrame, grades: pd.DataFrame) -> pd.DataFrame:
         return pd.DataFrame()
     frame = signals.merge(grades, on="signal_id", how="inner")
     frame["clv_points"] = pd.to_numeric(frame["clv_points"], errors="coerce")
+    if "clv_prob" in frame:
+        frame["clv_prob"] = pd.to_numeric(frame["clv_prob"], errors="coerce")
     frame["date"] = pd.to_datetime(
         frame["created_at"], utc=True, errors="coerce"
     ).dt.date.astype("string")
@@ -91,6 +93,10 @@ def _block(frame: pd.DataFrame) -> dict:
         "p_value": p_value,
         "mean_clv": float(clv.mean()),
         "median_clv": float(clv.median()),
+        # CLV in probability: price and key numbers counted, the vig taken out.
+        # Reported beside the points; the frozen criteria stay in points.
+        "mean_clv_prob": float(frame["clv_prob"].mean()) if "clv_prob" in frame else np.nan,
+        "priced": int(frame["clv_prob"].notna().sum()) if "clv_prob" in frame else 0,
         "flagged": int(frame["execution_flagged"].astype("string").str.lower()
                        .isin(["true", "1"]).sum()),
     }

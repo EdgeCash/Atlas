@@ -16,6 +16,7 @@ from datetime import UTC, datetime
 import numpy as np
 import pandas as pd
 
+from atlas.live import probability
 from atlas.util import get_logger
 
 LOG = get_logger(__name__)
@@ -61,7 +62,8 @@ def closing_lines(snapshots: pd.DataFrame, games: pd.DataFrame) -> pd.DataFrame:
 
 
 def grade(signals: pd.DataFrame, snapshots: pd.DataFrame, games: pd.DataFrame,
-          *, already_graded: set[str] | None = None) -> pd.DataFrame:
+          *, already_graded: set[str] | None = None, shapes: dict | None = None,
+          sports: dict[str, str] | None = None) -> pd.DataFrame:
     """Grade every signal whose game has kicked off and is not already graded."""
     if signals.empty:
         return pd.DataFrame()
@@ -94,6 +96,8 @@ def grade(signals: pd.DataFrame, snapshots: pd.DataFrame, games: pd.DataFrame,
     out["total_move"] = close - opening
     out["pre_signal_move"] = (entry - opening) * sign
     out["execution_flagged"] = out["pre_signal_move"] >= EXECUTION_FLAG_POINTS
+    prob = probability.clv_prob(merged, snapshots, games, shapes, sports)
+    out = out.merge(prob, on="signal_id", how="left")
     LOG.info("graded %d signals", len(out))
     return out
 

@@ -80,6 +80,33 @@ A line that never moved is a **push**, not a loss. Phase 3 learned that the
 expensive way: counting no-move games as losses understated every beat rate by
 about six points and hid the margin result entirely.
 
+### CLV in probability
+
+`clv_points` counts half-points. It cannot see the price: a total that stays
+at 53.5 while its price goes from -110 to -130 counts as a push. It also
+treats every half-point the same, although a spread moving through 3 or 7 is
+worth far more than one moving through 10.5. So every grade also carries CLV
+in probability (`atlas/live/probability.py`):
+
+* **`entry_prob`**: the side's chance of winning at the entry line, as the
+  market priced it when the signal formed, with the book's margin removed.
+* **`close_prob`**: the same chance at the same entry line, as the closing
+  market priced it. The closing market's outcome distribution is centred so
+  that it gives the closing line exactly its closing price, then read at the
+  entry line.
+* **`clv_prob`**: `close_prob - entry_prob`.
+* **`prob_assumed`**: set when a price at either end was missing and was read
+  against a standard -110 / -110 market. The book's opposite-side price was
+  only captured from 25 September 2026.
+
+The distribution's standard deviation, and the margin's key-number factors,
+come from `tracking/market_shape.csv`. The weekly refresh writes that file from
+the fitted models. Until it exists, a plain normal at the research's
+closing-line error is used instead.
+
+The scorecard reports `mean_clv_prob` next to the mean CLV in points. The kill
+criteria were pre-registered in points, and they stay in points.
+
 ---
 
 ## Which signals count

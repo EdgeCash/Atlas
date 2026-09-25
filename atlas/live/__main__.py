@@ -20,7 +20,7 @@ from zoneinfo import ZoneInfo
 import pandas as pd
 
 from atlas import config
-from atlas.live import audit, books, ops_report, quality, reproduce
+from atlas.live import audit, books, ops_report, probability, quality, reproduce
 from atlas.live import dashboard as dashboarding
 from atlas.live import drift as drifting
 from atlas.live import grade as grading
@@ -167,10 +167,30 @@ def _grade(store: Store) -> int:
         return 0
     existing = store.read("grades")
     done = set(existing["signal_id"].astype(str)) if not existing.empty else set()
-    rows = grading.grade(
-        signals, store.read("snapshots"), store.read("games"), already_graded=done
-    )
-    return store.upsert("grades", rows) if not rows.empty else 0
+    snapshots, games = store.read("snapshots"), store.read("games")
+    shapes, sports = _shapes(store)
+    rows = grading.grade(signals, snapshots, games, already_graded=done, shapes=shapes, sports=sports)
+    added = store.upsert("grades", rows) if not rows.empty else 0
+    # Grades from before the probability columns existed get them once, from
+    # the same snapshots; nothing else about a stored grade changes.
+    if not existing.empty:
+        missing = existing[pd.to_numeric(existing["clv_prob"], errors="coerce").isna()]
+        todo = signals[signals["signal_id"].astype(str).isin(set(missing["signal_id"].astype(str)))]
+        filled = probability.clv_prob(todo, snapshots, games, shapes, sports).dropna(subset=["clv_prob"])
+        if len(filled):
+            update = missing.drop(columns=[c for c in filled.columns if c != "signal_id"]).merge(
+                filled, on="signal_id", how="inner")
+            store.upsert("grades", update)
+    return added
+
+
+def _shapes(store: Store) -> tuple[dict, dict[str, str]]:
+    """The stored outcome distributions, and each game's sport from the projections."""
+    shapes = probability.load_shapes(store.read("market_shape"))
+    projections = store.read("projections")
+    sports = dict(zip(projections["game_id"].astype(str), projections["sport"].astype(str), strict=True)) \
+        if not projections.empty else {}
+    return shapes, sports
 
 
 def refresh(seasons: list[int] | None = None, *, rebuild: bool = True) -> int:
@@ -221,6 +241,7 @@ def publish_projections(store: Store) -> int:
         published += len(rows)
         LOG.info("published %d college projections, model %s", len(rows), projector.version)
     calibration = [projecting.history(frame, choices=choices).assign(sport="ncaaf")]
+    shapes = [probability.shapes_frame("ncaaf", projector.grid, projector.total.sigma)]
     # The NFL, when its warehouse is there. Its absence or failure is logged
     # and never takes the college publish down with it.
     try:
@@ -238,9 +259,11 @@ def publish_projections(store: Store) -> int:
             published += len(nfl_rows)
             LOG.info("published %d NFL projections, model %s", len(nfl_rows), nfl.version)
         calibration.append(nfl_projection.history(paths))
+        shapes.append(probability.shapes_frame("nfl", nfl.grid, nfl.total.sigma))
     except Exception as error:  # noqa: BLE001 - logged; the college publish stands
         LOG.warning("no NFL projections this refresh: %s", error)
     store.write("calibration", pd.concat(calibration, ignore_index=True))
+    store.write("market_shape", pd.concat(shapes, ignore_index=True))
     return published
 
 
