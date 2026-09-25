@@ -37,7 +37,7 @@ from atlas.models import lattice as lat
 from atlas.models import ncaaf_prior as prior_mod
 from atlas.models import ncaaf_state as state_mod
 from atlas.models import reference as ref
-from atlas.research.dataset import load_research_frame, research_sample
+from atlas.research.dataset import load_research_frame
 from atlas.util import get_logger
 
 LOG = get_logger(__name__)
@@ -248,7 +248,12 @@ def _joint_table(fc: pd.DataFrame, margin_pmf: np.ndarray, margin_support: np.nd
 
 def run(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON,
         choices: dict[int, state_mod.Choice] | None = None, grid: dict = state_mod.GRID):
-    """Walk-forward: state, calibrated total, joint grid, scored beside the references."""
+    """Walk-forward: state, calibrated total, joint grid, scored beside the references.
+
+    ``frame`` is every completed game (:func:`atlas.models.ncaaf_state.every_game`):
+    the state, its tuning and the total's calibration learn from all of it;
+    scores, the market and the lattice are on the games with a closing line.
+    """
     feats = prior_mod.team_seasons(frame)
     scored, tables, fits = [], [], {}
     for season, train, test in ref.walk_forward(frame, first_test_season=first_test_season):
@@ -258,6 +263,8 @@ def run(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON,
         tfit = fit_total(train_fc)
         fits[season] = tfit
         fc = _with_forecasts(test, prior, state_mod._spec(choice.q, choice.p0, choice.sigma, prior, choice.rho))
+        fc = fc[state_mod.has_market(fc)]
+        train = train[state_mod.has_market(train)]
         treg = train[train["season_type"] == "regular"] if "season_type" in train else train
         naive_mean, naive_sd = float(treg["actual_total"].mean()), float(treg["actual_total"].std(ddof=1))
         total_mean = tfit.mean(fc)
@@ -423,7 +430,7 @@ def main() -> None:
     ap.add_argument("--retune", action="store_true", help="ignore the state's saved hyperparameters and re-tune")
     args = ap.parse_args()
     paths = config.paths()
-    frame = research_sample(load_research_frame(paths.warehouse))
+    frame = state_mod.every_game(load_research_frame(paths.warehouse))
     choices = None if args.retune else state_mod.load_choices(state_mod.choices_path(paths.root))
     if choices is None:
         LOG.warning("no saved state hyperparameters (%s); tuning here, which is slow", state_mod.choices_path(paths.root))

@@ -1025,3 +1025,45 @@ def test_choices_saved_before_pooling_still_load(tmp_path):
     path.write_text('{"2024": {"q": 1.0, "p0": 20.0, "sigma": 10.0, "loglik": -1.0, "seasons": [2021, 2022, 2023]}}')
     c = state_mod.load_choices(path)[2024]
     assert c.p0_source == "grid" and c.p0_seasons == ()
+
+
+# ---------------------------------------------------------------------------
+# The filter learns from every FBS game
+# ---------------------------------------------------------------------------
+
+
+def _some_unpriced(frame: pd.DataFrame) -> pd.DataFrame:
+    """The synthetic league with a closing line missing on every fifth game."""
+    out = frame.copy()
+    gone = out.index[::5]
+    out.loc[gone, ["closing_spread", "closing_total"]] = np.nan
+    return out
+
+
+def test_an_unpriced_game_is_learnt_from_but_not_scored(research_frame):
+    frame = _some_unpriced(research_frame)
+    every = state_mod.every_game(frame)
+    lined = frame[state_mod.has_market(frame)]
+    scored, _, finals = state_mod.run(every, first_test_season=2021, grid=SMALL_GRID, fit_rho=False)
+    only, _, only_finals = state_mod.run(lined.reset_index(drop=True), first_test_season=2021, grid=SMALL_GRID,
+                                         fit_rho=False)
+    state = scored[scored["model"] == "state"]
+    assert len(state) == len(only[only["model"] == "state"])        # the same games are scored
+    assert state["mae"].notna().all()
+    # ...but the filter behind them saw more results.
+    assert not np.allclose(finals[2022].x, only_finals[2022].x)
+
+
+def test_the_total_walk_forward_runs_with_unpriced_games(research_frame):
+    frame = state_mod.every_game(_some_unpriced(research_frame))
+    choices = {s: state_mod.Choice(q=1.0, p0=20.0, sigma=11.0, loglik=0.0, seasons=()) for s in (2021, 2022)}
+    scored, table, _ = total_mod.run(frame, first_test_season=2021, choices=choices)
+    assert table["closing_spread"].notna().all() and table["closing_total"].notna().all()
+    assert np.isfinite(table["p_home"]).all()
+
+
+def test_the_projector_learns_from_unpriced_games(research_frame):
+    frame = _with_scheduled(_some_unpriced(research_frame))
+    projector = projecting.fit(frame, choices=_FIXED)
+    played = frame[frame["actual_margin"].notna() & (frame["season"] == projector.season)]
+    assert projector.assimilated == len(played)

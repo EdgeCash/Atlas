@@ -96,16 +96,17 @@ def fit(frame: pd.DataFrame, *, season: int | None = None,
 
     ``frame`` is the research frame *with* scheduled games. Completed seasons
     teach the prior, the hyperparameters, the total calibration and the
-    lattice, exactly as the walk-forward reports do; this season's completed
-    games are assimilated by the filter in kickoff order.
+    lattice, exactly as the walk-forward reports do: every completed game
+    for the first three, the games with a closing line for the lattice. This
+    season's completed games are assimilated by the filter in kickoff order.
     """
-    completed = frame[frame["actual_margin"].notna()]
+    completed = state_mod.every_game(frame)
     sample = research_sample(frame)
     if season is None:
         season = int(frame["season"].max())
     feats = prior_mod.team_seasons(frame)
-    prior = prior_mod.fit(sample, feats, season=season)
-    choice = _choice_for(season, choices, sample, feats, prior)
+    prior = prior_mod.fit(completed, feats, season=season)
+    choice = _choice_for(season, choices, completed, feats, prior)
     spec = state_mod._spec(choice.q, choice.p0, choice.sigma, prior, choice.rho)
 
     teams = prior.teams
@@ -117,7 +118,7 @@ def fit(frame: pd.DataFrame, *, season: int | None = None,
     played = pd.concat([this_season["home_team_id"], this_season["away_team_id"]]).value_counts()
     played = {int(k): int(v) for k, v in played.items()}
 
-    train_fc = total_mod._training_forecasts(sample, feats, season, choice, prior)
+    train_fc = total_mod._training_forecasts(completed, feats, season, choice, prior)
     total = total_mod.fit_total(train_fc)
     train = sample[sample["season"] < season]
     # Fitted as the walk-forward fits it: regular season only (reference.walk_forward).
@@ -217,8 +218,8 @@ def history(frame: pd.DataFrame, *, choices: dict[int, state_mod.Choice] | None 
     ``claimed`` the probability it gave its own side of that number, and
     ``won`` whether that side happened (a push counts half).
     """
-    sample = research_sample(frame)
-    scored, table, _ = total_mod.run(sample, first_test_season=first_test_season, choices=choices)
+    scored, table, _ = total_mod.run(state_mod.every_game(frame), first_test_season=first_test_season,
+                                     choices=choices)
     t = table.dropna(subset=["closing_spread", "closing_total"])
     line = -t["closing_spread"].to_numpy(dtype=float)
     p_cover = t["p_cover"].to_numpy(dtype=float)
