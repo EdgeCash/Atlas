@@ -1,18 +1,18 @@
 # NFL total and joint score grid
 
-Walk-forward, seasons 2020-2026. The total is the quarterback state model's implied home-plus-away points, recalibrated on the training seasons' own state forecasts with the wind (zero in a dome) as the one game-level term. The margin (state mean and sd through the key-number lattice) and the total (discretised normal) meet on a 60x60 grid over (home, away) points, reweighted by the points lattice; every headline number below is a mean of that grid.
+Walk-forward, seasons 2020-2026. The total is the quarterback state model's implied home-plus-away points, recalibrated on the training seasons' own state forecasts with the wind (zero in a dome) as the one game-level term. The margin (state mean and sd through the key-number lattice) and the total (discretised normal) meet on a 80x80 grid over (home, away) points, reweighted by the points lattice; every headline number below is a mean of that grid. The wind is the recorded game-time wind, not a pre-kickoff forecast - a mild look-ahead in these numbers.
 
 ## Calibration fitted, per season
 
 | season | intercept | slope on state total | wind_effective | sigma | raw sigma | train games |
 |---|---|---|---|---|---|---|
-| 2020 | +23.5 | 0.519 | -0.361 | 13.92 | 14.21 | 768 |
-| 2021 | +16.6 | 0.700 | -0.379 | 13.56 | 13.77 | 768 |
-| 2022 | +23.0 | 0.557 | -0.365 | 13.38 | 13.72 | 784 |
-| 2023 | +17.5 | 0.653 | -0.323 | 13.42 | 13.63 | 799 |
-| 2024 | +19.8 | 0.585 | -0.349 | 13.31 | 13.58 | 815 |
-| 2025 | +19.3 | 0.596 | -0.291 | 13.18 | 13.37 | 815 |
-| 2026 | +20.9 | 0.580 | -0.349 | 13.07 | 13.39 | 816 |
+| 2020 | +22.8 | 0.534 | -0.356 | 13.93 | 14.19 | 768 |
+| 2021 | +15.6 | 0.721 | -0.377 | 13.56 | 13.76 | 768 |
+| 2022 | +23.5 | 0.545 | -0.361 | 13.39 | 13.73 | 784 |
+| 2023 | +16.6 | 0.671 | -0.320 | 13.42 | 13.62 | 799 |
+| 2024 | +19.4 | 0.594 | -0.348 | 13.31 | 13.57 | 815 |
+| 2025 | +18.8 | 0.606 | -0.291 | 13.18 | 13.36 | 815 |
+| 2026 | +20.9 | 0.580 | -0.348 | 13.08 | 13.39 | 816 |
 
 ## Total, regular season 2023-2025
 
@@ -21,8 +21,8 @@ Walk-forward, seasons 2020-2026. The total is the quarterback state model's impl
 | model | games | crps | mae | over_brier | over_ece |
 |---|---|---|---|---|---|
 | naive | 816 | 7.614 | 10.68 | 0.263 | 0.102 |
-| state_raw | 816 | 7.472 | 10.53 | 0.257 | 0.057 |
-| total | 816 | 7.359 | 10.37 | 0.255 | 0.063 |
+| state_raw | 816 | 7.471 | 10.53 | 0.257 | 0.063 |
+| total | 816 | 7.364 | 10.38 | 0.255 | 0.063 |
 | market | 816 | 7.240 | 10.12 | 0.248 | 0.006 |
 
 ## Total, every scored season pooled
@@ -30,8 +30,8 @@ Walk-forward, seasons 2020-2026. The total is the quarterback state model's impl
 | model | games | crps | mae | over_brier | over_ece |
 |---|---|---|---|---|---|
 | naive | 1647 | 7.783 | 10.98 | 0.264 | 0.111 |
-| state_raw | 1647 | 7.605 | 10.75 | 0.259 | 0.078 |
-| total | 1647 | 7.513 | 10.62 | 0.256 | 0.081 |
+| state_raw | 1647 | 7.597 | 10.74 | 0.258 | 0.085 |
+| total | 1647 | 7.515 | 10.62 | 0.256 | 0.081 |
 | market | 1647 | 7.328 | 10.30 | 0.248 | 0.012 |
 
 ## Total by season, regular
@@ -45,20 +45,20 @@ Walk-forward, seasons 2020-2026. The total is the quarterback state model's impl
 | naive | 2024 | 272 | 7.287 | 10.04 | 0.255 | 0.078 |
 | naive | 2025 | 272 | 7.797 | 10.97 | 0.265 | 0.114 |
 | naive | 2026 | 32 | 9.198 | 12.89 | 0.296 | 0.270 |
-| state_raw | 2020 | 256 | 7.562 | 10.68 | 0.255 | 0.079 |
-| state_raw | 2021 | 272 | 7.782 | 11.24 | 0.261 | 0.112 |
-| state_raw | 2022 | 271 | 7.720 | 10.83 | 0.264 | 0.109 |
-| state_raw | 2023 | 272 | 7.573 | 10.82 | 0.260 | 0.092 |
-| state_raw | 2024 | 272 | 7.268 | 10.14 | 0.256 | 0.076 |
-| state_raw | 2025 | 272 | 7.577 | 10.64 | 0.254 | 0.044 |
-| state_raw | 2026 | 32 | 8.826 | 12.03 | 0.274 | 0.138 |
-| total | 2020 | 256 | 7.541 | 10.61 | 0.255 | 0.106 |
-| total | 2021 | 272 | 7.598 | 10.93 | 0.254 | 0.104 |
-| total | 2022 | 271 | 7.704 | 10.85 | 0.261 | 0.110 |
-| total | 2023 | 272 | 7.394 | 10.58 | 0.255 | 0.100 |
-| total | 2024 | 272 | 7.219 | 10.06 | 0.257 | 0.077 |
-| total | 2025 | 272 | 7.464 | 10.48 | 0.252 | 0.027 |
-| total | 2026 | 32 | 8.873 | 12.27 | 0.282 | 0.171 |
+| state_raw | 2020 | 256 | 7.545 | 10.64 | 0.254 | 0.085 |
+| state_raw | 2021 | 272 | 7.770 | 11.22 | 0.260 | 0.107 |
+| state_raw | 2022 | 271 | 7.707 | 10.82 | 0.264 | 0.122 |
+| state_raw | 2023 | 272 | 7.575 | 10.83 | 0.261 | 0.095 |
+| state_raw | 2024 | 272 | 7.262 | 10.13 | 0.256 | 0.077 |
+| state_raw | 2025 | 272 | 7.577 | 10.64 | 0.254 | 0.057 |
+| state_raw | 2026 | 32 | 8.836 | 12.04 | 0.274 | 0.138 |
+| total | 2020 | 256 | 7.540 | 10.62 | 0.255 | 0.114 |
+| total | 2021 | 272 | 7.602 | 10.93 | 0.254 | 0.103 |
+| total | 2022 | 271 | 7.701 | 10.85 | 0.261 | 0.111 |
+| total | 2023 | 272 | 7.397 | 10.58 | 0.255 | 0.102 |
+| total | 2024 | 272 | 7.223 | 10.06 | 0.257 | 0.078 |
+| total | 2025 | 272 | 7.470 | 10.48 | 0.252 | 0.038 |
+| total | 2026 | 32 | 8.878 | 12.27 | 0.282 | 0.171 |
 | market | 2020 | 256 | 7.231 | 10.15 | 0.245 | 0.006 |
 | market | 2021 | 272 | 7.493 | 10.79 | 0.247 | 0.039 |
 | market | 2022 | 271 | 7.414 | 10.39 | 0.247 | 0.056 |
@@ -75,14 +75,14 @@ Walk-forward, seasons 2020-2026. The total is the quarterback state model's impl
 | naive | wk 3-7 | 365 | 7.459 | 10.60 | 0.257 | 0.071 |
 | naive | wk 7-13 | 517 | 7.602 | 10.69 | 0.263 | 0.123 |
 | naive | wk 13+ | 541 | 8.158 | 11.42 | 0.269 | 0.114 |
-| state_raw | wk 1-3 | 224 | 7.671 | 11.16 | 0.262 | 0.098 |
-| state_raw | wk 3-7 | 365 | 7.121 | 10.00 | 0.248 | 0.067 |
-| state_raw | wk 7-13 | 517 | 7.550 | 10.65 | 0.260 | 0.084 |
-| state_raw | wk 13+ | 541 | 7.955 | 11.19 | 0.262 | 0.103 |
-| total | wk 1-3 | 224 | 7.587 | 10.95 | 0.262 | 0.087 |
-| total | wk 3-7 | 365 | 7.181 | 10.20 | 0.250 | 0.051 |
-| total | wk 7-13 | 517 | 7.379 | 10.37 | 0.255 | 0.081 |
-| total | wk 13+ | 541 | 7.834 | 11.00 | 0.259 | 0.104 |
+| state_raw | wk 1-3 | 224 | 7.675 | 11.15 | 0.263 | 0.107 |
+| state_raw | wk 3-7 | 365 | 7.132 | 10.02 | 0.248 | 0.057 |
+| state_raw | wk 7-13 | 517 | 7.528 | 10.61 | 0.260 | 0.089 |
+| state_raw | wk 13+ | 541 | 7.946 | 11.18 | 0.262 | 0.099 |
+| total | wk 1-3 | 224 | 7.594 | 10.95 | 0.262 | 0.083 |
+| total | wk 3-7 | 365 | 7.192 | 10.22 | 0.251 | 0.053 |
+| total | wk 7-13 | 517 | 7.374 | 10.36 | 0.254 | 0.079 |
+| total | wk 13+ | 541 | 7.836 | 11.00 | 0.259 | 0.104 |
 | market | wk 1-3 | 224 | 7.397 | 10.61 | 0.250 | 0.027 |
 | market | wk 3-7 | 365 | 7.030 | 9.94 | 0.247 | 0.041 |
 | market | wk 7-13 | 517 | 7.181 | 10.09 | 0.247 | 0.022 |
@@ -93,8 +93,8 @@ Walk-forward, seasons 2020-2026. The total is the quarterback state model's impl
 | model | games | crps | mae | over_brier | over_ece |
 |---|---|---|---|---|---|
 | naive | 78 | 7.999 | 10.97 | 0.241 | 0.059 |
-| state_raw | 78 | 8.158 | 11.63 | 0.258 | 0.137 |
-| total | 78 | 7.776 | 10.88 | 0.240 | 0.088 |
+| state_raw | 78 | 8.136 | 11.59 | 0.257 | 0.163 |
+| total | 78 | 7.770 | 10.87 | 0.240 | 0.086 |
 | market | 78 | 7.824 | 10.89 | 0.244 | 0.013 |
 
 ## P(home) by closing spread, regular season 2023-2025: the grid against the market
@@ -103,57 +103,57 @@ The plan asks whether the 65-80% bins are honest, because that is where the NFL 
 
 | bucket | games | grid P(home) | observed | grid gap | market P(home) | market gap |
 |---|---|---|---|---|---|---|
-| |spread| 0-3 | 203 | 0.507 | 0.483 | +0.024 | 0.504 | +0.021 |
-| |spread| 3-6 | 327 | 0.524 | 0.520 | +0.004 | 0.517 | -0.003 |
-| |spread| 6-10 | 207 | 0.576 | 0.563 | +0.013 | 0.562 | -0.001 |
-| |spread| 10+ | 79 | 0.677 | 0.734 | -0.058 | 0.700 | -0.035 |
+| |spread| 0-3 | 203 | 0.507 | 0.483 | +0.025 | 0.505 | +0.022 |
+| |spread| 3-6 | 327 | 0.525 | 0.520 | +0.005 | 0.518 | -0.002 |
+| |spread| 6-10 | 207 | 0.577 | 0.563 | +0.014 | 0.563 | -0.000 |
+| |spread| 10+ | 79 | 0.679 | 0.734 | -0.055 | 0.701 | -0.034 |
 
 ### Reliability, grid
 
 | bin | n | forecast | observed | gap |
 |---|---|---|---|---|
-| 0.1-0.2 | 14 | 0.171 | 0.286 | +0.115 |
-| 0.2-0.3 | 33 | 0.257 | 0.333 | +0.076 |
-| 0.3-0.4 | 90 | 0.354 | 0.294 | -0.060 |
-| 0.4-0.5 | 207 | 0.455 | 0.420 | -0.034 |
-| 0.5-0.6 | 162 | 0.550 | 0.531 | -0.019 |
-| 0.6-0.7 | 152 | 0.649 | 0.678 | +0.028 |
-| 0.7-0.8 | 113 | 0.743 | 0.761 | +0.018 |
-| 0.8-0.9 | 42 | 0.845 | 0.857 | +0.012 |
-| 0.9-1.0 | 3 | 0.911 | 1.000 | +0.089 |
+| 0.1-0.2 | 15 | 0.173 | 0.267 | +0.094 |
+| 0.2-0.3 | 32 | 0.257 | 0.344 | +0.087 |
+| 0.3-0.4 | 89 | 0.354 | 0.298 | -0.056 |
+| 0.4-0.5 | 203 | 0.454 | 0.419 | -0.035 |
+| 0.5-0.6 | 169 | 0.550 | 0.527 | -0.023 |
+| 0.6-0.7 | 142 | 0.649 | 0.669 | +0.020 |
+| 0.7-0.8 | 117 | 0.742 | 0.769 | +0.027 |
+| 0.8-0.9 | 46 | 0.843 | 0.848 | +0.005 |
+| 0.9-1.0 | 3 | 0.912 | 1.000 | +0.088 |
 
 ### Reliability, market
 
 | bin | n | forecast | observed | gap |
 |---|---|---|---|---|
 | 0.1-0.2 | 9 | 0.166 | 0.111 | -0.055 |
-| 0.2-0.3 | 35 | 0.265 | 0.229 | -0.037 |
-| 0.3-0.4 | 108 | 0.350 | 0.310 | -0.039 |
+| 0.2-0.3 | 35 | 0.265 | 0.229 | -0.036 |
+| 0.3-0.4 | 108 | 0.350 | 0.310 | -0.040 |
 | 0.4-0.5 | 179 | 0.431 | 0.369 | -0.062 |
-| 0.5-0.6 | 165 | 0.571 | 0.594 | +0.023 |
-| 0.6-0.7 | 197 | 0.646 | 0.706 | +0.060 |
-| 0.7-0.8 | 76 | 0.738 | 0.697 | -0.041 |
-| 0.8-0.9 | 45 | 0.844 | 0.933 | +0.090 |
+| 0.5-0.6 | 165 | 0.572 | 0.594 | +0.022 |
+| 0.6-0.7 | 197 | 0.647 | 0.706 | +0.059 |
+| 0.7-0.8 | 76 | 0.740 | 0.697 | -0.042 |
+| 0.8-0.9 | 45 | 0.845 | 0.933 | +0.089 |
 | 0.9-1.0 | 2 | 0.917 | 1.000 | +0.083 |
 
 ## The margin through the grid
 
-Margin CRPS from the grid's own marginal, points lattice applied: 7.290; from the state's lattice pmf directly: 7.290 (2023-2025).
+Margin CRPS from the grid's own marginal, points lattice applied: 7.289; from the state's lattice pmf directly: 7.290 (2023-2025).
 
 ## The exact score, for what it is
 
-Mean P(top exact score) with the points lattice: 0.0140.
+Mean P(top exact score) with the points lattice: 0.0141.
 
 | grid | games | top score was right | actual score in the top 10 cells | actual score in the top 50 cells | mean -log P(actual score) | median rank of the actual score |
 |---|---|---|---|---|---|---|
-| margin lattice only | 816 | 0.0061 | 0.0417 | 0.1642 | 7.137 | 307 |
-| with the points lattice | 816 | 0.0086 | 0.0870 | 0.2108 | 6.878 | 230 |
+| margin lattice only | 816 | 0.0074 | 0.0417 | 0.1642 | 7.133 | 306 |
+| with the points lattice | 816 | 0.0086 | 0.0882 | 0.2108 | 6.874 | 228 |
 
 ### Points lattice fitted for 2026
 
 | 0 | 3 | 6 | 7 | 10 | 13 | 14 | 16 | 17 | 20 | 21 | 23 | 24 | 27 | 28 | 30 | 31 | 34 | 35 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1.77 | 2.20 | 2.09 | 1.28 | 2.74 | 1.55 | 1.02 | 1.06 | 1.68 | 2.08 | 0.83 | 0.96 | 1.46 | 1.51 | 0.79 | 1.21 | 1.39 | 1.80 | 0.57 |
+| 1.77 | 2.20 | 2.09 | 1.28 | 2.74 | 1.55 | 1.02 | 1.06 | 1.68 | 2.08 | 0.83 | 0.96 | 1.46 | 1.51 | 0.79 | 1.21 | 1.39 | 1.79 | 0.57 |
 
 ## What the card would have said: the last 10 regular-season games of 2026
 
@@ -161,13 +161,13 @@ Decimal means, never rounded integers; the market column is the closing line for
 
 | game | projection | P(home) | total 80% range | most likely score | market (spread / total) | actual |
 |---|---|---|---|---|---|---|
-| NO at BAL | 26.9-18.1, total 45.0 | 75% | 29-61 | 20-17 (1.3%) | -8.5 / 45.5 | 17-24 |
-| PHI at TEN | 17.8-25.2, total 43.0 | 28% | 27-59 | 17-20 (1.3%) | +7.0 / 39.5 | 20-24 |
-| PIT at NE | 23.9-18.6, total 42.5 | 66% | 26-59 | 20-17 (1.5%) | -4.5 / 41.5 | 20-3 |
-| JAX at DEN | 19.7-23.7, total 43.4 | 38% | 27-60 | 17-20 (1.4%) | -2.5 / 45.5 | 20-13 |
-| LV at LAC | 24.0-21.0, total 44.9 | 59% | 29-62 | 20-17 (1.4%) | -6.5 / 43.5 | 14-26 |
-| MIA at SF | 28.2-17.4, total 45.6 | 80% | 30-62 | 20-17 (1.2%) | -12.5 / 44.5 | 35-13 |
+| NO at BAL | 27.3-17.9, total 45.2 | 76% | 29-62 | 20-17 (1.3%) | -8.5 / 45.5 | 17-24 |
+| PHI at TEN | 18.1-25.0, total 43.1 | 30% | 27-60 | 17-20 (1.3%) | +7.0 / 39.5 | 20-24 |
+| PIT at NE | 24.3-18.5, total 42.8 | 67% | 27-59 | 20-17 (1.5%) | -4.5 / 41.5 | 20-3 |
+| JAX at DEN | 19.8-23.7, total 43.4 | 38% | 27-60 | 17-20 (1.4%) | -2.5 / 45.5 | 20-13 |
+| LV at LAC | 23.9-21.0, total 44.9 | 59% | 29-62 | 20-17 (1.4%) | -6.5 / 43.5 | 14-26 |
+| MIA at SF | 28.3-17.4, total 45.7 | 80% | 30-62 | 20-17 (1.2%) | -12.5 / 44.5 | 35-13 |
 | SEA at ARI | 20.3-24.2, total 44.5 | 38% | 28-61 | 17-20 (1.3%) | +3.5 / 40.5 | 7-31 |
-| WAS at DAL | 27.0-24.6, total 51.5 | 57% | 35-69 | 27-24 (1.1%) | -3.5 / 51.5 | 37-20 |
-| IND at KC | 25.7-20.0, total 45.7 | 67% | 29-62 | 20-17 (1.3%) | -6.0 / 46.5 | 33-30 |
+| WAS at DAL | 27.0-24.5, total 51.5 | 57% | 35-69 | 27-24 (1.1%) | -3.5 / 51.5 | 37-20 |
+| IND at KC | 25.7-19.9, total 45.6 | 67% | 29-62 | 20-17 (1.3%) | -6.0 / 46.5 | 33-30 |
 | NYG at LA | 27.4-21.7, total 49.1 | 67% | 33-66 | 20-17 (1.1%) | -6.5 / 47.5 | 28-6 |
