@@ -974,3 +974,54 @@ def test_the_joseph_form_stays_positive_with_a_wrong_gain():
     assert np.linalg.eigvalsh(joseph_P).min() > -1e-9
     textbook = P - np.outer(k, Ph)
     assert np.linalg.eigvalsh((textbook + textbook.T) / 2).min() < -1e-3
+
+
+# ---------------------------------------------------------------------------
+# Pooling the prior variance
+# ---------------------------------------------------------------------------
+
+
+def test_the_moment_estimate_recovers_the_prior_variance():
+    rng = np.random.default_rng(5)
+    n, p0, sigma = 120, 16.0, 10.0
+    teams = pd.DataFrame({"season": 2024, "team_id": np.arange(n), "net": 0.0,
+                          "off": rng.normal(0, 4, n), "def": rng.normal(0, 4, n)})
+    true_off = teams["off"] + rng.normal(0, np.sqrt(p0), n)
+    true_def = teams["def"] + rng.normal(0, np.sqrt(p0), n)
+    h, a = rng.integers(0, n, 4000), rng.integers(0, n, 4000)
+    keep = h != a
+    h, a = h[keep], a[keep]
+    margin = (true_off[h].to_numpy() + true_def[h].to_numpy() - true_off[a].to_numpy() - true_def[a].to_numpy()
+              + 3.0 + rng.normal(0, np.sqrt(2) * sigma, len(h)))
+    games = pd.DataFrame({"home_team_id": h, "away_team_id": a, "neutral_site": 0, "actual_margin": margin})
+    prior = prior_mod.Prior(season=2024, net=None, points=type("P", (), {"boost": 3.0})(), teams=teams)
+    est = state_mod.moment_p0([(games, prior)], sigma, (2.0, 80.0))
+    assert est == pytest.approx(p0, rel=0.2)
+
+
+def test_one_real_prior_season_measures_p0_instead_of_choosing_it(research_frame):
+    """The synthetic league's first real prior is 2021: tuning for 2022 has one."""
+    feats = prior_mod.team_seasons(research_frame)
+    choice = state_mod.tune(research_frame, feats, 2022, grid=SMALL_GRID, fit_rho=False)
+    assert choice.p0_source == "moment" and choice.p0_seasons == (2021,)
+    assert min(SMALL_GRID["p0"]) <= choice.p0 <= max(SMALL_GRID["p0"])
+
+
+def test_older_real_prior_seasons_pool_into_p0(research_frame):
+    """Seasons with a prior that fall outside the recency window still inform p0."""
+    later = research_frame.copy()
+    later["season"] = later["season"] + 4
+    later["game_id"] = later["game_id"].astype("int64") + 10_000_000
+    later["kickoff"] = pd.to_datetime(later["kickoff"], utc=True) + pd.DateOffset(years=4)
+    frame = pd.concat([research_frame, later], ignore_index=True)
+    feats = prior_mod.team_seasons(frame)
+    choice = state_mod.tune(frame, feats, 2026, grid=SMALL_GRID, fit_rho=False)
+    assert choice.seasons == (2023, 2024, 2025)
+    assert choice.p0_source == "grid" and {2021, 2022} <= set(choice.p0_seasons)
+
+
+def test_choices_saved_before_pooling_still_load(tmp_path):
+    path = tmp_path / "choices.json"
+    path.write_text('{"2024": {"q": 1.0, "p0": 20.0, "sigma": 10.0, "loglik": -1.0, "seasons": [2021, 2022, 2023]}}')
+    c = state_mod.load_choices(path)[2024]
+    assert c.p0_source == "grid" and c.p0_seasons == ()
