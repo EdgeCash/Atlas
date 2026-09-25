@@ -166,6 +166,25 @@ alerting.
 
 ---
 
+## Retune · by hand, after a model change
+
+Not on the schedule. **Actions → retune → Run workflow** (`.github/workflows/retune.yml`)
+re-runs the model walk-forwards on the full warehouse: `ncaaf` (benchmarks,
+prior, state, total), `nfl` (benchmarks, state, total), or `both`.
+
+* It restores the heavy run's warehouse cache and never saves it, so it
+  cannot change what production builds from. The college half refuses to run
+  without `CFBD_API_KEY`: the prior is fitted on CFBD features, and a retune
+  without them would tune a model production does not run.
+* It proposes, it does not publish. `reports/` goes to a branch
+  `retune/<run number>` and to an artifact, and a pull request is opened
+  where the repository lets Actions open one (Settings → Actions → General →
+  "Allow GitHub Actions to create and approve pull requests"); otherwise the
+  run prints the compare link.
+* The saved choices it writes (`reports/*_state_choices.json`) are what the
+  live projectors read, so merging that pull request moves live numbers from
+  the next heavy run.
+
 ## Failure behaviour
 
 **Every task is safe to run twice.** The warehouse rebuild is idempotent, the
