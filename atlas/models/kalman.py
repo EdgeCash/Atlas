@@ -9,8 +9,15 @@ runs it as a filter whose gain replaces Elo's fixed K. This is the filter.
 
 Observations are points scored, two per game:
 
-    home_pts = base + off_home - def_away + boost + e
-    away_pts = base + off_away - def_home         + e
+    home_pts = base + off_home - def_away + boost + e_home
+    away_pts = base + off_away - def_home         + e_away
+
+Each ``e`` has variance ``sigma**2`` and the two are correlated by ``rho``:
+pace, weather and game script move both teams' points together, so a game
+that runs high on both sides is partly a high-scoring game and not two good
+offences. The pair is assimilated as its margin (noise ``2 sigma**2 (1 -
+rho)``) and its total (noise ``2 sigma**2 (1 + rho)``), which are
+uncorrelated, so two scalar updates are exact.
 
 ``def`` is points *prevented* (positive is good), so a margin is
 ``off_h + def_h - off_a - def_a + boost``. Each game is processed strictly in
@@ -44,6 +51,17 @@ class Spec:
     sigma: float
     base: float          # league-average points per team-game
     boost: float         # home advantage on the home team's points (== hfa on the margin)
+    rho: float = 0.0     # correlation between the two teams' point noise in one game
+
+    @property
+    def margin_noise(self) -> float:
+        """Variance of the margin's noise: ``2 sigma² (1 - rho)``."""
+        return 2.0 * self.sigma ** 2 * (1.0 - self.rho)
+
+    @property
+    def total_noise(self) -> float:
+        """Variance of the total's noise: ``2 sigma² (1 + rho)``."""
+        return 2.0 * self.sigma ** 2 * (1.0 + self.rho)
 
 
 @dataclass
@@ -147,8 +165,37 @@ def forecast(state: State, home, away, is_home: float, spec: Spec) -> tuple[floa
     idx = np.array([h, n + h, a, n + a])
     sign = np.array([1.0, 1.0, -1.0, -1.0])
     sub_P = P[np.ix_(idx, idx)]
-    var = float(sign @ sub_P @ sign) + 2.0 * spec.sigma ** 2
+    var = float(sign @ sub_P @ sign) + spec.margin_noise
     return float(mh - ma), float(np.sqrt(var)), float(mh), float(ma)
+
+
+def total_sd(state: State, home, away, spec: Spec) -> float:
+    """The sd of one game's total: the state's uncertainty plus the total's noise."""
+    n = state.n
+    h, a = state.index[home], state.index[away]
+    # total row: +off_h -def_a +off_a -def_h
+    idx = np.array([h, n + a, a, n + h])
+    sign = np.array([1.0, -1.0, 1.0, -1.0])
+    return float(np.sqrt(float(sign @ state.P[np.ix_(idx, idx)] @ sign) + spec.total_noise))
+
+
+def pair_update(state: State, home: tuple[list[int], list[int]], away: tuple[list[int], list[int]],
+                y_home: float, y_away: float, r: float, rho: float = 0.0) -> None:
+    """Assimilate one game's two point observations. In place.
+
+    ``home`` and ``away`` are each observation row's (plus, minus) indices;
+    ``y_*`` the points net of anything outside the state; ``r`` one team's
+    noise variance and ``rho`` the correlation between the two. With rho = 0
+    this is two independent scalar updates, exactly as before; otherwise the
+    margin and the total are assimilated, which are independent.
+    """
+    (hp, hm), (ap, am) = home, away
+    if rho == 0.0:
+        row_update(state, hp, hm, y_home, r)
+        row_update(state, ap, am, y_away, r)
+        return
+    row_update(state, hp + am, hm + ap, y_home - y_away, 2.0 * r * (1.0 - rho))
+    row_update(state, hp + ap, hm + am, y_home + y_away, 2.0 * r * (1.0 + rho))
 
 
 def _sparse_update(state: State, plus: int, minus: int, y: float, r: float) -> None:
@@ -190,9 +237,8 @@ def update(state: State, home, away, home_pts: float, away_pts: float, is_home: 
     """Assimilate one game's two point totals. In place."""
     n = state.n
     h, a = state.index[home], state.index[away]
-    r = spec.sigma ** 2
-    _sparse_update(state, h, n + a, home_pts - spec.base - spec.boost * is_home, r)
-    _sparse_update(state, a, n + h, away_pts - spec.base, r)
+    pair_update(state, ([h], [n + a]), ([a], [n + h]), home_pts - spec.base - spec.boost * is_home,
+                away_pts - spec.base, spec.sigma ** 2, spec.rho)
 
 
 def effective_weeks(games: pd.DataFrame, state: State | None = None) -> np.ndarray:
@@ -256,6 +302,7 @@ def run_season(games: pd.DataFrame, state: State, spec: Spec) -> pd.DataFrame:
     sds = np.full(len(g), np.nan)
     hps = np.full(len(g), np.nan)
     aps = np.full(len(g), np.nan)
+    tsds = np.full(len(g), np.nan)
     known = state.index
     for group in kickoff_groups(g["kickoff"].to_numpy()):
         week = int(weeks[group].max())
@@ -269,11 +316,57 @@ def run_season(games: pd.DataFrame, state: State, spec: Spec) -> pd.DataFrame:
         for i in played:
             means[i], sds[i], hps[i], aps[i] = forecast(state, homes[i], aways[i],
                                                         0.0 if neutral[i] else 1.0, spec)
+            tsds[i] = total_sd(state, homes[i], aways[i], spec)
         for i in played:
             m, t = margins[i], totals[i]
             if np.isnan(m) or np.isnan(t):
                 continue
             update(state, homes[i], aways[i], (t + m) / 2.0, (t - m) / 2.0,
                    0.0 if neutral[i] else 1.0, spec)
-    out = pd.DataFrame({"mean": means, "sd": sds, "home_pts": hps, "away_pts": aps}, index=idx)
+    out = pd.DataFrame({"mean": means, "sd": sds, "home_pts": hps, "away_pts": aps, "total_sd": tsds},
+                       index=idx)
     return out.reindex(games.index)
+
+
+#: Bounds on the fitted noise correlation. Pace pushes it up; a negative one
+#: (one team scoring at the other's expense beyond the margin) is allowed but
+#: implausible past -0.5, and past 0.8 the margin's noise would all but vanish.
+RHO_BOUNDS = (-0.5, 0.8)
+
+
+def noise_correlation(forecasts: pd.DataFrame, margins: np.ndarray, totals: np.ndarray,
+                      spec: Spec) -> float:
+    """The correlation between the two teams' point noise, from one-step forecasts.
+
+    ``forecasts`` are :func:`run_season`'s rows (``mean``, ``sd``,
+    ``home_pts``, ``away_pts``, ``total_sd``) made under ``spec``. Each
+    residual's variance is the state's own uncertainty plus the noise; taking
+    the state's part out leaves ``2 sigma² (1 - rho)`` on the margin and
+    ``2 sigma² (1 + rho)`` on the total, whose ratio is rho whatever sigma is.
+    """
+    f = forecasts
+    ok = f["mean"].notna() & f["total_sd"].notna() & np.isfinite(margins) & np.isfinite(totals)
+    if ok.sum() < 30:
+        return 0.0
+    rm = (margins - f["mean"].to_numpy(dtype=float))[ok.to_numpy()]
+    rt = (totals - (f["home_pts"] + f["away_pts"]).to_numpy(dtype=float))[ok.to_numpy()]
+    state_m = f["sd"].to_numpy(dtype=float)[ok.to_numpy()] ** 2 - spec.margin_noise
+    state_t = f["total_sd"].to_numpy(dtype=float)[ok.to_numpy()] ** 2 - spec.total_noise
+    noise_m = float(np.var(rm) - state_m.mean())
+    noise_t = float(np.var(rt) - state_t.mean())
+    if noise_m <= 0 or noise_t <= 0:
+        return 0.0
+    return float(np.clip((noise_t - noise_m) / (noise_t + noise_m), *RHO_BOUNDS))
+
+
+def with_correlation(spec: Spec, rho: float) -> Spec:
+    """``spec`` with noise correlation ``rho``, its margin noise unchanged.
+
+    The margin's noise is what the tuning measured; holding it fixed while
+    rho moves means the correlation only changes what the filter believes
+    about totals and how it splits a result between the two sides.
+    """
+    from dataclasses import replace
+
+    sigma = spec.sigma * np.sqrt((1.0 - spec.rho) / (1.0 - rho))
+    return replace(spec, sigma=float(sigma), rho=float(rho))

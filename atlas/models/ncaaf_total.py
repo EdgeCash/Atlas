@@ -119,7 +119,7 @@ def _training_forecasts(frame: pd.DataFrame, feats: pd.DataFrame, season: int,
             p, p0 = prior_mod.fit(frame, feats, season=s), choice.p0
         except ValueError:
             p, p0 = state_mod._zero_prior(games, like, s), state_mod.ZERO_PRIOR_P0
-        parts.append(_with_forecasts(games, p, state_mod._spec(choice.q, p0, choice.sigma, p)))
+        parts.append(_with_forecasts(games, p, state_mod._spec(choice.q, p0, choice.sigma, p, choice.rho)))
     return pd.concat(parts, ignore_index=True)
 
 
@@ -257,7 +257,7 @@ def run(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON,
         train_fc = _training_forecasts(frame, feats, season, choice, prior)
         tfit = fit_total(train_fc)
         fits[season] = tfit
-        fc = _with_forecasts(test, prior, state_mod._spec(choice.q, choice.p0, choice.sigma, prior))
+        fc = _with_forecasts(test, prior, state_mod._spec(choice.q, choice.p0, choice.sigma, prior, choice.rho))
         treg = train[train["season_type"] == "regular"] if "season_type" in train else train
         naive_mean, naive_sd = float(treg["actual_total"].mean()), float(treg["actual_total"].std(ddof=1))
         total_mean = tfit.mean(fc)
