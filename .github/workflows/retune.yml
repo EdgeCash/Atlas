@@ -1,0 +1,132 @@
+name: retune
+
+# Re-runs the model walk-forwards on the full warehouse and proposes what they
+# produce: the reports and the tuned hyperparameters the live projectors read
+# (reports/ncaaf_state_choices.json, reports/nfl_state_choices.json).
+#
+# Run by hand from the Actions tab after a model change, never on a schedule:
+# a retune moves live numbers, so a person asks for it and a person reviews
+# what it proposes. Nothing here touches main, tracking/, the site or Pages.
+# The result is pushed to a branch retune/<run number> and uploaded as an
+# artifact; a pull request is opened when the repository lets Actions open
+# one, and the job prints the compare link either way.
+#
+# It reads the warehouse the heavy run caches (with CFBD enrichment, which
+# the college prior needs) and never writes that cache, so a retune cannot
+# change what production builds from.
+
+on:
+  workflow_dispatch:
+    inputs:
+      sports:
+        description: which models to retune
+        type: choice
+        options: [both, ncaaf, nfl]
+        default: both
+
+permissions:
+  contents: write        # push the retune/<run> branch
+  pull-requests: write   # open the pull request, where the repository allows it
+
+# One retune at a time. Its own group: it neither waits on nor blocks the
+# heavy run and the poll, which share atlas-publish.
+concurrency:
+  group: atlas-retune
+  cancel-in-progress: false
+
+jobs:
+  retune:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    env:
+      SPORTS: ${{ inputs.sports }}
+      BRANCH: retune/${{ github.run_number }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+
+      # Read only: restore, never save. The heavy run owns this cache.
+      - name: Restore the warehouse
+        id: cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            data/raw
+            data/warehouse
+          key: atlas-data-
+          restore-keys: |
+            atlas-data-
+
+      - name: College data
+        if: env.SPORTS != 'nfl'
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+        run: |
+          if [ -z "$CFBD_API_KEY" ]; then
+            echo "::error::CFBD_API_KEY is not set. The college prior is fitted on CFBD features; a retune without them would tune for a model production does not run."
+            exit 1
+          fi
+          python -m atlas.ingest
+          python -m atlas.warehouse.build --include-scheduled
+
+      - name: NFL data
+        if: env.SPORTS != 'ncaaf'
+        run: |
+          make nfl-ingest
+          make nfl-warehouse
+
+      # State before total: the total reads the state's saved choices.
+      - name: Retune the college models
+        if: env.SPORTS != 'nfl'
+        run: |
+          make ncaaf-benchmarks
+          make ncaaf-prior
+          make ncaaf-state
+          make ncaaf-total
+
+      - name: Retune the NFL models
+        if: env.SPORTS != 'ncaaf'
+        run: |
+          make nfl-benchmarks
+          make nfl-state
+          make nfl-total
+
+      - name: Keep the reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: retune-${{ github.run_number }}
+          path: reports/
+          retention-days: 30
+
+      # reports/ only. The warehouse manifests and anything else the build
+      # rewrote stay behind: this branch proposes model output, nothing more.
+      - name: Propose the result
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "atlas-retune"
+          git config user.email "noreply@anthropic.com"
+          git checkout -b "$BRANCH"
+          git add reports
+          if git diff --cached --quiet; then
+            echo "The retune changed nothing in reports/."
+            exit 0
+          fi
+          git commit -m "retune ($SPORTS): $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')" \
+                     -m "Walk-forwards re-run on the full warehouse by the retune workflow, run ${{ github.run_id }}."
+          git push origin "$BRANCH"
+          body="Walk-forwards re-run on the full warehouse (\`$SPORTS\`), [run ${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}).
+
+          The saved choices in \`reports/*_state_choices.json\` are what the live projectors read: merging this changes live numbers from the next heavy run. Read the hyperparameter tables and, for the college state, the correlated-against-independent noise section before merging."
+          gh pr create --base main --head "$BRANCH" --title "Retune ($SPORTS): $(date -u '+%Y-%m-%d')" --body "$body" \
+            || echo "::notice::Could not open a pull request (the repository may not allow Actions to). Compare: ${{ github.server_url }}/${{ github.repository }}/compare/main...$BRANCH"
