@@ -98,6 +98,11 @@ class Projection:
     hfa: float = 0.0
     pace_adj: float = 0.0
     wind_adj: float = 0.0
+    # P(over a posted total) given that total: the share of the model's gap
+    # to the line that is real, and the sd about the line once it is taken.
+    # Absent (the NFL, older rows), P(over) reads off total_mean and total_sd.
+    over_shrink: float | None = None
+    over_sd: float | None = None
     home: dict = field(default_factory=dict)
     away: dict = field(default_factory=dict)
     teams: int | None = None
@@ -204,10 +209,19 @@ class Card:
 
     @property
     def over_probability(self) -> float | None:
-        """P(total above the current market total), from the model's total."""
-        if self.projection is None or self.total.current is None:
+        """P(total above the current market total), from the model's total.
+
+        Read given the line where the projection carries that fit: most of a
+        gap to the market is the model's own error, and the total's own sd
+        would state every point of it as real.
+        """
+        p = self.projection
+        if p is None or self.total.current is None:
             return None
-        return float(stats.norm.sf((self.total.current - self.projection.total_mean) / self.projection.total_sd))
+        line = self.total.current
+        if p.over_shrink is not None and p.over_sd is not None and p.over_sd > 0:
+            return float(stats.norm.sf(-p.over_shrink * (p.total_mean - line) / p.over_sd))
+        return float(stats.norm.sf((line - p.total_mean) / p.total_sd))
 
     @property
     def cover_probability(self) -> float | None:
@@ -367,6 +381,7 @@ def _projection(projections: pd.DataFrame, game_id: int) -> Projection | None:
         top_home=int(_num(row.get("top_home")) or 0), top_away=int(_num(row.get("top_away")) or 0),
         hfa=_num(row.get("hfa")) or 0.0, pace_adj=_num(row.get("pace_adj")) or 0.0,
         wind_adj=_num(row.get("wind_adj")) or 0.0,
+        over_shrink=_num(row.get("total_over_shrink")), over_sd=_num(row.get("total_over_sd")),
         home=side("home"), away=side("away"), teams=None if teams is None else int(teams),
         version=str(row.get("model_version") or ""), refreshed_at=str(row.get("refreshed_at") or ""),
     )

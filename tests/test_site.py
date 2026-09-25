@@ -13,6 +13,7 @@ from datetime import UTC, datetime, timedelta
 import numpy as np
 import pandas as pd
 import pytest
+from scipy import stats
 
 from atlas.site import data, render, social
 from atlas.site import drivers as driving
@@ -309,6 +310,19 @@ def test_the_projection_is_the_models_own_number_to_one_decimal():
     assert "48.5" in tier1                                  # the market, beside it
     assert card.margin_difference == pytest.approx(2.0)     # market has the away side by 7.5
     assert "Most likely score" in page
+
+
+def test_over_probability_is_read_given_the_line():
+    """With the line-given fit on the projection, the card's P(over) keeps
+    only the real share of the model's gap; without it, the total's own sd."""
+    card = _card(model_total=56.5, market_total=48.5)
+    alone = card.over_probability
+    assert alone == pytest.approx(stats.norm.sf((48.5 - 56.5) / 16.0))
+    card.projection.over_shrink, card.projection.over_sd = 0.2, 16.5
+    assert card.over_probability == pytest.approx(stats.norm.sf(-0.2 * 8.0 / 16.5))
+    assert 0.5 < card.over_probability < alone
+    card.projection.over_shrink = 0.0
+    assert card.over_probability == pytest.approx(0.5)
 
 
 def test_the_market_is_shown_first_with_its_open_and_move():

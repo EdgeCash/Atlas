@@ -568,6 +568,7 @@ def test_total_calibration_and_grid_run_walk_forward(research_frame):
     scored, table, fits = total_mod.run(research_frame, first_test_season=2021, choices=fixed)
     pooled = total_mod.summarise_total(scored[scored["season_type"] == "regular"]).set_index("model")
     assert all(f.sigma > 0 and f.n > 0 for f in fits.values())
+    assert all(0.0 <= f.over_shrink <= 1.0 and f.over_sigma > 0 for f in fits.values() if f.over_shrink is not None)
     assert pooled.loc["total", "crps"] <= pooled.loc["naive", "crps"] + 0.05
     assert np.isfinite(table["home_mean"]).all()
     assert (table["home_mean"] + table["away_mean"] - table["total_mean"]).abs().max() < 1e-9
@@ -577,6 +578,55 @@ def test_total_calibration_and_grid_run_walk_forward(research_frame):
     assert ((table["p_home"] >= 0) & (table["p_home"] <= 1)).all()
     text = total_mod.render(scored, table, fits)
     assert "## Total, regular season, pooled" in text and "most likely score" in text
+
+
+def _lined(n: int, shrink: float, seed: int = 7) -> tuple[pd.DataFrame, total_mod.TotalFit]:
+    """Games where the model's gap to the line is ``shrink`` real, the rest its own error."""
+    rng = np.random.default_rng(seed)
+    line = rng.normal(55.0, 8.0, n).round() + 0.5
+    gap = rng.normal(0.0, 7.0, n)
+    actual = np.clip(np.round(line + shrink * gap + rng.normal(0.0, 15.0, n)), 0, None)
+    frame = pd.DataFrame({"state_total": line + gap, "closing_total": line, "actual_total": actual})
+    tfit = total_mod.TotalFit(names=("state_total",), coef=np.array([0.0, 1.0]), fill={},
+                              sigma=float(np.std(actual - line - gap)), raw_sigma=15.0, n=n)
+    return frame, tfit
+
+
+def test_p_over_is_read_given_the_line():
+    """A model whose gaps to the line are a fifth real: read off its own sd,
+    P(over) states every point of the gap and is over-confident; given the
+    line, the fit recovers the fifth and P(over) is calibrated."""
+    train, tfit = _lined(20000, 0.2)
+    fit = total_mod.fit_over(train, tfit)
+    assert fit.over_shrink == pytest.approx(0.2, abs=0.03)
+    assert fit.over_sigma == pytest.approx(15.0, rel=0.03)
+    test, _ = _lined(20000, 0.2, seed=8)
+    mean, line = test["state_total"].to_numpy(), test["closing_total"].to_numpy()
+    hit = (test["actual_total"] > test["closing_total"]).astype(float)
+    given = fit.p_over(mean, line)
+    alone = tfit.p_over(mean, line)
+    assert scoring.expected_calibration_error(given, hit) < 0.02
+    assert scoring.expected_calibration_error(alone, hit) > 2 * scoring.expected_calibration_error(given, hit)
+    # No intercept: P(over) never leans against the model's own side (away
+    # from the zero floor, which trims a low total's lower tail).
+    clear = line > 3 * fit.over_sigma
+    assert ((given - 0.5) * np.sign(mean - line) >= -1e-3)[clear].all()
+
+
+def test_p_over_falls_back_without_enough_lined_games():
+    train, tfit = _lined(total_mod.MIN_OVER_GAMES - 1, 0.2)
+    assert total_mod.fit_over(train, tfit) is tfit
+    assert total_mod.fit_over(train.drop(columns="closing_total"), tfit) is tfit
+    mean, line = np.array([60.0]), np.array([50.5])
+    assert tfit.p_over(mean, line)[0] == pytest.approx(
+        total_mod._p_over(lat.discretise(mean, tfit.sigma, total_mod.TOTAL_SUPPORT), total_mod.TOTAL_SUPPORT, line)[0])
+
+
+def test_the_over_shrink_is_bounded():
+    train, tfit = _lined(5000, -0.5)
+    assert total_mod.fit_over(train, tfit).over_shrink == 0.0
+    train, tfit = _lined(5000, 1.6)
+    assert total_mod.fit_over(train, tfit).over_shrink == 1.0
 
 
 # ---------------------------------------------------------------------------

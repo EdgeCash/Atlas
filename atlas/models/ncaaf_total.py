@@ -17,6 +17,21 @@ normal) are then combined on an 80x80 grid over (home, away) points by
 fitted on the training seasons' own grids (step 7's v1.5). Every headline
 number is a mean of that grid.
 
+P(over a line) is a different question from the total's distribution. Most
+of the gap between the model and a posted total is the model's own error -
+the line already knows most of what the model knows - so reading P(over)
+off the total's own normal treated every point of disagreement as real and
+was badly over-confident (a stated 64% over went over about 52% of the time).
+It is read instead from the outcome given both numbers, fitted on the
+training seasons' games with a closing total:
+
+    actual - line = shrink * (model - line) + e,   e ~ N(0, over_sigma)
+
+``shrink`` is the share of a disagreement that turned out to be real, bounded
+to [0, 1]; with no intercept, P(over) always leans the model's way. The
+total's own mean and sd - the projection, its CRPS and the grid - are
+unchanged: this is only how a line is read.
+
 Scored where the plan says to look: the total against naive, the raw state
 total and the market; P(home) reliability by spread bucket; and the exact
 score, which is reported for what it is.
@@ -52,6 +67,10 @@ ADJUSTMENTS = ("adj_pace_sum", "weather_wind_effective")
 TOTAL_SUPPORT = np.arange(0, 2 * joint.DEFAULT_MAX_POINTS - 1)
 CHUNK = 400
 
+#: Fewer training games with a closing total than this and P(over) falls back
+#: to the total's own distribution.
+MIN_OVER_GAMES = 200
+
 
 def total_support(max_points: int = joint.DEFAULT_MAX_POINTS) -> np.ndarray:
     """Every total a ``max_points``-a-side grid can hold."""
@@ -69,9 +88,25 @@ class TotalFit:
     raw_sigma: float                 # residual sd of the uncalibrated state total
     n: int
     points_factor: np.ndarray | None = None   # the points lattice fitted beside it, one value per points cell
+    over_shrink: float | None = None          # share of a model-line gap that is real (fit_over)
+    over_sigma: float | None = None           # sd of the outcome about the line once that share is taken
+    over_n: int = 0
 
     def mean(self, fc: pd.DataFrame) -> np.ndarray:
         return _design(fc, self.names, self.fill) @ self.coef
+
+    def over_location(self, mean: np.ndarray, line: np.ndarray) -> tuple[np.ndarray, float]:
+        """The (mean, sd) to read P(over ``line``) from: given the line where
+        :func:`fit_over` has fitted one, else the total's own distribution."""
+        if self.over_shrink is None or self.over_sigma is None:
+            return np.asarray(mean, dtype=float), self.sigma
+        line = np.asarray(line, dtype=float)
+        return line + self.over_shrink * (np.asarray(mean, dtype=float) - line), self.over_sigma
+
+    def p_over(self, mean: np.ndarray, line: np.ndarray, support: np.ndarray = TOTAL_SUPPORT) -> np.ndarray:
+        """P(total > ``line``), a push counting half, for games with a line."""
+        loc, sd = self.over_location(mean, line)
+        return _p_over(lat.discretise(loc, sd, support), support, np.asarray(line, dtype=float))
 
 
 def _design(fc: pd.DataFrame, names: tuple[str, ...], fill: dict[str, float]) -> np.ndarray:
@@ -95,6 +130,27 @@ def fit_total(train: pd.DataFrame, adjustments: tuple[str, ...] = ADJUSTMENTS) -
     raw = y - train["state_total"].to_numpy(dtype=float)
     return TotalFit(names=names, coef=coef, fill=fill, sigma=float(np.std(resid, ddof=len(coef))),
                     raw_sigma=float(np.std(raw - raw.mean(), ddof=1)), n=int(len(y)))
+
+
+def fit_over(train: pd.DataFrame, tfit: TotalFit) -> TotalFit:
+    """``tfit`` with the line-given reading of P(over) fitted on ``train``.
+
+    ``actual - line = shrink * (model - line) + e`` by least squares through
+    the origin, on the training games with a closing total; ``shrink`` is
+    bounded to [0, 1]. Too few such games and ``tfit`` comes back unchanged.
+    """
+    if "closing_total" not in train:
+        return tfit
+    line = pd.to_numeric(train["closing_total"], errors="coerce").to_numpy(dtype=float)
+    ok = np.isfinite(line) & train["actual_total"].notna().to_numpy()
+    if ok.sum() < MIN_OVER_GAMES:
+        return tfit
+    gap = tfit.mean(train)[ok] - line[ok]
+    miss = train["actual_total"].to_numpy(dtype=float)[ok] - line[ok]
+    denom = float(gap @ gap)
+    shrink = float(np.clip(gap @ miss / denom, 0.0, 1.0)) if denom > 0 else 0.0
+    sigma = float(np.sqrt(np.mean((miss - shrink * gap) ** 2) * ok.sum() / (ok.sum() - 1)))
+    return replace(tfit, over_shrink=shrink, over_sigma=sigma, over_n=int(ok.sum()))
 
 
 def _with_forecasts(games: pd.DataFrame, prior: prior_mod.Prior, spec) -> pd.DataFrame:
@@ -135,18 +191,24 @@ def _p_over(pmf: np.ndarray, support: np.ndarray, line: np.ndarray) -> np.ndarra
 
 
 def _score_total(test: pd.DataFrame, models: dict[str, tuple[np.ndarray, float]], season: int,
-                 support: np.ndarray = TOTAL_SUPPORT) -> pd.DataFrame:
+                 support: np.ndarray = TOTAL_SUPPORT, over: dict[str, TotalFit] | None = None) -> pd.DataFrame:
+    """Each model's total scored on ``test``. A model named in ``over`` reads
+    P(over) through that fit (:meth:`TotalFit.p_over`); ``p_over_alone`` keeps
+    the reading off the model's own distribution beside it."""
     y = test["actual_total"].to_numpy(dtype=int)
     line = pd.to_numeric(test["closing_total"], errors="coerce").to_numpy(dtype=float) \
         if "closing_total" in test else np.full(len(test), np.nan)
     has_line = ~np.isnan(line)
-    over = np.where(has_line, (y > line).astype(float) + 0.5 * (y == line), np.nan)
+    over_hit = np.where(has_line, (y > line).astype(float) + 0.5 * (y == line), np.nan)
     rows = []
     for name, (mean, sigma) in models.items():
         pmf = lat.discretise(mean, sigma, support)
         p_over = np.full(len(test), np.nan)
         if has_line.any():
             p_over[has_line] = _p_over(pmf[has_line], support, line[has_line])
+        alone = p_over.copy()
+        if has_line.any() and over and name in over:
+            p_over[has_line] = over[name].p_over(np.asarray(mean, dtype=float)[has_line], line[has_line], support)
         rows.append(pd.DataFrame({
             "game_id": test["game_id"].to_numpy() if "game_id" in test else np.arange(len(test)),
             "season": season, "week": test["week"].to_numpy(),
@@ -154,7 +216,7 @@ def _score_total(test: pd.DataFrame, models: dict[str, tuple[np.ndarray, float]]
             "abs_spread": test["closing_spread"].abs().to_numpy() if "closing_spread" in test else np.nan,
             "model": name, "mean": mean, "sigma": sigma, "line": line,
             "crps": scoring.crps(pmf, support, y), "mae": scoring.mae(mean, y),
-            "p_over": p_over, "over": over,
+            "p_over": p_over, "p_over_alone": alone, "over": over_hit,
         }))
     return pd.concat(rows, ignore_index=True)
 
@@ -260,7 +322,7 @@ def run(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON,
         prior = prior_mod.fit(frame, feats, season=season)
         choice = (choices or {}).get(season) or state_mod.tune(frame, feats, season, grid=grid, like=prior)
         train_fc = _training_forecasts(frame, feats, season, choice, prior)
-        tfit = fit_total(train_fc)
+        tfit = fit_over(train_fc, fit_total(train_fc))
         fits[season] = tfit
         fc = _with_forecasts(test, prior, state_mod._spec(choice.q, choice.p0, choice.sigma, prior, choice.rho))
         fc = fc[state_mod.has_market(fc)]
@@ -289,7 +351,7 @@ def run(frame: pd.DataFrame, *, first_test_season: int = FIRST_TEST_SEASON,
         else:
             grid_ = lat.Lattice(support=lat.DEFAULT_SUPPORT, factor=np.ones(len(lat.DEFAULT_SUPPORT)),
                                 sigma=float(fc["m_sd"].mean()), games=0)
-        scored.append(_score_total(fc, models, season))
+        scored.append(_score_total(fc, models, season, over={"total": tfit}))
         points_factor = fit_points_lattice(train_fc, grid_, tfit)
         fits[season] = tfit = replace(tfit, points_factor=points_factor)
         margin_pmf = grid_.pmf(fc["m_mean"].to_numpy(dtype=float), fc["m_sd"].to_numpy(dtype=float))
@@ -342,7 +404,10 @@ def render(scored: pd.DataFrame, table: pd.DataFrame, fits: dict[int, TotalFit])
         row = {"season": s, "intercept": f"{f.coef[0]:+.1f}", "slope on state total": f"{f.coef[1]:.3f}"}
         for n, c in zip(f.names[1:], f.coef[2:], strict=True):
             row[n] = f"{c:+.3f}"
-        row.update({"sigma": f"{f.sigma:.2f}", "raw sigma": f"{f.raw_sigma:.2f}", "train games": f.n})
+        row.update({"sigma": f"{f.sigma:.2f}", "raw sigma": f"{f.raw_sigma:.2f}", "train games": f.n,
+                    "over shrink": "" if f.over_shrink is None else f"{f.over_shrink:.3f}",
+                    "over sigma": "" if f.over_sigma is None else f"{f.over_sigma:.2f}",
+                    "lined train games": f.over_n})
         coef_rows.append(row)
     parts = [
         "# NCAAF total and joint score grid", "",
@@ -352,13 +417,14 @@ def render(scored: pd.DataFrame, table: pd.DataFrame, fits: dict[int, TotalFit])
         "key-number lattice) and the total (discretised normal) are combined on an 80x80 grid over "
         "(home, away) points, `atlas/models/joint.py`; every headline number below is a mean of that grid.", "",
         "## Calibration fitted, per season", "",
-        "`raw sigma` is the residual sd of the uncalibrated state total; `sigma` is after calibration and is the total's forecast sd.", "",
+        "`raw sigma` is the residual sd of the uncalibrated state total; `sigma` is after calibration and is the total's forecast sd. "
+        "`over shrink` and `over sigma` read P(over a line): `actual - line = shrink * (total - line) + e`, "
+        "fitted on the training games with a closing total (`fit_over`).", "",
         md(pd.DataFrame(coef_rows)), "",
         "## Total, regular season, pooled", "",
         "`over_brier` and `over_ece` score P(over the closing total) against what happened; a push counts half. "
-        "A model weaker than the market is over-confident on P(over) by construction - where it disagrees with "
-        "the closing total the market is usually right - so that ECE measures the gap to the market, not the "
-        "soundness of the total's own distribution, which CRPS does.", "",
+        "The total's P(over) is read given the line (`over shrink`, `over sigma`); the other models' off their own "
+        "distribution. CRPS and MAE score the total's own distribution, which the line does not touch.", "",
         md(fmt(summarise_total(reg))), "",
         "## Total by season, regular", "",
         md(fmt(summarise_total(reg, ["season"]))), "",
@@ -369,6 +435,17 @@ def render(scored: pd.DataFrame, table: pd.DataFrame, fits: dict[int, TotalFit])
     bowls = scored[scored["season_type"] != "regular"]
     if not bowls.empty:
         parts += ["## Total, bowls and playoffs (never fitted, always scored)", "", md(fmt(summarise_total(bowls))), ""]
+    tot = reg[reg["model"] == "total"].dropna(subset=["p_over", "over"])
+    if not tot.empty and "p_over_alone" in tot:
+        def scores(d: pd.DataFrame, col: str) -> dict:
+            return {"brier": f"{np.mean((d[col] - d['over']) ** 2):.4f}",
+                    "ece": f"{scoring.expected_calibration_error(d[col], d['over']):.3f}",
+                    "mean P(side)": f"{np.maximum(d[col], 1 - d[col]).mean():.3f}"}
+        seen = [{"P(over) from": "the total alone", "games": len(tot), **scores(tot, "p_over_alone")},
+                {"P(over) from": "the total given the line", "games": len(tot), **scores(tot, "p_over")}]
+        parts += ["## P(over): the total alone against the total given the line, regular season", "",
+                  "The same games and the same total; only how a line is read differs. `mean P(side)` is the "
+                  "confidence the model states in its own side.", "", md(pd.DataFrame(seen)), ""]
     parts += ["## Reliability, P(over the closing total), regular season", ""]
     for name in ("total", "market"):
         d = reg[(reg["model"] == name)].dropna(subset=["p_over", "over"])

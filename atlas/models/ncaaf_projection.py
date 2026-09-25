@@ -119,7 +119,7 @@ def fit(frame: pd.DataFrame, *, season: int | None = None,
     played = {int(k): int(v) for k, v in played.items()}
 
     train_fc = total_mod._training_forecasts(completed, feats, season, choice, prior)
-    total = total_mod.fit_total(train_fc)
+    total = total_mod.fit_over(train_fc, total_mod.fit_total(train_fc))
     train = sample[sample["season"] < season]
     # Fitted as the walk-forward fits it: regular season only (reference.walk_forward).
     if "season_type" in train:
@@ -193,6 +193,10 @@ def project(projector: Projector, scheduled: pd.DataFrame) -> pd.DataFrame:
         # inputs' and are used only for probabilities at a line.
         "margin_mean": summary["margin_mean"].to_numpy(), "margin_sd": sds,
         "total_mean": summary["total_mean"].to_numpy(), "total_sd": p.total.sigma,
+        # How the card reads P(over) at a posted total: the total given the
+        # line (total_mod.fit_over), not the total's own sd.
+        "total_over_shrink": np.nan if p.total.over_shrink is None else p.total.over_shrink,
+        "total_over_sd": np.nan if p.total.over_sigma is None else p.total.over_sigma,
         "home_mean": summary["home_mean"].to_numpy(), "away_mean": summary["away_mean"].to_numpy(),
         "p_home": summary["p_home"].to_numpy(),
         "total_lo": summary["total_lo"].to_numpy(), "total_hi": summary["total_hi"].to_numpy(),
