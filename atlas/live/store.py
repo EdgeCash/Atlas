@@ -112,7 +112,17 @@ SCHEMA: dict[str, list[str]] = {
         "signal_id", "graded_at", "close_line", "clv_points", "result",
         "clv_from_open", "result_from_open", "total_move", "pre_signal_move",
         "execution_flagged",
+        # CLV in probability (atlas/live/probability.py): the side's vig-free
+        # chance of winning at the entry line, as the entry market and the
+        # closing market each priced it, and the difference.
+        # prob_assumed: a price at either end was read against the standard
+        # -110 / -110 market because the book's own was not captured.
+        "entry_prob", "close_prob", "clv_prob", "prob_assumed",
     ],
+    # The outcome distribution the probability grade reads: each sport and
+    # market's sd and, for the margin, its key-number factors. Written by the
+    # weekly refresh from the fitted models, read by the hourly poll.
+    "market_shape": ["sport", "market", "sigma", "point", "factor"],
 }
 
 #: The columns that identify a row. A second write with the same key updates
@@ -138,6 +148,7 @@ KEYS: dict[str, list[str]] = {
     "snapshots": ["game_id", "book", "market", "captured_at"],
     "signals": ["signal_id"],
     "grades": ["signal_id"],
+    "market_shape": ["sport", "market", "point"],
 }
 
 SORT: dict[str, list[str]] = {
@@ -153,6 +164,7 @@ SORT: dict[str, list[str]] = {
     "snapshots": ["game_id", "market", "book", "captured_at"],
     "signals": ["created_at", "game_id", "market", "book"],
     "grades": ["graded_at", "signal_id"],
+    "market_shape": ["sport", "market", "point"],
 }
 
 

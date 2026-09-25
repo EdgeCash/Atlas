@@ -187,6 +187,16 @@ def check_grades(store: Store | None = None) -> pd.DataFrame:
     found += _rows(frame, frame["signal_id"].duplicated(keep=False),
                    "one grade per signal", "blocking", "duplicate grade")
 
+    if "clv_prob" in frame:
+        probs = {c: pd.to_numeric(frame[c], errors="coerce") for c in ("entry_prob", "close_prob", "clv_prob")}
+        outside = ~(probs["entry_prob"].between(0, 1) & probs["close_prob"].between(0, 1)) \
+            & probs["close_prob"].notna()
+        found += _rows(frame, outside, "probabilities in range", "blocking",
+                       "entry_prob or close_prob outside [0, 1]")
+        off = (probs["close_prob"] - probs["entry_prob"] - probs["clv_prob"]).abs() > 0.002
+        found += _rows(frame, off & probs["clv_prob"].notna(), "clv_prob is consistent", "blocking",
+                       "clv_prob does not equal close_prob - entry_prob")
+
     out = pd.DataFrame([vars(e) for e in found])
     if not out.empty:
         LOG.warning("%d grade exceptions", len(out))
@@ -243,4 +253,6 @@ _CHECK_REGISTRY: tuple[tuple[str, str, str], ...] = (
     ("clv is consistent", "blocking", "grades"),
     ("result matches clv", "blocking", "grades"),
     ("one grade per signal", "blocking", "grades"),
+    ("probabilities in range", "blocking", "grades"),
+    ("clv_prob is consistent", "blocking", "grades"),
 )

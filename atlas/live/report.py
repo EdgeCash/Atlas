@@ -114,23 +114,23 @@ signal existed. They are checked, never tuned.
 
 ### By season
 
-{_or_empty(bundle["season"], ["season", "signals", "graded", "pushes", "beat_rate", "beat_low", "beat_high", "p_value", "mean_clv", "median_clv", "flagged"], ["Season", "Signals", "Graded", "Pushes", "Beat rate", "95% low", "95% high", "p vs 50%", "Mean CLV", "Median CLV", "Flagged"])}
+{_or_empty(bundle["season"], ["season", "signals", "graded", "pushes", "beat_rate", "beat_low", "beat_high", "p_value", "mean_clv", "median_clv", "mean_clv_prob", "flagged"], ["Season", "Signals", "Graded", "Pushes", "Beat rate", "95% low", "95% high", "p vs 50%", "Mean CLV", "Median CLV", "Mean CLV (prob)", "Flagged"])}
 
 ### By week
 
-{_or_empty(bundle["weekly"], ["season", "week", "signals", "graded", "pushes", "beat_rate", "mean_clv", "median_clv", "flagged"], ["Season", "Week", "Signals", "Graded", "Pushes", "Beat rate", "Mean CLV", "Median CLV", "Flagged"])}
+{_or_empty(bundle["weekly"], ["season", "week", "signals", "graded", "pushes", "beat_rate", "mean_clv", "median_clv", "mean_clv_prob", "flagged"], ["Season", "Week", "Signals", "Graded", "Pushes", "Beat rate", "Mean CLV", "Median CLV", "Mean CLV (prob)", "Flagged"])}
 
 ### By day
 
-{_or_empty(bundle["daily"], ["graded_date", "signals", "graded", "pushes", "beat_rate", "mean_clv", "median_clv", "flagged"], ["Date", "Signals", "Graded", "Pushes", "Beat rate", "Mean CLV", "Median CLV", "Flagged"])}
+{_or_empty(bundle["daily"], ["graded_date", "signals", "graded", "pushes", "beat_rate", "mean_clv", "median_clv", "mean_clv_prob", "flagged"], ["Date", "Signals", "Graded", "Pushes", "Beat rate", "Mean CLV", "Median CLV", "Mean CLV (prob)", "Flagged"])}
 
 ### By book
 
-{_or_empty(bundle["books"], ["book", "signals", "graded", "pushes", "beat_rate", "mean_clv", "median_clv", "flagged"], ["Book", "Signals", "Graded", "Pushes", "Beat rate", "Mean CLV", "Median CLV", "Flagged"])}
+{_or_empty(bundle["books"], ["book", "signals", "graded", "pushes", "beat_rate", "mean_clv", "median_clv", "mean_clv_prob", "flagged"], ["Book", "Signals", "Graded", "Pushes", "Beat rate", "Mean CLV", "Median CLV", "Mean CLV (prob)", "Flagged"])}
 
 ### Every population, including the ones the criteria ignore
 
-{_or_empty(bundle["selections"], ["selection", "signals", "graded", "pushes", "beat_rate", "beat_low", "beat_high", "p_value", "mean_clv", "median_clv", "flagged"], ["Population", "Signals", "Graded", "Pushes", "Beat rate", "95% low", "95% high", "p vs 50%", "Mean CLV", "Median CLV", "Flagged"])}
+{_or_empty(bundle["selections"], ["selection", "signals", "graded", "pushes", "beat_rate", "beat_low", "beat_high", "p_value", "mean_clv", "median_clv", "mean_clv_prob", "flagged"], ["Population", "Signals", "Graded", "Pushes", "Beat rate", "95% low", "95% high", "p vs 50%", "Mean CLV", "Median CLV", "Mean CLV (prob)", "Flagged"])}
 
 `primary` is the population the criteria are evaluated on: totals at or above
 the historical 90th percentile of disagreement. `secondary` is the same cut on
