@@ -255,8 +255,14 @@ def test_the_nfl_projector_projects_the_scheduled_slate(nfl_frame):
     assert ((out["p_home"] > 0) & (out["p_home"] < 1)).all()
     assert out["home_rank"].between(1, 8).all() and out["teams"].iloc[0] == 8
     assert projector.quarterback("qb-KC") is not None
-    assert (out["top_home"] < 60).all()
+    assert (out["top_home"] < 80).all()
     assert out["home_qb"].notna().all() and out["home_qb_pts"].notna().all() and (out["home_qb_sd"] > 0).all()
+    # The state stops at the last game played: carried through the unplayed
+    # schedule it would hold every remaining week's noise before project()
+    # added it again.
+    played = frame[frame["actual_margin"].notna() & (frame["season"] == projector.season)]
+    if len(played):
+        assert projector.state.week == int(played["week"].max())
 
 
 def test_the_expected_starter_is_the_qb2_when_the_report_lists_the_qb1_out():
@@ -294,11 +300,40 @@ def test_a_passer_record_is_strictly_before_kickoff():
     rec = ns.PasserRecord(log)
     assert rec.league == pytest.approx((0.4 + 0.2 - 0.2) / 3)
     n, epa = rec.before("x", pd.Timestamp("2023-09-17", tz="UTC"))
-    assert n == 30 and epa == pytest.approx(0.4 - rec.league)       # the 17 September game is not yet played
+    # The 17 September game is not yet played; the league is what it was before it.
+    assert n == 30 and epa == pytest.approx(0.4 - (0.4 - 0.2) / 2)
     n, epa = rec.before("x", pd.Timestamp("2023-09-24", tz="UTC"))
     assert n == 60 and epa == pytest.approx(0.3 - rec.league)
     assert rec.before("x", pd.Timestamp("2023-09-10", tz="UTC")) == (0.0, 0.0)
     assert rec.before("nobody", pd.Timestamp("2024-01-01", tz="UTC")) == (0.0, 0.0)
+
+
+def test_a_night_game_is_not_its_own_history():
+    """Kickoffs are UTC and the passer log is dated in Eastern time: a Sunday
+    night kickoff is Monday in UTC, and must still not see its own line."""
+    from atlas.models import nfl_state as ns
+
+    log = pd.DataFrame({
+        "passer_id": ["x", "x"], "game_date": ["2023-09-10", "2023-09-17"],
+        "dropbacks": [30, 40], "qb_epa_per_dropback": [-0.1, 0.5],
+    })
+    rec = ns.PasserRecord(log)
+    sunday_night = pd.Timestamp("2023-09-18T00:20:00Z")      # 8:20pm ET on the 17th
+    n, _ = rec.before("x", sunday_night)
+    assert n == 30
+
+
+def test_the_league_level_is_only_what_had_been_played():
+    """A walk-forward season must not be centred on seasons still to come."""
+    from atlas.models import nfl_state as ns
+
+    log = pd.DataFrame({
+        "passer_id": ["x", "y"], "game_date": ["2015-09-13", "2024-09-08"],
+        "dropbacks": [30, 30], "qb_epa_per_dropback": [0.0, 0.3],
+    })
+    rec = ns.PasserRecord(log)
+    assert rec.league_at(pd.Timestamp("2016-01-01")) == pytest.approx(0.0)
+    assert rec.league_at(pd.Timestamp("2025-01-01")) == pytest.approx(0.15)
 
 
 def test_a_passer_record_knows_each_game_line():
@@ -313,7 +348,7 @@ def test_a_passer_record_knows_each_game_line():
     })
     rec = ns.PasserRecord(log)
     n, epa = rec.game("x", "g1")
-    assert n == 30 and epa == pytest.approx(0.4 - rec.league)
+    assert n == 30 and epa == pytest.approx(0.4 - (0.4 - 0.2) / 2)    # the league through that Sunday
     assert rec.game("x", "g9") == (0.0, 0.0) and rec.game("nobody", "g1") == (0.0, 0.0)
     assert rec.play_var > 0 and rec.names == {"x": "X", "y": "Y"}
     assert ns.PasserRecord(log.drop(columns=["game_id"])).by_game == {}

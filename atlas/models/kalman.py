@@ -15,7 +15,8 @@ Observations are points scored, two per game:
 ``def`` is points *prevented* (positive is good), so a margin is
 ``off_h + def_h - off_a - def_a + boost``. Each game is processed strictly in
 kickoff order: the forecast for a game uses only games that kicked off
-before it, which is the point-in-time rule the rest of Atlas keeps.
+before it, which is the point-in-time rule the rest of Atlas keeps. Games
+sharing a kickoff are all forecast before any of them is assimilated.
 
 Nothing in this file knows about football beyond that. Sport-specific
 choices - the prior, the hyperparameters, what to compare against - live in
@@ -52,6 +53,7 @@ class State:
     P: np.ndarray                          # (2N, 2N)
     week: int | None = None
     index: dict = field(default_factory=dict)
+    kickoff: pd.Timestamp | None = None    # the latest kickoff forecast from this state
 
     @property
     def n(self) -> int:
@@ -108,7 +110,7 @@ def initialise(teams: np.ndarray, off: np.ndarray, defense: np.ndarray, spec: Sp
     teams = np.asarray(teams)
     n = len(teams)
     x = np.r_[np.asarray(off, dtype=float), np.asarray(defense, dtype=float)]
-    P = np.diag(np.r_[np.full(n, spec.p0_off), np.full(n, spec.p0_def)])
+    P = np.diag(np.r_[np.full(n, spec.p0_off, dtype=float), np.full(n, spec.p0_def, dtype=float)])
     return State(teams=teams, x=x, P=P, week=None, index={t: i for i, t in enumerate(teams)})
 
 
@@ -193,17 +195,57 @@ def update(state: State, home, away, home_pts: float, away_pts: float, is_home: 
     _sparse_update(state, a, n + h, away_pts - spec.base, r)
 
 
+def effective_weeks(games: pd.DataFrame, state: State | None = None) -> np.ndarray:
+    """Week numbers that only ever move forward through a season.
+
+    Postseason weeks restart at 1, which would read as the state going back
+    in time and add no process noise across the month before the bowls. A
+    postseason game is placed after the last regular-season week by the
+    whole weeks elapsed since the last regular-season kickoff - or, when
+    ``games`` holds no regular-season game, since the ``state``'s own last
+    kickoff (a projection of the bowls from a state carried to December).
+    """
+    weeks = games["week"].to_numpy(dtype=int).copy()
+    if "season_type" not in games:
+        return weeks
+    post = (games["season_type"] == "postseason").to_numpy()
+    if not post.any():
+        return weeks
+    kick = pd.to_datetime(games["kickoff"], utc=True, errors="coerce")
+    if (~post).any():
+        last_week, last_kick = int(weeks[~post].max()), kick[~post].max()
+    elif state is not None and state.week is not None and state.kickoff is not None:
+        last_week, last_kick = int(state.week), state.kickoff
+    else:
+        return weeks
+    days = (kick[post] - last_kick).dt.days.fillna(7).to_numpy()
+    weeks[post] = last_week + np.maximum(1, np.ceil(days / 7.0)).astype(int)
+    return weeks
+
+
+def kickoff_groups(kickoffs) -> list[np.ndarray]:
+    """Positions of each run of equal kickoffs, in order. Games at the same
+    kickoff cannot see each other's results, so each run is forecast before
+    any of it is assimilated."""
+    keys = pd.Series(kickoffs).astype(str).to_numpy()
+    if len(keys) == 0:
+        return []
+    starts = np.r_[0, np.flatnonzero(keys[1:] != keys[:-1]) + 1, len(keys)]
+    return [np.arange(s, e) for s, e in zip(starts[:-1], starts[1:], strict=True)]
+
+
 def run_season(games: pd.DataFrame, state: State, spec: Spec) -> pd.DataFrame:
     """Forecast every game before it is played, then learn from it.
 
     ``games`` must carry ``home_team_id``, ``away_team_id``, ``week``,
     ``kickoff``, ``actual_margin``, ``actual_total``, ``neutral_site``. Rows
     are processed in kickoff order; process noise is added whenever the week
-    advances. Returns one row per game with the pre-kickoff forecast.
+    advances. Returns one row per game with the pre-kickoff forecast. A game
+    without a result is forecast and not assimilated.
     """
     g = games.sort_values(["kickoff", "week"])
     idx = g.index.to_numpy()
-    weeks = g["week"].to_numpy(dtype=int)
+    weeks = effective_weeks(g, state)
     homes = g["home_team_id"].to_numpy()
     aways = g["away_team_id"].to_numpy()
     neutral = pd.to_numeric(g["neutral_site"], errors="coerce").fillna(0).to_numpy(dtype=float) \
@@ -215,19 +257,23 @@ def run_season(games: pd.DataFrame, state: State, spec: Spec) -> pd.DataFrame:
     hps = np.full(len(g), np.nan)
     aps = np.full(len(g), np.nan)
     known = state.index
-    for i in range(len(g)):
-        week = int(weeks[i])
+    for group in kickoff_groups(g["kickoff"].to_numpy()):
+        week = int(weeks[group].max())
         if state.week is None:
             state.week = week
         elif week > state.week:
             advance(state, week - state.week, spec)
             state.week = week
-        h, a = homes[i], aways[i]
-        if h not in known or a not in known:
-            continue
-        is_home = 0.0 if neutral[i] else 1.0
-        means[i], sds[i], hps[i], aps[i] = forecast(state, h, a, is_home, spec)
-        m, t = margins[i], totals[i]
-        update(state, h, a, (t + m) / 2.0, (t - m) / 2.0, is_home, spec)
+        state.kickoff = pd.to_datetime(g["kickoff"].iloc[group[0]], utc=True, errors="coerce")
+        played = [i for i in group if homes[i] in known and aways[i] in known]
+        for i in played:
+            means[i], sds[i], hps[i], aps[i] = forecast(state, homes[i], aways[i],
+                                                        0.0 if neutral[i] else 1.0, spec)
+        for i in played:
+            m, t = margins[i], totals[i]
+            if np.isnan(m) or np.isnan(t):
+                continue
+            update(state, homes[i], aways[i], (t + m) / 2.0, (t - m) / 2.0,
+                   0.0 if neutral[i] else 1.0, spec)
     out = pd.DataFrame({"mean": means, "sd": sds, "home_pts": hps, "away_pts": aps}, index=idx)
     return out.reindex(games.index)

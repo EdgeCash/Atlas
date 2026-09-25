@@ -49,7 +49,7 @@ def pregame(games: pd.DataFrame, params: Params = FIVETHIRTYEIGHT) -> pd.DataFra
     rating: dict = {}
     last_season = None
     home_out, away_out = np.empty(len(g)), np.empty(len(g))
-    neutral = pd.to_numeric(g.get("neutral_site", 0), errors="coerce").fillna(0).to_numpy()
+    neutral = pd.to_numeric(g.get("neutral_site", pd.Series(0, index=g.index)), errors="coerce").fillna(0).to_numpy()
     margins = pd.to_numeric(g["actual_margin"], errors="coerce").to_numpy()
     for i, (season, h, a) in enumerate(zip(g["season"], g["home_team_id"], g["away_team_id"], strict=True)):
         if season != last_season:

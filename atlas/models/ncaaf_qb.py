@@ -104,7 +104,7 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
     n = state.n
     cols = {c: (g[c].to_numpy() if c in g else np.full(len(g), None))
             for c in ("home_team_id", "away_team_id", "home_qb_id", "away_qb_id")}
-    weeks = g["week"].to_numpy(dtype=int)
+    weeks = kalman.effective_weeks(g, state)
     neutral = pd.to_numeric(g["neutral_site"], errors="coerce").fillna(0).to_numpy(dtype=float) \
         if "neutral_site" in g else np.zeros(len(g))
     margins, totals = g["actual_margin"].to_numpy(dtype=float), g["actual_total"].to_numpy(dtype=float)
@@ -121,16 +121,10 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
             state.add(key, 0.0 if team not in starters else new_mean, p0)
         return state.extra[key]
 
-    for i in range(len(g)):
-        week = int(weeks[i])
-        if state.week is None:
-            state.week = week
-        elif week > state.week:
-            _advance(state, week - state.week, spec)
-            state.week = week
+    def forecast(i: int):
         h, a = cols["home_team_id"][i], cols["away_team_id"][i]
         if h not in state.index or a not in state.index:
-            continue
+            return None
         ih, ia = state.index[h], state.index[a]
         boost = 0.0 if neutral[i] else spec.boost
         qh = state.extra.get(("qb", str(starters[h]))) if h in starters else None
@@ -142,9 +136,12 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
         _, var = kalman.row_forecast(state, hp + [n + ih], ap + [n + ia])
         mh, ma = spec.base + boost + mh, spec.base + ma
         means[i], sds[i], hps[i], aps[i] = mh - ma, np.sqrt(var + 2.0 * r), mh, ma
+        return h, a, ih, ia, boost, qh, qa
+
+    def learn(i, h, a, ih, ia, boost, qh, qa) -> None:
         m, t = margins[i], totals[i]
         if np.isnan(m) or np.isnan(t):
-            continue
+            return
         rh, ra = cols["home_qb_id"][i], cols["away_qb_id"][i]
         qh_rec = enter(h, rh) if rh is not None and not pd.isna(rh) else qh
         qa_rec = enter(a, ra) if ra is not None and not pd.isna(ra) else qa
@@ -155,6 +152,18 @@ def run_season_qb(games: pd.DataFrame, state: kalman.State, spec: kalman.Spec, *
         kalman.row_update(state, [ih] + ([qh_rec] if qh_rec is not None else []), [n + ia],
                           (t + m) / 2.0 - spec.base - boost, r)
         kalman.row_update(state, [ia] + ([qa_rec] if qa_rec is not None else []), [n + ih], (t - m) / 2.0 - spec.base, r)
+
+    # Games at one kickoff are all forecast before any is learnt from.
+    for group in kalman.kickoff_groups(g["kickoff"].to_numpy()):
+        week = int(weeks[group].max())
+        if state.week is None:
+            state.week = week
+        elif week > state.week:
+            _advance(state, week - state.week, spec)
+            state.week = week
+        seen = [(i, f) for i in group if (f := forecast(i)) is not None]
+        for i, f in seen:
+            learn(i, *f)
     out = pd.DataFrame({"mean": means, "sd": sds, "home_pts": hps, "away_pts": aps}, index=g.index)
     return out.reindex(games.index)
 

@@ -120,6 +120,9 @@ def fit(frame: pd.DataFrame, *, season: int | None = None,
     train_fc = total_mod._training_forecasts(sample, feats, season, choice, prior)
     total = total_mod.fit_total(train_fc)
     train = sample[sample["season"] < season]
+    # Fitted as the walk-forward fits it: regular season only (reference.walk_forward).
+    if "season_type" in train:
+        train = train[train["season_type"] == "regular"]
     if train["closing_spread"].notna().any():
         market = ref.market(train, train)
         grid = lat.fit(train["actual_margin"].to_numpy(), -train["closing_spread"].to_numpy(), market.sigma)
@@ -143,10 +146,19 @@ def project(projector: Projector, scheduled: pd.DataFrame) -> pd.DataFrame:
                      (scheduled["away_team_id"].isin(p.state.index))].copy()
     if rows.empty:
         return pd.DataFrame()
-    neutral = pd.to_numeric(rows.get("neutral_site", 0), errors="coerce").fillna(0).to_numpy(dtype=float)
-    means, sds, hps, aps = (np.zeros(len(rows)) for _ in range(4))
-    for i, (h, a, n) in enumerate(zip(rows["home_team_id"], rows["away_team_id"], neutral, strict=True)):
-        means[i], sds[i], hps[i], aps[i] = kalman.forecast(p.state, h, a, 0.0 if n else 1.0, p.spec)
+    neutral = (pd.to_numeric(rows["neutral_site"], errors="coerce").fillna(0).to_numpy(dtype=float)
+               if "neutral_site" in rows else np.zeros(len(rows)))
+    # Forecast as the walk-forward does: from a copy of the state, with each
+    # week's process noise added between here and the game's own week. A
+    # forecast straight off the state would be sharper than the backtest the
+    # model was tuned and calibrated on, and next week's and November's games
+    # would carry the same uncertainty.
+    state = kalman.State(teams=p.state.teams, x=p.state.x.copy(), P=p.state.P.copy(), week=p.state.week,
+                         index=dict(p.state.index), kickoff=p.state.kickoff)
+    fc = kalman.run_season(rows.assign(actual_margin=np.nan, actual_total=np.nan, neutral_site=neutral),
+                           state, p.spec)
+    means, sds = fc["mean"].to_numpy(dtype=float), fc["sd"].to_numpy(dtype=float)
+    hps, aps = fc["home_pts"].to_numpy(dtype=float), fc["away_pts"].to_numpy(dtype=float)
     rows["state_total"] = hps + aps
     total_mean = p.total.mean(rows)
     total_pmf = lat.discretise(total_mean, p.total.sigma, total_mod.TOTAL_SUPPORT)

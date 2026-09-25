@@ -83,7 +83,7 @@ def fit(games: pd.DataFrame, *, ridge: float = RIDGE) -> Ratings:
     home = g["home_team_id"].to_numpy()
     away = g["away_team_id"].to_numpy()
     teams = np.unique(np.r_[home, away])
-    is_home = 1.0 - pd.to_numeric(g.get("neutral_site", 0), errors="coerce").fillna(0).to_numpy(dtype=float)
+    is_home = 1.0 - pd.to_numeric(g.get("neutral_site", pd.Series(0, index=g.index)), errors="coerce").fillna(0).to_numpy(dtype=float)
     margin = g["actual_margin"].to_numpy(dtype=float)
     total = g["actual_total"].to_numpy(dtype=float)
     home_pts = (total + margin) / 2.0

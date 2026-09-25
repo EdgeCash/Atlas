@@ -292,7 +292,7 @@ nfl-benchmarks:
 nfl-state:
 	$(PYTHON) -m atlas.models.nfl_state
 
-# NFL plan, step 5: the total and the 60x60 grid on top of the state.
+# NFL plan, step 5: the total and the 80x80 grid on top of the state.
 nfl-total:
 	$(PYTHON) -m atlas.models.nfl_total
 

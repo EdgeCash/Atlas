@@ -17,6 +17,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 from atlas import config
@@ -28,6 +29,10 @@ from atlas.util import get_logger, write_parquet
 LOG = get_logger(__name__)
 
 PRIMARY_METHOD = "network"
+
+#: Added to a postseason week so that the bowls sort after the regular season
+#: (atlas/dfs/cfb_slate.py orders college weeks the same way).
+POSTSEASON_WEEK_OFFSET = 100
 
 
 @dataclass(frozen=True)
@@ -81,9 +86,14 @@ def build_adjusted(
 ) -> pd.DataFrame:
     eff = efficiency_stage.load(staging)
     long = games_stage.load_long(staging)
-    base = long[["game_id", "season", "week", "kickoff", "team_id", "opponent_id", "is_home"]]
+    base = long[["game_id", "season", "week", "kickoff", "team_id", "opponent_id", "is_home"]].copy()
+    # Postseason weeks restart at 1. The point-in-time window is "weeks before
+    # this one", so without an offset December's bowls would fall inside the
+    # window of every regular-season week from week 2 on.
+    post = long["season_type"].eq("postseason") if "season_type" in long else False
+    base["week"] = base["week"] + np.where(post, POSTSEASON_WEEK_OFFSET, 0)
 
-    result = base[["game_id", "season", "week", "team_id"]].copy()
+    result = long[["game_id", "season", "week", "team_id"]].assign(_rating_week=base["week"])
     # A week whose games have not kicked off yet contributes no observations,
     # so it would otherwise never be solved for and every scheduled game would
     # come back with a null rating.
@@ -105,13 +115,15 @@ def build_adjusted(
             )
             keep = ["season", "week", "team_id",
                     f"{stream.actor_output}{suffix}", f"{stream.opponent_output}{suffix}"]
-            result = result.merge(renamed[keep], on=["season", "week", "team_id"], how="left")
+            result = result.merge(renamed[keep].rename(columns={"week": "_rating_week"}),
+                                  on=["season", "_rating_week", "team_id"], how="left")
             if method == PRIMARY_METHOD:
                 strength = schedule_strength(obs, ratings)
                 strength["stream"] = stream.name
                 strengths.append(strength)
         LOG.info("adjusted stream %s across %d methods", stream.name, len(methods))
 
+    result = result.drop(columns="_rating_week")
     write_parquet(result, staging / "adjusted_efficiency.parquet")
     if strengths:
         write_parquet(pd.concat(strengths, ignore_index=True),

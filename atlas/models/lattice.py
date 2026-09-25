@@ -100,8 +100,12 @@ def fit(margins: np.ndarray, means: np.ndarray, sigma: float, *,
     counts = np.array([(margins == k).sum() for k in support])
     raw = np.where(expected > 0, observed / np.where(expected > 0, expected, 1.0), 1.0)
     raw = np.minimum(raw, MAX_FACTOR)
-    # Shrink thin margins toward one in proportion to how thin they are.
-    weight = np.clip(counts / MIN_GAMES_AT_MARGIN, 0.0, 1.0)
+    # Shrink thin margins toward one in proportion to how thin they are. A
+    # margin is thin only when both its observed and its expected count are:
+    # weighting on the observed count alone would leave a margin that never
+    # happens (a tie in college football) at a factor of one, with the
+    # normal's full mass on it.
+    weight = np.clip(np.maximum(counts, len(margins) * expected) / MIN_GAMES_AT_MARGIN, 0.0, 1.0)
     factor = 1.0 + weight * (raw - 1.0)
     factor = np.where(np.abs(support) > max_key, 1.0, factor)
     return Lattice(support=support, factor=factor, sigma=float(sigma), games=int(len(margins)))
