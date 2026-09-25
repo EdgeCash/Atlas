@@ -1,27 +1,27 @@
 # Atlas Drift Monitoring
 
-*Generated 2026-09-24 22:45 UTC by `python -m atlas.live check`. Every alarm compares
+*Generated 2026-09-25 00:54 UTC by `python -m atlas.live check`. Every alarm compares
 the most recent week of the record against its own history.*
 
 ---
 
 ## Status
 
-**1 alert(s) firing.** Alarms are advisory: nothing in the monitor edits the record and
+**2 alert(s) firing.** Alarms are advisory: nothing in the monitor edits the record and
 nothing in it stops the tracker. A monitor that can silently discard data is a
 worse problem than the drift it was watching for.
 
 | Alarm | Severity | Observed | Threshold | Detail |
 |---|---|---|---|---|
-| signal volume | ok | 116.0000 | 0.5 | only 1 week(s) of record; nothing to compare |
-| silence | ok | 2.2246 | 7 | last signal 2.2 days ago (2026-09-22) |
+| signal volume | alarm | -0.9655 | 0.5 | week 5: 4 signals against 116 the week before (-97%) |
+| silence | ok | 0.0000 | 7 | last signal 0.0 days ago (2026-09-25) |
 | single book | alarm | 1.0000 | 1 | 100% of signals from book 'DraftKings' (1 distinct) |
 | single market | ok | 0.5000 | 1 | 50% of signals from market 'margin' (2 distinct) |
-| model output (margin) | ok | n/a | 3 | 0 recent / 0 prior rows; too few to compare |
-| model output (total) | ok | n/a | 3 | 0 recent / 0 prior rows; too few to compare |
-| disagreement shape (margin) | ok | n/a | 0.01 | 0 recent / 0 prior rows; too few to compare |
-| disagreement shape (total) | ok | n/a | 0.01 | 0 recent / 0 prior rows; too few to compare |
-| primary rate | ok | n/a | 0.5 | 0 recent / 0 prior rows; too few to compare |
+| model output (margin) | ok | n/a | 3 | 2 recent / 58 prior rows; too few to compare |
+| model output (total) | ok | n/a | 3 | 2 recent / 58 prior rows; too few to compare |
+| disagreement shape (margin) | ok | n/a | 0.01 | 2 recent / 58 prior rows; too few to compare |
+| disagreement shape (total) | ok | n/a | 0.01 | 2 recent / 58 prior rows; too few to compare |
+| primary rate | ok | n/a | 0.5 | 4 recent / 116 prior rows; too few to compare |
 
 ---
 
@@ -62,8 +62,11 @@ newest week never finds.
 | Period | Scope | Rows | Matched | Mismatched | Missing | Clean | Detail |
 |---|---|---|---|---|---|---|---|
 | 2026-w04 | signals | 116 | 110 | 6 | 0 | no | entry_line: 3; disagreement: 3 |
-| 2026-w04 | grades | 0 | 0 | 0 | 0 | yes | no grades recorded |
-| 2026-w04 | statistics | 0 | 0 | 0 | 0 | yes | nothing graded yet |
+| 2026-w04 | grades | 2 | 2 | 0 | 0 | yes | exact match |
+| 2026-w04 | statistics | 8 | 8 | 0 | 0 | yes | recomputed from the replayed grades |
+| 2026-w05 | signals | 4 | 4 | 0 | 0 | yes | exact match |
+| 2026-w05 | grades | 0 | 0 | 0 | 0 | yes | no grades in this period |
+| 2026-w05 | statistics | 0 | 0 | 0 | 0 | yes | no graded signals in period |
 
 A **signals** mismatch means the record is not reproducible. A **grades**
 mismatch means the grading logic changed under a published number. A

@@ -1,0 +1,3 @@
+signal_id,graded_at,close_line,clv_points,result,clv_from_open,result_from_open,total_move,pre_signal_move,execution_flagged
+2f7ba39b-62c2-58d8-9cb2-7f2bb48cb0a1,2026-09-25T00:54:09+00:00,-2.500,0.000,push,-4.000,lost,-4.000,-4.000,False
+8a8723ee-86d9-5420-939a-526eb22a031a,2026-09-25T00:54:09+00:00,49.500,-1.000,lost,-5.000,lost,-5.000,-4.000,False
