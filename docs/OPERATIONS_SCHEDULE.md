@@ -181,6 +181,9 @@ prior, state, total), `nfl` (benchmarks, state, total), or `both`.
   where the repository lets Actions open one (Settings → Actions → General →
   "Allow GitHub Actions to create and approve pull requests"); otherwise the
   run prints the compare link.
+* It dispatches CI on its branch itself. A push or pull request made with the
+  workflow's own token starts no other workflow, so without that the pull
+  request would have no checks at all.
 * The saved choices it writes (`reports/*_state_choices.json`) are what the
   live projectors read, so merging that pull request moves live numbers from
   the next heavy run.
