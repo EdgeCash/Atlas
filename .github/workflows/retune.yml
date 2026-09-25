@@ -27,6 +27,7 @@ on:
 permissions:
   contents: write        # push the retune/<run> branch
   pull-requests: write   # open the pull request, where the repository allows it
+  actions: write         # dispatch CI on that branch (see "Propose the result")
 
 # One retune at a time. Its own group: it neither waits on nor blocks the
 # heavy run and the poll, which share atlas-publish.
@@ -125,6 +126,13 @@ jobs:
           git commit -m "retune ($SPORTS): $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')" \
                      -m "Walk-forwards re-run on the full warehouse by the retune workflow, run ${{ github.run_id }}."
           git push origin "$BRANCH"
+          # A push or pull request made with GITHUB_TOKEN starts no workflow,
+          # so CI would never run on this branch by itself and the pull
+          # request would sit with no checks. workflow_dispatch is the one
+          # event that token may raise: run CI on the branch explicitly. Its
+          # checks land on the branch's head commit, so they show on the PR.
+          gh workflow run ci.yml --ref "$BRANCH" \
+            || echo "::warning::Could not dispatch CI on $BRANCH. Run it from Actions -> CI -> Run workflow, branch $BRANCH."
           body="Walk-forwards re-run on the full warehouse (\`$SPORTS\`), [run ${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}).
 
           The saved choices in \`reports/*_state_choices.json\` are what the live projectors read: merging this changes live numbers from the next heavy run. Read the hyperparameter tables and, for the college state, the correlated-against-independent noise section before merging."
