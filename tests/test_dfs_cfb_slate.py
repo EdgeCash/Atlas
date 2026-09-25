@@ -156,3 +156,30 @@ def test_owner_payload_carries_both_sports(tmp_path):
     (tmp_path / "index.json").write_text(json.dumps({"slates": [college]}))
     alone = owner.payload(tmp_path / "index.json")
     assert alone["players"][0]["name"] == "College 0" and "college_players" not in alone
+
+
+def test_the_college_quarterback_of_record_and_his_state():
+    """The passer with the most attempts is the quarterback of record; a new starter enters at the prior."""
+    import numpy as np
+
+    from atlas.models import kalman
+    from atlas.models import ncaaf_qb as nq
+
+    box = pd.DataFrame([
+        {"event": "1", "home": 1, "player_id": "a", "pass_att": 30, "pass_yds": 250},
+        {"event": "1", "home": 1, "player_id": "b", "pass_att": 3, "pass_yds": 20},
+        {"event": "1", "home": 0, "player_id": "c", "pass_att": 25, "pass_yds": 200},
+    ])
+    assert nq.quarterbacks(box).iloc[0][["home_qb_id", "away_qb_id"]].tolist() == ["a", "c"]
+
+    kick = pd.Timestamp("2025-09-06", tz="UTC")
+    games = pd.DataFrame([{"game_id": f"g{w}", "week": w, "kickoff": kick + pd.Timedelta(days=7 * w),
+                           "home_team_id": 1, "away_team_id": 2, "home_qb_id": qb, "away_qb_id": "c",
+                           "actual_margin": 0.0, "actual_total": 50.0, "neutral_site": 1}
+                          for w, qb in ((1, "a"), (2, "a"), (3, "new"), (4, "new"))])
+    spec = kalman.Spec(q_off=0.0, q_def=0.0, p0_off=4.0, p0_def=4.0, sigma=10.0, base=25.0, boost=2.0)
+    state = kalman.initialise(np.array([1, 2]), np.zeros(2), np.zeros(2), spec)
+    fc = nq.run_season_qb(games, state, spec, p0=4.0, new_mean=-4.0)
+    assert state.value(("qb", "a")) == pytest.approx(0.0, abs=1.0)          # the first starter: the prior's
+    assert state.value(("qb", "new")) < -2.0                                # a change enters at the backup's price
+    assert fc.loc[3, "mean"] < fc.loc[2, "mean"] - 1.0                      # and is forecast with him next

@@ -1,6 +1,6 @@
 PYTHON ?= python3
 
-.PHONY: help install ingest warehouse research all test lint clean-data dfs-capture dfs-history dfs-staging dfs-scoring dfs-benchmarks dfs-model dfs-lineups dfs-slate dfs-kickers cfb-players cfb-scoring cfb-baseline cfb-model cfb-participation cfb-slate cfb-record owner-paper owner-plays \
+.PHONY: help install ingest warehouse research all test lint clean-data dfs-capture dfs-history dfs-staging dfs-scoring dfs-benchmarks dfs-model dfs-lineups dfs-slate dfs-kickers cfb-players cfb-scoring cfb-baseline cfb-model cfb-participation cfb-slate cfb-record owner-paper owner-plays ncaaf-qb \
 	live-refresh live-run live-report live-check live-reproduce \
 	site site-full site-serve site-audit site-shots launch-check \
 	ops-heavy ops-poll ops-social ops-health ops-status ops-crontab \
@@ -271,6 +271,10 @@ owner-paper:
 # The owner's curated plays under the frozen rules, and their record (needs ATLAS_OWNER_KEY).
 owner-plays:
 	$(PYTHON) -m atlas.owner.plays
+
+# College plan, row 9: the quarterback state from ESPN box scores, measured (it fails; see the report).
+ncaaf-qb:
+	$(PYTHON) -m atlas.models.ncaaf_qb
 
 # NFL plan, step 1: point-in-time team-game tables in their own warehouse.
 nfl-warehouse:
