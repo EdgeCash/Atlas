@@ -36,13 +36,32 @@ def test_a_projection_freezes_at_its_kickoff():
     assert weeks == set()
 
 
+def _cleartext(sealed: str) -> str:
+    """A sealed file without its base64 fields. Salt, IV and ciphertext are
+    random base64, where any short uppercase string - "OSU" - turns up by
+    chance about once in a few thousand files; only the rest is cleartext.
+    (atlas/owner/sealed.py checks only names longer than four characters in
+    the whole file, for the same reason.)"""
+    import json
+
+    return json.dumps({k: v for k, v in json.loads(sealed).items() if k not in ("salt", "iv", "ct")})
+
+
+def test_a_short_name_in_the_ciphertext_is_chance_not_a_leak():
+    """The flake behind retune/3's red py3.11 run, pinned: base64 that happens
+    to spell "OSU" is not cleartext."""
+    box = '{"v": 1, "kdf": "PBKDF2-SHA256", "salt": "xOSUx", "iv": "OSUa", "ct": "abcOSU"}'
+    assert "OSU" not in _cleartext(box)
+    assert "OSU" in _cleartext('{"v": 1, "team": "OSU", "ct": "abc"}')
+
+
 def test_the_record_is_sealed_by_week_and_a_wrong_key_changes_nothing(tmp_path, monkeypatch):
     where = tmp_path / "dfs_cfb_record"
     record = pd.DataFrame([_row("1", 11, "a", "Jeremiah Smith"), _row("9", 19, "q", "Next Week", week=6)])
     files = rec.seal(record, KEY, {(2026, 5), (2026, 6)}, where)
     assert [f.name for f in files] == ["2026-05.enc.json", "2026-06.enc.json"]
     text, week6 = files[0].read_text(), files[1].read_text()
-    assert "Jeremiah" not in text and "OSU" not in text
+    assert "Jeremiah Smith" not in text and "OSU" not in _cleartext(text)
     back = rec.load(KEY, where).set_index("name")
     assert back.loc["Jeremiah Smith", "projection"] == 10.0 and back.loc["Next Week", "week"] == 6
     with pytest.raises(rec.Unreadable):
