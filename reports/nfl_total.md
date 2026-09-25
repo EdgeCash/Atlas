@@ -4,25 +4,27 @@ Walk-forward, seasons 2020-2026. The total is the quarterback state model's impl
 
 ## Calibration fitted, per season
 
-| season | intercept | slope on state total | wind_effective | sigma | raw sigma | train games |
-|---|---|---|---|---|---|---|
-| 2020 | +22.8 | 0.534 | -0.356 | 13.93 | 14.19 | 768 |
-| 2021 | +15.6 | 0.721 | -0.377 | 13.56 | 13.76 | 768 |
-| 2022 | +23.5 | 0.545 | -0.361 | 13.39 | 13.73 | 784 |
-| 2023 | +16.6 | 0.671 | -0.320 | 13.42 | 13.62 | 799 |
-| 2024 | +19.4 | 0.594 | -0.348 | 13.31 | 13.57 | 815 |
-| 2025 | +18.8 | 0.606 | -0.291 | 13.18 | 13.36 | 815 |
-| 2026 | +20.9 | 0.580 | -0.348 | 13.08 | 13.39 | 816 |
+`over shrink` and `over sigma` read P(over a line): `actual - line = shrink * (total - line) + e`, fitted on the training games with a closing total (`fit_over`).
+
+| season | intercept | slope on state total | wind_effective | sigma | raw sigma | train games | over shrink | over sigma | lined train games |
+|---|---|---|---|---|---|---|---|---|---|
+| 2020 | +22.8 | 0.534 | -0.356 | 13.93 | 14.19 | 768 | 0.161 | 13.69 | 768 |
+| 2021 | +15.6 | 0.721 | -0.377 | 13.56 | 13.76 | 768 | 0.042 | 13.26 | 768 |
+| 2022 | +23.5 | 0.545 | -0.361 | 13.39 | 13.73 | 784 | 0.239 | 13.18 | 784 |
+| 2023 | +16.6 | 0.671 | -0.320 | 13.42 | 13.62 | 799 | 0.081 | 13.13 | 799 |
+| 2024 | +19.4 | 0.594 | -0.348 | 13.31 | 13.57 | 815 | 0.385 | 13.18 | 815 |
+| 2025 | +18.8 | 0.606 | -0.291 | 13.18 | 13.36 | 815 | 0.117 | 12.98 | 815 |
+| 2026 | +20.9 | 0.580 | -0.348 | 13.08 | 13.39 | 816 | 0.328 | 12.94 | 816 |
 
 ## Total, regular season 2023-2025
 
-`over_brier` and `over_ece` score P(over the closing total); a push counts half. A model weaker than the market is over-confident on P(over) by construction, so that ECE measures the gap to the market, not the total's own distribution, which CRPS does.
+`over_brier` and `over_ece` score P(over the closing total); a push counts half. The total's P(over) is read given the line (`over shrink`, `over sigma`); the other models' off their own distribution. CRPS and MAE score the total's own distribution, which the line does not touch.
 
 | model | games | crps | mae | over_brier | over_ece |
 |---|---|---|---|---|---|
 | naive | 816 | 7.614 | 10.68 | 0.263 | 0.102 |
 | state_raw | 816 | 7.471 | 10.53 | 0.257 | 0.063 |
-| total | 816 | 7.364 | 10.38 | 0.255 | 0.063 |
+| total | 816 | 7.364 | 10.38 | 0.249 | 0.014 |
 | market | 816 | 7.240 | 10.12 | 0.248 | 0.006 |
 
 ## Total, every scored season pooled
@@ -31,7 +33,7 @@ Walk-forward, seasons 2020-2026. The total is the quarterback state model's impl
 |---|---|---|---|---|---|
 | naive | 1647 | 7.783 | 10.98 | 0.264 | 0.111 |
 | state_raw | 1647 | 7.597 | 10.74 | 0.258 | 0.085 |
-| total | 1647 | 7.515 | 10.62 | 0.256 | 0.081 |
+| total | 1647 | 7.515 | 10.62 | 0.248 | 0.023 |
 | market | 1647 | 7.328 | 10.30 | 0.248 | 0.012 |
 
 ## Total by season, regular
@@ -52,13 +54,13 @@ Walk-forward, seasons 2020-2026. The total is the quarterback state model's impl
 | state_raw | 2024 | 272 | 7.262 | 10.13 | 0.256 | 0.077 |
 | state_raw | 2025 | 272 | 7.577 | 10.64 | 0.254 | 0.057 |
 | state_raw | 2026 | 32 | 8.836 | 12.04 | 0.274 | 0.138 |
-| total | 2020 | 256 | 7.540 | 10.62 | 0.255 | 0.114 |
-| total | 2021 | 272 | 7.602 | 10.93 | 0.254 | 0.103 |
-| total | 2022 | 271 | 7.701 | 10.85 | 0.261 | 0.111 |
-| total | 2023 | 272 | 7.397 | 10.58 | 0.255 | 0.102 |
-| total | 2024 | 272 | 7.223 | 10.06 | 0.257 | 0.078 |
-| total | 2025 | 272 | 7.470 | 10.48 | 0.252 | 0.038 |
-| total | 2026 | 32 | 8.878 | 12.27 | 0.282 | 0.171 |
+| total | 2020 | 256 | 7.540 | 10.62 | 0.246 | 0.045 |
+| total | 2021 | 272 | 7.602 | 10.93 | 0.247 | 0.040 |
+| total | 2022 | 271 | 7.701 | 10.85 | 0.249 | 0.069 |
+| total | 2023 | 272 | 7.397 | 10.58 | 0.248 | 0.045 |
+| total | 2024 | 272 | 7.223 | 10.06 | 0.250 | 0.043 |
+| total | 2025 | 272 | 7.470 | 10.48 | 0.250 | 0.020 |
+| total | 2026 | 32 | 8.878 | 12.27 | 0.259 | 0.120 |
 | market | 2020 | 256 | 7.231 | 10.15 | 0.245 | 0.006 |
 | market | 2021 | 272 | 7.493 | 10.79 | 0.247 | 0.039 |
 | market | 2022 | 271 | 7.414 | 10.39 | 0.247 | 0.056 |
@@ -79,14 +81,32 @@ Walk-forward, seasons 2020-2026. The total is the quarterback state model's impl
 | state_raw | wk 3-7 | 365 | 7.132 | 10.02 | 0.248 | 0.057 |
 | state_raw | wk 7-13 | 517 | 7.528 | 10.61 | 0.260 | 0.089 |
 | state_raw | wk 13+ | 541 | 7.946 | 11.18 | 0.262 | 0.099 |
-| total | wk 1-3 | 224 | 7.594 | 10.95 | 0.262 | 0.083 |
-| total | wk 3-7 | 365 | 7.192 | 10.22 | 0.251 | 0.053 |
-| total | wk 7-13 | 517 | 7.374 | 10.36 | 0.254 | 0.079 |
-| total | wk 13+ | 541 | 7.836 | 11.00 | 0.259 | 0.104 |
+| total | wk 1-3 | 224 | 7.594 | 10.95 | 0.252 | 0.032 |
+| total | wk 3-7 | 365 | 7.192 | 10.22 | 0.246 | 0.042 |
+| total | wk 7-13 | 517 | 7.374 | 10.36 | 0.248 | 0.023 |
+| total | wk 13+ | 541 | 7.836 | 11.00 | 0.249 | 0.042 |
 | market | wk 1-3 | 224 | 7.397 | 10.61 | 0.250 | 0.027 |
 | market | wk 3-7 | 365 | 7.030 | 9.94 | 0.247 | 0.041 |
 | market | wk 7-13 | 517 | 7.181 | 10.09 | 0.247 | 0.022 |
 | market | wk 13+ | 541 | 7.642 | 10.62 | 0.248 | 0.024 |
+
+## P(over): the total alone against the total given the line, regular season 2023-2025
+
+The same games and the same total; only how a line is read differs. `mean P(side)` is the confidence the model states in its own side.
+
+| P(over) from | games | brier | ece | mean P(side) |
+|---|---|---|---|---|
+| the total alone | 816 | 0.2550 | 0.063 | 0.561 |
+| the total given the line | 816 | 0.2493 | 0.014 | 0.512 |
+
+## P(over): the total alone against the total given the line, regular season, every scored season
+
+The same games and the same total; only how a line is read differs. `mean P(side)` is the confidence the model states in its own side.
+
+| P(over) from | games | brier | ece | mean P(side) |
+|---|---|---|---|---|
+| the total alone | 1647 | 0.2563 | 0.081 | 0.570 |
+| the total given the line | 1647 | 0.2485 | 0.023 | 0.512 |
 
 ## Total, playoffs (never fitted, always scored)
 
@@ -94,7 +114,7 @@ Walk-forward, seasons 2020-2026. The total is the quarterback state model's impl
 |---|---|---|---|---|---|
 | naive | 78 | 7.999 | 10.97 | 0.241 | 0.059 |
 | state_raw | 78 | 8.136 | 11.59 | 0.257 | 0.163 |
-| total | 78 | 7.770 | 10.87 | 0.240 | 0.086 |
+| total | 78 | 7.770 | 10.87 | 0.241 | 0.053 |
 | market | 78 | 7.824 | 10.89 | 0.244 | 0.013 |
 
 ## P(home) by closing spread, regular season 2023-2025: the grid against the market

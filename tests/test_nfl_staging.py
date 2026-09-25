@@ -233,6 +233,10 @@ def test_the_nfl_total_and_grid_run_walk_forward(nfl_frame):
     assert (table["home_mean"] + table["away_mean"] - table["total_mean"]).abs().max() < 1e-6
     assert ((table["top_home"] < nt.MAX_POINTS) & (table["top_away"] < nt.MAX_POINTS)).all()
     assert fits[SEASONS[1]].points_factor.shape == (nt.MAX_POINTS,)
+    f = fits[SEASONS[1]]
+    assert f.over_shrink is None or (0.0 <= f.over_shrink <= 1.0 and f.over_sigma > 0)
+    tot = scored[scored["model"] == "total"].dropna(subset=["p_over"])
+    assert tot["p_over"].between(0, 1).all() and "p_over_alone" in tot
     assert "## The exact score" in nt.render(scored, table, fits)
 
 

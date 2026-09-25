@@ -100,7 +100,8 @@ class Projection:
     wind_adj: float = 0.0
     # P(over a posted total) given that total: the share of the model's gap
     # to the line that is real, and the sd about the line once it is taken.
-    # Absent (the NFL, older rows), P(over) reads off total_mean and total_sd.
+    # Absent (rows published before the fit), P(over) reads off total_mean
+    # and total_sd.
     over_shrink: float | None = None
     over_sd: float | None = None
     home: dict = field(default_factory=dict)

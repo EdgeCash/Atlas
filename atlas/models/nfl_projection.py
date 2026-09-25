@@ -132,7 +132,7 @@ def fit(frame: pd.DataFrame, *, season: int | None = None, choices=None,
     train_fc = pd.concat([nt._with_forecasts(completed[completed["season"] == s], fcs[s])
                           for s in history[-ns.TUNING_SEASONS:]], ignore_index=True)
     train_fc = train_fc[train_fc["season_type"] == "regular"]
-    total = tm.fit_total(train_fc, nt.ADJUSTMENTS)
+    total = tm.fit_over(train_fc, tm.fit_total(train_fc, nt.ADJUSTMENTS))
     train = sample[sample["season"] < season]
     market = ref.market(train, train)
     grid = lat.fit(train["actual_margin"].to_numpy(), -train["closing_spread"].to_numpy(), market.sigma)
@@ -202,6 +202,9 @@ def project(projector: Projector, scheduled: pd.DataFrame) -> pd.DataFrame:
         "away_team_id": rows["away_team_id"].to_numpy(), "neutral_site": neutral,
         "margin_mean": summary["margin_mean"].to_numpy(), "margin_sd": fc["sd"].to_numpy(),
         "total_mean": summary["total_mean"].to_numpy(), "total_sd": p.total.sigma,
+        # How the card reads P(over) at a posted total (tm.fit_over).
+        "total_over_shrink": np.nan if p.total.over_shrink is None else p.total.over_shrink,
+        "total_over_sd": np.nan if p.total.over_sigma is None else p.total.over_sigma,
         "home_mean": summary["home_mean"].to_numpy(), "away_mean": summary["away_mean"].to_numpy(),
         "p_home": summary["p_home"].to_numpy(), "total_lo": summary["total_lo"].to_numpy(),
         "total_hi": summary["total_hi"].to_numpy(), "top_home": summary["top_home"].to_numpy(),
