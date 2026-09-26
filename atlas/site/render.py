@@ -426,9 +426,31 @@ def _hero(card: Card, home_accent: str, away_accent: str) -> str:
     <div class="hero-at">at</div>
     {_team_column(card.home, align="home")}
   </div>
-  <div class="hero-meta-row">{" · ".join(bits)} {_started_chip(card)}</div>
+  <div class="hero-meta-row">{" · ".join(bits)} {_started_chip(card)}</div>{_context_line(card)}
   <div class="hero-follow">{_follow_button(card)}</div>
 </div>"""
+
+
+#: Rest longer than this is a season opener's gap, not rest worth a line.
+MAX_REST_DAYS = 21
+#: A trip shorter than this is a bus ride across town; a true home game is 0.
+MIN_TRAVEL_MILES = 50
+
+
+def _context_line(card: Card) -> str:
+    """Rest and travel, each side's, in the header (`ATLAS_CARD_SPEC.md` §1).
+    Context, not a claim: neither is in Atlas's number, and a side with
+    neither known is left out."""
+    sides = (card.away, card.home)
+    rest = [f"{esc(s.abbr)} {_plural(round(s.rest_days), 'day')}" for s in sides
+            if s.rest_days is not None and 0 < s.rest_days <= MAX_REST_DAYS]
+    travel = [f"{esc(s.abbr)} {s.travel_miles:,.0f} mi" for s in sides
+              if s.travel_miles is not None and s.travel_miles >= MIN_TRAVEL_MILES]
+    # Each group is kept whole, so a phone wraps between them, never inside one.
+    bits = ([f"Rest {', '.join(rest)}"] if rest else []) + ([f"Travel {', '.join(travel)}"] if travel else [])
+    if not bits:
+        return ""
+    return f'\n  <div class="hero-context">{" · ".join(f"<span>{b}</span>" for b in bits)}</div>'
 
 
 def _answer(card: Card) -> str:
@@ -2035,8 +2057,9 @@ def _started_chip(card: Card) -> str:
 def _game_row(card: Card, *, dates: bool = False) -> str:
     """One board row. ``dates`` adds the day, which a section that is not
     grouped by day needs and a day block does not."""
-    difference = card.total_difference
-    diff_text = (f"Atlas {signed(difference)}" if difference is not None
+    # Atlas's own total under the market's, not the bare difference: "Atlas
+    # +0.4" left a reader asking "plus 0.4 of what?" (`MOBILE_UX_AUDIT.md`).
+    diff_text = (f"Atlas total {num(card.model_total)}" if card.total_difference is not None
                  else "no Atlas number")
     # One rank chip for the row, the better of the two: two of them beside a
     # long matchup title was pushing the title into the numbers column.
