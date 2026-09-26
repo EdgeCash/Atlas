@@ -60,8 +60,14 @@ class Window:
         return local.weekday() == (self.weekday + 1) % 7 and local.time() < self.end
 
 
-#: NCAAF Saturday 08:00 ET through midnight; NFL Sunday 07:00 to 20:00 ET.
+#: NCAAF Saturday 08:00 ET through midnight; NFL Sunday 07:00 to 20:00 ET;
+#: Thursday and Monday nights 17:00 to 23:00 ET. The weeknight windows cover
+#: the NFL's 20:15 kickoffs and Thursday's college slate from 19:00, with two
+#: hours of pre-game movement before them and room for a West Coast kickoff
+#: at 22:30. A line stops moving at kickoff, so nothing later is needed.
 GAME_DAYS = (
+    Window("Monday night", weekday=0, start=time(17, 0), end=time(23, 0)),
+    Window("Thursday night", weekday=3, start=time(17, 0), end=time(23, 0)),
     Window("NCAAF Saturday", weekday=5, start=time(8, 0), end=time(0, 0)),
     Window("NFL Sunday", weekday=6, start=time(7, 0), end=time(20, 0)),
 )

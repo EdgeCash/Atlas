@@ -88,8 +88,15 @@ Runtime: about 10 seconds.
 
 | Window | Days | Hours ET |
 |---|---|---|
+| Monday night | Monday | 17:00 → 23:00 |
+| Thursday night | Thursday | 17:00 → 23:00 |
 | NCAAF Saturday | Saturday | 08:00 → midnight |
 | NFL Sunday | Sunday | 07:00 → 20:00 |
+
+The weeknight windows cover the NFL's 20:15 kickoffs and Thursday's college
+slate from 19:00, with two hours of pre-game movement before them and room
+for a West Coast kickoff at 22:30. A line stops moving at kickoff, so nothing
+later is needed.
 
 Inside a window the poller runs every 15 minutes. Outside, hourly.
 
@@ -108,18 +115,19 @@ costing **no provider request**. On a game day all four fire.
 This is deliberately in the code rather than in two crontab lines. Two
 schedules would eventually disagree with each other — one updated, one not —
 and the disagreement would be invisible. One schedule that the task owns can
-be tested, and it is: eight parametrised cases pin the window boundaries,
+be tested, and it is: eighteen parametrised cases pin the window boundaries,
 including the one past midnight that does *not* count as Saturday.
 
 ### API budget
 
 | | Requests per week |
 |---|---|
-| Hourly poller, 5 ordinary days | 120 |
+| Hourly poller, 3 ordinary weekdays | 72 |
+| Thursday and Monday, 18 hours hourly + 6 hours × 4, each | 84 |
 | Game-day Saturday, 16 hours × 4 | 64 |
 | Game-day Sunday, 13 hours × 4 | 52 |
 | Heavy refresh | 7 |
-| **Total** | **~243** |
+| **Total** | **~279** |
 
 One ESPN scoreboard request each, unauthenticated, against a public endpoint —
 comfortably inside anything that could be called a rate limit. The skip logic
