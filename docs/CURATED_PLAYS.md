@@ -124,6 +124,20 @@ word is inside the ciphertext; the page's script holds none of it.
 - The card projections were not written when the tracker's separate
   number-maker produced no rows. They are written first now.
 
+## Why there are no NFL plays
+
+The NFL total is a market the model does not beat by disagreement (a gap
+of 3+ points: 49.7% of 515 against the close, 2020-2025). The one thing
+the NFL side has that college lacks, the quarterback, was tested under a
+pre-registered protocol on 26 September 2026
+([`NFL_QB_RULE_PREREGISTRATION.md`](NFL_QB_RULE_PREREGISTRATION.md),
+[`reports/nfl_qb_rule_test.md`](../reports/nfl_qb_rule_test.md)): in the
+311 regular-season games since 2020 where a team's expected starter was not
+its previous quarterback of record, Atlas's side of the closing total hit
+47.1% and the under 50.3%; in the 142 games where the depth chart's QB1 was
+listed Out or Doubtful, 49.3% and 47.1%. The NFL closing total prices the
+quarterback change. No NFL rule was added.
+
 ## What is still missing
 
 - A second book. Every line is DraftKings, through ESPN's scoreboard, which

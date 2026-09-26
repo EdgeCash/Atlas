@@ -34,6 +34,7 @@ no dashboard. It produces a warehouse, a measurement, and a recommendation.
 | Phase 5 operations manual | [`docs/LIVE_TRACKING.md`](docs/LIVE_TRACKING.md) |
 | **Curated plays: how they work** | [`docs/CURATED_PLAYS.md`](docs/CURATED_PLAYS.md) |
 | Curated plays audit (26 Sep 2026) | [`docs/CURATED_PLAYS_AUDIT.md`](docs/CURATED_PLAYS_AUDIT.md) |
+| NFL quarterback rule: pre-registration and result (not shown) | [`docs/NFL_QB_RULE_PREREGISTRATION.md`](docs/NFL_QB_RULE_PREREGISTRATION.md) · [`reports/nfl_qb_rule_test.md`](reports/nfl_qb_rule_test.md) |
 | Phase 5 raw record (CSV, committed) | `tracking/` |
 | **Operations manual** | [`reports/atlas_operations_manual.md`](reports/atlas_operations_manual.md) |
 | Data quality (Track 1) | [`reports/atlas_data_quality.md`](reports/atlas_data_quality.md) |
