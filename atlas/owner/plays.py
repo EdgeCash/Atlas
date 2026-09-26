@@ -697,6 +697,11 @@ def refresh(*, now: datetime | None = None, where: Path | None = None, heavy: bo
         sections = build(passphrase, now=now, heavy=heavy)
         if not sections:
             return write_page(None, reason="This run could not build the curated plays.", where=where)
+        # The owner's board rides in the same box: every book's line on every game, priced (atlas/owner/board.py).
+        # It is built only when BettingPros is configured and never takes the plays down with it.
+        from atlas.owner import board
+
+        sections = [*board.build(passphrase, now=now), *sections]
         data = {"built_at": _now(), "sections": [{k: v for k, v in s.items() if k != "record"} for s in sections]}
         plain = json.dumps(owner._clean(data), separators=(",", ":"), allow_nan=False).encode("utf-8")
         box = owner.encrypt(plain, passphrase)

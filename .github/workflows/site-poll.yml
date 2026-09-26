@@ -57,3 +57,7 @@ jobs:
       # The curated plays choose at a fixed poll and are sealed by every poll
       # (atlas/owner/plays.py); only ciphertext leaves the runner.
       ATLAS_OWNER_KEY: ${{ secrets.ATLAS_OWNER_KEY }}
+      # And the owner's board, built by every run from BettingPros' lines (atlas/owner/board.py).
+      BP_API_KEY: ${{ secrets.BP_API_KEY }}
+      BP_USER_ID: ${{ secrets.BP_USER_ID }}
+      BP_USER_KEY: ${{ secrets.BP_USER_KEY }}
