@@ -24,17 +24,22 @@ def week_file(where: Path, season, week) -> Path:
     return where / f"{int(season)}-{int(week):02d}.enc.json"
 
 
-def load(where: Path, passphrase: str) -> list[dict]:
-    """Every row of every week, opened; none when there is no record yet."""
+def open_text(text: str, passphrase: str) -> list[dict]:
+    """The rows of one sealed file, given its text."""
     from atlas.dfs import owner
 
+    try:
+        plain = gzip.decompress(owner.decrypt(json.loads(text), passphrase))
+    except Exception as error:  # noqa: BLE001 - the type only: never the content
+        raise Unreadable(type(error).__name__) from None
+    return json.loads(plain)["rows"]
+
+
+def load(where: Path, passphrase: str) -> list[dict]:
+    """Every row of every week, opened; none when there is no record yet."""
     rows: list[dict] = []
     for f in sorted(where.glob("*.enc.json")) if where.exists() else []:
-        try:
-            plain = gzip.decompress(owner.decrypt(json.loads(f.read_text()), passphrase))
-        except Exception as error:  # noqa: BLE001 - the type only: never the content
-            raise Unreadable(type(error).__name__) from None
-        rows.extend(json.loads(plain)["rows"])
+        rows.extend(open_text(f.read_text(), passphrase))
     return rows
 
 

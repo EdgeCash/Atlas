@@ -29,10 +29,12 @@ on:
     secrets:
       CFBD_API_KEY:
         required: false
-      # The owner page's passphrase (docs/MODEL_PLAN_DFS.md, step 6). Only the
+      # The owner page's passphrase (docs/MODEL_PLAN_DFS.md, step 6). The
       # Refresh step sees it, in both modes: the heavy run seals the lineups,
       # and every run seals the curated plays (atlas/owner/plays.py), which
-      # choose at a fixed poll. Only ciphertext comes out.
+      # choose at a fixed poll. The commit step sees it too, to merge the
+      # sealed records with another run's when two runs overlapped
+      # (scripts/merge_tracking.py). Only ciphertext comes out.
       ATLAS_OWNER_KEY:
         required: false
       # Reads the reader counter (counter/worker.js) for the owner page's
@@ -59,6 +61,14 @@ permissions:
 # apply a called workflow's own top-level concurrency, and a heavy run and a
 # poll that overlapped on 24 September 2026 both committed the tracking store
 # and the second could not rebase.
+#
+# The group is not enough on its own. A run's checkout is pinned to the
+# commit the run was created from, so a run held behind another builds on a
+# store the other has since added to, and its commit cannot rebase over the
+# other's: both appended to the same sorted CSVs (three rebuilds lost that way
+# on 26 September 2026). Hence the step below that moves to the branch tip
+# before the gate, and the store-aware merge in "Commit the record" for
+# whatever still overlaps.
 
 jobs:
   build:
@@ -68,6 +78,11 @@ jobs:
       ran: ${{ steps.gate.outputs.go }}
     steps:
       - uses: actions/checkout@v4
+
+      # See the note on concurrency above. --ff-only: the branch only ever
+      # moves forward, and if it somehow has not, the run keeps its checkout.
+      - name: Start from the tip of the branch
+        run: git pull -q --ff-only origin "$GITHUB_REF_NAME" || echo "kept the run's own checkout"
 
       # Exported here rather than set on a step, because anything that rebuilds
       # the site must see it: `make site-audit` depends on `site` and so
@@ -263,8 +278,19 @@ jobs:
       #
       # Last, after the artifact is uploaded: a git problem here should not cost
       # a site that already built and passed its audit.
+      #
+      # Another run may have committed the store while this one ran (a poll
+      # under a rebuild). Line-level git cannot rebase one run's appends over
+      # another's to the same sorted CSVs, so when the rebase fails the store
+      # merges itself (scripts/merge_tracking.py: the branch's rows with this
+      # run's upserted over them, the sealed records included) and this run's
+      # commit is rebuilt on the branch tip with everything else it wrote laid
+      # over. Nothing either run captured is lost.
       - name: Commit the record
         if: steps.gate.outputs.go == 'true'
+        env:
+          MODE: ${{ inputs.mode }}
+          ATLAS_OWNER_KEY: ${{ secrets.ATLAS_OWNER_KEY }}
         run: |
           git config user.name "atlas-tracker"
           git config user.email "noreply@anthropic.com"
@@ -279,12 +305,36 @@ jobs:
             echo "nothing changed"
             exit 0
           fi
-          git commit -m "${{ inputs.mode }}: $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')"
+          message="$MODE: $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')"
+          git commit -q -m "$message"
+          # This run's commit, under a name the merge below can start over from.
+          git branch -f atlas-run
+
+          # Rebuild this run's commit on top of $1, the branch tip it could not
+          # rebase onto: merge the store, then lay every file this run changed
+          # over the tip's tree. Files only the tip changed come with the tip.
+          merge_onto() {
+            python scripts/merge_tracking.py "$1" &&
+            git add -A tracking && git commit -q --amend --no-edit && git branch -f atlas-run &&
+            git checkout -q --detach "$1" &&
+            { git diff -z --name-only --diff-filter=ACMR atlas-run~1 atlas-run | xargs -0 -r git checkout -q atlas-run -- ; } &&
+            { git diff -z --name-only --diff-filter=D atlas-run~1 atlas-run | xargs -0 -r git rm -q --ignore-unmatch -- ; } &&
+            git add -A tracking data/ops reports && git add -u &&
+            { git diff --cached --quiet || git commit -q -m "$message"; }
+          }
+
           for i in 1 2 3 4; do
+            git checkout -q -f -B "$GITHUB_REF_NAME" atlas-run
             # --autostash as well, so anything a future step leaves behind is a
             # rebase that succeeds rather than a run that fails at the last line.
-            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" && \
-              git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            if git pull --rebase --autostash origin "$GITHUB_REF_NAME" && git push origin "HEAD:$GITHUB_REF_NAME"; then
+              exit 0
+            fi
+            git rebase --abort 2>/dev/null || true
+            echo "could not rebase onto the branch; merging the store with it instead"
+            if git fetch -q origin "$GITHUB_REF_NAME" && merge_onto FETCH_HEAD && git push origin "HEAD:$GITHUB_REF_NAME"; then
+              exit 0
+            fi
             sleep $((2 ** i))
           done
           exit 1

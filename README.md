@@ -425,6 +425,7 @@ atlas/
   testing/             deterministic synthetic league used by the test suite
 scripts/
   check_reproducible.py       builds twice, asserts byte-identical output
+  merge_tracking.py           merges a run's tracking store with the branch's when two runs overlapped
   research_qb_availability.py QB feasibility probe (research only)
 tests/                 offline suite: 124 tests, no network
 ```
