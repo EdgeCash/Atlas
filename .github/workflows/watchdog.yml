@@ -1,0 +1,55 @@
+name: watchdog
+
+# Tells someone when the live site goes stale (atlas/ops/watchdog.py).
+#
+# The health checks run inside every build, so they cannot see a build that
+# never started or one that failed before committing the record - the two
+# failures of 25 September 2026. This reads the freshness stamps committed on
+# main on its own schedule and keeps one GitHub issue, labelled site-stale, in
+# step: opened when the site is stale (GitHub notifies by email and in its
+# app), refreshed quietly while it stays stale, closed when it recovers.
+#
+# Hourly at :41, clear of the poll's and the heavy run's minutes. GitHub may
+# drop some of these too; the limits it checks are hours wide, so one run in
+# a few is enough. It reads and comments, and never builds or deploys.
+
+on:
+  schedule:
+    - cron: "41 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  actions: read          # the recent site-poll runs
+
+concurrency:
+  group: atlas-watchdog
+  cancel-in-progress: true
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+
+      - name: Check, and keep the issue in step
+        env:
+          GH_TOKEN: ${{ github.token }}
+          # Assigned so the notification cannot be missed; falls back to an
+          # unassigned issue when the owner is an organisation.
+          ALERT_ASSIGNEE: ${{ github.repository_owner }}
+        run: python -m atlas.ops.watchdog

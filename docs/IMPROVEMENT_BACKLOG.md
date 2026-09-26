@@ -12,12 +12,12 @@ Effort is S (hours), M (a day or two), L (a week or more).
 
 ## 1. Reliability
 
-**Alert when the site goes stale.** S. The health check runs in every build
-and only logs (`publish.yml`, the Health step, `continue-on-error: true`).
-Nothing tells anyone when it fails. On 25 September the site went five hours
-without a poll, and a forbidden word would have frozen every deploy for a
-week, and neither was noticed until someone looked. A failing check should
-open or update one GitHub issue, and close it when the check passes again.
+**Alert when the site goes stale.** Shipped 26 September:
+`.github/workflows/watchdog.yml` and `atlas/ops/watchdog.py`. Hourly, on its
+own schedule, it reads the freshness stamps committed on main and keeps one
+`site-stale` issue in step: opened when a blocking health check fails or the
+last three site-poll runs all failed, refreshed quietly while it stays stale,
+closed on recovery.
 
 **One bad word should not freeze the whole site.** S–M. The audit blocks the
 entire deploy on a single forbidden word on a single page (the Kelly/Shorts
