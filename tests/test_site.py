@@ -864,9 +864,10 @@ def test_every_game_can_be_followed_and_carries_its_details():
 def test_a_board_row_names_its_number_as_atlas_total():
     """"Atlas +0.4" left a reader asking "plus 0.4 of what?"; the row now
     carries Atlas's own total, under the market's."""
-    row = render._game_row(_card(model_total=50.7))
-    assert "Atlas total 50.7" in row
-    assert not re.search(r"Atlas [+−]", row)
+    card = _card(model_total=50.7)
+    for html in (render._game_row(card), render._featured_cell(card)):   # the tile's phone line too
+        assert "Atlas total 50.7" in html
+        assert not re.search(r"Atlas [+−]", html)
 
 
 def test_rest_and_travel_show_in_the_header_when_known():
