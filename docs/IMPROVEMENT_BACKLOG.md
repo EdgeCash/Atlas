@@ -91,34 +91,42 @@ block (dome, neutral site); deeper team pages.
 
 ---
 
-## Research: expert and computer consensus
+## Research: expert and computer consensus, for the owner page
 
 **The question.** Does the consensus of experts, or of other computer models,
-carry information about the final score that the closing line does not? If
-yes, it is a candidate model input. If no, it is a benchmark for the record
-page and nothing more.
+carry information about the result that the line does not? And does it sharpen
+the curated plays (`atlas/owner/plays.py`)?
 
-**What this is not.** Publishing picks is out: "Not a picks service"
-(`PRODUCT_VISION.md`), and expert picks are marked "never"
-(`COMPETITOR_GAP_ANALYSIS.md`). Collected consensus data stays internal, like
-the DFS record, unless a later decision says otherwise.
+**Where it lives.** Only inside the owner page's ciphertext, like the curated
+plays and the DFS lineups: sealed with the owner key, one file a week, never
+on the public site, where "Not a picks service" (`PRODUCT_VISION.md`) still
+holds.
 
 **Sources.**
 
 | Source | What it has | Access |
 |---|---|---|
-| The Prediction Tracker | dozens of computer models' predicted margins and totals, NCAAF and NFL, with history and their records against the line | public pages and CSVs, behind a Cloudflare bot check that blocked a scripted download on 26 September |
+| SP+, FPI, Elo (college) | three rating systems' implied margins | **already in the warehouse** (`atlas/sources/cfbd.py`, `atlas/staging/ratings.py`), with history |
+| The Prediction Tracker | dozens of computer models' predicted margins and totals, NCAAF and NFL, with history | public pages and CSVs behind a Cloudflare bot check that blocked a scripted download on 26 September; by hand works |
 | Massey ratings comparison | a composite of about 100 college rating systems | same Cloudflare check |
-| Pickwatch | human expert picks aggregated, with each expert's tracked record | scraping; terms to check |
+| Pickwatch | human expert picks aggregated, each expert's record tracked | scraping; terms to check |
 | ESPN, CBS, USA Today expert picks | straight-up and against-the-spread picks from named writers | scraping; terms to check |
 
-The computer-model consensus is the better research input: it is numeric, has
-history, and is what the repo's own benchmarks already speak (Elo, SP+, FPI).
-Human expert picks are mostly binary sides, and the research literature
-generally finds them near 50% against the spread.
+**Plan, in the order the evidence allows.**
 
-**Method.** Pre-register it, as `SIGNAL_PREREGISTRATION.md` did: fix the
-feature (consensus margin minus closing line), the holdout seasons and the
-pass bar before scoring anything, then test whether adding it lowers CRPS
-against the market. If the history can be downloaded by hand, the backtest
-needs no scraper at all.
+1. *Computer consensus for college, now.* SP+, FPI and Elo are already here
+   with history, so the backtest needs no new source. Pre-register it as
+   `SIGNAL_PREREGISTRATION.md` did: fix the feature (consensus margin minus the
+   line; Atlas and consensus agreeing or not), the holdout seasons and the pass
+   bar before scoring anything.
+2. *A label on each curated play, meanwhile.* Beside the quarterback flag:
+   where the consensus sits and whether it agrees with Atlas's side. A label,
+   never a filter, so the frozen rules stay frozen and the record shows
+   whether agreement mattered.
+3. *Human expert picks: start the record.* Log them before kickoff, sealed,
+   never revised, like the plays, from a source whose terms allow it, or from
+   a weekly file the owner provides. They cannot be tested until a record
+   exists, so the value of starting is the history it builds up.
+4. *A new rule only if a test passes.* A rule that uses consensus is frozen
+   with a new id and starts its own record the day it is frozen, as v1 and v2
+   did. The history it was chosen on is shown beside it, never mixed in.
