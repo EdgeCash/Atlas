@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-25T21:11:31+00:00",
+  "generated_at": "2026-09-26T13:25:38+00:00",
   "seasons": [
     2018,
     2019,
@@ -11,6 +11,7 @@
     2025,
     2026
   ],
+  "current_season": 2026,
   "sources": {
     "odds": "sportsdataverse/cfbfastR-data betting/parquet",
     "schedules": [
