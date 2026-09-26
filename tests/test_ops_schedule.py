@@ -93,6 +93,18 @@ def test_a_corrupt_provenance_file_does_not_stop_a_build(tmp_path):
     (datetime(2026, 9, 27, 19, 59, tzinfo=ET), "NFL Sunday"),
     (datetime(2026, 9, 27, 20, 0, tzinfo=ET), None),
     (datetime(2026, 9, 22, 14, 0, tzinfo=ET), None),      # a Tuesday
+    (datetime(2026, 9, 22, 20, 0, tzinfo=ET), None),      # a Tuesday night
+    (datetime(2026, 9, 24, 16, 59, tzinfo=ET), None),
+    (datetime(2026, 9, 24, 17, 0, tzinfo=ET), "Thursday night"),
+    (datetime(2026, 9, 24, 22, 59, tzinfo=ET), "Thursday night"),
+    (datetime(2026, 9, 24, 23, 0, tzinfo=ET), None),
+    (datetime(2026, 9, 28, 17, 0, tzinfo=ET), "Monday night"),
+    (datetime(2026, 9, 28, 22, 59, tzinfo=ET), "Monday night"),
+    (datetime(2026, 9, 28, 12, 0, tzinfo=ET), None),      # Monday afternoon
+    (datetime(2026, 9, 25, 17, 0, tzinfo=ET), "Friday night"),
+    (datetime(2026, 9, 25, 22, 59, tzinfo=ET), "Friday night"),
+    (datetime(2026, 9, 25, 23, 0, tzinfo=ET), None),
+    (datetime(2026, 9, 23, 20, 0, tzinfo=ET), None),      # a Wednesday night
 ])
 def test_game_day_windows_match_the_specification(moment, expected):
     window = schedule.game_day(moment)
