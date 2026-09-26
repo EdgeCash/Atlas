@@ -859,3 +859,24 @@ def test_every_game_can_be_followed_and_carries_its_details():
     assert 'href="scoreboard.html" aria-current="page">Scores' in sb
     text = _visible_text(sb)
     assert not any(re.search(rf"\b{w}\b", text) for w in FORBIDDEN if w not in ("unit", "units")), text[:300]
+
+
+def test_a_board_row_names_its_number_as_atlas_total():
+    """"Atlas +0.4" left a reader asking "plus 0.4 of what?"; the row now
+    carries Atlas's own total, under the market's."""
+    row = render._game_row(_card(model_total=50.7))
+    assert "Atlas total 50.7" in row
+    assert not re.search(r"Atlas [+−]", row)
+
+
+def test_rest_and_travel_show_in_the_header_when_known():
+    card = _card()
+    assert "hero-context" not in _page(card)                        # nothing known, no line
+    card.away.rest_days, card.home.rest_days = 6.9, 14.0
+    card.away.travel_miles, card.home.travel_miles = 1012.4, 0.0
+    hero = re.search(r'<div class="hero-context">(.*?)</div>', _page(card)).group(1)
+    assert re.sub(r"<[^>]+>", "", hero) == (f"Rest {card.away.abbr} 7 days, {card.home.abbr} 14 days · "
+                                            f"Travel {card.away.abbr} 1,012 mi")  # a true home game has no trip
+    card.away.rest_days, card.home.rest_days = 250.0, None          # a season opener's gap
+    card.away.travel_miles = 20.0                                   # across town
+    assert "hero-context" not in _page(card)

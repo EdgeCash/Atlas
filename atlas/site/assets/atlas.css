@@ -511,6 +511,8 @@ footer { display: grid; gap: 4px; }
   margin-top: 13px; padding-top: 11px; border-top: 1px solid var(--border);
   font-size: 12.5px; color: var(--ink-3);
 }
+.hero-context span { white-space: nowrap; }
+.hero-context { margin-top: 4px; font-size: 12px; color: var(--ink-4); font-variant-numeric: tabular-nums; }
 
 .crest { width: 42px; height: 42px; object-fit: contain; flex: none; }
 .crest.small { width: 30px; height: 30px; }

@@ -85,10 +85,12 @@ sports), current pre-game Elo and current SP+ (college) - and logs them to
 `tracking/other_models.csv` before kickoff. Display only; the model never reads
 them. The same log is the forward record the owner page's consensus label needs.
 
-**Two template fixes.** S.
-- Board rows read `Atlas +0.4` without saying it is the game total
-  (`MOBILE_UX_AUDIT.md`; still at `render.py`, `_game_row`).
-- Rest days and travel miles are parsed (`data.py`) and never shown.
+**Two template fixes.** Shipped 26 September.
+- Board rows read `Atlas total 58.9` under the market's total instead of an
+  unlabelled `Atlas +0.4` (proposal 1 in `MOBILE_UX_AUDIT.md`).
+- The card header shows each side's rest and trip when known, e.g.
+  `Rest UTA 7 days, ISU 13 days · Travel UTA 1,012 mi`. Rest over 21 days (a
+  season opener) and trips under 50 miles are left out.
 
 **A way to measure readers.** S–M. The analytics plan
 (`ANALYTICS_SPEC_FINAL.md`) reads server access logs, and GitHub Pages
