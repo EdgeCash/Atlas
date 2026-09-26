@@ -1154,7 +1154,7 @@ def _s8_reliability(card: Card, bands: dict, overall_band, *, bare: bool = False
     band = card.grade.band
     chart = _calibration_chart(bands, band.label)
     rows_ = [
-        ["Realised accuracy", f'<span class="lead">{pct(band.realised)}</span>',
+        ["Realized accuracy", f'<span class="lead">{pct(band.realised)}</span>',
          f'<span class="flat">{pct(overall_band.realised)}</span>'],
         ["Claimed accuracy", f'<span class="lead">{pct(band.claimed)}</span>',
          f'<span class="flat">{pct(overall_band.claimed)}</span>'],
@@ -1232,7 +1232,7 @@ def _calibration_chart(bands: dict, active: str) -> str:
         if label in ("0-1", "10+") and (active_x is None or abs(x - active_x) > 48)
     )
     return f"""<svg viewBox="0 0 330 142" class="plot" role="img"
-     aria-label="Claimed versus realised accuracy by disagreement band. The gap widens as disagreement grows.">
+     aria-label="Claimed versus realized accuracy by disagreement band. The gap widens as disagreement grows.">
   <line x1="34" y1="18"  x2="322" y2="18"  class="grid"/>
   <line x1="34" y1="66"  x2="322" y2="66"  class="grid"/>
   <line x1="34" y1="114" x2="322" y2="114" class="grid"/>
@@ -1245,7 +1245,7 @@ def _calibration_chart(bands: dict, active: str) -> str:
             stroke-linejoin="round"/>
   {marks}{ticks}
   <text x="322" y="16" class="label" text-anchor="end" fill="var(--data-neg)">claimed</text>
-  <text x="322" y="110" class="label" text-anchor="end" fill="var(--data-pos)">realised</text>
+  <text x="322" y="110" class="label" text-anchor="end" fill="var(--data-pos)">realized</text>
 </svg>"""
 
 
@@ -1267,7 +1267,7 @@ GRADE_SECTIONS = (
      "cards where Atlas is adding least."),
     (("B",), "Graded B",
      "A moderate disagreement, in the range where the model's claim and its "
-     "realised accuracy stay close."),
+     "realized accuracy stay close."),
     (("C",), "Graded C",
      "A wide disagreement. The model's historical claim starts to run ahead "
      "of what it delivered."),
@@ -1811,7 +1811,7 @@ def record_page(sports: dict[str, dict], *, since: str, grades: dict[str, list[d
       not counted.</p>
     <p><b>The grades.</b> Each card's grade is kept as it was last published before kickoff, with the spread it was
       graded against. <b>Claimed</b> is Atlas's own probability, on that card, that the final margin would land on its
-      side of that spread; <b>realised</b> is how often it did, a push counting half; the <b>gap</b> is realised less
+      side of that spread; <b>realized</b> is how often it did, a push counting half; the <b>gap</b> is realized less
       claimed. The grade's claim is that higher letters carry smaller gaps: an A card's probability should sit nearer
       what happens than a D card's. It is a calibration record, the same measure as the seasons on
       <a href="research.html">Research</a>, and not a count of results.</p>
@@ -1849,7 +1849,7 @@ def _record_grades(rows: list[dict] | None, since: str | None) -> str:
     return ('<div class="card card-pad top-gap record-table"><h3>By grade</h3>'
             f'<p class="note">Each card\'s grade as last published before kickoff: Atlas\'s claimed probability on '
             f'the spread against how often it happened.{start} A letter with few cards is noise, not a reading.</p>'
-            + table(["Grade", "Cards", "Claimed", "Realised", "Gap, pts"], body) + "</div>")
+            + table(["Grade", "Cards", "Claimed", "Realized", "Gap, pts"], body) + "</div>")
 
 
 def _record_summary(s: dict) -> str:
@@ -2506,7 +2506,7 @@ def about_page(example: Card | None, *, card_count: int) -> str:
       was taken.</p>
     <div class="disclosure">
       <b>A top grade does not mean "read this one first."</b> Cards where Atlas
-      and the market agree to within a point have realised 50.8% against a
+      and the market agree to within a point have realized 50.8% against a
       51.3% claim across 760 games — statistically a coin flip. They grade
       highest because they are the most reliable, and they are the most
       reliable because Atlas has added nothing to them. The grade tells you
@@ -2665,7 +2665,7 @@ FAQ = (
     ("The grade", (
         ("Is an A card the one I should read first?",
          "No, and this is the least intuitive thing about Atlas. Cards where "
-         "Atlas and the market agree to within a point have realised 50.8% "
+         "Atlas and the market agree to within a point have realized 50.8% "
          "against a 51.3% claim across 760 games \u2014 statistically a coin flip. "
          "They grade highest because they are the most reliable, and they are "
          "the most reliable because Atlas has added nothing to them. The "
@@ -2753,7 +2753,7 @@ FAQ = (
         ("How do I know the record is real?",
          "It is recomputed from the database on every build rather than "
          "transcribed, and the research page shows claimed accuracy against "
-         "realised accuracy for every band of disagreement, with the number "
+         "realized accuracy for every band of disagreement, with the number "
          "of games behind each row."),
         ("Has Atlas been wrong?",
          "Constantly, and the product is built around saying so. The grading "
@@ -2973,7 +2973,7 @@ def research_page(bands: dict, overall_band, *, card_count: int) -> str:
       Atlas does not grade on a curve, because a curve would make a screenshot
       mean something different depending on the week it was taken.</p>
     <p><b>A top grade is not a signal to read that card first.</b> Cards where
-      Atlas and the market agree to within a point have realised 50.8% against
+      Atlas and the market agree to within a point have realized 50.8% against
       a 51.3% claim across 760 games — statistically a coin flip. They grade
       highest because they are the most reliable, and they are the most
       reliable because Atlas has added nothing to them. The grade tells a
@@ -2988,9 +2988,9 @@ def research_page(bands: dict, overall_band, *, card_count: int) -> str:
       important. A model that disagrees violently with the market looks
       exciting. Measured across {overall_band.games:,} out-of-sample games, it
       is the opposite.</p>
-    {table(["Disagreement", "Games", "Claimed", "Realised", "Gap", "Seasons above 50%"], band_rows)}
+    {table(["Disagreement", "Games", "Claimed", "Realized", "Gap", "Seasons above 50%"], band_rows)}
     <p>Read the gap column. Where Atlas barely disagrees with the market, its
-      claimed accuracy and its realised accuracy nearly match. Where it
+      claimed accuracy and its realized accuracy nearly match. Where it
       disagrees by ten points or more, it claimed
       {pct(bands["10+"].claimed, 0) if "10+" in bands else "—"} and delivered
       {pct(bands["10+"].realised, 0) if "10+" in bands else "—"}.</p>
@@ -3007,12 +3007,12 @@ def research_page(bands: dict, overall_band, *, card_count: int) -> str:
     <p>Calibration asks whether a claimed 65% is a real 65%. Against the
       closing number Atlas is <b>overconfident</b>, and gets more so as it
       gets more confident: its top confidence bucket claims
-      {pct(bands["10+"].claimed, 0) if "10+" in bands else "—"} and realises
+      {pct(bands["10+"].claimed, 0) if "10+" in bands else "—"} and realizes
       about {pct(bands["10+"].realised, 0) if "10+" in bands else "—"}.</p>
     <p>The grade corrects for this on every card. It is built from the
       calibration record itself, so a card in a badly-calibrated band cannot
       grade well no matter how interesting it looks.</p>
-    <p>The claimed number is still shown, beside the realised one, because a
+    <p>The claimed number is still shown, beside the realized one, because a
       correction you cannot see is a correction you cannot check.</p>
   </div>
 </section>

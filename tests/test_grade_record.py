@@ -106,7 +106,7 @@ def test_the_page_shows_the_record_by_grade_and_passes_the_audit(tmp_path):
     g = pd.DataFrame([{**_logged(1, True, claimed=0.55, letter="B"), "won": 1.0}] * 40)
     page = render.record_page({}, since="today", grades={"ncaaf": gr.by_letter(g), "nfl": gr.by_letter(g.iloc[0:0])},
                               grades_since="26 September 2026")
-    assert "By grade" in page and "Claimed" in page and "Realised" in page
+    assert "By grade" in page and "Claimed" in page and "Realized" in page
     assert "<td>+45.0</td>" in page and "Gap, pts" in page      # 100% realised against 55% claimed
     assert "No graded card yet" in page                          # the NFL, with nothing graded
     assert "It began on 26 September 2026" in page
