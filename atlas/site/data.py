@@ -144,6 +144,9 @@ class Card:
     postseason: bool = False
     sport: str = "ncaaf"
     matchup: object | None = None          # atlas.site.matchup.Matchup, attached by the build
+    #: Other public models' numbers for this game (`atlas/sources/other_models.py`):
+    #: dicts with model, home_margin, home_win_prob, as_of, detail.
+    other_models: list = field(default_factory=list)
 
     # -- derived -----------------------------------------------------------
 
@@ -317,6 +320,22 @@ def _scheduled(sport: str) -> tuple[pd.DataFrame, pd.DataFrame]:
     return frame, frame[frame["actual_margin"].isna()].copy()
 
 
+def other_models_by_game(store, sport: str) -> dict[int, list[dict]]:
+    """The other models' numbers per game, in a fixed order. Empty on any failure."""
+    order = {"fpi": 0, "sp_plus": 1, "elo": 2}
+    try:
+        t = store.read("other_models")
+        t = t[t["sport"].astype(str) == sport]
+    except Exception as error:  # noqa: BLE001 - a card without the panel is still a card
+        LOG.warning("other models not read: %s", type(error).__name__)
+        return {}
+    out: dict[int, list[dict]] = {}
+    for row in t.to_dict("records"):
+        row = {k: (None if isinstance(v, float) and np.isnan(v) else v) for k, v in row.items()}
+        out.setdefault(int(row["game_id"]), []).append(row)
+    return {g: sorted(rows, key=lambda r: order.get(r["model"], 9)) for g, rows in out.items()}
+
+
 def build_cards(*, horizon: int = 8, refresh_meta: bool = False, sport: str = "ncaaf") -> list[Card]:
     """Every scheduled game Atlas can publish a card for, in one sport."""
     frame, scheduled = _scheduled(sport)
@@ -329,6 +348,7 @@ def build_cards(*, horizon: int = 8, refresh_meta: bool = False, sport: str = "n
     if not projections.empty:
         projections = projections[projections["sport"].fillna("ncaaf").astype(str) == sport]
     snapshots = store.read("snapshots")
+    others = other_models_by_game(store, sport)
     metadata = espn_meta.fetch(espn_meta.days_ahead(horizon), refresh=refresh_meta, sport=sport)
     bands = grading.calibration_bands(sport=sport)
     curve = grading.calibration_curve(sport=sport)
@@ -348,6 +368,7 @@ def build_cards(*, horizon: int = 8, refresh_meta: bool = False, sport: str = "n
             continue
         card = _card(row, info, projections, snapshots, pool, bands, curve, sport=sport)
         if card is not None:
+            card.other_models = others.get(game_id, [])
             cards.append(card)
 
     cards.sort(key=lambda c: (c.kickoff, c.title))
