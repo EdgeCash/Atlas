@@ -812,6 +812,26 @@ def test_a_game_says_it_has_started_once_it_kicks_off():
     assert "lock" not in chip.search(page).group(0).lower()
 
 
+def test_a_stadium_name_is_not_vocabulary(tmp_path):
+    """Kelly/Shorts Stadium is Central Michigan's. The launch audit blocks the
+    whole deploy on a forbidden word, so a venue must read as a name, as a
+    player's does - the day its first game reached the board, every poll
+    failed the audit. Run the real audit over the page, context rules and all."""
+    from scripts.audit_site import audit
+
+    card = _card()
+    card.venue = "Kelly/Shorts Stadium"
+    page = _page(card)
+    assert '<span class="pn">Kelly/Shorts Stadium</span>' in page
+    (tmp_path / "ncaaf").mkdir()
+    (tmp_path / "ncaaf" / "card.html").write_text(page)
+    blocking, _ = audit(tmp_path)
+    assert blocking["forbidden vocabulary"] == []
+    # Still escaped: a venue is data from a provider.
+    card.venue = "<b>Field</b>"
+    assert '<span class="pn">&lt;b&gt;Field&lt;/b&gt;</span>' in _page(card)
+
+
 def test_every_game_can_be_followed_and_carries_its_details():
     """Follow buttons on tiles, rows and the card, each backed by the page's
     game data; the scoreboard page lists no games of its own and says where

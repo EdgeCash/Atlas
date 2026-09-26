@@ -53,7 +53,7 @@ MOTION = re.compile(r"@keyframes|animation\s*:|setInterval|requestAnimationFrame
 
 def visible(html: str) -> str:
     html = re.sub(r"<script.*?</script>", " ", html, flags=re.S)
-    # A person's name is not vocabulary (render.player_name marks it).
+    # A person's or a stadium's name is not vocabulary (render.player_name marks it).
     html = re.sub(r'<span class="pn">[^<]*</span>', " ", html)
     html = re.sub(r"<style.*?</style>", " ", html, flags=re.S)
     return re.sub(r"<[^>]+>", " ", html).lower()

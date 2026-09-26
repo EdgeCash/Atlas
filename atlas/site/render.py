@@ -251,8 +251,8 @@ def kickoff_line(card: Card) -> str:
     local = eastern(card.kickoff)
     bits = [f'<span><b>{local.strftime("%a %-d %b")}</b> · {clock(card.kickoff)}</span>']
     if card.venue:
-        place = card.venue + (f", {card.city}" if card.city else "")
-        bits.append(f"<span>{esc(place)}</span>")
+        city = f", {esc(card.city)}" if card.city else ""
+        bits.append(f"<span>{player_name(card.venue)}{city}</span>")
     bits.append(f'<span>{"Conference game" if card.conference_game else "Non-conference"}</span>')
     weather = card.weather
     if weather.get("temp") is not None:
@@ -412,18 +412,20 @@ def _team_column(side, *, align: str) -> str:
 
 
 def _hero(card: Card, home_accent: str, away_accent: str) -> str:
-    bits = [day_and_clock(card.kickoff)]
+    bits = [esc(day_and_clock(card.kickoff))]
     if card.tv:
-        bits.append(card.tv)
+        bits.append(esc(card.tv))
     if card.venue:
-        bits.append(card.venue)
+        # A stadium is a name, not vocabulary: Kelly/Shorts is Central
+        # Michigan's, and the audit would otherwise read a stakes formula.
+        bits.append(player_name(card.venue))
     return f"""<div class="card hero" style="--team-home:{esc(home_accent)};--team-away:{esc(away_accent)}">
   <div class="hero-teams">
     {_team_column(card.away, align="away")}
     <div class="hero-at">at</div>
     {_team_column(card.home, align="home")}
   </div>
-  <div class="hero-meta-row">{esc(" · ".join(bits))} {_started_chip(card)}</div>
+  <div class="hero-meta-row">{" · ".join(bits)} {_started_chip(card)}</div>
   <div class="hero-follow">{_follow_button(card)}</div>
 </div>"""
 
@@ -1529,8 +1531,9 @@ def scoreboard_page() -> str:
 
 
 def player_name(name) -> str:
-    """A person's name, marked so the launch audit reads it as a name: a
-    quarterback called Lock or a receiver called Kelly is not vocabulary."""
+    """A person's or a place's name, marked so the launch audit reads it as a
+    name: a quarterback called Lock, a receiver called Kelly or Kelly/Shorts
+    Stadium is not vocabulary."""
     return f'<span class="pn">{esc(name)}</span>'
 
 
