@@ -1936,18 +1936,21 @@ def _record_games(games: list[dict], total: int) -> str:
             + table(["Game", "Atlas miss", "Market miss"], rows) + "</div>")
 
 
-def owner_page(record: dict | None) -> str:
-    """The owner's DFS page: ciphertext and the means to open it, nothing else.
+def owner_page(record: dict | None, plays: dict | None = None) -> str:
+    """The owner's page: ciphertext and the means to open it, nothing else.
 
     ``record`` is `atlas/dfs/owner.py`'s output - an encrypted box, or the
-    reason there is none. The lineups exist in readable form only in the
-    browser that typed the passphrase. Not linked from the site, not in the
-    sitemap, and asks search engines not to index it.
+    reason there is none - and ``plays`` is `atlas/owner/plays.py`'s, the
+    curated plays' own box, sealed by every run. Both open with the one
+    passphrase; the plaintext exists only in the browser that typed it. Not
+    linked from the site, not in the sitemap, and asks search engines not to
+    index it.
     """
     import json
 
     record = record or {"box": None, "reason": "Nothing has been built yet."}
-    island = json.dumps({"box": record.get("box")}).replace("</", "<\\/")
+    plays = plays or {"box": None, "reason": "The curated plays have not been built yet."}
+    island = json.dumps({"box": record.get("box"), "plays": plays.get("box")}).replace("</", "<\\/")
     built = record.get("built_at")
     when = ""
     if built:
@@ -1957,13 +1960,27 @@ def owner_page(record: dict | None) -> str:
             when = f" Last built {esc(stamp(datetime.fromisoformat(built)))}."
         except (TypeError, ValueError):
             when = ""
-    if record.get("box"):
-        state = f"<p class=\"note\">This week's lineups, encrypted.{when}</p>"
+    parts = []
+    if plays.get("box"):
+        plays_when = ""
+        if plays.get("built_at"):
+            from datetime import datetime
+
+            try:
+                plays_when = f" ({esc(stamp(datetime.fromisoformat(plays['built_at'])))})"
+            except (TypeError, ValueError):
+                plays_when = ""
+        parts.append(f"The curated plays, encrypted{plays_when}.")
     else:
-        state = f"<p class=\"note\">{esc(record.get('reason') or 'Nothing to open.')}{when}</p>"
+        parts.append(esc(plays.get("reason") or "No curated plays to open."))
+    if record.get("box"):
+        parts.append(f"This week's lineups, encrypted.{when}")
+    else:
+        parts.append(f"{esc(record.get('reason') or 'Nothing to open.')}{when}")
+    state = f"<p class=\"note\">{' '.join(parts)}</p>"
     body = f"""<div class="board-head">
   <h1>Owner</h1>
-  <span class="board-note">Private DFS lineups · opened in this browser only</span>
+  <span class="board-note">Private curated plays and DFS lineups · opened in this browser only</span>
 </div>
 
 <div class="card card-pad">
@@ -1981,8 +1998,9 @@ def owner_page(record: dict | None) -> str:
 
 <div class="disclosure top-gap">
   <b>What this page is.</b> The page holds only ciphertext. The passphrase you type derives the key here, in
-  this browser, and the lineups are decrypted into this tab's memory - nothing is stored or sent. They are the
-  most projected points under DraftKings' cap from Atlas's DFS model; they promise nothing about any contest.
+  this browser, and the plays and lineups are decrypted into this tab's memory - nothing is stored or sent. The
+  lineups are the most projected points under DraftKings' cap from Atlas's DFS model; they promise nothing about
+  any contest.
   {DFS_NOTE}
 </div>
 

@@ -36,11 +36,19 @@ Rebuilds everything, in this order:
 
 | Step | Command | Why here |
 |---|---|---|
+| 0 | `atlas.ingest` (the workflow's Ingest step) | the season in progress is fetched again: results, play-by-play, team file, lines |
 | 1 | `atlas.warehouse.build --include-scheduled` | the warehouse feeds everything |
-| 2 | `atlas.live refresh --no-rebuild` | the model reads the warehouse |
+| 2 | `atlas.live refresh --no-rebuild` | the model reads the warehouse; projections first, with the kickoff wind forecast |
 | 3 | `atlas.live run` | capture the market before publishing |
+| 4 | `atlas.sources.availability` | the SEC's and ACC's quarterback reports, read by the plays' starter label |
+| 5 | `atlas.owner.plays refresh` | the owner's curated plays: logged if a rule chooses now, graded, sealed into their own box |
+| 6 | `atlas.dfs.owner` | the DFS slates and the owner's lineups, sealed |
 | — | record `heavy` and `poll` | **stamps are written before the pages** |
-| 4 | `atlas.site.build` | board, 58 cards, 116 team pages, social, status |
+| 7 | `atlas.site.build` | board, 58 cards, 116 team pages, social, status |
+
+(The NFL ingest and warehouse, the DraftKings capture, the college box scores
+and the other-models panel run between these; `atlas/ops/__main__.py` is the
+full list. The plays step never fails the run and runs on every poll as well.)
 
 Two orderings matter and both are deliberate.
 
@@ -63,13 +71,15 @@ Runtime: about 7 seconds for the site, plus the warehouse rebuild. Use
 
 ## Track 2 — the light poller · hourly
 
-Market only. No warehouse, no model, no social assets.
+Market only, and the owner's curated plays. No warehouse, no model, no social
+assets.
 
 | Step | Command |
 |---|---|
 | 1 | `atlas.live run` — capture the current market |
+| 2 | `atlas.owner.plays refresh` — log the plays a rule chooses at this poll (v3: the first at or after 10:00 ET Saturday), grade against every close captured, seal the plays box; never fails the poll |
 | — | record `poll` |
-| 2 | `atlas.site.build --no-social` — republish with the new numbers |
+| 3 | `atlas.site.build --no-social` — republish with the new numbers |
 
 **The projections on a card do not change.** Only the market numbers, the
 difference, the grade (which moves with the market under V2), and the board's

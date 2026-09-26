@@ -152,8 +152,9 @@ def build(out: Path | None = None, *, social_cards: bool = True,
     # not in the sitemap, asks not to be indexed.
     (out / "dfs").mkdir(exist_ok=True)
     from atlas.dfs import owner as dfs_owner
+    from atlas.owner import plays as owner_plays
 
-    (out / "dfs" / "owner.html").write_text(render.owner_page(dfs_owner.read()))
+    (out / "dfs" / "owner.html").write_text(render.owner_page(dfs_owner.read(), plays=owner_plays.read_page()))
     # The public DFS area (step 7): the latest slate's recorded projections and the model's record.
     dfs_slate, dfs_players = _dfs_slate()
     from atlas.dfs import record as dfs_record

@@ -30,7 +30,9 @@ on:
       CFBD_API_KEY:
         required: false
       # The owner page's passphrase (docs/MODEL_PLAN_DFS.md, step 6). Only the
-      # heavy run's Refresh step sees it; only ciphertext comes out.
+      # Refresh step sees it, in both modes: the heavy run seals the lineups,
+      # and every run seals the curated plays (atlas/owner/plays.py), which
+      # choose at a fixed poll. Only ciphertext comes out.
       ATLAS_OWNER_KEY:
         required: false
       # Reads the reader counter (counter/worker.js) for the owner page's
@@ -197,7 +199,7 @@ jobs:
           # because staging loads the CFBD parquets by file existence and never
           # consults the key. The data was always right; the provenance was not.
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
-          ATLAS_OWNER_KEY: ${{ inputs.mode == 'heavy' && secrets.ATLAS_OWNER_KEY || '' }}
+          ATLAS_OWNER_KEY: ${{ secrets.ATLAS_OWNER_KEY }}
           ATLAS_COUNTER_TOKEN: ${{ inputs.mode == 'heavy' && secrets.ATLAS_COUNTER_TOKEN || '' }}
         # --force because the gate above has already decided, in Eastern time
         # and tolerant of a late start. Letting the task re-apply the strict

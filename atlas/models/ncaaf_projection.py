@@ -204,6 +204,10 @@ def project(projector: Projector, scheduled: pd.DataFrame) -> pd.DataFrame:
         "top_p": summary["top_p"].to_numpy(),
         "hfa": np.where(neutral > 0, 0.0, p.spec.boost),
         "pace_adj": adjustment("adj_pace_sum"), "wind_adj": adjustment("weather_wind_effective"),
+        # The wind the total assumed, when a kickoff forecast was attached
+        # (`atlas/sources/forecast.py`); empty where the training mean stood in.
+        "wind_mph": (pd.to_numeric(rows["wind_mph"], errors="coerce").to_numpy() if "wind_mph" in rows
+                     else np.nan),
         "model_version": p.version,
     })
     for side in ("home", "away"):
@@ -224,6 +228,12 @@ def history(frame: pd.DataFrame, *, choices: dict[int, state_mod.Choice] | None 
     """
     scored, table, _ = total_mod.run(state_mod.every_game(frame), first_test_season=first_test_season,
                                      choices=choices)
+    # Each game's kickoff rides along so a rule that chooses on one weekday
+    # can be replayed on the same days (`atlas/owner/plays.rule_history`).
+    kickoffs = (pd.Series(pd.to_datetime(frame["kickoff"], utc=True, errors="coerce").to_numpy(),
+                          index=frame["game_id"].to_numpy()) if "kickoff" in frame and "game_id" in frame
+                else pd.Series(dtype="datetime64[ns, UTC]"))
+    kickoffs = kickoffs[~kickoffs.index.duplicated()]
     t = table.dropna(subset=["closing_spread", "closing_total"])
     line = -t["closing_spread"].to_numpy(dtype=float)
     p_cover = t["p_cover"].to_numpy(dtype=float)
@@ -236,6 +246,7 @@ def history(frame: pd.DataFrame, *, choices: dict[int, state_mod.Choice] | None 
         "season_type": t["season_type"].to_numpy(), "market": "margin",
         "abs_edge": np.abs(t["margin_mean"].to_numpy(dtype=float) - line),
         "claimed": np.maximum(p_cover, 1 - p_cover), "won": happened,
+        "kickoff": t["game_id"].map(kickoffs).to_numpy() if "game_id" in t else pd.NaT,
     })]
     tot = scored[(scored["model"] == "total")].dropna(subset=["p_over", "over"])
     if not tot.empty:
@@ -249,6 +260,7 @@ def history(frame: pd.DataFrame, *, choices: dict[int, state_mod.Choice] | None 
             "season_type": tot["season_type"].to_numpy(), "market": "total",
             "abs_edge": np.abs(tot["mean"].to_numpy(dtype=float) - tot["line"].to_numpy(dtype=float)),
             "claimed": np.maximum(p_over, 1 - p_over), "won": won,
+            "kickoff": tot["game_id"].map(kickoffs).to_numpy() if "game_id" in tot else pd.NaT,
         }))
     return pd.concat(rows, ignore_index=True)
 

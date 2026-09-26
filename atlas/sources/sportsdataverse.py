@@ -15,6 +15,7 @@ files carry 362 columns and ~110 MB per season.
 
 from __future__ import annotations
 
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pandas as pd
@@ -27,6 +28,39 @@ RAW_BASE = "https://raw.githubusercontent.com/sportsdataverse/cfbfastR-data/main
 PBP_RELEASE = (
     "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/cfbfastR_cfb_pbp"
 )
+
+
+def current_season(today: datetime | None = None) -> int:
+    """The college season in progress: it starts in late August and ends in January."""
+    today = today or datetime.now(UTC)
+    return today.year if today.month >= 8 else today.year - 1
+
+
+def _refreshed(url: str, dest: Path, refresh: bool) -> Path:
+    """The file, fetched again when ``refresh`` asks and a copy is cached.
+
+    Every file here is cached on disk and served from the cache for ever
+    after, which is right for a finished season and wrong for the one in
+    progress: a schedule fetched in week 3 carries week 3's results for the
+    rest of the year, and a model that assimilates results from it stops
+    learning without saying so. The season in progress is re-fetched on every
+    ingest (`atlas/ingest.py`), as the NFL side has done from the start
+    (`atlas/sources/nflverse.py`) - into a file beside the cached one, which
+    it replaces only once the download is whole, so a source that is down
+    this morning costs the day's results and not the season's.
+    """
+    if not (refresh and dest.exists() and dest.stat().st_size > 0):
+        return download(url, dest)
+    fresh = dest.with_name(f"{dest.stem}.refresh{dest.suffix}")
+    fresh.unlink(missing_ok=True)
+    try:
+        download(url, fresh)
+        fresh.replace(dest)
+    except Exception as exc:  # noqa: BLE001 - the cached copy stands, and says so
+        LOG.warning("refresh of %s failed (%s); the cached copy stands", dest.name, exc)
+        fresh.unlink(missing_ok=True)
+    return dest
+
 
 #: Play-by-play columns Atlas keeps. Anything missing from a season's file is
 #: silently skipped (the published schema has drifted slightly over the years).
@@ -102,33 +136,46 @@ def pbp_path(raw: Path, season: int) -> Path:
     return raw / "pbp" / f"pbp_{season}.parquet"
 
 
-def fetch_schedules(raw: Path, season: int) -> Path:
-    return download(f"{RAW_BASE}/schedules/parquet/cfb_schedules_{season}.parquet",
-                    schedules_path(raw, season))
+def fetch_schedules(raw: Path, season: int, *, refresh: bool = False) -> Path:
+    """One season's schedule and results. ``refresh`` re-fetches a cached file:
+    the season in progress gains its latest results only this way."""
+    return _refreshed(f"{RAW_BASE}/schedules/parquet/cfb_schedules_{season}.parquet",
+                      schedules_path(raw, season), refresh)
 
 
-def fetch_team_info(raw: Path, season: int) -> Path:
-    return download(f"{RAW_BASE}/team_info/parquet/cfb_team_info_{season}.parquet",
-                    team_info_path(raw, season))
+def fetch_team_info(raw: Path, season: int, *, refresh: bool = False) -> Path:
+    return _refreshed(f"{RAW_BASE}/team_info/parquet/cfb_team_info_{season}.parquet",
+                      team_info_path(raw, season), refresh)
 
 
-def fetch_odds(raw: Path) -> Path:
-    return download(f"{RAW_BASE}/betting/parquet/cfb_line_odds.parquet", odds_path(raw))
+def fetch_odds(raw: Path, *, refresh: bool = False) -> Path:
+    """Every season's lines in one file, so refreshing it is how the season
+    in progress gains its closing lines."""
+    return _refreshed(f"{RAW_BASE}/betting/parquet/cfb_line_odds.parquet", odds_path(raw), refresh)
 
 
-def fetch_play_by_play(raw: Path, season: int, *, keep_full: bool = False) -> Path:
+def fetch_play_by_play(raw: Path, season: int, *, refresh: bool = False, keep_full: bool = False) -> Path:
     """Download one season of play-by-play and persist a trimmed copy.
 
     The full 110 MB source file is deleted after trimming unless ``keep_full``
     is set, so a nine-season rebuild needs ~1 GB of transient disk rather than
-    ~1 GB of permanent disk.
+    ~1 GB of permanent disk. ``refresh`` fetches the season again and replaces
+    the trimmed copy only once the new one is whole.
     """
     dest = pbp_path(raw, season)
-    if dest.exists() and dest.stat().st_size > 0:
+    cached = dest.exists() and dest.stat().st_size > 0
+    if cached and not refresh:
         LOG.debug("cached trimmed pbp %s", season)
         return dest
     full = raw / "pbp" / f"_full_play_by_play_{season}.parquet"
-    download(f"{PBP_RELEASE}/play_by_play_{season}.parquet", full)
+    full.unlink(missing_ok=True)
+    try:
+        download(f"{PBP_RELEASE}/play_by_play_{season}.parquet", full)
+    except Exception:
+        if cached:
+            LOG.warning("refresh of play-by-play %s failed; the cached copy stands", season)
+            return dest
+        raise
     df = _read_available_columns(full, PBP_COLUMNS)
     write_parquet(df, dest)
     if not keep_full:

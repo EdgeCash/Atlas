@@ -84,9 +84,9 @@ def test_the_tracker_rides_only_inside_the_ciphertext(tmp_path, monkeypatch):
     assert sealed["box"] is not None                                          # no slate, still opens
     data = json.loads(owner.decrypt(sealed["box"], "horse battery"))
     assert data["slates"] == [] and data["note"] == "No upcoming slate is posted yet."
-    assert [s["title"] for s in data["sections"]] == ["Curated plays, rule v1", "Curated plays, rule v2",
-                                                      "Paper tracker"]
-    tracker = data["sections"][2]
+    # The curated plays are not here: they ride in their own box (atlas/owner/plays.py).
+    assert [s["title"] for s in data["sections"]] == ["Paper tracker"]
+    tracker = data["sections"][0]
     assert "record" not in tracker
     rows = {r[0]: r[1] for r in tracker["tables"][0]["rows"]}
     assert rows["Won-lost-push"] == "1-0-0" and rows["Graded"] == "1"
