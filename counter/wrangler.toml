@@ -1,0 +1,17 @@
+# The reader counter (counter/worker.js). Deployed by
+# .github/workflows/counter-deploy.yml, which creates the database on the
+# first run and fills in database_id; locally, `npx wrangler dev` uses a
+# local copy of it.
+name = "atlas-readers"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+workers_dev = true
+
+[vars]
+# The site's origins, comma-separated. A hit from anywhere else is refused.
+ALLOWED_ORIGINS = "https://edgecash.github.io"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "atlas-readers"
+database_id = "00000000-0000-0000-0000-000000000000"

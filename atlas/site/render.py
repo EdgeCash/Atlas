@@ -9,6 +9,7 @@ from `docs/BRAND_GUIDE.md`.
 from __future__ import annotations
 
 import os
+import re
 
 from atlas.site.data import Card
 from atlas.site.grade import seasons_word
@@ -47,6 +48,9 @@ FEEDBACK_EMAIL = "beta@atlas.football"
 #: claims a domain nobody has registered yet is worse than no launch at all.
 #: The default stays production, so nothing changes for a normal build.
 SITE_URL = os.environ.get("ATLAS_SITE_URL", "https://atlas.football").rstrip("/")
+#: The reader counter's address (counter/worker.js). Unset, no page carries
+#: the beacon, so nothing is counted until the counter is deployed.
+COUNTER_URL = os.environ.get("ATLAS_COUNTER_URL", "").strip().rstrip("/")
 
 
 def asset(name: str) -> str:
@@ -131,6 +135,14 @@ def accents(card: Card) -> tuple[str, str]:
 # ---------------------------------------------------------------------------
 
 
+def _counter(root: str) -> str:
+    """The beacon and where it reports, only when a counter is configured."""
+    if not COUNTER_URL:
+        return ""
+    return (f'<meta name="atlas-counter" content="{esc(COUNTER_URL)}">\n'
+            f'<script src="{root}{asset("readers.js")}" defer></script>\n')
+
+
 def layout(*, title: str, body: str, depth: int = 0, description: str = "",
            active: str = "", social: str = "", canonical: str | None = None,
            structured: str = "") -> str:
@@ -167,7 +179,7 @@ def layout(*, title: str, body: str, depth: int = 0, description: str = "",
 <title>{esc(title)}</title>
 <link rel="stylesheet" href="{root}{asset("atlas.css")}">
 <script src="{root}{asset("games.js")}" defer></script>
-{f'<link rel="canonical" href="{esc(SITE_URL)}/{esc(canonical)}">' if canonical is not None else ""}
+{_counter(root)}{f'<link rel="canonical" href="{esc(SITE_URL)}/{esc(canonical)}">' if canonical is not None else ""}
 {social}
 {structured}
 </head>
@@ -597,7 +609,9 @@ def _panel_card(bare: bool) -> str:
 
 
 def _panel(summary: str, hint: str, body: str, *, open_: bool = False) -> str:
-    return f"""<details class="panel"{" open" if open_ else ""}>
+    # data-panel names the panel for the reader counter's "which panels are opened".
+    name = re.sub(r"[^a-z0-9]+", "-", summary.lower()).strip("-")
+    return f"""<details class="panel" data-panel="{name}"{" open" if open_ else ""}>
   <summary><span class="panel-title">{esc(summary)}</span>
     <span class="panel-hint">{esc(hint)}</span></summary>
   <div class="panel-body">{body}</div>

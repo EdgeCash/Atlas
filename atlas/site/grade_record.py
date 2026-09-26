@@ -56,6 +56,7 @@ def rows(cards, now: datetime) -> pd.DataFrame:
             "first_letter": g.letter, "first_score": g.score, "first_at": at,
             "letter": g.letter, "score": g.score, "line": float(line), "atlas": float(card.model_margin),
             "claimed": max(p, 1.0 - p), "home_side": bool(p >= 0.5), "published_at": at,
+            "path": card.path,
         })
     return pd.DataFrame(out)
 

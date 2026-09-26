@@ -53,3 +53,4 @@ jobs:
     secrets:
       CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
       ATLAS_OWNER_KEY: ${{ secrets.ATLAS_OWNER_KEY }}
+      ATLAS_COUNTER_TOKEN: ${{ secrets.ATLAS_COUNTER_TOKEN }}

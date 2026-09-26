@@ -93,11 +93,12 @@ them. The same log is the forward record the owner page's consensus label needs.
   `Rest UTA 7 days, ISU 13 days · Travel UTA 1,012 mi`. Rest over 21 days (a
   season opener) and trips under 50 miles are left out.
 
-**A way to measure readers.** S–M. The analytics plan
-(`ANALYTICS_SPEC_FINAL.md`) reads server access logs, and GitHub Pages
-provides none, so which cards and panels people open, and whether they come
-back, is unknown. Options: a cookieless first-party counter, or a host that
-keeps logs. Worth settling before choosing among the features above.
+**A way to measure readers.** Built 26 September; counting starts once it is
+deployed. GitHub Pages keeps no access log, so the log analyser had nothing to
+read. A first-party counter instead (`counter/`, `ANALYTICS_SPEC_FINAL.md`,
+"The counter"): a Cloudflare Worker keeping daily counts of page views,
+new and returning visits and card panels opened, with no cookie and nothing
+that identifies a reader, read only in the owner page's Readers section.
 
 **Later.** Grade movement ("opened B, now C"); a standings page; a context
 block (dome, neutral site); deeper team pages.
