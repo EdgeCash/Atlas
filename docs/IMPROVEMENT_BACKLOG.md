@@ -1,0 +1,124 @@
+# Atlas — Improvement Backlog
+
+What to build next, in order, and the evidence for each. Collected on
+26 September 2026 from the model reports, the product docs checked against
+the code, and two days of running the live schedule. An item leaves this list
+when it ships or when a measurement says it is not worth doing; either way the
+reason goes in its line.
+
+Effort is S (hours), M (a day or two), L (a week or more).
+
+---
+
+## 1. Reliability
+
+**Alert when the site goes stale.** S. The health check runs in every build
+and only logs (`publish.yml`, the Health step, `continue-on-error: true`).
+Nothing tells anyone when it fails. On 25 September the site went five hours
+without a poll, and a forbidden word would have frozen every deploy for a
+week, and neither was noticed until someone looked. A failing check should
+open or update one GitHub issue, and close it when the check passes again.
+
+**One bad word should not freeze the whole site.** S–M. The audit blocks the
+entire deploy on a single forbidden word on a single page (the Kelly/Shorts
+Stadium card on 25 September). Venues are now marked as names, but a team,
+coach or player name can do it again. Better: hold back the offending page,
+deploy the rest, and alert.
+
+## 2. Model accuracy
+
+Walk-forward CRPS (lower is better):
+
+| | Atlas | Market | Elo |
+|---|---|---|---|
+| College margin, 2021–25 | 8.923 | 8.606 | 9.230 |
+| College total | 9.126 | 8.847 | — |
+| NFL margin, 2023–25 | 7.290 | 7.074 | 7.372 |
+| NFL total | 7.364 | 7.240 | — |
+
+Sources: `reports/ncaaf_state.md`, `reports/ncaaf_total.md`,
+`reports/nfl_state.md`, `reports/nfl_total.md`.
+
+**Start capturing NFL starter and injury reports now.** S to start, then it
+accumulates. NFL games with a changed quarterback score 7.611 against 7.209
+for the rest, while the market's gap on the same split is 0.05
+(`reports/nfl_state.md`). The depth chart names the new starter in only
+56–59% of those games (`MODEL_PLAN_NFL.md`). College shows the same miss:
+−2.46 points in a new starter's first game (`reports/ncaaf_qb.md`). Nothing
+can be backtested until a season of history exists, so the value of starting
+is the history it builds up. The SEC/ACC availability capture
+(`atlas/sources/availability.py`) is the college half, and the model does not
+read it yet.
+
+**College weeks 1–4 prior.** M–L, off-season. This is the largest gap: 9.101
+against 8.413 in weeks 1–2, 9.281 against 8.663 in weeks 3–4, and about 0.18
+by weeks 9–12 (`reports/ncaaf_state.md`). The season is past week 4, so work
+here pays from next August.
+
+**Score the NFL total on forecast wind.** S. It is scored on the wind recorded
+at game time, which the report calls "a mild look-ahead"
+(`reports/nfl_total.md`). Scoring on a pre-kickoff forecast makes the number
+honest, and the true gap is probably a little larger than it looks.
+
+**Run the college connectivity test.** S, diagnostic. Specified in
+`MODEL_PLAN_NCAAF.md`: score inter-conference games separately from
+in-conference ones. It has never been run.
+
+## 3. Site features and UX
+
+**Grade reliability on the record page.** M. Ranked first in every product
+doc: what each grade letter claimed against what happened, with n, updated
+weekly. `record_page` shows misses and the winner rate but never splits by
+letter. It must avoid win-loss and hit-rate wording (`scripts/audit_site.py`).
+
+**An "other models" panel.** S. SP+, FPI and Elo beside Atlas's number, with
+no verdict. The docs call it "the best value-per-hour item"; the data is in
+the warehouse and on no page.
+
+**Two template fixes.** S.
+- Board rows read `Atlas +0.4` without saying it is the game total
+  (`MOBILE_UX_AUDIT.md`; still at `render.py`, `_game_row`).
+- Rest days and travel miles are parsed (`data.py`) and never shown.
+
+**A way to measure readers.** S–M. The analytics plan
+(`ANALYTICS_SPEC_FINAL.md`) reads server access logs, and GitHub Pages
+provides none, so which cards and panels people open, and whether they come
+back, is unknown. Options: a cookieless first-party counter, or a host that
+keeps logs. Worth settling before choosing among the features above.
+
+**Later.** Grade movement ("opened B, now C"); a standings page; a context
+block (dome, neutral site); deeper team pages.
+
+---
+
+## Research: expert and computer consensus
+
+**The question.** Does the consensus of experts, or of other computer models,
+carry information about the final score that the closing line does not? If
+yes, it is a candidate model input. If no, it is a benchmark for the record
+page and nothing more.
+
+**What this is not.** Publishing picks is out: "Not a picks service"
+(`PRODUCT_VISION.md`), and expert picks are marked "never"
+(`COMPETITOR_GAP_ANALYSIS.md`). Collected consensus data stays internal, like
+the DFS record, unless a later decision says otherwise.
+
+**Sources.**
+
+| Source | What it has | Access |
+|---|---|---|
+| The Prediction Tracker | dozens of computer models' predicted margins and totals, NCAAF and NFL, with history and their records against the line | public pages and CSVs, behind a Cloudflare bot check that blocked a scripted download on 26 September |
+| Massey ratings comparison | a composite of about 100 college rating systems | same Cloudflare check |
+| Pickwatch | human expert picks aggregated, with each expert's tracked record | scraping; terms to check |
+| ESPN, CBS, USA Today expert picks | straight-up and against-the-spread picks from named writers | scraping; terms to check |
+
+The computer-model consensus is the better research input: it is numeric, has
+history, and is what the repo's own benchmarks already speak (Elo, SP+, FPI).
+Human expert picks are mostly binary sides, and the research literature
+generally finds them near 50% against the spread.
+
+**Method.** Pre-register it, as `SIGNAL_PREREGISTRATION.md` did: fix the
+feature (consensus margin minus closing line), the holdout seasons and the
+pass bar before scoring anything, then test whether adding it lowers CRPS
+against the market. If the history can be downloaded by hand, the backtest
+needs no scraper at all.
