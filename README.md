@@ -32,6 +32,8 @@ no dashboard. It produces a warehouse, a measurement, and a recommendation.
 | **Phase 4: gamma assessment (monetization)** | [`reports/atlas_gamma_assessment.md`](reports/atlas_gamma_assessment.md) |
 | **Phase 5: live CLV tracking (updated continuously)** | [`reports/live_clv_tracking.md`](reports/live_clv_tracking.md) |
 | Phase 5 operations manual | [`docs/LIVE_TRACKING.md`](docs/LIVE_TRACKING.md) |
+| **Curated plays: how they work** | [`docs/CURATED_PLAYS.md`](docs/CURATED_PLAYS.md) |
+| Curated plays audit (26 Sep 2026) | [`docs/CURATED_PLAYS_AUDIT.md`](docs/CURATED_PLAYS_AUDIT.md) |
 | Phase 5 raw record (CSV, committed) | `tracking/` |
 | **Operations manual** | [`reports/atlas_operations_manual.md`](reports/atlas_operations_manual.md) |
 | Data quality (Track 1) | [`reports/atlas_data_quality.md`](reports/atlas_data_quality.md) |

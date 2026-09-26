@@ -1,6 +1,10 @@
 """Stage 1: pull every source into data/raw.
 
-Re-running is cheap: each artefact is cached on disk and skipped if present.
+Re-running is cheap: each artefact is cached on disk and skipped if present -
+except the season in progress, whose schedule (the results the live model
+learns from), play-by-play (its pace term) and team file are fetched again on
+every run, and the one lines file, which is how that season gains its closing
+lines. A cache that never expires is right for 2018 and wrong for this week.
 """
 
 from __future__ import annotations
@@ -27,24 +31,29 @@ def ingest(
     with_predictors: bool = True,
     with_cfbd: bool = True,
     with_qb: bool = False,
+    current: int | None = None,
 ) -> dict:
+    """``current`` (default: the season in progress) is fetched fresh; every other season is served from
+    the cache."""
     paths = config.paths().ensure()
     seasons = seasons or config.seasons()
+    current = sdv.current_season() if current is None else current
     manifest: dict = {
         "generated_at": datetime.now(UTC).isoformat(timespec="seconds"),
         "seasons": seasons,
+        "current_season": current,
         "sources": {},
     }
 
     LOG.info("ingesting betting market odds")
-    sdv.fetch_odds(paths.raw)
+    sdv.fetch_odds(paths.raw, refresh=True)
     manifest["sources"]["odds"] = "sportsdataverse/cfbfastR-data betting/parquet"
 
     got_schedule: list[int] = []
     for season in seasons:
         try:
-            sdv.fetch_schedules(paths.raw, season)
-            sdv.fetch_team_info(paths.raw, season)
+            sdv.fetch_schedules(paths.raw, season, refresh=(season == current))
+            sdv.fetch_team_info(paths.raw, season, refresh=(season == current))
             got_schedule.append(season)
         except Exception as exc:  # noqa: BLE001 - a season may not exist yet
             LOG.warning("schedule/team_info unavailable for %s: %s", season, exc)
@@ -66,7 +75,7 @@ def ingest(
         got_pbp: list[int] = []
         for season in got_schedule:
             try:
-                sdv.fetch_play_by_play(paths.raw, season)
+                sdv.fetch_play_by_play(paths.raw, season, refresh=(season == current))
                 got_pbp.append(season)
             except Exception as exc:  # noqa: BLE001
                 LOG.warning("play-by-play unavailable for %s: %s", season, exc)

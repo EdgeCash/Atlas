@@ -57,7 +57,7 @@ SCHEMA: dict[str, list[str]] = {
     "projections": [
         "game_id", "sport", "season", "week", "kickoff", "home_team_id", "away_team_id", "neutral_site",
         "margin_mean", "margin_sd", "total_mean", "total_sd", "total_over_shrink", "total_over_sd", "home_mean", "away_mean", "p_home",
-        "total_lo", "total_hi", "top_home", "top_away", "top_p", "hfa", "pace_adj", "wind_adj",
+        "total_lo", "total_hi", "top_home", "top_away", "top_p", "hfa", "pace_adj", "wind_adj", "wind_mph",
         "home_off", "home_def", "home_net", "home_sd_off", "home_sd_def", "home_rank", "home_games",
         "away_off", "away_def", "away_net", "away_sd_off", "away_sd_def", "away_rank", "away_games",
         # The NFL's expected starter and his state (points against his team's
@@ -68,7 +68,7 @@ SCHEMA: dict[str, list[str]] = {
     # The model against the closing number, walk-forward over completed
     # seasons: what the grade is computed from. Replaced whole on each refresh.
     "calibration": [
-        "game_id", "sport", "season", "week", "season_type", "market", "abs_edge", "claimed", "won",
+        "game_id", "sport", "season", "week", "season_type", "market", "abs_edge", "claimed", "won", "kickoff",
     ],
     # Each card's grade as the site published it before kickoff: the first
     # letter a reader could have seen and the last, with the spread it was

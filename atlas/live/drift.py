@@ -230,6 +230,79 @@ def selection_rate_drift(frame: pd.DataFrame) -> list[Alert]:
                   f"({change:+.0%})")]
 
 
+#: Track 3: the college state must have assimilated new games by this many
+#: hours after a Saturday's last kickoff. The season file the results come
+#: from was, until 26 September 2026, fetched once and served from the cache
+#: for the rest of the season, and every projection for a week came from a
+#: state that had learnt nothing since week 3 without any check noticing.
+STATE_DUE_HOURS = 36.0
+#: And is a watch, not an alarm, until this long after: the source publishes
+#: results on its own cadence, and a Sunday refresh may honestly be early.
+STATE_ALARM_HOURS = 84.0
+
+
+def _assimilated(projections: pd.DataFrame) -> pd.Series:
+    """Games the college state had seen at each refresh, by refresh time: the
+    sum over teams of games assimilated, as the projections record it."""
+    if projections.empty or "refreshed_at" not in projections:
+        return pd.Series(dtype=float)
+    p = projections[projections["sport"].fillna("ncaaf") == "ncaaf"] if "sport" in projections else projections
+    out = {}
+    for stamp, part in p.groupby("refreshed_at"):
+        teams = pd.concat([part[["home_team_id", "home_games"]].rename(
+                               columns={"home_team_id": "team", "home_games": "games"}),
+                           part[["away_team_id", "away_games"]].rename(
+                               columns={"away_team_id": "team", "away_games": "games"})])
+        teams = teams.dropna(subset=["team"]).drop_duplicates("team")
+        out[pd.Timestamp(stamp)] = float(pd.to_numeric(teams["games"], errors="coerce").fillna(0).sum())
+    series = pd.Series(out).sort_index()
+    series.index = pd.to_datetime(series.index, utc=True)
+    return series
+
+
+def state_alerts(projections: pd.DataFrame, *, now: pd.Timestamp | None = None) -> list[Alert]:
+    """Did the college state learn from the last game day?
+
+    The most recent Saturday whose games are over is found from ``now``; the
+    latest refresh after it must have assimilated more games than the latest
+    refresh before it. Until the first refresh after the deadline it is
+    quiet; a refresh that has not moved is a watch, and past a further
+    deadline an alarm.
+    """
+    now = pd.Timestamp(now or pd.Timestamp.now(tz="UTC"))
+    if now.tzinfo is None:
+        now = now.tz_localize("UTC")
+    seen = _assimilated(projections)
+    if seen.empty:
+        return [Alert("college state", "ok", np.nan, STATE_DUE_HOURS, "no college projections yet")]
+    local = now.tz_convert("America/New_York")
+    # The last Saturday's final kickoff is over by midnight Eastern; the
+    # deadline runs from that midnight.
+    days_back = (local.weekday() - 6) % 7          # to the most recent Sunday 00:00 ET
+    sunday = (local - pd.Timedelta(days=days_back)).normalize()
+    if sunday > local:
+        sunday -= pd.Timedelta(days=7)
+    saturday_noon = (sunday - pd.Timedelta(hours=12)).tz_convert("UTC")
+    deadline = (sunday + pd.Timedelta(hours=STATE_DUE_HOURS)).tz_convert("UTC")
+    alarm_at = (sunday + pd.Timedelta(hours=STATE_ALARM_HOURS)).tz_convert("UTC")
+    before = seen[seen.index < saturday_noon]
+    after = seen[seen.index >= sunday.tz_convert("UTC")]
+    if now < deadline:
+        return [Alert("college state", "ok", np.nan, STATE_DUE_HOURS,
+                      f"not due until {deadline:%a %H:%M} UTC")]
+    if before.empty or after.empty:
+        return [Alert("college state", "watch" if after.empty and now >= alarm_at else "ok", np.nan,
+                      STATE_DUE_HOURS, "no refresh on one side of the last game day to compare")]
+    moved = float(after.iloc[-1] - before.iloc[-1])
+    if moved > 0:
+        return [Alert("college state", "ok", moved, 1.0,
+                      f"{moved:.0f} more team-games assimilated since Saturday noon ET")]
+    severity = "alarm" if now >= alarm_at else "watch"
+    return [Alert("college state", severity, moved, 1.0,
+                  f"the latest refresh ({after.index[-1]:%a %H:%M} UTC) has assimilated no game since the "
+                  f"refresh before Saturday ({before.index[-1]:%a %H:%M} UTC): the season file is not refreshing")]
+
+
 def monitor(store: Store | None = None) -> pd.DataFrame:
     """Every alarm, fired or not. A quiet monitor has to prove it looked."""
     store = store or Store.open()
@@ -241,6 +314,7 @@ def monitor(store: Store | None = None) -> pd.DataFrame:
         *output_drift(frame),
         *distribution_drift(frame),
         *selection_rate_drift(frame),
+        *state_alerts(store.read("projections")),
     ]
     out = _as_frame(alerts)
     firing = out[out["severity"] != "ok"]

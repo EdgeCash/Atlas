@@ -1134,3 +1134,20 @@ def test_a_season_with_no_closing_lines_yet_is_learnt_from_and_skipped_in_scorin
     assert set(state_scored["season"]) == {2021} and last in finals
     h = projecting.history(frame, choices=choices, first_test_season=2021)
     assert set(h["season"]) == {2021}
+
+
+def test_a_kickoff_wind_forecast_moves_the_live_total_as_the_fit_says(research_frame):
+    """The walk-forward saw the observed wind; the live total sees the forecast the same way, and records it."""
+    frame = _with_scheduled(research_frame)
+    projector = projecting.fit(frame, choices=_FIXED)
+    scheduled = frame[frame["actual_margin"].isna() & (frame["season"] == projector.season)].copy()
+    calm = projecting.project(projector, scheduled.assign(weather_wind_effective=0.0, wind_mph=0.0))
+    windy = projecting.project(projector, scheduled.assign(weather_wind_effective=20.0, wind_mph=20.0))
+    assert (calm["wind_mph"] == 0.0).all() and (windy["wind_mph"] == 20.0).all()
+    if "weather_wind_effective" in projector.total.names:
+        coef = dict(zip(projector.total.names, projector.total.coef[1:], strict=True))["weather_wind_effective"]
+        assert np.allclose(windy["wind_adj"] - calm["wind_adj"], 20.0 * coef)
+        # The grid is bounded at 0-79 a side, which trims the shift a little on lopsided games.
+        assert np.allclose(windy["total_mean"] - calm["total_mean"], 20.0 * coef, atol=0.5)
+    none = projecting.project(projector, scheduled)
+    assert none["wind_mph"].isna().all()                       # no forecast: the training mean stands in

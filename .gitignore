@@ -36,6 +36,10 @@ data/warehouse/**
 # the owner page publishes them only encrypted (docs/MODEL_PLAN_DFS.md, step 6).
 /data/dfs/
 
+# The owner page's curated plays box: ciphertext, rebuilt by every run from
+# the sealed record in tracking/owner_plays/ (atlas/owner/plays.py).
+/data/owner/
+
 # The reader counter's local wrangler state and secrets (counter/)
 counter/.wrangler/
 counter/.dev.vars

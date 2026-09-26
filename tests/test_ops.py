@@ -324,3 +324,29 @@ def test_a_blocking_exception_outranks_the_kill_criteria(store):
     store.write("signals", signals)
     page = dashboard.render(dashboard.collect(store))
     assert "SUSPECT" in page
+
+
+def _projections(refreshes: list[tuple[str, int]]) -> pd.DataFrame:
+    """College projections at each refresh, two teams, each having played ``games``."""
+    rows = []
+    for stamp, games in refreshes:
+        rows.append({"game_id": 1, "sport": "ncaaf", "refreshed_at": stamp, "home_team_id": 61, "away_team_id": 99,
+                     "home_games": games, "away_games": games, "model_version": f"m{games}"})
+    return pd.DataFrame(rows)
+
+
+def test_a_college_state_that_learns_nothing_after_a_game_day_fires(store):
+    stale = _projections([("2026-09-25T13:00:00+00:00", 3), ("2026-09-27T08:00:00+00:00", 3),
+                          ("2026-09-28T08:00:00+00:00", 3)])
+    # Monday 13:00 ET: past the 36-hour deadline (Monday noon ET), not yet the alarm (Wednesday noon ET).
+    watch = drift.state_alerts(stale, now=pd.Timestamp("2026-09-28T17:00:00Z"))[0]
+    assert watch.severity == "watch" and "no game" in watch.detail
+    alarm = drift.state_alerts(stale, now=pd.Timestamp("2026-09-30T18:00:00Z"))[0]        # Wednesday 14:00 ET
+    assert alarm.severity == "alarm"
+    moved = _projections([("2026-09-25T13:00:00+00:00", 3), ("2026-09-28T08:00:00+00:00", 4)])
+    assert drift.state_alerts(moved, now=pd.Timestamp("2026-09-30T18:00:00Z"))[0].severity == "ok"
+    # Before the deadline nothing is expected of it; with no projections nothing is said.
+    assert drift.state_alerts(stale, now=pd.Timestamp("2026-09-28T09:00:00Z"))[0].severity == "ok"
+    assert drift.state_alerts(pd.DataFrame(), now=pd.Timestamp("2026-09-30T18:00:00Z"))[0].severity == "ok"
+    store.write("projections", stale)
+    assert "college state" in set(drift.monitor(store)["name"])

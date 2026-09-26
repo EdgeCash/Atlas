@@ -53,3 +53,7 @@ jobs:
     with:
       mode: poll
       force: ${{ github.event_name == 'workflow_dispatch' && inputs.force }}
+    secrets:
+      # The curated plays choose at a fixed poll and are sealed by every poll
+      # (atlas/owner/plays.py); only ciphertext leaves the runner.
+      ATLAS_OWNER_KEY: ${{ secrets.ATLAS_OWNER_KEY }}

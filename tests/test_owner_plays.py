@@ -19,7 +19,7 @@ NOW = datetime(2026, 9, 25, 12, tzinfo=UTC)
 def test_rule_v1_is_frozen():
     """A change to the rule is a new rule, never an edit: this fails if v1 or its history is touched."""
     assert plays.RULE_V1 == plays.Rule(
-        id="cfb-total-5-v1", frozen="2026-09-24", sport="ncaaf", market="total", threshold=5.0,
+        id="cfb-total-5-v1", frozen="2026-09-24", sport="ncaaf", market="total", threshold=5.0, daily=True,
         label="College totals, regular season: Atlas's total 5+ points from the line")
     hist = plays.HISTORY["cfb-total-5-v1"]
     assert [sum(v[0][i] for v in hist.values()) for i in range(3)] == [453, 379, 7]
@@ -105,7 +105,10 @@ def test_the_plays_are_sealed_and_only_the_owner_key_opens_them(tmp_path):
                              "actual_total": [None] * 6,
                              "season_type": ["regular"] * 4 + ["postseason", "regular"]})
     where = tmp_path / "owner_plays"
-    out = plays.build(KEY, store=store, research=research, now=NOW, where=where)[0]
+    sections = plays.build(KEY, store=store, research=research, now=NOW, where=where)
+    assert [s["title"] for s in sections] == ["Curated plays, rule v3 (the plays going forward)",
+                                              "Curated plays, rule v1", "Curated plays, rule v2"]
+    out = sections[1]
     upcoming = out["tables"][0]
     assert upcoming["title"] == "This week: 2 plays"
     assert upcoming["rows"][0][1] == "over 50 (-115)" and "Chippewas @ Hurricanes" in upcoming["rows"][0][0]
@@ -123,8 +126,9 @@ def test_the_plays_are_sealed_and_only_the_owner_key_opens_them(tmp_path):
 def test_rule_v2_is_frozen():
     assert plays.RULE_V2 == plays.Rule(
         id="cfb-total-top5-v2", frozen="2026-09-25", sport="ncaaf", market="total", threshold=0.0, top_n=5,
-        weekday=5, label="College totals, regular season: each Saturday morning, the week's five largest gaps "
-                         "between Atlas's total and the line")
+        weekday=5, daily=True,
+        label="College totals, regular season: each Saturday morning, the week's five largest gaps "
+              "between Atlas's total and the line")
     hist = plays.HISTORY["cfb-total-top5-v2"]
     assert [sum(v[0][i] for v in hist.values()) for i in range(3)] == [208, 152, 5]
     assert plays.HISTORY_COLUMNS["cfb-total-top5-v2"] == ("Vs close",)
@@ -160,12 +164,25 @@ def test_each_rule_keeps_its_own_record(tmp_path):
                              "away_team": ["West Virginia", "Hawai'i"]})
     where = tmp_path / "owner_plays"
     sections = plays.build(KEY, store=store, research=research, now=saturday, where=where)
-    assert sections[1]["tables"][0]["rows"][0][0].startswith("West Virginia @ Oklahoma State")   # schools, not mascots
-    assert [s["title"] for s in sections] == ["Curated plays, rule v1", "Curated plays, rule v2"]
+    assert sections[2]["tables"][0]["rows"][0][0].startswith("West Virginia @ Oklahoma State")   # schools, not mascots
+    assert [s["title"] for s in sections] == ["Curated plays, rule v3 (the plays going forward)",
+                                              "Curated plays, rule v1", "Curated plays, rule v2"]
     record = plays.load(KEY, where)
+    # 4 AM Saturday: v1 and v2 choose; v3 waits for the first poll from 10:00 ET.
     assert sorted(zip(record["rule"], record["game_id"], strict=True)) == [
         ("cfb-total-5-v1", 1), ("cfb-total-top5-v2", 1), ("cfb-total-top5-v2", 2)]
-    assert sections[1]["tables"][0]["title"] == "This week: 2 plays"
+    assert sections[2]["tables"][0]["title"].startswith("This week: 2 plays, chosen Sat 4:00 AM ET")
+    assert sections[0]["tables"][0]["rows"] == [["No game qualifies right now.", ""]]
+    ten = datetime(2026, 9, 26, 14, 4, tzinfo=UTC)                                       # 10:04 AM Eastern
+    sections = plays.build(KEY, store=store, research=research, now=ten, where=where)
+    record = plays.load(KEY, where)
+    assert sorted(zip(record["rule"], record["game_id"], strict=True)) == [
+        ("cfb-total-5-v1", 1), ("cfb-total-top5-sat10-v3", 1), ("cfb-total-top5-sat10-v3", 2),
+        ("cfb-total-top5-v2", 1), ("cfb-total-top5-v2", 2)]
+    assert sections[0]["tables"][0]["title"] == "This week: 2 plays, chosen Sat 10:04 AM ET"
+    # v3's line is the 10 AM one; v2's was the 4 AM one, and neither is revised by the other.
+    v3 = record[record["rule"] == "cfb-total-top5-sat10-v3"]
+    assert v3["formed_at"].str.startswith("2026-09-26T14:04").all()
 
 
 def test_each_play_carries_the_line_movement_flag():
@@ -202,3 +219,160 @@ def test_each_play_carries_the_line_movement_flag():
     assert split["rows"] == [["Line moved against Atlas", "0-1-0 (0.0%)"], ["Everything else", "1-0-0 (100.0%)"]]
     graded_rows = next(t for t in section["tables"] if t["title"] == "Latest graded")["rows"]
     assert any("line moved 4 against by the close" in r[0] for r in graded_rows)
+
+
+def test_rule_v3_is_frozen_and_chooses_at_the_first_poll_from_ten_eastern():
+    assert plays.RULE_V3 == plays.Rule(
+        id="cfb-total-top5-sat10-v3", frozen="2026-09-26", sport="ncaaf", market="total", threshold=0.0, top_n=5,
+        weekday=5, hour=10,
+        label="College totals, regular season: each Saturday at the first poll from 10:00 ET, the weekend's five "
+              "largest gaps between Atlas's total and the line")
+    assert plays.RULE_V3.id not in plays.HISTORY                       # no frozen figures: its history is rebuilt
+    four_am = datetime(2026, 9, 26, 8, tzinfo=UTC)
+    nine_59 = datetime(2026, 9, 26, 13, 59, tzinfo=UTC)
+    ten_04 = datetime(2026, 9, 26, 14, 4, tzinfo=UTC)
+    friday_noon = datetime(2026, 9, 25, 16, tzinfo=UTC)
+    assert not plays.chooses_now(plays.RULE_V3, four_am) and not plays.chooses_now(plays.RULE_V3, nine_59)
+    assert plays.chooses_now(plays.RULE_V3, ten_04) and not plays.chooses_now(plays.RULE_V3, friday_noon)
+    assert plays.chooses_now(plays.RULE_V2, four_am) and plays.chooses_now(plays.RULE_V1, friday_noon)
+    gaps = [9.0, -8.0, 7.0, 6.5, -6.0, 5.5, 1.0]
+    projections = pd.DataFrame([_projection(i, 50.0 + g, kickoff="2026-09-26T16:00:00Z")
+                                for i, g in enumerate(gaps, start=10)])
+    snapshots = pd.DataFrame([_snap(i, 50.0) for i in range(10, 17)])
+    types = {str(i): "regular" for i in range(10, 17)}
+    assert plays.candidates(plays.RULE_V3, projections, snapshots, pd.DataFrame(), types, four_am, set()).empty
+    got = plays.candidates(plays.RULE_V3, projections, snapshots, pd.DataFrame(), types, ten_04, set())
+    assert list(got["game_id"]) == [10, 11, 12, 13, 14] and got["formed_at"].iloc[0] == "2026-09-26T14:04:00+00:00"
+    assert plays.candidates(plays.RULE_V3, projections, snapshots, pd.DataFrame(), types, ten_04, {(2026, 4)}).empty
+
+
+def test_each_play_is_graded_against_its_books_close():
+    """CLV: where the book closed against the line taken, on Atlas's side, in points and in probability."""
+    projections = pd.DataFrame([_projection(1, 60.0), _projection(2, 40.0)])
+    logged = pd.DataFrame([_snap(1, 49.0), _snap(2, 50.0, other=-110.0)])
+    games = pd.DataFrame({"game_id": [1, 2], "home_team": ["A B", "C D"], "away_team": ["E F", "G H"],
+                          "kickoff": "2026-09-26T16:00:00Z"})
+    types = {"1": "regular", "2": "regular"}
+    got = plays.candidates(plays.RULE_V1, projections, logged, games, types, NOW)
+    # By kickoff the over's total rose to 51 (the market came to Atlas) and the under's rose to 52 (it went away).
+    closing = pd.concat([logged, pd.DataFrame([
+        _snap(1, 51.0, price=-115.0, other=-105.0, at="2026-09-26T15:30:00+00:00"),
+        _snap(2, 52.0, at="2026-09-26T15:30:00+00:00")])], ignore_index=True)
+    after = datetime(2026, 9, 26, 17, tzinfo=UTC)
+    value = plays.closing_value(got, closing, games, None, after)
+    a, b = plays.play_id(plays.RULE_V1, 1), plays.play_id(plays.RULE_V1, 2)
+    assert value.loc[a, "close_line"] == 51.0 and value.loc[a, "clv_points"] == 2.0 and value.loc[a, "clv_result"] == "beat"
+    assert value.loc[b, "clv_points"] == -2.0 and value.loc[b, "clv_result"] == "lost"
+    assert value.loc[a, "clv_prob"] > 0 > value.loc[b, "clv_prob"]
+    # Before kickoff there is no close, and nothing is graded against one.
+    assert plays.closing_value(got, closing, games, None, NOW).empty
+    finals = pd.DataFrame({"game_id": ["1", "2"], "final_margin": [0.0, 0.0], "final_total": [45.0, 44.0]})
+    g = plays.graded(got, finals, plays.closing_movement(got, closing, games, after), value)
+    assert g.set_index("play_id").loc[a, "outcome"] == "loss" and g.set_index("play_id").loc[a, "clv"] == 2.0
+    section = plays.section(plays.RULE_V1, g, datetime(2026, 9, 27, tzinfo=UTC))
+    close = next(t for t in section["tables"] if t["title"].startswith("Against the close"))
+    rows = dict(close["rows"])
+    assert rows["Beat-push-lost the close"] == "1-0-1" and rows["Beat rate"] == "50.0%"
+    assert rows["Mean CLV, points"] == "+0.00" and rows["Mean CLV, win probability"] != "–"
+    latest = next(t for t in section["tables"] if t["title"] == "Latest graded")["rows"]
+    assert any("closed 51, CLV +2" in r[0] for r in latest)
+    assert any("CLV" in n and "good play whether or not it won" in n for n in section["notes"])
+
+
+def test_the_history_beside_a_rule_is_the_current_models_walk_forward():
+    """Rebuilt from tracking/calibration.csv on every refresh, by the rule's own definition."""
+    rows = []
+    for season in (2024, 2025):
+        for week in (1, 2):
+            for i in range(8):
+                gid = season * 1000 + week * 10 + i
+                # Games alternate Saturday and Friday; the largest gaps are the Friday ones.
+                day = "2026-09-26" if i % 2 == 0 else "2026-09-25"
+                rows.append({"game_id": gid, "sport": "ncaaf", "season": season, "week": week,
+                             "season_type": "regular", "market": "total", "abs_edge": 8.0 - i,
+                             "claimed": 0.55, "won": 1.0 if i % 3 else 0.0, "kickoff": f"{day}T16:00:00Z"})
+    rows.append({"game_id": 9, "sport": "ncaaf", "season": 2025, "week": 1, "season_type": "postseason",
+                 "market": "total", "abs_edge": 9.0, "claimed": 0.6, "won": 0.5, "kickoff": "2026-09-26T16:00:00Z"})
+    rows.append({"game_id": 8, "sport": "ncaaf", "season": 2025, "week": 1, "season_type": "regular",
+                 "market": "margin", "abs_edge": 9.0, "claimed": 0.6, "won": 1.0, "kickoff": "2026-09-26T16:00:00Z"})
+    cal = pd.DataFrame(rows)
+    v1, how = plays.rule_history(plays.RULE_V1, cal)
+    # |edge| >= 5: i in 0..3 each week, won when i % 3: 2 wins, 2 losses per week, regular season, totals only.
+    assert v1 == {2024: (4, 4, 0), 2025: (4, 4, 0)} and "closing total" in how
+    v3, how = plays.rule_history(plays.RULE_V3, cal)
+    # Saturday games only (i even: edges 8, 6, 4, 2; won for i = 2, 4), the top five is all four of them.
+    assert v3 == {2024: (4, 4, 0), 2025: (4, 4, 0)} and "Saturday" in how
+    all_days, how = plays.rule_history(plays.RULE_V3, cal.drop(columns=["kickoff"]))
+    assert all_days == {2024: (6, 4, 0), 2025: (6, 4, 0)} and "every day" in how
+    assert plays.rule_history(plays.RULE_V1, pd.DataFrame()) == ({}, "no walk-forward table yet")
+    section = plays.section(plays.RULE_V1, plays.graded(pd.DataFrame(columns=plays.COLUMNS), pd.DataFrame()),
+                            NOW, calibration=cal)
+    current = next(t for t in section["tables"] if t["title"].startswith("History, current model"))
+    assert current["rows"] == [["2024", "50.0% of 8"], ["2025", "50.0% of 8"], ["All", "50.0% of 16"]]
+    frozen = next(t for t in section["tables"] if t["title"].startswith("History before the freeze"))
+    assert "not reproducible" in frozen["title"] and frozen["rows"][-1][0] == "All"
+
+
+def test_the_plays_box_is_sealed_by_every_run_and_says_why_when_it_cannot_be(tmp_path, monkeypatch):
+    from atlas.dfs import owner
+    from atlas.site import render
+
+    monkeypatch.delenv(owner.SECRET, raising=False)
+    where = tmp_path / "plays.enc.json"
+    plays.refresh(where=where)
+    record = plays.read_page(where)
+    assert record["box"] is None and "not configured" in record["reason"]
+
+    monkeypatch.setenv(owner.SECRET, KEY)
+    monkeypatch.setenv("ATLAS_TRACKING_DIR", str(tmp_path / "tracking"))
+    store = Store.open(tmp_path / "tracking")
+    projections, snapshots, games, _ = _inputs()
+    store.write("projections", projections)
+    store.write("snapshots", snapshots)
+    store.write("games", games.assign(kickoff="2026-09-26T16:00:00Z"))
+    research = pd.DataFrame({"game_id": [1, 2, 3, 4, 5, 6], "actual_margin": [None] * 6, "actual_total": [None] * 6,
+                             "season_type": ["regular"] * 4 + ["postseason", "regular"],
+                             "home_team": ["Miami", "Oregon", "C", "D", "E", "F"],
+                             "away_team": ["Central Michigan", "USC", "G", "H", "I", "J"]})
+    monkeypatch.setattr("atlas.research.dataset.load_research_frame", lambda: research)
+    plays.refresh(now=NOW, where=where)                                    # a poll: v1 does not choose at one
+    assert not (tmp_path / "tracking" / "owner_plays").exists()
+    plays.refresh(now=NOW, where=where, heavy=True)                        # the rebuild: it does
+    record = plays.read_page(where)
+    assert record["box"] is not None and record["reason"] is None
+    text = where.read_text()
+    assert "Miami" not in text and "Oregon" not in text and "over 50" not in text
+    data = json.loads(owner.decrypt(record["box"], KEY))
+    assert [s["title"] for s in data["sections"]][1] == "Curated plays, rule v1"
+    assert data["sections"][1]["tables"][0]["title"] == "This week: 2 plays"
+    assert all("record" not in s for s in data["sections"])
+    assert (tmp_path / "tracking" / "owner_plays" / "2026-04.enc.json").exists()   # logged and sealed as well
+    page = render.owner_page({"built_at": None, "box": None, "reason": "No slate."}, plays=record)
+    assert record["box"]["ct"] in page and "Miami" not in page and "The curated plays, encrypted" in page
+    bare = render.owner_page(None, plays=None)
+    assert "have not been built yet" in bare
+
+
+def test_the_daily_rules_choose_only_at_the_rebuild_and_v3_at_any_run(tmp_path):
+    """v1 and v2 were defined on the 04:00 ET rebuild; the plays step now runs on every poll too, and a poll
+    must not become a second chance for them. v3 chooses at whichever run is first from 10:00 ET Saturday."""
+    saturday_4am = datetime(2026, 9, 26, 8, tzinfo=UTC)
+    assert not plays.chooses_now(plays.RULE_V1, saturday_4am, heavy=False)
+    assert not plays.chooses_now(plays.RULE_V2, saturday_4am, heavy=False)
+    assert plays.chooses_now(plays.RULE_V1, saturday_4am, heavy=True)
+    assert plays.chooses_now(plays.RULE_V2, saturday_4am, heavy=True)
+    ten = datetime(2026, 9, 26, 14, 4, tzinfo=UTC)
+    assert plays.chooses_now(plays.RULE_V3, ten, heavy=False) and plays.chooses_now(plays.RULE_V3, ten, heavy=True)
+    store = Store.open(tmp_path / "tracking")
+    store.write("projections", pd.DataFrame([_projection(1, 60.0), _projection(2, 52.0)]))
+    store.write("snapshots", pd.DataFrame([_snap(1, 50.0), _snap(2, 50.0)]))
+    store.write("games", pd.DataFrame({"game_id": [1, 2], "home_team": ["A B", "C D"], "away_team": ["E F", "G H"],
+                                       "kickoff": "2026-09-26T16:00:00Z"}))
+    research = pd.DataFrame({"game_id": [1, 2], "actual_margin": [None] * 2, "actual_total": [None] * 2,
+                             "season_type": ["regular"] * 2, "home_team": ["A", "C"], "away_team": ["E", "G"]})
+    where = tmp_path / "owner_plays"
+    plays.build(KEY, store=store, research=research, now=saturday_4am, where=where, heavy=False)   # a poll
+    assert not where.exists()                                                # nothing chose: no file sealed
+    plays.build(KEY, store=store, research=research, now=ten, where=where, heavy=False)
+    record = plays.load(KEY, where)
+    assert set(record["rule"]) == {"cfb-total-top5-sat10-v3"}
