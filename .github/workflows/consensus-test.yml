@@ -1,0 +1,113 @@
+name: consensus test
+
+# Scores the pre-registered consensus test (docs/CONSENSUS_PREREGISTRATION.md)
+# once, on the full warehouse, and proposes the result: reports/consensus_test.md
+# on a branch consensus-test/<run number>, as an artifact, and as a pull request
+# where the repository lets Actions open one.
+#
+# Run by hand, from main, never on a schedule. The holdout is scored ONCE:
+# the job refuses to start if a consensus-test/* branch already exists or the
+# report is already on this ref, because a second scoring is a second look.
+# Delete neither to get around it; a new question is a new pre-registration.
+#
+# It reads the warehouse the heavy run caches and never writes that cache,
+# like the retune. Nothing here touches main, tracking/, the site or Pages.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write        # push the consensus-test/<run> branch
+  pull-requests: write   # open the pull request, where the repository allows it
+
+concurrency:
+  group: atlas-consensus-test
+  cancel-in-progress: false
+
+jobs:
+  score:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      BRANCH: consensus-test/${{ github.run_number }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scored once
+        run: |
+          if [ -e reports/consensus_test.md ]; then
+            echo "::error::reports/consensus_test.md is already on this ref. The holdout is scored once."
+            exit 1
+          fi
+          if [ -n "$(git ls-remote --heads origin 'consensus-test/*')" ]; then
+            echo "::error::A consensus-test/* branch already exists. The holdout is scored once."
+            git ls-remote --heads origin 'consensus-test/*'
+            exit 1
+          fi
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+
+      # Read only: restore, never save. The heavy run owns this cache.
+      - name: Restore the warehouse
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            data/raw
+            data/warehouse
+          key: atlas-data-
+          restore-keys: |
+            atlas-data-
+
+      # Q2 replays the college state model, whose prior is fitted on CFBD
+      # features; without the key it would score a model production does not
+      # run. Elo and ESPN's pre-game projection need no key.
+      - name: College data
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+        run: |
+          if [ -z "$CFBD_API_KEY" ]; then
+            echo "::error::CFBD_API_KEY is not set. Q2 replays the college state model, which needs CFBD features."
+            exit 1
+          fi
+          python -m atlas.ingest
+          python -m atlas.warehouse.build --include-scheduled
+
+      - name: Score
+        run: python -m atlas.research.consensus_score
+
+      - name: Keep the report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: consensus-test-${{ github.run_number }}
+          path: reports/consensus_test.md
+          if-no-files-found: ignore
+          retention-days: 90
+
+      - name: Propose the result
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "atlas-research"
+          git config user.email "noreply@anthropic.com"
+          git checkout -b "$BRANCH"
+          git add reports/consensus_test.md
+          git commit -m "Consensus test: scored once ($(TZ=America/New_York date '+%Y-%m-%d %H:%M ET'))" \
+                     -m "Scored by the consensus-test workflow, run ${{ github.run_id }}, against docs/CONSENSUS_PREREGISTRATION.md."
+          git push origin "$BRANCH"
+          decision="$(sed -n '/^## Decision/,/^## /p' reports/consensus_test.md | sed '1d;$d' | sed '/^$/d')"
+          body="Scored once against \`docs/CONSENSUS_PREREGISTRATION.md\`, [run ${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}).
+
+          **Decision:** ${decision}
+
+          Owner page only: nothing in this result reaches the public site."
+          gh pr create --base main --head "$BRANCH" --title "Consensus test: result" --body "$body" \
+            || echo "::notice::Could not open a pull request. Compare: ${{ github.server_url }}/${{ github.repository }}/compare/main...$BRANCH"
