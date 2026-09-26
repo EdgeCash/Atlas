@@ -298,11 +298,11 @@ def test_the_board_rides_in_the_plays_box_and_only_when_bettingpros_is_configure
     assert data["sections"][0]["title"].startswith("Picks now") and fake.calls >= 3
     # Every section says which tab it belongs in; the exchanges ride behind the board and the parlays.
     tabs = [s.get("tab") for s in data["sections"]]
-    assert tabs == ["Board", "Board", "Board", "Board", "Parlays", "Trading", "Plays"]
+    assert tabs == ["Board", "Board", "Board", "Board", "Parlays", "Trading", "Trading", "Trading", "Plays"]
     trading = next(s for s in data["sections"] if s["tab"] == "Trading")
-    assert trading["title"] == "Sports trading: Kalshi and Polymarket"
+    assert trading["title"] == "Positions for Sat Sep 26 (1)"
     positions = trading["tables"][0]
-    assert positions["title"].startswith("Positions for Sat Sep 26: 1") and positions["rows"][0][2] == "Polymarket US"
+    assert positions["rows"][0][1][1] == "Polymarket US"
     assert (tmp_path / "tracking" / "owner_trading").exists()                        # logged at 10:04 ET, sealed
     picks_table = data["sections"][0]["tables"][0]
     assert picks_table["head"][:2] == ["Game", "Bet"] and isinstance(picks_table["rows"][0][0], list)

@@ -358,44 +358,78 @@ def _cents(x: float) -> str:
     return f"{100 * x:.0f}¢" if math.isfinite(x) else "–"
 
 
-def _buy(x, now: datetime) -> str:
-    """"52¢ + 1.7¢ fee", marked when the quote is older than the parlays' stale mark."""
+def _price(x, now: datetime) -> list:
+    """["52¢", "+1.7¢ fee"], the second line marked when the quote is older than the parlays' stale mark."""
     age = _age(getattr(x, "updated", None), now)
-    stale = f" (quote {age:.0f} min old)" if math.isfinite(age) and age > parlays.STALE_MINUTES else ""
-    return f"{_cents(x.ask)} + {100 * x.fee:.1f}¢ fee{stale}"
+    stale = f" · quote {age:.0f} min old" if math.isfinite(age) and age > parlays.STALE_MINUTES else ""
+    return [_cents(x.ask), f"+{100 * x.fee:.1f}¢ fee{stale}"]
+
+
+def _venue(x) -> str:
+    return x.venue + ("" if bool(x.tradeable) else " (reference)")
+
+
+#: Exchange board rows shown before the rest fold away.
+TOP_ROWS = 10
+HEAD = ["Game", "Contract", "Price", "Edge"]
 
 
 def section(p: pd.DataFrame, chosen: pd.DataFrame, graded: pd.DataFrame, names: dict, now: datetime) -> list[dict]:
+    """The Trading tab: the day's positions, the exchange board, and the record, each its own card."""
     from atlas.owner.board import _eastern
 
     logged = set(graded["position_id"]) if len(graded) else set()
-    rows = [[f"{x.label} · {_eastern(x.kickoff)}", contract(x.market, x.side, x.line, x.label), x.venue, _buy(x, now),
-             paper._pct(x.p), f"{x.ev:+.1%}", f"{x.stake:.1%} of bankroll" + (" · logged" if x.position_id in logged else "")]
-            for x in chosen.itertuples()]
     day = pd.Timestamp(chosen["day"].iloc[0]).strftime("%a %b %-d") if len(chosen) else \
         pd.Timestamp(parlays.day_of(now)).strftime("%a %b %-d")
-    tables = [{"title": f"Positions for {day}: {len(rows)}",
-               "head": ["Game", "Contract", "Venue", "Buy at", "Fair", "EV after fees", "Stake"],
-               "rows": rows or [[f"Nothing clears {MIN_EV:+.0%} after fees at Kalshi or Polymarket US.", "", "", "", "",
-                                 "", ""]]}]
+    rows = [[[x.label, _eastern(x.kickoff)],
+             [contract(x.market, x.side, x.line, x.label), x.venue],
+             _price(x, now),
+             [f"EV {x.ev:+.1%}", f"fair {paper._pct(x.p)}"],
+             [f"{x.stake:.1%}", "logged" if x.position_id in logged else ""]]
+            for x in chosen.itertuples()]
+    out = [{"title": f"Positions for {day} ({len(rows)})", "tab": "Trading",
+            "tables": [{"title": "", "head": [*HEAD, "Stake"], "stack": True,
+                        "rows": rows or [[f"Nothing clears {MIN_EV:+.0%} after fees at Kalshi or Polymarket US.",
+                                          "", "", "", ""]]}],
+            "notes": [
+                "Paper trading only: nothing is bought. A contract costs its price and pays $1 if it wins.",
+                f"Positions: Kalshi and Polymarket US only (the global Polymarket is close-only for US accounts and is "
+                f"shown for reference), {MIN_EV:+.0%} or more after fees, one per game at the side and venue that pays "
+                f"best, at most {MAX_POSITIONS} a day. Stake is a share of the bankroll: a quarter of Kelly, "
+                f"(fair − cost) ÷ (1 − cost), capped at {MAX_STAKE:.0%} each and {DAILY_CAP:.0%} a day.",
+                "The day's positions are logged once, at the first run from 10:00 ET, at the prices shown then "
+                "(marked logged); the table keeps moving through the day.",
+                "Assumed, to confirm before trading: that each quote is the venue's price to buy, and that it fills at "
+                "the size staked; the quotes carry no depth."]}]
     upcoming = p[pd.to_datetime(p["kickoff"], utc=True, errors="coerce") > pd.Timestamp(now)] if len(p) else p
+    tables = []
     if len(upcoming):
         best = upcoming.sort_values("ev", ascending=False).drop_duplicates(["game_id", "market"], keep="first")
-        best = best.head(BOARD_ROWS)
-        tables.append({"title": "Exchange board: each game and market at its best exchange price, against the consensus",
-                       "head": ["Game", "Contract", "Venue", "Buy at", "Fair", "EV after fees"],
-                       "rows": [[f"{label_of(names, x.game_id)} · {_eastern(x.kickoff)}",
-                                 contract(x.market, x.side, x.line, label_of(names, x.game_id)),
-                                 x.venue + ("" if x.tradeable else " (reference)"), _buy(x, now), paper._pct(x.p),
-                                 f"{x.ev:+.1%}"] for x in best.itertuples()]})
+        board_rows = [[[label_of(names, x.game_id), _eastern(x.kickoff)],
+                       [contract(x.market, x.side, x.line, label_of(names, x.game_id)), _venue(x)],
+                       _price(x, now), [f"EV {x.ev:+.1%}", f"fair {paper._pct(x.p)}"]]
+                      for x in best.itertuples()]
+        tables.append({"title": f"Best {min(TOP_ROWS, len(board_rows))} of {len(board_rows)} by expected value after "
+                                "fees", "head": HEAD, "stack": True, "rows": board_rows[:TOP_ROWS]})
+        if len(board_rows) > TOP_ROWS:
+            tables.append({"title": f"The other {len(board_rows) - TOP_ROWS}", "fold": True, "stack": True,
+                           "head": HEAD, "rows": board_rows[TOP_ROWS:]})
     counts = []
     for book, venue in VENUES.items():
         mine = p[p["book_id"] == book] if len(p) else p
         n = {m: int((mine["market"] == m).sum()) if len(mine) else 0 for m in ("total", "spread", "moneyline")}
         counts.append([venue.name + ("" if venue.tradeable else " (reference)"), str(n["total"]), str(n["spread"]),
                        str(n["moneyline"])])
-    tables.append({"title": "Quotes this run (sides priced)", "head": ["Venue", "Totals", "Spreads", "Moneylines"],
-                   "rows": counts})
+    tables.append({"title": "Quotes this run, by venue", "fold": True,
+                   "head": ["Venue", "Totals", "Spreads", "Moneylines"], "rows": counts})
+    out.append({"title": "Exchange board", "tab": "Trading", "tables": tables, "notes": [
+        "Each game and market at its best exchange price, whether or not it clears the bar. Fair is the sportsbook "
+        "consensus with its margin removed, read at the contract's line; on totals, Atlas's calibrated probability, "
+        "as on the board. EV after fees is fair ÷ (price + fee) − 1.",
+        "Fees: Kalshi's taker fee, 7% × price × (1 − price) per contract (the exchange rounds each order up to the "
+        "cent; not modelled), and 5% for Polymarket, the rate the Velocity repository modelled. Confirm both against "
+        "each venue's current schedule before real money. Quotes arrive with every poll through BettingPros and stay "
+        "sealed like the board's lines."]})
     if len(graded):
         done = graded[graded["outcome"].isin(["win", "loss", "push"])]
         decided = done[done["outcome"] != "push"]
@@ -409,35 +443,22 @@ def section(p: pd.DataFrame, chosen: pd.DataFrame, graded: pd.DataFrame, names: 
                 ["Return per dollar staked", f"{pnl / staked:+.1%}" if staked else "–"],
                 ["Beat the consensus close", f"{int((clv > 0).sum())} of {int(clv.notna().sum())}" if clv.notna().any() else "–"],
                 ["Mean CLV, win probability", f"{clv.mean():+.1%}" if clv.notna().any() else "–"]]
-        tables.append({"title": "Record (paper)", "head": ["", ""], "rows": rows})
+        tables = [{"title": "", "head": ["", ""], "rows": rows}]
         latest = graded[graded["outcome"] != "open"].sort_values("kickoff", ascending=False).head(10)
         if len(latest):
-            tables.append({"title": "Latest graded", "head": ["Game", "Contract", "Venue", "Result"],
-                           "rows": [[x.label, contract(x.market, x.side, x.line, x.label),
-                                     VENUES[int(x.book_id)].name if int(x.book_id) in VENUES else str(x.book_id),
-                                     f"{x.outcome} {x.pnl:+.2%} of bankroll"
-                                     + (f" · CLV {x.clv_prob:+.1%}" if pd.notna(x.clv_prob) else "")]
+            tables.append({"title": "Latest graded", "fold": True, "stack": True,
+                           "head": ["Game", "Contract", "Result"],
+                           "rows": [[x.label,
+                                     [contract(x.market, x.side, x.line, x.label),
+                                      VENUES[int(x.book_id)].name if int(x.book_id) in VENUES else str(x.book_id)],
+                                     [f"{x.outcome} {x.pnl:+.2%}",
+                                      f"CLV {x.clv_prob:+.1%}" if pd.notna(x.clv_prob) else ""]]
                                     for x in latest.itertuples()]})
-    notes = [
-        "Paper trading only: nothing is bought. Kalshi and Polymarket quotes arrive with every poll through "
-        "BettingPros, the board's feed, and stay sealed like the board's lines. A contract costs its price and pays "
-        "$1 if it wins.",
-        "Fair is the sportsbook consensus with its margin removed, read at the contract's line; on totals, Atlas's "
-        "calibrated probability, as on the board. EV after fees is fair ÷ (price + fee) − 1. Fees: Kalshi's taker "
-        "fee, 7% × price × (1 − price) per contract (the exchange rounds each order up to the cent; not modelled), "
-        "and 5% for Polymarket, the rate the Velocity repository modelled. Confirm both against each venue's current "
-        "schedule before real money.",
-        f"Positions: Kalshi and Polymarket US only (the global Polymarket is close-only for US accounts, shown for "
-        f"reference), {MIN_EV:+.0%} or more after fees, one per game at the side and venue that pays best, at most "
-        f"{MAX_POSITIONS} a day. Stake: a quarter of Kelly, (fair − cost) ÷ (1 − cost), capped at {MAX_STAKE:.0%} of "
-        f"the bankroll each and {DAILY_CAP:.0%} a day.",
-        "The day's positions are logged once, at the first run from 10:00 ET, at the prices shown then (marked "
-        "logged); the tables keep moving. Each is graded on the final score, a push refunded, and against the "
-        f"consensus close in win probability. Nothing is read from fewer than {MIN_GRADED} graded.",
-        "Assumed, to confirm before trading: that each quote is the venue's price to buy, and that it fills at the "
-        "size staked; the quotes carry no depth.",
-    ]
-    return [{"title": "Sports trading: Kalshi and Polymarket", "tab": "Trading", "notes": notes, "tables": tables}]
+        out.append({"title": "Trading record (paper)", "tab": "Trading", "tables": tables, "notes": [
+            "Each position is graded on the final score (a push refunded) and against the consensus close in win "
+            "probability. Returns are shares of the bankroll at the stakes shown. "
+            f"Nothing is read from fewer than {MIN_GRADED} graded."]})
+    return out
 
 
 def build(lines: pd.DataFrame, events: pd.DataFrame, projections: pd.DataFrame, shapes: dict,
@@ -459,5 +480,5 @@ def build(lines: pd.DataFrame, events: pd.DataFrame, projections: pd.DataFrame, 
         return section(p, chosen, graded, names, now)
     except Exception as error:  # noqa: BLE001 - the type only: a message could quote a price
         LOG.error("trading not built: %s", type(error).__name__)
-        return [{"title": "Sports trading: Kalshi and Polymarket", "tab": "Trading",
+        return [{"title": "Exchange board", "tab": "Trading",
                  "notes": [f"This run could not build the trading section ({type(error).__name__})."], "tables": []}]
