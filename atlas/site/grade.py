@@ -328,7 +328,7 @@ def _headline(letter: str, band: Band, disagreement: float) -> str:
     if letter == "B":
         return (
             "A moderate disagreement in a band where the model's claim and its "
-            "realised accuracy stay reasonably close."
+            "realized accuracy stay reasonably close."
         )
     if letter == "C":
         return (
