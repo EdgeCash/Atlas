@@ -582,6 +582,68 @@ def section(rule: Rule, g: pd.DataFrame, now: datetime, schools: dict | None = N
     return {"title": title, "notes": notes, "tables": tables, "record": rec}
 
 
+def distinct(g: pd.DataFrame) -> pd.DataFrame:
+    """One row per game and side: a game several rules chose counts once, as it was first logged."""
+    if g.empty:
+        return g
+    t = g.assign(_f=pd.to_datetime(g["formed_at"], utc=True, errors="coerce")).sort_values("_f", kind="stable")
+    return t.drop_duplicates(["game_id", "side"], keep="first").drop(columns="_f")
+
+
+def master_section(g: pd.DataFrame, now: datetime, schools: dict | None = None) -> dict:
+    """The owner page's one list of curated plays, whichever rule chose them: the open plays at their latest
+    logging (the line to bet now), and one record in which each game and side counts once."""
+    open_ = g[(g["outcome"] == "open") & (pd.to_datetime(g["kickoff"], utc=True) > pd.Timestamp(now))] \
+        if len(g) else g
+    if len(open_):
+        latest = open_.assign(_f=pd.to_datetime(open_["formed_at"], utc=True, errors="coerce")) \
+            .sort_values("_f", kind="stable").drop_duplicates(["game_id"], keep="last").sort_values("kickoff")
+        rows = [[f"{_game(x, schools)} · {_eastern(x.kickoff)}",
+                 f"{x.side} {x.line:g} ({'-110?' if x.price_assumed else f'{x.price:+.0f}'}) {x.book}",
+                 f"{x.atlas_total:.1f} ({abs(float(x.gap)):.1f} off)",
+                 (_eastern(str(x.formed_at)) if pd.notna(x.formed_at) else "–")
+                 + _moved_note(x.moved_against, "so far") + _starter_note(x, schools)]
+                for x in latest.itertuples()]
+        tables = [{"title": f"Open plays: {len(rows)}", "head": ["Game", "Play", "Atlas", "Chosen · flags"],
+                   "rows": rows}]
+    else:
+        tables = [{"title": "Open plays", "head": ["", ""], "rows": [["No game qualifies right now.", ""]]}]
+    once = distinct(g) if len(g) else g
+    clv = pd.to_numeric(once["clv"], errors="coerce") if "clv" in once else pd.Series(np.nan, index=once.index)
+    rec = paper.record(once.assign(clv=clv))
+    tables.append({"title": "Record", "head": ["", ""], "rows": [
+        ["Graded", str(rec["graded"])], ["Won-lost-push", f"{rec['wins']}-{rec['losses']}-{rec['pushes']}"],
+        ["Win rate", paper._pct(rec["win_rate"])],
+        ["95% range", f"{paper._pct(rec['low'])}–{paper._pct(rec['high'])}" if rec["wins"] + rec["losses"] else "–"],
+        ["Break-even at the prices taken", paper._pct(rec["break_even"])],
+        ["Units", paper._num(rec["units"])], ["Per play", paper._num(rec["roi"], "{:+.1%}")]]})
+    closing = _closing_table(once) if len(once) else None
+    if closing:
+        tables.append(closing)
+    done = once[once["outcome"] != "open"].sort_values("kickoff", ascending=False).head(15) if len(once) else once
+    if len(done):
+        tables.append({"title": "Latest graded", "head": ["Game", "Play", "Result"],
+                       "rows": [[_game(x, schools) + _moved_note(x.moved_at_close, "by the close")
+                                 + _starter_note(x, schools) + _clv_note(x),
+                                 f"{x.side} {x.line:g}", f"{x.outcome} {x.profit:+.2f}"]
+                                for x in done.itertuples()]})
+    notes = [
+        "College totals where Atlas's number is furthest from the line: every game 5 or more points off at the "
+        "daily rebuild, and each Saturday the weekend's five largest gaps, chosen at the 04:00 ET rebuild and again "
+        "at the first run from 10:00 ET. Atlas's side, one flat unit, logged at the line and price then and never "
+        "changed.",
+        "Open plays show each game's latest logging: the line to bet now. The record counts each game and side "
+        "once, at its first logging, graded on the final score and against its book's close (CLV: how far the "
+        "close sat past the line taken, on Atlas's side). A price the feed did not give is graded at -110 and "
+        "marked.",
+        verdict(rec),
+        f"Flags: the total moved {MOVED_AGAINST:g}+ points against Atlas from the opener (news the market may have "
+        "and Atlas does not), and a starting quarterback reported Out or Doubtful when logged (SEC and ACC reports "
+        "only). Labels, not filters.",
+    ]
+    return {"title": "Curated plays", "tab": "Plays", "notes": notes, "tables": tables, "record": rec}
+
+
 def _quarterbacks(schools: dict, research: pd.DataFrame | None, store, now: datetime) -> dict:
     """The upcoming games' expected starters and their reported statuses; none when a source is missing."""
     try:
@@ -601,15 +663,16 @@ def _quarterbacks(schools: dict, research: pd.DataFrame | None, store, now: date
 
 def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, now: datetime | None = None,
           where: Path | None = None, heavy: bool = True) -> list[dict]:
-    """Log this run's plays, grade the record, and return the owner page's sections, one per rule
-    (`PAGE_ORDER`). ``heavy`` says whether this is the daily rebuild, which the daily rules choose at, or a
-    poll. Never raises."""
+    """Log this run's plays, grade the record, and return the owner page's one curated plays section
+    (`master_section`). ``heavy`` says whether this is the daily rebuild, which the daily rules choose at, or
+    a poll. Never raises."""
     now = now or datetime.now(UTC)
     try:
         record = load(passphrase, where)
     except sealed.Unreadable as error:
         LOG.error("curated plays: the owner key does not open them (%s); left as they are", error)
-        return [{"title": "Curated plays", "notes": ["The plays could not be opened with this key."], "tables": []}]
+        return [{"title": "Curated plays", "tab": "Plays", "notes": ["The plays could not be opened with this key."],
+                 "tables": []}]
     try:
         if store is None:
             from atlas.live.store import Store
@@ -643,8 +706,9 @@ def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, 
         snapshots = store.read("snapshots")
         g = graded(record, paper.results(research, games), closing_movement(record, snapshots, games, now),
                    closing_value(record, snapshots, games, store.read("market_shape"), now))
-        calibration = store.read("calibration")
-        return [section(rule, g[g["rule"] == rule.id], now, schools, calibration) for rule in PAGE_ORDER]
+        # One list on the page, whichever rule chose a play; each rule's own record stays in the sealed
+        # record and in `section` (the terminal view), not on the page.
+        return [master_section(g, now, schools)]
     except Exception as error:  # noqa: BLE001
         LOG.error("curated plays not built: %s", type(error).__name__)
         return []
@@ -684,6 +748,17 @@ def _check_sealed(box: dict, sections: list[dict]) -> None:
                         raise RuntimeError("plaintext in the sealed payload")
 
 
+def _research() -> pd.DataFrame | None:
+    """The warehouse's research frame, read once a run; none when there is no warehouse."""
+    try:
+        from atlas.research.dataset import load_research_frame
+
+        return load_research_frame()
+    except Exception as error:  # noqa: BLE001
+        LOG.info("curated plays: no warehouse (%s)", type(error).__name__)
+        return None
+
+
 def refresh(*, now: datetime | None = None, where: Path | None = None, heavy: bool = False) -> Path:
     """The plays step of every run, heavy or poll: log, grade, and seal the owner page's plays box.
     Never raises, and never fails the run: without the key it records why the box is empty."""
@@ -694,14 +769,16 @@ def refresh(*, now: datetime | None = None, where: Path | None = None, heavy: bo
         LOG.warning("no %s secret: the curated plays are not logged", owner.SECRET)
         return write_page(None, reason="The owner key is not configured.", where=where)
     try:
-        sections = build(passphrase, now=now, heavy=heavy)
+        research = _research()
+        sections = build(passphrase, now=now, heavy=heavy, research=research)
         if not sections:
             return write_page(None, reason="This run could not build the curated plays.", where=where)
-        # The owner's board rides in the same box: every book's line on every game, priced (atlas/owner/board.py).
-        # It is built only when BettingPros is configured and never takes the plays down with it.
+        # The owner's board rides in the same box: every book's line on every game, priced (atlas/owner/board.py),
+        # with the parlays and the exchanges behind it. It is built only when BettingPros is configured and never
+        # takes the plays down with it. The warehouse goes with it: games by school, not by mascot (two Cowboys).
         from atlas.owner import board
 
-        sections = [*board.build(passphrase, now=now), *sections]
+        sections = [*board.build(passphrase, now=now, research=research), *sections]
         data = {"built_at": _now(), "sections": [{k: v for k, v in s.items() if k != "record"} for s in sections]}
         plain = json.dumps(owner._clean(data), separators=(",", ":"), allow_nan=False).encode("utf-8")
         box = owner.encrypt(plain, passphrase)

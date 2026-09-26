@@ -64,6 +64,9 @@ PICK_COLUMNS = ["pick_id", "game_id", "event_id", "sport", "season", "week", "ki
                 "ev_price", "ev_atlas", "atlas_number", "formed_at"]
 #: Games this far ahead are on the board.
 HORIZON = timedelta(days=8)
+#: The markets captured. The board prices totals and spreads; moneylines are for the exchanges
+#: (`atlas/owner/trading.py`), where the game-winner contract is the main market.
+CAPTURED = ("total", "spread", "moneyline")
 #: How close a BettingPros event's scheduled time must be to ESPN's kickoff to be the same game.
 MATCH_WINDOW = pd.Timedelta(minutes=45)
 #: A pick: positive expected value at the best price, by the measure the market allows.
@@ -161,7 +164,7 @@ def capture(client: bp.Client, games: pd.DataFrame, now: datetime) -> tuple[pd.D
         if pairs.empty:
             LOG.warning("board: no %s game matched a BettingPros event", sport)
             continue
-        found = bp.offers(client, sport, pairs["event_id"].tolist(), captured_at=stamp)
+        found = bp.offers(client, sport, pairs["event_id"].tolist(), markets=CAPTURED, captured_at=stamp)
         found = found.merge(pairs, on="event_id", how="inner")
         lines.append(found)
         matched.append(ev.merge(pairs, on="event_id", how="inner"))
@@ -294,11 +297,12 @@ LEG_COLUMNS = ["game_id", "event_id", "sport", "season", "week", "kickoff", "mar
 
 
 def legs(lines: pd.DataFrame, events: pd.DataFrame, projections: pd.DataFrame, shapes: dict,
-         now: datetime, calibration: pd.DataFrame | None = None) -> pd.DataFrame:
-    """Every takeable book's current price on every side, valued: one row per game, market, side and
-    book, with the fair probability under the consensus read at that book's line, Atlas's probability
-    on totals, and both expected values. The board is the best of these per side; the parlays combine
-    them across games at one book."""
+         now: datetime, calibration: pd.DataFrame | None = None, books=None) -> pd.DataFrame:
+    """Every takeable book's current price on every side of the totals and spreads, valued: one row per
+    game, market, side and book, with the fair probability under the consensus read at that book's line,
+    Atlas's probability on totals, and both expected values. The board is the best of these per side; the
+    parlays combine them across games at one book. ``books`` asks for those books instead of the takeable
+    sportsbooks (the exchanges, for `atlas/owner/trading.py`); expected values there are before fees."""
     if lines.empty:
         return pd.DataFrame(columns=LEG_COLUMNS)
     p = projections.sort_values("refreshed_at").drop_duplicates("game_id", keep="last") if not projections.empty \
@@ -308,6 +312,8 @@ def legs(lines: pd.DataFrame, events: pd.DataFrame, projections: pd.DataFrame, s
     curves = {sport: edge_curve(calibration, sport) for sport in set(lines["sport"].astype(str))}
     rows = []
     for (game_id, market), part in lines.assign(game_id=lines["game_id"].astype(str)).groupby(["game_id", "market"]):
+        if market not in ("total", "spread"):
+            continue
         info = ev_by_game.loc[game_id] if game_id in ev_by_game.index else None
         home_abbr = str(info["home_abbr"]) if info is not None else None
         visitor_abbr = str(info["visitor_abbr"]) if info is not None else None
@@ -324,7 +330,7 @@ def legs(lines: pd.DataFrame, events: pd.DataFrame, projections: pd.DataFrame, s
         pr = proj.loc[game_id] if proj is not None and game_id in proj.index else None
         atlas_number = float(pr["total_mean"]) if pr is not None and market == "total" else (
             float(pr["margin_mean"]) if pr is not None else float("nan"))
-        take = part[bp.takeable(part)]
+        take = part[bp.takeable(part)] if books is None else part[quotable(part, books)]
         sides = [side_of(r, market, home_abbr, visitor_abbr, cons["line"]) for r in take.itertuples()]
         curve = curves.get(sport)
         move = cons["line"] - cons["open_line"] if math.isfinite(cons["open_line"]) else float("nan")
@@ -361,6 +367,16 @@ def legs(lines: pd.DataFrame, events: pd.DataFrame, projections: pd.DataFrame, s
                     "forecast_wind": wind, "stadium_type": info["stadium_type"] if info is not None else None,
                 })
     return pd.DataFrame(rows, columns=LEG_COLUMNS)
+
+
+def quotable(lines: pd.DataFrame, books) -> pd.Series:
+    """Rows that are a real, current quote from one of ``books``: not off, and a price (an exchange's
+    filled market reads -99900)."""
+    if lines.empty:
+        return pd.Series(dtype=bool)
+    cost = pd.to_numeric(lines["cost"], errors="coerce")
+    return lines["book_id"].isin([int(b) for b in books]) & ~lines["is_off"].astype(bool) & cost.notna() \
+        & (cost.abs() < 5000)
 
 
 def price(lines: pd.DataFrame, events: pd.DataFrame, projections: pd.DataFrame, shapes: dict,
@@ -652,7 +668,7 @@ def sections(board: pd.DataFrame, chosen: pd.DataFrame, graded: pd.DataFrame, na
         f"Built {_eastern(now)} ET from {calls} API calls. Lines are licensed to the owner: they live only inside this "
         "ciphertext and in the sealed market record, never on a public page.",
     ]
-    return [{"title": "The board", "notes": notes, "tables": tables}]
+    return [{"title": "The board", "tab": "Board", "notes": notes, "tables": tables}]
 
 
 # ---------------------------------------------------------------------------
@@ -662,9 +678,10 @@ def sections(board: pd.DataFrame, chosen: pd.DataFrame, graded: pd.DataFrame, na
 
 def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, now: datetime | None = None,
           client: bp.Client | None = None, market_where: Path | None = None, picks_where: Path | None = None,
-          parlays_where: Path | None = None) -> list[dict]:
-    """Capture the market, seal it, price the board, log and grade the picks and the day's parlays, and
-    return the sections. Never raises; returns nothing when BettingPros is not configured."""
+          parlays_where: Path | None = None, trading_where: Path | None = None) -> list[dict]:
+    """Capture the market, seal it, price the board, log and grade the picks, the day's parlays and the
+    exchange positions, and return the sections. Never raises; returns nothing when BettingPros is not
+    configured."""
     now = now or datetime.now(UTC)
     client = client or bp.Client.from_env()
     if client is None:
@@ -684,7 +701,8 @@ def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, 
         record, added = market_store.append(record, lines)
         if not added.empty:
             market_store.seal(record, passphrase, added, market_where)
-        table = legs(lines, events, projections, shapes, now, store.read("calibration"))
+        calibration = store.read("calibration")
+        table = legs(lines, events, projections, shapes, now, calibration)
         board = price(lines, events, projections, shapes, now, table=table)
         chosen = picks(board)
         pick_record = load_picks(passphrase, picks_where)
@@ -704,15 +722,17 @@ def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, 
                                                              strict=True)}
         for g in games.itertuples():
             names.setdefault(str(g.game_id), f"{str(g.away_team).split(' ')[-1]} @ {str(g.home_team).split(' ')[-1]}")
-        from atlas.owner import parlays
+        from atlas.owner import parlays, trading
 
         finals = paper.results(research, games)
         return [*sections(board, chosen, graded, names, now, client.calls),
-                *parlays.build(table, finals, names, passphrase, now, where=parlays_where)]
+                *parlays.build(table, finals, names, passphrase, now, where=parlays_where),
+                *trading.build(lines, events, projections, shapes, calibration, finals, closes, names, passphrase,
+                               now, where=trading_where)]
     except Exception as error:  # noqa: BLE001 - the type only: a message could quote a line
         LOG.error("board not built: %s", type(error).__name__)
-        return [{"title": "The board", "notes": [f"This run could not build the board ({type(error).__name__})."],
-                 "tables": []}]
+        return [{"title": "The board", "tab": "Board",
+                 "notes": [f"This run could not build the board ({type(error).__name__})."], "tables": []}]
 
 
 def main() -> None:

@@ -209,7 +209,7 @@ def section(w: pd.DataFrame, games: pd.DataFrame | None = None) -> dict:
     if recent_rows:
         tables.append({"title": "Latest college totals, strongest 10%",
                        "head": ["Game", "Side (price)", "Result (units)"], "rows": recent_rows})
-    return {"title": "Paper tracker", "notes": notes, "tables": tables, "record": recs}
+    return {"title": "Paper tracker", "tab": "More", "notes": notes, "tables": tables, "record": recs}
 
 
 def build(store=None, research: pd.DataFrame | None = None) -> dict | None:

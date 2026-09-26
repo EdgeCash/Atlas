@@ -319,7 +319,7 @@ def section(chosen: pd.DataFrame, graded: pd.DataFrame, now: datetime) -> list[d
         f"pushed leg drops out and the odds reduce, as the books settle it. Nothing is read from fewer than "
         f"{MIN_GRADED} graded. Built {_eastern(now)} ET.",
     ]
-    return [{"title": "Daily parlays", "notes": notes, "tables": tables}]
+    return [{"title": "Daily parlays", "tab": "Parlays", "notes": notes, "tables": tables}]
 
 
 def build(legs: pd.DataFrame, finals: pd.DataFrame, names: dict, passphrase: str, now: datetime,
@@ -338,5 +338,5 @@ def build(legs: pd.DataFrame, finals: pd.DataFrame, names: dict, passphrase: str
         return section(chosen, graded, now)
     except Exception as error:  # noqa: BLE001 - the type only: a message could quote a line
         LOG.error("parlays not built: %s", type(error).__name__)
-        return [{"title": "Daily parlays", "notes": [f"This run could not build the parlays ({type(error).__name__})."],
-                 "tables": []}]
+        return [{"title": "Daily parlays", "tab": "Parlays",
+                 "notes": [f"This run could not build the parlays ({type(error).__name__})."], "tables": []}]

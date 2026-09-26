@@ -106,14 +106,12 @@ def test_the_plays_are_sealed_and_only_the_owner_key_opens_them(tmp_path):
                              "season_type": ["regular"] * 4 + ["postseason", "regular"]})
     where = tmp_path / "owner_plays"
     sections = plays.build(KEY, store=store, research=research, now=NOW, where=where)
-    assert [s["title"] for s in sections] == ["Curated plays, rule v3 (the plays going forward)",
-                                              "Curated plays, rule v1", "Curated plays, rule v2"]
-    out = sections[1]
-    upcoming = out["tables"][0]
-    assert upcoming["title"] == "This week: 2 plays"
-    assert upcoming["rows"][0][1] == "over 50 (-115)" and "Chippewas @ Hurricanes" in upcoming["rows"][0][0]
-    assert "Atlas 60.0" in upcoming["rows"][0][0]
-    assert any(t["title"].startswith("History before the freeze") for t in out["tables"])
+    assert [(s["title"], s["tab"]) for s in sections] == [("Curated plays", "Plays")]    # one list, not one per rule
+    upcoming = sections[0]["tables"][0]
+    assert upcoming["title"] == "Open plays: 2"
+    assert upcoming["rows"][0][1] == "over 50 (-115) DraftKings" and "Chippewas @ Hurricanes" in upcoming["rows"][0][0]
+    assert upcoming["rows"][0][2] == "60.0 (10.0 off)"
+    assert not any(t["title"].startswith("History") for t in sections[0]["tables"])
     text = (where / "2026-04.enc.json").read_text()
     assert "Hurricanes" not in text and "Trojans" not in text and set(json.loads(text)) >= {"ct", "iv", "salt"}
     assert len(plays.load(KEY, where)) == 2
@@ -164,22 +162,24 @@ def test_each_rule_keeps_its_own_record(tmp_path):
                              "away_team": ["West Virginia", "Hawai'i"]})
     where = tmp_path / "owner_plays"
     sections = plays.build(KEY, store=store, research=research, now=saturday, where=where)
-    assert sections[2]["tables"][0]["rows"][0][0].startswith("West Virginia @ Oklahoma State")   # schools, not mascots
-    assert [s["title"] for s in sections] == ["Curated plays, rule v3 (the plays going forward)",
-                                              "Curated plays, rule v1", "Curated plays, rule v2"]
+    assert [s["title"] for s in sections] == ["Curated plays"]
+    open_ = sections[0]["tables"][0]
+    assert open_["rows"][0][0].startswith("West Virginia @ Oklahoma State")              # schools, not mascots
     record = plays.load(KEY, where)
     # 4 AM Saturday: v1 and v2 choose; v3 waits for the first poll from 10:00 ET.
     assert sorted(zip(record["rule"], record["game_id"], strict=True)) == [
         ("cfb-total-5-v1", 1), ("cfb-total-top5-v2", 1), ("cfb-total-top5-v2", 2)]
-    assert sections[2]["tables"][0]["title"].startswith("This week: 2 plays, chosen Sat 4:00 AM ET")
-    assert sections[0]["tables"][0]["rows"] == [["No game qualifies right now.", ""]]
+    # Game 1, chosen by v1 and v2 at 4 AM, is one row: the page lists games, not rules.
+    assert open_["title"] == "Open plays: 2" and all(r[3].startswith("Sat 4:00 AM") for r in open_["rows"])
     ten = datetime(2026, 9, 26, 14, 4, tzinfo=UTC)                                       # 10:04 AM Eastern
     sections = plays.build(KEY, store=store, research=research, now=ten, where=where)
     record = plays.load(KEY, where)
     assert sorted(zip(record["rule"], record["game_id"], strict=True)) == [
         ("cfb-total-5-v1", 1), ("cfb-total-top5-sat10-v3", 1), ("cfb-total-top5-sat10-v3", 2),
         ("cfb-total-top5-v2", 1), ("cfb-total-top5-v2", 2)]
-    assert sections[0]["tables"][0]["title"] == "This week: 2 plays, chosen Sat 10:04 AM ET"
+    # Each open play shows its latest logging, v3's at 10:04, the line to bet now; still one row a game.
+    open_ = sections[0]["tables"][0]
+    assert open_["title"] == "Open plays: 2" and all(r[3].startswith("Sat 10:04 AM") for r in open_["rows"])
     # v3's line is the 10 AM one; v2's was the 4 AM one, and neither is revised by the other.
     v3 = record[record["rule"] == "cfb-total-top5-sat10-v3"]
     assert v3["formed_at"].str.startswith("2026-09-26T14:04").all()
@@ -343,8 +343,8 @@ def test_the_plays_box_is_sealed_by_every_run_and_says_why_when_it_cannot_be(tmp
     text = where.read_text()
     assert "Miami" not in text and "Oregon" not in text and "over 50" not in text
     data = json.loads(owner.decrypt(record["box"], KEY))
-    assert [s["title"] for s in data["sections"]][1] == "Curated plays, rule v1"
-    assert data["sections"][1]["tables"][0]["title"] == "This week: 2 plays"
+    assert [s["title"] for s in data["sections"]] == ["Curated plays"]
+    assert data["sections"][0]["tables"][0]["title"] == "Open plays: 2" and data["sections"][0]["tab"] == "Plays"
     assert all("record" not in s for s in data["sections"])
     assert (tmp_path / "tracking" / "owner_plays" / "2026-04.enc.json").exists()   # logged and sealed as well
     page = render.owner_page({"built_at": None, "box": None, "reason": "No slate."}, plays=record)
@@ -376,3 +376,28 @@ def test_the_daily_rules_choose_only_at_the_rebuild_and_v3_at_any_run(tmp_path):
     plays.build(KEY, store=store, research=research, now=ten, where=where, heavy=False)
     record = plays.load(KEY, where)
     assert set(record["rule"]) == {"cfb-total-top5-sat10-v3"}
+
+
+def test_the_master_record_counts_each_game_once_at_its_first_logging():
+    """Two rules choosing the same game and side are one play in the record, graded at the first line taken."""
+    base = {**dict.fromkeys(plays.COLUMNS), "season": 2026, "week": 4, "kickoff": "2026-09-26T16:00:00Z",
+            "home_team": "A B", "away_team": "C D", "book": "DraftKings", "atlas_total": 60.0, "gap": 10.0}
+    record = pd.DataFrame([
+        {**base, "play_id": "v1", "rule": plays.RULE_V1.id, "game_id": 1, "side": "over", "line": 49.5,
+         "price": -110.0, "formed_at": "2026-09-26T08:00:00+00:00"},
+        {**base, "play_id": "v3", "rule": plays.RULE_V3.id, "game_id": 1, "side": "over", "line": 51.5,
+         "price": -110.0, "formed_at": "2026-09-26T14:04:00+00:00"},
+        {**base, "play_id": "x", "rule": plays.RULE_V1.id, "game_id": 2, "side": "under", "line": 45.0,
+         "price": -105.0, "formed_at": "2026-09-26T08:00:00+00:00"},
+    ])
+    finals = pd.DataFrame({"game_id": ["1", "2"], "final_margin": [0.0, 0.0], "final_total": [51.0, 47.0]})
+    g = plays.graded(record, finals)
+    once = plays.distinct(g)
+    assert sorted(once["play_id"]) == ["v1", "x"]                                        # game 1 at 49.5, not 51.5
+    sec = plays.master_section(g, datetime(2026, 9, 27, tzinfo=UTC))
+    rows = dict(next(t for t in sec["tables"] if t["title"] == "Record")["rows"])
+    assert rows["Graded"] == "2" and rows["Won-lost-push"] == "1-1-0"   # over 49.5 wins at 51; under 45 loses at 47
+    assert sec["tables"][0]["rows"] == [["No game qualifies right now.", ""]]
+    latest = next(t for t in sec["tables"] if t["title"] == "Latest graded")["rows"]
+    assert len(latest) == 2
+

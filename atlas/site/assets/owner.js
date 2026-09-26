@@ -4,7 +4,8 @@
  * see atlas/dfs/owner.py and atlas/owner/plays.py): one box for the plays,
  * one for the lineups, both under the same passphrase. The passphrase is
  * typed here, the keys are derived here, and the plaintext exists only in
- * this tab's memory. Nothing is stored and nothing is sent anywhere.
+ * this tab's memory. Nothing is stored and nothing is sent anywhere. Opened,
+ * the page is a row of tabs; each section names the one it belongs in.
  */
 (function () {
   "use strict";
@@ -17,6 +18,7 @@
   var playsBox = record.plays;
   var status = document.getElementById("owner-status");
   var out = document.getElementById("owner-out");
+  var gate = form.parentNode;          // the passphrase card: out of the way while the page is open
 
   if (!box && !playsBox) { form.hidden = true; return; }
   if (!(window.crypto && window.crypto.subtle)) {
@@ -167,28 +169,112 @@
     return card;
   }
 
-  // The curated plays first: they are what the page is for. Each section
-  // brings its own words; the script holds none of them.
-  function renderPlays(plays) {
-    if (!plays) return;
-    var head = el("div", { "class": "card card-pad" });
-    head.appendChild(el("h2", null, "Curated plays"));
-    head.appendChild(el("p", { "class": "note" }, "Built " + eastern(plays.built_at)));
-    var close = el("button", { type: "button", "class": "button ghost" }, "Close");
-    close.addEventListener("click", function () { out.textContent = ""; form.hidden = false; status.textContent = ""; });
-    var actions = el("div", { "class": "lede-actions" });
-    actions.appendChild(close);
-    head.appendChild(actions);
-    out.appendChild(head);
-    (plays.sections || []).forEach(function (sec) { out.appendChild(sectionCard(sec)); });
+  // The page opens on tabs. Each section names its tab; one sealed before tabs
+  // existed is placed by its title. The script holds the tabs' names, nothing else.
+  var TABS = ["Plays", "Board", "Parlays", "Trading", "DFS", "More"];
+
+  function tabOf(sec) {
+    if (sec.tab) return sec.tab;
+    var t = sec.title || "";
+    if (/^Curated plays/.test(t)) return "Plays";
+    if (/^The board/.test(t)) return "Board";
+    if (/parlays/i.test(t)) return "Parlays";
+    return "More";
   }
 
-  function render(data) {
+  function slug(name) { return name.toLowerCase().replace(/[^a-z]+/g, "-"); }
+
+  function shell(plays, data) {
+    var head = el("div", { "class": "card card-pad owner-head" });
+    var built = [];
+    if (plays && plays.built_at) built.push("Plays, board and markets built " + eastern(plays.built_at));
+    if (data && data.built_at) built.push("lineups built " + eastern(data.built_at));
+    head.appendChild(el("p", { "class": "note" }, built.join(" · ")));
+    var close = el("button", { type: "button", "class": "button ghost" }, "Close");
+    close.addEventListener("click", function () {
+      out.textContent = ""; form.hidden = false; status.textContent = ""; gate.style.display = "";
+      if (history.replaceState) history.replaceState(null, "", location.pathname + location.search);
+    });
+    head.appendChild(close);
+    out.appendChild(head);
+    var bar = el("div", { "class": "owner-tabs", role: "tablist", "aria-label": "Owner sections" });
+    out.appendChild(bar);
+    var panels = {}, buttons = {}, order = [];
+
+    function panel(name) {
+      if (panels[name]) return panels[name];
+      var id = "owner-tab-" + slug(name);
+      var b = el("button", { type: "button", "class": "owner-tab", role: "tab", id: id + "-tab",
+                             "aria-controls": id, "aria-selected": "false", tabindex: "-1" }, name);
+      var p = el("div", { "class": "owner-panel", role: "tabpanel", id: id, "aria-labelledby": id + "-tab" });
+      p.hidden = true;
+      b.addEventListener("click", function () { select(name, true); });
+      b.addEventListener("keydown", function (ev) {
+        var i = order.indexOf(name);
+        if (ev.key === "ArrowRight" || ev.key === "ArrowLeft") {
+          ev.preventDefault();
+          var next = order[(i + (ev.key === "ArrowRight" ? 1 : order.length - 1)) % order.length];
+          select(next, true);
+          buttons[next].focus();
+        }
+      });
+      panels[name] = p; buttons[name] = b;
+      return p;
+    }
+
+    function select(name, remember) {
+      order.forEach(function (n) {
+        var on = n === name;
+        buttons[n].setAttribute("aria-selected", on ? "true" : "false");
+        buttons[n].setAttribute("tabindex", on ? "0" : "-1");
+        panels[n].hidden = !on;
+      });
+      if (remember && history.replaceState) history.replaceState(null, "", "#" + slug(name));
+    }
+
+    function finish() {
+      // Tabs in their fixed order, then any a section named that the script does not know.
+      var names = Object.keys(panels);
+      order = TABS.filter(function (n) { return names.indexOf(n) >= 0; })
+        .concat(names.filter(function (n) { return TABS.indexOf(n) < 0; }));
+      order.forEach(function (n) { bar.appendChild(buttons[n]); out.appendChild(panels[n]); });
+      var wanted = (location.hash || "").replace("#", "");
+      var start = order.filter(function (n) { return slug(n) === wanted; })[0] || order[0];
+      if (start) select(start, false);
+    }
+
+    return { panel: panel, finish: finish };
+  }
+
+  // A section brings its own words: the page's script holds none of them.
+  function sectionCard(sec) {
+    var card = el("div", { "class": "card card-pad top-gap" });
+    card.appendChild(el("h3", null, sec.title || ""));
+    (sec.tables || []).forEach(function (t) {
+      if (t.title) card.appendChild(el("h4", { "class": "top-gap" }, t.title));
+      card.appendChild(table(t.head || [], t.rows || []));
+    });
+    // The explanations after the numbers, folded: read once, not scrolled past every visit.
+    if ((sec.notes || []).length) {
+      var more = el("details", { "class": "owner-notes top-gap" });
+      more.appendChild(el("summary", null, "How this works"));
+      sec.notes.forEach(function (n) { more.appendChild(el("p", { "class": "note" }, n)); });
+      card.appendChild(more);
+    }
+    return card;
+  }
+
+  function renderPlays(plays, page) {
+    if (!plays) return;
+    (plays.sections || []).forEach(function (sec) { page.panel(tabOf(sec)).appendChild(sectionCard(sec)); });
+  }
+
+  function render(data, page) {
     if (!data) return;
+    var into = page.panel("DFS");
     var slates = data.slates || [];
     var head = el("div", { "class": "card card-pad top-gap" });
-    head.appendChild(el("h2", null, slates.length ? slates.length + " slates this week" : "No slate this week"));
-    head.appendChild(el("p", { "class": "note" }, "Built " + eastern(data.built_at)));
+    head.appendChild(el("h3", null, slates.length ? slates.length + " slates this week" : "No slate this week"));
     if (!slates.length && data.note) head.appendChild(el("p", { "class": "note" }, data.note));
     var choose = el("select", { "aria-label": "Slate", "class": "owner-slate" });
     slates.forEach(function (s, i) { choose.appendChild(el("option", { value: String(i) }, slateName(s))); });
@@ -196,37 +282,24 @@
       return s.game_type === "Classic" && s.label === "Main" && (s.sport || "nfl") === "nfl";
     });
     if (main >= 0) choose.value = String(main);
-    if (slates.length) head.appendChild(choose);
-    var actions = el("div", { "class": "lede-actions" });
-    var dl = el("button", { type: "button", "class": "button" }, "Download this slate's DraftKings upload file");
-    dl.addEventListener("click", function () { download(slates[Number(choose.value)]); });
-    var close = el("button", { type: "button", "class": "button ghost" }, "Close");
-    close.addEventListener("click", function () { out.textContent = ""; form.hidden = false; status.textContent = ""; });
-    if (slates.length) actions.appendChild(dl);
-    actions.appendChild(close);
-    head.appendChild(actions);
-    out.appendChild(head);
+    if (slates.length) {
+      head.appendChild(choose);
+      var dl = el("button", { type: "button", "class": "button" }, "Download this slate's DraftKings upload file");
+      dl.addEventListener("click", function () { download(slates[Number(choose.value)]); });
+      var actions = el("div", { "class": "lede-actions" });
+      actions.appendChild(dl);
+      head.appendChild(actions);
+    }
+    into.appendChild(head);
     var holder = el("div");
-    out.appendChild(holder);
+    into.appendChild(holder);
     choose.addEventListener("change", function () { lineupCards(slates[Number(choose.value)], holder); });
     if (slates.length) lineupCards(slates[Number(choose.value)], holder);
 
-    if ((data.players || []).length) out.appendChild(poolCard("Every player, by projection", data.players));
-    if (data.college_players) out.appendChild(poolCard("College: every player, by projection", data.college_players));
-    if (data.college_record) out.appendChild(recordCard(data.college_record));
-    (data.sections || []).forEach(function (sec) { out.appendChild(sectionCard(sec)); });
-  }
-
-  // A section brings its own words: the page's script holds none of them.
-  function sectionCard(sec) {
-    var card = el("div", { "class": "card card-pad top-gap" });
-    card.appendChild(el("h3", null, sec.title || ""));
-    (sec.notes || []).forEach(function (n) { card.appendChild(el("p", { "class": "note" }, n)); });
-    (sec.tables || []).forEach(function (t) {
-      if (t.title) card.appendChild(el("h4", { "class": "top-gap" }, t.title));
-      card.appendChild(table(t.head || [], t.rows || []));
-    });
-    return card;
+    if ((data.players || []).length) into.appendChild(poolCard("Every player, by projection", data.players));
+    if (data.college_players) into.appendChild(poolCard("College: every player, by projection", data.college_players));
+    if (data.college_record) into.appendChild(recordCard(data.college_record));
+    (data.sections || []).forEach(function (sec) { page.panel(tabOf(sec)).appendChild(sectionCard(sec)); });
   }
 
   form.addEventListener("submit", function (ev) {
@@ -239,11 +312,15 @@
       status.textContent = "";
       try {
         out.textContent = "";
-        renderPlays(opened[0]);
-        render(opened[1]);
+        var page = shell(opened[0], opened[1]);
+        renderPlays(opened[0], page);
+        render(opened[1], page);
+        page.finish();
+        gate.style.display = "none";
       } catch (e) {
         // Opened, but not shown: say so rather than blame the passphrase.
         form.hidden = false;
+        gate.style.display = "";
         status.textContent = "The page opened but could not be shown (" + e.name + ").";
         if (window.console) console.error(e);
       }
