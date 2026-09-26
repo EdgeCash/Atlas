@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-09-26T16:53:13.187069+00:00",
+      "detail": "market in 7s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T16:53:13.036576+00:00",
+      "detail": "98 cards, 16 NFL cards, 132 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-09-26T16:38:21.668486+00:00",
       "detail": "market in 7s",
       "mode": "NCAAF Saturday",
@@ -1215,24 +1228,12 @@
       "detail": "24 files",
       "name": "social",
       "ok": true
-    },
-    {
-      "at": "2026-09-23T15:29:06.226552+00:00",
-      "detail": "58 cards, 116 teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T15:29:06.225230+00:00",
-      "detail": "24 files",
-      "name": "social",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-09-26T16:38:21.510894+00:00",
-      "detail": "99 cards, 16 NFL cards, 132 teams, 30 NFL teams",
+      "at": "2026-09-26T16:53:13.036576+00:00",
+      "detail": "98 cards, 16 NFL cards, 132 teams, 30 NFL teams",
       "name": "build",
       "ok": true
     },
@@ -1243,7 +1244,7 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-09-26T16:38:21.668486+00:00",
+      "at": "2026-09-26T16:53:13.187069+00:00",
       "detail": "market in 7s",
       "mode": "NCAAF Saturday",
       "name": "poll",
@@ -1258,8 +1259,8 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-09-26T16:38:21.510894+00:00",
-      "detail": "99 cards, 16 NFL cards, 132 teams, 30 NFL teams",
+      "at": "2026-09-26T16:53:13.036576+00:00",
+      "detail": "98 cards, 16 NFL cards, 132 teams, 30 NFL teams",
       "name": "build",
       "ok": true
     },
@@ -1270,7 +1271,7 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-09-26T16:38:21.668486+00:00",
+      "at": "2026-09-26T16:53:13.187069+00:00",
       "detail": "market in 7s",
       "mode": "NCAAF Saturday",
       "name": "poll",

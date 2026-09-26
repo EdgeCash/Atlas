@@ -1,6 +1,6 @@
 # Atlas Live CLV Tracking
 
-*Generated 2026-09-26 16:37 UTC by `python -m atlas.live report`. Updated on every run
+*Generated 2026-09-26 16:52 UTC by `python -m atlas.live report`. Updated on every run
 of the tracker. Source tables are the CSVs in `tracking/`, which are committed
 alongside this file so the record can be audited row by row.*
 
@@ -18,7 +18,7 @@ alongside this file so the record can be audited row by row.*
 | Signals recorded | 143 |
 | Primary signals | 1 |
 | Graded (decided) | 0 |
-| Awaiting kickoff | 113 |
+| Awaiting kickoff | 111 |
 | Seasons of tracking | 1 of 2 required |
 | Verdict possible at | 124 graded primary signals |
 
@@ -61,8 +61,8 @@ _No graded signals yet._
 
 | Population | Signals | Graded | Pushes | Beat rate | 95% low | 95% high | p vs 50% | Mean CLV | Median CLV | Mean CLV (prob) | Flagged |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| observed | 30 | 22 | 8 | 0.4091 | 0.2326 | 0.6127 | 0.8569 | 0.0000 | 0 | 0.0003 | 12 |
-| all | 30 | 22 | 8 | 0.4091 | 0.2326 | 0.6127 | 0.8569 | 0.0000 | 0 | 0.0003 | 12 |
+| observed | 32 | 23 | 9 | 0.3913 | 0.2216 | 0.5921 | 0.8950 | -0.0156 | 0 | 0.0006 | 13 |
+| all | 32 | 23 | 9 | 0.3913 | 0.2216 | 0.5921 | 0.8950 | -0.0156 | 0 | 0.0006 | 13 |
 
 `primary` is the population the criteria are evaluated on: totals at or above
 the historical 90th percentile of disagreement. `secondary` is the same cut on
@@ -94,9 +94,9 @@ beat rate and reported separately.
 | Table | Rows | What it holds |
 |---|---|---|
 | `tracking/games.csv` | 102 | every game seen, with kickoff and status |
-| `tracking/snapshots.csv` | 944 | append-on-change line observations, timestamped |
+| `tracking/snapshots.csv` | 947 | append-on-change line observations, timestamped |
 | `tracking/signals.csv` | 143 | immutable opinions |
-| `tracking/grades.csv` | 30 | one row per graded signal |
+| `tracking/grades.csv` | 32 | one row per graded signal |
 
 ---
 
