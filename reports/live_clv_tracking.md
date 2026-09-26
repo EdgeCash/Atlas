@@ -1,6 +1,6 @@
 # Atlas Live CLV Tracking
 
-*Generated 2026-09-26 22:22 UTC by `python -m atlas.live report`. Updated on every run
+*Generated 2026-09-26 22:37 UTC by `python -m atlas.live report`. Updated on every run
 of the tracker. Source tables are the CSVs in `tracking/`, which are committed
 alongside this file so the record can be audited row by row.*
 
@@ -17,12 +17,12 @@ alongside this file so the record can be audited row by row.*
 |---|---|
 | Signals recorded | 143 |
 | Primary signals | 1 |
-| Graded (decided) | 0 |
-| Awaiting kickoff | 73 |
+| Graded (decided) | 1 |
+| Awaiting kickoff | 69 |
 | Seasons of tracking | 1 of 2 required |
 | Verdict possible at | 124 graded primary signals |
 
-**The record is too short to decide anything.** 0 graded signals against the 124 needed to separate the beat rate from a coin flip. Numbers below are reported because they are the record, not because they mean anything yet.
+**The record is too short to decide anything.** 1 graded signals against the 124 needed to separate the beat rate from a coin flip. Numbers below are reported because they are the record, not because they mean anything yet.
 
 ---
 
@@ -33,9 +33,9 @@ signal existed. They are checked, never tuned.
 
 | Criterion | Observed | Threshold | Graded | Status | Requirement |
 |---|---|---|---|---|---|
-| CLV beat rate | n/a | 0.55 | 0 | collecting | must stay at or above 55% |
-| Mean CLV | n/a | 0.49 | 0 | collecting | must stay at or above 0.49 points |
-| Execution window | n/a | 0.5 | 0 | collecting | share of signals where the line had already moved 0.5+ points toward Atlas before it spoke |
+| CLV beat rate | 1.0000 | 0.55 | 1 | collecting | must stay at or above 55% |
+| Mean CLV | 1.0000 | 0.49 | 1 | collecting | must stay at or above 0.49 points |
+| Execution window | 1.0000 | 0.5 | 1 | collecting | share of signals where the line had already moved 0.5+ points toward Atlas before it spoke |
 
 ---
 
@@ -43,26 +43,35 @@ signal existed. They are checked, never tuned.
 
 ### By season
 
-_No graded signals yet._
+| Season | Signals | Graded | Pushes | Beat rate | 95% low | 95% high | p vs 50% | Mean CLV | Median CLV | Mean CLV (prob) | Flagged |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 2026 | 1 | 1 | 0 | 1.0000 | 0.2065 | 1.0000 | 0.5000 | 1.0000 | 1 | 0.0460 | 1 |
 
 ### By week
 
-_No graded signals yet._
+| Season | Week | Signals | Graded | Pushes | Beat rate | Mean CLV | Median CLV | Mean CLV (prob) | Flagged |
+|---|---|---|---|---|---|---|---|---|---|
+| 2026 | 4.0000 | 1 | 1 | 0 | 1.0000 | 1.0000 | 1 | 0.0460 | 1 |
 
 ### By day
 
-_No graded signals yet._
+| Date | Signals | Graded | Pushes | Beat rate | Mean CLV | Median CLV | Mean CLV (prob) | Flagged |
+|---|---|---|---|---|---|---|---|---|
+| 2026-09-26 | 1 | 1 | 0 | 1.0000 | 1.0000 | 1 | 0.0460 | 1 |
 
 ### By book
 
-_No graded signals yet._
+| Book | Signals | Graded | Pushes | Beat rate | Mean CLV | Median CLV | Mean CLV (prob) | Flagged |
+|---|---|---|---|---|---|---|---|---|
+| DraftKings | 1 | 1 | 0 | 1.0000 | 1.0000 | 1 | 0.0460 | 1 |
 
 ### Every population, including the ones the criteria ignore
 
 | Population | Signals | Graded | Pushes | Beat rate | 95% low | 95% high | p vs 50% | Mean CLV | Median CLV | Mean CLV (prob) | Flagged |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| observed | 70 | 48 | 22 | 0.4167 | 0.2885 | 0.5572 | 0.9033 | -0.0857 | 0 | -0.0018 | 29 |
-| all | 70 | 48 | 22 | 0.4167 | 0.2885 | 0.5572 | 0.9033 | -0.0857 | 0 | -0.0018 | 29 |
+| observed | 73 | 51 | 22 | 0.4314 | 0.3050 | 0.5673 | 0.8688 | -0.0753 | 0 | -0.0015 | 32 |
+| primary | 1 | 1 | 0 | 1.0000 | 0.2065 | 1.0000 | 0.5000 | 1.0000 | 1 | 0.0460 | 1 |
+| all | 74 | 52 | 22 | 0.4423 | 0.3159 | 0.5766 | 0.8341 | -0.0608 | 0 | -0.0009 | 33 |
 
 `primary` is the population the criteria are evaluated on: totals at or above
 the historical 90th percentile of disagreement. `secondary` is the same cut on
@@ -94,9 +103,9 @@ beat rate and reported separately.
 | Table | Rows | What it holds |
 |---|---|---|
 | `tracking/games.csv` | 102 | every game seen, with kickoff and status |
-| `tracking/snapshots.csv` | 1,051 | append-on-change line observations, timestamped |
+| `tracking/snapshots.csv` | 1,053 | append-on-change line observations, timestamped |
 | `tracking/signals.csv` | 143 | immutable opinions |
-| `tracking/grades.csv` | 70 | one row per graded signal |
+| `tracking/grades.csv` | 74 | one row per graded signal |
 
 ---
 
