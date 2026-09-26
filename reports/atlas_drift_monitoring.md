@@ -1,6 +1,6 @@
 # Atlas Drift Monitoring
 
-*Generated 2026-09-26 03:35 UTC by `python -m atlas.live check`. Every alarm compares
+*Generated 2026-09-26 13:24 UTC by `python -m atlas.live check`. Every alarm compares
 the most recent week of the record against its own history.*
 
 ---
@@ -13,15 +13,16 @@ worse problem than the drift it was watching for.
 
 | Alarm | Severity | Observed | Threshold | Detail |
 |---|---|---|---|---|
-| signal volume | alarm | -0.9655 | 0.5 | week 5: 4 signals against 116 the week before (-97%) |
-| silence | ok | 1.1121 | 7 | last signal 1.1 days ago (2026-09-25) |
+| signal volume | alarm | -0.7672 | 0.5 | week 5: 27 signals against 116 the week before (-77%) |
+| silence | ok | 0.0000 | 7 | last signal 0.0 days ago (2026-09-26) |
 | single book | alarm | 1.0000 | 1 | 100% of signals from book 'DraftKings' (1 distinct) |
-| single market | ok | 0.5000 | 1 | 50% of signals from market 'margin' (2 distinct) |
-| model output (margin) | ok | n/a | 3 | 2 recent / 58 prior rows; too few to compare |
-| model output (total) | ok | n/a | 3 | 2 recent / 58 prior rows; too few to compare |
-| disagreement shape (margin) | ok | n/a | 0.01 | 2 recent / 58 prior rows; too few to compare |
-| disagreement shape (total) | ok | n/a | 0.01 | 2 recent / 58 prior rows; too few to compare |
-| primary rate | ok | n/a | 0.5 | 4 recent / 116 prior rows; too few to compare |
+| single market | ok | 0.5035 | 1 | 50% of signals from market 'margin' (2 distinct) |
+| model output (margin) | ok | n/a | 3 | 14 recent / 58 prior rows; too few to compare |
+| model output (total) | ok | n/a | 3 | 13 recent / 58 prior rows; too few to compare |
+| disagreement shape (margin) | ok | n/a | 0.01 | 14 recent / 58 prior rows; too few to compare |
+| disagreement shape (total) | ok | n/a | 0.01 | 13 recent / 58 prior rows; too few to compare |
+| primary rate | ok | n/a | 0.5 | 27 recent / 116 prior rows; too few to compare |
+| college state | ok | n/a | 36 | no refresh on one side of the last game day to compare |
 
 ---
 
@@ -64,7 +65,7 @@ newest week never finds.
 | 2026-w04 | signals | 116 | 116 | 0 | 0 | yes | exact match |
 | 2026-w04 | grades | 10 | 10 | 0 | 0 | yes | exact match |
 | 2026-w04 | statistics | 8 | 8 | 0 | 0 | yes | recomputed from the replayed grades |
-| 2026-w05 | signals | 4 | 4 | 0 | 0 | yes | exact match |
+| 2026-w05 | signals | 27 | 27 | 0 | 0 | yes | exact match |
 | 2026-w05 | grades | 0 | 0 | 0 | 0 | yes | no grades in this period |
 | 2026-w05 | statistics | 0 | 0 | 0 | 0 | yes | no graded signals in period |
 

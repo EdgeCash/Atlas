@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-09-26T13:24:41.369511+00:00",
+      "detail": "market in 6s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T13:24:41.235843+00:00",
+      "detail": "109 cards, 16 NFL cards, 134 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-09-26T03:35:47.328929+00:00",
       "detail": "market in 5s",
       "mode": "ordinary",
@@ -1203,7 +1216,7 @@
   ],
   "last": {
     "build": {
-      "at": "2026-09-26T03:35:47.187519+00:00",
+      "at": "2026-09-26T13:24:41.235843+00:00",
       "detail": "109 cards, 16 NFL cards, 134 teams, 30 NFL teams",
       "name": "build",
       "ok": true
@@ -1215,9 +1228,9 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-09-26T03:35:47.328929+00:00",
-      "detail": "market in 5s",
-      "mode": "ordinary",
+      "at": "2026-09-26T13:24:41.369511+00:00",
+      "detail": "market in 6s",
+      "mode": "NCAAF Saturday",
       "name": "poll",
       "ok": true
     },
@@ -1230,7 +1243,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-09-26T03:35:47.187519+00:00",
+      "at": "2026-09-26T13:24:41.235843+00:00",
       "detail": "109 cards, 16 NFL cards, 134 teams, 30 NFL teams",
       "name": "build",
       "ok": true
@@ -1242,9 +1255,9 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-09-26T03:35:47.328929+00:00",
-      "detail": "market in 5s",
-      "mode": "ordinary",
+      "at": "2026-09-26T13:24:41.369511+00:00",
+      "detail": "market in 6s",
+      "mode": "NCAAF Saturday",
       "name": "poll",
       "ok": true
     },
