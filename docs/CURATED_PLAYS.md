@@ -94,6 +94,14 @@ measured on an earlier version of the model by a script that is not in the
 repository, is shown as frozen, and is not relied on. v3 has none: its
 history is only ever the current model's.
 
+## The board
+
+From 26 September 2026 the owner page also carries the board
+([`OWNER_BOARD.md`](OWNER_BOARD.md)): every upcoming game priced across
+every book BettingPros quotes, with the sides worth taking at the best
+price logged and graded. The curated plays stay as the fixed rules' record;
+the board is where the prices are.
+
 ## What the owner page shows
 
 One passphrase opens two boxes: the curated plays (built by every run) and

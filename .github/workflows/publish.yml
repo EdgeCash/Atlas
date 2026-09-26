@@ -39,6 +39,15 @@ on:
       # Readers section; only the heavy run's Refresh step sees it.
       ATLAS_COUNTER_TOKEN:
         required: false
+      # BettingPros partner API, for the owner's board (atlas/owner/board.py):
+      # every book's line on every game, sealed with the owner key, never
+      # published. The Refresh step sees these in both modes.
+      BP_API_KEY:
+        required: false
+      BP_USER_ID:
+        required: false
+      BP_USER_KEY:
+        required: false
 
 permissions:
   contents: write      # commit tracking/ and the freshness stamp
@@ -201,6 +210,9 @@ jobs:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
           ATLAS_OWNER_KEY: ${{ secrets.ATLAS_OWNER_KEY }}
           ATLAS_COUNTER_TOKEN: ${{ inputs.mode == 'heavy' && secrets.ATLAS_COUNTER_TOKEN || '' }}
+          BP_API_KEY: ${{ secrets.BP_API_KEY }}
+          BP_USER_ID: ${{ secrets.BP_USER_ID }}
+          BP_USER_KEY: ${{ secrets.BP_USER_KEY }}
         # --force because the gate above has already decided, in Eastern time
         # and tolerant of a late start. Letting the task re-apply the strict
         # should_poll() minute test here would undo exactly that.
