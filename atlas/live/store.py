@@ -19,6 +19,8 @@ Tables
                captured each heavy refresh (`atlas/sources/availability.py`)
 ``card_grades`` each card's grade as published before kickoff: the first
                letter it showed and the last (`atlas/site/grade_record.py`)
+``other_models`` FPI, Elo and SP+ for each upcoming game, as last fetched
+               before kickoff (`atlas/sources/other_models.py`)
 """
 
 from __future__ import annotations
@@ -76,6 +78,13 @@ SCHEMA: dict[str, list[str]] = {
         "sport", "game_id", "season", "week", "kickoff", "market",
         "first_letter", "first_score", "first_at",
         "letter", "score", "line", "atlas", "claimed", "home_side", "published_at",
+    ],
+    # Other public models' numbers for each upcoming game, for the card's
+    # panel: a home margin (positive when the home side is ahead), FPI's win
+    # probability where it gives one, when the source published it and when
+    # Atlas fetched it. Written only before kickoff.
+    "other_models": [
+        "sport", "game_id", "kickoff", "model", "home_margin", "home_win_prob", "as_of", "fetched_at", "detail",
     ],
     # DraftKings NFL Classic slates and their salaries (`atlas/sources/draftkings.py`):
     # DraftKings keeps no history, so this is the only record of the market
@@ -147,6 +156,7 @@ KEYS: dict[str, list[str]] = {
     "projections": ["sport", "game_id", "model_version"],
     "calibration": ["sport", "game_id", "market"],
     "card_grades": ["sport", "game_id"],
+    "other_models": ["sport", "game_id", "model"],
     "dfs_slates": ["draft_group_id"],
     # Last capture wins: a player's status (questionable, out) is worth
     # having as of the latest look before the slate locks.
@@ -169,6 +179,7 @@ SORT: dict[str, list[str]] = {
     "projections": ["sport", "season", "week", "game_id", "model_version"],
     "calibration": ["sport", "season", "week", "game_id", "market"],
     "card_grades": ["sport", "season", "week", "game_id"],
+    "other_models": ["sport", "kickoff", "game_id", "model"],
     "dfs_slates": ["starts_at", "draft_group_id"],
     "dfs_salaries": ["draft_group_id", "position", "salary", "player_id"],
     "dfs_projections": ["starts_at", "draft_group_id", "position", "player_id_dk"],

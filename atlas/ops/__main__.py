@@ -78,6 +78,10 @@ def heavy(*, skip_warehouse: bool = False) -> int:
         # before anything the site publishes is written. Never fails the run
         # (atlas/dfs/owner.py).
         ("dfs", ["atlas.dfs.owner"]),
+        # FPI, Elo and SP+ for each upcoming game, fetched fresh for the card's
+        # "other models" panel (display only; the model never reads them).
+        # Never fails the run (atlas/sources/other_models.py).
+        ("other-models", ["atlas.sources.other_models"]),
         ("site", ["atlas.site.build"]),
     ]
     details = []

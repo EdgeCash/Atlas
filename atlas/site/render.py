@@ -306,6 +306,7 @@ def card_page(card: Card, *, bands: dict, overall_band,
         _open_market(card),
         _open_projection(card),
         _open_matchup(card),
+        _open_other_models(card),
         _open_grade(card),
         _open_drivers(card),
         _open_movement(card),
@@ -600,6 +601,64 @@ def _open_matchup(card: Card) -> str:
                   f"how each offense compares with the defense it faces, season to date, "
                   f"ranked among {m.teams} {m.universe}",
                   _matchup_body(card))
+
+
+#: How each other model is named on the card, and what its number is.
+OTHER_MODELS = {
+    "fpi": "FPI (ESPN)",
+    "sp_plus": "SP+",
+    "elo": "Elo",
+}
+
+
+def _by(card: Card, home_margin: float | None) -> str:
+    """"MIA by 13.1" from a home margin; "Even" at zero."""
+    if home_margin is None:
+        return "—"
+    if abs(home_margin) < 0.05:
+        return "Even"
+    side = card.home if home_margin > 0 else card.away
+    return f"{esc(side.abbr)} by {abs(home_margin):.1f}"
+
+
+def _chance(card: Card, home_prob: float | None, home_margin: float | None) -> str:
+    """The win probability of the side the margin favours, so a row reads one way."""
+    if home_prob is None:
+        return "—"
+    return pct(home_prob if (home_margin or 0) >= 0 else 1 - home_prob, 0)
+
+
+def _as_of(value) -> str:
+    """"Sep 25" from a source's timestamp (ESPN writes 2026-09-25T11:00Z)."""
+    from datetime import datetime
+
+    try:
+        return eastern(datetime.fromisoformat(str(value))).strftime("%b %-d")
+    except (TypeError, ValueError):
+        return "—"
+
+
+def _open_other_models(card: Card) -> str:
+    """Other public models beside Atlas and the market, without a verdict
+    (`atlas/sources/other_models.py`). Absent when none has a number."""
+    if not card.other_models:
+        return ""
+    rows = []
+    for r in card.other_models:
+        rows.append([OTHER_MODELS.get(r["model"], esc(str(r["model"]))), _by(card, r.get("home_margin")),
+                     _chance(card, r.get("home_win_prob"), r.get("home_margin")), _as_of(r.get("as_of"))])
+    rows.append(["<b>Atlas</b>", f"<b>{_by(card, card.model_margin)}</b>",
+                 _chance(card, card.home_win_probability, card.model_margin), "live"])
+    if card.market_margin is not None:
+        rows.append(["Market", _by(card, card.market_margin), "—", "live"])
+    note = ('<p class="note">Each model\'s number for this game as its source published it before kickoff; '
+            '<b>Win</b> is the favored side\'s chance to win, where the model gives one. FPI\'s margin and chance '
+            'are ESPN\'s own. SP+ is the difference in the two teams\' ratings, plus 2.5 '
+            'for a home side; Elo is the difference in ratings at 24 points a point, plus 2.6 for a home side, as '
+            'Atlas measured it on past seasons. None of these is an input to Atlas\'s number, and none is here to '
+            'settle anything: they show where Atlas sits among other models.</p>')
+    body = table(["Model", "Margin", "Win", "As of"], rows) + note
+    return _panel("Other models", "what FPI, SP+ and Elo say about this game, beside Atlas and the market", body)
 
 
 def _matchup_value(stat, value: float | None) -> str:

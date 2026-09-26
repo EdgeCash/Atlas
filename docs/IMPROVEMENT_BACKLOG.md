@@ -75,9 +75,15 @@ before 26 September was kept, so the record starts empty and fills as games go
 final. The first letter kept for each card is also what grade movement
 ("opened B, now C") will need.
 
-**An "other models" panel.** S. SP+, FPI and Elo beside Atlas's number, with
-no verdict. The docs call it "the best value-per-hour item"; the data is in
-the warehouse and on no page.
+**An "other models" panel.** Shipped 26 September: `atlas/sources/other_models.py`
+and the card's "Other models" panel. The roadmap's premise that the data was
+already in the warehouse, fresh, did not hold: ESPN's projection was fetched
+once and never refreshed, the schedule file once a season, and SP+ is only the
+previous season's (on purpose, for the model). So the heavy refresh fetches
+them fresh for upcoming games - FPI's own margin and chance to win (both
+sports), current pre-game Elo and current SP+ (college) - and logs them to
+`tracking/other_models.csv` before kickoff. Display only; the model never reads
+them. The same log is the forward record the owner page's consensus label needs.
 
 **Two template fixes.** S.
 - Board rows read `Atlas +0.4` without saying it is the game total
