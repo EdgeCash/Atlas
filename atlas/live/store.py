@@ -78,6 +78,8 @@ SCHEMA: dict[str, list[str]] = {
         "sport", "game_id", "season", "week", "kickoff", "market",
         "first_letter", "first_score", "first_at",
         "letter", "score", "line", "atlas", "claimed", "home_side", "published_at",
+        # The card's page, so the reader counter's views can be read by grade.
+        "path",
     ],
     # Other public models' numbers for each upcoming game, for the card's
     # panel: a home margin (positive when the home side is ahead), FPI's win

@@ -1,7 +1,8 @@
 # Atlas — Analytics, Final
 
-**Track 2.** Implemented in `atlas/ops/analytics.py`. No client-side code, no
-third-party script, no account.
+**Track 2.** Implemented in `atlas/ops/analytics.py` (server logs) and, since
+26 September 2026, the first-party counter (`counter/`, `atlas/ops/readers.py`),
+because GitHub Pages keeps no access log. No third-party script, no cookie.
 
 ---
 
@@ -174,3 +175,44 @@ temptation starts:
 
 The "most viewed cards" table above is an **operator** view in a terminal. It
 does not go on the site, for exactly that reason.
+
+---
+
+## The counter
+
+GitHub Pages serves the site and writes no access log a reader of ours can
+see, so the log analyser above has nothing to read. The counter is the
+"single first-party counter" `POST_LAUNCH_METRICS.md` allowed for.
+
+| Part | What it does |
+|---|---|
+| `counter/worker.js` | A Cloudflare Worker Atlas owns. `POST /hit` adds one to a daily count; `GET /counts` returns the counts to a holder of `ATLAS_COUNTER_TOKEN`. |
+| `counter/schema.sql` | One table: day (Eastern), event, page, source, detail, count. |
+| `atlas/site/assets/readers.js` | The beacon, on every page only once `ATLAS_COUNTER_URL` is set. |
+| `atlas/ops/readers.py` | The owner page's **Readers** section, sealed with the rest of it; `python -m atlas.ops.readers` prints the same in a terminal. |
+| `.github/workflows/counter-deploy.yml` | Tests and deploys the Worker, creating its database on the first run. |
+
+**What it counts.** A page view, with the referrer's *category* (x, search,
+direct...; the host is reduced to the label on arrival and the rest is
+dropped). Each device's first page of the day, new or returning: the device
+keeps the date of its last visit in its own storage and never sends it. And
+which card panel was opened, once per page view. That last one is the panel
+opens this spec called "the one genuine loss" of logs alone.
+
+**What it does not keep.** The IP address, the user agent (read only to drop
+crawlers), the full referrer, a cookie or any identifier. A browser sending
+Global Privacy Control or Do Not Track sends nothing. Counts run low for all
+of that, and anyone can post a hit, so they are for trends.
+
+**Where it is read.** Only inside the owner page's ciphertext. The repository
+is public, and "most viewed cards" is an operator's view: nothing from the
+counter is committed or printed by a workflow. Card views are read by grade
+from `tracking/card_grades.csv`, which now keeps each card's page, so the
+headline number (the share of card views that were marked down) needs no
+more from the beacon than the page.
+
+**Setup, once.** A free Cloudflare account, then in the repository's
+settings: secrets `CLOUDFLARE_API_TOKEN` (Workers Scripts: Edit, D1: Edit) and
+`ATLAS_COUNTER_TOKEN` (any long random string); run *counter deploy*; set the
+variable `ATLAS_COUNTER_URL` to the address it prints. The next build carries
+the beacon; the next heavy run's owner page carries the Readers section.

@@ -90,7 +90,7 @@ def test_the_matchup_panel_pairs_each_offense_with_the_defense_it_faces():
                        ranks={k: 60 for k in stats} | {"points_against": 25}, games=3)
     card.matchup = mu.Matchup(away=away, home=home, teams=138, universe="FBS teams", through="20 September")
     page = ts._page(card)
-    panel = re.search(r'<details class="panel">\s*<summary><span class="panel-title">Matchup</span>.*?</details>',
+    panel = re.search(r'<details class="panel"[^>]*>\s*<summary><span class="panel-title">Matchup</span>.*?</details>',
                       page, re.S).group(0)
     assert f"{card.away.short} offense" in panel and f"{card.home.short} defense" in panel
     assert f"{card.home.short} offense" in panel and "Situational" in panel

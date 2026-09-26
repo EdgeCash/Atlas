@@ -33,6 +33,10 @@ on:
       # heavy run's Refresh step sees it; only ciphertext comes out.
       ATLAS_OWNER_KEY:
         required: false
+      # Reads the reader counter (counter/worker.js) for the owner page's
+      # Readers section; only the heavy run's Refresh step sees it.
+      ATLAS_COUNTER_TOKEN:
+        required: false
 
 permissions:
   contents: write      # commit tracking/ and the freshness stamp
@@ -69,6 +73,7 @@ jobs:
       - name: Where this build will be served
         env:
           OVERRIDE: ${{ vars.ATLAS_SITE_URL }}
+          COUNTER: ${{ vars.ATLAS_COUNTER_URL }}
           OWNER: ${{ github.repository_owner }}
           REPO: ${{ github.event.repository.name }}
         run: |
@@ -77,6 +82,9 @@ jobs:
             url="https://$(printf '%s' "$OWNER" | tr '[:upper:]' '[:lower:]').github.io/$REPO"
           fi
           echo "ATLAS_SITE_URL=$url" >> "$GITHUB_ENV"
+          # The reader counter (counter/worker.js): pages carry its beacon only
+          # once the ATLAS_COUNTER_URL repository variable is set.
+          echo "ATLAS_COUNTER_URL=$COUNTER" >> "$GITHUB_ENV"
           echo "publishing as $url"
 
       # Before installing anything. The gate reads atlas/ops/schedule.py and the
@@ -190,6 +198,7 @@ jobs:
           # consults the key. The data was always right; the provenance was not.
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
           ATLAS_OWNER_KEY: ${{ inputs.mode == 'heavy' && secrets.ATLAS_OWNER_KEY || '' }}
+          ATLAS_COUNTER_TOKEN: ${{ inputs.mode == 'heavy' && secrets.ATLAS_COUNTER_TOKEN || '' }}
         # --force because the gate above has already decided, in Eastern time
         # and tolerant of a late start. Letting the task re-apply the strict
         # should_poll() minute test here would undo exactly that.

@@ -1,0 +1,91 @@
+name: counter deploy
+
+# Deploys the reader counter (counter/worker.js) to Cloudflare Workers: on a
+# change under counter/, or by hand from the Actions tab. Setup, once
+# (docs/ANALYTICS_SPEC_FINAL.md, "The counter"):
+#
+#   secrets  CLOUDFLARE_API_TOKEN  a token with Workers Scripts: Edit and D1: Edit
+#            CLOUDFLARE_ACCOUNT_ID only if the token reaches more than one account
+#            ATLAS_COUNTER_TOKEN   any long random string; the owner page reads with it
+#   variable ATLAS_COUNTER_URL     the workers.dev address this run prints; once set,
+#                                  the next build puts the beacon on every page
+#
+# Without CLOUDFLARE_API_TOKEN it says so and deploys nothing.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["counter/**", ".github/workflows/counter-deploy.yml"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: counter-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: counter
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Test the worker
+        run: node --test worker.test.mjs
+
+      - name: Is Cloudflare configured?
+        id: cf
+        env:
+          TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::notice::No CLOUDFLARE_API_TOKEN secret: the counter is not deployed."
+            echo "go=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "go=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Deploy
+        if: steps.cf.outputs.go == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          READ_TOKEN: ${{ secrets.ATLAS_COUNTER_TOKEN }}
+          # Extra origins (a custom domain, later), comma-separated.
+          ORIGINS: ${{ vars.ATLAS_COUNTER_ORIGINS }}
+        run: |
+          set -euo pipefail
+          if [ -n "$ACCOUNT" ]; then export CLOUDFLARE_ACCOUNT_ID="$ACCOUNT"; fi
+          npm install --no-save --no-audit --no-fund wrangler@4 >/dev/null
+          w() { npx wrangler "$@"; }
+
+          # The database: created on the first run, found by name after.
+          find_id() { w d1 list --json | jq -r '.[] | select(.name == "atlas-readers") | .uuid'; }
+          id="$(find_id)"
+          if [ -z "$id" ]; then
+            w d1 create atlas-readers
+            id="$(find_id)"
+          fi
+          sed -i "s/^database_id = .*/database_id = \"$id\"/" wrangler.toml
+          w d1 execute atlas-readers --remote --yes --file schema.sql
+
+          origins="https://edgecash.github.io${ORIGINS:+,$ORIGINS}"
+          w deploy --var "ALLOWED_ORIGINS:$origins" | tee deploy.log
+
+          if [ -n "$READ_TOKEN" ]; then
+            printf '%s' "$READ_TOKEN" | w secret put READ_TOKEN
+          else
+            echo "::warning::No ATLAS_COUNTER_TOKEN secret: the counter counts, but nothing can read it."
+          fi
+
+          url="$(grep -oE 'https://[a-z0-9.-]+\.workers\.dev' deploy.log | head -1 || true)"
+          echo "::notice::Counter deployed at ${url:-(see the log above)}. Set the ATLAS_COUNTER_URL repository variable to it."
