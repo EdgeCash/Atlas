@@ -13,9 +13,10 @@ committed. The heavy refresh:
 3. encrypts them with a key derived from the ``ATLAS_OWNER_KEY`` secret
    (PBKDF2-SHA256, 600,000 iterations, a fresh salt; AES-256-GCM, a fresh
    nonce) and writes only the ciphertext to ``data/dfs/owner.enc.json``;
-4. the site build puts that ciphertext in ``dfs/owner.html``, where the
-   browser derives the same key from the typed passphrase and decrypts it
-   locally (WebCrypto). The passphrase never leaves the device.
+4. the site build puts that ciphertext in ``dfs/owner.html``, beside the
+   curated plays' own box (`atlas/owner/plays.py`), where the browser derives
+   the same key from the typed passphrase and decrypts both locally
+   (WebCrypto). The passphrase never leaves the device.
 
 The step never fails the refresh. Without the secret it builds nothing; on
 any error it records a short reason (no player, no number) that the page
@@ -207,18 +208,17 @@ def refresh(*, rebuild: bool = True) -> Path:
         LOG.warning("no %s secret: the owner page is not built", SECRET)
         return write(None, reason=reason or "The owner key is not configured.")
     from atlas.dfs import cfb_record
-    from atlas.owner import paper, plays
+    from atlas.owner import paper
 
-    # The curated plays are logged every morning, slate or none; they and the
-    # paper tracker open the page even on a day with no slate.
-    curated = plays.build(passphrase)
+    # The curated plays are not here: they have their own box, sealed by the
+    # plays step of every run, heavy or poll (atlas/owner/plays.py), so a
+    # rebuild that fails here cannot decide the week's plays. The page is
+    # always sealed when the key is set, slate or none, so it always opens.
     tracker = paper.build()
     from atlas.ops import readers
 
     audience = readers.build()
-    sections = [*curated, *([tracker] if tracker else []), *([audience] if audience else [])]
-    if index is None and not sections:
-        return write(None, reason=reason)
+    sections = [*([tracker] if tracker else []), *([audience] if audience else [])]
     college = cfb_record.update(passphrase) if index is not None else None
     try:
         data = payload(index, college_record=college, sections=sections, note=reason)

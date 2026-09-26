@@ -15,6 +15,7 @@ files carry 362 columns and ~110 MB per season.
 
 from __future__ import annotations
 
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pandas as pd
@@ -22,6 +23,27 @@ import pandas as pd
 from atlas.util import download, get_logger, read_parquet, write_parquet
 
 LOG = get_logger(__name__)
+
+
+def current_season(today: datetime | None = None) -> int:
+    """The college season in progress: it starts in late August and ends in January."""
+    today = today or datetime.now(UTC)
+    return today.year if today.month >= 8 else today.year - 1
+
+
+def _fresh(dest: Path, refresh: bool) -> None:
+    """Drop a cached file so :func:`atlas.util.download` fetches it again.
+
+    Every file here is cached on disk and served from the cache for ever
+    after, which is right for a finished season and wrong for the one in
+    progress: a schedule fetched in week 3 carries week 3's results for the
+    rest of the year, and a model that assimilates results from it stops
+    learning without saying so. The season in progress is re-fetched on every
+    ingest (`atlas/ingest.py`); the NFL side has done the same from the start
+    (`atlas/sources/nflverse.py`).
+    """
+    if refresh and dest.exists():
+        dest.unlink()
 
 RAW_BASE = "https://raw.githubusercontent.com/sportsdataverse/cfbfastR-data/main"
 PBP_RELEASE = (
@@ -102,32 +124,42 @@ def pbp_path(raw: Path, season: int) -> Path:
     return raw / "pbp" / f"pbp_{season}.parquet"
 
 
-def fetch_schedules(raw: Path, season: int) -> Path:
-    return download(f"{RAW_BASE}/schedules/parquet/cfb_schedules_{season}.parquet",
-                    schedules_path(raw, season))
+def fetch_schedules(raw: Path, season: int, *, refresh: bool = False) -> Path:
+    """One season's schedule and results. ``refresh`` re-fetches a cached file:
+    the season in progress gains its latest results only this way."""
+    dest = schedules_path(raw, season)
+    _fresh(dest, refresh)
+    return download(f"{RAW_BASE}/schedules/parquet/cfb_schedules_{season}.parquet", dest)
 
 
-def fetch_team_info(raw: Path, season: int) -> Path:
-    return download(f"{RAW_BASE}/team_info/parquet/cfb_team_info_{season}.parquet",
-                    team_info_path(raw, season))
+def fetch_team_info(raw: Path, season: int, *, refresh: bool = False) -> Path:
+    dest = team_info_path(raw, season)
+    _fresh(dest, refresh)
+    return download(f"{RAW_BASE}/team_info/parquet/cfb_team_info_{season}.parquet", dest)
 
 
-def fetch_odds(raw: Path) -> Path:
-    return download(f"{RAW_BASE}/betting/parquet/cfb_line_odds.parquet", odds_path(raw))
+def fetch_odds(raw: Path, *, refresh: bool = False) -> Path:
+    """Every season's lines in one file, so refreshing it is how the season
+    in progress gains its closing lines."""
+    dest = odds_path(raw)
+    _fresh(dest, refresh)
+    return download(f"{RAW_BASE}/betting/parquet/cfb_line_odds.parquet", dest)
 
 
-def fetch_play_by_play(raw: Path, season: int, *, keep_full: bool = False) -> Path:
+def fetch_play_by_play(raw: Path, season: int, *, refresh: bool = False, keep_full: bool = False) -> Path:
     """Download one season of play-by-play and persist a trimmed copy.
 
     The full 110 MB source file is deleted after trimming unless ``keep_full``
     is set, so a nine-season rebuild needs ~1 GB of transient disk rather than
-    ~1 GB of permanent disk.
+    ~1 GB of permanent disk. ``refresh`` drops the trimmed copy first.
     """
     dest = pbp_path(raw, season)
+    _fresh(dest, refresh)
     if dest.exists() and dest.stat().st_size > 0:
         LOG.debug("cached trimmed pbp %s", season)
         return dest
     full = raw / "pbp" / f"_full_play_by_play_{season}.parquet"
+    _fresh(full, refresh)
     download(f"{PBP_RELEASE}/play_by_play_{season}.parquet", full)
     df = _read_available_columns(full, PBP_COLUMNS)
     write_parquet(df, dest)

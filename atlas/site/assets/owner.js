@@ -1,9 +1,10 @@
-/* The owner page: decrypts this week's lineups in the browser.
+/* The owner page: decrypts the curated plays and this week's lineups in the browser.
  *
  * The page carries only ciphertext (AES-256-GCM under a PBKDF2-SHA256 key,
- * see atlas/dfs/owner.py). The passphrase is typed here, the key is derived
- * here, and the plaintext exists only in this tab's memory. Nothing is
- * stored and nothing is sent anywhere.
+ * see atlas/dfs/owner.py and atlas/owner/plays.py): one box for the plays,
+ * one for the lineups, both under the same passphrase. The passphrase is
+ * typed here, the keys are derived here, and the plaintext exists only in
+ * this tab's memory. Nothing is stored and nothing is sent anywhere.
  */
 (function () {
   "use strict";
@@ -13,10 +14,11 @@
   if (!boxEl || !form) return;
   var record = JSON.parse(boxEl.textContent || "{}");
   var box = record.box;
+  var playsBox = record.plays;
   var status = document.getElementById("owner-status");
   var out = document.getElementById("owner-out");
 
-  if (!box) { form.hidden = true; return; }
+  if (!box && !playsBox) { form.hidden = true; return; }
   if (!(window.crypto && window.crypto.subtle)) {
     status.textContent = "This browser cannot decrypt the page (no WebCrypto).";
     form.hidden = true;
@@ -29,16 +31,17 @@
     return a;
   }
 
-  function open(passphrase) {
+  function open(passphrase, sealed) {
+    if (!sealed) return Promise.resolve(null);
     var enc = new TextEncoder();
     return crypto.subtle.importKey("raw", enc.encode(passphrase.trim()), "PBKDF2", false, ["deriveKey"])
       .then(function (base) {
         return crypto.subtle.deriveKey(
-          { name: "PBKDF2", salt: bytes(box.salt), iterations: box.iterations, hash: "SHA-256" },
+          { name: "PBKDF2", salt: bytes(sealed.salt), iterations: sealed.iterations, hash: "SHA-256" },
           base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
       })
       .then(function (key) {
-        return crypto.subtle.decrypt({ name: "AES-GCM", iv: bytes(box.iv) }, key, bytes(box.ct));
+        return crypto.subtle.decrypt({ name: "AES-GCM", iv: bytes(sealed.iv) }, key, bytes(sealed.ct));
       })
       .then(function (plain) { return JSON.parse(new TextDecoder().decode(plain)); });
   }
@@ -164,10 +167,26 @@
     return card;
   }
 
-  function render(data) {
-    out.textContent = "";
-    var slates = data.slates || [];
+  // The curated plays first: they are what the page is for. Each section
+  // brings its own words; the script holds none of them.
+  function renderPlays(plays) {
+    if (!plays) return;
     var head = el("div", { "class": "card card-pad" });
+    head.appendChild(el("h2", null, "Curated plays"));
+    head.appendChild(el("p", { "class": "note" }, "Built " + eastern(plays.built_at)));
+    var close = el("button", { type: "button", "class": "button ghost" }, "Close");
+    close.addEventListener("click", function () { out.textContent = ""; form.hidden = false; status.textContent = ""; });
+    var actions = el("div", { "class": "lede-actions" });
+    actions.appendChild(close);
+    head.appendChild(actions);
+    out.appendChild(head);
+    (plays.sections || []).forEach(function (sec) { out.appendChild(sectionCard(sec)); });
+  }
+
+  function render(data) {
+    if (!data) return;
+    var slates = data.slates || [];
+    var head = el("div", { "class": "card card-pad top-gap" });
     head.appendChild(el("h2", null, slates.length ? slates.length + " slates this week" : "No slate this week"));
     head.appendChild(el("p", { "class": "note" }, "Built " + eastern(data.built_at)));
     if (!slates.length && data.note) head.appendChild(el("p", { "class": "note" }, data.note));
@@ -214,20 +233,22 @@
     ev.preventDefault();
     var input = document.getElementById("owner-pass");
     status.textContent = "Opening…";
-    open(input.value).then(function (data) {
+    Promise.all([open(input.value, playsBox), open(input.value, box)]).then(function (opened) {
       input.value = "";
       form.hidden = true;
       status.textContent = "";
       try {
-        render(data);
+        out.textContent = "";
+        renderPlays(opened[0]);
+        render(opened[1]);
       } catch (e) {
         // Opened, but not shown: say so rather than blame the passphrase.
         form.hidden = false;
-        status.textContent = "The lineups opened but could not be shown (" + e.name + ").";
+        status.textContent = "The page opened but could not be shown (" + e.name + ").";
         if (window.console) console.error(e);
       }
     }, function () {
-      status.textContent = "That passphrase does not open this week's lineups.";
+      status.textContent = "That passphrase does not open this page.";
     });
   });
 })();

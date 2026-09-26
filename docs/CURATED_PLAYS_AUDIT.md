@@ -4,6 +4,22 @@
 is measured, and what is missing. Every number below is from the committed
 record (`tracking/`), the reports, or the code as of commit `34df7cb`.
 
+**Status, same day.** The findings marked *fixed* below were addressed in the
+commits that followed the audit; how the plays work now is in
+[`CURATED_PLAYS.md`](CURATED_PLAYS.md). The numbers in this document are
+left as they were measured.
+
+| Finding | Status |
+|---|---|
+| 3.1 The college model is not learning this season's results | fixed: the season in progress is re-fetched on every heavy run; the drift monitor alarms when the state has not moved after a game day |
+| 3.2 The rules' history cannot be reproduced | fixed: each rule's history is rebuilt from `tracking/calibration.csv` on every run; the frozen constants are shown as frozen |
+| 3.3 The gap is mostly a regression-to-the-mean bet | open: a property of the model's calibration, stated on the page's history rather than changed |
+| 3.4 Backtest and live are different bets | partly fixed: the live total now carries a kickoff wind forecast; rule v3 chooses at a fixed Saturday-morning poll; the line and price differences remain and are now measured (v2 beside v3, and CLV) |
+| 3.5 One book, captured at the wrong hour | partly fixed: plays are chosen at the first poll at or after 10:00 ET Saturday, from every poll, independent of the rebuild; still one book |
+| 3.6 Information the market has and Atlas does not | open: wind is now forecast; quarterbacks, a second price and the line timeline are not |
+| 3.7 Grading is thinner than the tracker's | fixed: every play is graded against its book's close, in points and in probability |
+| 3.8 Operational state of the record | as it was; the record starts accumulating from here |
+
 The question asked: we do not need a system that beats the market on every
 game. We need one that picks a small number of plays each week, logs them
 before kickoff, and grades only those. What information are we lacking to

@@ -199,18 +199,22 @@ def refresh(seasons: list[int] | None = None, *, rebuild: bool = True) -> int:
 
     if rebuild:
         warehouse.build(seasons, include_scheduled=True)
+    store = Store.open()
+    # The card's own projections first: they are what every card and the
+    # owner's curated plays read, and they must not wait on the tracker's
+    # separate number-maker, which returns nothing when no game is scheduled
+    # in the warehouse and used to take the projections down with it.
+    published = publish_projections(store)
     numbers = signalling.atlas_numbers(signalling.build_models())
     if numbers.empty:
         LOG.warning("refresh produced no numbers")
-        return 0
+        return published
     numbers = numbers.copy()
     numbers["refreshed_at"] = datetime.now(UTC).replace(microsecond=0).isoformat()
-    store = Store.open()
     # Appended, not replaced: a signal formed last week must stay reproducible
     # from the number that produced it, which a wholesale rewrite would erase.
     store.upsert("numbers", numbers)
     LOG.info("published %d numbers", len(numbers))
-    publish_projections(store)
     return len(numbers)
 
 
@@ -231,7 +235,7 @@ def publish_projections(store: Store) -> int:
     choices = state_mod.load_choices(state_mod.choices_path(paths.root))
     projector = projecting.fit(frame, choices=choices)
     scheduled = frame[frame["actual_margin"].isna() & (frame["season"] == projector.season)]
-    rows = projecting.project(projector, scheduled)
+    rows = projecting.project(projector, _with_forecast(scheduled, paths))
     published = 0
     if rows.empty:
         LOG.warning("refresh produced no college projections")
@@ -265,6 +269,23 @@ def publish_projections(store: Store) -> int:
     store.write("calibration", pd.concat(calibration, ignore_index=True))
     store.write("market_shape", pd.concat(shapes, ignore_index=True))
     return published
+
+
+def _with_forecast(scheduled: pd.DataFrame, paths) -> pd.DataFrame:
+    """The scheduled games with the kickoff wind forecast the total was fitted
+    to expect (`atlas/sources/forecast.py`). The walk-forward saw the observed
+    wind; without this the live total saw none. Never fails the refresh."""
+    try:
+        from atlas.sources import forecast
+        from atlas.staging import teams as teams_mod
+
+        venues = teams_mod.venues(teams_mod.load(paths.staging))
+        out = forecast.attach(scheduled, venues)
+        LOG.info("kickoff wind forecast on %d of %d scheduled games", int(out["wind_mph"].notna().sum()), len(out))
+        return out
+    except Exception as error:  # noqa: BLE001 - the projection stands on the training mean, as before
+        LOG.warning("no kickoff wind forecast this refresh (%s)", type(error).__name__)
+        return scheduled
 
 
 def _before_kickoff(rows: pd.DataFrame, now: str) -> pd.DataFrame:

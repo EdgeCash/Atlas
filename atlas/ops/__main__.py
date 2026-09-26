@@ -1,7 +1,7 @@
 """Atlas live operations.
 
     python -m atlas.ops heavy     # 04:00 ET - warehouse, model, every page
-    python -m atlas.ops poll      # hourly (15 min on game days) - market only
+    python -m atlas.ops poll      # hourly (15 min on game days) - market, and the owner's plays
     python -m atlas.ops social    # 05:00 ET - the featured card assets
     python -m atlas.ops backup    # copy the live record, then read it back
     python -m atlas.ops analytics # traffic, from the web server's access log
@@ -71,6 +71,10 @@ def heavy(*, skip_warehouse: bool = False) -> int:
         # into tracking/availability.csv before the curated plays are logged
         # (they read the starters' statuses from it). Never fails the run.
         ("availability", ["atlas.sources.availability"]),
+        # The owner's curated plays: logged at this run if a rule chooses now,
+        # graded, and sealed into their own box for the owner page. Never
+        # fails the run, and runs on every poll as well (atlas/owner/plays.py).
+        ("plays", ["atlas.owner.plays", "refresh"]),
         # DFS: every upcoming Classic, Showdown and Tiers slate projected;
         # the Main slate's projections recorded in tracking/dfs_projections.csv
         # for the public DFS page until its first kickoff; and the owner's
@@ -119,6 +123,11 @@ def poll(*, force: bool = False) -> int:
     if not ok:
         freshness.record("poll", ok=False, detail=detail)
         return 1
+
+    # The curated plays choose at a fixed poll (rule v3: the first at or after
+    # 10:00 ET on Saturday), from the market this poll just captured, and are
+    # graded against every close it recorded. The step never fails the poll.
+    _run("plays", ["atlas.owner.plays", "refresh"])
 
     # A poll refreshes the market on the pages without touching the warehouse
     # or the model. The projections on a card are from the heavy refresh; only
