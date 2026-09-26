@@ -1,6 +1,6 @@
 # Atlas Data Quality
 
-*Generated 2026-09-26 15:52 UTC by `python -m atlas.live check`. Regenerated on every
+*Generated 2026-09-26 16:07 UTC by `python -m atlas.live check`. Regenerated on every
 tracker run against the live record in `tracking/`.*
 
 ---
@@ -12,7 +12,7 @@ tracker run against the live record in `tracking/`.*
 | | |
 |---|---|
 | Signals checked | 143 |
-| Grades checked | 10 |
+| Grades checked | 30 |
 | Checks run | 19 |
 | Blocking exceptions | 0 |
 | Warnings | 0 |
@@ -39,12 +39,12 @@ complaints. Every check is listed here on every run.
 | signal is an opinion | blocking | signals | 143 | 0 | yes |
 | signal id is unique | blocking | signals | 143 | 0 | yes |
 | model version recorded | warning | signals | 143 | 0 | yes |
-| grade references a signal | blocking | grades | 10 | 0 | yes |
-| clv is consistent | blocking | grades | 10 | 0 | yes |
-| result matches clv | blocking | grades | 10 | 0 | yes |
-| one grade per signal | blocking | grades | 10 | 0 | yes |
-| probabilities in range | blocking | grades | 10 | 0 | yes |
-| clv_prob is consistent | blocking | grades | 10 | 0 | yes |
+| grade references a signal | blocking | grades | 30 | 0 | yes |
+| clv is consistent | blocking | grades | 30 | 0 | yes |
+| result matches clv | blocking | grades | 30 | 0 | yes |
+| one grade per signal | blocking | grades | 30 | 0 | yes |
+| probabilities in range | blocking | grades | 30 | 0 | yes |
+| clv_prob is consistent | blocking | grades | 30 | 0 | yes |
 
 ### What each severity means
 
