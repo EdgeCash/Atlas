@@ -1,6 +1,42 @@
 {
   "history": [
     {
+      "at": "2026-09-26T14:32:47.001866+00:00",
+      "detail": "109 cards, 16 NFL cards, 134 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T14:32:46.999929+00:00",
+      "detail": "12 files",
+      "name": "social",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T14:32:39.813925+00:00",
+      "detail": "captured during the heavy refresh",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T14:32:39.811609+00:00",
+      "detail": "warehouse in 32s; nfl-ingest in 2s; nfl-warehouse in 21s; model in 49s; market in 5s; dfs-capture in 7s; cfb-players in 44s; availability in 1s; plays in 23s; dfs in 135s; other-models in 12s; site in 8s",
+      "name": "heavy",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T14:32:39.669194+00:00",
+      "detail": "109 cards, 16 NFL cards, 134 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T14:32:39.667214+00:00",
+      "detail": "12 files",
+      "name": "social",
+      "ok": true
+    },
+    {
       "at": "2026-09-26T14:23:11.125646+00:00",
       "detail": "market in 5s",
       "mode": "NCAAF Saturday",
@@ -1185,66 +1221,29 @@
       "detail": "24 files",
       "name": "social",
       "ok": true
-    },
-    {
-      "at": "2026-09-23T02:46:48.152761+00:00",
-      "detail": "58 cards, 116 teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T02:46:48.151508+00:00",
-      "detail": "24 files",
-      "name": "social",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T02:43:58.956726+00:00",
-      "detail": "58 cards, 116 teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T02:43:58.955580+00:00",
-      "detail": "24 files",
-      "name": "social",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T02:42:50.784959+00:00",
-      "detail": "social in 8s",
-      "name": "social",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T02:42:50.481029+00:00",
-      "detail": "58 cards, 116 teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-09-26T14:23:10.974473+00:00",
+      "at": "2026-09-26T14:32:47.001866+00:00",
       "detail": "109 cards, 16 NFL cards, 134 teams, 30 NFL teams",
       "name": "build",
       "ok": true
     },
     "heavy": {
-      "at": "2026-09-25T21:22:28.450020+00:00",
-      "detail": "warehouse in 30s; nfl-ingest in 3s; nfl-warehouse in 20s; model in 37s; market in 5s; dfs-capture in 10s; cfb-players in 403s; availability in 2s; dfs in 138s; site in 8s",
+      "at": "2026-09-26T14:32:39.811609+00:00",
+      "detail": "warehouse in 32s; nfl-ingest in 2s; nfl-warehouse in 21s; model in 49s; market in 5s; dfs-capture in 7s; cfb-players in 44s; availability in 1s; plays in 23s; dfs in 135s; other-models in 12s; site in 8s",
       "name": "heavy",
       "ok": true
     },
     "poll": {
-      "at": "2026-09-26T14:23:11.125646+00:00",
-      "detail": "market in 5s",
-      "mode": "NCAAF Saturday",
+      "at": "2026-09-26T14:32:39.813925+00:00",
+      "detail": "captured during the heavy refresh",
       "name": "poll",
       "ok": true
     },
     "social": {
-      "at": "2026-09-25T21:22:34.496501+00:00",
+      "at": "2026-09-26T14:32:46.999929+00:00",
       "detail": "12 files",
       "name": "social",
       "ok": true
@@ -1252,26 +1251,25 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-09-26T14:23:10.974473+00:00",
+      "at": "2026-09-26T14:32:47.001866+00:00",
       "detail": "109 cards, 16 NFL cards, 134 teams, 30 NFL teams",
       "name": "build",
       "ok": true
     },
     "heavy": {
-      "at": "2026-09-25T21:22:28.450020+00:00",
-      "detail": "warehouse in 30s; nfl-ingest in 3s; nfl-warehouse in 20s; model in 37s; market in 5s; dfs-capture in 10s; cfb-players in 403s; availability in 2s; dfs in 138s; site in 8s",
+      "at": "2026-09-26T14:32:39.811609+00:00",
+      "detail": "warehouse in 32s; nfl-ingest in 2s; nfl-warehouse in 21s; model in 49s; market in 5s; dfs-capture in 7s; cfb-players in 44s; availability in 1s; plays in 23s; dfs in 135s; other-models in 12s; site in 8s",
       "name": "heavy",
       "ok": true
     },
     "poll": {
-      "at": "2026-09-26T14:23:11.125646+00:00",
-      "detail": "market in 5s",
-      "mode": "NCAAF Saturday",
+      "at": "2026-09-26T14:32:39.813925+00:00",
+      "detail": "captured during the heavy refresh",
       "name": "poll",
       "ok": true
     },
     "social": {
-      "at": "2026-09-25T21:22:34.496501+00:00",
+      "at": "2026-09-26T14:32:46.999929+00:00",
       "detail": "12 files",
       "name": "social",
       "ok": true
