@@ -2113,7 +2113,7 @@ def _featured_cell(card: Card, *, root: str = "", filterable: bool = False) -> s
   <div class="feature-end">
     <p class="note feature-foot">Difference {signed(difference)} on the total</p>
     <p class="feature-line">{esc(card.spread_text)} · total {num(card.total.current)}
-      <span class="feature-line-diff">Atlas {signed(difference)}</span></p>
+      <span class="feature-line-diff">Atlas total {num(card.model_total)}</span></p>
     <div class="feature-actions">{_follow_button(card)}
       <span class="details-chip">Details <span aria-hidden="true">→</span></span></div>
   </div>

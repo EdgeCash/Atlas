@@ -86,8 +86,9 @@ sports), current pre-game Elo and current SP+ (college) - and logs them to
 them. The same log is the forward record the owner page's consensus label needs.
 
 **Two template fixes.** Shipped 26 September.
-- Board rows read `Atlas total 58.9` under the market's total instead of an
-  unlabelled `Atlas +0.4` (proposal 1 in `MOBILE_UX_AUDIT.md`).
+- Board rows, and the featured tiles' phone line, read `Atlas total 58.9`
+  beside the market's total instead of an unlabelled `Atlas +0.4` (proposal 1
+  in `MOBILE_UX_AUDIT.md`).
 - The card header shows each side's rest and trip when known, e.g.
   `Rest UTA 7 days, ISU 13 days · Travel UTA 1,012 mi`. Rest over 21 days (a
   season opener) and trips under 50 miles are left out.
