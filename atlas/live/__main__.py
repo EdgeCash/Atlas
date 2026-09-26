@@ -366,9 +366,16 @@ def main() -> None:
     result = poll(args.horizon, provider=args.provider, sign=not args.no_sign)
     LOG.info("poll: %s", result)
     if args.command == "run":
-        reporting.write()
-        LOG.info("check: %s", check())
-        dashboarding.write()
+        # The capture above is the record; what follows describes it. A
+        # failure in the description is logged as loudly as possible and
+        # does not take the capture down with it: a run that exits non-zero
+        # here is never committed, and the market it captured is lost.
+        for label, step in (("report", reporting.write), ("check", lambda: LOG.info("check: %s", check())),
+                            ("dashboard", dashboarding.write)):
+            try:
+                step()
+            except Exception as error:  # noqa: BLE001 - the capture stands; the failure is on the record
+                LOG.error("%s failed after a good capture: %s: %s", label, type(error).__name__, error)
 
 
 if __name__ == "__main__":
