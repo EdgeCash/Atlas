@@ -1,6 +1,6 @@
 # Atlas Live CLV Tracking
 
-*Generated 2026-09-26 23:07 UTC by `python -m atlas.live report`. Updated on every run
+*Generated 2026-09-26 23:22 UTC by `python -m atlas.live report`. Updated on every run
 of the tracker. Source tables are the CSVs in `tracking/`, which are committed
 alongside this file so the record can be audited row by row.*
 
@@ -18,7 +18,7 @@ alongside this file so the record can be audited row by row.*
 | Signals recorded | 143 |
 | Primary signals | 1 |
 | Graded (decided) | 1 |
-| Awaiting kickoff | 59 |
+| Awaiting kickoff | 57 |
 | Seasons of tracking | 1 of 2 required |
 | Verdict possible at | 124 graded primary signals |
 
@@ -69,9 +69,9 @@ signal existed. They are checked, never tuned.
 
 | Population | Signals | Graded | Pushes | Beat rate | 95% low | 95% high | p vs 50% | Mean CLV | Median CLV | Mean CLV (prob) | Flagged |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| observed | 83 | 56 | 27 | 0.4464 | 0.3239 | 0.5759 | 0.8252 | -0.0542 | 0 | -0.0013 | 34 |
+| observed | 85 | 56 | 29 | 0.4464 | 0.3239 | 0.5759 | 0.8252 | -0.0529 | 0 | -0.0011 | 35 |
 | primary | 1 | 1 | 0 | 1.0000 | 0.2065 | 1.0000 | 0.5000 | 1.0000 | 1 | 0.0460 | 1 |
-| all | 84 | 57 | 27 | 0.4561 | 0.3337 | 0.5841 | 0.7865 | -0.0417 | 0 | -0.0007 | 35 |
+| all | 86 | 57 | 29 | 0.4561 | 0.3337 | 0.5841 | 0.7865 | -0.0407 | 0 | -0.0006 | 36 |
 
 `primary` is the population the criteria are evaluated on: totals at or above
 the historical 90th percentile of disagreement. `secondary` is the same cut on
@@ -103,9 +103,9 @@ beat rate and reported separately.
 | Table | Rows | What it holds |
 |---|---|---|
 | `tracking/games.csv` | 102 | every game seen, with kickoff and status |
-| `tracking/snapshots.csv` | 1,059 | append-on-change line observations, timestamped |
+| `tracking/snapshots.csv` | 1,064 | append-on-change line observations, timestamped |
 | `tracking/signals.csv` | 143 | immutable opinions |
-| `tracking/grades.csv` | 84 | one row per graded signal |
+| `tracking/grades.csv` | 86 | one row per graded signal |
 
 ---
 
