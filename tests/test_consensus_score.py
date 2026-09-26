@@ -113,6 +113,18 @@ def test_q2_splits_atlas_selections_by_agreement():
     assert "Where it disagrees" in text and "Both required" in text
 
 
+def test_the_report_bolds_each_verdict_once():
+    """The first scored report printed ****fail****: the verdict was bolded
+    by the helper and again by the sentence around it."""
+    frame = _frame(informative=False)
+    games = score.eligible(frame)
+    atlas = pd.Series(games["line"].to_numpy(), index=games["game_id"].to_numpy())
+    text = score.render(score.score(frame, atlas))
+    assert "***" not in text
+    assert "All four required: **fail**" in text and "Both required: **fail**" in text
+    assert "| **fail** |" in text
+
+
 def test_the_holdout_is_scored_once(tmp_path):
     out = tmp_path / "consensus_test.md"
     out.write_text("already scored\n")

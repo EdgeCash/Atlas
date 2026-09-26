@@ -314,7 +314,14 @@ def _pct(x: float) -> str:
 
 
 def _yes(ok: bool) -> str:
-    return "pass" if ok else "**fail**"
+    """The plain word; each caller decides the emphasis. (It used to bold a
+    fail itself, and the sentences bolding it again printed ****fail****.)"""
+    return "pass" if ok else "fail"
+
+
+def _cell(ok: bool) -> str:
+    """A criteria-table cell: a fail stands out, a pass does not."""
+    return _yes(ok) if ok else f"**{_yes(ok)}**"
 
 
 def _criteria_table(c: dict) -> list[str]:
@@ -326,7 +333,7 @@ def _criteria_table(c: dict) -> list[str]:
         f"{c['units_115']:+.1f} units (at -110: {c['units_110']:+.1f})",
     ]
     for (name, ok), value in zip(c["checks"].items(), values, strict=True):
-        lines.append(f"| {name} | {value} | {_yes(ok)} |")
+        lines.append(f"| {name} | {value} | {_cell(ok)} |")
     lines += ["", "| Season | Win rate | n |", "|---|---|---|"]
     for season, row in c["by_season"].iterrows():
         lines.append(f"| {season} | {_pct(row['mean'])} | {int(row['size'])} |")
