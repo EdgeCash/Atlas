@@ -48,10 +48,10 @@ def test_sealed_rows_merge_by_key_in_the_branchs_order_then_this_runs_new_rows()
 
 def test_sealed_weekly_files_both_runs_rewrote_are_merged_and_resealed(tmp_path):
     where = tmp_path / "owner_plays"
-    ours = sealed.seal([{"play_id": "p1", "grade": None}, {"play_id": "p3", "grade": None}], KEY,
+    ours = sealed.seal([{"play_id": "play-one", "grade": None}, {"play_id": "play-three", "grade": None}], KEY,
                        where / "2026-04.enc.json")
-    sealed.seal([{"play_id": "p0"}], KEY, where / "2026-03.enc.json")          # only this run has this week
-    theirs = sealed.seal([{"play_id": "p1", "grade": "win"}, {"play_id": "p2", "grade": None}], KEY,
+    sealed.seal([{"play_id": "play-zero"}], KEY, where / "2026-03.enc.json")          # only this run has this week
+    theirs = sealed.seal([{"play_id": "play-one", "grade": "win"}, {"play_id": "play-two", "grade": None}], KEY,
                          tmp_path / "theirs.enc.json")
     remote = {"tracking/owner_plays/2026-04.enc.json": theirs.read_text(),
               "tracking/owner_plays/2026-02.enc.json": "only the branch has this week"}
@@ -59,10 +59,12 @@ def test_sealed_weekly_files_both_runs_rewrote_are_merged_and_resealed(tmp_path)
     merged = mt.merge_sealed("origin/main", KEY, tracking=tmp_path, remote=remote.get, listing=listing)
     assert merged == ["tracking/owner_plays/2026-04.enc.json"]
     rows = sealed.open_text(ours.read_text(), KEY)
-    assert [r["play_id"] for r in rows] == ["p1", "p2", "p3"]
+    assert [r["play_id"] for r in rows] == ["play-one", "play-two", "play-three"]
     assert rows[0]["grade"] is None                                            # this run's row for a play both hold
-    assert sealed.open_text((where / "2026-03.enc.json").read_text(), KEY) == [{"play_id": "p0"}]
-    assert "p1" not in ours.read_text() and "p2" not in ours.read_text()      # still sealed
+    assert sealed.open_text((where / "2026-03.enc.json").read_text(), KEY) == [{"play_id": "play-zero"}]
+    # Still sealed. The ids carry a hyphen, which base64 never does, so they cannot turn up in the ciphertext by
+    # chance: "p1" did, one run in about twenty (PR #40's first CI run).
+    assert "play-one" not in ours.read_text() and "play-two" not in ours.read_text()
     # The wrong key opens nothing and writes nothing.
     before = ours.read_text()
     with pytest.raises(sealed.Unreadable):

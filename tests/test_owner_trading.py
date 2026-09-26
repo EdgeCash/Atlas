@@ -37,7 +37,7 @@ def _lines():
         # Game B, the moneyline only. Kalshi spells the home side another way; the global Polymarket pays best.
         _row(B, 32200, "moneyline", "OKST", 0, -150), _row(B, 32200, "moneyline", "WYO", 0, 130),
         _row(B, 32200, "moneyline", "OSU", 68, -140), _row(B, 32200, "moneyline", "WYO", 68, 135),
-        _row(B, 32200, "moneyline", "OKST", 75, -160), _row(B, 32200, "moneyline", "WYO", 75, 150),
+        _row(B, 32200, "moneyline", "OKST", 75, -160), _row(B, 32200, "moneyline", "WYO", 75, 155),
         _row(B, 32200, "moneyline", "OKST", 73, -170), _row(B, 32200, "moneyline", "WYO", 73, 160),
         _row(B, 32200, "moneyline", "OKST", 68, -110, off=True),                   # off: never a quote
     ]
@@ -70,11 +70,13 @@ def test_the_fee_is_the_venues_formula_and_ev_is_fair_over_cost():
     assert trading.fee(0.5, 0.07) == pytest.approx(0.0175)                         # Kalshi at 50c: 1.75c
     assert trading.fee(0.4, 0.05) == pytest.approx(0.012)
     p = _priced().set_index(["game_id", "market", "side", "book_id"])
-    x = p.loc[(B, "moneyline", "away", 75)]                                        # Polymarket US, WYO +150
+    x = p.loc[(B, "moneyline", "away", 75)]                                        # Polymarket US, WYO +155
     fair = 1 - probability.no_vig(-150, 130)
-    assert x["ask"] == pytest.approx(0.4) and x["fee"] == pytest.approx(0.012) and x["price"] == pytest.approx(0.412)
-    assert x["p"] == pytest.approx(fair) and x["ev"] == pytest.approx(fair / 0.412 - 1)
-    assert x["kelly"] == pytest.approx((fair - 0.412) / (1 - 0.412))
+    ask = 100 / 255
+    cost = ask + 0.05 * ask * (1 - ask)
+    assert x["ask"] == pytest.approx(ask) and x["fee"] == pytest.approx(cost - ask) and x["price"] == pytest.approx(cost)
+    assert x["p"] == pytest.approx(fair) and x["ev"] == pytest.approx(fair / cost - 1)
+    assert x["kelly"] == pytest.approx((fair - cost) / (1 - cost))
     assert p.loc[(B, "moneyline", "home", 68)]["ev"] < 0                             # fees turn a near-fair price negative
 
 
@@ -178,7 +180,7 @@ def test_the_section_shows_positions_the_exchange_board_coverage_and_the_record(
     stale = trading.section(p, chosen, graded, NAMES, datetime(2026, 9, 26, 16, 0, tzinfo=UTC))[0]
     assert "min old" in stale["tables"][0]["rows"][0][3]                              # three hours on: marked
     empty = trading.section(p.iloc[0:0], chosen.iloc[0:0], graded.iloc[0:0], NAMES, NOW)[0]
-    assert empty["tables"][0]["rows"][0][0].startswith("Nothing clears +1% after fees")
+    assert empty["tables"][0]["rows"][0][0].startswith("Nothing clears +2% after fees")
 
 
 def test_a_moneyline_offer_parses_with_no_line_and_appends_on_change_like_any_other():
@@ -200,4 +202,18 @@ def test_a_moneyline_offer_parses_with_no_line_and_appends_on_change_like_any_ot
     assert len(added) == 4
     _, again = market_store.append(record, rows)
     assert again.empty                                                              # unchanged: no new rows
+
+
+def test_the_bar_is_two_percent_after_fees():
+    """Polymarket US at +150 against a -150/+130 consensus is +1.98% after its fee: shown, not taken."""
+    assert trading.MIN_EV == 0.02
+    lines = _lines()
+    lines.loc[(lines["game_id"] == B) & (lines["book_id"] == 75) & (lines["participant"] == "WYO"), "cost"] = 150.0
+    p = trading.priced(trading.quotes(lines, _events(), _projections(), {}, NOW, None))
+    x = p.set_index(["game_id", "market", "side", "book_id"]).loc[(B, "moneyline", "away", 75)]
+    assert 0.019 < x["ev"] < 0.02
+    chosen = trading.positions(p, _events(), NAMES, NOW)
+    assert B not in set(chosen["game_id"])                                            # under the bar; the global
+    board = trading.section(p, chosen, chosen.iloc[0:0].assign(outcome=[], pnl=[], clv_prob=[]), NAMES, NOW)[0]
+    assert any(r[0].startswith(NAMES[B]) for r in board["tables"][1]["rows"])        # Polymarket still on the board
 

@@ -46,7 +46,7 @@ def _offers_body(event_id: int, market: str, home: str = "CSUS", away: str = "UM
             sel("", home, None, [(0, [ln(None, -150)]), (12, [ln(None, -155)]), (68, [ln(None, -140)]),
                                  (75, [ln(None, -160)]), (73, [ln(None, -170)])]),
             sel("", away, None, [(0, [ln(None, 130)]), (12, [ln(None, 125)]), (68, [ln(None, 135)]),
-                                 (75, [ln(None, 150)]), (73, [ln(None, 160)])]),
+                                 (75, [ln(None, 155)]), (73, [ln(None, 160)])]),
         ]
     else:
         selections = [

@@ -112,7 +112,8 @@ only totals and spreads.
   order up to the cent, not modelled) and 5% for Polymarket, the rate the Velocity repository modelled.
 - **EV after fees** is fair ÷ cost − 1; the Kelly fraction is (fair − cost) ÷ (1 − cost).
 - **Positions**: Kalshi and Polymarket US only (the global Polymarket is close-only for US accounts and is
-  shown as a reference price), +1% or more after fees, one per game at the side and venue that pays best, at
+  shown as a reference price), +2% or more after fees (raised from +1% on 26 September 2026; that day's positions
+  were logged at +1%), one per game at the side and venue that pays best, at
   most ten a day; a quarter of Kelly, capped at 2% of the bankroll each and 10% a day.
 - **Record** (`tracking/owner_trading/`, sealed): the day's positions are logged once at the first run from
   10:00 ET, like the parlays, and graded on the final score (a push refunded) and against the consensus close
