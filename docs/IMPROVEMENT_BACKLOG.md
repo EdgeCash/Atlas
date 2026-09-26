@@ -100,6 +100,14 @@ read. A first-party counter instead (`counter/`, `ANALYTICS_SPEC_FINAL.md`,
 new and returning visits and card panels opened, with no cookie and nothing
 that identifies a reader, read only in the owner page's Readers section.
 
+*Waiting on the owner (banked 26 September):* a free Cloudflare account (open
+Workers & Pages once for the workers.dev address); an API token from the
+"Edit Cloudflare Workers" template plus D1: Edit; repository secrets
+`CLOUDFLARE_API_TOKEN` and `ATLAS_COUNTER_TOKEN` (any long random string).
+Then: run *counter deploy*, set the `ATLAS_COUNTER_URL` variable to the
+address it prints, run a poll. Until then nothing is deployed or counted and
+every other workflow runs as before.
+
 **Later.** Grade movement ("opened B, now C"); a standings page; a context
 block (dome, neutral site); deeper team pages.
 
