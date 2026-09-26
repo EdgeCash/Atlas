@@ -288,16 +288,19 @@ def edge_curve(calibration: pd.DataFrame | None, sport: str):
     return p
 
 
-def price(lines: pd.DataFrame, events: pd.DataFrame, projections: pd.DataFrame, shapes: dict,
-          now: datetime, calibration: pd.DataFrame | None = None) -> pd.DataFrame:
-    """One row per game, market and side: the consensus, the best book by the measure that applies, both
-    expected values, Atlas's number and probability, and the flags."""
-    columns = ["game_id", "event_id", "sport", "season", "week", "kickoff", "market", "side", "cons_line",
-               "cons_cost", "open_line", "move", "best_book", "best_line", "best_cost", "p_fair", "p_atlas",
-               "ev_price", "ev_atlas", "atlas_number", "books", "steam", "off_market", "moved_against",
-               "forecast_wind", "stadium_type"]
+LEG_COLUMNS = ["game_id", "event_id", "sport", "season", "week", "kickoff", "market", "side", "book_id", "line",
+               "cost", "updated", "cons_line", "cons_cost", "open_line", "move", "p_fair", "p_atlas", "ev_price",
+               "ev_atlas", "atlas_number", "forecast_wind", "stadium_type"]
+
+
+def legs(lines: pd.DataFrame, events: pd.DataFrame, projections: pd.DataFrame, shapes: dict,
+         now: datetime, calibration: pd.DataFrame | None = None) -> pd.DataFrame:
+    """Every takeable book's current price on every side, valued: one row per game, market, side and
+    book, with the fair probability under the consensus read at that book's line, Atlas's probability
+    on totals, and both expected values. The board is the best of these per side; the parlays combine
+    them across games at one book."""
     if lines.empty:
-        return pd.DataFrame(columns=columns)
+        return pd.DataFrame(columns=LEG_COLUMNS)
     p = projections.sort_values("refreshed_at").drop_duplicates("game_id", keep="last") if not projections.empty \
         else projections
     proj = p.assign(game_id=p["game_id"].astype(str)).set_index("game_id") if not p.empty else None
@@ -324,11 +327,13 @@ def price(lines: pd.DataFrame, events: pd.DataFrame, projections: pd.DataFrame, 
         take = part[bp.takeable(part)]
         sides = [side_of(r, market, home_abbr, visitor_abbr, cons["line"]) for r in take.itertuples()]
         curve = curves.get(sport)
+        move = cons["line"] - cons["open_line"] if math.isfinite(cons["open_line"]) else float("nan")
+        wind = float(info["forecast_wind"]) if info is not None and pd.notna(info["forecast_wind"]) else float("nan")
         for side in (("over", "under") if market == "total" else ("home", "away")):
             first = side in ("over", "home")
-            cands = take[[sd == side for sd in sides]]
-            best, best_score = None, -np.inf
-            for r in cands.itertuples():
+            cons_side_line = cons["line"] if (market == "total" or first) else -cons["line"]
+            open_side_line = cons["open_line"] if (market == "total" or first) else -cons["open_line"]
+            for r in take[[sd == side for sd in sides]].itertuples():
                 line_market = float(r.line) if market == "total" else (-float(r.line) if first else float(r.line))
                 p_first = probability.at_line(shape, cons_market_line, cons_first, line_market)
                 p_fair = probability.side_prob(p_first, "over" if first else "under")
@@ -344,34 +349,59 @@ def price(lines: pd.DataFrame, events: pd.DataFrame, projections: pd.DataFrame, 
                         p_over = atlas_over(atlas_number, pr["total_over_shrink"], pr["total_over_sd"], r.line)
                         p_a = p_over if first else 1.0 - p_over
                 e_atlas = ev(p_a, r.cost) if math.isfinite(p_a) else float("nan")
-                score = e_atlas if (market == "total" and math.isfinite(e_atlas)) else e_price
-                if math.isfinite(score) and score > best_score:
-                    best, best_score = (r, p_fair, p_a, e_price, e_atlas), score
-            if best is None:
+                rows.append({
+                    "game_id": game_id, "event_id": int(part["event_id"].iloc[0]), "sport": sport,
+                    "season": info["season"] if info is not None else None,
+                    "week": info["week"] if info is not None else None,
+                    "kickoff": info["scheduled"] if info is not None else None, "market": market, "side": side,
+                    "book_id": int(r.book_id), "line": float(r.line), "cost": float(r.cost), "updated": r.updated,
+                    "cons_line": cons_side_line, "cons_cost": cons["first_cost"] if first else cons["second_cost"],
+                    "open_line": open_side_line, "move": move, "p_fair": p_fair, "p_atlas": p_a,
+                    "ev_price": e_price, "ev_atlas": e_atlas, "atlas_number": atlas_number,
+                    "forecast_wind": wind, "stadium_type": info["stadium_type"] if info is not None else None,
+                })
+    return pd.DataFrame(rows, columns=LEG_COLUMNS)
+
+
+def price(lines: pd.DataFrame, events: pd.DataFrame, projections: pd.DataFrame, shapes: dict,
+          now: datetime, calibration: pd.DataFrame | None = None, table: pd.DataFrame | None = None) -> pd.DataFrame:
+    """One row per game, market and side: the consensus, the best book by the measure that applies, both
+    expected values, Atlas's number and probability, and the flags. ``table`` is :func:`legs` already
+    built, when the caller has it."""
+    columns = ["game_id", "event_id", "sport", "season", "week", "kickoff", "market", "side", "cons_line",
+               "cons_cost", "open_line", "move", "best_book", "best_line", "best_cost", "p_fair", "p_atlas",
+               "ev_price", "ev_atlas", "atlas_number", "books", "steam", "off_market", "moved_against",
+               "forecast_wind", "stadium_type"]
+    table = legs(lines, events, projections, shapes, now, calibration) if table is None else table
+    if table.empty:
+        return pd.DataFrame(columns=columns)
+    t = table.copy()
+    t["score"] = np.where((t["market"] == "total") & t["ev_atlas"].notna(), t["ev_atlas"], t["ev_price"])
+    rows = []
+    for (game_id, market), part in t.groupby(["game_id", "market"], sort=True):
+        for side in (("over", "under") if market == "total" else ("home", "away")):
+            cands = part[part["side"] == side]
+            scored = cands[cands["score"].notna()]
+            if scored.empty:
                 continue
-            r, p_fair, p_a, e_price, e_atlas = best
-            cons_side_line = cons["line"] if (market == "total" or first) else -cons["line"]
-            best_side_line = float(r.line)
-            better = (best_side_line - cons_side_line) * (-1.0 if side in ("over", "home") else 1.0) \
-                if market == "total" else (best_side_line - cons_side_line)
-            move = cons["line"] - cons["open_line"] if math.isfinite(cons["open_line"]) else float("nan")
-            open_side_line = cons["open_line"] if (market == "total" or first) else -cons["open_line"]
+            r = scored.loc[scored["score"].idxmax()]
+            first = side in ("over", "home")
+            better = (r["line"] - r["cons_line"]) * (-1.0 if first else 1.0) if market == "total" \
+                else (r["line"] - r["cons_line"])
+            move = float(r["move"])
             against = float("nan")
             if market == "total" and math.isfinite(move):
                 against = -move if side == "over" else move
             rows.append({
-                "game_id": game_id, "event_id": int(part["event_id"].iloc[0]), "sport": sport,
-                "season": info["season"] if info is not None else None, "week": info["week"] if info is not None else None,
-                "kickoff": info["scheduled"] if info is not None else None, "market": market, "side": side,
-                "cons_line": cons_side_line, "cons_cost": cons["first_cost"] if first else cons["second_cost"],
-                "open_line": open_side_line, "move": move, "best_book": int(r.book_id), "best_line": best_side_line,
-                "best_cost": float(r.cost), "p_fair": p_fair, "p_atlas": p_a, "ev_price": e_price, "ev_atlas": e_atlas,
-                "atlas_number": atlas_number, "books": int(cands["book_id"].nunique()),
+                "game_id": game_id, "event_id": r["event_id"], "sport": r["sport"], "season": r["season"],
+                "week": r["week"], "kickoff": r["kickoff"], "market": market, "side": side,
+                "cons_line": r["cons_line"], "cons_cost": r["cons_cost"], "open_line": r["open_line"], "move": move,
+                "best_book": int(r["book_id"]), "best_line": float(r["line"]), "best_cost": float(r["cost"]),
+                "p_fair": r["p_fair"], "p_atlas": r["p_atlas"], "ev_price": r["ev_price"], "ev_atlas": r["ev_atlas"],
+                "atlas_number": r["atlas_number"], "books": int(cands["book_id"].nunique()),
                 "steam": bool(math.isfinite(move) and abs(move) >= STEAM[market]),
                 "off_market": bool(better >= OFF_MARKET[market]),
-                "moved_against": against,
-                "forecast_wind": float(info["forecast_wind"]) if info is not None and pd.notna(info["forecast_wind"]) else float("nan"),
-                "stadium_type": info["stadium_type"] if info is not None else None,
+                "moved_against": against, "forecast_wind": r["forecast_wind"], "stadium_type": r["stadium_type"],
             })
     return pd.DataFrame(rows, columns=columns)
 
@@ -631,9 +661,10 @@ def sections(board: pd.DataFrame, chosen: pd.DataFrame, graded: pd.DataFrame, na
 
 
 def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, now: datetime | None = None,
-          client: bp.Client | None = None, market_where: Path | None = None, picks_where: Path | None = None) -> list[dict]:
-    """Capture the market, seal it, price the board, log and grade the picks, and return the section. Never
-    raises; returns nothing when BettingPros is not configured."""
+          client: bp.Client | None = None, market_where: Path | None = None, picks_where: Path | None = None,
+          parlays_where: Path | None = None) -> list[dict]:
+    """Capture the market, seal it, price the board, log and grade the picks and the day's parlays, and
+    return the sections. Never raises; returns nothing when BettingPros is not configured."""
     now = now or datetime.now(UTC)
     client = client or bp.Client.from_env()
     if client is None:
@@ -653,7 +684,8 @@ def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, 
         record, added = market_store.append(record, lines)
         if not added.empty:
             market_store.seal(record, passphrase, added, market_where)
-        board = price(lines, events, projections, shapes, now, store.read("calibration"))
+        table = legs(lines, events, projections, shapes, now, store.read("calibration"))
+        board = price(lines, events, projections, shapes, now, table=table)
         chosen = picks(board)
         pick_record = load_picks(passphrase, picks_where)
         pick_record, weeks = log_picks(pick_record, chosen, games, now)
@@ -672,7 +704,11 @@ def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, 
                                                              strict=True)}
         for g in games.itertuples():
             names.setdefault(str(g.game_id), f"{str(g.away_team).split(' ')[-1]} @ {str(g.home_team).split(' ')[-1]}")
-        return sections(board, chosen, graded, names, now, client.calls)
+        from atlas.owner import parlays
+
+        finals = paper.results(research, games)
+        return [*sections(board, chosen, graded, names, now, client.calls),
+                *parlays.build(table, finals, names, passphrase, now, where=parlays_where)]
     except Exception as error:  # noqa: BLE001 - the type only: a message could quote a line
         LOG.error("board not built: %s", type(error).__name__)
         return [{"title": "The board", "notes": [f"This run could not build the board ({type(error).__name__})."],
