@@ -43,6 +43,15 @@ For each game inside eight days, for the total and the spread:
   more off consensus on a total, half a point on a spread), moved against
   Atlas, and BettingPros' kickoff wind forecast from 15 mph outdoors.
 
+On the owner page the Board tab is four cards: **Picks now**, then **Totals**
+and **Spreads** (each game's better side, best expected value first, the top
+ten shown and the rest folded under "The other N games"), then the **Board
+record** once picks are logged (latest graded picks folded). Each row reads
+game and kickoff, the bet at its book (a spread names the team, not "home"),
+the consensus and where it opened, the edge (EV, and the probability behind
+it), and the flags. On a phone each row becomes a small card. Each card's
+explanations fold under "How this works".
+
 ## Picks
 
 The sides with positive expected value at the best price, one per game and
