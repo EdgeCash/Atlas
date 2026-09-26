@@ -44,7 +44,7 @@ from atlas.dfs import benchmarks as bm
 from atlas.dfs import context, environment, model, participation, players, ranges, record
 from atlas.dfs import optimizer as op
 from atlas.sources import nflverse
-from atlas.util import get_logger
+from atlas.util import get_logger, where
 
 LOG = get_logger(__name__)
 
@@ -360,7 +360,7 @@ def _cfb(store, now: datetime | None) -> list[dict]:
     try:
         return cfb_slate.run(store, now=now)
     except Exception as error:  # noqa: BLE001
-        LOG.error("college DFS slates not built: %s", type(error).__name__)
+        LOG.error("college DFS slates not built: %s at %s", type(error).__name__, where(error))
         return []
 
 

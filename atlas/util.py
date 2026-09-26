@@ -138,3 +138,15 @@ def write_parquet(df: pd.DataFrame, path: Path) -> Path:
 
 def read_parquet(path: Path, **kwargs: Any) -> pd.DataFrame:
     return pd.read_parquet(path, **kwargs)
+
+
+def where(error: BaseException, depth: int = 4) -> str:
+    """The last frames of an exception as ``file:line in function``, innermost last.
+
+    For a log line that must name a failure's place but never its message:
+    a message could quote a player, a price or a key; a file and a line
+    cannot."""
+    import traceback
+
+    frames = traceback.extract_tb(error.__traceback__)[-depth:]
+    return " > ".join(f"{Path(f.filename).name}:{f.lineno} in {f.name}" for f in frames) or "?"
