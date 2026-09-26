@@ -744,8 +744,10 @@ def _check_sealed(box: dict, sections: list[dict]) -> None:
         for t in s.get("tables", []):
             for row in t.get("rows", []):
                 for cell in row:
-                    if isinstance(cell, str) and len(cell) > 4 and cell in published:
-                        raise RuntimeError("plaintext in the sealed payload")
+                    # A cell is a string, or a main value and its second lines.
+                    for part in (cell if isinstance(cell, list) else [cell]):
+                        if isinstance(part, str) and len(part) > 4 and part in published:
+                            raise RuntimeError("plaintext in the sealed payload")
 
 
 def _research() -> pd.DataFrame | None:

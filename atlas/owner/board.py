@@ -602,37 +602,89 @@ def _flags(row) -> str:
     return ", ".join(out)
 
 
+#: Rows shown on the totals and spreads cards before the rest fold away.
+TOP_ROWS = 10
+HEAD = ["Game", "Bet", "Consensus", "Edge", "Flags"]
+
+
+def bet_label(market: str, side: str, line, label: str) -> str:
+    """"Over 44.5", or the team and its handicap: "Sacramento State +5.5", not "home +5.5"."""
+    if market == "total":
+        return f"{str(side).capitalize()} {_line(line, market)}"
+    away, home = label.split(" @ ", 1) if " @ " in label else ("Away", "Home")
+    return f"{home if side == 'home' else away} {_line(line, market)}"
+
+
+def _edge(x) -> tuple[float, float]:
+    """The expected value and probability the board ranks by: Atlas's on totals, the price edge otherwise."""
+    total = x.market == "total"
+    ev = x.ev_atlas if total and _finite(x.ev_atlas) else x.ev_price
+    p = x.p_atlas if total and _finite(x.p_atlas) else x.p_fair
+    return ev, p
+
+
+def _finite(v) -> bool:
+    try:
+        return math.isfinite(float(v))
+    except (TypeError, ValueError):
+        return False
+
+
+def _row(x, names: dict) -> list:
+    """One side on the board: each cell a main value and a quieter second line."""
+    label = _game(x, names)
+    ev, p = _edge(x)
+    atlas = f" · Atlas {x.atlas_number:.1f}" if x.market == "total" and _finite(x.atlas_number) else ""
+    books = f" · {int(x.books)} books" if _finite(getattr(x, "books", None)) else ""
+    opened = f"opened {_line(x.open_line, x.market)}" if _finite(x.open_line) else ""
+    return [[label, _eastern(x.kickoff)],
+            [f"{bet_label(x.market, x.side, x.best_line, label)} ({x.best_cost:+.0f})", bp.book_name(x.best_book) + books],
+            [f"{_line(x.cons_line, x.market)} ({x.cons_cost:+.0f})", opened],
+            [f"EV {_ev(ev)}", f"P {_pct(p)}{atlas}"],
+            _flags(x) or "–"]
+
+
 def sections(board: pd.DataFrame, chosen: pd.DataFrame, graded: pd.DataFrame, names: dict, now: datetime,
              calls: int) -> list[dict]:
-    """The board as the owner page shows it: picks, the totals board, the spreads board, the record."""
-    upcoming = board[pd.to_datetime(board["kickoff"], utc=True, errors="coerce") > pd.Timestamp(now)] if not board.empty else board
-    pick_rows = [[f"{_game(x, names)} · {_eastern(x.kickoff)}",
-                  f"{x.side} {_line(x.best_line, x.market)} ({x.best_cost:+.0f}) at {bp.book_name(x.best_book)}",
-                  f"cons {_line(x.cons_line, x.market)} ({x.cons_cost:+.0f}) · Atlas {x.atlas_number:.1f}",
-                  f"{_ev(x.ev_atlas if x.market == 'total' else x.ev_price)} · P {_pct(x.p_atlas if x.market == 'total' else x.p_fair)}"
-                  + (f" · {_flags(x)}" if _flags(x) else "")]
-                 for x in chosen.itertuples()] if not chosen.empty else []
-    tables = [{"title": f"Picks now: {len(pick_rows)} with positive expected value at the best price",
-               "head": ["Game", "Side (price) at book", "Consensus · Atlas", "EV · P · flags"],
-               "rows": pick_rows or [["Nothing clears zero at any book right now.", "", "", ""]]}]
+    """The Board tab: the picks, the totals, the spreads and the record, each its own card, best first."""
+    out = [{"title": f"Picks now ({len(chosen)})", "tab": "Board",
+            "notes": [
+                "The board prices every upcoming game across every book BettingPros quotes; the consensus and the "
+                "prediction markets are reference, never taken. Each pick is the better side of a game's total or "
+                "spread at the book that pays best, when its expected value there is above "
+                f"{MIN_EV:.0%}: at most {MAX_PICKS}, one per game and market, best first.",
+                f"Flags: steam, the consensus has moved {STEAM['total']:g}+ (totals) or {STEAM['spread']:g}+ "
+                f"(spreads) points from its opener; off-market, the best book sits {OFF_MARKET['total']:g}+ or "
+                f"{OFF_MARKET['spread']:g}+ points off the consensus; a move of {MOVED_AGAINST:g}+ against Atlas; and "
+                "BettingPros' kickoff wind forecast, from 15 mph outdoors.",
+                f"Built {_eastern(now)} ET from {calls} API calls. Lines are licensed to the owner: they live only "
+                "inside this ciphertext and in the sealed market record, never on a public page."],
+            "tables": [{"title": "", "head": HEAD, "stack": True,
+                        "rows": [_row(x, names) for x in chosen.itertuples()] if not chosen.empty
+                        else [["Nothing clears zero at any book right now.", "", "", "", ""]]}]}]
+    upcoming = board[pd.to_datetime(board["kickoff"], utc=True, errors="coerce") > pd.Timestamp(now)] \
+        if not board.empty else board
+    notes = {
+        "total": "Edge on totals is Atlas EV: the expected value of the book's price under Atlas's own calibrated "
+                 "probability at that line, its total read through the share of a disagreement that turns out real "
+                 "(about a third in 2026). P is that probability.",
+        "spread": "Edge on spreads is the price edge only: the expected value of the book's price under the "
+                  "consensus market read at the book's line. Atlas's model adds nothing here (its market weight is "
+                  "1.00), so a spread edge is a better price, not a better opinion.",
+    }
     for market, label in (("total", "Totals"), ("spread", "Spreads")):
-        m = upcoming[upcoming["market"] == market].copy()
+        m = upcoming[upcoming["market"] == market].copy() if len(upcoming) else upcoming
         if m.empty:
             continue
-        m["score"] = m["ev_atlas"].fillna(m["ev_price"]) if market == "total" else m["ev_price"]
-        m = m.sort_values(["kickoff", "score"], ascending=[True, False]).drop_duplicates(["game_id"], keep="first")
-        head = ["Game", "Consensus (open)", "Best side (book)", "Atlas · P" if market == "total" else "Price edge", "Flags"]
-        rows = []
-        for x in m.itertuples():
-            if market == "total":
-                value = f"{x.atlas_number:.1f} · P({x.side}) {_pct(x.p_atlas)} · EV {_ev(x.ev_atlas)}"
-            else:
-                value = f"EV {_ev(x.ev_price)} · fair {_pct(x.p_fair)}"
-            rows.append([f"{_game(x, names)} · {_eastern(x.kickoff)}",
-                         f"{_line(x.cons_line, market)} ({_line(x.open_line, market)})",
-                         f"{x.side} {_line(x.best_line, market)} ({x.best_cost:+.0f}) {bp.book_name(x.best_book)} · {x.books} books",
-                         value, _flags(x)])
-        tables.append({"title": f"{label} board: every game, its better side at the best price", "head": head, "rows": rows})
+        m["score"] = [_edge(x)[0] for x in m.itertuples()]
+        m = m.sort_values("score", ascending=False).drop_duplicates(["game_id"], keep="first")
+        rows = [_row(x, names) for x in m.itertuples()]
+        tables = [{"title": f"Best {min(TOP_ROWS, len(rows))} of {len(rows)} games by expected value", "head": HEAD,
+                   "stack": True, "rows": rows[:TOP_ROWS]}]
+        if len(rows) > TOP_ROWS:
+            tables.append({"title": f"The other {len(rows) - TOP_ROWS} games", "fold": True, "head": HEAD,
+                           "stack": True, "rows": rows[TOP_ROWS:]})
+        out.append({"title": label, "tab": "Board", "notes": [notes[market]], "tables": tables})
     rec = paper.record(graded.assign(clv=pd.to_numeric(graded["clv"], errors="coerce"),
                                      price=pd.to_numeric(graded["cost"], errors="coerce"))) if len(graded) else None
     if rec:
@@ -645,30 +697,21 @@ def sections(board: pd.DataFrame, chosen: pd.DataFrame, graded: pd.DataFrame, na
                  f"{int(counts.get('beat', 0))}-{int(counts.get('push', 0))}-{int(counts.get('lost', 0))}" if len(done) else "–"],
                 ["Mean CLV, points", paper._num(pd.to_numeric(done["clv"], errors="coerce").mean(), "{:+.2f}") if len(done) else "–"],
                 ["Mean CLV, win probability", paper._num(pd.to_numeric(done["clv_prob"], errors="coerce").mean(), "{:+.1%}") if len(done) else "–"]]
-        tables.append({"title": "Board record (every pick, at the book, line and price shown when it first qualified)",
-                       "head": ["", ""], "rows": rows})
+        tables = [{"title": "", "head": ["", ""], "rows": rows}]
         latest = graded[graded["outcome"] != "open"].sort_values("kickoff", ascending=False).head(12)
         if len(latest):
-            tables.append({"title": "Latest graded picks", "head": ["Game", "Pick", "Result"],
-                           "rows": [[_game(x, names), f"{x.side} {_line(x.line, x.market)} ({float(x.cost):+.0f}) {bp.book_name(x.book_id)}",
-                                     f"{x.outcome} {x.profit:+.2f}" + (f" · closed {_line(x.close_line, x.market)}, CLV {x.clv:+g}" if pd.notna(x.clv) else "")]
+            tables.append({"title": "Latest graded picks", "fold": True, "stack": True, "head": ["Game", "Pick", "Result"],
+                           "rows": [[_game(x, names),
+                                     [f"{bet_label(x.market, x.side, x.line, _game(x, names))} ({float(x.cost):+.0f})",
+                                      bp.book_name(x.book_id)],
+                                     [f"{x.outcome} {x.profit:+.2f}",
+                                      f"closed {_line(x.close_line, x.market)}, CLV {x.clv:+g}" if pd.notna(x.clv) else ""]]
                                     for x in latest.itertuples()]})
-    notes = [
-        "The board prices every upcoming game across every book BettingPros quotes (the consensus and prediction "
-        "markets are shown as reference, never taken). Price edge is the expected value of a book's price under the "
-        "consensus market read at that book's line. On totals, Atlas EV is the expected value under Atlas's own "
-        "calibrated probability at that line: its total read through the share of a disagreement that turns out "
-        "real (about a third in 2026). Spreads carry price edge only: the model's market weight there is 1.00.",
-        f"Picks are the sides above {MIN_EV:.0%} expected value at the best price, one per game and market, at most "
-        f"{MAX_PICKS}. Each is logged once, at the book, line and price on the board the first time it qualifies, and "
-        f"graded on the score and against the consensus close. Nothing is read from fewer than {MIN_GRADED} graded.",
-        f"Steam: the consensus has moved {STEAM['total']:g}+ (totals) or {STEAM['spread']:g}+ (spreads) points from its "
-        f"opener. Off-market: the best book sits {OFF_MARKET['total']:g}+ or {OFF_MARKET['spread']:g}+ points off the "
-        "consensus. Wind is BettingPros' kickoff forecast, shown from 15 mph outdoors.",
-        f"Built {_eastern(now)} ET from {calls} API calls. Lines are licensed to the owner: they live only inside this "
-        "ciphertext and in the sealed market record, never on a public page.",
-    ]
-    return [{"title": "The board", "tab": "Board", "notes": notes, "tables": tables}]
+        out.append({"title": "Board record", "tab": "Board", "tables": tables, "notes": [
+            "Each pick is logged once, at the book, line and price on the board the first time it qualifies, and "
+            "graded on the final score and against the consensus close, in points and in win probability. "
+            f"Nothing is read from fewer than {MIN_GRADED} graded."]})
+    return out
 
 
 # ---------------------------------------------------------------------------

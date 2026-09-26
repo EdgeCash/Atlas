@@ -67,16 +67,26 @@
   function money(n) { return "$" + Number(n).toLocaleString("en-US"); }
   function pts(n) { return n === null || n === undefined || isNaN(n) ? "–" : Number(n).toFixed(1); }
 
-  function table(head, rows) {
+  function table(head, rows, stack) {
     var wrap = el("div", { "class": "table-scroll" });
-    var t = el("table", { "class": "rows owner-table" });
+    // A stacked table becomes one small card a row on a phone; each cell carries its column's name for it.
+    var t = el("table", { "class": "rows owner-table" + (stack ? " owner-stack" : "") });
     var tr = el("tr");
     head.forEach(function (h) { tr.appendChild(el("th", null, h)); });
     var thead = el("thead"); thead.appendChild(tr); t.appendChild(thead);
     var tbody = el("tbody");
     rows.forEach(function (r) {
       var row = el("tr");
-      r.forEach(function (c) { row.appendChild(el("td", null, c)); });
+      r.forEach(function (c, i) {
+        var label = stack && head[i] ? { "data-label": head[i] } : null;
+        // A cell is a value, or a main value and quieter lines under it.
+        if (!Array.isArray(c)) { row.appendChild(el("td", label, c)); return; }
+        var td = el("td", label, c[0]);
+        c.slice(1).forEach(function (sub) {
+          if (sub !== null && sub !== undefined && sub !== "") td.appendChild(el("span", { "class": "owner-sub" }, sub));
+        });
+        row.appendChild(td);
+      });
       tbody.appendChild(row);
     });
     t.appendChild(tbody);
@@ -251,8 +261,16 @@
     var card = el("div", { "class": "card card-pad top-gap" });
     card.appendChild(el("h3", null, sec.title || ""));
     (sec.tables || []).forEach(function (t) {
+      // A long reference table can arrive folded, its title the thing to open.
+      if (t.fold) {
+        var fold = el("details", { "class": "owner-fold top-gap" });
+        fold.appendChild(el("summary", null, t.title || ""));
+        fold.appendChild(table(t.head || [], t.rows || [], t.stack));
+        card.appendChild(fold);
+        return;
+      }
       if (t.title) card.appendChild(el("h4", { "class": "top-gap" }, t.title));
-      card.appendChild(table(t.head || [], t.rows || []));
+      card.appendChild(table(t.head || [], t.rows || [], t.stack));
     });
     // The explanations after the numbers, folded: read once, not scrolled past every visit.
     if ((sec.notes || []).length) {

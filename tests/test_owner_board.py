@@ -229,13 +229,24 @@ def test_picks_are_logged_once_and_graded_on_the_score_and_the_consensus_close(t
     assert over["outcome"] == "win" and over["profit"] == pytest.approx(100 / 105)
     assert over["close_line"] == 45.5 and over["clv"] == 1.0 and over["clv_result"] == "beat" and over["clv_prob"] > 0
     assert home["outcome"] == "win" and home["close_line"] == 5.0 and home["clv"] == -0.5 and home["clv_result"] == "lost"
-    section = board.sections(b, chosen, g.reset_index(), {"401866429": "UMass @ Sacramento State"}, NOW, 20)[0]
-    titles = [t["title"] for t in section["tables"]]
-    assert titles[0].startswith("Picks now: 2") and any(t.startswith("Totals board") for t in titles)
-    assert any(t.startswith("Board record") for t in titles) and any(t == "Latest graded picks" for t in titles)
-    record_rows = dict(next(t for t in section["tables"] if t["title"].startswith("Board record"))["rows"])
+    cards = board.sections(b, chosen, g.reset_index(), {"401866429": "UMass @ Sacramento State"}, NOW, 20)
+    # Four cards on the Board tab, the picks first; each card's explanations are its own.
+    assert [c["title"] for c in cards] == ["Picks now (2)", "Totals", "Spreads", "Board record"]
+    assert {c["tab"] for c in cards} == {"Board"} and all(c["notes"] for c in cards)
+    picks = cards[0]["tables"][0]
+    assert picks["head"] == ["Game", "Bet", "Consensus", "Edge", "Flags"]
+    # Two-line cells: the game over its kickoff, the bet over its book; a spread names the team, not "home".
+    rows = {r[1][0]: r for r in picks["rows"]}
+    assert rows["Over 44.5 (-105)"][0] == ["UMass @ Sacramento State", "Sat 9:00 PM"]
+    assert rows["Over 44.5 (-105)"][1][1].startswith("BetMGM")
+    assert "Sacramento State +5.5 (-115)" in rows and rows["Over 44.5 (-105)"][3][0].startswith("EV +")
+    totals = cards[1]["tables"]
+    assert totals[0]["title"] == "Best 1 of 1 games by expected value" and len(totals) == 1   # nothing folded
+    assert "wind 18 mph" in totals[0]["rows"][0][-1]
+    record_rows = dict(cards[3]["tables"][0]["rows"])
     assert record_rows["Won-lost-push"] == "2-0-0" and record_rows["Beat-push-lost the consensus close"] == "1-0-1"
-    assert any("wind 18 mph" in r[-1] for r in next(t for t in section["tables"] if t["title"].startswith("Totals board"))["rows"])
+    latest = cards[3]["tables"][1]
+    assert latest["title"] == "Latest graded picks" and latest["fold"] is True
 
 
 class _FakeClient:
@@ -284,17 +295,33 @@ def test_the_board_rides_in_the_plays_box_and_only_when_bettingpros_is_configure
     monkeypatch.setattr(bp.Client, "from_env", classmethod(lambda cls: fake))
     plays.refresh(now=NOW, where=where)
     data = json.loads(owner.decrypt(plays.read_page(where)["box"], KEY))
-    assert data["sections"][0]["title"] == "The board" and fake.calls >= 3
+    assert data["sections"][0]["title"].startswith("Picks now") and fake.calls >= 3
     # Every section says which tab it belongs in; the exchanges ride behind the board and the parlays.
     tabs = [s.get("tab") for s in data["sections"]]
-    assert tabs == ["Board", "Parlays", "Trading", "Plays"]
-    trading = data["sections"][2]
+    assert tabs == ["Board", "Board", "Board", "Board", "Parlays", "Trading", "Plays"]
+    trading = next(s for s in data["sections"] if s["tab"] == "Trading")
     assert trading["title"] == "Sports trading: Kalshi and Polymarket"
     positions = trading["tables"][0]
     assert positions["title"].startswith("Positions for Sat Sep 26: 1") and positions["rows"][0][2] == "Polymarket US"
     assert (tmp_path / "tracking" / "owner_trading").exists()                        # logged at 10:04 ET, sealed
     picks_table = data["sections"][0]["tables"][0]
-    assert picks_table["title"].startswith("Picks now")
+    assert picks_table["head"][:2] == ["Game", "Bet"] and isinstance(picks_table["rows"][0][0], list)
     text = where.read_text()
     assert "Hornets" not in text and "BetMGM" not in text and "44.5" not in text
     assert (tmp_path / "tracking" / "owner_market").exists()                          # the lines, sealed
+
+
+def test_the_totals_card_shows_the_best_ten_and_folds_the_rest():
+    b = board.price(_lines(), _events(), _projections(total=50.0), {}, NOW, _calibration())
+    over = b[(b["market"] == "total") & (b["side"] == "over")].iloc[0]
+    many = pd.DataFrame([{**over.to_dict(), "game_id": f"g{i}", "ev_atlas": 0.01 * (i - 3)} for i in range(13)])
+    names = {f"g{i}": f"Away {i} @ Home {i}" for i in range(13)}
+    cards = board.sections(many, many.iloc[0:0], many.iloc[0:0].assign(outcome=[], clv=[], cost=[], clv_result=[]),
+                           names, NOW, 20)
+    totals = next(c for c in cards if c["title"] == "Totals")["tables"]
+    assert totals[0]["title"] == "Best 10 of 13 games by expected value" and len(totals[0]["rows"]) == 10
+    assert totals[0]["rows"][0][0][0] == "Away 12 @ Home 12"                          # the best first
+    assert totals[1] == {**totals[1], "title": "The other 3 games", "fold": True} and len(totals[1]["rows"]) == 3
+    assert [c["title"] for c in cards] == ["Picks now (0)", "Totals"]                 # no spreads here, no record yet
+    assert cards[0]["tables"][0]["rows"][0][0] == "Nothing clears zero at any book right now."
+

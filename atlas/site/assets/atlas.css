@@ -1049,6 +1049,22 @@ html[data-view="tiles"] .view-list { display: none; }
 .owner-tab:focus-visible { outline: 2px solid var(--data-pos); outline-offset: -2px; border-radius: 6px 6px 0 0; }
 .owner-panel[hidden] { display: none; }
 .owner-notes summary { cursor: pointer; font-size: 13px; font-weight: 620; color: var(--ink-2); }
+.owner-fold summary { cursor: pointer; font-size: 14px; font-weight: 620; color: var(--ink-2); padding: 4px 0; }
+.owner-sub { display: block; margin-top: 1px; font-size: 12px; font-weight: 400; color: var(--ink-3); }
+.owner-table td { vertical-align: top; }
+/* A stacked table on a phone: the first cell across the top, the rest two to a line, each under its column's name. */
+@media (max-width: 640px) {
+  table.owner-table.owner-stack thead { display: none; }
+  table.owner-table.owner-stack tr {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; padding: 10px 0; border-top: 1px solid var(--border);
+  }
+  table.owner-table.owner-stack td { display: block; padding: 0; border: 0; text-align: left; white-space: normal; }
+  table.owner-table.owner-stack td:first-child { grid-column: 1 / -1; font-weight: 620; }
+  table.owner-table.owner-stack td[data-label]:not(:first-child)::before {
+    content: attr(data-label); display: block; margin-bottom: 1px; font-size: 10.5px; font-weight: 650;
+    letter-spacing: .06em; text-transform: uppercase; color: var(--ink-4);
+  }
+}
 .owner-notes p { margin: 8px 0 0; }
 
 /* -------------------------------------------------------------- dfs ---- */
