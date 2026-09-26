@@ -128,9 +128,15 @@ def replay_signals(store: Store, period: str) -> Replay:
     numbers = store.read("numbers")
     numbers["prediction"] = pd.to_numeric(numbers["prediction"], errors="coerce")
     numbers["threshold"] = pd.to_numeric(numbers["threshold"], errors="coerce")
-    # Replay with the model version the signal names, not today's.
-    versions = set(stored["model_version"].astype(str))
-    numbers = numbers[numbers["model_version"].astype(str).isin(versions)]
+    # Replay each signal with the model version *it* names, not today's and
+    # not every version any signal in the period names: a week whose signals
+    # were formed at two refits would otherwise replay every game twice, once
+    # per version, and the comparison would find two rows where one was
+    # stored. (That took every poll and the daily rebuild down on 26
+    # September 2026, once week 5 held signals from two refits.)
+    named = stored[["game_id", "market", "model_version"]].drop_duplicates().astype(str)
+    keyed = numbers.assign(_k=numbers[["game_id", "market", "model_version"]].astype(str).agg("|".join, axis=1))
+    numbers = keyed[keyed["_k"].isin(set(named.agg("|".join, axis=1)))].drop(columns="_k")
 
     quotes = quotes.merge(
         stored[["game_id", "market", "season", "week"]].drop_duplicates(),
@@ -196,13 +202,19 @@ def _compare(period: str, scope: str, stored: pd.DataFrame, replayed: pd.DataFra
         return Replay(period, scope, len(stored), 0, 0, len(stored),
                       "replay produced nothing")
 
-    left = stored.set_index("signal_id")
-    right = replayed.set_index("signal_id")
-    missing = [i for i in left.index if i not in right.index]
-    shared = [i for i in left.index if i in right.index]
+    # One row per id on each side. A replay that produced the same id twice is
+    # itself a mismatch to report, never a reason to stop the run: the poll
+    # that calls this has already captured the market, and a crash here
+    # discards that capture with the commit that never follows.
+    left = stored.drop_duplicates("signal_id").set_index("signal_id")
+    right_all = replayed.drop_duplicates("signal_id").set_index("signal_id")
+    duplicated = int(len(replayed) - len(right_all))
+    missing = [i for i in left.index if i not in right_all.index]
+    shared = [i for i in left.index if i in right_all.index]
+    right = right_all.reindex(shared)
 
-    mismatched = 0
-    notes: list[str] = []
+    mismatched = duplicated
+    notes: list[str] = [f"replayed {duplicated} ids twice"] if duplicated else []
     for column in columns:
         if column == "signal_id" or column not in left or column not in right:
             continue
@@ -210,9 +222,9 @@ def _compare(period: str, scope: str, stored: pd.DataFrame, replayed: pd.DataFra
         numeric_a = pd.to_numeric(a, errors="coerce")
         numeric_b = pd.to_numeric(b, errors="coerce")
         if numeric_a.notna().all() and numeric_b.notna().all():
-            differs = (numeric_a - numeric_b).abs() > TOLERANCE
+            differs = (numeric_a.to_numpy() - numeric_b.to_numpy()).__abs__() > TOLERANCE
         else:
-            differs = a.astype(str) != b.astype(str)
+            differs = a.astype(str).to_numpy() != b.astype(str).to_numpy()
         count = int(differs.sum())
         if count:
             mismatched += count

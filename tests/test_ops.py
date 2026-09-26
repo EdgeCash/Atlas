@@ -298,6 +298,37 @@ def test_replay_uses_the_model_version_the_signal_names(store):
     assert reproduce.replay_signals(store, "2026-w06").clean
 
 
+def test_a_period_with_signals_from_two_refits_replays_each_with_its_own_version(store):
+    """26 September 2026: week 5 held signals formed at two refits. Filtering the numbers to the set of
+    versions any of them named replayed every game twice, the comparison found two rows where one was
+    stored, and pandas raised - taking every poll and the daily rebuild down with it. Each signal is
+    replayed with the version it names, and a malformed replay is a dirty row, never an exception."""
+    signals = _clean(store)
+    # Half the week's signals were formed at the first refit, half at the second, at different numbers.
+    second = signals.index[30:]
+    signals.loc[second, "model_version"] = "v2"
+    signals.loc[second, "atlas_number"] = 58.0
+    signals.loc[second, "disagreement"] = 58.0 - 52.0
+    signals.loc[second, "selection"] = "observed"                   # 6 points is under the 9-point threshold
+    store.write("signals", signals)
+    v1 = pd.DataFrame([{"game_id": r["game_id"], "season": 2026, "week": 6, "market": "total",
+                        "prediction": 62.0, "threshold": 9.0, "model_version": "v1",
+                        "refreshed_at": "2026-09-01T00:00:00+00:00"} for _, r in signals.iterrows()])
+    v2 = v1.assign(prediction=58.0, model_version="v2", refreshed_at="2026-09-20T00:00:00+00:00")
+    store.write("numbers", pd.concat([v1, v2], ignore_index=True))
+    replay = reproduce.replay_signals(store, "2026-w06")
+    assert replay.clean, replay.detail
+    assert replay.rows == 60 and replay.matched == 60
+    # A replay that produced an id twice is reported as a mismatch, not raised.
+    stored = store.read("signals")
+    doubled = pd.concat([stored, stored.iloc[:5]], ignore_index=True)
+    out = reproduce._compare("2026-w06", "signals", stored, doubled, reproduce.SIGNAL_COLUMNS)
+    assert not out.clean and out.mismatched == 5 and "twice" in out.detail
+    # And a replay with rows of a different shape compares by id, never by position.
+    shuffled = stored.iloc[::-1].reset_index(drop=True)
+    assert reproduce._compare("2026-w06", "signals", stored, shuffled, reproduce.SIGNAL_COLUMNS).clean
+
+
 # ---------------------------------------------------------------------------
 # Track 4 - the dashboard
 # ---------------------------------------------------------------------------
