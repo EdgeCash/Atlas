@@ -1,6 +1,253 @@
 {
   "history": [
     {
+      "at": "2026-09-26T20:38:11.764363+00:00",
+      "detail": "market in 7s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T20:38:11.617134+00:00",
+      "detail": "84 cards, 16 NFL cards, 127 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T20:23:20.224622+00:00",
+      "detail": "market in 7s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T20:23:20.086681+00:00",
+      "detail": "84 cards, 16 NFL cards, 127 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T20:08:15.696187+00:00",
+      "detail": "market in 6s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T20:08:15.554374+00:00",
+      "detail": "85 cards, 16 NFL cards, 127 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T19:53:13.049797+00:00",
+      "detail": "market in 7s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T19:53:12.908679+00:00",
+      "detail": "86 cards, 16 NFL cards, 127 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T19:38:22.180172+00:00",
+      "detail": "market in 6s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T19:38:22.019220+00:00",
+      "detail": "86 cards, 16 NFL cards, 127 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T19:23:07.120180+00:00",
+      "detail": "market in 6s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T19:23:06.990673+00:00",
+      "detail": "94 cards, 16 NFL cards, 130 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T19:08:04.981930+00:00",
+      "detail": "market in 6s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T19:08:04.841332+00:00",
+      "detail": "94 cards, 16 NFL cards, 130 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T18:53:11.344798+00:00",
+      "detail": "market in 5s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T18:53:11.152279+00:00",
+      "detail": "95 cards, 16 NFL cards, 130 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T18:37:56.725180+00:00",
+      "detail": "market in 5s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T18:37:56.601092+00:00",
+      "detail": "95 cards, 16 NFL cards, 130 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T18:23:09.365528+00:00",
+      "detail": "market in 6s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T18:23:09.217980+00:00",
+      "detail": "95 cards, 16 NFL cards, 130 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T18:05:09.668075+00:00",
+      "detail": "market in 4s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T18:05:09.537435+00:00",
+      "detail": "95 cards, 16 NFL cards, 130 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T17:53:28.000113+00:00",
+      "detail": "market in 8s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T17:53:27.854084+00:00",
+      "detail": "97 cards, 16 NFL cards, 131 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T17:38:14.633612+00:00",
+      "detail": "market in 6s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T17:38:14.486328+00:00",
+      "detail": "97 cards, 16 NFL cards, 131 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T17:23:14.847056+00:00",
+      "detail": "market in 6s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T17:23:14.697447+00:00",
+      "detail": "98 cards, 16 NFL cards, 132 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T17:08:21.600251+00:00",
+      "detail": "market in 6s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T17:08:21.429160+00:00",
+      "detail": "98 cards, 16 NFL cards, 132 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T16:53:13.187069+00:00",
+      "detail": "market in 7s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T16:53:13.036576+00:00",
+      "detail": "98 cards, 16 NFL cards, 132 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T16:38:21.668486+00:00",
+      "detail": "market in 7s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T16:38:21.510894+00:00",
+      "detail": "99 cards, 16 NFL cards, 132 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T16:23:14.291291+00:00",
+      "detail": "market in 6s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T16:23:14.140699+00:00",
+      "detail": "99 cards, 16 NFL cards, 132 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T16:08:18.466449+00:00",
+      "detail": "market in 7s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T16:08:18.326155+00:00",
+      "detail": "99 cards, 16 NFL cards, 132 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-09-26T15:53:12.606058+00:00",
       "detail": "market in 5s",
       "mode": "NCAAF Saturday",
@@ -995,241 +1242,12 @@
       "detail": "12 files",
       "name": "social",
       "ok": true
-    },
-    {
-      "at": "2026-09-23T19:58:48.771189+00:00",
-      "detail": "58 cards, 116 teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T19:58:48.770212+00:00",
-      "detail": "12 files",
-      "name": "social",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T19:58:43.628782+00:00",
-      "detail": "captured during the heavy refresh",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T19:58:43.627550+00:00",
-      "detail": "warehouse in 27s; model in 3s; market in 3s; site in 11s",
-      "name": "heavy",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T19:58:43.462761+00:00",
-      "detail": "58 cards, 116 teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T19:58:43.461838+00:00",
-      "detail": "12 files",
-      "name": "social",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T19:53:47.221130+00:00",
-      "detail": "58 cards, 116 teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T19:53:47.220186+00:00",
-      "detail": "12 files",
-      "name": "social",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T19:53:43.346337+00:00",
-      "detail": "captured during the heavy refresh",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T19:53:43.345133+00:00",
-      "detail": "warehouse in 20s; model in 2s; market in 2s; site in 5s",
-      "name": "heavy",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T19:53:43.151057+00:00",
-      "detail": "58 cards, 116 teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T19:53:43.150021+00:00",
-      "detail": "12 files",
-      "name": "social",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T18:31:23.907378+00:00",
-      "detail": "market in 3s",
-      "mode": "ordinary",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T18:31:23.745120+00:00",
-      "detail": "58 cards, 116 teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T18:29:14.483264+00:00",
-      "detail": "58 cards, 116 teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T18:29:14.482241+00:00",
-      "detail": "12 files",
-      "name": "social",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T18:29:09.321713+00:00",
-      "detail": "captured during the heavy refresh",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T18:29:09.320494+00:00",
-      "detail": "warehouse in 25s; model in 3s; market in 3s; site in 11s",
-      "name": "heavy",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T18:29:09.127945+00:00",
-      "detail": "58 cards, 116 teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T18:29:09.127027+00:00",
-      "detail": "12 files",
-      "name": "social",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T18:25:28.450584+00:00",
-      "detail": "58 cards, 116 teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T18:25:28.449638+00:00",
-      "detail": "12 files",
-      "name": "social",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T18:25:22.702369+00:00",
-      "detail": "captured during the heavy refresh",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T18:25:22.701201+00:00",
-      "detail": "warehouse in 28s; model in 3s; market in 3s; site in 17s",
-      "name": "heavy",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T18:25:22.486731+00:00",
-      "detail": "58 cards, 116 teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T18:25:22.485869+00:00",
-      "detail": "12 files",
-      "name": "social",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T15:30:49.686103+00:00",
-      "detail": "58 cards, 116 teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T15:30:49.684782+00:00",
-      "detail": "24 files",
-      "name": "social",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T15:29:55.860102+00:00",
-      "detail": "58 cards, 116 teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T15:29:55.858787+00:00",
-      "detail": "24 files",
-      "name": "social",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T15:29:06.226552+00:00",
-      "detail": "58 cards, 116 teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T15:29:06.225230+00:00",
-      "detail": "24 files",
-      "name": "social",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T15:28:49.638641+00:00",
-      "detail": "58 cards, 116 teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T15:28:49.637482+00:00",
-      "detail": "24 files",
-      "name": "social",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T14:56:47.426386+00:00",
-      "detail": "58 cards, 116 teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T14:56:47.425235+00:00",
-      "detail": "24 files",
-      "name": "social",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T03:37:03.567399+00:00",
-      "detail": "58 cards, 116 teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T03:37:03.566359+00:00",
-      "detail": "24 files",
-      "name": "social",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-09-26T15:53:12.445933+00:00",
-      "detail": "109 cards, 16 NFL cards, 134 teams, 30 NFL teams",
+      "at": "2026-09-26T20:38:11.617134+00:00",
+      "detail": "84 cards, 16 NFL cards, 127 teams, 30 NFL teams",
       "name": "build",
       "ok": true
     },
@@ -1240,8 +1258,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-09-26T15:53:12.606058+00:00",
-      "detail": "market in 5s",
+      "at": "2026-09-26T20:38:11.764363+00:00",
+      "detail": "market in 7s",
       "mode": "NCAAF Saturday",
       "name": "poll",
       "ok": true
@@ -1255,8 +1273,8 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-09-26T15:53:12.445933+00:00",
-      "detail": "109 cards, 16 NFL cards, 134 teams, 30 NFL teams",
+      "at": "2026-09-26T20:38:11.617134+00:00",
+      "detail": "84 cards, 16 NFL cards, 127 teams, 30 NFL teams",
       "name": "build",
       "ok": true
     },
@@ -1267,8 +1285,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-09-26T15:53:12.606058+00:00",
-      "detail": "market in 5s",
+      "at": "2026-09-26T20:38:11.764363+00:00",
+      "detail": "market in 7s",
       "mode": "NCAAF Saturday",
       "name": "poll",
       "ok": true
