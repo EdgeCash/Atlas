@@ -17,7 +17,7 @@ spreads, and the game-winner contract, a moneyline):
 * **expected value after fees**: fair probability / (price + fee) - 1, and
   the Kelly fraction ``(p - cost) / (1 - cost)``.
 
-The day's **positions** are the tradeable venues' contracts at +1% or more
+The day's **positions** are the tradeable venues' contracts at +2% or more
 after fees, from games on the Eastern day (or the next day with games), one
 per game at the venue and side that pays best, sized at a quarter of Kelly,
 at most 2% of the bankroll each and 10% in all. They are logged once into a
@@ -65,7 +65,9 @@ VENUES = {
     75: Venue("Polymarket US", 0.05, True),
     73: Venue("Polymarket", 0.05, False),
 }
-MIN_EV = 0.01
+#: Raised from +1% on 26 September 2026, after the first day filled all ten positions: a +1% edge read against a
+#: stale quote or the best of three venues is within the noise. Positions logged that day were at +1%.
+MIN_EV = 0.02
 MAX_POSITIONS = 10
 KELLY_FRACTION = 0.25
 MAX_STAKE = 0.02
@@ -209,7 +211,7 @@ def contract(market: str, side: str, line: float, label: str) -> str:
 
 
 def positions(p: pd.DataFrame, events: pd.DataFrame, names: dict, now: datetime) -> pd.DataFrame:
-    """The day's positions: tradeable venues, +1% or more after fees, one per game at the side and venue that
+    """The day's positions: tradeable venues, +2% or more after fees, one per game at the side and venue that
     pays best, at most :data:`MAX_POSITIONS`, sized at a quarter of Kelly under the caps."""
     if p.empty:
         return pd.DataFrame(columns=[*COLUMNS, "venue", "oldest"])
