@@ -68,3 +68,9 @@ def test_sealed_weekly_files_both_runs_rewrote_are_merged_and_resealed(tmp_path)
     with pytest.raises(sealed.Unreadable):
         mt.merge_sealed("origin/main", "not the key", tracking=tmp_path, remote=remote.get, listing=listing)
     assert ours.read_text() == before
+
+
+def test_every_sealed_record_the_owner_page_keeps_is_merged_by_its_row_key():
+    assert set(mt.SEALED) == {"owner_plays", "owner_board", "owner_market", "owner_parlays"}
+    assert mt.SEALED["owner_parlays"] == ["parlay_id"]
+

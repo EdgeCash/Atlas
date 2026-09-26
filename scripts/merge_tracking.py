@@ -41,6 +41,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SEALED: dict[str, list[str]] = {
     "owner_plays": ["play_id"],
     "owner_board": ["pick_id"],
+    "owner_parlays": ["parlay_id"],
     "owner_market": ["sport", "event_id", "market", "selection", "book_id", "captured_at"],
 }
 

@@ -74,3 +74,27 @@ has been worth on its own walk-forward, and price edge is arithmetic on the
 books' own prices; neither is a forecast of this weekend. Moneylines, alt
 lines and team totals are not on it yet; the score grid could price them and
 that is the next thing to test. The public site is unchanged.
+
+## Daily parlays
+
+Below the board, the owner page shows the day's parlays (`atlas/owner/parlays.py`), built from the
+same priced legs: every takeable book's price on every side, with the probability the board uses for
+it (Atlas's calibrated probability on totals, the consensus fair probability at that book's line on
+spreads).
+
+- **Legs** are the board's positive-EV sides from games kicking off today Eastern, or the next day with
+  games: one per game at a book, the best six per book.
+- **Parlays** are two or three of a book's legs from different games. Never a same-game parlay: the
+  books price those on correlations this does not model. The same legs at several books are shown
+  once, at the book that pays best for them; the best six by expected value are shown.
+- **The arithmetic** is stated, not dressed up: with independent legs the parlay's expected value is
+  the product of the legs' decimal odds times the product of their probabilities, minus one. A parlay
+  compounds the legs' edges and their variance; it adds no information a single bet lacks.
+- Each row shows the odds, the probability it hits, its expected value, a quarter-Kelly stake on a
+  bankroll of one, and the age of its oldest quote, marked stale past 90 minutes, because a book may
+  re-price a stale leg in its parlay builder.
+- **The record** (`tracking/owner_parlays/`, sealed): the day's set is logged once, at the first run
+  at or after 10:00 ET on that day, the moment rule v3 of the curated plays chooses, at the odds shown
+  then. Graded when every leg's game is final; a pushed leg drops out and the odds reduce, as the books
+  settle it. The live table keeps moving through the day and marks the logged set.
+
