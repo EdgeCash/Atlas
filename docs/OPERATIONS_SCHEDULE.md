@@ -228,6 +228,17 @@ timestamp a reader can see.** That is the entire point of `last` versus
 is at most fifteen minutes away. A task that retries inside its own window can
 hammer a provider that is already struggling.
 
+**Two runs that overlap both keep their work.** The two callers share a
+concurrency group, but a run held behind another still builds from the commit
+it was created on, and its tracking commit then cannot rebase over the
+other's: both appended to the same sorted CSVs (three rebuilds were lost that
+way on 26 September 2026). So a run first moves to the branch tip, and when
+its commit still cannot rebase, the store merges itself: every table is keyed,
+so each is rewritten as the branch's rows with the run's upserted over them,
+the sealed owner records the same way by their row keys, and the run's commit
+is rebuilt on the tip (`scripts/merge_tracking.py`, called from publish.yml's
+"Commit the record"). The reports and the freshness stamp are the later run's.
+
 ---
 
 ## Installing
