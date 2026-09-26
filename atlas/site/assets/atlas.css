@@ -1032,6 +1032,24 @@ html[data-view="tiles"] .view-list { display: none; }
 .owner-table td:nth-child(2) { padding-left: 10px; }
 .owner-table td:first-child { white-space: normal; }    /* long names wrap rather than push the numbers off */
 #owner-out select { margin: 6px 0 10px; min-height: 36px; font-size: 15px; }
+.owner-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.owner-head .note { margin: 0; }
+.owner-tabs {
+  display: flex; gap: 2px; margin-top: 12px; overflow-x: auto; border-bottom: 1px solid var(--border);
+  scrollbar-width: none; -webkit-overflow-scrolling: touch;
+}
+.owner-tabs::-webkit-scrollbar { display: none; }
+.owner-tab {
+  flex: 0 0 auto; min-height: 42px; padding: 0 14px; margin-bottom: -1px; font: inherit; font-size: 14px;
+  font-weight: 620; color: var(--ink-3); background: none; border: 0; border-bottom: 2px solid transparent;
+  cursor: pointer; white-space: nowrap;
+}
+.owner-tab:hover { color: var(--ink-2); }
+.owner-tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--ink); }
+.owner-tab:focus-visible { outline: 2px solid var(--data-pos); outline-offset: -2px; border-radius: 6px 6px 0 0; }
+.owner-panel[hidden] { display: none; }
+.owner-notes summary { cursor: pointer; font-size: 13px; font-weight: 620; color: var(--ink-2); }
+.owner-notes p { margin: 8px 0 0; }
 
 /* -------------------------------------------------------------- dfs ---- */
 

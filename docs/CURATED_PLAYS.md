@@ -104,12 +104,20 @@ the board is where the prices are.
 
 ## What the owner page shows
 
-One passphrase opens two boxes: the curated plays (built by every run) and
-the DFS lineups (built by the heavy run). The plays come first, one section
-per rule with v3 at the top: this week's plays with the time they were
-chosen, the live record, the record against the close, the two splits, the
-latest graded plays with their close and CLV, and the two histories. Every
-word is inside the ciphertext; the page's script holds none of it.
+One passphrase opens two boxes: the curated plays, board, parlays and
+trading (built by every run) and the DFS lineups (built by the heavy run).
+Opened, the page is a row of tabs: Plays, Board, Parlays, Trading, DFS and
+More. Each section's explanations are folded under "How this works".
+
+The Plays tab is one list, whichever rule chose a play
+(`plays.master_section`): the open plays at each game's latest logging (the
+line to bet now) with Atlas's number, when it was chosen and the flags; one
+record in which each game and side counts once, at its first logging;
+the record against the close; and the latest graded plays. Each rule still
+logs into the sealed record under its own id, so any rule's own record can
+be read from it (`plays.section`, the terminal view), but the page no longer
+shows one section per rule. Every word is inside the ciphertext; the page's
+script holds only the tabs' names.
 
 ## What changed on 26 September 2026
 

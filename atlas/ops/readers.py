@@ -166,7 +166,7 @@ def section(s: dict) -> dict:
                                  f"{100 * n / s['card_views']:.0f}" if s["card_views"] else "–"]
                                 for k, n in s["panels"].most_common()]})
     counted("Most viewed cards", "Card", s["cards"], s["card_views"], name=_card_name)
-    return {"title": "Readers", "notes": notes, "tables": tables}
+    return {"title": "Readers", "tab": "More", "notes": notes, "tables": tables}
 
 
 def build(store=None, today: date | None = None) -> dict | None:

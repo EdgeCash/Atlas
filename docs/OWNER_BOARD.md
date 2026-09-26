@@ -98,3 +98,29 @@ spreads).
   then. Graded when every leg's game is final; a pushed leg drops out and the odds reduce, as the books
   settle it. The live table keeps moving through the day and marks the logged set.
 
+## Sports trading: Kalshi and Polymarket
+
+The Trading tab (`atlas/owner/trading.py`) is a paper-trading model for the prediction exchanges, built from
+the same BettingPros capture as the board: Kalshi (book 68), Polymarket US (75) and the global Polymarket (73).
+The capture includes the game-winner market (moneyline) as well as totals and spreads; the board itself prices
+only totals and spreads.
+
+- **Fair value** is the sportsbook consensus with its margin removed, read at the contract's line; on totals,
+  Atlas's calibrated probability, as on the board.
+- **Cost** is the quote as a contract price (its implied probability) plus the taker fee,
+  `rate × price × (1 − price)` per contract: 7% for Kalshi (its published formula; the exchange rounds each
+  order up to the cent, not modelled) and 5% for Polymarket, the rate the Velocity repository modelled.
+- **EV after fees** is fair ÷ cost − 1; the Kelly fraction is (fair − cost) ÷ (1 − cost).
+- **Positions**: Kalshi and Polymarket US only (the global Polymarket is close-only for US accounts and is
+  shown as a reference price), +1% or more after fees, one per game at the side and venue that pays best, at
+  most ten a day; a quarter of Kelly, capped at 2% of the bankroll each and 10% a day.
+- **Record** (`tracking/owner_trading/`, sealed): the day's positions are logged once at the first run from
+  10:00 ET, like the parlays, and graded on the final score (a push refunded) and against the consensus close
+  in win probability.
+- The tab also shows the exchange board (each game and market at its best exchange price) and how many sides
+  each venue quoted this run; the run's log carries the same counts, never a price.
+
+To confirm before real money: that BettingPros shows each venue's price to buy, both fee rates against the
+venues' current schedules, and depth (the quotes carry none, so a price may not fill at size). Nothing places
+an order; execution would need a Kalshi API key and a Polymarket US account, and a paper record that earns it.
+

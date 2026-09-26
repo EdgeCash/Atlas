@@ -23,7 +23,8 @@ def _offers_body(event_id: int, market: str, home: str = "CSUS", away: str = "UM
     another way, a replaced line, a prediction market, and a line that has gone off."""
     def sel(selection, participant, line, books):
         return {"selection": selection, "participant": participant, "label": selection or participant, "active": True,
-                "opening_line": {"line": line + 2, "cost": -110, "book_id": 10, "created": "2026-09-22 08:00:00"},
+                "opening_line": {"line": None if line is None else line + 2, "cost": -110, "book_id": 10,
+                                 "created": "2026-09-22 08:00:00"},
                 "books": [{"id": bid, "lines": lines} for bid, lines in books]}
 
     def ln(line, cost, *, main=True, replaced=False, off=False, updated="2026-09-26 13:00:00"):
@@ -38,6 +39,14 @@ def _offers_body(event_id: int, market: str, home: str = "CSUS", away: str = "UM
                                             ln(44.5, -115, updated="2026-09-26 12:00:00")])]),
             sel("Under", None, 44.5, [(0, [ln(44.5, -110)]), (12, [ln(44.5, -108)]), (19, [ln(44.5, -115)]),
                                        (49, [ln(46.5, -110)]), (60, [ln(49.5, 150)]), (24, [ln(44.5, -105)])]),
+        ]
+    elif market == "moneyline":
+        # The game-winner market: no line. Kalshi (68) and Polymarket US (75) trade it; Polymarket (73) is a reference.
+        selections = [
+            sel("", home, None, [(0, [ln(None, -150)]), (12, [ln(None, -155)]), (68, [ln(None, -140)]),
+                                 (75, [ln(None, -160)]), (73, [ln(None, -170)])]),
+            sel("", away, None, [(0, [ln(None, 130)]), (12, [ln(None, 125)]), (68, [ln(None, 135)]),
+                                 (75, [ln(None, 150)]), (73, [ln(None, 160)])]),
         ]
     else:
         selections = [
@@ -238,7 +247,7 @@ class _FakeClient:
     def get(self, path, **params):
         self.calls += 1
         if path == "/offers":
-            market = "total" if int(params["market_id"]) == bp.MARKETS["ncaaf"]["total"] else "spread"
+            market = {v: k for k, v in bp.MARKETS["ncaaf"].items()}[int(params["market_id"])]
             return _offers_body(32187, market)
         return {"events": [{"id": 32187, "scheduled": "2026-09-27 01:00:00", "season": 2026, "week": 4, "status": "scheduled",
                             "home": "CSUS", "visitor": "UMASS", "venue": {"stadium_type": "outdoor"},
@@ -276,6 +285,14 @@ def test_the_board_rides_in_the_plays_box_and_only_when_bettingpros_is_configure
     plays.refresh(now=NOW, where=where)
     data = json.loads(owner.decrypt(plays.read_page(where)["box"], KEY))
     assert data["sections"][0]["title"] == "The board" and fake.calls >= 3
+    # Every section says which tab it belongs in; the exchanges ride behind the board and the parlays.
+    tabs = [s.get("tab") for s in data["sections"]]
+    assert tabs == ["Board", "Parlays", "Trading", "Plays"]
+    trading = data["sections"][2]
+    assert trading["title"] == "Sports trading: Kalshi and Polymarket"
+    positions = trading["tables"][0]
+    assert positions["title"].startswith("Positions for Sat Sep 26: 1") and positions["rows"][0][2] == "Polymarket US"
+    assert (tmp_path / "tracking" / "owner_trading").exists()                        # logged at 10:04 ET, sealed
     picks_table = data["sections"][0]["tables"][0]
     assert picks_table["title"].startswith("Picks now")
     text = where.read_text()

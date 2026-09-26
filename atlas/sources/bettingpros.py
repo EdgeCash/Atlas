@@ -181,7 +181,9 @@ def parse_offers(body: dict, sport: str, market: str, captured_at: str) -> pd.Da
                 rows.append({
                     "captured_at": captured_at, "sport": sport, "event_id": int(event_id) if event_id else None,
                     "market": market, "selection": selection, "participant": participant,
-                    "book_id": int(book.get("id")), "line": pd.to_numeric(current.get("line"), errors="coerce"),
+                    "book_id": int(book.get("id")),
+                    # A moneyline has no line: 0, so the row survives and compares equal to itself.
+                    "line": 0.0 if market == "moneyline" else pd.to_numeric(current.get("line"), errors="coerce"),
                     "cost": pd.to_numeric(current.get("cost"), errors="coerce"), "updated": _text(current.get("updated")),
                     "is_off": bool(current.get("is_off")),
                     "open_line": pd.to_numeric(opening.get("line"), errors="coerce"),

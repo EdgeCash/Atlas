@@ -71,6 +71,7 @@ def test_sealed_weekly_files_both_runs_rewrote_are_merged_and_resealed(tmp_path)
 
 
 def test_every_sealed_record_the_owner_page_keeps_is_merged_by_its_row_key():
-    assert set(mt.SEALED) == {"owner_plays", "owner_board", "owner_market", "owner_parlays"}
+    assert set(mt.SEALED) == {"owner_plays", "owner_board", "owner_market", "owner_parlays", "owner_trading"}
+    assert mt.SEALED["owner_trading"] == ["position_id"]
     assert mt.SEALED["owner_parlays"] == ["parlay_id"]
 
