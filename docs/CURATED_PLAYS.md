@@ -17,8 +17,9 @@ two ways. This is the operating description; the audit that led to it is
    where there is no forecast yet.
 2. **Every poll** (hourly; every fifteen minutes on game days) captures the
    DraftKings line and both prices for every game, then runs the plays step:
-   log anything a rule chooses now, grade every play whose game has started
-   or finished, and seal the owner page's plays box.
+   log anything a rule chooses now (v3 only; v1 and v2 were defined on the
+   daily rebuild and choose only there), grade every play whose game has
+   started or finished, and seal the owner page's plays box.
 3. **Saturday, the first poll at or after 10:00 ET**, rule v3 chooses the
    weekend's five plays: among college regular-season games still to kick
    off, the five with the largest gap between Atlas's total and the
@@ -38,9 +39,9 @@ a new id and a record that starts the day it is frozen.
 
 | Rule | Chooses | When | Record starts |
 |---|---|---|---|
-| `cfb-total-top5-sat10-v3` | the weekend's five largest gaps | the first poll at or after 10:00 ET Saturday | 26 Sep 2026 |
-| `cfb-total-top5-v2` | the week's five largest gaps | the first run on Saturday (the 04:00 ET rebuild) | 25 Sep 2026 |
-| `cfb-total-5-v1` | every game with a gap of 5+ points | the first run at which it qualifies, up to 8 days out | 24 Sep 2026 |
+| `cfb-total-top5-sat10-v3` | the weekend's five largest gaps | the first run at or after 10:00 ET Saturday (a poll, normally) | 26 Sep 2026 |
+| `cfb-total-top5-v2` | the week's five largest gaps | the Saturday 04:00 ET rebuild, as defined | 25 Sep 2026 |
+| `cfb-total-5-v1` | every game with a gap of 5+ points | the first 04:00 ET rebuild at which it qualifies, up to 8 days out, as defined | 24 Sep 2026 |
 
 v3 is the rule the plays are chosen by going forward. v2 keeps running:
 the same five games chosen six hours earlier, at Friday night's line,

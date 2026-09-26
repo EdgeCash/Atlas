@@ -1,6 +1,6 @@
 """The owner's curated plays: games a frozen rule selects, logged before kickoff and graded.
 
-    python -m atlas.owner.plays refresh     # every run: log, grade, and seal the owner page's plays box
+    python -m atlas.owner.plays refresh [--heavy]   # every run: log, grade, seal the owner page's plays box
     python -m atlas.owner.plays             # the records, to the terminal (needs ATLAS_OWNER_KEY)
 
 A rule is fixed before the games it selects, and never tuned after: a change
@@ -21,7 +21,8 @@ line the book is quoting; Atlas's side, one flat unit, one set per week. In
 practice that run is the 04:00 ET rebuild, so its line is Friday night's.
 
 **Rule v3** (``cfb-total-top5-sat10-v3``, frozen 26 September 2026): the same
-five largest gaps, chosen at the first poll at or after 10:00 ET on Saturday -
+five largest gaps, chosen at the first run (a poll, normally) at or after
+10:00 ET on Saturday -
 after the overnight moves and with every Saturday game still to kick off, so
 the line is the Saturday morning market and the choosing time is fixed and
 stated. v2 keeps running beside it: the same games chosen six hours apart
@@ -95,12 +96,13 @@ class Rule:
     top_n: int = 0                    # a weekly rule: this many games, the largest gaps
     weekday: int | None = None        # and the Eastern weekday it chooses on (Monday 0)
     hour: int | None = None           # and the Eastern hour from which it chooses (any run before is not it)
+    daily: bool = False               # chooses only at the daily rebuild, as its definition says; never at a poll
 
 
-RULE_V1 = Rule(id="cfb-total-5-v1", frozen="2026-09-24", sport="ncaaf", market="total", threshold=5.0,
+RULE_V1 = Rule(id="cfb-total-5-v1", frozen="2026-09-24", sport="ncaaf", market="total", threshold=5.0, daily=True,
                label="College totals, regular season: Atlas's total 5+ points from the line")
 RULE_V2 = Rule(id="cfb-total-top5-v2", frozen="2026-09-25", sport="ncaaf", market="total", threshold=0.0,
-               top_n=5, weekday=5,
+               top_n=5, weekday=5, daily=True,
                label="College totals, regular season: each Saturday morning, the week's five largest gaps "
                      "between Atlas's total and the line")
 RULE_V3 = Rule(id="cfb-total-top5-sat10-v3", frozen="2026-09-26", sport="ncaaf", market="total", threshold=0.0,
@@ -169,8 +171,11 @@ def current_lines(snapshots: pd.DataFrame, market: str) -> pd.DataFrame:
     return last[["game_id", "book", "line", "price", "other_price", "open_line"]]
 
 
-def chooses_now(rule: Rule, now: datetime) -> bool:
-    """Whether this moment is one a weekly rule chooses at: its weekday, and at or after its hour."""
+def chooses_now(rule: Rule, now: datetime, heavy: bool = True) -> bool:
+    """Whether this run is one the rule chooses at: the daily rebuild for a daily rule (v1 and v2 were
+    defined on it, and a poll is not it); for a weekly rule its weekday, and at or after its hour."""
+    if rule.daily and not heavy:
+        return False
     if not rule.top_n:
         return True
     local = now.astimezone(EASTERN)
@@ -181,10 +186,10 @@ def chooses_now(rule: Rule, now: datetime) -> bool:
 
 def candidates(rule: Rule, projections: pd.DataFrame, snapshots: pd.DataFrame, games: pd.DataFrame,
                season_types: dict, now: datetime, logged_weeks: set | None = None,
-               qbs: dict | None = None) -> pd.DataFrame:
-    """The games the rule selects right now: not started, regular season, and far enough from the line
+               qbs: dict | None = None, heavy: bool = True) -> pd.DataFrame:
+    """The games the rule selects at this run: not started, regular season, and far enough from the line
     - or, for a weekly rule at its choosing moment, the week's ``top_n`` largest gaps, once a week."""
-    if not chooses_now(rule, now):
+    if not chooses_now(rule, now, heavy):
         return pd.DataFrame(columns=COLUMNS)
     p = projections[projections["sport"] == rule.sport].copy()
     if p.empty:
@@ -541,16 +546,16 @@ def section(rule: Rule, g: pd.DataFrame, now: datetime, schools: dict | None = N
         tables.append({"title": "History before the freeze (as frozen; an earlier model, not reproducible)",
                        "head": ["Season", *heads], "rows": rows})
     if not rule.top_n:
-        logged = ("Each play is logged once, the first run at which its game qualifies, at the line and price the "
-                  "book was quoting then, and never changed or removed.")
+        logged = ("Each play is logged once, the first daily rebuild (04:00 ET) at which its game qualifies, at the "
+                  "line and price the book was quoting then, and never changed or removed.")
     elif rule.hour is None:
-        logged = ("The week's plays are chosen once, at the first run on its Saturday (in practice the 04:00 ET "
-                  "rebuild, so the line is Friday night's), at the lines and prices then, and never changed or "
-                  "removed. Thursday and Friday games are not in it.")
+        logged = ("The week's plays are chosen once, at the daily rebuild on its Saturday (04:00 ET, so the line "
+                  "is Friday night's), at the lines and prices then, and never changed or removed. Thursday and "
+                  "Friday games are not in it.")
     else:
-        logged = (f"The weekend's plays are chosen once, at the first poll at or after {rule.hour}:00 ET on "
-                  "Saturday, at the lines and prices then, and never changed or removed. Thursday and Friday "
-                  "games are not in it.")
+        logged = (f"The weekend's plays are chosen once, at the first run at or after {rule.hour}:00 ET on "
+                  "Saturday (a poll, normally), at the lines and prices then, and never changed or removed. "
+                  "Thursday and Friday games are not in it.")
     notes = [
         f"Rule {rule.id}, frozen {rule.frozen}: {rule.label}. Atlas's side, one flat unit. Never tuned: a change "
         "is a new rule with its own record from the day it is frozen.",
@@ -595,9 +600,10 @@ def _quarterbacks(schools: dict, research: pd.DataFrame | None, store, now: date
 
 
 def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, now: datetime | None = None,
-          where: Path | None = None) -> list[dict]:
+          where: Path | None = None, heavy: bool = True) -> list[dict]:
     """Log this run's plays, grade the record, and return the owner page's sections, one per rule
-    (`PAGE_ORDER`). Never raises."""
+    (`PAGE_ORDER`). ``heavy`` says whether this is the daily rebuild, which the daily rules choose at, or a
+    poll. Never raises."""
     now = now or datetime.now(UTC)
     try:
         record = load(passphrase, where)
@@ -628,7 +634,7 @@ def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, 
             weeks_logged = {(int(a), int(b)) for a, b in mine[["season", "week"]].itertuples(index=False)} \
                 if len(mine) else set()
             fresh = candidates(rule, store.read("projections"), store.read("snapshots"), games, season_types, now,
-                               weeks_logged, qbs)
+                               weeks_logged, qbs, heavy)
             before = len(record)
             record, weeks = log(record, fresh)
             if weeks:
@@ -678,7 +684,7 @@ def _check_sealed(box: dict, sections: list[dict]) -> None:
                         raise RuntimeError("plaintext in the sealed payload")
 
 
-def refresh(*, now: datetime | None = None, where: Path | None = None) -> Path:
+def refresh(*, now: datetime | None = None, where: Path | None = None, heavy: bool = False) -> Path:
     """The plays step of every run, heavy or poll: log, grade, and seal the owner page's plays box.
     Never raises, and never fails the run: without the key it records why the box is empty."""
     from atlas.dfs import owner
@@ -688,7 +694,7 @@ def refresh(*, now: datetime | None = None, where: Path | None = None) -> Path:
         LOG.warning("no %s secret: the curated plays are not logged", owner.SECRET)
         return write_page(None, reason="The owner key is not configured.", where=where)
     try:
-        sections = build(passphrase, now=now)
+        sections = build(passphrase, now=now, heavy=heavy)
         if not sections:
             return write_page(None, reason="This run could not build the curated plays.", where=where)
         data = {"built_at": _now(), "sections": [{k: v for k, v in s.items() if k != "record"} for s in sections]}
@@ -707,9 +713,11 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="The owner's curated plays")
     ap.add_argument("command", nargs="?", choices=["show", "refresh"], default="show",
                     help="refresh: log this run's plays and seal the owner page's plays box (never fails)")
+    ap.add_argument("--heavy", action="store_true",
+                    help="this is the daily rebuild: the rules defined on it (v1, v2) choose now")
     args = ap.parse_args()
     if args.command == "refresh":
-        refresh()
+        refresh(heavy=args.heavy)
         return
     from atlas.dfs import owner
 

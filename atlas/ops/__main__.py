@@ -74,7 +74,7 @@ def heavy(*, skip_warehouse: bool = False) -> int:
         # The owner's curated plays: logged at this run if a rule chooses now,
         # graded, and sealed into their own box for the owner page. Never
         # fails the run, and runs on every poll as well (atlas/owner/plays.py).
-        ("plays", ["atlas.owner.plays", "refresh"]),
+        ("plays", ["atlas.owner.plays", "refresh", "--heavy"]),
         # DFS: every upcoming Classic, Showdown and Tiers slate projected;
         # the Main slate's projections recorded in tracking/dfs_projections.csv
         # for the public DFS page until its first kickoff; and the owner's

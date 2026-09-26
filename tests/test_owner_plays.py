@@ -19,7 +19,7 @@ NOW = datetime(2026, 9, 25, 12, tzinfo=UTC)
 def test_rule_v1_is_frozen():
     """A change to the rule is a new rule, never an edit: this fails if v1 or its history is touched."""
     assert plays.RULE_V1 == plays.Rule(
-        id="cfb-total-5-v1", frozen="2026-09-24", sport="ncaaf", market="total", threshold=5.0,
+        id="cfb-total-5-v1", frozen="2026-09-24", sport="ncaaf", market="total", threshold=5.0, daily=True,
         label="College totals, regular season: Atlas's total 5+ points from the line")
     hist = plays.HISTORY["cfb-total-5-v1"]
     assert [sum(v[0][i] for v in hist.values()) for i in range(3)] == [453, 379, 7]
@@ -126,8 +126,9 @@ def test_the_plays_are_sealed_and_only_the_owner_key_opens_them(tmp_path):
 def test_rule_v2_is_frozen():
     assert plays.RULE_V2 == plays.Rule(
         id="cfb-total-top5-v2", frozen="2026-09-25", sport="ncaaf", market="total", threshold=0.0, top_n=5,
-        weekday=5, label="College totals, regular season: each Saturday morning, the week's five largest gaps "
-                         "between Atlas's total and the line")
+        weekday=5, daily=True,
+        label="College totals, regular season: each Saturday morning, the week's five largest gaps "
+              "between Atlas's total and the line")
     hist = plays.HISTORY["cfb-total-top5-v2"]
     assert [sum(v[0][i] for v in hist.values()) for i in range(3)] == [208, 152, 5]
     assert plays.HISTORY_COLUMNS["cfb-total-top5-v2"] == ("Vs close",)
@@ -334,7 +335,9 @@ def test_the_plays_box_is_sealed_by_every_run_and_says_why_when_it_cannot_be(tmp
                              "home_team": ["Miami", "Oregon", "C", "D", "E", "F"],
                              "away_team": ["Central Michigan", "USC", "G", "H", "I", "J"]})
     monkeypatch.setattr("atlas.research.dataset.load_research_frame", lambda: research)
-    plays.refresh(now=NOW, where=where)
+    plays.refresh(now=NOW, where=where)                                    # a poll: v1 does not choose at one
+    assert not (tmp_path / "tracking" / "owner_plays").exists()
+    plays.refresh(now=NOW, where=where, heavy=True)                        # the rebuild: it does
     record = plays.read_page(where)
     assert record["box"] is not None and record["reason"] is None
     text = where.read_text()
@@ -348,3 +351,28 @@ def test_the_plays_box_is_sealed_by_every_run_and_says_why_when_it_cannot_be(tmp
     assert record["box"]["ct"] in page and "Miami" not in page and "The curated plays, encrypted" in page
     bare = render.owner_page(None, plays=None)
     assert "have not been built yet" in bare
+
+
+def test_the_daily_rules_choose_only_at_the_rebuild_and_v3_at_any_run(tmp_path):
+    """v1 and v2 were defined on the 04:00 ET rebuild; the plays step now runs on every poll too, and a poll
+    must not become a second chance for them. v3 chooses at whichever run is first from 10:00 ET Saturday."""
+    saturday_4am = datetime(2026, 9, 26, 8, tzinfo=UTC)
+    assert not plays.chooses_now(plays.RULE_V1, saturday_4am, heavy=False)
+    assert not plays.chooses_now(plays.RULE_V2, saturday_4am, heavy=False)
+    assert plays.chooses_now(plays.RULE_V1, saturday_4am, heavy=True)
+    assert plays.chooses_now(plays.RULE_V2, saturday_4am, heavy=True)
+    ten = datetime(2026, 9, 26, 14, 4, tzinfo=UTC)
+    assert plays.chooses_now(plays.RULE_V3, ten, heavy=False) and plays.chooses_now(plays.RULE_V3, ten, heavy=True)
+    store = Store.open(tmp_path / "tracking")
+    store.write("projections", pd.DataFrame([_projection(1, 60.0), _projection(2, 52.0)]))
+    store.write("snapshots", pd.DataFrame([_snap(1, 50.0), _snap(2, 50.0)]))
+    store.write("games", pd.DataFrame({"game_id": [1, 2], "home_team": ["A B", "C D"], "away_team": ["E F", "G H"],
+                                       "kickoff": "2026-09-26T16:00:00Z"}))
+    research = pd.DataFrame({"game_id": [1, 2], "actual_margin": [None] * 2, "actual_total": [None] * 2,
+                             "season_type": ["regular"] * 2, "home_team": ["A", "C"], "away_team": ["E", "G"]})
+    where = tmp_path / "owner_plays"
+    plays.build(KEY, store=store, research=research, now=saturday_4am, where=where, heavy=False)   # a poll
+    assert not where.exists()                                                # nothing chose: no file sealed
+    plays.build(KEY, store=store, research=research, now=ten, where=where, heavy=False)
+    record = plays.load(KEY, where)
+    assert set(record["rule"]) == {"cfb-total-top5-sat10-v3"}
