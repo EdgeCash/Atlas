@@ -42,7 +42,7 @@ from atlas.dfs import cfb_players as cp
 from atlas.dfs import optimizer as op
 from atlas.dfs import slate as nfl_slate
 from atlas.sources import espn_cfb
-from atlas.util import get_logger
+from atlas.util import get_logger, where
 
 LOG = get_logger(__name__)
 
@@ -209,6 +209,9 @@ def run(store=None, *, now: datetime | None = None, raw: Path | None = None) -> 
     for _, slate in todo.iterrows():
         group, kind, label = int(slate["draft_group_id"]), slate["game_type"], slate["label"]
         pool = salaries[salaries["draft_group_id"] == group].merge(per_player, on="player_id_dk", how="left")
+        if pool.empty:
+            LOG.info("college %s %s (%d): listed, no player pool posted yet; skipped", kind, label, group)
+            continue
         sides = pool["game"].str.split(r" @ | vs ", n=1, expand=True, regex=True)
         pool["opponent"] = np.where(pool["team"] == sides[0], sides[1], sides[0])
         out = nfl_slate.out_dir(group)
@@ -226,6 +229,10 @@ def run(store=None, *, now: datetime | None = None, raw: Path | None = None) -> 
             made = (op.showdown(p, LINEUPS["Showdown"], flex_label="UTIL") if kind == "Showdown"
                     else op.optimize(p, LINEUPS["Classic"]))
         except op.Infeasible:
+            made = []
+        except Exception as error:  # noqa: BLE001 - the type and the place only; one slate never costs the others
+            LOG.error("college %s %s (%d): lineups not built: %s at %s", kind, label, group, type(error).__name__,
+                      where(error))
             made = []
         (out / "lineups_upload.csv").write_text(op.upload(made, kind, "cfb"))
         cols = ["lineup", "slot", "name", "team", "salary", "projection", "low", "high"]

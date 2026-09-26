@@ -83,9 +83,21 @@ def _check_pool(pool: pd.DataFrame) -> pd.DataFrame:
     missing = need - set(pool.columns)
     if missing:
         raise ValueError(f"pool lacks {sorted(missing)}")
-    p = pool.dropna(subset=["projection", "salary"]).reset_index(drop=True)
+    p = _nonempty(pool.dropna(subset=["projection", "salary"]).reset_index(drop=True))
     if p["id"].duplicated().any():
         raise ValueError("a player appears twice in the pool")
+    return p
+
+
+def _nonempty(p: pd.DataFrame) -> pd.DataFrame:
+    """The pool, or :class:`Infeasible` when nothing in it can be picked.
+
+    DraftKings lists a slate before its player pool is posted (Classic
+    Mon-Thu, 26 September 2026), and a pool can lose every player to a
+    missing projection. Either is "no lineup fits", which callers already
+    handle, not a malformed program for scipy to reject."""
+    if p.empty:
+        raise Infeasible("no playable player in the pool")
     return p
 
 
@@ -303,7 +315,7 @@ def showdown(pool: pd.DataFrame, opts: Options | None = None, *, flex_label: str
     ``opts`` uses the same locks, excludes, n, min_unique and max_exposure.
     """
     opts = opts or Options()
-    p = pool.dropna(subset=["projection", "salary", "cpt_salary"]).reset_index(drop=True)
+    p = _nonempty(pool.dropna(subset=["projection", "salary", "cpt_salary"]).reset_index(drop=True))
     n = len(p)
     ids = p["id"].to_numpy()
     proj = p["projection"].to_numpy(dtype=float)
@@ -374,7 +386,7 @@ def valid_showdown(lineup: pd.DataFrame, opts: Options | None = None, *, flex_la
 def tiers(pool: pd.DataFrame, opts: Options | None = None) -> list[pd.DataFrame]:
     """Tiers: one player from each tier, no salary, players from at least two games."""
     opts = opts or Options()
-    p = pool.dropna(subset=["projection", "tier"]).reset_index(drop=True)
+    p = _nonempty(pool.dropna(subset=["projection", "tier"]).reset_index(drop=True))
     ids = p["id"].to_numpy()
     tier = p["tier"].astype(int).to_numpy()
     games = _games(p)
