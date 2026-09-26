@@ -29,6 +29,27 @@ LOG = get_logger(__name__)
 SOCIAL_LIMIT = 6
 
 
+#: The day the site began recording each card's grade before kickoff. The grade
+#: record on the record page can only start here: a grade is a claim made in
+#: advance, and nothing earlier was kept.
+GRADES_SINCE = "26 September 2026"
+
+
+def _log_grades(cards) -> None:
+    """Keep each card's grade as published (`grade_record.py`). A failure is
+    logged and never costs the site."""
+    from datetime import UTC, datetime
+
+    from atlas.live.store import Store
+    from atlas.site import grade_record
+
+    try:
+        logged = grade_record.log(cards, datetime.now(UTC), Store.open())
+        LOG.info("grade record: %d cards logged before kickoff", logged)
+    except Exception as error:  # noqa: BLE001
+        LOG.error("grade record not logged: %s", type(error).__name__)
+
+
 def default_out() -> Path:
     return config.paths().root / "site"
 
@@ -37,10 +58,11 @@ def _record(out: Path) -> None:
     """The public model record (`atlas/site/record.py`): the page, and every graded game as a CSV."""
     import math
 
-    from atlas.site import record
+    from atlas.site import grade_record, record
 
     graded = record.build()
     graded.to_csv(out / "record.csv", index=False)
+    grades = grade_record.build()
 
     def clean(rows):
         return [{k: (None if isinstance(v, float) and math.isnan(v) else v) for k, v in r.items()} for r in rows]
@@ -50,7 +72,8 @@ def _record(out: Path) -> None:
         g = graded[graded["sport"] == sport]
         sports[sport] = {"summary": record.summary(g), "weekly": clean(record.weekly(g).to_dict("records")),
                          "latest": clean(g.head(40).to_dict("records"))}
-    (out / "record.html").write_text(render.record_page(sports, since="with the week of 24 September 2026"))
+    (out / "record.html").write_text(render.record_page(sports, since="with the week of 24 September 2026",
+                                                        grades=grades, grades_since=GRADES_SINCE))
 
 
 def build(out: Path | None = None, *, social_cards: bool = True,
@@ -63,6 +86,7 @@ def build(out: Path | None = None, *, social_cards: bool = True,
             "`python -m atlas.warehouse.build --include-scheduled`"
         )
     nfl_cards = _nfl_cards(horizon=horizon, refresh_meta=refresh_meta)
+    _log_grades([*cards, *nfl_cards])
     _attach_matchups(cards, "ncaaf")
     _attach_matchups(nfl_cards, "nfl")
 

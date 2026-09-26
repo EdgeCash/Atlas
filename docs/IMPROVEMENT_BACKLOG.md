@@ -66,10 +66,14 @@ in-conference ones. It has never been run.
 
 ## 3. Site features and UX
 
-**Grade reliability on the record page.** M. Ranked first in every product
-doc: what each grade letter claimed against what happened, with n, updated
-weekly. `record_page` shows misses and the winner rate but never splits by
-letter. It must avoid win-loss and hit-rate wording (`scripts/audit_site.py`).
+**Grade reliability on the record page.** Shipped 26 September, recording from
+that day: `atlas/site/grade_record.py`. Every build logs each card's grade
+before kickoff to `tracking/card_grades.csv` (the first letter it showed, kept,
+and the last, which is graded); the record page shows claimed against realised
+on the spread, by letter, with n and a "few" marker under 30 cards. No grade
+before 26 September was kept, so the record starts empty and fills as games go
+final. The first letter kept for each card is also what grade movement
+("opened B, now C") will need.
 
 **An "other models" panel.** S. SP+, FPI and Elo beside Atlas's number, with
 no verdict. The docs call it "the best value-per-hour item"; the data is in

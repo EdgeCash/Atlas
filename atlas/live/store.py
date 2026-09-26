@@ -17,6 +17,8 @@ Tables
 ``grades``     one row per graded signal (Track 3)
 ``availability`` the SEC's and the ACC's availability reports, their quarterbacks,
                captured each heavy refresh (`atlas/sources/availability.py`)
+``card_grades`` each card's grade as published before kickoff: the first
+               letter it showed and the last (`atlas/site/grade_record.py`)
 """
 
 from __future__ import annotations
@@ -65,6 +67,15 @@ SCHEMA: dict[str, list[str]] = {
     # seasons: what the grade is computed from. Replaced whole on each refresh.
     "calibration": [
         "game_id", "sport", "season", "week", "season_type", "market", "abs_edge", "claimed", "won",
+    ],
+    # Each card's grade as the site published it before kickoff: the first
+    # letter a reader could have seen and the last, with the spread it was
+    # graded against, Atlas's margin and Atlas's claimed probability for its
+    # own side of that spread. The public grade record is made from it.
+    "card_grades": [
+        "sport", "game_id", "season", "week", "kickoff", "market",
+        "first_letter", "first_score", "first_at",
+        "letter", "score", "line", "atlas", "claimed", "home_side", "published_at",
     ],
     # DraftKings NFL Classic slates and their salaries (`atlas/sources/draftkings.py`):
     # DraftKings keeps no history, so this is the only record of the market
@@ -135,6 +146,7 @@ KEYS: dict[str, list[str]] = {
     "numbers": ["game_id", "market", "model_version"],
     "projections": ["sport", "game_id", "model_version"],
     "calibration": ["sport", "game_id", "market"],
+    "card_grades": ["sport", "game_id"],
     "dfs_slates": ["draft_group_id"],
     # Last capture wins: a player's status (questionable, out) is worth
     # having as of the latest look before the slate locks.
@@ -156,6 +168,7 @@ SORT: dict[str, list[str]] = {
     "numbers": ["season", "week", "game_id", "market", "model_version"],
     "projections": ["sport", "season", "week", "game_id", "model_version"],
     "calibration": ["sport", "season", "week", "game_id", "market"],
+    "card_grades": ["sport", "season", "week", "game_id"],
     "dfs_slates": ["starts_at", "draft_group_id"],
     "dfs_salaries": ["draft_group_id", "position", "salary", "player_id"],
     "dfs_projections": ["starts_at", "draft_group_id", "position", "player_id_dk"],

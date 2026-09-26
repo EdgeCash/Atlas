@@ -124,6 +124,30 @@ def weekly(g: pd.DataFrame) -> pd.DataFrame:
         market_total_miss=("market_total_miss", "mean")).sort_values(["season", "week"], ascending=False)
 
 
+def _warehouses() -> tuple[pd.DataFrame | None, pd.DataFrame | None]:
+    """The college and NFL research frames, each None where it cannot be read."""
+    research = nfl = None
+    try:
+        from atlas.research.dataset import load_research_frame
+
+        research = load_research_frame()
+    except Exception as error:  # noqa: BLE001
+        LOG.info("record: no college warehouse (%s)", type(error).__name__)
+    try:
+        from atlas.research.nfl_dataset import load_nfl_frame
+
+        nfl = load_nfl_frame()
+    except Exception as error:  # noqa: BLE001
+        LOG.info("record: no NFL warehouse (%s)", type(error).__name__)
+    return research, nfl
+
+
+def all_finals(store) -> pd.DataFrame:
+    """Every final score Atlas can find, for the grade record (`grade_record.py`)."""
+    research, nfl = _warehouses()
+    return finals(research, nfl, store.read("games"))
+
+
 def build(store=None) -> pd.DataFrame:
     """The graded record from the tracking store and the warehouses. Never raises."""
     try:
@@ -131,19 +155,7 @@ def build(store=None) -> pd.DataFrame:
             from atlas.live.store import Store
 
             store = Store.open()
-        research = nfl = None
-        try:
-            from atlas.research.dataset import load_research_frame
-
-            research = load_research_frame()
-        except Exception as error:  # noqa: BLE001
-            LOG.info("record: no college warehouse (%s)", type(error).__name__)
-        try:
-            from atlas.research.nfl_dataset import load_nfl_frame
-
-            nfl = load_nfl_frame()
-        except Exception as error:  # noqa: BLE001
-            LOG.info("record: no NFL warehouse (%s)", type(error).__name__)
+        research, nfl = _warehouses()
         games = store.read("games")
         names = {str(g): (_short(h), _short(a)) for g, h, a in zip(games["game_id"], games["home_team"],
                                                                    games["away_team"], strict=True)} if len(games) else {}

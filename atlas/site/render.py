@@ -1707,7 +1707,8 @@ def dfs_page(slate: dict | None, players: list[dict], *, history: dict | None, l
                   canonical="dfs.html")
 
 
-def record_page(sports: dict[str, dict], *, since: str) -> str:
+def record_page(sports: dict[str, dict], *, since: str, grades: dict[str, list[dict]] | None = None,
+                grades_since: str | None = None) -> str:
     """The public model record (`atlas/site/record.py`): every projection Atlas
     published before kickoff, against the final score, with the market's
     pre-kickoff number beside it where Atlas captured one. Facts only: every
@@ -1721,6 +1722,7 @@ def record_page(sports: dict[str, dict], *, since: str) -> str:
         parts.append(f'''<section class="section" id="{sport}">
   <div class="section-head"><h2>{names[sport]}</h2></div>
   <div class="card card-pad prose">{_record_summary(s)}</div>
+  {_record_grades((grades or {}).get(sport), grades_since) if grades is not None else ""}
   {_record_weeks(data.get("weekly") or [])}
   {_record_games(data.get("latest") or [], s.get("games", 0))}
 </section>''')
@@ -1748,6 +1750,12 @@ def record_page(sports: dict[str, dict], *, since: str) -> str:
     <p><b>The miss.</b> How far the projected margin (home points less away points) and the projected total were from
       the final ones, in points. <b>Winner</b> is how often the side Atlas had ahead won; a projected or final tie is
       not counted.</p>
+    <p><b>The grades.</b> Each card's grade is kept as it was last published before kickoff, with the spread it was
+      graded against. <b>Claimed</b> is Atlas's own probability, on that card, that the final margin would land on its
+      side of that spread; <b>realised</b> is how often it did, a push counting half; the <b>gap</b> is realised less
+      claimed. The grade's claim is that higher letters carry smaller gaps: an A card's probability should sit nearer
+      what happens than a D card's. It is a calibration record, the same measure as the seasons on
+      <a href="research.html">Research</a>, and not a count of results.</p>
     <p><b>The market.</b> DraftKings' last margin and total before kickoff, as Atlas captured them, graded the same
       way on the same games. A game with no captured line is graded for Atlas alone, and the comparison uses only the
       games that have both.</p>
@@ -1760,6 +1768,29 @@ def record_page(sports: dict[str, dict], *, since: str) -> str:
                    "score, with the market's pre-kickoff number beside it.")
     return layout(title="Model record | Atlas", body=body, active="record", description=description,
                   canonical="record.html")
+
+
+def _record_grades(rows: list[dict] | None, since: str | None) -> str:
+    """Claimed against realised, by grade letter (`atlas/site/grade_record.py`)."""
+    start = f" It began on {esc(since)}; nothing earlier was kept." if since else ""
+    total = next((r for r in rows or [] if r["letter"] == "All"), None)
+    if not total or not total["cards"]:
+        return ('<div class="card card-pad top-gap prose"><h3>By grade</h3><p>No graded card yet. Each card\'s '
+                'grade is kept as it was published before kickoff, and counts here once its game is final.'
+                f'{start}</p></div>')
+    body = []
+    for r in rows:
+        if not r["cards"]:
+            body.append([esc(r["letter"]), "0", "—", "—", "—"])
+            continue
+        few = ' <span class="note">few</span>' if r["few"] and r["letter"] != "All" else ""
+        label = f"<b>{esc(r['letter'])}</b>" if r["letter"] == "All" else esc(r["letter"])
+        body.append([label, f"{r['cards']}{few}", pct(r["claimed"]), pct(r["realised"]),
+                     signed(r["gap"] * 100)])
+    return ('<div class="card card-pad top-gap record-table"><h3>By grade</h3>'
+            f'<p class="note">Each card\'s grade as last published before kickoff: Atlas\'s claimed probability on '
+            f'the spread against how often it happened.{start} A letter with few cards is noise, not a reading.</p>'
+            + table(["Grade", "Cards", "Claimed", "Realised", "Gap, pts"], body) + "</div>")
 
 
 def _record_summary(s: dict) -> str:
