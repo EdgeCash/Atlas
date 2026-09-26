@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-09-26T14:23:11.125646+00:00",
+      "detail": "market in 5s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-26T14:23:10.974473+00:00",
+      "detail": "109 cards, 16 NFL cards, 134 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-09-26T14:07:55.685773+00:00",
       "detail": "market in 4s",
       "mode": "NCAAF Saturday",
@@ -1208,23 +1221,11 @@
       "detail": "58 cards, 116 teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-09-23T02:42:34.305750+00:00",
-      "detail": "captured during the heavy refresh",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-09-23T02:42:34.304601+00:00",
-      "detail": "model in 4s; market in 3s; site in 8s",
-      "name": "heavy",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-09-26T14:07:55.542808+00:00",
+      "at": "2026-09-26T14:23:10.974473+00:00",
       "detail": "109 cards, 16 NFL cards, 134 teams, 30 NFL teams",
       "name": "build",
       "ok": true
@@ -1236,8 +1237,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-09-26T14:07:55.685773+00:00",
-      "detail": "market in 4s",
+      "at": "2026-09-26T14:23:11.125646+00:00",
+      "detail": "market in 5s",
       "mode": "NCAAF Saturday",
       "name": "poll",
       "ok": true
@@ -1251,7 +1252,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-09-26T14:07:55.542808+00:00",
+      "at": "2026-09-26T14:23:10.974473+00:00",
       "detail": "109 cards, 16 NFL cards, 134 teams, 30 NFL teams",
       "name": "build",
       "ok": true
@@ -1263,8 +1264,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-09-26T14:07:55.685773+00:00",
-      "detail": "market in 4s",
+      "at": "2026-09-26T14:23:11.125646+00:00",
+      "detail": "market in 5s",
       "mode": "NCAAF Saturday",
       "name": "poll",
       "ok": true
