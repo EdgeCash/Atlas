@@ -44,7 +44,7 @@ from atlas.dfs import benchmarks as bm
 from atlas.dfs import context, environment, model, participation, players, ranges, record
 from atlas.dfs import optimizer as op
 from atlas.sources import nflverse
-from atlas.util import get_logger
+from atlas.util import get_logger, where
 
 LOG = get_logger(__name__)
 
@@ -255,6 +255,23 @@ def lineups(projected: pd.DataFrame, game_type: str = "Classic", opts: op.Option
     return op.optimize(p, opts or LINEUPS["Classic"])
 
 
+def slate_lineups(pool: pd.DataFrame, kind: str, label: str, group: int,
+                  opts: op.Options | None = None) -> list[pd.DataFrame]:
+    """One slate's lineups: none when no lineup fits, and none, logged by type
+    and place, when the build fails any other way. One slate's failure never
+    costs the others theirs: on 26 September 2026 a Classic slate DraftKings
+    had listed before posting its pool took every NFL slate's lineups with it,
+    and the owner page went out empty for two days."""
+    try:
+        return lineups(pool, kind, opts)
+    except op.Infeasible:
+        return []
+    except Exception as error:  # noqa: BLE001 - the type and the place only
+        LOG.error("%s %s (%d): lineups not built: %s at %s", kind, label, group, type(error).__name__,
+                  where(error))
+        return []
+
+
 def upcoming(slates: pd.DataFrame, now: datetime | None = None) -> pd.DataFrame:
     """Every captured NFL slate that has not started, oldest first; a slate
     captured before formats were recorded is a Classic one."""
@@ -317,6 +334,9 @@ def _nfl(store, now: datetime | None) -> list[dict]:
     for _, slate in todo.iterrows():
         group, kind, label = int(slate["draft_group_id"]), slate["game_type"], slate["label"]
         pool = salaries[salaries["draft_group_id"] == group].merge(per_player, on="player_id_dk", how="left")
+        if pool.empty:
+            LOG.info("%s %s (%d): listed, no player pool posted yet; skipped", kind, label, group)
+            continue
         pool["team"] = pool["team"].replace(DK_TEAM)
         out = out_dir(group)
         out.mkdir(parents=True, exist_ok=True)
@@ -330,10 +350,7 @@ def _nfl(store, now: datetime | None) -> list[dict]:
         (out / "slate.json").write_text(json.dumps(meta) + "\n")
         if kind == "Classic" and label == "Main":
             record.save(pool, slate, store, now=now)
-        try:
-            made = lineups(pool, kind, LINEUPS["Main"] if (kind, label) == ("Classic", "Main") else None)
-        except op.Infeasible:
-            made = []
+        made = slate_lineups(pool, kind, label, group, LINEUPS["Main"] if (kind, label) == ("Classic", "Main") else None)
         (out / "lineups_upload.csv").write_text(op.upload(made, kind))
         if made:
             readable = pd.concat([lu.assign(lineup=i + 1) for i, lu in enumerate(made)])
@@ -360,7 +377,7 @@ def _cfb(store, now: datetime | None) -> list[dict]:
     try:
         return cfb_slate.run(store, now=now)
     except Exception as error:  # noqa: BLE001
-        LOG.error("college DFS slates not built: %s", type(error).__name__)
+        LOG.error("college DFS slates not built: %s at %s", type(error).__name__, where(error))
         return []
 
 

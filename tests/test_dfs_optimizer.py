@@ -369,3 +369,31 @@ def test_a_locked_player_at_his_cap_keeps_the_lineups_already_built():
     locked = pool[pool["position"] == "RB"]["id"].iloc[0]
     lineups = op.optimize(pool, op.Options(n=4, locks=[locked], max_exposure=0.5, min_unique=1))
     assert len(lineups) == 2 and all(locked in set(x["id"]) for x in lineups)
+
+
+def test_an_empty_pool_is_infeasible_not_an_error():
+    """DraftKings lists a slate before its player pool is posted (Classic Mon-Thu, 26 September 2026).
+    The optimizer says "no lineup fits", which callers handle, rather than handing scipy an empty
+    objective, which took every slate's lineups with it."""
+    empty = _pool(1).iloc[0:0]
+    with pytest.raises(op.Infeasible):
+        op.optimize(empty)
+    with pytest.raises(op.Infeasible):
+        op.showdown(empty.assign(cpt_salary=[]))
+    with pytest.raises(op.Infeasible):
+        op.tiers(empty.assign(tier=[]))
+    with pytest.raises(op.Infeasible):                       # every projection missing: the same case
+        op.optimize(_pool(1).assign(projection=np.nan))
+
+
+def test_one_slates_failure_never_costs_the_others_their_lineups(caplog):
+    from atlas.dfs import slate
+
+    proper = _pool(2).assign(player_id_dk=lambda d: d["id"], status="", disabled=False)
+    assert len(slate.slate_lineups(proper, "Classic", "Main", 1)) == slate.LINEUPS["Classic"].n
+    assert slate.slate_lineups(proper.iloc[0:0], "Classic", "Mon-Thu", 2) == []          # nothing fits: quietly
+    with caplog.at_level("ERROR"):
+        assert slate.slate_lineups(pd.DataFrame({"name": ["x"]}), "Showdown", "A @ B", 3) == []
+    assert "Showdown A @ B (3): lineups not built: KeyError at" in caplog.text            # the type and the place
+    assert "x" not in caplog.text.split("lineups not built")[1].split("\n")[0].replace("KeyError", "")
+

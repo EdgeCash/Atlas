@@ -37,7 +37,7 @@ from pathlib import Path
 import pandas as pd
 
 from atlas import config
-from atlas.util import get_logger
+from atlas.util import get_logger, where
 
 LOG = get_logger(__name__)
 
@@ -199,8 +199,8 @@ def refresh(*, rebuild: bool = True) -> Path:
 
         index, reason = slate.run_all(), None
     except Exception as error:  # noqa: BLE001 - the site must still build
-        # The type only: a message could quote a player or a number.
-        LOG.error("DFS slate not built: %s", type(error).__name__)
+        # The type and the place only: a message could quote a player or a number.
+        LOG.error("DFS slate not built: %s at %s", type(error).__name__, where(error))
         index = None
         reason = ("No upcoming slate is posted yet." if type(error).__name__ == "NoSlate"
                   else f"This refresh could not build the lineups ({type(error).__name__}).")
@@ -229,7 +229,7 @@ def refresh(*, rebuild: bool = True) -> Path:
                  len(box["ct"]))
         return write(box)
     except Exception as error:  # noqa: BLE001
-        LOG.error("owner page not built: %s", type(error).__name__)
+        LOG.error("owner page not built: %s at %s", type(error).__name__, where(error))
         return write(None, reason=f"This refresh could not build the lineups ({type(error).__name__}).")
 
 
