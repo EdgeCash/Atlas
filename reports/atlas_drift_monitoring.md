@@ -1,6 +1,6 @@
 # Atlas Drift Monitoring
 
-*Generated 2026-09-27 03:52 UTC by `python -m atlas.live check`. Every alarm compares
+*Generated 2026-09-27 04:52 UTC by `python -m atlas.live check`. Every alarm compares
 the most recent week of the record against its own history.*
 
 ---
@@ -14,7 +14,7 @@ worse problem than the drift it was watching for.
 | Alarm | Severity | Observed | Threshold | Detail |
 |---|---|---|---|---|
 | signal volume | alarm | -0.7672 | 0.5 | week 5: 27 signals against 116 the week before (-77%) |
-| silence | ok | 0.6028 | 7 | last signal 0.6 days ago (2026-09-26) |
+| silence | ok | 0.6447 | 7 | last signal 0.6 days ago (2026-09-26) |
 | single book | alarm | 1.0000 | 1 | 100% of signals from book 'DraftKings' (1 distinct) |
 | single market | ok | 0.5035 | 1 | 50% of signals from market 'margin' (2 distinct) |
 | model output (margin) | ok | n/a | 3 | 14 recent / 58 prior rows; too few to compare |
@@ -22,7 +22,7 @@ worse problem than the drift it was watching for.
 | disagreement shape (margin) | ok | n/a | 0.01 | 14 recent / 58 prior rows; too few to compare |
 | disagreement shape (total) | ok | n/a | 0.01 | 13 recent / 58 prior rows; too few to compare |
 | primary rate | ok | n/a | 0.5 | 27 recent / 116 prior rows; too few to compare |
-| college state | ok | n/a | 36 | no refresh on one side of the last game day to compare |
+| college state | ok | n/a | 36 | not due until Mon 16:00 UTC |
 
 ---
 
