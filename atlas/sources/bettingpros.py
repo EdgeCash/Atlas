@@ -229,6 +229,77 @@ def takeable(lines: pd.DataFrame) -> pd.Series:
         & lines["cost"].notna() & (lines["cost"].abs() < 5000)
 
 
+# ---------------------------------------------------------------------------
+# Player props: which books quote them (a probe, counts only)
+# ---------------------------------------------------------------------------
+
+#: The player-prop markets the probe asks for, by the slug BettingPros gives them.
+PROP_PROBE_SLUGS = ("passing-yards", "rushing-yards", "receiving-yards", "receptions")
+#: The pick'em apps in the book catalogue: a line against fixed payouts, not a price.
+PICKEM = {37: "PrizePicks", 53: "Dabble", 45: "Betr"}
+
+
+def markets(client: Client, sport: str) -> list[dict]:
+    """The sport's market catalogue: id, slug and category for each market."""
+    return list(client.get("/markets", sport=SPORT_NAMES[sport]).get("markets") or [])
+
+
+def book_counts(body: dict) -> tuple[int, dict[int, int]]:
+    """(offers, {book id: selections it quotes a current line on}) for an offers response. Lines are
+    counted, never read."""
+    counts: dict[int, int] = {}
+    offers = body.get("offers") or []
+    for offer in offers:
+        for sel in offer.get("selections") or []:
+            for book in sel.get("books") or []:
+                current = _current(book.get("lines") or [])
+                if current is None or current.get("is_off"):
+                    continue
+                bid = int(book.get("id"))
+                counts[bid] = counts.get(bid, 0) + 1
+    return len(offers), counts
+
+
+def probe_props(client: Client, sport: str, event_ids: list[int], max_pages: int = 3) -> dict:
+    """Which books quote the probe's player-prop markets on these events, and how many props each."""
+    listed = markets(client, sport)
+    categories: dict[str, int] = {}
+    for m in listed:
+        c = str(m.get("category") or "?")
+        categories[c] = categories.get(c, 0) + 1
+    wanted = [m for m in listed if str(m.get("slug") or "") in PROP_PROBE_SLUGS]
+    out = {"sport": sport, "listed": len(listed), "categories": categories,
+           "markets": [str(m.get("slug")) for m in wanted], "events": len(event_ids), "offers": 0, "books": {},
+           "prop_slugs": sorted({str(m.get("slug")) for m in listed if "prop" in str(m.get("category") or "")})[:12]}
+    if not wanted or not event_ids:
+        return out
+    ids = ":".join(str(int(m["id"])) for m in wanted)
+    events = ":".join(str(int(e)) for e in event_ids[:BATCH])
+    for page in range(1, max_pages + 1):
+        body = client.get("/offers", sport=SPORT_NAMES[sport], market_id=ids, event_id=events, location=LOCATION,
+                          limit=50, page=page)
+        n, counts = book_counts(body)
+        out["offers"] += n
+        for bid, c in counts.items():
+            out["books"][bid] = out["books"].get(bid, 0) + c
+        if page >= int((body.get("_pagination") or {}).get("total_pages") or 1):
+            break
+    return out
+
+
+def describe_probe(result: dict) -> str:
+    """One log line: the markets asked, the props found, the pick'em apps by name, the books that quote."""
+    books = result["books"]
+    pickem = ", ".join(f"{name} {books.get(bid, 0)}" for bid, name in PICKEM.items())
+    top = sorted(((c, b) for b, c in books.items() if b not in PICKEM and b != CONSENSUS), reverse=True)[:8]
+    quoting = ", ".join(f"{book_name(b)} {c}" for c, b in top) or "none"
+    if not result["markets"]:
+        return (f"props probe: {result['sport']}: none of {', '.join(PROP_PROBE_SLUGS)} among {result['listed']} "
+                f"markets listed {result['categories']}; prop slugs listed: {', '.join(result['prop_slugs']) or 'none'}")
+    return (f"props probe: {result['sport']}: {', '.join(result['markets'])} on {result['events']} events: "
+            f"{result['offers']} player props; pick'em: {pickem}; books quoting: {quoting}")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description="This weekend's multi-book lines from BettingPros")
     ap.add_argument("--sport", default="ncaaf", choices=sorted(MARKETS))
