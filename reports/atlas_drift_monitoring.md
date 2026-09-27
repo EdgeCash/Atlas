@@ -1,6 +1,6 @@
 # Atlas Drift Monitoring
 
-*Generated 2026-09-27 18:22 UTC by `python -m atlas.live check`. Every alarm compares
+*Generated 2026-09-27 18:37 UTC by `python -m atlas.live check`. Every alarm compares
 the most recent week of the record against its own history.*
 
 ---
@@ -14,7 +14,7 @@ worse problem than the drift it was watching for.
 | Alarm | Severity | Observed | Threshold | Detail |
 |---|---|---|---|---|
 | signal volume | ok | -0.0345 | 0.5 | week 5: 112 signals against 116 the week before (-3%) |
-| silence | ok | 0.0417 | 7 | last signal 0.0 days ago (2026-09-27) |
+| silence | ok | 0.0522 | 7 | last signal 0.1 days ago (2026-09-27) |
 | single book | alarm | 1.0000 | 1 | 100% of signals from book 'DraftKings' (1 distinct) |
 | single market | ok | 0.5000 | 1 | 50% of signals from market 'margin' (2 distinct) |
 | model output (margin) | alarm | -4.0179 | 3 | mean Atlas number moved -4.02 points against prior weeks |
