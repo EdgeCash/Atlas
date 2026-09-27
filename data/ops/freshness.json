@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-09-27T01:08:23.030413+00:00",
+      "detail": "market in 9s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-27T01:08:22.891839+00:00",
+      "detail": "56 cards, 30 NFL cards, 112 teams, 31 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-09-27T00:53:20.071728+00:00",
       "detail": "market in 8s",
       "mode": "NCAAF Saturday",
@@ -1246,23 +1259,11 @@
       "detail": "12 files",
       "name": "social",
       "ok": true
-    },
-    {
-      "at": "2026-09-24T13:26:53.911536+00:00",
-      "detail": "captured during the heavy refresh",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-09-24T13:26:53.909916+00:00",
-      "detail": "warehouse in 28s; nfl-ingest in 2s; nfl-warehouse in 20s; model in 26s; market in 3s; site in 6s",
-      "name": "heavy",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-09-27T00:53:19.856745+00:00",
+      "at": "2026-09-27T01:08:22.891839+00:00",
       "detail": "56 cards, 30 NFL cards, 112 teams, 31 NFL teams",
       "name": "build",
       "ok": true
@@ -1274,8 +1275,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-09-27T00:53:20.071728+00:00",
-      "detail": "market in 8s",
+      "at": "2026-09-27T01:08:23.030413+00:00",
+      "detail": "market in 9s",
       "mode": "NCAAF Saturday",
       "name": "poll",
       "ok": true
@@ -1289,7 +1290,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-09-27T00:53:19.856745+00:00",
+      "at": "2026-09-27T01:08:22.891839+00:00",
       "detail": "56 cards, 30 NFL cards, 112 teams, 31 NFL teams",
       "name": "build",
       "ok": true
@@ -1301,8 +1302,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-09-27T00:53:20.071728+00:00",
-      "detail": "market in 8s",
+      "at": "2026-09-27T01:08:23.030413+00:00",
+      "detail": "market in 9s",
       "mode": "NCAAF Saturday",
       "name": "poll",
       "ok": true
