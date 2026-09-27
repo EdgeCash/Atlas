@@ -127,8 +127,11 @@ only totals and spreads.
 - **Record** (`tracking/owner_trading/`, sealed): the day's positions are logged once at the first run from
   10:00 ET, like the parlays, and graded on the final score (a push refunded) and against the consensus close
   in win probability.
-- The tab also shows the exchange board (each game and market at its best exchange price) and how many sides
-  each venue quoted this run; the run's log carries the same counts, never a price.
+- The tab is three cards: **Positions for the day** (game over kickoff, contract over venue, price over fee, EV
+  over the fair probability, stake over whether it is logged); the **Exchange board** (each game and market at
+  its best exchange price, the best ten shown and the rest folded, with the quotes each venue gave this run
+  folded beneath); and the **Trading record** once positions are logged. On a phone each row becomes a small
+  card. The run's log carries the per-venue counts too, never a price.
 
 To confirm before real money: that BettingPros shows each venue's price to buy, both fee rates against the
 venues' current schedules, and depth (the quotes carry none, so a price may not fill at size). Nothing places
