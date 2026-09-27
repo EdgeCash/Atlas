@@ -1,6 +1,6 @@
 # Atlas Drift Monitoring
 
-*Generated 2026-09-27 16:52 UTC by `python -m atlas.live check`. Every alarm compares
+*Generated 2026-09-27 17:07 UTC by `python -m atlas.live check`. Every alarm compares
 the most recent week of the record against its own history.*
 
 ---
@@ -13,14 +13,14 @@ worse problem than the drift it was watching for.
 
 | Alarm | Severity | Observed | Threshold | Detail |
 |---|---|---|---|---|
-| signal volume | ok | -0.1897 | 0.5 | week 5: 94 signals against 116 the week before (-19%) |
+| signal volume | ok | -0.0690 | 0.5 | week 5: 108 signals against 116 the week before (-7%) |
 | silence | ok | 0.0000 | 7 | last signal 0.0 days ago (2026-09-27) |
 | single book | alarm | 1.0000 | 1 | 100% of signals from book 'DraftKings' (1 distinct) |
 | single market | ok | 0.5000 | 1 | 50% of signals from market 'margin' (2 distinct) |
-| model output (margin) | alarm | -5.3346 | 3 | mean Atlas number moved -5.33 points against prior weeks |
-| model output (total) | ok | 0.3895 | 3 | mean Atlas number moved +0.39 points against prior weeks |
-| disagreement shape (margin) | ok | 0.2351 | 0.01 | KS statistic 0.195, p = 0.2351 |
-| disagreement shape (total) | ok | 0.3029 | 0.01 | KS statistic 0.183, p = 0.3029 |
+| model output (margin) | alarm | -4.0194 | 3 | mean Atlas number moved -4.02 points against prior weeks |
+| model output (total) | ok | 0.1887 | 3 | mean Atlas number moved +0.19 points against prior weeks |
+| disagreement shape (margin) | ok | 0.4267 | 0.01 | KS statistic 0.158, p = 0.4267 |
+| disagreement shape (total) | ok | 0.2753 | 0.01 | KS statistic 0.181, p = 0.2753 |
 | primary rate | watch | -1.0000 | 0.5 | 0.0% of signals primary against 0.9% before (-100%) |
 | college state | ok | n/a | 36 | not due until Mon 16:00 UTC |
 
@@ -65,7 +65,7 @@ newest week never finds.
 | 2026-w04 | signals | 116 | 116 | 0 | 0 | yes | exact match |
 | 2026-w04 | grades | 116 | 116 | 0 | 0 | yes | exact match |
 | 2026-w04 | statistics | 12 | 12 | 0 | 0 | yes | recomputed from the replayed grades |
-| 2026-w05 | signals | 94 | 27 | 67 | 0 | no | atlas_number: 31; disagreement: 31; direction: 3; selection: 2 |
+| 2026-w05 | signals | 108 | 41 | 67 | 0 | no | atlas_number: 31; disagreement: 31; direction: 3; selection: 2 |
 | 2026-w05 | grades | 0 | 0 | 0 | 0 | yes | no grades in this period |
 | 2026-w05 | statistics | 0 | 0 | 0 | 0 | yes | no graded signals in period |
 
