@@ -129,15 +129,19 @@ def test_prop_offers_are_parsed_to_each_books_current_line_per_side():
     assert pp.loc["over", "line"] == 62.5 and pp.loc["under", "line"] == 62.5             # the main line, not the goblin
 
 
-def test_props_are_fetched_a_dozen_events_a_request_every_page_and_counted():
+def test_props_are_fetched_a_dozen_events_a_request_every_page_and_counted(caplog):
     client = _Client()
-    got = bp.props(client, "nfl", list(range(1, 15)), MARKET_IDS)
+    with caplog.at_level("INFO", logger="atlas.sources.bettingpros"):
+        got = bp.props(client, "nfl", list(range(1, 15)), MARKET_IDS)
     offers = [p for path, p in client.seen if path == "/offers"]
     assert len(offers) == 4                                                    # two batches of events, two pages each
     assert offers[0]["market_id"] == "102:103:104:105" and offers[0]["limit"] == 50
     assert offers[0]["event_id"].count(":") == 11 and offers[2]["event_id"] == "13:14"
     assert len(got) == 2 * 6 and "_parameters" not in json.dumps(got.to_dict("records"), default=str)
-    capped = bp.props(_Client(), "nfl", list(range(1, 15)), MARKET_IDS, max_pages=3)
+    assert "cap cut" not in caplog.text
+    with caplog.at_level("INFO", logger="atlas.sources.bettingpros"):
+        capped = bp.props(_Client(), "nfl", list(range(1, 15)), MARKET_IDS, max_pages=3)
+    assert "the 3-page cap cut the latest games" in caplog.text                  # the second batch's page two
     assert len(capped) == 2 * 6                                                # page three is the second batch's first
     assert bp.props(_Client(), "nfl", [], MARKET_IDS).empty and bp.props(_Client(), "nfl", [1], {}).empty
 
@@ -377,3 +381,19 @@ def test_a_sealed_pick_record_opens_only_with_the_key(tmp_path):
     pickem.seal(picks, KEY, weeks, tmp_path, pickem.PICK_COLUMNS, list(picks["player"]))
     with pytest.raises(sealed.Unreadable):
         pickem.load("not the key", tmp_path, pickem.PICK_COLUMNS)
+
+
+def test_the_run_logs_what_the_tab_shows_in_counts_only():
+    priced, counts = pickem.price(_slate_props())
+    chosen = pickem.optimize(priced)
+    line = pickem.summary(counts, priced, chosen, "2026-09-27")
+    picks = int((priced["p"] >= pickem.PICK_FLOOR).sum())
+    assert line.startswith("pickem: slate 2026-09-27: 7 PrizePicks lines, 1 More only, 1 unpriced, 5 priced, ")
+    assert f"{picks} picks from 54% on 4 games" in line and f"{len(chosen)} slips (" in line
+    assert "flex" in line and "power" in line
+    assert not any(ch in line for ch in ("62.5", "92.5", "London", "-110"))              # never a line, a name or a price
+    empty = pickem.summary({}, priced.iloc[0:0], chosen.iloc[0:0], None)
+    assert empty == "pickem: slate none: 0 PrizePicks lines, 0 More only, 0 unpriced, 0 priced, 0 picks from 54% on 0 games, 0 slips (none)"
+    described = pickem._describe("nfl", _slate_props(), 5)
+    assert "7 props on 4 of 5 slate events, PrizePicks on 7" in described and "62.5" not in described
+

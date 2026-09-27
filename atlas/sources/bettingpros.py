@@ -242,7 +242,7 @@ PROP_COLUMNS = ["captured_at", "sport", "event_id", "market", "player_key", "pla
                 "selection", "book_id", "line", "cost", "updated", "main"]
 #: Offers per page (the endpoint's cap) and pages a sport may take in one run.
 PROP_PAGE = 50
-PROP_PAGES = 10
+PROP_PAGES = 16
 
 
 def markets(client: Client, sport: str) -> list[dict]:
@@ -313,11 +313,14 @@ def props(client: Client, sport: str, event_ids: list[int], slug_of: dict[int, s
     if not ids or not slug_of:
         return pd.DataFrame(columns=PROP_COLUMNS)
     wanted = ":".join(str(m) for m in sorted(slug_of))
-    parts, pages = [], 0
+    parts, pages, capped = [], 0, False
     for start in range(0, len(ids), BATCH):
         batch = ":".join(str(i) for i in ids[start:start + BATCH])
         page = 1
-        while pages < max_pages:
+        while True:
+            if pages >= max_pages:
+                capped = True                 # a page was still to come: the latest games go without
+                break
             try:
                 body = client.get("/offers", sport=SPORT_NAMES[sport], market_id=wanted, event_id=batch,
                                   location=LOCATION, limit=PROP_PAGE, page=page)
@@ -330,8 +333,8 @@ def props(client: Client, sport: str, event_ids: list[int], slug_of: dict[int, s
                 break
             page += 1
     out = pd.concat(parts, ignore_index=True) if parts else pd.DataFrame(columns=PROP_COLUMNS)
-    LOG.info("bettingpros: %d prop lines on %d %s events, %d pages, %d calls so far", len(out), len(ids), sport,
-             pages, client.calls)
+    LOG.info("bettingpros: %d prop lines on %d %s events, %d pages%s, %d calls so far", len(out), len(ids), sport,
+             pages, f" (the {max_pages}-page cap cut the latest games)" if capped else "", client.calls)
     return out
 
 
