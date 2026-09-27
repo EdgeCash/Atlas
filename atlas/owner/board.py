@@ -715,6 +715,61 @@ def sections(board: pd.DataFrame, chosen: pd.DataFrame, graded: pd.DataFrame, na
 
 
 # ---------------------------------------------------------------------------
+# The player-prop probe: once a day, counts only
+# ---------------------------------------------------------------------------
+
+
+def probes_path() -> Path:
+    from atlas import config
+
+    return config.paths().data / "ops" / "probes.json"
+
+
+def probe_due(name: str, now: datetime, where: Path | None = None) -> bool:
+    """True when ``name`` has not run yet on this Eastern day."""
+    where = where or probes_path()
+    try:
+        done = json.loads(where.read_text()).get(name)
+    except (OSError, ValueError):
+        done = None
+    return done != pd.Timestamp(now).tz_convert(EASTERN).strftime("%Y-%m-%d")
+
+
+def mark_probed(name: str, now: datetime, where: Path | None = None) -> None:
+    where = where or probes_path()
+    try:
+        state = json.loads(where.read_text())
+    except (OSError, ValueError):
+        state = {}
+    state[name] = pd.Timestamp(now).tz_convert(EASTERN).strftime("%Y-%m-%d")
+    where.parent.mkdir(parents=True, exist_ok=True)
+    where.write_text(json.dumps(state, indent=1, sort_keys=True) + "\n")
+
+
+def probe_props(client: bp.Client, events: pd.DataFrame, now: datetime, where: Path | None = None) -> list[str]:
+    """Once an Eastern day, ask BettingPros which books quote NFL and college player props on the soonest
+    games, PrizePicks among them, and log the counts: never a line. About eight calls. Never raises."""
+    if not probe_due("props", now, where):
+        return []
+    lines = []
+    for sport in ("nfl", "ncaaf"):
+        try:
+            mine = events[events["sport"] == sport] if not events.empty else events
+            kick = pd.to_datetime(mine["scheduled"], utc=True, errors="coerce") if len(mine) else pd.Series(dtype=object)
+            ids = mine.assign(_k=kick)[kick > pd.Timestamp(now)].sort_values("_k")["event_id"].astype(int).tolist() \
+                if len(mine) else []
+            lines.append(bp.describe_probe(bp.probe_props(client, sport, ids)))
+        except Exception as error:  # noqa: BLE001 - the type and the place only
+            from atlas.util import where as place
+
+            lines.append(f"props probe: {sport}: failed: {type(error).__name__} at {place(error)}")
+    for line in lines:
+        LOG.info(line)
+    mark_probed("props", now, where)
+    return lines
+
+
+# ---------------------------------------------------------------------------
 # The step
 # ---------------------------------------------------------------------------
 
@@ -740,6 +795,10 @@ def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, 
         up = upcoming(games, projections, now)
         lines, events = capture(client, up, now) if not up.empty else (pd.DataFrame(columns=[*bp.LINE_COLUMNS, "game_id"]),
                                                                         pd.DataFrame(columns=[*bp.EVENT_COLUMNS, "game_id"]))
+        try:
+            probe_props(client, events, now)
+        except Exception as error:  # noqa: BLE001 - a probe never takes the board down
+            LOG.warning("props probe not run: %s", type(error).__name__)
         record = market_store.load(passphrase, market_where)
         record, added = market_store.append(record, lines)
         if not added.empty:
