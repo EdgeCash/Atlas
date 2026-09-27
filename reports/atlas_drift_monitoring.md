@@ -1,26 +1,26 @@
 # Atlas Drift Monitoring
 
-*Generated 2026-09-27 15:07 UTC by `python -m atlas.live check`. Every alarm compares
+*Generated 2026-09-27 15:22 UTC by `python -m atlas.live check`. Every alarm compares
 the most recent week of the record against its own history.*
 
 ---
 
 ## Status
 
-**2 alert(s) firing.** Alarms are advisory: nothing in the monitor edits the record and
+**3 alert(s) firing.** Alarms are advisory: nothing in the monitor edits the record and
 nothing in it stops the tracker. A monitor that can silently discard data is a
 worse problem than the drift it was watching for.
 
 | Alarm | Severity | Observed | Threshold | Detail |
 |---|---|---|---|---|
-| signal volume | ok | -0.5000 | 0.5 | week 5: 58 signals against 116 the week before (-50%) |
-| silence | ok | 0.0105 | 7 | last signal 0.0 days ago (2026-09-27) |
+| signal volume | ok | -0.4310 | 0.5 | week 5: 66 signals against 116 the week before (-43%) |
+| silence | ok | 0.0000 | 7 | last signal 0.0 days ago (2026-09-27) |
 | single book | alarm | 1.0000 | 1 | 100% of signals from book 'DraftKings' (1 distinct) |
 | single market | ok | 0.5000 | 1 | 50% of signals from market 'margin' (2 distinct) |
-| model output (margin) | ok | n/a | 3 | 29 recent / 58 prior rows; too few to compare |
-| model output (total) | ok | n/a | 3 | 29 recent / 58 prior rows; too few to compare |
-| disagreement shape (margin) | ok | n/a | 0.01 | 29 recent / 58 prior rows; too few to compare |
-| disagreement shape (total) | ok | n/a | 0.01 | 29 recent / 58 prior rows; too few to compare |
+| model output (margin) | alarm | -5.6971 | 3 | mean Atlas number moved -5.70 points against prior weeks |
+| model output (total) | ok | 0.7277 | 3 | mean Atlas number moved +0.73 points against prior weeks |
+| disagreement shape (margin) | ok | 0.2537 | 0.01 | KS statistic 0.213, p = 0.2537 |
+| disagreement shape (total) | ok | 0.3770 | 0.01 | KS statistic 0.189, p = 0.3770 |
 | primary rate | watch | -1.0000 | 0.5 | 0.0% of signals primary against 0.9% before (-100%) |
 | college state | ok | n/a | 36 | not due until Mon 16:00 UTC |
 
@@ -65,7 +65,7 @@ newest week never finds.
 | 2026-w04 | signals | 116 | 116 | 0 | 0 | yes | exact match |
 | 2026-w04 | grades | 116 | 116 | 0 | 0 | yes | exact match |
 | 2026-w04 | statistics | 12 | 12 | 0 | 0 | yes | recomputed from the replayed grades |
-| 2026-w05 | signals | 58 | 0 | 67 | 0 | no | atlas_number: 31; disagreement: 31; direction: 3; selection: 2 |
+| 2026-w05 | signals | 66 | 0 | 67 | 0 | no | atlas_number: 31; disagreement: 31; direction: 3; selection: 2 |
 | 2026-w05 | grades | 0 | 0 | 0 | 0 | yes | no grades in this period |
 | 2026-w05 | statistics | 0 | 0 | 0 | 0 | yes | no graded signals in period |
 
