@@ -1,6 +1,6 @@
 # Atlas Operations Manual
 
-*Generated 2026-09-27 10:52 UTC by `python -m atlas.live check`. Atlas research is
+*Generated 2026-09-27 11:07 UTC by `python -m atlas.live check`. Atlas research is
 complete; this document is about keeping the live tracker alive and honest for
 two seasons.*
 
@@ -18,7 +18,7 @@ two seasons.*
 | Signals recorded | 151 |
 | Grades recorded | 116 |
 | Line snapshots | 1,168 |
-| Tracker runs logged | 108 |
+| Tracker runs logged | 109 |
 | Blocking data-quality exceptions | 0 |
 | Monitor alerts firing | 3 |
 | Replays clean | 6 of 6 |
@@ -100,7 +100,7 @@ trace(Store.open(), "<signal_id>")   # signal, grade, full line history, run
 
 | Table | Rows | Columns | Primary key |
 |---|---|---|---|
-| runs | 108 | 14 | run_id |
+| runs | 109 | 14 | run_id |
 | numbers | 2,420 | 8 | game_id, market, model_version |
 | projections | 4,218 | 49 | sport, game_id, model_version |
 | calibration | 11,180 | 10 | sport, game_id, market |

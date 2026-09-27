@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-09-27T11:08:18.683759+00:00",
+      "detail": "market in 6s",
+      "mode": "NFL Sunday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-27T11:08:18.500387+00:00",
+      "detail": "56 cards, 30 NFL cards, 112 teams, 31 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-09-27T10:53:33.115937+00:00",
       "detail": "market in 7s",
       "mode": "ordinary",
@@ -1264,23 +1277,11 @@
       "detail": "12 files",
       "name": "social",
       "ok": true
-    },
-    {
-      "at": "2026-09-24T21:24:09.656875+00:00",
-      "detail": "captured during the heavy refresh",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-09-24T21:24:09.654952+00:00",
-      "detail": "warehouse in 28s; nfl-ingest in 4s; nfl-warehouse in 20s; model in 25s; market in 5s; dfs-capture in 11s; cfb-players in 694s; dfs in 136s; site in 12s",
-      "name": "heavy",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-09-27T10:53:32.972847+00:00",
+      "at": "2026-09-27T11:08:18.500387+00:00",
       "detail": "56 cards, 30 NFL cards, 112 teams, 31 NFL teams",
       "name": "build",
       "ok": true
@@ -1292,9 +1293,9 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-09-27T10:53:33.115937+00:00",
-      "detail": "market in 7s",
-      "mode": "ordinary",
+      "at": "2026-09-27T11:08:18.683759+00:00",
+      "detail": "market in 6s",
+      "mode": "NFL Sunday",
       "name": "poll",
       "ok": true
     },
@@ -1307,7 +1308,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-09-27T10:53:32.972847+00:00",
+      "at": "2026-09-27T11:08:18.500387+00:00",
       "detail": "56 cards, 30 NFL cards, 112 teams, 31 NFL teams",
       "name": "build",
       "ok": true
@@ -1319,9 +1320,9 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-09-27T10:53:33.115937+00:00",
-      "detail": "market in 7s",
-      "mode": "ordinary",
+      "at": "2026-09-27T11:08:18.683759+00:00",
+      "detail": "market in 6s",
+      "mode": "NFL Sunday",
       "name": "poll",
       "ok": true
     },
