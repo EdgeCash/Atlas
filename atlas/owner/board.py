@@ -560,7 +560,7 @@ def grade_picks(record: pd.DataFrame, finals: pd.DataFrame, closes: pd.DataFrame
 def _eastern(ts) -> str:
     t = pd.Timestamp(ts)
     t = t.tz_localize("UTC") if t.tzinfo is None else t
-    return t.tz_convert(EASTERN).strftime("%a %-I:%M %p")
+    return t.tz_convert(EASTERN).strftime("%a %b %-d, %-I:%M %p")
 
 
 def _game(row, names: dict) -> str:

@@ -170,7 +170,7 @@ def test_each_rule_keeps_its_own_record(tmp_path):
     assert sorted(zip(record["rule"], record["game_id"], strict=True)) == [
         ("cfb-total-5-v1", 1), ("cfb-total-top5-v2", 1), ("cfb-total-top5-v2", 2)]
     # Game 1, chosen by v1 and v2 at 4 AM, is one row: the page lists games, not rules.
-    assert open_["title"] == "Open plays: 2" and all(r[3].startswith("Sat 4:00 AM") for r in open_["rows"])
+    assert open_["title"] == "Open plays: 2" and all(r[3].startswith("Sat Sep 26, 4:00 AM") for r in open_["rows"])
     ten = datetime(2026, 9, 26, 14, 4, tzinfo=UTC)                                       # 10:04 AM Eastern
     sections = plays.build(KEY, store=store, research=research, now=ten, where=where)
     record = plays.load(KEY, where)
@@ -179,7 +179,7 @@ def test_each_rule_keeps_its_own_record(tmp_path):
         ("cfb-total-top5-v2", 1), ("cfb-total-top5-v2", 2)]
     # Each open play shows its latest logging, v3's at 10:04, the line to bet now; still one row a game.
     open_ = sections[0]["tables"][0]
-    assert open_["title"] == "Open plays: 2" and all(r[3].startswith("Sat 10:04 AM") for r in open_["rows"])
+    assert open_["title"] == "Open plays: 2" and all(r[3].startswith("Sat Sep 26, 10:04 AM") for r in open_["rows"])
     # v3's line is the 10 AM one; v2's was the 4 AM one, and neither is revised by the other.
     v3 = record[record["rule"] == "cfb-total-top5-sat10-v3"]
     assert v3["formed_at"].str.startswith("2026-09-26T14:04").all()

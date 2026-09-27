@@ -170,7 +170,7 @@ def test_the_trading_tab_is_three_cards_positions_board_and_record():
     positions = cards[0]["tables"][0]
     assert positions["head"] == ["Game", "Contract", "Price", "Edge", "Stake"] and positions["stack"] is True
     row = next(r for r in positions["rows"] if r[1][1] == "Polymarket US")
-    assert row[0] == [NAMES[B], "Sat 7:30 PM"] and row[1][0] == "Wyoming to win"
+    assert row[0] == [NAMES[B], "Sat Sep 26, 7:30 PM"] and row[1][0] == "Wyoming to win"
     assert row[2][0] == "39¢" and row[2][1].startswith("+1.2¢ fee")                 # the ask over its fee
     assert row[3][0].startswith("EV +") and row[3][1].startswith("fair ")
     board = cards[1]["tables"]

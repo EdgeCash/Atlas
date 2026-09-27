@@ -391,7 +391,7 @@ def rule_history(rule: Rule, calibration: pd.DataFrame | None) -> tuple[dict[int
 def _eastern(ts: str) -> str:
     t = pd.Timestamp(ts)
     t = t.tz_localize("UTC") if t.tzinfo is None else t
-    return t.tz_convert(EASTERN).strftime("%a %-I:%M %p")
+    return t.tz_convert(EASTERN).strftime("%a %b %-d, %-I:%M %p")
 
 
 def _team(name) -> str:

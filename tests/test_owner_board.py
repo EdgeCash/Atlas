@@ -237,7 +237,7 @@ def test_picks_are_logged_once_and_graded_on_the_score_and_the_consensus_close(t
     assert picks["head"] == ["Game", "Bet", "Consensus", "Edge", "Flags"]
     # Two-line cells: the game over its kickoff, the bet over its book; a spread names the team, not "home".
     rows = {r[1][0]: r for r in picks["rows"]}
-    assert rows["Over 44.5 (-105)"][0] == ["UMass @ Sacramento State", "Sat 9:00 PM"]
+    assert rows["Over 44.5 (-105)"][0] == ["UMass @ Sacramento State", "Sat Sep 26, 9:00 PM"]
     assert rows["Over 44.5 (-105)"][1][1].startswith("BetMGM")
     assert "Sacramento State +5.5 (-115)" in rows and rows["Over 44.5 (-105)"][3][0].startswith("EV +")
     totals = cards[1]["tables"]
