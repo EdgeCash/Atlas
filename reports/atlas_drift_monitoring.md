@@ -1,6 +1,6 @@
 # Atlas Drift Monitoring
 
-*Generated 2026-09-27 13:55 UTC by `python -m atlas.live check`. Every alarm compares
+*Generated 2026-09-27 14:22 UTC by `python -m atlas.live check`. Every alarm compares
 the most recent week of the record against its own history.*
 
 ---
@@ -13,14 +13,14 @@ worse problem than the drift it was watching for.
 
 | Alarm | Severity | Observed | Threshold | Detail |
 |---|---|---|---|---|
-| signal volume | alarm | -0.6897 | 0.5 | week 5: 36 signals against 116 the week before (-69%) |
+| signal volume | alarm | -0.6552 | 0.5 | week 5: 40 signals against 116 the week before (-66%) |
 | silence | ok | 0.0000 | 7 | last signal 0.0 days ago (2026-09-27) |
 | single book | alarm | 1.0000 | 1 | 100% of signals from book 'DraftKings' (1 distinct) |
 | single market | ok | 0.5000 | 1 | 50% of signals from market 'margin' (2 distinct) |
-| model output (margin) | ok | n/a | 3 | 18 recent / 58 prior rows; too few to compare |
-| model output (total) | ok | n/a | 3 | 18 recent / 58 prior rows; too few to compare |
-| disagreement shape (margin) | ok | n/a | 0.01 | 18 recent / 58 prior rows; too few to compare |
-| disagreement shape (total) | ok | n/a | 0.01 | 18 recent / 58 prior rows; too few to compare |
+| model output (margin) | ok | n/a | 3 | 20 recent / 58 prior rows; too few to compare |
+| model output (total) | ok | n/a | 3 | 20 recent / 58 prior rows; too few to compare |
+| disagreement shape (margin) | ok | n/a | 0.01 | 20 recent / 58 prior rows; too few to compare |
+| disagreement shape (total) | ok | n/a | 0.01 | 20 recent / 58 prior rows; too few to compare |
 | primary rate | watch | -1.0000 | 0.5 | 0.0% of signals primary against 0.9% before (-100%) |
 | college state | ok | n/a | 36 | not due until Mon 16:00 UTC |
 
@@ -65,7 +65,7 @@ newest week never finds.
 | 2026-w04 | signals | 116 | 116 | 0 | 0 | yes | exact match |
 | 2026-w04 | grades | 116 | 116 | 0 | 0 | yes | exact match |
 | 2026-w04 | statistics | 12 | 12 | 0 | 0 | yes | recomputed from the replayed grades |
-| 2026-w05 | signals | 36 | 0 | 67 | 0 | no | atlas_number: 31; disagreement: 31; direction: 3; selection: 2 |
+| 2026-w05 | signals | 40 | 0 | 67 | 0 | no | atlas_number: 31; disagreement: 31; direction: 3; selection: 2 |
 | 2026-w05 | grades | 0 | 0 | 0 | 0 | yes | no grades in this period |
 | 2026-w05 | statistics | 0 | 0 | 0 | 0 | yes | no graded signals in period |
 

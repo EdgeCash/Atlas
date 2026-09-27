@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-09-27T14:23:55.872840+00:00",
+      "detail": "market in 9s",
+      "mode": "NFL Sunday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-27T14:23:55.728591+00:00",
+      "detail": "56 cards, 30 NFL cards, 112 teams, 31 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-09-27T14:00:31.978495+00:00",
       "detail": "56 cards, 30 NFL cards, 112 teams, 31 NFL teams",
       "name": "build",
@@ -1274,24 +1287,11 @@
       "detail": "12 files",
       "name": "social",
       "ok": true
-    },
-    {
-      "at": "2026-09-25T18:25:29.918907+00:00",
-      "detail": "market in 5s",
-      "mode": "ordinary",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-09-25T18:25:29.772736+00:00",
-      "detail": "62 cards, 16 NFL cards, 118 teams, 30 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-09-27T14:00:31.978495+00:00",
+      "at": "2026-09-27T14:23:55.728591+00:00",
       "detail": "56 cards, 30 NFL cards, 112 teams, 31 NFL teams",
       "name": "build",
       "ok": true
@@ -1303,8 +1303,9 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-09-27T14:00:25.113477+00:00",
-      "detail": "captured during the heavy refresh",
+      "at": "2026-09-27T14:23:55.872840+00:00",
+      "detail": "market in 9s",
+      "mode": "NFL Sunday",
       "name": "poll",
       "ok": true
     },
@@ -1317,7 +1318,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-09-27T14:00:31.978495+00:00",
+      "at": "2026-09-27T14:23:55.728591+00:00",
       "detail": "56 cards, 30 NFL cards, 112 teams, 31 NFL teams",
       "name": "build",
       "ok": true
@@ -1329,8 +1330,9 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-09-27T14:00:25.113477+00:00",
-      "detail": "captured during the heavy refresh",
+      "at": "2026-09-27T14:23:55.872840+00:00",
+      "detail": "market in 9s",
+      "mode": "NFL Sunday",
       "name": "poll",
       "ok": true
     },
