@@ -77,7 +77,7 @@ assets.
 | Step | Command |
 |---|---|
 | 1 | `atlas.live run` — capture the current market |
-| 2 | `atlas.owner.plays refresh` — log the plays a rule chooses at this poll (v3: the first at or after 10:00 ET Saturday), grade against every close captured, seal the plays box; never fails the poll |
+| 2 | `atlas.owner.plays refresh` — log the plays a rule chooses at this poll (v3: the first at or after 10:00 ET Saturday), grade against every close captured, seal the plays box, and behind it the owner's board, parlays, exchange positions and pick'em (`docs/OWNER_BOARD.md`); never fails the poll |
 | — | record `poll` |
 | 3 | `atlas.site.build --no-social` — republish with the new numbers |
 

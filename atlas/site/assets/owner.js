@@ -181,7 +181,7 @@
 
   // The page opens on tabs. Each section names its tab; one sealed before tabs
   // existed is placed by its title. The script holds the tabs' names, nothing else.
-  var TABS = ["Plays", "Board", "Parlays", "Trading", "DFS", "More"];
+  var TABS = ["Plays", "Board", "Parlays", "Trading", "Pick'em", "DFS", "More"];
 
   function tabOf(sec) {
     if (sec.tab) return sec.tab;
