@@ -104,10 +104,10 @@ the board is where the prices are.
 
 ## What the owner page shows
 
-One passphrase opens two boxes: the curated plays, board, parlays and
-trading (built by every run) and the DFS lineups (built by the heavy run).
-Opened, the page is a row of tabs: Plays, Board, Parlays, Trading, DFS and
-More. Each section's explanations are folded under "How this works".
+One passphrase opens two boxes: the curated plays, board, parlays, trading
+and pick'em (built by every run) and the DFS lineups (built by the heavy run).
+Opened, the page is a row of tabs: Plays, Board, Parlays, Trading, Pick'em,
+DFS and More. Each section's explanations are folded under "How this works".
 
 The Plays tab is one list, whichever rule chose a play
 (`plays.master_section`): the open plays at each game's latest logging (the

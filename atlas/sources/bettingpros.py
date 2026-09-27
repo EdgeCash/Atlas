@@ -17,7 +17,8 @@ as the ``x-api-key`` header on every call) and, for premium-tier fields,
 ``BP_USER_ID`` and ``BP_USER_KEY`` (sent together as ``auth=user``). The
 board needs only the partner key. Without it every function here returns
 empty and the board is not built. Budget: 5 requests a second, 5,000 a day;
-a poll costs about fifteen.
+a poll costs about eighteen for the board and up to a dozen more for the
+day's player props (`atlas/owner/pickem.py`).
 
 Market ids and the book catalogue were read from the API on 26 September
 2026 and are fixed here rather than fetched on every run.
@@ -230,13 +231,18 @@ def takeable(lines: pd.DataFrame) -> pd.Series:
 
 
 # ---------------------------------------------------------------------------
-# Player props: which books quote them (a probe, counts only)
+# Player props: every book's line on each player, PrizePicks among them
 # ---------------------------------------------------------------------------
 
-#: The player-prop markets the probe asks for, by the slug BettingPros gives them.
-PROP_PROBE_SLUGS = ("passing-yards", "rushing-yards", "receiving-yards", "receptions")
-#: The pick'em apps in the book catalogue: a line against fixed payouts, not a price.
-PICKEM = {37: "PrizePicks", 53: "Dabble", 45: "Betr"}
+#: The player-prop markets read for the pick'em model, by the slug BettingPros gives them.
+PROP_SLUGS = ("passing-yards", "rushing-yards", "receiving-yards", "receptions")
+#: PrizePicks in the book catalogue: a line against fixed payouts, not a price.
+PRIZEPICKS = 37
+PROP_COLUMNS = ["captured_at", "sport", "event_id", "market", "player_key", "player", "position", "team",
+                "selection", "book_id", "line", "cost", "updated", "main"]
+#: Offers per page (the endpoint's cap) and pages a sport may take in one run.
+PROP_PAGE = 50
+PROP_PAGES = 10
 
 
 def markets(client: Client, sport: str) -> list[dict]:
@@ -244,60 +250,89 @@ def markets(client: Client, sport: str) -> list[dict]:
     return list(client.get("/markets", sport=SPORT_NAMES[sport]).get("markets") or [])
 
 
-def book_counts(body: dict) -> tuple[int, dict[int, int]]:
-    """(offers, {book id: selections it quotes a current line on}) for an offers response. Lines are
-    counted, never read."""
-    counts: dict[int, int] = {}
-    offers = body.get("offers") or []
-    for offer in offers:
+def prop_markets(client: Client, sport: str, slugs: tuple[str, ...] = PROP_SLUGS) -> dict[int, str]:
+    """{market id: slug} for the prop markets wanted, as this sport's catalogue numbers them."""
+    return {int(m["id"]): str(m["slug"]) for m in markets(client, sport)
+            if str(m.get("slug") or "") in slugs and m.get("id") is not None}
+
+
+def _live(lines: list[dict]) -> dict | None:
+    """The book's current line: active, not replaced, not off; the main one, else the newest."""
+    live = [ln for ln in lines if ln.get("active", True) and not ln.get("replaced") and not ln.get("is_off")]
+    main = [ln for ln in live if ln.get("main")] or live
+    if not main:
+        return None
+    return max(main, key=lambda ln: str(ln.get("updated") or ""))
+
+
+def parse_props(body: dict, sport: str, slug_of: dict[int, str], captured_at: str) -> pd.DataFrame:
+    """One row per player, market, side and book: the book's current line and price. Links, pick
+    counts and the request echo are not read."""
+    rows = []
+    for offer in body.get("offers") or []:
+        try:
+            slug = slug_of.get(int(offer.get("market_id")))
+        except (TypeError, ValueError):
+            slug = None
+        if slug is None or not offer.get("event_id"):
+            continue
+        people = offer.get("participants") or [{}]
+        who = people[0] or {}
+        player = who.get("player") or {}
+        name = _text(who.get("name")) or " ".join(
+            x for x in (player.get("first_name"), player.get("last_name")) if x) or None
+        key = _text(offer.get("player_id")) or _text(who.get("id"))
+        if not (name and key):
+            continue
         for sel in offer.get("selections") or []:
+            side = str(sel.get("selection") or "").lower()
+            if side not in ("over", "under"):
+                continue
             for book in sel.get("books") or []:
-                current = _current(book.get("lines") or [])
-                if current is None or current.get("is_off"):
+                current = _live(book.get("lines") or [])
+                if current is None:
                     continue
-                bid = int(book.get("id"))
-                counts[bid] = counts.get(bid, 0) + 1
-    return len(offers), counts
+                rows.append({
+                    "captured_at": captured_at, "sport": sport, "event_id": int(offer["event_id"]), "market": slug,
+                    "player_key": key, "player": name, "position": _text(player.get("position")),
+                    "team": _text(player.get("team")), "selection": side, "book_id": int(book.get("id")),
+                    "line": pd.to_numeric(current.get("line"), errors="coerce"),
+                    "cost": pd.to_numeric(current.get("cost"), errors="coerce"),
+                    "updated": _text(current.get("updated")), "main": bool(current.get("main")),
+                })
+    out = pd.DataFrame(rows, columns=PROP_COLUMNS)
+    return out.dropna(subset=["line"])
 
 
-def probe_props(client: Client, sport: str, event_ids: list[int], max_pages: int = 3) -> dict:
-    """Which books quote the probe's player-prop markets on these events, and how many props each."""
-    listed = markets(client, sport)
-    categories: dict[str, int] = {}
-    for m in listed:
-        c = str(m.get("category") or "?")
-        categories[c] = categories.get(c, 0) + 1
-    wanted = [m for m in listed if str(m.get("slug") or "") in PROP_PROBE_SLUGS]
-    out = {"sport": sport, "listed": len(listed), "categories": categories,
-           "markets": [str(m.get("slug")) for m in wanted], "events": len(event_ids), "offers": 0, "books": {},
-           "prop_slugs": sorted({str(m.get("slug")) for m in listed if "prop" in str(m.get("category") or "")})[:12]}
-    if not wanted or not event_ids:
-        return out
-    ids = ":".join(str(int(m["id"])) for m in wanted)
-    events = ":".join(str(int(e)) for e in event_ids[:BATCH])
-    for page in range(1, max_pages + 1):
-        body = client.get("/offers", sport=SPORT_NAMES[sport], market_id=ids, event_id=events, location=LOCATION,
-                          limit=50, page=page)
-        n, counts = book_counts(body)
-        out["offers"] += n
-        for bid, c in counts.items():
-            out["books"][bid] = out["books"].get(bid, 0) + c
-        if page >= int((body.get("_pagination") or {}).get("total_pages") or 1):
-            break
+def props(client: Client, sport: str, event_ids: list[int], slug_of: dict[int, str], *,
+          max_pages: int = PROP_PAGES, captured_at: str | None = None) -> pd.DataFrame:
+    """Every book's current line on the prop markets ``slug_of`` names, for the events given: a dozen
+    events a request, a page at a time, at most ``max_pages`` pages for the sport."""
+    captured_at = captured_at or datetime.now(UTC).replace(microsecond=0).isoformat()
+    ids = [int(i) for i in event_ids]
+    if not ids or not slug_of:
+        return pd.DataFrame(columns=PROP_COLUMNS)
+    wanted = ":".join(str(m) for m in sorted(slug_of))
+    parts, pages = [], 0
+    for start in range(0, len(ids), BATCH):
+        batch = ":".join(str(i) for i in ids[start:start + BATCH])
+        page = 1
+        while pages < max_pages:
+            try:
+                body = client.get("/offers", sport=SPORT_NAMES[sport], market_id=wanted, event_id=batch,
+                                  location=LOCATION, limit=PROP_PAGE, page=page)
+            except Exception as error:  # noqa: BLE001 - one page's failure keeps the rest
+                LOG.warning("bettingpros: %s props page not fetched (%s)", sport, type(error).__name__)
+                break
+            pages += 1
+            parts.append(parse_props(body, sport, slug_of, captured_at))
+            if page >= int((body.get("_pagination") or {}).get("total_pages") or 1):
+                break
+            page += 1
+    out = pd.concat(parts, ignore_index=True) if parts else pd.DataFrame(columns=PROP_COLUMNS)
+    LOG.info("bettingpros: %d prop lines on %d %s events, %d pages, %d calls so far", len(out), len(ids), sport,
+             pages, client.calls)
     return out
-
-
-def describe_probe(result: dict) -> str:
-    """One log line: the markets asked, the props found, the pick'em apps by name, the books that quote."""
-    books = result["books"]
-    pickem = ", ".join(f"{name} {books.get(bid, 0)}" for bid, name in PICKEM.items())
-    top = sorted(((c, b) for b, c in books.items() if b not in PICKEM and b != CONSENSUS), reverse=True)[:8]
-    quoting = ", ".join(f"{book_name(b)} {c}" for c, b in top) or "none"
-    if not result["markets"]:
-        return (f"props probe: {result['sport']}: none of {', '.join(PROP_PROBE_SLUGS)} among {result['listed']} "
-                f"markets listed {result['categories']}; prop slugs listed: {', '.join(result['prop_slugs']) or 'none'}")
-    return (f"props probe: {result['sport']}: {', '.join(result['markets'])} on {result['events']} events: "
-            f"{result['offers']} player props; pick'em: {pickem}; books quoting: {quoting}")
 
 
 def main() -> None:

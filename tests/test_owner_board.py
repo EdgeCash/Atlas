@@ -293,14 +293,15 @@ def test_the_board_rides_in_the_plays_box_and_only_when_bettingpros_is_configure
     assert [s["title"] for s in data["sections"]][0].startswith("Curated plays")      # no BettingPros: no board
     fake = _FakeClient()
     monkeypatch.setattr(bp.Client, "from_env", classmethod(lambda cls: fake))
-    monkeypatch.setattr(board, "probes_path", lambda: tmp_path / "probes.json")          # never the repo's data/ops
     plays.refresh(now=NOW, where=where)
-    assert json.loads((tmp_path / "probes.json").read_text()) == {"props": "2026-09-26"}   # the probe ran, once
     data = json.loads(owner.decrypt(plays.read_page(where)["box"], KEY))
     assert data["sections"][0]["title"].startswith("Picks now") and fake.calls >= 3
     # Every section says which tab it belongs in; the exchanges ride behind the board and the parlays.
     tabs = [s.get("tab") for s in data["sections"]]
-    assert tabs == ["Board", "Board", "Board", "Board", "Parlays", "Trading", "Trading", "Trading", "Plays"]
+    assert tabs == ["Board", "Board", "Board", "Board", "Parlays", "Trading", "Trading", "Trading", "Pick'em", "Pick'em",
+                    "Plays"]
+    pickem_cards = [s["title"] for s in data["sections"] if s["tab"] == "Pick'em"]
+    assert pickem_cards == ["Slips for Sat Sep 26 (0)", "Pick board"]            # no prop markets listed: nothing priced
     trading = next(s for s in data["sections"] if s["tab"] == "Trading")
     assert trading["title"] == "Positions for Sat Sep 26 (1)"
     positions = trading["tables"][0]
@@ -326,57 +327,3 @@ def test_the_totals_card_shows_the_best_ten_and_folds_the_rest():
     assert totals[1] == {**totals[1], "title": "The other 3 games", "fold": True} and len(totals[1]["rows"]) == 3
     assert [c["title"] for c in cards] == ["Picks now (0)", "Totals"]                 # no spreads here, no record yet
     assert cards[0]["tables"][0]["rows"][0][0] == "Nothing clears zero at any book right now."
-
-
-class _PropsClient:
-    """Stands in for BettingPros' markets and prop offers: PrizePicks quotes some props, a book one."""
-
-    def __init__(self, fail=False):
-        self.calls, self.fail = 0, fail
-
-    def get(self, path, **params):
-        self.calls += 1
-        if self.fail:
-            raise RuntimeError("boom")
-        if path == "/markets":
-            return {"markets": [{"id": 1, "slug": "spread", "category": "game-odds"},
-                                {"id": 102, "slug": "passing-yards", "category": "player-props"},
-                                {"id": 104, "slug": "receptions", "category": "player-props"},
-                                {"id": 999, "slug": "anytime-td", "category": "player-props"}]}
-        assert path == "/offers" and params["market_id"] == "102:104" and params["limit"] == 50
-
-        def book(bid, off=False):
-            return {"id": bid, "lines": [{"main": True, "active": True, "replaced": False, "is_off": off,
-                                          "line": 245.5, "cost": -115 if bid != 37 else None}]}
-        offer = {"event_id": 22040, "selections": [
-            {"selection": "over", "books": [book(0), book(37), book(12), book(10, off=True)]},
-            {"selection": "under", "books": [book(0), book(37), book(12), book(10)]}]}
-        return {"offers": [offer] * 3, "_pagination": {"total_pages": 2 if params["page"] == 1 else 2}}
-
-
-def test_the_props_probe_counts_books_on_player_props_prizepicks_by_name():
-    client = _PropsClient()
-    result = bp.probe_props(client, "nfl", [22040, 22041])
-    assert result["markets"] == ["passing-yards", "receptions"] and result["offers"] == 6          # two pages
-    assert result["books"] == {0: 12, 37: 12, 12: 12, 10: 6}                                      # off lines not counted
-    line = bp.describe_probe(result)
-    assert "pick'em: PrizePicks 12, Dabble 0, Betr 0" in line and "DraftKings 12" in line and "FanDuel 6" in line
-    assert "245.5" not in line and "-115" not in line                                             # counts, never lines
-    assert client.calls == 3                                                                       # markets, two pages
-    nothing = bp.describe_probe({**result, "markets": [], "prop_slugs": ["anytime-td"]})
-    assert "none of passing-yards" in nothing and "anytime-td" in nothing
-
-
-def test_the_props_probe_runs_once_an_eastern_day_and_never_takes_the_board_down(tmp_path):
-    where = tmp_path / "probes.json"
-    events = pd.DataFrame([{"event_id": 22040, "sport": "nfl", "scheduled": pd.Timestamp("2026-09-27 17:00", tz="UTC")}])
-    lines = board.probe_props(_PropsClient(), events, NOW, where)
-    assert len(lines) == 2 and lines[0].startswith("props probe: nfl") and "on 1 events" in lines[0]
-    assert "ncaaf" in lines[1]                                                                     # no college events
-    assert board.probe_props(_PropsClient(), events, NOW, where) == []                             # once a day
-    later = datetime(2026, 9, 27, 14, 30, tzinfo=UTC)                                              # Sunday, 10:30 ET
-    assert board.probe_due("props", later, where)
-    failed = board.probe_props(_PropsClient(fail=True), events, later, where)
-    assert all("failed: RuntimeError at" in x for x in failed)                                     # logged, not raised
-    assert not board.probe_due("props", later, where)                                              # and not retried today
-

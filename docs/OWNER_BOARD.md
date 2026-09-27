@@ -72,9 +72,11 @@ credentials) is dropped before a response is read. Credentials are the
 repository secrets `BP_API_KEY`, `BP_USER_ID` and `BP_USER_KEY`, passed to
 the Refresh step in both workflows.
 
-Budget: about twenty requests per run (events by week, then offers a dozen
-games at a time for two markets and two sports), against a limit of 5,000 a
-day. Rate and quota errors leave that batch out and keep the rest.
+Budget: about eighteen requests per run for the board (events by week, then
+offers a dozen games at a time for three markets and two sports), and for the
+pick'em one market lookup per sport on the slate and at most ten pages of
+player props, against a limit of 5,000 a day. Rate and quota errors leave
+that batch out and keep the rest.
 
 ## What it does not do
 
@@ -136,4 +138,44 @@ only totals and spreads.
 To confirm before real money: that BettingPros shows each venue's price to buy, both fee rates against the
 venues' current schedules, and depth (the quotes carry none, so a price may not fill at size). Nothing places
 an order; execution would need a Kalshi API key and a Polymarket US account, and a paper record that earns it.
+
+## Pick'em: PrizePicks
+
+The Pick'em tab (`atlas/owner/pickem.py`) prices PrizePicks' lines against the sportsbooks' player props and
+builds the slips worth entering. PrizePicks sells a line, not a price: More or Less on two to six players, paid
+by a fixed table. The books sell the same props at prices, and a price says how likely a side is.
+
+- **The capture**: every run, for the slate's games (not started, on today's Eastern date, or the next day with
+  games), passing yards, rushing yards, receiving yards and receptions, every book's current line on both sides
+  (`bettingpros.props`, markets found by slug). PrizePicks is book 37. The 26 September probe found PrizePicks on
+  most NFL props and some college ones, with DraftKings, FanDuel, Caesars, Hard Rock and ProphetX quoting.
+- **Fair value**: each sportsbook or exchange quoting both sides (FanDuel, DraftKings, Caesars, BetMGM, Fanatics,
+  BetRivers, bet365, Hard Rock, theScore, ProphetX, Novig and a few more; never the consensus, a pick'em app or an
+  unnamed book) gives a vig-free probability at its line, which a shape for the stat moves to PrizePicks' line; the
+  median across books, two at least. Yardage shapes are a player's yards over the player's season mean without that game,
+  NFL regular seasons 2016-2025 (`python -m atlas.owner.pickem fit`); receptions a negative binomial, variance 1.1
+  times the mean. A book more than a quarter of its line (plus two yards), or a catch and a half, from PrizePicks
+  is left out. College uses the NFL shapes.
+- **Picks**: the likelier side of each standard line (PrizePicks quotes More and Less at it), from 54%. A line
+  offered More only is a demon or a goblin: its payout depends on the mix and is not published, so it is left out
+  and counted. A whole-number line can tie; a tie drops the pick from the entry, as PrizePicks settles it.
+- **Slips**: for each entry (Power, every pick must hit; Flex, partial pays) and size, the combination of the best
+  twelve picks (two a game at most), never two in one slip from the same game, that grows a bankroll fastest at
+  full Kelly, when its expected value is positive. Each shows its expected value, the chance it pays more than the
+  entry, and a quarter-Kelly stake for that slip alone (the slips share picks: one, not all).
+- **Payouts**: PrizePicks' standard table, Power 3×, 5×, 10×, 20×, 37.5× for two to six picks; Flex 2.25× and
+  1.25× for three, 5× and 1.5× for four, 10×, 2× and 0.4× for five, 25×, 2× and 0.4× for six. The break-even hit
+  rate per pick runs from 54.2% (six-pick Flex) to 59.1% (three-pick Flex). Some states pay differently: confirm
+  in the app and change `PAYOUTS`. Each logged slip keeps the table it was priced on.
+- **Record** (sealed, `tracking/owner_pickem/` for picks and `tracking/owner_slips/` for slips): the day's picks
+  from 54% and its slips, logged once at the first run from 10:00 ET, like the parlays. Each pick's fair
+  probability at its logged line is followed until kickoff (did the books move toward it?), and graded from ESPN's
+  box score once the game is final, both sports keyed by ESPN's event id. A player missing from the box score is
+  void, as PrizePicks voids a player who does not play. A slip settles on its picks: ties and voids drop out and
+  the entry pays as the next size down (a Flex left with two pays as a two-pick Power; one left is refunded).
+- The tab is three cards: **Slips for the day**, the **Pick board** (the best ten picks, the rest folded) and the
+  **Pick'em record** once picks are logged. The run's log carries counts only, never a line or a price.
+
+It does not enter anything. Same-game correlations, where pick'em is most often beaten, are not modelled, so a
+slip never holds two picks from one game.
 
