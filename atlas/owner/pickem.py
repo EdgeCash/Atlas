@@ -799,16 +799,28 @@ def sections(priced: pd.DataFrame, chosen: pd.DataFrame, picks: pd.DataFrame, sl
 # ---------------------------------------------------------------------------
 
 
-def _describe(sport: str, props: pd.DataFrame) -> str:
+def _describe(sport: str, props: pd.DataFrame, events: int) -> str:
     """A log line: counts only, never a line or a price."""
     if props.empty:
-        return f"pickem: {sport}: no prop lines"
+        return f"pickem: {sport}: no prop lines on {events} slate events"
     lines = props.drop_duplicates(["event_id", "player_key", "market", "book_id"])
     pp = int((lines["book_id"] == bp.PRIZEPICKS).sum())
     fair = lines[lines["book_id"].isin(FAIR_BOOKS)]
     top = fair["book_id"].value_counts().head(6)
-    return (f"pickem: {sport}: {lines[['event_id', 'player_key', 'market']].drop_duplicates().shape[0]} props, "
-            f"PrizePicks on {pp}; books: " + ", ".join(f"{bp.book_name(b)} {c}" for b, c in top.items()))
+    return (f"pickem: {sport}: {lines[['event_id', 'player_key', 'market']].drop_duplicates().shape[0]} props on "
+            f"{lines['event_id'].nunique()} of {events} slate events, PrizePicks on {pp}; books: "
+            + ", ".join(f"{bp.book_name(b)} {c}" for b, c in top.items()))
+
+
+def summary(counts: dict, priced: pd.DataFrame, chosen: pd.DataFrame, day: str | None) -> str:
+    """The run's pick'em in one log line, counts only: what the tab shows."""
+    picks = int((priced["p"] >= PICK_FLOOR).sum()) if len(priced) else 0
+    kinds = ", ".join(f"{k} {int(n)}" for k, n in chosen["kind"].value_counts().sort_index().items()) if len(chosen) \
+        else "none"
+    return (f"pickem: slate {day or 'none'}: {counts.get('lines', 0)} PrizePicks lines, {counts.get('more_only', 0)} "
+            f"More only, {counts.get('unpriced', 0)} unpriced, {len(priced)} priced, {picks} picks from "
+            f"{PICK_FLOOR:.0%} on {priced.loc[priced['p'] >= PICK_FLOOR, 'game_id'].nunique() if picks else 0} games, "
+            f"{len(chosen)} slips ({kinds})")
 
 
 def fetch(client, events: pd.DataFrame, now: datetime) -> pd.DataFrame:
@@ -824,7 +836,7 @@ def fetch(client, events: pd.DataFrame, now: datetime) -> pd.DataFrame:
 
             LOG.warning("pickem: %s props not fetched: %s at %s", sport, type(error).__name__, where(error))
             continue
-        LOG.info(_describe(str(sport), got))
+        LOG.info(_describe(str(sport), got, len(part)))
         parts.append(got.merge(part[["event_id", "game_id", "kickoff", "day"]], on="event_id", how="inner"))
     if not parts:
         return pd.DataFrame(columns=[*bp.PROP_COLUMNS, "game_id", "kickoff", "day"])
@@ -840,6 +852,7 @@ def build(client, events: pd.DataFrame, games: pd.DataFrame, names: dict, passph
         priced, counts = price(props)
         chosen = optimize(priced)
         day = str(priced["day"].iloc[0]) if len(priced) else None
+        LOG.info(summary(counts, priced, chosen, day))
         picks = load(passphrase, picks_where, PICK_COLUMNS)
         slips = load(passphrase, slips_where, SLIP_COLUMNS)
         touched: set = set()

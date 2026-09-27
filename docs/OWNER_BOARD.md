@@ -74,7 +74,7 @@ the Refresh step in both workflows.
 
 Budget: about eighteen requests per run for the board (events by week, then
 offers a dozen games at a time for three markets and two sports), and for the
-pick'em one market lookup per sport on the slate and at most ten pages of
+pick'em one market lookup per sport on the slate and at most sixteen pages of
 player props, against a limit of 5,000 a day. Rate and quota errors leave
 that batch out and keep the rest.
 
@@ -174,7 +174,9 @@ by a fixed table. The books sell the same props at prices, and a price says how 
   void, as PrizePicks voids a player who does not play. A slip settles on its picks: ties and voids drop out and
   the entry pays as the next size down (a Flex left with two pays as a two-pick Power; one left is refunded).
 - The tab is three cards: **Slips for the day**, the **Pick board** (the best ten picks, the rest folded) and the
-  **Pick'em record** once picks are logged. The run's log carries counts only, never a line or a price.
+  **Pick'em record** once picks are logged. The run's log carries counts only, never a line or a price: the props
+  and the slate games they came back on, then the PrizePicks lines, More-only and unpriced lines, picks, and slips
+  by entry. It says so when the sixteen-page cap cut the latest games.
 
 It does not enter anything. Same-game correlations, where pick'em is most often beaten, are not modelled, so a
 slip never holds two picks from one game.
