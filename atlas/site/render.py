@@ -1980,7 +1980,7 @@ def owner_page(record: dict | None, plays: dict | None = None) -> str:
     state = f"<p class=\"note\">{' '.join(parts)}</p>"
     body = f"""<div class="board-head">
   <h1>Owner</h1>
-  <span class="board-note">Private plays, board, parlays, trading, pick'em and DFS lineups · opened in this browser only</span>
+  <span class="board-note">Private plays, board, parlays, trading and DFS lineups · opened in this browser only</span>
 </div>
 
 <div class="card card-pad">

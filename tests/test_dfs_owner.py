@@ -257,3 +257,18 @@ def test_payload_is_strict_json_for_the_browser():
     data = owner._clean({"lineups": [{"salary": float("nan"), "slots": [{"projection": 1.5, "low": float("nan")}]}]})
     text = json.dumps(data, allow_nan=False)
     assert "NaN" not in text and '"salary": null' in text
+
+
+def test_the_owner_page_passes_the_site_audit(tmp_path):
+    """The page's own words are audited like every public page: the publish step fails on a forbidden word
+    (on 27 September 2026 a header naming the pick'em tab stopped every poll). The sealed sections are
+    ciphertext and not read."""
+    from atlas.site import render
+    from scripts.audit_site import audit
+
+    page = render.owner_page({"box": None, "reason": "Nothing has been built yet."},
+                             plays={"box": None, "reason": "The curated plays have not been built yet."})
+    (tmp_path / "dfs").mkdir()
+    (tmp_path / "dfs" / "owner.html").write_text(page)
+    blocking, _ = audit(tmp_path)
+    assert {k: v for k, v in blocking.items() if v} == {}
