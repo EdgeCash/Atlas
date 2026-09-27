@@ -1,6 +1,6 @@
 # Atlas Live CLV Tracking
 
-*Generated 2026-09-27 02:08 UTC by `python -m atlas.live report`. Updated on every run
+*Generated 2026-09-27 02:22 UTC by `python -m atlas.live report`. Updated on every run
 of the tracker. Source tables are the CSVs in `tracking/`, which are committed
 alongside this file so the record can be audited row by row.*
 
@@ -103,7 +103,7 @@ beat rate and reported separately.
 | Table | Rows | What it holds |
 |---|---|---|
 | `tracking/games.csv` | 102 | every game seen, with kickoff and status |
-| `tracking/snapshots.csv` | 1,099 | append-on-change line observations, timestamped |
+| `tracking/snapshots.csv` | 1,100 | append-on-change line observations, timestamped |
 | `tracking/signals.csv` | 143 | immutable opinions |
 | `tracking/grades.csv` | 110 | one row per graded signal |
 
