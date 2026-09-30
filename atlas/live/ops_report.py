@@ -401,8 +401,12 @@ Replays randomly chosen periods and checks that the signals, the grades and
 the statistics all rebuild from the stored inputs. Signals replay against the
 **first snapshot** for each game, book and market — the poll that first sees a
 game writes both in the same pass, so the first observation is the entry line
-by construction — and against the **model version the signal names**, which is
-why `tracking/numbers.csv` keeps every version rather than being overwritten.
+by construction — and against the **number the signal was formed from**: the
+model version it names, at the latest refresh of that version at or before the
+signal. New results change every number under one version, so a refresh keeps
+each superseded number a signal was formed from rather than overwriting it
+(`scripts/restore_numbers.py` put back the ones overwritten before 30 September
+2026, from git history).
 
 ---
 

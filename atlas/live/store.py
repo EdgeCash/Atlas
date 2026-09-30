@@ -151,10 +151,14 @@ SCHEMA: dict[str, list[str]] = {
 #: the row rather than duplicating it.
 KEYS: dict[str, list[str]] = {
     "runs": ["run_id"],
-    # Keyed by model version too, so a refit adds a row rather than
-    # overwriting the number a past signal was formed from. Without that
-    # history a historical replay silently uses today's model.
-    "numbers": ["game_id", "market", "model_version"],
+    # Keyed by model version and refresh too, so neither a refit nor a
+    # refresh overwrites the number a past signal was formed from. The
+    # version names the model, not the games it learned from: new results
+    # change every prediction under the same version, and on 27 September
+    # 2026 a refresh keyed without the time rewrote 31 published signals'
+    # numbers. The refresh keeps a superseded row only when a signal was
+    # formed from it (`atlas.live.reproduce.keep_history`).
+    "numbers": ["game_id", "market", "model_version", "refreshed_at"],
     "projections": ["sport", "game_id", "model_version"],
     "calibration": ["sport", "game_id", "market"],
     "card_grades": ["sport", "game_id"],
@@ -177,7 +181,7 @@ KEYS: dict[str, list[str]] = {
 
 SORT: dict[str, list[str]] = {
     "runs": ["started_at", "run_id"],
-    "numbers": ["season", "week", "game_id", "market", "model_version"],
+    "numbers": ["season", "week", "game_id", "market", "model_version", "refreshed_at"],
     "projections": ["sport", "season", "week", "game_id", "model_version"],
     "calibration": ["sport", "season", "week", "game_id", "market"],
     "card_grades": ["sport", "season", "week", "game_id"],

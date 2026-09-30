@@ -213,8 +213,14 @@ def refresh(seasons: list[int] | None = None, *, rebuild: bool = True) -> int:
     numbers["refreshed_at"] = datetime.now(UTC).replace(microsecond=0).isoformat()
     # Appended, not replaced: a signal formed last week must stay reproducible
     # from the number that produced it, which a wholesale rewrite would erase.
-    store.upsert("numbers", numbers)
-    LOG.info("published %d numbers", len(numbers))
+    # New results change a number under the same model version, so the rows
+    # a refresh supersedes stay when a signal was formed from them.
+    from atlas.live import reproduce
+
+    table = reproduce.keep_history(store.read("numbers"), numbers, store.read("signals"))
+    store.write("numbers", table)
+    LOG.info("published %d numbers (%d rows in the table, with the earlier ones signals were formed from)",
+             len(numbers), len(table))
     return len(numbers)
 
 

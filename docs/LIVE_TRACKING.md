@@ -52,7 +52,7 @@ to three decimals, so an unchanged row produces no diff.
 
 | File | Contents |
 |---|---|
-| `numbers.csv` | Atlas's number per scheduled game and market, with the model version |
+| `numbers.csv` | Atlas's number per scheduled game and market, with the model version and when it was refreshed; a refresh keeps each earlier number a signal was formed from, so every signal replays against its own |
 | `games.csv` | every game seen, with kickoff and status |
 | `snapshots.csv` | append-on-change line observations, timestamped (Track 2) |
 | `signals.csv` | immutable opinions (Track 1) |
