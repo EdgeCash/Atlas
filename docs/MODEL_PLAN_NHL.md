@@ -5,15 +5,19 @@ the NHL: the data, the empirical profile, the factors and their measured
 sizes, the game model, the player-prop model, how both are validated, and the
 order to build them in. It follows `MODEL_PLAN_NFL.md` section for section.
 
-**Status (30 September 2026): steps 0 to 2 are built.** Every poll records
+**Status (30 September 2026): steps 0 to 5 are built; the game model meets v1's bar**
+(`reports/nhl_model.md`: better than Elo and the goals-based Poisson model on
+every row out of sample). Every poll records
 ESPN's DraftKings moneyline, puck line and total and the NHL finals
 (`atlas/live/provider.py`), and the owner capture seals every BettingPros
 book's NHL lines and player props (`atlas/owner/nhl_capture.py`). The raw
 cache (`atlas/sources/nhl.py`, 19,197 games of play-by-play, 2010-11 on) and
 the warehouse (`atlas/staging/nhl/`) reproduce §3 (`reports/nhl_profile.md`);
 expected goals are fitted a season at a time (`reports/nhl_xg.md`); the
-benchmarks are scored (`reports/nhl_benchmarks.md`). Nothing prices or shows
-an NHL line yet. The rest below is the plan. Every number in it was
+benchmarks are scored (`reports/nhl_benchmarks.md`); the state, the goalie
+and the grid are built and scored (`atlas/models/nhl_state.py`,
+`nhl_grid.py`, `nhl_model.py`). The rest below is the plan, with what the
+build changed marked where it did. Every number in it was
 measured on 30 September 2026 from the sources in §2, unless it says it is
 cited; step 1's warehouse has to reproduce §3 to the decimal before anything
 is built on it, as the NFL's did.
@@ -402,8 +406,9 @@ Foundation §6 applies. NHL additions:
 
 | Score, moneyline incl. OT | Naive | Elo | Goals-Poisson | **Target v1** | Market |
 |---|---|---|---|---|---|
-| Brier, 2010–22 pooled | 0.2482 | 0.2408 | 0.2411 | **< Elo** | 0.2385 |
-| Brier, 2021–22 | 0.2483 | 0.2309 | 0.2312 | **< Elo** | 0.2256 |
+| Brier, 2010–22 pooled | 0.2482 | 0.2408 | 0.2411 | **< Elo: 0.2388** | 0.2385 |
+| Brier, 2021–22 | 0.2483 | 0.2309 | 0.2312 | **< Elo: 0.2276** | 0.2256 |
+| Brier, 2020–26, every game | 0.2487 | 0.2367 | 0.2373 | **< Elo: 0.2343** | — |
 
 Elo is walk-forward from 2010–11 (K 6, 30 Elo points of home ice, 30% back
 to the mean each summer, tuned on 2010–17); the goals-Poisson model is each
@@ -412,7 +417,9 @@ team's exponentially weighted goals for and against in a Poisson grid
 "home, always" to the market.
 
 **v1 is done when it beats Elo and a goals-based Poisson team model on
-every row out of sample.** Matching the market is v2's ambition, as it was
+every row out of sample.** It does, in every season from 2020–21 to
+2025–26 (the narrowest 2023–24: 0.2339 against Elo's 0.2341), and it comes
+within 0.0003 of the closing line pooled over 2010–22 and 0.0005 in 2020–21. Matching the market is v2's ambition, as it was
 for the NFL. The market's lead over "home, always" is one hundredth of
 Brier; a model that closes a fifth of it is doing well.
 
@@ -425,9 +432,9 @@ Brier; a model that closes a fifth of it is doing well.
 | 0 | **Capture first.** ESPN's NHL scoreboard in the poll (DraftKings line, results) and BettingPros' NHL game lines and props in the owner capture, sealed like football's, with a counts-only log of the slugs, books and PrizePicks coverage. `atlas/sources/nhl.py`: the game list, team, goalie and skater game logs, trimmed play-by-play and shift charts, 2010–11 on, cached once (`make nhl-ingest`); the odds archive, 2010–22; the ESPN event id for every NHL game | **done** — capture live from 30 September 2026 (the five opening-night closes of the 29th missed); raw cache 2010–11 to 2026–27: 22,052 games, 19,197 of play-by-play, 736,638 skater-games, the archive's 15,206 games (15,205 matched), ESPN ids for every played game; 52 MB; the heavy run adds the season in progress and fills history newest first, twelve minutes at most (`make nhl-ingest`) |
 | 1 | `atlas/staging/nhl/`: games, team-game shots and goals by strength, goalie-games with the starter, skater-games, point-in-time features, through the college modules (`make nhl-warehouse`) | **done** — `data/warehouse/nhl.duckdb` (28 MB; every shot attempt staged to `data/staging/nhl/`); reproduces §3, the handful of first measurements that differed corrected in §3 (`reports/nhl_profile.md`) |
 | 2 | Expected-goals model; benchmarks: naive, Elo, goals-Poisson team model, market (`make nhl-benchmarks`) | **done** — xG fitted a season at a time on the three before it, AUC 0.76, 0.95–1.05 goals per xG every season; Elo 0.2408 pooled 2010–22, 0.2309 in 2021–22; goals-Poisson 0.2411, 0.2312 (`reports/nhl_xg.md`, `reports/nhl_benchmarks.md`) |
-| 3 | Kalman state, 5-on-5 expected goals for and against plus special teams, carried across seasons | ties or beats Elo |
-| 4 | Goalie state and the expected starter (rest, back-to-back, the confirmation when it comes) | the goalie test |
-| 5 | The grid: regulation, empty net, overtime; puck line and totals calibrated | the §7 table, out of sample |
+| 3 | Kalman state, 5-on-5 expected goals for and against plus special teams, carried across seasons | **done** — 5-on-5 and special-teams states, and a finishing state (goals over expected goals, shrunk hard) the plan did not have: without it the model trailed Elo, with it it leads; the observation is expected goals six parts to unblocked attempts four, tuned |
+| 4 | Goalie state and the expected starter (rest, back-to-back, the confirmation when it comes) | **done** — the goalie state and the expected starter; the goalie test passes (no worse when a usual starter sits); pricing the confirmed starter instead changes Brier by 0.0002, so the goalie state is small, as its reliability (0.31) said it would be |
+| 5 | The grid: regulation, empty net, overtime; puck line and totals calibrated | **done** — every layer fitted on the three seasons before the one it prices (the empty net moved: 0.30 goals a game in 2010–11, 0.55 by 2024–25), plus a fitted stretch of the teams' gap; the §7 table met (`reports/nhl_model.md`) |
 | 6 | Wire into the card and grade (`nhl.html` board, the live and site layers take a third sport), the owner board, parlays and the exchanges (Kalshi and Polymarket list NHL games) | NHL cards; the audit passes |
 | 7 | Props v1: the Pick'em engine on NHL slugs, with §3's shapes, graded from the NHL box score | a Pick'em slate on NHL nights |
 | 8 | Props v2: Atlas's player projections, walk-forward | shown beside the market when it earns it |
