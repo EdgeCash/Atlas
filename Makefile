@@ -4,7 +4,8 @@ PYTHON ?= python3
 	live-refresh live-run live-report live-check live-reproduce \
 	site site-full site-serve site-audit site-shots launch-check \
 	ops-heavy ops-poll ops-social ops-health ops-status ops-crontab \
-	ops-backup ops-analytics perf seo ncaaf-benchmarks ncaaf-prior ncaaf-state ncaaf-total nfl-ingest nfl-warehouse nfl-benchmarks nfl-state nfl-total
+	ops-backup ops-analytics perf seo ncaaf-benchmarks ncaaf-prior ncaaf-state ncaaf-total nfl-ingest nfl-warehouse nfl-benchmarks nfl-state nfl-total \
+	nhl-ingest nhl-warehouse nhl-xg nhl-benchmarks
 
 help:
 	@echo "Atlas Phase 1A - research warehouse"
@@ -42,6 +43,10 @@ help:
 	@echo "  make nfl-benchmarks    score the reference models the NFL model must beat"
 	@echo "  make nfl-state         run and score the NFL Kalman state model"
 	@echo "  make nfl-total         calibrate the NFL total and score the joint score grid"
+	@echo "  make nhl-ingest        fetch and cache the NHL's games, game logs, shots, odds archive and ESPN ids"
+	@echo "  make nhl-warehouse     build data/warehouse/nhl.duckdb and recompute the plan's profile from it"
+	@echo "  make nhl-xg            fit NHL expected goals a season at a time and check them"
+	@echo "  make nhl-benchmarks    score naive, Elo, goals-Poisson and the market walk-forward"
 	@echo "  make perf       measure load time and LCP at three viewports"
 	@echo "  make seo        validate canonicals, meta, OpenGraph and sitemap"
 	@echo "  make site-full  warehouse + numbers + market + site, from scratch"
@@ -194,6 +199,23 @@ ncaaf-total:
 # NFL plan, step 0: the raw data, cached one season per file, no key.
 nfl-ingest:
 	$(PYTHON) -m atlas.sources.nflverse
+
+# NHL plan, step 0: the NHL's API, the odds archive and ESPN's ids, cached one
+# season per file, no key. `--budget 0` fills a cold cache in one go.
+nhl-ingest:
+	$(PYTHON) -m atlas.sources.nhl --budget 0
+
+# NHL plan, step 1: the warehouse, and the plan's §3 recomputed from it.
+nhl-warehouse:
+	$(PYTHON) -m atlas.staging.nhl.build
+	$(PYTHON) -m atlas.research.nhl_profile
+
+# NHL plan, step 2: expected goals, fitted a season at a time, and the benchmarks.
+nhl-xg:
+	$(PYTHON) -m atlas.models.nhl_xg
+
+nhl-benchmarks:
+	$(PYTHON) -m atlas.models.nhl_benchmarks
 
 # DFS plan, step 0: DraftKings' Classic slates and salaries into the record
 # (daily in the heavy refresh), and RotoGuru's 2014-2021 DraftKings archive.
