@@ -30,6 +30,7 @@ CACHE_HOURS = 6
 SCOREBOARDS = {
     "ncaaf": SCOREBOARD,
     "nfl": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+    "nhl": "https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard",
 }
 
 

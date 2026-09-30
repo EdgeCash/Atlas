@@ -115,7 +115,8 @@ def build(out: Path | None = None, *, social_cards: bool = True,
         espn_meta.fetch(espn_meta.days_ahead(horizon), sport="nfl"),
         config.paths().data / "site" / "logos", prefix="nfl-",
     ) if nfl_cards else {}
-    if logos or nfl_logos:
+    nhl_cards, nhl_bands, nhl_overall, nhl_logos = _nhl(horizon=horizon, refresh_meta=refresh_meta)
+    if logos or nfl_logos or nhl_logos:
         shutil.copytree(config.paths().data / "site" / "logos", out / "assets" / "logos")
     for card in cards:
         for side in (card.home, card.away):
@@ -145,6 +146,9 @@ def build(out: Path | None = None, *, social_cards: bool = True,
             (out / render.team_path(team, "nfl")).write_text(render.nfl_team_page(
                 team, cards=nfl_cards, pool=nfl_pool, results=nfl_results.get(team.team_id, []),
                 freshness=stamps))
+    from atlas.site import nhl as nhl_site
+
+    nhl_paths = nhl_site.write(out, nhl_cards, bands=nhl_bands, overall_band=nhl_overall, freshness=stamps)
     _record(out)
     (out / "premium.html").write_text(render.premium_page())
     (out / "scoreboard.html").write_text(render.scoreboard_page())
@@ -188,17 +192,41 @@ def build(out: Path | None = None, *, social_cards: bool = True,
     # advertises itself as complete.
     if social_cards:
         ops_freshness.record("social", detail=f"{len(images)} files")
-    ops_freshness.record("build", detail=f"{len(cards)} cards, {len(nfl_cards)} NFL cards, {len(teams)} teams, "
-                                         f"{len(nfl_teams)} NFL teams")
+    ops_freshness.record("build", detail=f"{len(cards)} cards, {len(nfl_cards)} NFL cards, {len(nhl_cards)} NHL cards, "
+                                         f"{len(teams)} teams, {len(nfl_teams)} NFL teams")
     # Written last, so it reports the run that just happened rather than the
     # one before it.
     (out / "status.html").write_text(render.status_page(ops_status.summary()))
     _write_robots(out)
-    _write_sitemap(out, [*cards, *nfl_cards], teams, nfl_teams)
-    LOG.info("site: %d cards, %d NFL cards, %d teams, %d NFL teams, %d images -> %s",
-             len(cards), len(nfl_cards), len(teams), len(nfl_teams), len(images), out)
-    return {"cards": len(cards), "nfl_cards": len(nfl_cards), "teams": len(teams), "nfl_teams": len(nfl_teams),
-            "images": len(images), "out": out}
+    _write_sitemap(out, [*cards, *nfl_cards], teams, nfl_teams, extra=nhl_paths)
+    LOG.info("site: %d cards, %d NFL cards, %d NHL cards, %d teams, %d NFL teams, %d images -> %s",
+             len(cards), len(nfl_cards), len(nhl_cards), len(teams), len(nfl_teams), len(images), out)
+    return {"cards": len(cards), "nfl_cards": len(nfl_cards), "nhl_cards": len(nhl_cards), "teams": len(teams),
+            "nfl_teams": len(nfl_teams), "images": len(images), "out": out}
+
+
+def _nhl(*, horizon: int, refresh_meta: bool) -> tuple[list, dict, object, dict]:
+    """The NHL's cards, its grade record and its logos, or nothing: an NHL failure never takes football down."""
+    try:
+        from atlas.live.store import Store
+        from atlas.site import nhl as nhl_site
+
+        meta = espn_meta.fetch(espn_meta.days_ahead(horizon), refresh=refresh_meta, sport="nhl")
+        logos = espn_meta.cache_logos(meta, config.paths().data / "site" / "logos", prefix="nhl-")
+        try:
+            bands = grading.calibration_bands(nhl_site.GRADED_MARKET, sport="nhl")
+            curve = grading.calibration_curve(nhl_site.GRADED_MARKET, sport="nhl")
+            overall = grading.overall(bands)
+        except Exception as error:  # noqa: BLE001 - the cards stand ungraded
+            LOG.warning("no NHL grade this build: %s", type(error).__name__)
+            bands, curve, overall = {}, None, None
+        from datetime import UTC, datetime
+
+        cards = nhl_site.build_cards(Store.open(), meta, logos, datetime.now(UTC), bands=bands, curve=curve)
+        return cards, bands, overall, logos
+    except Exception as error:  # noqa: BLE001 - logged; the board says there is nothing yet
+        LOG.warning("no NHL cards this build: %s", error)
+        return [], {}, None, {}
 
 
 def _nfl_cards(*, horizon: int, refresh_meta: bool) -> list:
@@ -357,7 +385,7 @@ SITEMAP_PRIORITY = {"": "1.0", "about.html": "0.9", "research.html": "0.8",
                     "ncaaf": "0.8", "team": "0.6"}
 
 
-def _write_sitemap(out: Path, cards, teams: dict, nfl_teams: dict | None = None) -> None:
+def _write_sitemap(out: Path, cards, teams: dict, nfl_teams: dict | None = None, extra: list[str] | None = None) -> None:
     """Every public page, once, with the day it was built.
 
     A card's content changes whenever the market does, so `changefreq` is
@@ -384,6 +412,8 @@ def _write_sitemap(out: Path, cards, teams: dict, nfl_teams: dict | None = None)
              for slug in sorted(teams)]
     urls += [(render.team_path(side, "nfl"), "weekly", SITEMAP_PRIORITY["team"])
              for _, side in sorted((nfl_teams or {}).items())]
+    # The NHL's board and cards (atlas/site/nhl.py).
+    urls += [(path, "daily", "0.9" if path == "nhl.html" else SITEMAP_PRIORITY["ncaaf"]) for path in extra or []]
 
     entries = "".join(
         f"<url><loc>{render.SITE_URL}/{path}</loc>"

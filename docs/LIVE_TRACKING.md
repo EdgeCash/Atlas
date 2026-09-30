@@ -55,6 +55,7 @@ to three decimals, so an unchanged row produces no diff.
 | `numbers.csv` | Atlas's number per scheduled game and market, with the model version and when it was refreshed; a refresh keeps each earlier number a signal was formed from, so every signal replays against its own |
 | `games.csv` | every game seen, with kickoff, status and sport (ncaaf, nfl, nhl; empty on football rows from before 30 September 2026) |
 | `snapshots.csv` | append-on-change line observations, timestamped (Track 2); the NHL's moneyline is a `moneyline` row with no line, its puck line a `margin` |
+| `nhl_projections.csv` | the NHL model's numbers for each game in the next eight days (`atlas/models/nhl_projection.py`, the heavy refresh): each side's expected goals, the grid's probabilities (the win with overtime, the regulation three-way, the puck line both ways, the total at 4.5 to 7.5) and the expected starting goalies behind them; keyed by ESPN's event id |
 | `signals.csv` | immutable opinions (Track 1) |
 | `grades.csv` | one row per graded signal (Track 3) |
 
