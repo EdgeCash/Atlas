@@ -20,10 +20,10 @@ and the grid are built and scored (`atlas/models/nhl_state.py`,
 per game, graded in points of win probability) and on the owner's board,
 parlays and exchange board (`atlas/owner/nhl_board.py`), and in the pick'em
 (`atlas/owner/pickem.py`), with Atlas's own player projections beside the
-market's (`atlas/models/nhl_props.py`, `reports/nhl_props.md`). BettingPros' closing lines for 2023–24 to
+market's (`atlas/models/nhl_props.py`, `reports/nhl_props.md`). BettingPros' closing lines for 2022–23 to
 2025–26 are backfilled and sealed (`atlas/owner/nhl_history.py`): the consensus close leads Atlas's moneyline by
-0.002 to 0.003 of Brier in each season (`reports/nhl_market_recent.md`), and the puck line, tested again on
-those seasons, lost (`reports/nhl_puckline_fresh.md`, step 9). The rest below is the plan, with what the
+0.001 to 0.003 of Brier in each season (`reports/nhl_market_recent.md`), and the puck line, tested again on
+2023–26, lost (`reports/nhl_puckline_fresh.md`, step 9). The rest below is the plan, with what the
 build changed marked where it did. Every number in it was
 measured on 30 September 2026 from the sources in §2, unless it says it is
 cited; step 1's warehouse has to reproduce §3 to the decimal before anything
@@ -107,7 +107,7 @@ to be checked on the first game days.
 |---|---|---|
 | SportsBookReviewsOnline archive (`/scoresoddsarchives/nhl-odds-YYYY-YY`) | 2010–11 → 2021–22 verified complete (e.g. 1,401 games in 2021–22 with playoffs; pages go back to 2007–08); 2022–23 stops on 27 November | **fetched and parsed**: opening and closing moneyline, puck line with price, opening and closing total with price. Needs a browser user agent. Personal-use archive: cache it, never republish it |
 | The Odds API, historical | from late 2020 | paid; fills 2022–23 → 2025–26 |
-| BettingPros partner API, `/offers` by event | depth measured by the backfill itself | **the owner's choice (30 September 2026).** `atlas/owner/nhl_history.py`, a step of the heavy refresh: 2025–26 back to 2022–23, newest first, 500 calls a run, each game matched to the warehouse and each kept book's last main pregame line taken as its close (the consensus, DraftKings, FanDuel), sealed in `tracking/owner_nhl_history/`; a season with no pregame line is where the key's history ends and nothing older is asked for. The market row for those seasons: `reports/nhl_market_recent.md`. First run (30 September 2026): 2025–26's lines all came back stamped after puck drop, so from the second run a book's close falls back to its last line as it came off the board, counted in the market row only when a season's such closes score like pregame ones. By the third run, the same day, 2023–24, 2024–25 and 2025–26 were in, with a consensus close on every matched game (1,332, 1,306 and 1,253). 2023–24 closed pregame and 2024–25 mostly did (226 games at the off); 2025–26 closed almost entirely at the off, a minute after puck drop at the median, and those closes score like pregame ones (Brier 0.2438), so they count. The consensus close's Brier against Atlas's: 0.2333 and 0.2363 in 2023–24, 0.2318 and 0.2352 in 2024–25, 0.2438 and 0.2456 in 2025–26. 2022–23 is filling, 500 calls a heavy run |
+| BettingPros partner API, `/offers` by event | depth measured by the backfill itself | **the owner's choice (30 September 2026).** `atlas/owner/nhl_history.py`, a step of the heavy refresh: 2025–26 back to 2022–23, newest first, 500 calls a run, each game matched to the warehouse and each kept book's last main pregame line taken as its close (the consensus, DraftKings, FanDuel), sealed in `tracking/owner_nhl_history/`; a season with no pregame line is where the key's history ends and nothing older is asked for. The market row for those seasons: `reports/nhl_market_recent.md`. First run (30 September 2026): 2025–26's lines all came back stamped after puck drop, so from the second run a book's close falls back to its last line as it came off the board, counted in the market row only when a season's such closes score like pregame ones. By the third run, the same day, 2023–24, 2024–25 and 2025–26 were in, with a consensus close on every matched game (1,332, 1,306 and 1,253). 2023–24 closed pregame and 2024–25 mostly did (226 games at the off); 2025–26 closed almost entirely at the off, a minute after puck drop at the median, and those closes score like pregame ones (Brier 0.2438), so they count. The consensus close's Brier against Atlas's: 0.2333 and 0.2363 in 2023–24, 0.2318 and 0.2352 in 2024–25, 0.2438 and 0.2456 in 2025–26. 2022–23 followed on the fourth run, the same day: a consensus close on all 1,309 matched games, every book's close pregame, the consensus close's Brier 0.2343 against Atlas's 0.2354 (1,232 games in the market row). The backfill is complete: every season asked for had lines, back to 2022–23, and nothing older is asked for. Pooled over 2022–26, the consensus close's Brier is 0.2358 against Atlas's 0.2381 on 5,042 games |
 | sports-statistics.com | ESPN-derived skater (1.01M rows) and goalie box scores, keyed by ESPN event id | a cross-check only: the NHL API is the primary, and the download was not reachable from here |
 
 The market benchmark therefore exists for 2010–11 to 2021–22 now, and for
@@ -472,8 +472,9 @@ reaches the public site until step 5's table is filled in and passes.
   depth as it goes (`atlas/owner/nhl_history.py`, §2); the market row for the
   recent seasons follows (`reports/nhl_market_recent.md`). 2023–24 to 2025–26
   were in by the third run (30 September 2026), which scored the puck line's
-  fresh test (step 9); 2022–23 is filling. The Odds API stays the fallback for
-  any season the key does not reach.
+  fresh test (step 9), and 2022–23 by the fourth, the same day: the backfill
+  is complete and the Odds API was not needed. It stays the fallback should
+  an older season ever be wanted.
 - **PrizePicks' NHL payouts:** the same table as football's is assumed; a
   state that pays differently changes `PAYOUTS`.
 - No new credentials: the NHL API and ESPN are keyless, and BettingPros is
