@@ -5,7 +5,7 @@ the NHL: the data, the empirical profile, the factors and their measured
 sizes, the game model, the player-prop model, how both are validated, and the
 order to build them in. It follows `MODEL_PLAN_NFL.md` section for section.
 
-**Status (30 September 2026): steps 0 to 7 are built; the game model meets v1's bar**
+**Status (30 September 2026): steps 0 to 8 are built; the game model meets v1's bar**
 (`reports/nhl_model.md`: better than Elo and the goals-based Poisson model on
 every row out of sample). Every poll records
 ESPN's DraftKings moneyline, puck line and total and the NHL finals
@@ -19,7 +19,8 @@ and the grid are built and scored (`atlas/models/nhl_state.py`,
 `nhl_grid.py`, `nhl_model.py`); the NHL is on the site (`nhl.html`, a card
 per game, graded in points of win probability) and on the owner's board,
 parlays and exchange board (`atlas/owner/nhl_board.py`), and in the pick'em
-(`atlas/owner/pickem.py`). The rest below is the plan, with what the
+(`atlas/owner/pickem.py`), with Atlas's own player projections beside the
+market's (`atlas/models/nhl_props.py`, `reports/nhl_props.md`). The rest below is the plan, with what the
 build changed marked where it did. Every number in it was
 measured on 30 September 2026 from the sources in §2, unless it says it is
 cited; step 1's warehouse has to reproduce §3 to the decimal before anything
@@ -386,6 +387,15 @@ the arena term.
 Shown beside the market's fair value, never instead of it, until the
 walk-forward says it is better.
 
+*(Built as `atlas/models/nhl_props.py`, `make nhl-props`. What the build
+changed: points are Atlas's goals plus its assists, each from the player's
+own rate against the opponent (shift-level on-ice shares are not in the
+warehouse); a light prior beat a heavy one everywhere (5 games of the
+position's rate, tuned); the arena is counted out of a player's rate before
+the game's is put back; saves take the empirical distribution of saves over
+their expectation, because a pulled starter leaves them skewed left, which a
+negative binomial gets backwards.)*
+
 ---
 
 ## 7. Validation — NHL specifics
@@ -443,7 +453,7 @@ Brier; a model that closes a fifth of it is doing well.
 | 5 | The grid: regulation, empty net, overtime; puck line and totals calibrated | **done** — every layer fitted on the three seasons before the one it prices (the empty net moved: 0.30 goals a game in 2010–11, 0.55 by 2024–25), plus a fitted stretch of the teams' gap; the §7 table met (`reports/nhl_model.md`) |
 | 6 | Wire into the card and grade (`nhl.html` board, the live and site layers take a third sport), the owner board, parlays and the exchanges (Kalshi and Polymarket list NHL games) | **public side done** — the heavy refresh publishes `tracking/nhl_projections.csv` and the NHL's moneyline record (11,764 games since 2013–14 against the closing line) into `tracking/calibration.csv`; `nhl.html` and a card per game (`atlas/site/nhl.py`): Atlas's chance beside DraftKings' de-vigged moneyline, the grade in points of win probability from that record, the grid, the goalies, the model's reading; the audit passes. No NHL signal or public record page yet. **Owner side done** — the owner board prices every book's NHL moneyline, puck line and total by the grid pulled toward the consensus by the share of its disagreement that has turned out real (0.46 on that record), logs its picks once in `tracking/owner_nhl/` and grades them on the final and the close; the same legs feed the parlays and the exchange board (`atlas/owner/nhl_board.py`, `docs/OWNER_BOARD.md`) |
 | 7 | Props v1: the Pick'em engine on NHL slugs, with §3's shapes, graded from the NHL box score | **done** — the pick'em slate takes the NHL's games; shots on goal, points, goals, assists, saves, blocked shots and hits priced from every book's two-sided price along §3's count shapes (saves 1.9, measured again around a game-level expectation of shots against: 1.92), graded from ESPN's hockey box score, which matches the NHL's to the skater (`atlas/sources/nhl.py`); PrizePicks' standard payouts assumed until the owner confirms them |
-| 8 | Props v2: Atlas's player projections, walk-forward | shown beside the market when it earns it |
+| 8 | Props v2: Atlas's player projections, walk-forward | **done** — ice time × rates per second (shrunk lightly to the position: players differ, hits most) × the opponent, the arena (counted neutral, so a home rink is not in the rate and the factor both) and home, a Poisson layer a season at a time on the three before; saves on the empirical shape of saves over their expectation (they lean left: the pulled goalie). Better than the season-mean Poisson at every common line pooled over 2022–26 (shots 0.2112 against 0.2163 at 1.5, saves 0.2282 against 0.2509 at 24.5; hits only just, and not in 2024–26, when league hitting fell) (`reports/nhl_props.md`). Sealed for the owner each heavy refresh; the pick'em shows Atlas's probability beside fair and logs it, so the two meet on the same lines |
 | 9 | Curated NHL plays: rules pre-registered on the walk-forward before any is logged, as the football rules were | only if a rule clears its bar |
 
 Steps 0 and 7 reuse code that exists and can run within days of a go-ahead;

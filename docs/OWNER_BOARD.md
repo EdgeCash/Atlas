@@ -231,6 +231,14 @@ goals, assists and blocks the same), points as goals plus assists, a goalie's sa
 books settle; a scratched skater or a goalie who did not go in is void; two players of one name told apart by team.
 NHL rows are filed by the ISO week of puck drop. PrizePicks' NHL payouts are assumed to be its standard table.
 
+**Atlas beside the market** (step 8). Each heavy refresh seals every active NHL player's state after his latest
+game, the teams', the arenas' and the season's fitted layer into `tracking/owner_nhl_players/state.enc.json`
+(`atlas/models/nhl_props.py`: walk-forward, better than a Poisson on the season mean at every common line,
+`reports/nhl_props.md`). The pick'em finds each NHL line's player by name (and team, where two share one) on the
+team BettingPros lists him on, against that night's opponent, and shows **Atlas** beside fair: its own probability
+of the same side at PrizePicks' line. It never prices a pick or a slip; it is logged with each pick, and the record
+shows the Brier of fair and of Atlas on the same graded NHL picks.
+
 It does not enter anything. Same-game correlations, where pick'em is most often beaten, are not modelled, so a
 slip never holds two picks from one game.
 

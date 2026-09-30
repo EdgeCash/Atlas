@@ -5,7 +5,7 @@ PYTHON ?= python3
 	site site-full site-serve site-audit site-shots launch-check \
 	ops-heavy ops-poll ops-social ops-health ops-status ops-crontab \
 	ops-backup ops-analytics perf seo ncaaf-benchmarks ncaaf-prior ncaaf-state ncaaf-total nfl-ingest nfl-warehouse nfl-benchmarks nfl-state nfl-total \
-	nhl-ingest nhl-warehouse nhl-xg nhl-benchmarks nhl-model
+	nhl-ingest nhl-warehouse nhl-xg nhl-benchmarks nhl-model nhl-props
 
 help:
 	@echo "Atlas Phase 1A - research warehouse"
@@ -48,6 +48,7 @@ help:
 	@echo "  make nhl-xg            fit NHL expected goals a season at a time and check them"
 	@echo "  make nhl-benchmarks    score naive, Elo, goals-Poisson and the market walk-forward"
 	@echo "  make nhl-model         tune, walk forward and score the NHL game model (steps 3 to 5)"
+	@echo "  make nhl-props         tune, walk forward and score the NHL player projections (step 8)"
 	@echo "  make perf       measure load time and LCP at three viewports"
 	@echo "  make seo        validate canonicals, meta, OpenGraph and sitemap"
 	@echo "  make site-full  warehouse + numbers + market + site, from scratch"
@@ -221,6 +222,10 @@ nhl-benchmarks:
 # NHL plan, steps 3 to 5: the state, the goalie, the grid; tuned, walked forward, scored.
 nhl-model:
 	$(PYTHON) -m atlas.models.nhl_model
+
+# NHL plan, step 8: the player projections, tuned once, walked forward, scored against a season-mean Poisson.
+nhl-props:
+	$(PYTHON) -m atlas.models.nhl_props
 
 # DFS plan, step 0: DraftKings' Classic slates and salaries into the record
 # (daily in the heavy refresh), and RotoGuru's 2014-2021 DraftKings archive.

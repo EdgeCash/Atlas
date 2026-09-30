@@ -14,6 +14,7 @@ Two jobs, deliberately separated by cost:
 from __future__ import annotations
 
 import argparse
+import os
 from datetime import UTC, date, datetime, timedelta
 from zoneinfo import ZoneInfo
 
@@ -290,6 +291,20 @@ def publish_projections(store: Store) -> int:
         from atlas.util import where
 
         LOG.warning("no NHL projections this refresh: %s at %s", type(error).__name__, where(error))
+    # The NHL's players (step 8): each active player's state after his latest game, sealed for the owner's
+    # pick'em, which reads Atlas's own probability beside the market's from it.
+    try:
+        from atlas.dfs import owner
+        from atlas.models import nhl_props
+
+        passphrase = os.environ.get(owner.SECRET, "").strip()
+        if passphrase:
+            LOG.info("sealed NHL player projections: %d players", nhl_props.publish(datetime.fromisoformat(now),
+                                                                                   passphrase))
+    except Exception as error:  # noqa: BLE001 - logged; the rest of the publish stands
+        from atlas.util import where
+
+        LOG.warning("no NHL player projections this refresh: %s at %s", type(error).__name__, where(error))
     store.write("calibration", pd.concat(calibration, ignore_index=True))
     store.write("market_shape", pd.concat(shapes, ignore_index=True))
     return published
