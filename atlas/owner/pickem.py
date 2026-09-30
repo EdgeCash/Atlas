@@ -40,6 +40,17 @@ a negative binomial, variance 1.1 times the mean. College uses the NFL
 shapes. A book more than a quarter of its line (plus two yards) or a catch
 and a half from PrizePicks is not moved that far and is left out.
 
+The NHL (docs/MODEL_PLAN_NHL.md, step 7): every stat a count, with the
+variance-to-mean ratios measured around a player's own mean in §3 of the plan
+(regular seasons 2010-11 to 2025-26): shots on goal and blocked shots 1.08,
+hits 1.18, points, goals and assists a Poisson (0.97), a goalie's saves 1.9
+(1.98 around his own mean, 1.92 around a game-level expectation of shots
+against, starters 2021-26: saves swing with the score and the pulled goalie,
+not only the opponent). A book a goal, a point, a shot or a block from
+PrizePicks' line is moved; saves three. Graded from ESPN's hockey box score
+(`atlas/sources/nhl.py`), a shootout not counted, as the books settle it; the
+NHL's rows are filed by the ISO week of puck drop.
+
 Only inside the owner page's ciphertext, like the board. The payout table is
 PrizePicks' standard one; a state with a different table changes
 :data:`PAYOUTS`, and each logged slip keeps the table it was priced on.
@@ -69,9 +80,18 @@ LOG = get_logger(__name__)
 NAMESPACE = uuid.UUID("5b0e7c3a-8d21-4f6e-a1c9-3e7d2b4f6a58")
 
 #: The markets priced, the box-score column each settles on, and how the page names them.
-STATS = {"passing-yards": "pass_yds", "rushing-yards": "rush_yds", "receiving-yards": "rec_yds", "receptions": "rec"}
+STATS = {"passing-yards": "pass_yds", "rushing-yards": "rush_yds", "receiving-yards": "rec_yds", "receptions": "rec",
+         "shots": "sog", "shots-on-goal": "sog", "points": "pts", "goals": "g", "assists": "a", "saves": "sv",
+         "blocked-shots": "blk", "hits": "hits"}
 LABELS = {"passing-yards": "pass yds", "rushing-yards": "rush yds", "receiving-yards": "rec yds",
-          "receptions": "receptions"}
+          "receptions": "receptions", "shots": "shots on goal", "shots-on-goal": "shots on goal", "points": "points",
+          "goals": "goals", "assists": "assists", "saves": "saves", "blocked-shots": "blocked shots", "hits": "hits"}
+#: BettingPros' slugs asked for, per sport.
+SLUGS = {"nfl": ("passing-yards", "rushing-yards", "receiving-yards", "receptions"),
+         "ncaaf": ("passing-yards", "rushing-yards", "receiving-yards", "receptions"),
+         "nhl": ("shots", "shots-on-goal", "points", "goals", "assists", "saves", "blocked-shots", "hits")}
+#: Prop pages a sport may take in one run: the NHL's slate is up to sixteen games of six markets.
+PAGES = {"nhl": 30}
 #: The books whose two-sided prices make the fair value: sportsbooks and the two sports exchanges. Not the
 #: consensus (an average of these), not a pick'em app, not a book the catalogue has not named.
 FAIR_BOOKS = frozenset({10, 12, 13, 14, 18, 19, 24, 32, 33, 38, 43, 49, 60, 67})
@@ -115,6 +135,10 @@ RATIOS = {
 }
 #: Receptions: a negative binomial with this variance-to-mean ratio.
 REC_DISPERSION = 1.1
+#: Every count stat's variance-to-mean ratio: a negative binomial above one, a Poisson at one.
+COUNTS = {"rec": REC_DISPERSION, "sog": 1.08, "blk": 1.08, "hits": 1.18, "pts": 1.0, "g": 1.0, "a": 1.0, "sv": 1.9}
+#: How far a book's line may sit from PrizePicks' on a count and still be moved to it.
+COUNT_MOVES = {"rec": 1.5, "sv": 3.0}
 
 PICK_COLUMNS = ["pick_id", "day", "logged_at", "sport", "season", "week", "game_id", "kickoff", "game", "player_key",
                 "player", "team", "market", "side", "line", "p", "p_push", "books", "book_line", "close_line", "close_p",
@@ -155,11 +179,19 @@ def ratio_cdf(stat: str, x: float) -> float:
     return float(np.interp(x, values, probs, left=0.0, right=1.0))
 
 
-def _nb_cdf(k: int, mean: float) -> float:
-    """P(Y <= k) for a negative binomial with mean ``mean`` and variance :data:`REC_DISPERSION` times it."""
+def _nb_cdf(k: int, mean: float, dispersion: float = REC_DISPERSION) -> float:
+    """P(Y <= k) for a negative binomial with mean ``mean`` and variance ``dispersion`` times it; a Poisson
+    at a dispersion of one or less."""
     if k < 0:
         return 0.0
-    p = 1.0 / REC_DISPERSION
+    if dispersion <= 1.0:
+        total, term = 0.0, math.exp(-mean)
+        for j in range(int(k) + 1):
+            if j > 0:
+                term *= mean / j
+            total += term
+        return min(1.0, total)
+    p = 1.0 / dispersion
     n = mean * p / (1.0 - p)
     log_base = n * math.log(p)
     total, log_pmf = 0.0, log_base
@@ -172,14 +204,15 @@ def _nb_cdf(k: int, mean: float) -> float:
 
 def split(stat: str, centre: float, line: float) -> tuple[float, float]:
     """(P over, P exactly on the line) for a stat whose distribution is set by ``centre``: the player's
-    expectation for yards (the ratios scaled by it), the negative binomial's mean for receptions."""
+    expectation for yards (the ratios scaled by it), the count's mean for a count."""
     whole = float(line).is_integer()
-    if stat == "rec":
+    if stat in COUNTS:
+        d = COUNTS[stat]
         if whole:
-            below = _nb_cdf(int(line) - 1, centre)
-            at = _nb_cdf(int(line), centre)
+            below = _nb_cdf(int(line) - 1, centre, d)
+            at = _nb_cdf(int(line), centre, d)
             return 1.0 - at, at - below
-        return 1.0 - _nb_cdf(math.floor(line), centre), 0.0
+        return 1.0 - _nb_cdf(math.floor(line), centre, d), 0.0
     if centre <= 0:
         return 0.0, 0.0
     if whole:
@@ -191,7 +224,7 @@ def split(stat: str, centre: float, line: float) -> tuple[float, float]:
 def centre_for(stat: str, line: float, p_over: float) -> float | None:
     """The centre at which the stat goes over ``line`` with probability ``p_over``, a tie on a
     whole-number line set aside (the book refunds it). None when no centre does."""
-    if stat != "rec" and not float(line).is_integer():
+    if stat not in COUNTS and not float(line).is_integer():
         q = float(np.interp(1.0 - p_over, QUANTILE_PROBS, RATIOS[stat]))
         return float(line) / q if q > 0 else None
 
@@ -200,7 +233,7 @@ def centre_for(stat: str, line: float, p_over: float) -> float | None:
         return over / max(1e-9, 1.0 - at) - p_over
 
     scale = max(1.0, float(line))
-    lo, hi = (0.05, 40.0) if stat == "rec" else (0.05 * scale, 25.0 * scale)
+    lo, hi = (0.01, max(40.0, 3.0 * scale)) if stat in COUNTS else (0.05 * scale, 25.0 * scale)
     g_lo, g_hi = gap(lo), gap(hi)
     if not (g_lo < 0 < g_hi):
         return None
@@ -217,7 +250,9 @@ def centre_for(stat: str, line: float, p_over: float) -> float | None:
 
 def max_move(stat: str, line: float) -> float:
     """How far a book's line may sit from PrizePicks' and still be moved to it."""
-    return 1.5 if stat == "rec" else 0.25 * abs(float(line)) + 2.0
+    if stat in COUNTS:
+        return COUNT_MOVES.get(stat, 1.0)
+    return 0.25 * abs(float(line)) + 2.0
 
 
 def fair_at(quotes, stat: str, line: float) -> dict | None:
@@ -487,6 +522,14 @@ def due(picks: pd.DataFrame, day: str, now: datetime) -> bool:
     return not (len(picks) and (picks["day"].astype(str) == day).any())
 
 
+def filed(sport, kickoff) -> tuple[int, int]:
+    """Where an NHL row is filed: the ISO year and week of puck drop (the NHL has no weeks)."""
+    t = pd.Timestamp(kickoff)
+    t = t.tz_localize("UTC") if t.tzinfo is None else t.tz_convert("UTC")
+    year, week, _ = t.isocalendar()
+    return int(year), int(week)
+
+
 def _stamp(ts) -> str:
     t = pd.Timestamp(ts)
     t = t.tz_localize("UTC") if t.tzinfo is None else t.tz_convert("UTC")
@@ -506,8 +549,9 @@ def log(picks: pd.DataFrame, slips: pd.DataFrame, priced: pd.DataFrame, chosen: 
     stamp = _stamp(now)
     rows, ids = [], {}
     for r in eligible.itertuples():
-        season, week = week_of.get(str(r.game_id), (None, None))
-        if season is None or pd.isna(season):
+        nhl = str(r.sport) == "nhl"
+        season, week = filed(r.sport, r.kickoff) if nhl else week_of.get(str(r.game_id), (None, None))
+        if season is None or pd.isna(season) or week is None or pd.isna(week):
             continue
         pid = pick_id(r.day, r.event_id, r.player_key, r.market, r.side)
         ids[r.Index] = pid
@@ -578,7 +622,8 @@ def follow(picks: pd.DataFrame, props: pd.DataFrame, now: datetime) -> tuple[pd.
 # ---------------------------------------------------------------------------
 
 SUMMARY = {"nfl": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event={event}",
-           "ncaaf": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/summary?event={event}"}
+           "ncaaf": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/summary?event={event}",
+           "nhl": "https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/summary?event={event}"}
 
 
 def box_score(sport: str, game_id: str) -> pd.DataFrame | None:
@@ -590,6 +635,10 @@ def box_score(sport: str, game_id: str) -> pd.DataFrame | None:
     status = ((((body.get("header") or {}).get("competitions") or [{}])[0].get("status") or {}).get("type") or {})
     if not status.get("completed"):
         return None
+    if sport == "nhl":
+        from atlas.sources import nhl
+
+        return nhl.espn_box(body)
     return espn_cfb.parse(body, 0, 0, "")
 
 
@@ -599,11 +648,13 @@ def name_key(name) -> str:
     return re.sub(r"[^a-z]", "", text)
 
 
-def find(box: pd.DataFrame, player: str) -> pd.Series | None:
+def find(box: pd.DataFrame, player: str, team=None) -> pd.Series | None:
     """The player's line in the box score: by full name, else by first initial and last name when only
-    one player fits."""
+    one player fits; two of one name (the NHL has two Sebastian Ahos) told apart by team when it is known."""
     keys = box["name"].map(name_key)
     hit = box[keys == name_key(player)]
+    if len(hit) > 1 and isinstance(team, str) and team and "team" in box:
+        hit = hit[hit["team"].astype(str) == team]
     if len(hit) == 1:
         return hit.iloc[0]
     words = [w for w in re.sub(r"\b(jr|sr|ii|iii|iv|v)\b\.?", "", str(player).lower()).split() if w]
@@ -646,11 +697,11 @@ def grade(picks: pd.DataFrame, games: pd.DataFrame, now: datetime, fetch=box_sco
         box = boxes[gid]
         if box is None or box.empty:
             continue
-        row = find(box, r["player"])
-        if row is None:
-            actual, outcome = None, "void"
+        row = find(box, r["player"], r.get("team"))
+        actual = float(pd.to_numeric(row.get(STATS[r["market"]]), errors="coerce")) if row is not None else float("nan")
+        if not math.isfinite(actual):
+            actual, outcome = None, "void"          # not in the box score (or no such stat for him): did not play
         else:
-            actual = float(row[STATS[r["market"]]])
             outcome = settle(r["side"], float(r["line"]), actual)
         picks.loc[i, ["actual", "outcome", "graded_at"]] = [actual, outcome, _stamp(now)]
         changed.add((int(r["season"]), int(r["week"])))
@@ -753,8 +804,10 @@ def sections(priced: pd.DataFrame, chosen: pd.DataFrame, picks: pd.DataFrame, sl
         f"does not publish), {counts.get('unpriced', 0)} with fewer than {MIN_BOOKS} books to price them.",
         "Fair is the probability of the side shown: each sportsbook's price on both sides, its margin taken out, "
         "moved from its line to PrizePicks' along the stat's spread (yards scaled from ten NFL seasons of games "
-        "around a player's mean; receptions a count), the median across books. The books' line is the median of "
-        "theirs. A tie on a whole-number line drops the pick from the entry, as PrizePicks settles it."]}
+        "around a player's mean; receptions and every NHL stat a count, at the spread measured for it), the median "
+        "across books. The books' line is the median of theirs. A tie on a whole-number line drops the pick from "
+        "the entry, as PrizePicks settles it. The NHL is priced on PrizePicks' standard payout table too: confirm it "
+        "in the app."]}
     out = [slip_card, board_card]
 
     if len(picks):
@@ -829,8 +882,9 @@ def fetch(client, events: pd.DataFrame, now: datetime) -> pd.DataFrame:
     parts = []
     for sport, part in on.groupby("sport"):
         try:
-            slug_of = bp.prop_markets(client, str(sport))
-            got = bp.props(client, str(sport), part["event_id"].astype(int).tolist(), slug_of)
+            slug_of = bp.prop_markets(client, str(sport), SLUGS.get(str(sport), bp.PROP_SLUGS))
+            got = bp.props(client, str(sport), part["event_id"].astype(int).tolist(), slug_of,
+                           max_pages=PAGES.get(str(sport), bp.PROP_PAGES))
         except Exception as error:  # noqa: BLE001 - the type and the place only
             from atlas.util import where
 

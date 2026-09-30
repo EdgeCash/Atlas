@@ -238,6 +238,9 @@ def test_the_board_seals_nhl_lines_beside_footballs_and_says_when_it_has_no_proj
     nhl = [s for s in sections if s["title"].startswith("NHL")]
     assert [s["title"] for s in nhl] == ["NHL board"] and "1 NHL game has lines and no Atlas projection" in str(nhl)
     assert not (tmp_path / "nhl").exists()
+    # The pick'em takes the NHL's slate too (step 7): both PrizePicks lines priced on the books' props.
+    board_card = next(s for s in sections if s["title"] == "Pick board")
+    assert "2 lines this run" in board_card["notes"][0]
 
 
 def test_the_board_prices_the_nhl_from_the_published_projection_and_logs_its_picks(tmp_path, monkeypatch):
