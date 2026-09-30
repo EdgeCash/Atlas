@@ -960,13 +960,16 @@ def _snapshot(passphrase: str, where: Path | None = None) -> dict | None:
 
 def build(client, events: pd.DataFrame, games: pd.DataFrame, names: dict, passphrase: str, now: datetime, *,
           picks_where: Path | None = None, slips_where: Path | None = None, box=box_score,
-          projections_where: Path | None = None) -> list[dict]:
-    """The day's pick'em: priced, optimised, logged once, followed, graded, shown. Never raises."""
+          projections_where: Path | None = None, keep: dict | None = None) -> list[dict]:
+    """The day's pick'em: priced, optimised, logged once, followed, graded, shown. Never raises. ``keep``, when
+    given, is handed the priced lines as ``keep["priced"]`` for the High Five (`atlas/owner/highfive.py`)."""
     try:
         picks_where, slips_where = picks_where or picks_path(), slips_where or slips_path()
         props = fetch(client, events, now)
         priced, counts = price(props)
         priced = atlas_beside(priced, _snapshot(passphrase, projections_where), events)
+        if keep is not None:
+            keep["priced"] = priced
         chosen = optimize(priced)
         day = str(priced["day"].iloc[0]) if len(priced) else None
         LOG.info(summary(counts, priced, chosen, day))

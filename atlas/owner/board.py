@@ -722,7 +722,8 @@ def sections(board: pd.DataFrame, chosen: pd.DataFrame, graded: pd.DataFrame, na
 def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, now: datetime | None = None,
           client: bp.Client | None = None, market_where: Path | None = None, picks_where: Path | None = None,
           parlays_where: Path | None = None, trading_where: Path | None = None, pickem_where: Path | None = None,
-          slips_where: Path | None = None, props_where: Path | None = None, nhl_where: Path | None = None) -> list[dict]:
+          slips_where: Path | None = None, props_where: Path | None = None, nhl_where: Path | None = None,
+          highfive_where: Path | None = None, highfive_parlays_where: Path | None = None) -> list[dict]:
     """Capture the market, seal it, price the board (football's, then the NHL's, `nhl_board.py`), log and
     grade the picks, the day's parlays, the exchange positions and the pick'em, and return the sections.
     Never raises; returns nothing when BettingPros is not configured."""
@@ -782,12 +783,18 @@ def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, 
         nhl_quotes = nhl_board.quotes(nhl_lines, nhl_events, nhl_projections, k)
         every_event = pd.concat([x for x in (events, nhl_events) if len(x)], ignore_index=True) \
             if len(nhl_events) else events
-        return [*sections(board, chosen, graded, names, now, client.calls), *nhl_sections,
-                *parlays.build(both, finals, names, passphrase, now, where=parlays_where),
-                *trading.build(lines, every_event, projections, shapes, calibration, finals, closes, names, passphrase,
-                               now, where=trading_where, extra=nhl_quotes),
-                *pickem.build(client, every_event, games, names, passphrase, now, picks_where=pickem_where,
-                              slips_where=slips_where)]
+        kept: dict = {}
+        out = [*sections(board, chosen, graded, names, now, client.calls), *nhl_sections,
+               *parlays.build(both, finals, names, passphrase, now, where=parlays_where),
+               *trading.build(lines, every_event, projections, shapes, calibration, finals, closes, names, passphrase,
+                              now, where=trading_where, extra=nhl_quotes),
+               *pickem.build(client, every_event, games, names, passphrase, now, picks_where=pickem_where,
+                             slips_where=slips_where, keep=kept)]
+        # The High Five (atlas/owner/highfive.py): the day's best wagers and props from what is priced above.
+        from atlas.owner import highfive
+
+        return [*out, *highfive.build(both, kept.get("priced"), finals, games, names, passphrase, now,
+                                      where=highfive_where, parlays_where=highfive_parlays_where)]
     except Exception as error:  # noqa: BLE001 - the type only: a message could quote a line
         LOG.error("board not built: %s", type(error).__name__)
         return [{"title": "The board", "tab": "Board",
