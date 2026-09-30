@@ -104,7 +104,7 @@ to be checked on the first game days.
 |---|---|---|
 | SportsBookReviewsOnline archive (`/scoresoddsarchives/nhl-odds-YYYY-YY`) | 2010–11 → 2021–22 verified complete (e.g. 1,401 games in 2021–22 with playoffs; pages go back to 2007–08); 2022–23 stops on 27 November | **fetched and parsed**: opening and closing moneyline, puck line with price, opening and closing total with price. Needs a browser user agent. Personal-use archive: cache it, never republish it |
 | The Odds API, historical | from late 2020 | paid; fills 2022–23 → 2025–26 |
-| BettingPros partner API, `/offers` by season | unknown | the key Atlas already has; its depth for past NHL seasons is to be measured with a counts-only call |
+| BettingPros partner API, `/offers` by event | depth measured by the backfill itself | **the owner's choice (30 September 2026).** `atlas/owner/nhl_history.py`, a step of the heavy refresh: 2025–26 back to 2022–23, newest first, 500 calls a run, each game matched to the warehouse and each kept book's last main pregame line taken as its close (the consensus, DraftKings, FanDuel), sealed in `tracking/owner_nhl_history/`; a season with no pregame line is where the key's history ends and nothing older is asked for. The market row for those seasons: `reports/nhl_market_recent.md` |
 | sports-statistics.com | ESPN-derived skater (1.01M rows) and goalie box scores, keyed by ESPN event id | a cross-check only: the NHL API is the primary, and the download was not reachable from here |
 
 The market benchmark therefore exists for 2010–11 to 2021–22 now, and for
@@ -464,10 +464,11 @@ reaches the public site until step 5's table is filled in and passes.
 
 ## 9. What the owner needs to decide
 
-- **Historical closing lines for 2022–23 to 2025–26:** buy The Odds API's
-  history, or let the BettingPros partner key's depth be measured first. The
-  model can be built and benchmarked against Elo without it; the market row
-  for recent seasons cannot.
+- **Historical closing lines for 2022–23 to 2025–26:** *decided 30 September
+  2026: BettingPros.* The heavy refresh backfills them and measures the key's
+  depth as it goes (`atlas/owner/nhl_history.py`, §2); the market row for the
+  recent seasons follows (`reports/nhl_market_recent.md`). The Odds API stays
+  the fallback for any season the key does not reach.
 - **PrizePicks' NHL payouts:** the same table as football's is assumed; a
   state that pays differently changes `PAYOUTS`.
 - No new credentials: the NHL API and ESPN are keyless, and BettingPros is
