@@ -1,6 +1,6 @@
 # Atlas Operations Manual
 
-*Generated 2026-09-30 19:35 UTC by `python -m atlas.live check`. Atlas research is
+*Generated 2026-09-30 20:26 UTC by `python -m atlas.live check`. Atlas research is
 complete; this document is about keeping the live tracker alive and honest for
 two seasons.*
 
@@ -17,8 +17,8 @@ two seasons.*
 |---|---|
 | Signals recorded | 228 |
 | Grades recorded | 116 |
-| Line snapshots | 2,310 |
-| Tracker runs logged | 246 |
+| Line snapshots | 2,332 |
+| Tracker runs logged | 247 |
 | Blocking data-quality exceptions | 0 |
 | Monitor alerts firing | 3 |
 | Replays clean | 6 of 6 |
@@ -100,19 +100,19 @@ trace(Store.open(), "<signal_id>")   # signal, grade, full line history, run
 
 | Table | Rows | Columns | Primary key |
 |---|---|---|---|
-| runs | 246 | 14 | run_id |
+| runs | 247 | 14 | run_id |
 | numbers | 2,644 | 8 | game_id, market, model_version, refreshed_at |
 | projections | 5,213 | 49 | sport, game_id, model_version |
 | nhl_projections | 50 | 42 | game_id, model_version |
 | calibration | 22,974 | 10 | sport, game_id, market |
 | card_grades | 140 | 17 | sport, game_id |
 | other_models | 382 | 9 | sport, game_id, model |
-| dfs_slates | 65 | 7 | draft_group_id |
-| dfs_salaries | 12,893 | 15 | draft_group_id, player_id |
-| dfs_projections | 1,290 | 18 | draft_group_id, player_id_dk |
+| dfs_slates | 78 | 7 | draft_group_id |
+| dfs_salaries | 13,983 | 15 | draft_group_id, player_id |
+| dfs_projections | 1,292 | 18 | draft_group_id, player_id_dk |
 | availability | 348 | 13 | conference, report_id, team, player |
-| games | 184 | 15 | game_id |
-| snapshots | 2,310 | 11 | game_id, book, market, captured_at |
+| games | 187 | 15 | game_id |
+| snapshots | 2,332 | 11 | game_id, book, market, captured_at |
 | signals | 228 | 17 | signal_id |
 | grades | 116 | 14 | signal_id |
 | market_shape | 324 | 5 | sport, market, point |
