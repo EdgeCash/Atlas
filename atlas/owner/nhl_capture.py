@@ -39,10 +39,11 @@ SPORT = "nhl"
 AHEAD = timedelta(hours=36)
 #: The game markets, as the owner board names them.
 GAME_MARKETS = ("moneyline", "spread", "total")
-#: The player markets wanted, by the slugs BettingPros is expected to give them. The first
-#: capture's log says which exist; a slug not in the catalogue is simply not asked for.
-PROP_SLUGS = ("shots-on-goal", "points", "goals", "assists", "saves", "blocked-shots", "power-play-points",
-              "hits", "goals-against", "anytime-goal", "first-goal")
+#: The player markets wanted, by BettingPros' slugs. The first capture (30 September 2026) found
+#: assists, blocked-shots, goals, points and saves, and shots on goal under ``shots``; a slug not in the
+#: catalogue is simply not asked for.
+PROP_SLUGS = ("shots", "shots-on-goal", "points", "goals", "assists", "saves", "blocked-shots",
+              "power-play-points", "hits", "goals-against")
 #: Words that mark a catalogue slug as a player market worth naming in the log when it is not wanted.
 PROP_WORDS = ("shot", "point", "goal", "assist", "save", "block", "hit", "faceoff", "penalt", "time-on-ice")
 #: Props are fetched at most this often, and at most this many pages at a time.
