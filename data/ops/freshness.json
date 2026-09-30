@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-09-30T12:08:38.858843+00:00",
+      "detail": "market in 8s",
+      "mode": "ordinary",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-30T12:08:38.694503+00:00",
+      "detail": "59 cards, 16 NFL cards, 117 teams, 32 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-09-30T11:08:16.940039+00:00",
       "detail": "market in 7s",
       "mode": "ordinary",
@@ -1280,24 +1293,11 @@
       "detail": "56 cards, 21 NFL cards, 112 teams, 31 NFL teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-09-27T19:23:35.069377+00:00",
-      "detail": "market in 8s",
-      "mode": "NFL Sunday",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-09-27T19:23:34.881576+00:00",
-      "detail": "56 cards, 21 NFL cards, 112 teams, 31 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-09-30T11:08:16.812829+00:00",
+      "at": "2026-09-30T12:08:38.694503+00:00",
       "detail": "59 cards, 16 NFL cards, 117 teams, 32 NFL teams",
       "name": "build",
       "ok": true
@@ -1309,8 +1309,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-09-30T11:08:16.940039+00:00",
-      "detail": "market in 7s",
+      "at": "2026-09-30T12:08:38.858843+00:00",
+      "detail": "market in 8s",
       "mode": "ordinary",
       "name": "poll",
       "ok": true
@@ -1324,7 +1324,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-09-30T11:08:16.812829+00:00",
+      "at": "2026-09-30T12:08:38.694503+00:00",
       "detail": "59 cards, 16 NFL cards, 117 teams, 32 NFL teams",
       "name": "build",
       "ok": true
@@ -1336,8 +1336,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-09-30T11:08:16.940039+00:00",
-      "detail": "market in 7s",
+      "at": "2026-09-30T12:08:38.858843+00:00",
+      "detail": "market in 8s",
       "mode": "ordinary",
       "name": "poll",
       "ok": true
