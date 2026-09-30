@@ -201,8 +201,9 @@ def letter_for(score: float) -> str:
 
 
 def compute(disagreement: float, band: Band, completeness: float, *,
-            curve: Curve, conditions: Conditions | None = None) -> Grade:
-    """The rubric. Four components, one letter, nothing entered by hand."""
+            curve: Curve, conditions: Conditions | None = None, unit: str = "points") -> Grade:
+    """The rubric. Four components, one letter, nothing entered by hand. ``unit`` names what the
+    disagreement is measured in: football's points, or the NHL's points of win probability."""
     conditions = conditions or Conditions()
     expected_gap = curve.gap(disagreement) + conditions.penalty
 
@@ -226,8 +227,8 @@ def compute(disagreement: float, band: Band, completeness: float, *,
         conditions=condition_score,
         completeness=completeness,
         band=band,
-        headline=_headline(letter, band, disagreement),
-        lesson=_lesson(letter, band, disagreement, expected_gap),
+        headline=_headline(letter, band, disagreement, unit),
+        lesson=_lesson(letter, band, disagreement, expected_gap, unit),
         disagreement=abs(float(disagreement)),
         expected_gap=expected_gap,
         condition_notes=_condition_notes(conditions),
@@ -257,7 +258,7 @@ def _condition_notes(conditions: Conditions) -> list[str]:
 
 
 def _lesson(letter: str, band: Band, disagreement: float,
-            expected_gap: float) -> list[str]:
+            expected_gap: float, unit: str = "points") -> list[str]:
     """Three plain-English lines: what the letter says, what Atlas did, and
     what the record behind it is.
 
@@ -275,7 +276,7 @@ def _lesson(letter: str, band: Band, disagreement: float,
     if letter == "A+":
         return [
             "Historically reliable.",
-            f"Atlas and the market land on the same number, {edge:.1f} points apart.",
+            f"Atlas and the market land on the same number, {edge:.1f} {unit} apart.",
             "Agreement is where this model is most reliable, and where it is "
             "adding least — a top grade means trust the number, not that this "
             "is the card to read first.",
@@ -283,30 +284,30 @@ def _lesson(letter: str, band: Band, disagreement: float,
     if letter == "A":
         return [
             "Historically reliable.",
-            f"Atlas and the market are closely aligned, {edge:.1f} points apart.",
+            f"Atlas and the market are closely aligned, {edge:.1f} {unit} apart.",
             claim,
         ]
     if letter == "B":
         return [
             "Historically sound.",
-            f"A {size} disagreement of {edge:.1f} points.",
+            f"A {size} disagreement of {edge:.1f} {unit}.",
             claim + " The claim runs a little ahead of the delivery.",
         ]
     if letter == "C":
         return [
             "Mixed record.",
-            f"A {size} disagreement of {edge:.1f} points.",
+            f"A {size} disagreement of {edge:.1f} {unit}.",
             claim + " That gap is where this grade comes from.",
         ]
     if letter == "D":
         return [
             "Historically unreliable.",
-            f"A {size} disagreement of {edge:.1f} points.",
+            f"A {size} disagreement of {edge:.1f} {unit}.",
             claim + " Atlas commonly struggles this far out.",
         ]
     return [
         "Historically unreliable.",
-        f"A {size} disagreement of {edge:.1f} points.",
+        f"A {size} disagreement of {edge:.1f} {unit}.",
         claim + " Atlas marks its own card down.",
     ]
 
@@ -319,7 +320,7 @@ def seasons_word(band: Band) -> str:
     return f"{words.get(n, str(n))} season{'s' if n != 1 else ''}"
 
 
-def _headline(letter: str, band: Band, disagreement: float) -> str:
+def _headline(letter: str, band: Band, disagreement: float, unit: str = "points") -> str:
     if letter in ("A+", "A"):
         return (
             "Atlas and the market agree closely, and this disagreement band has "
@@ -336,7 +337,7 @@ def _headline(letter: str, band: Band, disagreement: float) -> str:
             "runs well ahead of what it delivered."
         )
     return (
-        f"Atlas sits {abs(disagreement):.1f} points from the market. Cards in "
+        f"Atlas sits {abs(disagreement):.1f} {unit} from the market. Cards in "
         f"the {band.label} band claimed {band.claimed:.0%} accuracy and "
         f"delivered {band.realised:.0%} — read the drivers and the market "
         "context, and treat the projection as weak."
@@ -450,6 +451,10 @@ def _scored(market_name: str, sport: str = "ncaaf") -> pd.DataFrame:
             from atlas.models import nfl_projection
 
             table = nfl_projection.history(paths)
+        elif sport == "nhl":
+            # The NHL's record is a minute of walking the whole league; only the heavy refresh writes it,
+            # and until it has, the NHL's cards stand ungraded.
+            return pd.DataFrame(columns=["abs_edge", "claimed", "won", "season", "market"])
         else:
             from atlas.models import ncaaf_projection, ncaaf_state
             from atlas.research.dataset import load_research_frame

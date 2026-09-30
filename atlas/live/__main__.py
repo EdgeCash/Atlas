@@ -272,6 +272,24 @@ def publish_projections(store: Store) -> int:
         shapes.append(probability.shapes_frame("nfl", nfl.grid, nfl.total.sigma))
     except Exception as error:  # noqa: BLE001 - logged; the college publish stands
         LOG.warning("no NFL projections this refresh: %s", error)
+    # The NHL (docs/MODEL_PLAN_NHL.md, step 6): the stored model walked to today,
+    # each game ahead gridded, and its moneyline record for the grade. Its
+    # absence or failure never takes football's publish down with it.
+    try:
+        from atlas.models import nhl_projection
+
+        nhl_rows, nhl_record = nhl_projection.publish(store, datetime.fromisoformat(now))
+        nhl_rows = nhl_rows[pd.to_datetime(nhl_rows["kickoff"], utc=True) > pd.Timestamp(now)] if len(nhl_rows) \
+            else nhl_rows
+        if not nhl_rows.empty:
+            store.upsert("nhl_projections", nhl_rows)
+            published += len(nhl_rows)
+        calibration.append(nhl_record)
+        LOG.info("published %d NHL projections; %d games in the NHL record", len(nhl_rows), len(nhl_record))
+    except Exception as error:  # noqa: BLE001 - logged; football's publish stands
+        from atlas.util import where
+
+        LOG.warning("no NHL projections this refresh: %s at %s", type(error).__name__, where(error))
     store.write("calibration", pd.concat(calibration, ignore_index=True))
     store.write("market_shape", pd.concat(shapes, ignore_index=True))
     return published

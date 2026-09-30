@@ -153,6 +153,7 @@ def layout(*, title: str, body: str, depth: int = 0, description: str = "",
         ("Home", f"{root}index.html", "home"),
         ("NCAAF", f"{root}ncaaf.html", "ncaaf"),
         ("NFL", f"{root}nfl.html", "nfl"),
+        ("NHL", f"{root}nhl.html", "nhl"),
         ("DFS", f"{root}dfs.html", "dfs"),
         ("Scores", f"{root}scoreboard.html", "scores"),
         ("Record", f"{root}record.html", "record"),
@@ -166,7 +167,7 @@ def layout(*, title: str, body: str, depth: int = 0, description: str = "",
         for label, href, key in nav_items
     )
     meta_description = description or (
-        "Research, analytics and market context for college football and the NFL. "
+        "Research, analytics and market context for college football, the NFL and the NHL. "
         "Atlas does not publish selections."
     )
     return f"""<!DOCTYPE html>

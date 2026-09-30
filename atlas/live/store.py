@@ -65,6 +65,19 @@ SCHEMA: dict[str, list[str]] = {
         "home_qb", "home_qb_pts", "home_qb_sd", "away_qb", "away_qb_pts", "away_qb_sd",
         "teams", "model_version", "refreshed_at",
     ],
+    # The NHL's numbers for each scheduled game (`atlas/models/nhl_projection.py`):
+    # each side's expected regulation goals and the grid's probabilities -
+    # the win, overtime, the puck line and the totals - with the expected
+    # starting goalies behind them. Keyed by ESPN's event id, as ``games`` is.
+    "nhl_projections": [
+        "game_id", "nhl_game_id", "season", "kickoff", "home_team", "away_team", "home_b2b", "away_b2b",
+        "lambda_home", "lambda_away", "home_edge", "home_mean", "away_mean", "total_mean",
+        "p_home", "p_reg_home", "p_reg_away", "p_ot", "p_ot_home", "p_home_minus_1_5", "p_away_minus_1_5",
+        "p_over_4.5", "p_over_5.5", "p_over_6.5", "p_over_7.5", "top",
+        "off_home", "def_home", "pp_home", "pk_home", "finish_home", "goalie_home",
+        "off_away", "def_away", "pp_away", "pk_away", "finish_away", "goalie_away",
+        "home_goalies", "away_goalies", "model_version", "refreshed_at",
+    ],
     # The model against the closing number, walk-forward over completed
     # seasons: what the grade is computed from. Replaced whole on each refresh.
     "calibration": [
@@ -163,6 +176,7 @@ KEYS: dict[str, list[str]] = {
     # formed from it (`atlas.live.reproduce.keep_history`).
     "numbers": ["game_id", "market", "model_version", "refreshed_at"],
     "projections": ["sport", "game_id", "model_version"],
+    "nhl_projections": ["game_id", "model_version"],
     "calibration": ["sport", "game_id", "market"],
     "card_grades": ["sport", "game_id"],
     "other_models": ["sport", "game_id", "model"],
@@ -186,6 +200,7 @@ SORT: dict[str, list[str]] = {
     "runs": ["started_at", "run_id"],
     "numbers": ["season", "week", "game_id", "market", "model_version", "refreshed_at"],
     "projections": ["sport", "season", "week", "game_id", "model_version"],
+    "nhl_projections": ["kickoff", "game_id", "model_version"],
     "calibration": ["sport", "season", "week", "game_id", "market"],
     "card_grades": ["sport", "season", "week", "game_id"],
     "other_models": ["sport", "kickoff", "game_id", "model"],
