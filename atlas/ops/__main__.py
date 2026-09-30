@@ -58,6 +58,13 @@ def heavy(*, skip_warehouse: bool = False) -> int:
         # season in progress; the build is a couple of minutes.
         ("nfl-ingest", ["atlas.sources.nflverse"]),
         ("nfl-warehouse", ["atlas.staging.nfl.build"]),
+        # The NHL's raw cache (docs/MODEL_PLAN_NHL.md, step 0): the season in
+        # progress, then history newest first, at most twelve minutes of it a
+        # run. Every source fails soft; the step never fails the run.
+        ("nhl-ingest", ["atlas.sources.nhl"]),
+        # The NHL warehouse, with each season's expected goals. Under a minute;
+        # never fails the run.
+        ("nhl-warehouse", ["atlas.staging.nhl.build"]),
         ("model", ["atlas.live", "refresh", "--no-rebuild"]),
         ("market", ["atlas.live", "run"]),
         # DraftKings' Classic salaries for the DFS model's record. It never

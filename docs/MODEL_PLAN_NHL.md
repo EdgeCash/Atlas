@@ -5,18 +5,24 @@ the NHL: the data, the empirical profile, the factors and their measured
 sizes, the game model, the player-prop model, how both are validated, and the
 order to build them in. It follows `MODEL_PLAN_NFL.md` section for section.
 
-**Status: step 0's capture is running** (30 September 2026): every poll
-records ESPN's DraftKings moneyline, puck line and total and the NHL finals
+**Status (30 September 2026): steps 0 to 2 are built.** Every poll records
+ESPN's DraftKings moneyline, puck line and total and the NHL finals
 (`atlas/live/provider.py`), and the owner capture seals every BettingPros
-book's NHL lines and player props (`atlas/owner/nhl_capture.py`). Nothing
-prices or shows an NHL line. The rest below is the plan. Every number in it was
+book's NHL lines and player props (`atlas/owner/nhl_capture.py`). The raw
+cache (`atlas/sources/nhl.py`, 19,197 games of play-by-play, 2010-11 on) and
+the warehouse (`atlas/staging/nhl/`) reproduce §3 (`reports/nhl_profile.md`);
+expected goals are fitted a season at a time (`reports/nhl_xg.md`); the
+benchmarks are scored (`reports/nhl_benchmarks.md`). Nothing prices or shows
+an NHL line yet. The rest below is the plan. Every number in it was
 measured on 30 September 2026 from the sources in §2, unless it says it is
 cited; step 1's warehouse has to reproduce §3 to the decimal before anything
 is built on it, as the NFL's did.
 
-**The 2026–27 regular season opened on 30 September 2026** (three games, then
-eight on 1 October and thirteen on 3 October). The build runs in season. The
-market capture starts first, because closing lines not captured are gone.
+**The 2026–27 regular season opened on 29 September 2026** (five games, then
+three on 30 September and eight on 1 October; this plan first said the 30th,
+from ESPN's scoreboard for that day alone). The build runs in season. The
+market capture starts first, because closing lines not captured are gone:
+it began on 30 September, so the five opening-night closes were missed.
 
 ---
 
@@ -33,8 +39,8 @@ slowly, and it is fed by shots and expected goals, which stabilise far
 faster than goals (split-half 0.72 against 0.50).
 
 **The market is good, and the room is small.** Closing moneylines, 2010–11 to
-2021–22 (14,866 games): Brier 0.2385 against 0.2482 for "the home side,
-always". The whole gap between knowing nothing and the closing line is 0.010
+2021–22 (14,865 games, playoffs included): Brier 0.2385 against 0.2482 for
+"the home side, always". The whole gap between knowing nothing and the closing line is 0.010
 of Brier. Calibration is within about two points in every bucket from 30%
 to 70%.
 
@@ -118,6 +124,19 @@ play-by-play (step 2), which also keeps every input point-in-time.
 
 ## 3. Empirical profile (NHL API, regular seasons 2010–11 to 2025–26)
 
+Recomputed from the warehouse by `python -m atlas.research.nhl_profile`
+(`reports/nhl_profile.md`), step 1's test. Every figure below is the
+warehouse's. Where the first measurement differed it has been corrected here:
+the back-to-back counts (1,055 and 3,330, against 1,048 and 3,296; the home
+side's rate 46.5% against 46.8%), the goalie's year-over-year 0.45 and spread
+1.08 (0.44, 1.07), the prop dispersions (shots 1.08, points 0.97, hits 1.18,
+blocks 1.08, saves 1.98 with sd 7.6; first 1.10, 0.95, 1.20, 1.12, 2.11,
+7.4), the high-volume shooters' over rates, now on the season mean without
+the game (58.5% and 64.5%; first 58.2% and 65.0%), and the market's count
+(14,865, playoffs included). The split-half figures are the first half of a
+team's season against the second; year over year is pooled over consecutive
+seasons.
+
 ### Outcome structure
 
 A shootout adds one goal to the winner's final score; it is taken off here.
@@ -133,7 +152,7 @@ A shootout adds one goal to the winner's final score; it is taken off here.
 | Total, sd | 2.22 | 2.28 | 2.32 |
 | Home / away goals per game | 2.82 / 2.54 | 2.96 / 2.69 | 3.18 / 2.95 |
 | Home–away goals correlation | −0.05 | −0.05 | −0.11 |
-| Team goals var/mean | 0.97 | 0.97 | 0.99 |
+| Team goals var/mean | 0.97 | 0.98 | 1.00 |
 | One-goal regulation games % | 23.2 | 21.4 | **18.0** |
 | Two-goal games % | 21.6 | 20.9 | 19.4 |
 | Three+ goal games % | 31.1 | 34.6 | **40.3** |
@@ -174,8 +193,8 @@ Second night of a back-to-back against a rested opponent, 2010–26:
 
 | | Both rested | On the second night |
 |---|---|---|
-| At home | 53.5% win, +0.22 goals | **46.8%, −0.09** (n = 1,048) |
-| Away | 46.5%, −0.22 | **40.8%, −0.50** (n = 3,296) |
+| At home | 53.5% win, +0.22 goals | **46.5%, −0.09** (n = 1,055) |
+| Away | 46.5%, −0.22 | **40.8%, −0.50** (n = 3,330) |
 
 About −6 points of win probability and −0.3 goals, much of it the goalie: the
 #1 starts 42% of second nights and 67% otherwise.
@@ -213,27 +232,27 @@ or so. Early, shots say more than goals.
 The #1's share of a team's starts, median: 69.5% (2010–14), 64.6% (2014–20),
 **59.8%** (2020–26). Tandems are the norm now. Save percentage, goalies with
 40+ starts: odd/even-game reliability 0.31 (391 goalie-seasons), year over
-year 0.44 (224), sd across goalie-seasons 1.07 points.
+year 0.45 (224), sd across goalie-seasons 1.08 points.
 
 ### Player props (skater game logs 2022–23 to 2024–25, 141,653 player-games)
 
 | Stat | Odd/even-game reliability (40+ games) | Var/mean around the player's own mean |
 |---|---|---|
-| Shots on goal per game | **0.91** | 1.10 |
+| Shots on goal per game | **0.91** | 1.08 |
 | Shots per 60 | 0.87 | — |
 | Time on ice per game | **0.99** | — |
-| Points per game | 0.85 | 0.95 |
+| Points per game | 0.85 | 0.97 |
 | Shooting % | **0.46** | — |
-| Hits per game | 0.94 | 1.20 |
-| Blocked shots per game | 0.92 | 1.12 |
-| Goalie saves (starters, 2021–26) | — | **2.11** (sd 7.4 on a mean of 26) |
+| Hits per game | 0.94 | 1.18 |
+| Blocked shots per game | 0.92 | 1.08 |
+| Goalie saves (starters, 2021–26) | — | **1.98** (sd 7.6 on a mean of 26) |
 
 Volume is stable and finishing is not: shots, ice time, hits and blocks are
 among the most projectable numbers in sport; goals are not. A plain Poisson
 on the season mean overstates the over for high-volume shooters: players at
-3.0–3.5 shots a game went over 2.5 58.2% of the time against Poisson's 62.2%,
-3.5–4.0 at 65.0% against 71.9% (part of that is the season mean regressing,
-part is the tail). Saves are over-dispersed because shots against swing
+3.0–3.5 shots a game (the season's mean without the game itself) went over
+2.5 58.5% of the time against Poisson's 61.9%, 3.5–4.0 at 64.5% against
+71.7% (part of that is the mean regressing, part is the tail). Saves are over-dispersed because shots against swing
 with the opponent and the score: they need each game's projected shots
 against, not a season average.
 
@@ -282,8 +301,13 @@ state regresses harder.
 
 **Observation.** Each game's expected goals, from Atlas's own model on the
 play-by-play (distance, angle, shot type, rebound, rush, strength state,
-empty net; logistic first, fitted 2010–19, checked for calibration on
-2020–26), by strength state and time on ice. Goals are a second, noisier
+empty net; logistic), by strength state and time on ice. The plan was to fit
+it once on 2010–19 and check it on 2020–26; the check found the NHL's
+tracking changed under it (from 2021–22 twice the recorded rebounds and
+attempts inside ten feet, each converting less often), and a fixed fit
+drifted to 0.88 goals per expected goal by 2025–26. So each season's model
+is fitted on the three seasons before it: point-in-time, within 0.95–1.05 of
+the goals in every season (`reports/nhl_xg.md`). Goals are a second, noisier
 channel; expected goals are the primary one, the way EPA was tested for the
 NFL.
 
@@ -376,10 +400,16 @@ Foundation §6 applies. NHL additions:
 
 ### Success criteria
 
-| Score, moneyline incl. OT | Naive | Elo | **Target v1** | Market |
-|---|---|---|---|---|
-| Brier, 2010–22 pooled | 0.2482 | *step 2* | **< Elo** | 0.2385 |
-| Brier, 2021–22 | 0.2483 | *step 2* | **< Elo** | 0.2256 |
+| Score, moneyline incl. OT | Naive | Elo | Goals-Poisson | **Target v1** | Market |
+|---|---|---|---|---|---|
+| Brier, 2010–22 pooled | 0.2482 | 0.2408 | 0.2411 | **< Elo** | 0.2385 |
+| Brier, 2021–22 | 0.2483 | 0.2309 | 0.2312 | **< Elo** | 0.2256 |
+
+Elo is walk-forward from 2010–11 (K 6, 30 Elo points of home ice, 30% back
+to the mean each summer, tuned on 2010–17); the goals-Poisson model is each
+team's exponentially weighted goals for and against in a Poisson grid
+(`reports/nhl_benchmarks.md`). Elo closes three quarters of the way from
+"home, always" to the market.
 
 **v1 is done when it beats Elo and a goals-based Poisson team model on
 every row out of sample.** Matching the market is v2's ambition, as it was
@@ -392,9 +422,9 @@ Brier; a model that closes a fifth of it is doing well.
 
 | Step | Work | Output |
 |---|---|---|
-| 0 | **Capture first.** ESPN's NHL scoreboard in the poll (DraftKings line, results) and BettingPros' NHL game lines and props in the owner capture, sealed like football's, with a counts-only log of the slugs, books and PrizePicks coverage. `atlas/sources/nhl.py`: the game list, team, goalie and skater game logs, trimmed play-by-play and shift charts, 2010–11 on, cached once (`make nhl-ingest`); the odds archive, 2010–22; the ESPN event id for every NHL game | closing lines from opening night; the raw cache |
-| 1 | `atlas/staging/nhl/`: games, team-game shots and goals by strength, goalie-games with the starter, skater-games, point-in-time features, through the college modules (`make nhl-warehouse`) | `data/warehouse/nhl.duckdb`; **reproduces §3 exactly** |
-| 2 | Expected-goals model; benchmarks: naive, Elo, goals-Poisson team model, market (`make nhl-benchmarks`) | `reports/nhl_xg.md`, `reports/nhl_benchmarks.md`: Elo's row in §7 filled in |
+| 0 | **Capture first.** ESPN's NHL scoreboard in the poll (DraftKings line, results) and BettingPros' NHL game lines and props in the owner capture, sealed like football's, with a counts-only log of the slugs, books and PrizePicks coverage. `atlas/sources/nhl.py`: the game list, team, goalie and skater game logs, trimmed play-by-play and shift charts, 2010–11 on, cached once (`make nhl-ingest`); the odds archive, 2010–22; the ESPN event id for every NHL game | **done** — capture live from 30 September 2026 (the five opening-night closes of the 29th missed); raw cache 2010–11 to 2026–27: 22,052 games, 19,197 of play-by-play, 736,638 skater-games, the archive's 15,206 games (15,205 matched), ESPN ids for every played game; 52 MB; the heavy run adds the season in progress and fills history newest first, twelve minutes at most (`make nhl-ingest`) |
+| 1 | `atlas/staging/nhl/`: games, team-game shots and goals by strength, goalie-games with the starter, skater-games, point-in-time features, through the college modules (`make nhl-warehouse`) | **done** — `data/warehouse/nhl.duckdb` (28 MB; every shot attempt staged to `data/staging/nhl/`); reproduces §3, the handful of first measurements that differed corrected in §3 (`reports/nhl_profile.md`) |
+| 2 | Expected-goals model; benchmarks: naive, Elo, goals-Poisson team model, market (`make nhl-benchmarks`) | **done** — xG fitted a season at a time on the three before it, AUC 0.76, 0.95–1.05 goals per xG every season; Elo 0.2408 pooled 2010–22, 0.2309 in 2021–22; goals-Poisson 0.2411, 0.2312 (`reports/nhl_xg.md`, `reports/nhl_benchmarks.md`) |
 | 3 | Kalman state, 5-on-5 expected goals for and against plus special teams, carried across seasons | ties or beats Elo |
 | 4 | Goalie state and the expected starter (rest, back-to-back, the confirmation when it comes) | the goalie test |
 | 5 | The grid: regulation, empty net, overtime; puck line and totals calibrated | the §7 table, out of sample |
