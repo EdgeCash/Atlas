@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-09-30T19:08:53.762004+00:00",
+      "detail": "market in 9s",
+      "mode": "ordinary",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-30T19:08:53.614730+00:00",
+      "detail": "59 cards, 16 NFL cards, 0 NHL cards, 117 teams, 32 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-09-30T18:08:30.368278+00:00",
       "detail": "market in 10s",
       "mode": "ordinary",
@@ -1277,24 +1290,11 @@
       "detail": "56 cards, 17 NFL cards, 112 teams, 30 NFL teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-09-27T21:38:29.724713+00:00",
-      "detail": "market in 8s",
-      "mode": "NFL Sunday",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-09-27T21:38:29.535536+00:00",
-      "detail": "56 cards, 17 NFL cards, 112 teams, 30 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-09-30T18:08:30.235358+00:00",
+      "at": "2026-09-30T19:08:53.614730+00:00",
       "detail": "59 cards, 16 NFL cards, 0 NHL cards, 117 teams, 32 NFL teams",
       "name": "build",
       "ok": true
@@ -1306,8 +1306,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-09-30T18:08:30.368278+00:00",
-      "detail": "market in 10s",
+      "at": "2026-09-30T19:08:53.762004+00:00",
+      "detail": "market in 9s",
       "mode": "ordinary",
       "name": "poll",
       "ok": true
@@ -1321,7 +1321,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-09-30T18:08:30.235358+00:00",
+      "at": "2026-09-30T19:08:53.614730+00:00",
       "detail": "59 cards, 16 NFL cards, 0 NHL cards, 117 teams, 32 NFL teams",
       "name": "build",
       "ok": true
@@ -1333,8 +1333,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-09-30T18:08:30.368278+00:00",
-      "detail": "market in 10s",
+      "at": "2026-09-30T19:08:53.762004+00:00",
+      "detail": "market in 9s",
       "mode": "ordinary",
       "name": "poll",
       "ok": true
