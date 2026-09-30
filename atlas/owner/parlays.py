@@ -12,7 +12,8 @@ So, from the board's legs (`atlas/owner/board.py`: every takeable book's price
 on every side, with the probability the board uses for it):
 
 * the day's **candidates**: sides with positive expected value by the board's
-  measure (Atlas EV on totals, price edge on spreads), from games kicking off
+  measure (Atlas EV on football totals and on the NHL's three markets,
+  `atlas/owner/nhl_board.py`; price edge on football spreads), from games kicking off
   today Eastern, or on the next day with games; one leg per game at a book;
 * **parlays** of two or three legs at one book, different games only (never
   a same-game parlay, which the books price on correlations this does not
@@ -90,6 +91,13 @@ def day_of(ts) -> str:
     return t.tz_convert(EASTERN).strftime("%Y-%m-%d")
 
 
+def atlas_measured(t: pd.DataFrame) -> pd.Series:
+    """The legs Atlas's own probability prices: every total, and every NHL market (on football spreads and
+    moneylines its market weight is 1.00, so the consensus is the probability)."""
+    sport = t["sport"].astype(str) if "sport" in t else pd.Series("", index=t.index)
+    return (t["market"] == "total") | (sport == "nhl")
+
+
 def candidates(legs: pd.DataFrame, now: datetime) -> pd.DataFrame:
     """The day's legs: upcoming, positive expected value by the board's measure, at most one per game
     at each book (its best side and market), on the Eastern day of ``now`` when it has any, else the
@@ -99,9 +107,9 @@ def candidates(legs: pd.DataFrame, now: datetime) -> pd.DataFrame:
     t = legs.copy()
     t["kickoff"] = pd.to_datetime(t["kickoff"], utc=True, errors="coerce")
     t = t[t["kickoff"] > pd.Timestamp(now)]
-    total = t["market"] == "total"
-    t["score"] = np.where(total & t["ev_atlas"].notna(), t["ev_atlas"], t["ev_price"])
-    t["p"] = np.where(total & t["p_atlas"].notna(), t["p_atlas"], t["p_fair"])
+    atlas = atlas_measured(t)
+    t["score"] = np.where(atlas & t["ev_atlas"].notna(), t["ev_atlas"], t["ev_price"])
+    t["p"] = np.where(atlas & t["p_atlas"].notna(), t["p_atlas"], t["p_fair"])
     t = t[(t["score"] > MIN_EV) & t["p"].between(0.05, 0.95)]
     if t.empty:
         return t.assign(day=pd.Series(dtype=str))
@@ -222,7 +230,7 @@ def leg_outcome(leg: dict, finals: pd.DataFrame) -> str:
     if f.empty:
         return "open"
     total, margin = float(f["final_total"].iloc[0]), float(f["final_margin"].iloc[0])
-    line = float(leg["line"])
+    line = 0.0 if leg["market"] == "moneyline" else float(leg["line"])
     if leg["market"] == "total":
         edge = (total - line) * (1.0 if leg["side"] == "over" else -1.0)
     else:
@@ -260,6 +268,8 @@ def grade(record: pd.DataFrame, finals: pd.DataFrame) -> pd.DataFrame:
 
 
 def _leg_text(lg: dict) -> str:
+    if lg["market"] == "moneyline":
+        return f"{lg['label']}: {lg['side']} to win ({lg['cost']:+.0f}) · P {lg['p']:.0%}"
     line = f"{lg['line']:g}" if lg["market"] == "total" else f"{lg['line']:+g}"
     return f"{lg['label']}: {lg['side']} {line} ({lg['cost']:+.0f}) · P {lg['p']:.0%}"
 
@@ -309,7 +319,8 @@ def section(chosen: pd.DataFrame, graded: pd.DataFrame, now: datetime) -> list[d
         "expected value is the product of the legs' decimal odds times the product of their probabilities, minus one: "
         "it adds nothing a single bet lacks, and trades a lower hit rate for a higher payout at more variance. Its "
         "one real use is putting several of the board's edges on one ticket at one book, where the payout compounds.",
-        f"Legs are the board's positive-EV sides (Atlas EV on totals, price edge on spreads) from games kicking off "
+        f"Legs are the board's positive-EV sides (Atlas EV on football totals and every NHL market, price edge on "
+        f"football spreads) from games kicking off "
         f"today Eastern, or the next day with games: one per game at a book, the best {PER_BOOK} per book, "
         f"{MAX_LEGS} legs at most. Never a same-game parlay: the books price those on correlations this does not model.",
         f"The stake is a quarter of Kelly on a bankroll of one. The age of the oldest quote is shown because a book "

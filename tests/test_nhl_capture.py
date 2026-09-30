@@ -217,20 +217,44 @@ def test_a_failing_api_costs_the_nhl_capture_and_nothing_else(caplog):
     assert "-115" not in caplog.text
 
 
-def test_the_board_seals_nhl_lines_beside_footballs_and_prices_none_of_them(tmp_path, monkeypatch):
+def _board(tmp_path, store):
     from atlas.owner import board
+
+    return board.build(KEY, store=store, now=NOW, client=_FakeClient(), market_where=tmp_path / "market",
+                       picks_where=tmp_path / "picks", parlays_where=tmp_path / "parlays",
+                       trading_where=tmp_path / "trading", pickem_where=tmp_path / "pickem",
+                       slips_where=tmp_path / "slips", props_where=tmp_path / "props", nhl_where=tmp_path / "nhl")
+
+
+def test_the_board_seals_nhl_lines_beside_footballs_and_says_when_it_has_no_projection(tmp_path, monkeypatch):
     from atlas.owner import market as market_store
 
     monkeypatch.setenv("ATLAS_TRACKING_DIR", str(tmp_path / "tracking"))
     store = Store.open(tmp_path / "tracking")
     store.write("games", _games())
-    client = _FakeClient()
-    sections = board.build(KEY, store=store, now=NOW, client=client, market_where=tmp_path / "market",
-                           picks_where=tmp_path / "picks", parlays_where=tmp_path / "parlays",
-                           trading_where=tmp_path / "trading", pickem_where=tmp_path / "pickem",
-                           slips_where=tmp_path / "slips", props_where=tmp_path / "props")
+    sections = _board(tmp_path, store)
     record = market_store.load(KEY, tmp_path / "market")
     assert set(record["sport"]) == {"nhl"} and set(record["game_id"].astype(int)) == {401891781}
-    assert client.calls > 0
-    shown = str(sections)
-    assert "Blue Jackets" not in shown and "Sabres" not in shown          # captured, never priced or shown
+    nhl = [s for s in sections if s["title"].startswith("NHL")]
+    assert [s["title"] for s in nhl] == ["NHL board"] and "1 NHL game has lines and no Atlas projection" in str(nhl)
+    assert not (tmp_path / "nhl").exists()
+
+
+def test_the_board_prices_the_nhl_from_the_published_projection_and_logs_its_picks(tmp_path, monkeypatch):
+    from atlas.owner import nhl_board
+
+    monkeypatch.setenv("ATLAS_TRACKING_DIR", str(tmp_path / "tracking"))
+    store = Store.open(tmp_path / "tracking")
+    store.write("games", _games())
+    store.write("nhl_projections", pd.DataFrame([{
+        "game_id": 401891781, "season": 2026, "kickoff": "2026-10-01T23:00:00+00:00", "home_team": "CBJ",
+        "away_team": "BUF", "p_home": 0.60, "p_home_minus_1_5": 0.30, "p_away_minus_1_5": 0.22, "p_over_5.5": 0.62,
+        "p_over_6.5": 0.44, "total_mean": 6.2, "model_version": "nhl-v1",
+        "refreshed_at": "2026-10-01T08:00:00+00:00"}]))
+    sections = _board(tmp_path, store)
+    titles = [s["title"] for s in sections]
+    at = next(i for i, t in enumerate(titles) if t.startswith("NHL picks now"))
+    assert sections[at]["tab"] == "Board" and titles.index("Daily parlays") > at        # after football's, before parlays
+    record = nhl_board.load(KEY, tmp_path / "nhl")
+    assert "moneyline" in set(record["market"]) and set(record["game_id"]) == {"401891781"}
+    assert "Jackets to win" in str(sections)
