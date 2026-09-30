@@ -780,13 +780,13 @@ def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, 
                                                      closes, names, passphrase, now, where=nhl_where)
         both = pd.concat([x for x in (table, nhl_legs) if len(x)], ignore_index=True) if len(nhl_legs) else table
         nhl_quotes = nhl_board.quotes(nhl_lines, nhl_events, nhl_projections, k)
-        trade_events = pd.concat([x for x in (events, nhl_events) if len(x)], ignore_index=True) \
+        every_event = pd.concat([x for x in (events, nhl_events) if len(x)], ignore_index=True) \
             if len(nhl_events) else events
         return [*sections(board, chosen, graded, names, now, client.calls), *nhl_sections,
                 *parlays.build(both, finals, names, passphrase, now, where=parlays_where),
-                *trading.build(lines, trade_events, projections, shapes, calibration, finals, closes, names, passphrase,
+                *trading.build(lines, every_event, projections, shapes, calibration, finals, closes, names, passphrase,
                                now, where=trading_where, extra=nhl_quotes),
-                *pickem.build(client, events, games, names, passphrase, now, picks_where=pickem_where,
+                *pickem.build(client, every_event, games, names, passphrase, now, picks_where=pickem_where,
                               slips_where=slips_where)]
     except Exception as error:  # noqa: BLE001 - the type only: a message could quote a line
         LOG.error("board not built: %s", type(error).__name__)

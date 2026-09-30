@@ -219,6 +219,18 @@ by a fixed table. The books sell the same props at prices, and a price says how 
   and the slate games they came back on, then the PrizePicks lines, More-only and unpriced lines, picks, and slips
   by entry. It says so when the sixteen-page cap cut the latest games.
 
+**The NHL** (`docs/MODEL_PLAN_NHL.md`, step 7). On NHL nights the slate takes the NHL's games too (from the owner
+capture's matched events), and the same engine prices PrizePicks' NHL lines: shots on goal, points, goals, assists,
+a goalie's saves, blocked shots and hits, by BettingPros' slugs, thirty pages at most. Every NHL stat is a count,
+at the variance-to-mean ratio measured for it in the plan's §3: shots on goal and blocked shots 1.08, hits 1.18,
+points, goals and assists a Poisson, saves 1.9 (1.92 around a game-level expectation of shots against, starters
+2021-26, so a book's line, which knows the game, does not remove it). A book a shot, a block, a point or a goal from
+PrizePicks' line is moved to it, saves three; farther is left out. Graded from ESPN's hockey box score
+(`atlas/sources/nhl.py`, `espn_box`: checked against the NHL's own on 29 September 2026, every skater's shots,
+goals, assists and blocks the same), points as goals plus assists, a goalie's saves without the shootout's, as the
+books settle; a scratched skater or a goalie who did not go in is void; two players of one name told apart by team.
+NHL rows are filed by the ISO week of puck drop. PrizePicks' NHL payouts are assumed to be its standard table.
+
 It does not enter anything. Same-game correlations, where pick'em is most often beaten, are not modelled, so a
 slip never holds two picks from one game.
 

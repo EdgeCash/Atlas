@@ -523,6 +523,36 @@ def espn_day(day: str, sess) -> list[dict]:
     return out
 
 
+#: ESPN's box-score keys, to the columns the pick'em settles on (`atlas/owner/pickem.py`).
+BOX_KEYS = {"shotsTotal": "sog", "goals": "g", "assists": "a", "blockedShots": "blk", "hits": "hits", "saves": "sv"}
+BOX_COLUMNS = ["name", "team", "position", *BOX_KEYS.values(), "pts"]
+
+
+def espn_box(summary: dict) -> pd.DataFrame:
+    """One row per player who played, from ESPN's game summary: shots on goal, goals, assists, points,
+    blocked shots and hits for a skater, saves for a goalie (a shootout's not counted: ESPN keeps those
+    apart, and the books and PrizePicks settle without them). A scratched player, or a goalie who did not
+    go in, is not listed. Checked against the NHL's own box score on 29 September 2026: every skater's
+    shots, goals, assists and blocks the same."""
+    rows = []
+    for team_box in (summary.get("boxscore") or {}).get("players") or []:
+        team = (team_box.get("team") or {}).get("abbreviation")
+        team = ESPN_CODES.get(team, team)
+        for group in team_box.get("statistics") or []:
+            keys = group.get("keys") or []
+            position = {"forwards": "F", "defenses": "D", "goalies": "G"}.get(group.get("name"), "")
+            for a in group.get("athletes") or []:
+                if a.get("didNotPlay"):
+                    continue
+                st = dict(zip(keys, a.get("stats") or [], strict=False))
+                row = {"name": (a.get("athlete") or {}).get("displayName"), "team": team, "position": position}
+                for key, column in BOX_KEYS.items():
+                    row[column] = pd.to_numeric(st.get(key), errors="coerce")
+                rows.append(row)
+    out = pd.DataFrame(rows, columns=[c for c in BOX_COLUMNS if c != "pts"])
+    return out.assign(pts=out["g"] + out["a"]).reindex(columns=BOX_COLUMNS)
+
+
 def fetch_espn_ids(raw: Path, season: int, *, refresh_days: int = 0) -> Path | None:
     """ESPN's event id for every game of the season, matched by date and both teams. Dates already
     read are kept; the last ``refresh_days`` before today are read again (a postponement moves a game)."""
