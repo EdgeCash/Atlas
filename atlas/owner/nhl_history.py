@@ -403,6 +403,18 @@ def home_probs(record: pd.DataFrame, book: int) -> pd.DataFrame:
     return wide.dropna(subset=["p"])[cols]
 
 
+def at_off_check(f: pd.DataFrame) -> dict:
+    """Per season, whether its consensus moneyline closes taken at the off score like pregame closes: 30 or more
+    and a Brier of :data:`SANE_BRIER` or worse. ``f`` has ``season``, ``at_off``, ``p_market`` and ``home_win``.
+    Returns {season: (counts, how many at the off, their Brier)}."""
+    out = {}
+    for season, part in f.groupby("season"):
+        off = part[part["at_off"]]
+        brier = float(((off["p_market"] - off["home_win"]) ** 2).mean()) if len(off) else float("nan")
+        out[season] = (bool(len(off) >= 30 and brier >= SANE_BRIER), int(len(off)), brier)
+    return out
+
+
 def market_row(record: pd.DataFrame, atlas: pd.DataFrame) -> pd.DataFrame:
     """Per season, on the games with a consensus close and a result: the Brier of the consensus, of DraftKings
     (where it closed too) and of Atlas. ``atlas`` is the walked model: ``game_id``, ``p_home``, ``home_win``.
@@ -413,11 +425,10 @@ def market_row(record: pd.DataFrame, atlas: pd.DataFrame) -> pd.DataFrame:
     f = cons.merge(atlas, on="game_id", how="inner").merge(dk, on="game_id", how="left")
     left_out: dict = {}
     keep = []
+    checked = at_off_check(f)
     for season, part in f.groupby("season"):
-        off = part[part["at_off"]]
-        brier = float(((off["p_market"] - off["home_win"]) ** 2).mean()) if len(off) else float("nan")
-        sane = len(off) >= 30 and brier >= SANE_BRIER
-        left_out[season] = (0 if sane else int(len(off)), brier)
+        sane, n_off, brier = checked[season]
+        left_out[season] = (0 if sane else n_off, brier)
         keep.append(part if sane else part[~part["at_off"]])
     f = pd.concat(keep, ignore_index=True) if keep else f.iloc[0:0]
     rows = []
@@ -437,13 +448,17 @@ def market_row(record: pd.DataFrame, atlas: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+WALKED = ["game_id", "p_home", "home_win", "p_home_minus_1_5", "p_away_minus_1_5", "margin"]
+
+
 def walked_atlas(seasons) -> pd.DataFrame:
-    """The stored game model's P(home wins) for every completed game of ``seasons``, walked forward unchanged."""
+    """The stored game model walked forward unchanged through every completed game of ``seasons``: P(home wins),
+    P(home by two or more), P(away by two or more), and the result (the final margin, a shootout's goal in)."""
     from atlas.models import nhl_model, nhl_projection
 
     stored = nhl_projection.choices()
     if stored is None:
-        return pd.DataFrame(columns=["game_id", "p_home", "home_win"])
+        return pd.DataFrame(columns=WALKED)
     tables = nhl_model.load_tables()
     f, _, games = nhl_projection.walk(tables, stored)
     f = f.merge(games[["game_id", "season", "home_score", "away_score"]], on="game_id", how="left")
@@ -451,7 +466,10 @@ def walked_atlas(seasons) -> pd.DataFrame:
     layers = nhl_projection.ensure_layers(stored, tables, f, games, sorted(f["season"].unique()))
     f = nhl_model.with_grid(f, layers)
     return pd.DataFrame({"game_id": f["game_id"].astype("int64"), "p_home": f["p_home"].astype(float),
-                         "home_win": (f["home_score"] > f["away_score"]).astype(float)})
+                         "home_win": (f["home_score"] > f["away_score"]).astype(float),
+                         "p_home_minus_1_5": f["p_home_minus_1_5"].astype(float),
+                         "p_away_minus_1_5": f["p_away_minus_1_5"].astype(float),
+                         "margin": (f["home_score"] - f["away_score"]).astype(float)})
 
 
 def write_report(row: pd.DataFrame, record: pd.DataFrame, root: Path) -> Path:
@@ -502,10 +520,18 @@ def main() -> None:
         record, changed = backfill(client, games, passphrase)
         root = config.paths().root
         report = root / "reports" / "nhl_market_recent.md"
+        walked = None
         if (changed or not report.exists()) and (record["kind"] == "close").any():
-            row = market_row(record, walked_atlas(SEASONS))
+            walked = walked_atlas(SEASONS)
+            row = market_row(record, walked)
             write_report(row, record, root)
             LOG.info("nhl history: market row written for %d games", int(row.loc[row["season"] == "all", "games"].sum()))
+        # The puck line's fresh test (docs/NHL_PUCKLINE_FRESH_PREREGISTRATION.md): scored once, the first run
+        # that finds 2023-24 to 2025-26 all in.
+        from atlas.research import nhl_puckline_fresh as fresh
+
+        if fresh.due(record, root):
+            fresh.run(record, walked if walked is not None else walked_atlas(fresh.SEASONS), root)
     except Exception as error:  # noqa: BLE001 - the type and place only; never fails the heavy run
         from atlas.util import where
 

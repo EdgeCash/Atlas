@@ -10,7 +10,11 @@ two ways. This is the operating description; the audit that led to it is
 line, each the side of Atlas's disagreement with the close) were registered
 in [`NHL_PLAYS_PREREGISTRATION.md`](NHL_PLAYS_PREREGISTRATION.md) before any
 was scored, and none cleared its bar on 2020-23
-(`reports/nhl_plays.md`). The owner board's NHL picks are a separate record
+(`reports/nhl_plays.md`). The puck line, the closest, is being tested again
+on 2023-26, seasons it never saw
+([`NHL_PUCKLINE_FRESH_PREREGISTRATION.md`](NHL_PUCKLINE_FRESH_PREREGISTRATION.md)):
+scored once by the heavy refresh when the BettingPros backfill has those
+seasons, and a curated NHL play only if it clears that bar. The owner board's NHL picks are a separate record
 (`OWNER_BOARD.md`).
 
 ## The week, in order
