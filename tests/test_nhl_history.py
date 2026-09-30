@@ -41,13 +41,15 @@ def _line(line, cost, updated, *, main=True, live=False):
 
 
 class FakeBP:
-    """Lists each season's games as events (Arizona as ARI, New Jersey as NJ), and prices them: 2025-26 with
-    pregame lines, 2024-25 with lines posted only after puck drop (the key's depth ends there)."""
+    """Lists each season's games as events (Arizona as ARI, New Jersey as NJ), and prices them: pregame lines by
+    default; ``stamped_after`` seasons with every line stamped after puck drop (as 2025-26's came back); ``empty``
+    seasons with no line at all (the key's depth ends there)."""
 
-    def __init__(self, honour_windows=True):
+    def __init__(self, honour_windows=True, stamped_after=(), empty=(2024,)):
         self.calls = 0
         self.asked = []
         self.honour = honour_windows
+        self.stamped_after, self.empty = set(stamped_after), set(empty)
         g = _games()
         self.events = [{"id": int(r.game_id) % 100_000 + 70_000 * (r.season - 2023), "season": int(r.season),
                         "scheduled": r.kickoff.strftime("%Y-%m-%d %H:%M:%S"), "status": "complete",
@@ -78,7 +80,10 @@ class FakeBP:
             pre = (start - pd.Timedelta(hours=1)).strftime("%Y-%m-%d %H:%M:%S")
             early = (start - pd.Timedelta(hours=9)).strftime("%Y-%m-%d %H:%M:%S")
             after = (start + pd.Timedelta(minutes=20)).strftime("%Y-%m-%d %H:%M:%S")
-            if ev["season"] == 2024:                                     # nothing pregame: the depth ends here
+            if ev["season"] in self.empty:                               # no line at all: the depth ends here
+                offers.append({"event_id": eid, "selections": []})
+                continue
+            if ev["season"] in self.stamped_after:                       # the close, stamped as it came off
                 stamp_close, stamp_open = after, after
             else:
                 stamp_close, stamp_open = pre, early
@@ -95,7 +100,7 @@ class FakeBP:
                     books.append({"id": book, "lines": [
                         _line(ln, cost + 10, stamp_open, main=True),                  # opened, then moved
                         _line(ln, cost, stamp_close, main=True),                      # the close
-                        _line(ln, cost - 200, after, main=True, live=True)]})         # in play: never the close
+                        _line(ln, cost - 200, after, main=True, live=True)]})         # the live feed: never
                 selections.append({"selection": name, "participant": part, "books": books,
                                    "opening_line": {"line": ln, "cost": cost + 10}})
             offers.append({"event_id": eid, "selections": selections})
@@ -125,8 +130,14 @@ def test_the_close_is_the_last_main_pregame_line_never_the_live_feed():
     lines = [_line(6.5, -110, "2025-11-01 14:00:00"), _line(6.5, -120, "2025-11-01 22:30:00"),
              _line(6.5, -125, "2025-11-01 22:40:00", main=False), _line(5.5, -300, "2025-11-01 23:30:00"),
              _line(6.5, -500, "2025-11-01 22:50:00", live=True)]
-    assert hist.closing(lines, start)["cost"] == -120
-    assert hist.closing([_line(6.5, -110, "2025-11-02 01:00:00")], start) is None
+    close, source = hist.closing(lines, start)
+    assert (close["cost"], source) == (-120, "pregame")
+    # Nothing stamped before puck drop: the last line nothing replaced, as it came off the board.
+    off = [_line(6.5, -110, "2025-11-02 01:00:00"), {**_line(6.5, -150, "2025-11-02 01:30:00"), "replaced": True},
+           _line(6.5, -900, "2025-11-02 00:10:00", live=True)]
+    close, source = hist.closing(off, start)
+    assert (close["cost"], source) == (-110, "at-off")
+    assert hist.closing([_line(6.5, -900, "2025-11-02 00:10:00", live=True)], start) == (None, None)
 
 
 def test_the_backfill_keeps_three_books_seals_and_resumes_within_its_budget(tmp_path):
@@ -149,6 +160,7 @@ def test_the_backfill_keeps_three_books_seals_and_resumes_within_its_budget(tmp_
     tried = record[record["kind"] == "tried"]
     assert len(tried) > before and tried["event_id"].is_unique                       # resumed, nothing asked twice
     assert hist.status(record) == {2025: "done", 2024: "empty"}                       # the depth found
+    assert set(record.loc[record["kind"] == "close", "source"]) == {"pregame"}
 
 
 def test_the_depth_found_stops_the_asking(tmp_path, caplog):
@@ -160,6 +172,35 @@ def test_the_depth_found_stops_the_asking(tmp_path, caplog):
         _, changed = hist.backfill(client, _games(), KEY, where=where, budget=1000)
     assert not changed and client.calls == calls                                      # 2023 and 2022 never asked
     assert "depth ends at 2024" in caplog.text and "-140" not in caplog.text
+
+
+def test_lines_stamped_after_puck_drop_are_kept_at_the_off_and_timed_in_the_log(tmp_path, caplog):
+    client = FakeBP(stamped_after=(2025,))
+    with caplog.at_level(logging.INFO):
+        record, _ = hist.backfill(client, _games(), KEY, where=tmp_path / "h", budget=1000)
+    closes = record[record["kind"] == "close"]
+    assert set(closes["source"]) == {"at-off"} and set(closes["book_id"]) == set(hist.KEPT)
+    assert hist.status(record)[2025] == "done"
+    assert "at the off (stamped 20/20/20 minutes after puck drop" in caplog.text and "-140" not in caplog.text
+
+
+def test_a_season_closed_under_the_old_rule_with_few_consensus_closes_is_asked_again(tmp_path):
+    old = pd.DataFrame(
+        [{"kind": "tried", "season": 2025, "event_id": e, "game_id": e} for e in range(10)]
+        + [{"kind": "close", "season": 2025, "event_id": 0, "game_id": 0, "market": "moneyline", "side": "home",
+            "book_id": 0, "cost": -120.0},
+           {"kind": "season", "season": 2025, "status": "done", "events": 10},
+           {"kind": "tried", "season": 2024, "event_id": 99, "game_id": 99}]).reindex(columns=hist.COLUMNS)
+    record, reopened = hist.reopen(old)
+    assert reopened == [2025] and set(record["season"]) == {2024}
+    ruled = old.copy()
+    ruled.loc[ruled["kind"] == "season", "rule"] = hist.RULE
+    assert hist.reopen(ruled)[1] == []                                               # the current rule stands
+    hist.seal(old, KEY, [2025, 2024], tmp_path)
+    client = FakeBP(stamped_after=(2025,))
+    record, changed = hist.backfill(client, _games(), KEY, where=tmp_path, budget=1000)
+    assert changed and (record.loc[(record["kind"] == "close") & (record["season"] == 2025), "source"] == "at-off").all()
+    assert int(((record["kind"] == "season") & (record["season"] == 2025)).sum()) == 1
 
 
 def test_a_window_the_api_ignores_is_listed_a_day_at_a_time():
@@ -182,3 +223,30 @@ def test_the_market_row_scores_the_consensus_draftkings_and_atlas_on_the_same_ga
     assert row.loc[2025, "games"] == 2 and row.loc[2025, "market"] == pytest.approx(((p - 1) ** 2 + p ** 2) / 2)
     assert row.loc[2025, "atlas"] == pytest.approx((0.16 + 0.25) / 2) and row.loc[2025, "dk_games"] == 2
     assert row.loc["all", "games"] == 2
+
+
+def test_closes_at_the_off_count_only_when_they_score_like_pregame_closes():
+    import numpy as np
+
+    rng = np.random.default_rng(1)
+    n = 200
+    won = (rng.random(n) < 0.55).astype(float)
+    games = np.arange(n)
+
+    def record(p_home):
+        rows = []
+        for g, p in zip(games, p_home, strict=True):
+            home = -100 * p / (1 - p) if p >= 0.5 else 100 * (1 - p) / p
+            away = -100 * (1 - p) / p if p < 0.5 else 100 * p / (1 - p)
+            rows += [{"kind": "close", "season": 2025, "game_id": g, "market": "moneyline", "side": "home",
+                      "book_id": 0, "cost": home, "source": "at-off"},
+                     {"kind": "close", "season": 2025, "game_id": g, "market": "moneyline", "side": "away",
+                      "book_id": 0, "cost": away, "source": "at-off"}]
+        return pd.DataFrame(rows)
+
+    atlas = pd.DataFrame({"game_id": games, "p_home": 0.55, "home_win": won})
+    pregame = hist.market_row(record(np.full(n, 0.55)), atlas).set_index("season")
+    assert pregame.loc[2025, "games"] == n and pregame.loc[2025, "left_out"] == 0
+    in_game = hist.market_row(record(np.where(won == 1, 0.9, 0.1)), atlas).set_index("season")
+    assert in_game.loc[2025, "left_out"] == n and in_game.loc[2025, "games"] == 0      # an in-game price: out
+    assert in_game.loc[2025, "off_brier"] < hist.SANE_BRIER

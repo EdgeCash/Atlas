@@ -55,7 +55,15 @@ MATCH = timedelta(hours=3)
 CODES = {"NJ": "NJD", "SJ": "SJS", "TB": "TBL", "LA": "LAK", "LV": "VGK", "VEG": "VGK", "WAS": "WSH", "MON": "MTL",
          "CLB": "CBJ", "CLS": "CBJ", "NAS": "NSH", "ARI": "UTA", "PHX": "UTA", "UTAH": "UTA", "UTH": "UTA"}
 COLUMNS = ["kind", "season", "event_id", "game_id", "scheduled", "market", "side", "book_id", "line", "cost",
-           "updated", "open_line", "open_cost", "status", "events"]
+           "updated", "open_line", "open_cost", "status", "events", "source", "rule"]
+#: The rule the closes are taken by. 1 kept pregame-stamped lines only; 2 (from the first run's finding, 30
+#: September 2026: 2025-26's lines all come back stamped after puck drop) falls back to the line as it came off
+#: the board. A season marked done under an older rule with under half its games closed is asked again.
+RULE = 2
+REOPEN_BELOW = 0.5
+#: A season's closes taken at the off count in the market row only when they score like pregame closes: an
+#: in-game price knows the score and scores far better. The market's best pregame season since 2010 was 0.2256.
+SANE_BRIER = 0.22
 
 
 def path() -> Path:
@@ -147,24 +155,27 @@ def match(games: pd.DataFrame, events: pd.DataFrame) -> pd.DataFrame:
 # ---------------------------------------------------------------------------
 
 
-def closing(lines: list[dict], start: pd.Timestamp) -> dict | None:
-    """A book's last main pregame line: posted at or before ``start`` and not from the live feed; the book's main
-    line where it marks one."""
-    pre = []
-    for ln in lines or []:
-        t = _ts(ln.get("updated"))
-        if ln.get("from_live") or t is None or t > start:
-            continue
-        pre.append((t, ln))
+def closing(lines: list[dict], start: pd.Timestamp) -> tuple[dict | None, str | None]:
+    """A book's close and how it was known: ``pregame``, its last main line posted at or before ``start``; else
+    ``at-off``, its last main line on the pregame market that nothing replaced, as it came off the board (the
+    stamp then says when it came off, not when it was set). Never a line from the live feed."""
+    stamped = [(t, ln) for ln in lines or [] if not ln.get("from_live") and (t := _ts(ln.get("updated"))) is not None]
+    pre = [p for p in stamped if p[0] <= start]
     main = [p for p in pre if p[1].get("main")] or pre
-    return max(main, key=lambda p: p[0])[1] if main else None
+    if main:
+        return max(main, key=lambda p: p[0])[1], "pregame"
+    off = [p for p in stamped if not p[1].get("replaced")]
+    main = [p for p in off if p[1].get("main")] or off
+    if main:
+        return max(main, key=lambda p: p[0])[1], "at-off"
+    return None, None
 
 
 def parse_closes(body: dict, market: str, matched: pd.DataFrame, season: int) -> tuple[list[dict], dict]:
     """The kept books' closes on one market for the matched events in ``body``; and counts (books with lines only
     after puck drop, selections whose side is not known)."""
     info = matched.set_index("event_id")
-    rows, counts = [], {"after_start": 0, "unsided": 0}
+    rows, counts = [], {"pregame": 0, "at-off": 0, "none": 0, "unsided": 0, "minutes": [], "lines": 0, "books": 0}
     for offer in body.get("offers") or []:
         try:
             event_id = int(offer.get("event_id"))
@@ -192,16 +203,23 @@ def parse_closes(body: dict, market: str, matched: pd.DataFrame, season: int) ->
                     continue
                 if book_id not in KEPT:
                     continue
-                close = closing(book.get("lines") or [], ev["kickoff"])
+                lines = book.get("lines") or []
+                close, source = closing(lines, ev["kickoff"])
+                counts["lines"] += len(lines)
+                counts["books"] += 1
                 if close is None:
-                    counts["after_start"] += 1
+                    counts["none"] += 1
                     continue
+                counts[source] += 1
+                if source == "at-off":
+                    counts["minutes"].append((_ts(close.get("updated")) - ev["kickoff"]).total_seconds() / 60.0)
                 rows.append({"kind": "close", "season": int(season), "event_id": event_id, "game_id": int(ev["game_id"]),
                              "scheduled": ev["kickoff"].strftime("%Y-%m-%dT%H:%M:%SZ"), "market": market, "side": side,
                              "book_id": book_id,
                              "line": 0.0 if market == "moneyline" else _num(close.get("line")),
                              "cost": _num(close.get("cost")), "updated": str(close.get("updated") or ""),
-                             "open_line": _num(opening.get("line")), "open_cost": _num(opening.get("cost"))})
+                             "open_line": _num(opening.get("line")), "open_cost": _num(opening.get("cost")),
+                             "source": source, "rule": RULE})
     return rows, counts
 
 
@@ -230,6 +248,28 @@ def seal(record: pd.DataFrame, passphrase: str, seasons, where: Path | None = No
     return out
 
 
+def reopen(record: pd.DataFrame) -> tuple[pd.DataFrame, list[int]]:
+    """Seasons marked done under an older rule with under :data:`REOPEN_BELOW` of their games closed by the
+    consensus, taken out of the record to be asked again. Returns (the record, the seasons reopened)."""
+    if record.empty:
+        return record, []
+    out = []
+    for r in record[record["kind"] == "season"].itertuples():
+        rule = pd.to_numeric(getattr(r, "rule", None), errors="coerce")
+        if str(r.status) != "done" or (pd.notna(rule) and rule >= RULE):
+            continue
+        season = int(r.season)
+        mine = record[pd.to_numeric(record["season"]) == season]
+        asked = mine.loc[mine["kind"] == "tried", "event_id"].nunique()
+        closed = mine.loc[(mine["kind"] == "close") & (pd.to_numeric(mine["book_id"]) == bp.CONSENSUS)
+                          & (mine["market"] == "moneyline"), "event_id"].nunique()
+        if asked and closed / asked < REOPEN_BELOW:
+            out.append(season)
+    if out:
+        record = record[~pd.to_numeric(record["season"]).isin(out)].reset_index(drop=True)
+    return record, out
+
+
 def status(record: pd.DataFrame) -> dict[int, str]:
     s = record[record["kind"] == "season"]
     return {int(r.season): str(r.status) for r in s.itertuples()}
@@ -247,6 +287,10 @@ def backfill(client: bp.Client, games: pd.DataFrame, passphrase: str, *, where: 
     from atlas.owner import nhl_capture
 
     record = load(passphrase, where)
+    record, reopened = reopen(record)
+    for season in reopened:
+        LOG.info("nhl history: %d-%02d asked again under rule %d (under half its games had a consensus close)",
+                 season, (season + 1) % 100, RULE)
     done = status(record)
     todo = [s for s in SEASONS if s not in done]
     if not todo:
@@ -259,7 +303,7 @@ def backfill(client: bp.Client, games: pd.DataFrame, passphrase: str, *, where: 
     if not ids:
         LOG.warning("nhl history: no NHL game markets in the catalogue")
         return record, False
-    changed: set[int] = set()
+    changed: set[int] = set(reopened)
     tried = set(record.loc[record["kind"] == "tried", "event_id"].dropna().astype(int)) if len(record) else set()
     new_rows: list[dict] = []
     for season in todo:
@@ -271,7 +315,7 @@ def backfill(client: bp.Client, games: pd.DataFrame, passphrase: str, *, where: 
         events, how = list_events(client, season, days, budget)
         pairs = match(g, events)
         open_ = pairs[~pairs["event_id"].isin(tried)]
-        counts = {"after_start": 0, "unsided": 0}
+        counts = {"pregame": 0, "at-off": 0, "none": 0, "unsided": 0, "minutes": [], "lines": 0, "books": 0}
         found = asked = 0
         finished = True
         for start in range(0, len(open_), bp.BATCH):
@@ -302,20 +346,24 @@ def backfill(client: bp.Client, games: pd.DataFrame, passphrase: str, *, where: 
             changed.add(season)
         season_rows = [r for r in new_rows if r.get("season") == season and r["kind"] == "close"]
         with_close = len({r["event_id"] for r in season_rows if r["book_id"] == bp.CONSENSUS})
+        mins = pd.Series(counts["minutes"], dtype=float)
+        stamps = (f"stamped {mins.quantile(0.1):.0f}/{mins.median():.0f}/{mins.quantile(0.9):.0f} minutes after puck "
+                  "drop (p10/median/p90)") if len(mins) else "none"
         LOG.info("nhl history: %d-%02d: %d events listed (%s windows), %d matched to %d warehouse games, %d asked "
-                 "this run, %d closes kept, %d with a consensus close; %d book lines only after puck drop, %d "
-                 "selections unsided; %d calls so far", season, (season + 1) % 100, len(events), how, len(pairs),
-                 len(g), asked, found,
-                 with_close, counts["after_start"], counts["unsided"], client.calls)
+                 "this run, %d closes kept, %d with a consensus close; book closes %d pregame, %d at the off (%s), "
+                 "%d with no line; %.1f lines a book; %d selections unsided; %d calls so far", season,
+                 (season + 1) % 100, len(events), how, len(pairs), len(g), asked, found, with_close,
+                 counts["pregame"], counts["at-off"], stamps, counts["none"],
+                 counts["lines"] / max(counts["books"], 1), counts["unsided"], client.calls)
         if finished:
             kept = record[(record["kind"] == "close") & (pd.to_numeric(record["season"]) == season)] if len(record) \
                 else record
             any_close = len(season_rows) + len(kept) > 0
             new_rows.append({"kind": "season", "season": season, "status": "done" if any_close else "empty",
-                             "events": int(len(pairs))})
+                             "events": int(len(pairs)), "rule": RULE})
             changed.add(season)
             if not any_close:
-                LOG.info("nhl history: no pregame line for %d-%02d: the key's depth ends after it", season,
+                LOG.info("nhl history: no line at all for %d-%02d: the key's depth ends after it", season,
                          (season + 1) % 100)
                 break
     if new_rows:
@@ -337,29 +385,50 @@ def _no_vig(a, b) -> float:
 
 
 def home_probs(record: pd.DataFrame, book: int) -> pd.DataFrame:
-    """Per game, the book's closing moneyline with its margin out: P(home)."""
+    """Per game, the book's closing moneyline with its margin out: P(home), and ``at_off`` where either side's
+    close was taken as it came off the board (rule 1's rows were all pregame)."""
+    cols = ["game_id", "season", "p", "at_off"]
     c = record[(record["kind"] == "close") & (record["market"] == "moneyline")
                & (pd.to_numeric(record["book_id"]) == book)]
     if c.empty:
-        return pd.DataFrame(columns=["game_id", "season", "p"])
+        return pd.DataFrame(columns=cols)
+    source = c["source"] if "source" in c else pd.Series("pregame", index=c.index)
+    c = c.assign(off=(source.astype("string").fillna("pregame") == "at-off").astype(int))
     wide = c.pivot_table(index=["game_id", "season"], columns="side", values="cost", aggfunc="last").reset_index()
     if not {"home", "away"} <= set(wide.columns):
-        return pd.DataFrame(columns=["game_id", "season", "p"])
+        return pd.DataFrame(columns=cols)
+    off = c.groupby("game_id")["off"].max()
     wide["p"] = [_no_vig(h, a) for h, a in zip(wide["home"], wide["away"], strict=True)]
-    return wide.dropna(subset=["p"])[["game_id", "season", "p"]]
+    wide["at_off"] = wide["game_id"].map(off).fillna(0).astype(bool)
+    return wide.dropna(subset=["p"])[cols]
 
 
 def market_row(record: pd.DataFrame, atlas: pd.DataFrame) -> pd.DataFrame:
     """Per season, on the games with a consensus close and a result: the Brier of the consensus, of DraftKings
-    (where it closed too) and of Atlas. ``atlas`` is the walked model: ``game_id``, ``p_home``, ``home_win``."""
+    (where it closed too) and of Atlas. ``atlas`` is the walked model: ``game_id``, ``p_home``, ``home_win``.
+    A season's closes taken at the off count only when there are 30 or more and they score like pregame closes
+    (:data:`SANE_BRIER`); otherwise they are left out and counted in ``left_out``."""
     cons = home_probs(record, bp.CONSENSUS).rename(columns={"p": "p_market"})
     dk = home_probs(record, 12)[["game_id", "p"]].rename(columns={"p": "p_dk"})
     f = cons.merge(atlas, on="game_id", how="inner").merge(dk, on="game_id", how="left")
+    left_out: dict = {}
+    keep = []
+    for season, part in f.groupby("season"):
+        off = part[part["at_off"]]
+        brier = float(((off["p_market"] - off["home_win"]) ** 2).mean()) if len(off) else float("nan")
+        sane = len(off) >= 30 and brier >= SANE_BRIER
+        left_out[season] = (0 if sane else int(len(off)), brier)
+        keep.append(part if sane else part[~part["at_off"]])
+    f = pd.concat(keep, ignore_index=True) if keep else f.iloc[0:0]
     rows = []
-    for season, part in [*f.groupby("season"), ("all", f)]:
+    seasons = [(s, f[f["season"] == s]) for s in sorted(left_out)] + [("all", f)]
+    for season, part in seasons:
         y = part["home_win"].to_numpy(float)
         dk_part = part.dropna(subset=["p_dk"])
-        rows.append({"season": season, "games": int(len(part)),
+        out, off_brier = (sum(v[0] for v in left_out.values()), float("nan")) if season == "all" \
+            else left_out[season]
+        rows.append({"season": season, "games": int(len(part)), "at_off": int(part["at_off"].sum()),
+                     "left_out": int(out), "off_brier": off_brier,
                      "market": float(((part["p_market"] - y) ** 2).mean()) if len(part) else float("nan"),
                      "atlas": float(((part["p_home"] - y) ** 2).mean()) if len(part) else float("nan"),
                      "dk_games": int(len(dk_part)),
@@ -395,12 +464,20 @@ def write_report(row: pd.DataFrame, record: pd.DataFrame, root: Path) -> Path:
              "(sealed in `tracking/owner_nhl_history/`, never in the clear), its margin taken out; the stored game "
              "model walked forward unchanged. Brier on P(home wins), overtime and the shootout included. Aggregates "
              "only.", "",
-             "| Season | Games | Consensus close | DraftKings close (games) | Atlas |", "|---|---|---|---|---|"]
+             "| Season | Games | Of which closed at the off | Consensus close | DraftKings close (games) | Atlas | "
+             "Left out |", "|---|---|---|---|---|---|---|"]
     for r in row.itertuples():
         label = "2022-26 pooled" if r.season == "all" else f"{int(r.season)}-{(int(r.season) + 1) % 100:02d}"
         dk = f"{r.draftkings:.4f} ({r.dk_games:,})" if r.dk_games else "–"
-        lines.append(f"| {label} | {r.games:,} | {r.market:.4f} | {dk} | {r.atlas:.4f} |")
-    lines += ["", "Seasons backfilled: " + (", ".join(f"{s}-{(s + 1) % 100:02d} {v}" for s, v in sorted(done.items()))
+        why = "" if r.season == "all" else (f" (Brier {r.off_brier:.4f}: not a pregame close)"
+                                            if r.left_out >= 30 else " (too few to judge)")
+        out = f"{r.left_out:,} closed at the off{why}" if r.left_out else "–"
+        market, atlas = (f"{r.market:.4f}", f"{r.atlas:.4f}") if r.games else ("–", "–")
+        lines.append(f"| {label} | {r.games:,} | {r.at_off:,} | {market} | {dk} | {atlas} | {out} |")
+    lines += ["", "A close taken at the off is a book's last line on the pregame market as it came off the board, "
+              "for games whose lines came back stamped after puck drop. Those count only when a season has 30 or more "
+              f"and they score like pregame closes (Brier {SANE_BRIER} or worse): an in-game price knows the score.",
+              "", "Seasons backfilled: " + (", ".join(f"{s}-{(s + 1) % 100:02d} {v}" for s, v in sorted(done.items()))
                                            or "none yet") + ".", ""]
     out = root / "reports" / "nhl_market_recent.md"
     out.write_text("\n".join(lines))

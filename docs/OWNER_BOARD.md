@@ -235,7 +235,12 @@ NHL rows are filed by the ISO week of puck drop. PrizePicks' NHL payouts are ass
 refresh spends up to 500 calls filling the NHL's closing lines for 2025-26 back to 2022-23, newest first: the
 season's events a month at a time (a day at a time if the API ignores the window), matched to the warehouse's
 games by puck drop and both teams, then for each game the consensus's, DraftKings' and FanDuel's last main
-pregame line on the moneyline, puck line and total, never a line from the live feed. Sealed in
+pregame line on the moneyline, puck line and total, never a line from the live feed. Where a book's lines all
+came back stamped after puck drop (2025-26's did, on the first run), its close is its last line on the pregame
+market that nothing replaced, as it came off the board, marked "at the off"; the log times those stamps in
+minutes after puck drop, and the market row counts them only when a season's score like pregame closes (an
+in-game price, which knows the score, would score far better). A season closed under the first rule with under
+half its games closed is asked again. Sealed in
 `tracking/owner_nhl_history/`, one file a season; resumed where it stopped; a season with no pregame line is
 where the key's history ends, and nothing older is asked for. The log says, per season, how many events were
 listed, matched and asked, how many closes were kept and how many had a consensus close, in counts only. Once
