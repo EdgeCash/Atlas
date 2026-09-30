@@ -26,7 +26,7 @@ import pandas as pd
 from atlas.live import grade as grading
 from atlas.live import scorecard as sc
 from atlas.live import signals as signalling
-from atlas.live.store import Store
+from atlas.live.store import SCHEMA, Store
 from atlas.util import get_logger
 
 LOG = get_logger(__name__)
@@ -111,6 +111,60 @@ def first_quotes(store: Store, signals: pd.DataFrame) -> pd.DataFrame:
     return first[mask.isin(set(keys))]
 
 
+#: What names a model's number for a game; with ``refreshed_at``, one refresh of it.
+NUMBER_KEY = ["game_id", "market", "model_version"]
+
+
+def _key(frame: pd.DataFrame, columns: list[str]) -> pd.Series:
+    return frame[columns].astype(str).agg("|".join, axis=1) if len(frame) else pd.Series(dtype=str)
+
+
+def in_effect(numbers: pd.DataFrame, signals: pd.DataFrame) -> pd.DataFrame:
+    """For each signal, the number it was formed from: the latest refresh of its game, market and model
+    version at or before the signal was created. When the record of a number begins after the signal
+    (a table written before refreshes were kept), its earliest refresh. One row per signal, the numbers'
+    columns and ``signal_id``; a signal with no number for its version has no row."""
+    columns = ["signal_id", *SCHEMA["numbers"]]
+    if numbers.empty or signals.empty:
+        return pd.DataFrame(columns=columns)
+    n = numbers.assign(_k=_key(numbers, NUMBER_KEY).to_numpy(),
+                       _t=pd.to_datetime(numbers["refreshed_at"], utc=True, errors="coerce").to_numpy())
+    s = pd.DataFrame({"signal_id": signals["signal_id"].to_numpy(), "_k": _key(signals, NUMBER_KEY).to_numpy(),
+                      "_c": pd.to_datetime(signals["created_at"], utc=True, errors="coerce").to_numpy()})
+    m = s.merge(n, on="_k", how="inner").sort_values("_t", kind="stable")
+    before = m[m["_t"] <= m["_c"]].drop_duplicates("signal_id", keep="last")
+    after = m[~m["signal_id"].isin(set(before["signal_id"]))].drop_duplicates("signal_id", keep="first")
+    return pd.concat([before, after], ignore_index=True)[columns]
+
+
+def keep_history(existing: pd.DataFrame, fresh: pd.DataFrame, signals: pd.DataFrame) -> pd.DataFrame:
+    """The numbers table after a refresh: every fresh row; every earlier row the refresh does not
+    supersede (another model version, a game no longer scheduled); and of the rows it does supersede,
+    those a signal was formed from. A number no signal used is replaced, so the table grows by about
+    one row per signal, not by a table per refresh."""
+    if existing.empty:
+        return fresh.reindex(columns=SCHEMA["numbers"])
+    full = [*NUMBER_KEY, "refreshed_at"]
+    superseded = _key(existing, NUMBER_KEY).isin(set(_key(fresh, NUMBER_KEY)))
+    used = set(_key(in_effect(existing, signals), full))
+    keep = (~superseded) | _key(existing, full).isin(used)
+    out = pd.concat([existing[keep.to_numpy()], fresh], ignore_index=True).reindex(columns=SCHEMA["numbers"])
+    return out[~_key(out, full).duplicated(keep="last").to_numpy()].reset_index(drop=True)
+
+
+def restore(current: pd.DataFrame, history: list[pd.DataFrame], signals: pd.DataFrame) -> pd.DataFrame:
+    """Put back the numbers signals were formed from that a refresh overwrote: for each signal, the row in
+    effect at its creation among every version of the table in ``history``, added when ``current`` lacks
+    it. Nothing in ``current`` changes."""
+    full = [*NUMBER_KEY, "refreshed_at"]
+    pool = pd.concat([current, *history], ignore_index=True).reindex(columns=SCHEMA["numbers"])
+    pool = pool[~_key(pool, full).duplicated(keep="first").to_numpy()]
+    needed = in_effect(pool, signals).drop(columns="signal_id")
+    missing = needed[~_key(needed, full).isin(set(_key(current, full))).to_numpy()]
+    missing = missing[~_key(missing, full).duplicated().to_numpy()]
+    return pd.concat([current, missing], ignore_index=True).reindex(columns=SCHEMA["numbers"])
+
+
 def replay_signals(store: Store, period: str) -> Replay:
     """Re-derive the period's signals from the stored numbers and quotes."""
     stored = store.read("signals")
@@ -128,21 +182,31 @@ def replay_signals(store: Store, period: str) -> Replay:
     numbers = store.read("numbers")
     numbers["prediction"] = pd.to_numeric(numbers["prediction"], errors="coerce")
     numbers["threshold"] = pd.to_numeric(numbers["threshold"], errors="coerce")
-    # Replay each signal with the model version *it* names, not today's and
-    # not every version any signal in the period names: a week whose signals
-    # were formed at two refits would otherwise replay every game twice, once
-    # per version, and the comparison would find two rows where one was
-    # stored. (That took every poll and the daily rebuild down on 26
-    # September 2026, once week 5 held signals from two refits.)
-    named = stored[["game_id", "market", "model_version"]].drop_duplicates().astype(str)
-    keyed = numbers.assign(_k=numbers[["game_id", "market", "model_version"]].astype(str).agg("|".join, axis=1))
-    numbers = keyed[keyed["_k"].isin(set(named.agg("|".join, axis=1)))].drop(columns="_k")
+    # Replay each signal with the number *it* was formed from: the version it names, not today's and not
+    # every version any signal in the period names (a week with signals from two refits replayed every
+    # game twice and took every poll down on 26 September 2026), and the refresh of that version in
+    # effect when it was formed, not the latest (new results change every number under one version: on
+    # 27 September a refresh left 31 of week 5's signals unreproducible).
+    used = in_effect(numbers, stored)
+    if used.empty:
+        return Replay(period, "signals", len(stored), 0, 0, len(stored), "no numbers to replay against")
 
     quotes = quotes.merge(
         stored[["game_id", "market", "season", "week"]].drop_duplicates(),
         on=["game_id", "market"], how="left", suffixes=("", "_signal"),
     )
-    replayed = signalling.form_signals(numbers, quotes)
+    books = stored.set_index("signal_id")[["game_id", "market", "book"]]
+    quote_key = _key(quotes, ["game_id", "market", "book"])
+    parts = []
+    # One refresh of one version names each game and market once: replay each such group against the
+    # quotes its own signals were formed from, so no signal is replayed with another's number.
+    for _, rows in used.groupby(["refreshed_at", "model_version"], sort=True, dropna=False):
+        wanted = set(_key(books.loc[rows["signal_id"]], ["game_id", "market", "book"]))
+        part = signalling.form_signals(rows.drop(columns="signal_id").drop_duplicates(["game_id", "market"]),
+                                       quotes[quote_key.isin(wanted).to_numpy()])
+        if part is not None and not part.empty:
+            parts.append(part)
+    replayed = pd.concat(parts, ignore_index=True) if parts else pd.DataFrame()
     return _compare(period, "signals", stored, replayed, SIGNAL_COLUMNS)
 
 

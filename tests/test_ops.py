@@ -329,6 +329,96 @@ def test_a_period_with_signals_from_two_refits_replays_each_with_its_own_version
     assert reproduce._compare("2026-w06", "signals", stored, shuffled, reproduce.SIGNAL_COLUMNS).clean
 
 
+def _numbers(signals: pd.DataFrame, prediction: float, refreshed_at: str, version: str = "v1") -> pd.DataFrame:
+    return pd.DataFrame([{"game_id": r["game_id"], "season": 2026, "week": 6, "market": "total",
+                          "prediction": prediction, "threshold": 9.0, "model_version": version,
+                          "refreshed_at": refreshed_at} for _, r in signals.iterrows()])
+
+
+def test_a_refresh_under_the_same_version_keeps_the_number_a_signal_was_formed_from(store):
+    """27 September 2026: new results changed every upcoming number under an unchanged model version, the
+    refresh keyed without its time wrote over them, and 31 published signals no longer replayed. A refresh
+    now keeps each superseded number a signal was formed from, and drops the ones none was."""
+    from atlas.live.__main__ import load_numbers
+
+    signals = _clean(store)                                              # formed now, from 62
+    before = (datetime.now(UTC) - timedelta(days=1)).replace(microsecond=0).isoformat()
+    after = (datetime.now(UTC) + timedelta(hours=1)).replace(microsecond=0).isoformat()
+    unused = pd.DataFrame([{"game_id": 999999, "season": 2026, "week": 6, "market": "total", "prediction": 40.0,
+                            "threshold": 9.0, "model_version": "v1", "refreshed_at": before}])
+    store.write("numbers", pd.concat([_numbers(signals, 62.0, before), unused], ignore_index=True))
+    fresh = pd.concat([_numbers(signals, 60.0, after), unused.assign(prediction=41.0, refreshed_at=after)],
+                      ignore_index=True)
+    # Overwriting, as the refresh did, breaks the replay ...
+    store.write("numbers", fresh)
+    assert not reproduce.replay_signals(store, "2026-w06").clean
+    # ... keeping the history does not.
+    store.write("numbers", pd.concat([_numbers(signals, 62.0, before), unused], ignore_index=True))
+    table = reproduce.keep_history(store.read("numbers"), fresh, store.read("signals"))
+    store.write("numbers", table)
+    assert len(table) == 60 + 60 + 1                                     # the unused game's old row is gone
+    assert set(table.loc[table["game_id"] == 999999, "prediction"]) == {41.0}
+    replay = reproduce.replay_signals(store, "2026-w06")
+    assert replay.clean and replay.matched == 60, replay.detail
+    # The poll reads only the newest number for each game and market.
+    live = load_numbers(store)
+    assert len(live) == 61 and set(live["prediction"]) == {60.0, 41.0}
+    # A signal formed after the refresh replays against the new number, the rest against the old.
+    later = store.read("signals")
+    late = later.index[:10]
+    later.loc[late, "created_at"] = (datetime.now(UTC) + timedelta(hours=2)).replace(microsecond=0).isoformat()
+    later.loc[late, "atlas_number"] = 60.0
+    later.loc[late, "disagreement"] = 60.0 - 52.0
+    later.loc[late, "selection"] = "observed"                          # 8 points is under the 9-point threshold
+    store.write("signals", later)
+    replay = reproduce.replay_signals(store, "2026-w06")
+    assert replay.clean and replay.matched == 60, replay.detail
+    # A third refresh keeps the one number each signal was formed from (50 of the first, 10 of the second)
+    # and drops the superseded ones no signal used: the table grows by a row a signal, not a table a refresh.
+    third = _numbers(signals, 59.0, (datetime.now(UTC) + timedelta(hours=3)).replace(microsecond=0).isoformat())
+    table = reproduce.keep_history(store.read("numbers"), third, store.read("signals"))
+    assert len(table[table["game_id"] != 999999]) == 50 + 10 + 60
+    store.write("numbers", table)
+    assert reproduce.replay_signals(store, "2026-w06").clean
+
+
+def test_restoring_from_history_puts_back_only_what_signals_were_formed_from(store):
+    signals = _clean(store)
+    before = (datetime.now(UTC) - timedelta(days=1)).replace(microsecond=0).isoformat()
+    after = (datetime.now(UTC) + timedelta(hours=1)).replace(microsecond=0).isoformat()
+    older = (datetime.now(UTC) - timedelta(days=2)).replace(microsecond=0).isoformat()
+    overwritten = _numbers(signals, 60.0, after)
+    store.write("numbers", overwritten)
+    assert not reproduce.replay_signals(store, "2026-w06").clean
+    history = [_numbers(signals, 62.0, before), _numbers(signals, 61.0, older), overwritten]
+    restored = reproduce.restore(store.read("numbers"), history, store.read("signals"))
+    assert len(restored) == 120                                          # the number in effect, not every version
+    assert restored.iloc[:60].equals(store.read("numbers"))              # nothing already there changes
+    store.write("numbers", restored)
+    assert reproduce.replay_signals(store, "2026-w06").clean
+    assert len(reproduce.restore(restored, history, store.read("signals"))) == 120   # a second run adds nothing
+
+
+def test_the_refresh_step_writes_the_history(store, monkeypatch):
+    from atlas.live import __main__ as live
+    from atlas.live import signals as signalling
+
+    signals = _clean(store)
+    # Formed an hour ago, from yesterday's refresh; this refresh comes after them.
+    store.write("signals", signals.assign(created_at=(datetime.now(UTC) - timedelta(hours=1)).isoformat()))
+    before = (datetime.now(UTC) - timedelta(days=1)).replace(microsecond=0).isoformat()
+    store.write("numbers", _numbers(signals, 62.0, before))
+    monkeypatch.setattr(live.Store, "open", classmethod(lambda cls, root=None: store))
+    monkeypatch.setattr(live, "publish_projections", lambda s: 0)
+    monkeypatch.setattr(signalling, "build_models", lambda: {})
+    monkeypatch.setattr(signalling, "atlas_numbers",
+                        lambda models: _numbers(signals, 60.0, "x").drop(columns="refreshed_at"))
+    assert live.refresh(rebuild=False) == 60
+    table = store.read("numbers")
+    assert len(table) == 120 and table["refreshed_at"].nunique() == 2
+    assert reproduce.replay_signals(store, "2026-w06").clean
+
+
 # ---------------------------------------------------------------------------
 # Track 4 - the dashboard
 # ---------------------------------------------------------------------------

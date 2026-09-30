@@ -112,7 +112,7 @@ def _tracker_rows() -> list[Row]:
             "graded once the game is complete"),
         Row("Line observations", f"{len(snapshots):,}",
             "appended only when a number changes"),
-        Row("Atlas numbers live", f"{len(numbers):,}",
+        Row("Atlas numbers live", f"{len(numbers.drop_duplicates(['game_id', 'market'])):,}",
             "one per scheduled game and market"),
     ]
 
