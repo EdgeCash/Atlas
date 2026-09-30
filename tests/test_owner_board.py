@@ -299,7 +299,10 @@ def test_the_board_rides_in_the_plays_box_and_only_when_bettingpros_is_configure
     # Every section says which tab it belongs in; the exchanges ride behind the board and the parlays.
     tabs = [s.get("tab") for s in data["sections"]]
     assert tabs == ["Board", "Board", "Board", "Board", "Parlays", "Trading", "Trading", "Trading", "Pick'em", "Pick'em",
-                    "Plays"]
+                    "High Five", "Plays"]
+    five = next(s for s in data["sections"] if s["tab"] == "High Five")
+    assert five["title"] == "Daily High Five" and "could not build" not in " ".join(five["notes"])
+    assert (tmp_path / "tracking" / "owner_highfive").exists() or five["tables"][0]["rows"]
     pickem_cards = [s["title"] for s in data["sections"] if s["tab"] == "Pick'em"]
     assert pickem_cards == ["Slips for Sat Sep 26 (0)", "Pick board"]            # no prop markets listed: nothing priced
     trading = next(s for s in data["sections"] if s["tab"] == "Trading")
