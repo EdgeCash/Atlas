@@ -103,11 +103,20 @@ Runtime: about 10 seconds.
 | Friday night | Friday | 17:00 → 23:00 |
 | NCAAF Saturday | Saturday | 08:00 → midnight |
 | NFL Sunday | Sunday | 07:00 → 20:00 |
+| NHL Tuesday night | Tuesday, October → June | 18:00 → 23:00 |
+| NHL Wednesday night | Wednesday, October → June | 18:00 → 23:00 |
 
 The weeknight windows cover the NFL's 20:15 kickoffs and the Thursday and
 Friday college slates from 19:00, with two hours of pre-game movement before them and room
 for a West Coast kickoff at 22:30. A line stops moving at kickoff, so nothing
 later is needed.
+
+The NHL plays most nights, puck drop 19:00 to 22:30 ET. The football windows
+already cover Monday, Thursday, Friday, Saturday and most of Sunday; the two
+NHL windows add Tuesday and Wednesday nights in the months it plays, so every
+NHL closing line is taken within fifteen minutes of puck drop
+(`docs/MODEL_PLAN_NHL.md`, step 0). Each poll reads three ESPN scoreboards:
+college, the NFL and the NHL.
 
 Inside a window the poller runs every 15 minutes. Outside, hourly.
 
@@ -134,13 +143,14 @@ including the one past midnight that does *not* count as Saturday.
 | | Requests per week |
 |---|---|
 | Hourly poller, Tuesday and Wednesday | 48 |
+| NHL Tuesday and Wednesday nights, 5 hours × 3 more, each (October → June) | 30 |
 | Monday, Thursday and Friday, 18 hours hourly + 6 hours × 4, each | 126 |
 | Game-day Saturday, 16 hours × 4 | 64 |
 | Game-day Sunday, 13 hours × 4 | 52 |
 | Heavy refresh | 7 |
-| **Total** | **~297** |
+| **Total** | **~327 polls** |
 
-One ESPN scoreboard request each, unauthenticated, against a public endpoint —
+One ESPN scoreboard request per sport per poll, unauthenticated, against a public endpoint —
 comfortably inside anything that could be called a rate limit. The skip logic
 is what keeps it there: without it the same crontab would make 672.
 

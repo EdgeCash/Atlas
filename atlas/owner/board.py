@@ -722,7 +722,7 @@ def sections(board: pd.DataFrame, chosen: pd.DataFrame, graded: pd.DataFrame, na
 def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, now: datetime | None = None,
           client: bp.Client | None = None, market_where: Path | None = None, picks_where: Path | None = None,
           parlays_where: Path | None = None, trading_where: Path | None = None, pickem_where: Path | None = None,
-          slips_where: Path | None = None) -> list[dict]:
+          slips_where: Path | None = None, props_where: Path | None = None) -> list[dict]:
     """Capture the market, seal it, price the board, log and grade the picks, the day's parlays, the
     exchange positions and the pick'em, and return the sections. Never raises; returns nothing when
     BettingPros is not configured."""
@@ -741,8 +741,14 @@ def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, 
         up = upcoming(games, projections, now)
         lines, events = capture(client, up, now) if not up.empty else (pd.DataFrame(columns=[*bp.LINE_COLUMNS, "game_id"]),
                                                                         pd.DataFrame(columns=[*bp.EVENT_COLUMNS, "game_id"]))
+        # The NHL's market is recorded from opening night and priced nowhere yet (docs/MODEL_PLAN_NHL.md,
+        # step 0): its lines go into the sealed record beside football's and nothing else reads them.
+        from atlas.owner import nhl_capture
+
+        nhl_lines, _ = nhl_capture.capture(client, games, passphrase, now, props_where=props_where)
         record = market_store.load(passphrase, market_where)
-        record, added = market_store.append(record, lines)
+        record, added = market_store.append(record, pd.concat([lines, nhl_lines], ignore_index=True)
+                                            if len(nhl_lines) else lines)
         if not added.empty:
             market_store.seal(record, passphrase, added, market_where)
         calibration = store.read("calibration")
@@ -756,8 +762,9 @@ def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, 
             LOG.info("board: %d picks logged", len(weeks))
         kickoffs = pd.to_datetime(games.set_index(games["game_id"].astype(str))["kickoff"], utc=True, errors="coerce")
         started = kickoffs[kickoffs <= pd.Timestamp(now)]
-        closes = market_store.closing(record[record["game_id"].astype(str).isin(set(started.index))], started) \
-            if not record.empty else record
+        football = record[record["sport"].astype(str) != nhl_capture.SPORT] if not record.empty else record
+        closes = market_store.closing(football[football["game_id"].astype(str).isin(set(started.index))], started) \
+            if not football.empty else football
         all_events = events if pick_record.empty else events
         graded = grade_picks(pick_record, paper.results(research, games), closes, all_events, shapes)
         names = {}

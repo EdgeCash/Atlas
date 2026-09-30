@@ -72,11 +72,24 @@ credentials) is dropped before a response is read. Credentials are the
 repository secrets `BP_API_KEY`, `BP_USER_ID` and `BP_USER_KEY`, passed to
 the Refresh step in both workflows.
 
+**The NHL, recorded and not priced** (`atlas/owner/nhl_capture.py`,
+`docs/MODEL_PLAN_NHL.md` step 0). From opening night, every poll also takes
+every book's moneyline, puck line and total on the NHL games within the next
+day and a half into the same sealed market record, and at most once an hour
+every book's line on the NHL player markets, PrizePicks among them, into
+`tracking/owner_props/` (one sealed file per ISO week, appended on change).
+Nothing prices, picks or shows an NHL line yet: the record is the market the
+NHL model and its props will be measured against. The log says, in counts,
+how many games matched, which game and player markets the catalogue has, and
+per market how many players, books and PrizePicks lines there were.
+
 Budget: about eighteen requests per run for the board (events by week, then
 offers a dozen games at a time for three markets and two sports), and for the
 pick'em one market lookup per sport on the slate and at most sixteen pages of
-player props, against a limit of 5,000 a day. Rate and quota errors leave
-that batch out and keep the rest.
+player props; for the NHL one catalogue lookup, one events call per day and
+about three offers calls per run, and at most forty pages of props an hour;
+against a limit of 5,000 a day. Rate and quota errors leave that batch out
+and keep the rest.
 
 ## What it does not do
 

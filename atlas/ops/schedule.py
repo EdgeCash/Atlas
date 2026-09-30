@@ -49,9 +49,13 @@ class Window:
     weekday: int          # Monday is 0, as `datetime.weekday()` has it
     start: time
     end: time
+    #: The months the window is open, or every month when empty.
+    months: frozenset[int] = frozenset()
 
     def contains(self, moment: datetime) -> bool:
         local = moment.astimezone(EASTERN)
+        if self.months and local.month not in self.months:
+            return False
         if self.start <= self.end:
             return local.weekday() == self.weekday and self.start <= local.time() < self.end
         # Crosses midnight: the tail belongs to the previous day's window.
@@ -60,18 +64,27 @@ class Window:
         return local.weekday() == (self.weekday + 1) % 7 and local.time() < self.end
 
 
+#: The months the NHL plays, regular season and playoffs.
+NHL_MONTHS = frozenset({10, 11, 12, 1, 2, 3, 4, 5, 6})
+
 #: NCAAF Saturday 08:00 ET through midnight; NFL Sunday 07:00 to 20:00 ET;
 #: Monday, Thursday and Friday nights 17:00 to 23:00 ET. The weeknight windows
 #: cover the NFL's 20:15 kickoffs and the Thursday and Friday college slates
 #: from 19:00, with two hours of pre-game movement before them and room for a
 #: West Coast kickoff at 22:30. A line stops moving at kickoff, so nothing
-#: later is needed.
+#: later is needed. The NHL plays most nights, puck drop 19:00 to 22:30 ET:
+#: the football windows cover five of them, and Tuesday and Wednesday nights
+#: are added in its months, so each NHL closing line is taken within fifteen
+#: minutes of puck drop (docs/MODEL_PLAN_NHL.md, step 0).
+
 GAME_DAYS = (
     Window("Monday night", weekday=0, start=time(17, 0), end=time(23, 0)),
     Window("Thursday night", weekday=3, start=time(17, 0), end=time(23, 0)),
     Window("Friday night", weekday=4, start=time(17, 0), end=time(23, 0)),
     Window("NCAAF Saturday", weekday=5, start=time(8, 0), end=time(0, 0)),
     Window("NFL Sunday", weekday=6, start=time(7, 0), end=time(20, 0)),
+    Window("NHL Tuesday night", weekday=1, start=time(18, 0), end=time(23, 0), months=NHL_MONTHS),
+    Window("NHL Wednesday night", weekday=2, start=time(18, 0), end=time(23, 0), months=NHL_MONTHS),
 )
 
 

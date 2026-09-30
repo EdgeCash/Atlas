@@ -114,6 +114,9 @@ SCHEMA: dict[str, list[str]] = {
         "game_id", "season", "week", "kickoff", "home_team", "away_team",
         "home_team_id", "away_team_id", "status", "completed",
         "home_score", "away_score", "first_seen_at", "updated_at",
+        # The scoreboard the game came from: ncaaf, nfl or nhl. Empty on rows
+        # captured before the NHL was polled (30 September 2026), all football.
+        "sport",
     ],
     "snapshots": [
         "captured_at", "game_id", "book", "market", "line", "price",
