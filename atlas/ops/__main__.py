@@ -67,6 +67,11 @@ def heavy(*, skip_warehouse: bool = False) -> int:
         ("nhl-warehouse", ["atlas.staging.nhl.build"]),
         ("model", ["atlas.live", "refresh", "--no-rebuild"]),
         ("market", ["atlas.live", "run"]),
+        # The NHL's closing lines for 2022-23 to 2025-26 from BettingPros, the
+        # owner's choice for the archive's gap (docs/MODEL_PLAN_NHL.md, §9):
+        # a few hundred calls a run until the seasons are in, sealed, then the
+        # market row for those seasons. Never fails the run.
+        ("nhl-history", ["atlas.owner.nhl_history"]),
         # DraftKings' Classic salaries for the DFS model's record. It never
         # fails the run: a missed capture is logged, the site still builds.
         ("dfs-capture", ["atlas.sources.draftkings"]),

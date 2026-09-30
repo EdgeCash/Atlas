@@ -231,6 +231,17 @@ goals, assists and blocks the same), points as goals plus assists, a goalie's sa
 books settle; a scratched skater or a goalie who did not go in is void; two players of one name told apart by team.
 NHL rows are filed by the ISO week of puck drop. PrizePicks' NHL payouts are assumed to be its standard table.
 
+**The NHL's history** (`atlas/owner/nhl_history.py`, the owner's choice for the archive's gap). Each heavy
+refresh spends up to 500 calls filling the NHL's closing lines for 2025-26 back to 2022-23, newest first: the
+season's events a month at a time (a day at a time if the API ignores the window), matched to the warehouse's
+games by puck drop and both teams, then for each game the consensus's, DraftKings' and FanDuel's last main
+pregame line on the moneyline, puck line and total, never a line from the live feed. Sealed in
+`tracking/owner_nhl_history/`, one file a season; resumed where it stopped; a season with no pregame line is
+where the key's history ends, and nothing older is asked for. The log says, per season, how many events were
+listed, matched and asked, how many closes were kept and how many had a consensus close, in counts only. Once
+there are closes, it writes the market row the plan's §7 table was missing (`reports/nhl_market_recent.md`: the
+Brier of the consensus close, of DraftKings' and of Atlas, per season; aggregates only).
+
 **Atlas beside the market** (step 8). Each heavy refresh seals every active NHL player's state after his latest
 game, the teams', the arenas' and the season's fitted layer into `tracking/owner_nhl_players/state.enc.json`
 (`atlas/models/nhl_props.py`: walk-forward, better than a Poisson on the season mean at every common line,
