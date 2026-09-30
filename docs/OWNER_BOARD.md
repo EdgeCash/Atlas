@@ -245,7 +245,9 @@ half its games closed is asked again. Sealed in
 where the key's history ends, and nothing older is asked for. The log says, per season, how many events were
 listed, matched and asked, how many closes were kept and how many had a consensus close, in counts only. Once
 there are closes, it writes the market row the plan's §7 table was missing (`reports/nhl_market_recent.md`: the
-Brier of the consensus close, of DraftKings' and of Atlas, per season; aggregates only).
+Brier of the consensus close, of DraftKings' and of Atlas, per season; aggregates only). All four seasons,
+2022-23 to 2025-26, were in by 30 September 2026; a refresh with nothing left to fill asks BettingPros for
+nothing.
 
 **Atlas beside the market** (step 8). Each heavy refresh seals every active NHL player's state after his latest
 game, the teams', the arenas' and the season's fitted layer into `tracking/owner_nhl_players/state.enc.json`
