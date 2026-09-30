@@ -10,8 +10,9 @@ So, for every side an exchange quotes on the upcoming games (totals,
 spreads, and the game-winner contract, a moneyline):
 
 * **fair probability**: the sportsbook consensus with its margin removed,
-  read at the contract's line (`atlas/live/probability.py`); on totals,
-  Atlas's calibrated probability, the measure the board uses;
+  read at the contract's line (`atlas/live/probability.py`); on football
+  totals and every NHL market, Atlas's calibrated probability, the measure
+  the boards use (`atlas/owner/board.py`, `atlas/owner/nhl_board.py`);
 * **price**: the quote as a contract price (its implied probability), plus
   the venue's taker fee, ``rate x price x (1 - price)`` per contract;
 * **expected value after fees**: fair probability / (price + fee) - 1, and
@@ -182,8 +183,7 @@ def priced(q: pd.DataFrame) -> pd.DataFrame:
     t["ask"] = t["cost"].map(lambda c: probability.implied(float(c)))
     t["fee"] = [fee(a, r) for a, r in zip(t["ask"], rate, strict=True)]
     t["price"] = t["ask"] + t["fee"]
-    total = t["market"] == "total"
-    t["p"] = np.where(total & t["p_atlas"].notna(), t["p_atlas"], t["p_fair"]).astype(float)
+    t["p"] = np.where(parlays.atlas_measured(t) & t["p_atlas"].notna(), t["p_atlas"], t["p_fair"]).astype(float)
     t = t[(t["ask"] > 0) & (t["ask"] < 1) & (t["price"] < 1)].copy()
     t["ev"] = t["p"] / t["price"] - 1.0
     t["kelly"] = ((t["p"] - t["price"]) / (1.0 - t["price"])).clip(lower=0.0)
@@ -308,6 +308,10 @@ def close_prob(pos, closes: pd.DataFrame, shapes: dict) -> float:
                & (closes["market"] == pos.market)]
     if c.empty:
         return float("nan")
+    if str(pos.sport) == "nhl":
+        from atlas.owner import nhl_board
+
+        return nhl_board.close_prob(pos, closes)
     if pos.market == "moneyline":
         sides = moneyline_sides(c, pos.home_abbr, pos.visitor_abbr)
         h, a = c[sides == "home"], c[sides == "away"]
@@ -424,8 +428,8 @@ def section(p: pd.DataFrame, chosen: pd.DataFrame, graded: pd.DataFrame, names: 
                    "head": ["Venue", "Totals", "Spreads", "Moneylines"], "rows": counts})
     out.append({"title": "Exchange board", "tab": "Trading", "tables": tables, "notes": [
         "Each game and market at its best exchange price, whether or not it clears the bar. Fair is the sportsbook "
-        "consensus with its margin removed, read at the contract's line; on totals, Atlas's calibrated probability, "
-        "as on the board. EV after fees is fair ÷ (price + fee) − 1.",
+        "consensus with its margin removed, read at the contract's line; on football totals and every NHL market, "
+        "Atlas's calibrated probability, as on the boards. EV after fees is fair ÷ (price + fee) − 1.",
         "Fees: Kalshi's taker fee, 7% × price × (1 − price) per contract (the exchange rounds each order up to the "
         "cent; not modelled), and 5% for Polymarket, the rate the Velocity repository modelled. Confirm both against "
         "each venue's current schedule before real money. Quotes arrive with every poll through BettingPros and stay "
@@ -463,10 +467,15 @@ def section(p: pd.DataFrame, chosen: pd.DataFrame, graded: pd.DataFrame, names: 
 
 def build(lines: pd.DataFrame, events: pd.DataFrame, projections: pd.DataFrame, shapes: dict,
           calibration: pd.DataFrame | None, finals: pd.DataFrame, closes: pd.DataFrame, names: dict,
-          passphrase: str, now: datetime, where: Path | None = None) -> list[dict]:
-    """The exchanges priced, the day's positions logged once and graded, and the section. Never raises."""
+          passphrase: str, now: datetime, where: Path | None = None, extra: pd.DataFrame | None = None) -> list[dict]:
+    """The exchanges priced, the day's positions logged once and graded, and the section. ``extra`` is
+    another sport's quotes already valued (the NHL's, `nhl_board.quotes`), its events among ``events``.
+    Never raises."""
     try:
-        p = priced(quotes(lines, events, projections, shapes, now, calibration))
+        q = quotes(lines, events, projections, shapes, now, calibration)
+        if extra is not None and len(extra):
+            q = pd.concat([x for x in (q, extra.reindex(columns=QUOTE_COLUMNS)) if len(x)], ignore_index=True)
+        p = priced(q)
         chosen = positions(p, events, names, now)
         record = load(passphrase, where)
         if parlays.due(record, chosen, now):

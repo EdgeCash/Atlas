@@ -722,10 +722,10 @@ def sections(board: pd.DataFrame, chosen: pd.DataFrame, graded: pd.DataFrame, na
 def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, now: datetime | None = None,
           client: bp.Client | None = None, market_where: Path | None = None, picks_where: Path | None = None,
           parlays_where: Path | None = None, trading_where: Path | None = None, pickem_where: Path | None = None,
-          slips_where: Path | None = None, props_where: Path | None = None) -> list[dict]:
-    """Capture the market, seal it, price the board, log and grade the picks, the day's parlays, the
-    exchange positions and the pick'em, and return the sections. Never raises; returns nothing when
-    BettingPros is not configured."""
+          slips_where: Path | None = None, props_where: Path | None = None, nhl_where: Path | None = None) -> list[dict]:
+    """Capture the market, seal it, price the board (football's, then the NHL's, `nhl_board.py`), log and
+    grade the picks, the day's parlays, the exchange positions and the pick'em, and return the sections.
+    Never raises; returns nothing when BettingPros is not configured."""
     now = now or datetime.now(UTC)
     client = client or bp.Client.from_env()
     if client is None:
@@ -741,11 +741,11 @@ def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, 
         up = upcoming(games, projections, now)
         lines, events = capture(client, up, now) if not up.empty else (pd.DataFrame(columns=[*bp.LINE_COLUMNS, "game_id"]),
                                                                         pd.DataFrame(columns=[*bp.EVENT_COLUMNS, "game_id"]))
-        # The NHL's market is recorded from opening night and priced nowhere yet (docs/MODEL_PLAN_NHL.md,
-        # step 0): its lines go into the sealed record beside football's and nothing else reads them.
-        from atlas.owner import nhl_capture
+        # The NHL's market, recorded from opening night (docs/MODEL_PLAN_NHL.md, step 0), into the sealed record
+        # beside football's, and priced by its own board below (step 6).
+        from atlas.owner import nhl_board, nhl_capture
 
-        nhl_lines, _ = nhl_capture.capture(client, games, passphrase, now, props_where=props_where)
+        nhl_lines, nhl_events = nhl_capture.capture(client, games, passphrase, now, props_where=props_where)
         record = market_store.load(passphrase, market_where)
         record, added = market_store.append(record, pd.concat([lines, nhl_lines], ignore_index=True)
                                             if len(nhl_lines) else lines)
@@ -762,9 +762,8 @@ def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, 
             LOG.info("board: %d picks logged", len(weeks))
         kickoffs = pd.to_datetime(games.set_index(games["game_id"].astype(str))["kickoff"], utc=True, errors="coerce")
         started = kickoffs[kickoffs <= pd.Timestamp(now)]
-        football = record[record["sport"].astype(str) != nhl_capture.SPORT] if not record.empty else record
-        closes = market_store.closing(football[football["game_id"].astype(str).isin(set(started.index))], started) \
-            if not football.empty else football
+        closes = market_store.closing(record[record["game_id"].astype(str).isin(set(started.index))], started) \
+            if not record.empty else record
         all_events = events if pick_record.empty else events
         graded = grade_picks(pick_record, paper.results(research, games), closes, all_events, shapes)
         names = {}
@@ -776,10 +775,17 @@ def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, 
         from atlas.owner import parlays, pickem, trading
 
         finals = paper.results(research, games)
-        return [*sections(board, chosen, graded, names, now, client.calls),
-                *parlays.build(table, finals, names, passphrase, now, where=parlays_where),
-                *trading.build(lines, events, projections, shapes, calibration, finals, closes, names, passphrase,
-                               now, where=trading_where),
+        nhl_projections = store.read("nhl_projections")
+        nhl_sections, nhl_legs, k = nhl_board.build(nhl_lines, nhl_events, nhl_projections, calibration, finals,
+                                                     closes, names, passphrase, now, where=nhl_where)
+        both = pd.concat([x for x in (table, nhl_legs) if len(x)], ignore_index=True) if len(nhl_legs) else table
+        nhl_quotes = nhl_board.quotes(nhl_lines, nhl_events, nhl_projections, k)
+        trade_events = pd.concat([x for x in (events, nhl_events) if len(x)], ignore_index=True) \
+            if len(nhl_events) else events
+        return [*sections(board, chosen, graded, names, now, client.calls), *nhl_sections,
+                *parlays.build(both, finals, names, passphrase, now, where=parlays_where),
+                *trading.build(lines, trade_events, projections, shapes, calibration, finals, closes, names, passphrase,
+                               now, where=trading_where, extra=nhl_quotes),
                 *pickem.build(client, events, games, names, passphrase, now, picks_where=pickem_where,
                               slips_where=slips_where)]
     except Exception as error:  # noqa: BLE001 - the type only: a message could quote a line

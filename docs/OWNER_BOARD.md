@@ -72,16 +72,43 @@ credentials) is dropped before a response is read. Credentials are the
 repository secrets `BP_API_KEY`, `BP_USER_ID` and `BP_USER_KEY`, passed to
 the Refresh step in both workflows.
 
-**The NHL, recorded and not priced** (`atlas/owner/nhl_capture.py`,
+**The NHL, recorded** (`atlas/owner/nhl_capture.py`,
 `docs/MODEL_PLAN_NHL.md` step 0). From opening night, every poll also takes
 every book's moneyline, puck line and total on the NHL games within the next
 day and a half into the same sealed market record, and at most once an hour
 every book's line on the NHL player markets, PrizePicks among them, into
 `tracking/owner_props/` (one sealed file per ISO week, appended on change).
-Nothing prices, picks or shows an NHL line yet: the record is the market the
-NHL model and its props will be measured against. The log says, in counts,
-how many games matched, which game and player markets the catalogue has, and
-per market how many players, books and PrizePicks lines there were.
+The log says, in counts, how many games matched, which game and player
+markets the catalogue has, and per market how many players, books and
+PrizePicks lines there were.
+
+**The NHL, priced** (`atlas/owner/nhl_board.py`, step 6). The same lines,
+cards of their own on the Board tab after football's:
+
+* **fair** is the consensus book's two prices with the margin out, at the
+  consensus line; a book at another line is left out (the grid could move
+  it, but a price edge read off Atlas's own shape is Atlas's opinion wearing
+  the market's clothes);
+* **Atlas** is the grid's probability for the side at that line
+  (`tracking/nhl_projections.csv`: the moneyline, the puck line at ±1.5,
+  totals 4.5 to 7.5), pulled toward fair by the share of its disagreement
+  that has turned out real: least squares through the market on the NHL's
+  moneyline record against the close in `tracking/calibration.csv`, 0.46
+  over 11,764 games (0.46 too while the record is under 500);
+* **picks** are the sides with positive expected value by Atlas at the best
+  price: per game one on the result (the moneyline or the puck line, one
+  team either way being one opinion) and one on the total, at most six;
+  logged once, the first board they qualify on, into
+  `tracking/owner_nhl/` (one sealed file per ISO week of puck drop), with
+  the teams' BettingPros codes so the close can be read after puck drop;
+  graded on the final score as the books settle it, a shootout goal
+  included, and against the consensus close in win probability.
+
+The same NHL legs go to the day's parlays and, where Kalshi or Polymarket
+quote an NHL game, to the exchange board, valued by Atlas as above (on
+football, Atlas's probability prices totals only). With no NHL game ahead
+and no record, the NHL adds nothing to the page; with lines and no
+projection, one line says so.
 
 Budget: about eighteen requests per run for the board (events by week, then
 offers a dozen games at a time for three markets and two sports), and for the
@@ -96,8 +123,9 @@ and keep the rest.
 It does not bet, size, or promise. Atlas EV is what the model's disagreement
 has been worth on its own walk-forward, and price edge is arithmetic on the
 books' own prices; neither is a forecast of this weekend. Moneylines, alt
-lines and team totals are not on it yet; the score grid could price them and
-that is the next thing to test. The public site is unchanged.
+lines and team totals are not on it yet; football's score grid could price
+them and that is the next thing to test. The NHL's moneyline, puck line and
+total are on it, from the NHL's own grid. The public site is unchanged.
 
 ## Daily parlays
 
