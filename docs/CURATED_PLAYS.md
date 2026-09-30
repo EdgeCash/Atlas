@@ -6,6 +6,13 @@ two ways. This is the operating description; the audit that led to it is
 [`CURATED_PLAYS_AUDIT.md`](CURATED_PLAYS_AUDIT.md). Code:
 `atlas/owner/plays.py`.
 
+**The NHL has none.** Its three candidate rules (moneyline, total and puck
+line, each the side of Atlas's disagreement with the close) were registered
+in [`NHL_PLAYS_PREREGISTRATION.md`](NHL_PLAYS_PREREGISTRATION.md) before any
+was scored, and none cleared its bar on 2020-23
+(`reports/nhl_plays.md`). The owner board's NHL picks are a separate record
+(`OWNER_BOARD.md`).
+
 ## The week, in order
 
 1. **Every day at 04:00 ET** the heavy run re-fetches the season in

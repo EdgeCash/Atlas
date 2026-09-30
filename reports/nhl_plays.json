@@ -1,0 +1,385 @@
+{
+ "verdict": [
+  {
+   "rule": "M",
+   "market": "moneyline",
+   "bets": 1804,
+   "units": 10.46725567699206,
+   "per_bet": 0.00580224815797786,
+   "beat_market": 0.016690554294922298,
+   "beat_lower": -0.010258812115641594,
+   "seasons_up": 2,
+   "units_shaded": -18.82801185001227,
+   "descriptive_bets": 3240,
+   "descriptive_units": 77.92846788115504,
+   "c1_units": true,
+   "c2_beats_market": false,
+   "c3_seasons": true,
+   "c4_shaded": false,
+   "c5_bets": true,
+   "descriptive_ok": true,
+   "real": false
+  },
+  {
+   "rule": "T",
+   "market": "total",
+   "bets": 241,
+   "units": 4.380920448311755,
+   "per_bet": 0.018178093146521808,
+   "beat_market": 0.03565684590357303,
+   "beat_lower": -0.043329687135167015,
+   "seasons_up": 2,
+   "units_shaded": -0.6265624264124998,
+   "descriptive_bets": 2564,
+   "descriptive_units": -23.206166084228208,
+   "c1_units": true,
+   "c2_beats_market": false,
+   "c3_seasons": true,
+   "c4_shaded": false,
+   "c5_bets": true,
+   "descriptive_ok": false,
+   "real": false
+  },
+  {
+   "rule": "P",
+   "market": "puck line",
+   "bets": 997,
+   "units": 34.487375161055255,
+   "per_bet": 0.034591148606875885,
+   "beat_market": 0.022577432280151653,
+   "beat_lower": -0.013682659626865322,
+   "seasons_up": 3,
+   "units_shaded": 19.165319225908373,
+   "descriptive_bets": 1224,
+   "descriptive_units": 5.671679113647064,
+   "c1_units": true,
+   "c2_beats_market": false,
+   "c3_seasons": true,
+   "c4_shaded": true,
+   "c5_bets": true,
+   "descriptive_ok": true,
+   "real": false
+  }
+ ],
+ "by_season": [
+  {
+   "rule": "M",
+   "season": 2014,
+   "bets": 844,
+   "units": -28.985948153822452,
+   "threshold": 2.0
+  },
+  {
+   "rule": "M",
+   "season": 2015,
+   "bets": 554,
+   "units": -4.438848146837743,
+   "threshold": 3.0
+  },
+  {
+   "rule": "M",
+   "season": 2016,
+   "bets": 418,
+   "units": 20.51323627808379,
+   "threshold": 4.0
+  },
+  {
+   "rule": "M",
+   "season": 2017,
+   "bets": 434,
+   "units": -9.029109332833315,
+   "threshold": 4.0
+  },
+  {
+   "rule": "M",
+   "season": 2018,
+   "bets": 371,
+   "units": 17.061876809362587,
+   "threshold": 4.0
+  },
+  {
+   "rule": "M",
+   "season": 2019,
+   "bets": 619,
+   "units": 82.80726042720221,
+   "threshold": 2.0
+  },
+  {
+   "rule": "M",
+   "season": 2020,
+   "bets": 649,
+   "units": -2.9249054411166924,
+   "threshold": 2.0
+  },
+  {
+   "rule": "M",
+   "season": 2021,
+   "bets": 931,
+   "units": 13.345844131073237,
+   "threshold": 2.0
+  },
+  {
+   "rule": "M",
+   "season": 2022,
+   "bets": 224,
+   "units": 0.04631698703552667,
+   "threshold": 2.0
+  },
+  {
+   "rule": "P",
+   "season": 2015,
+   "bets": 327,
+   "units": 3.1539483067886467,
+   "threshold": 4.0
+  },
+  {
+   "rule": "P",
+   "season": 2016,
+   "bets": 379,
+   "units": -23.689903773622984,
+   "threshold": 4.0
+  },
+  {
+   "rule": "P",
+   "season": 2017,
+   "bets": 225,
+   "units": 14.78023474262381,
+   "threshold": 5.0
+  },
+  {
+   "rule": "P",
+   "season": 2018,
+   "bets": 161,
+   "units": -4.527811395299011,
+   "threshold": 5.0
+  },
+  {
+   "rule": "P",
+   "season": 2019,
+   "bets": 132,
+   "units": 15.955211233156602,
+   "threshold": 5.0
+  },
+  {
+   "rule": "P",
+   "season": 2020,
+   "bets": 598,
+   "units": 17.895825700778055,
+   "threshold": 2.0
+  },
+  {
+   "rule": "P",
+   "season": 2021,
+   "bets": 332,
+   "units": 14.75689575675676,
+   "threshold": 5.0
+  },
+  {
+   "rule": "P",
+   "season": 2022,
+   "bets": 67,
+   "units": 1.8346537035204402,
+   "threshold": 5.0
+  },
+  {
+   "rule": "T",
+   "season": 2014,
+   "bets": 658,
+   "units": -22.400817094228433,
+   "threshold": 3.0
+  },
+  {
+   "rule": "T",
+   "season": 2015,
+   "bets": 538,
+   "units": 52.321345973475644,
+   "threshold": 4.0
+  },
+  {
+   "rule": "T",
+   "season": 2016,
+   "bets": 577,
+   "units": -1.317866333157966,
+   "threshold": 4.0
+  },
+  {
+   "rule": "T",
+   "season": 2017,
+   "bets": 435,
+   "units": -51.881491394284566,
+   "threshold": 4.0
+  },
+  {
+   "rule": "T",
+   "season": 2018,
+   "bets": 193,
+   "units": -9.260478330043549,
+   "threshold": 8.0
+  },
+  {
+   "rule": "T",
+   "season": 2019,
+   "bets": 163,
+   "units": 9.33314109401066,
+   "threshold": 8.0
+  },
+  {
+   "rule": "T",
+   "season": 2020,
+   "bets": 124,
+   "units": 11.556334888943585,
+   "threshold": 8.0
+  },
+  {
+   "rule": "T",
+   "season": 2021,
+   "bets": 92,
+   "units": -14.034072449289841,
+   "threshold": 8.0
+  },
+  {
+   "rule": "T",
+   "season": 2022,
+   "bets": 25,
+   "units": 6.858658008658009,
+   "threshold": 8.0
+  }
+ ],
+ "thresholds": [
+  {
+   "rule": "M",
+   "season": 2014,
+   "threshold": 2.0
+  },
+  {
+   "rule": "M",
+   "season": 2015,
+   "threshold": 3.0
+  },
+  {
+   "rule": "M",
+   "season": 2016,
+   "threshold": 4.0
+  },
+  {
+   "rule": "M",
+   "season": 2017,
+   "threshold": 4.0
+  },
+  {
+   "rule": "M",
+   "season": 2018,
+   "threshold": 4.0
+  },
+  {
+   "rule": "M",
+   "season": 2019,
+   "threshold": 2.0
+  },
+  {
+   "rule": "M",
+   "season": 2020,
+   "threshold": 2.0
+  },
+  {
+   "rule": "M",
+   "season": 2021,
+   "threshold": 2.0
+  },
+  {
+   "rule": "M",
+   "season": 2022,
+   "threshold": 2.0
+  },
+  {
+   "rule": "T",
+   "season": 2014,
+   "threshold": 3.0
+  },
+  {
+   "rule": "T",
+   "season": 2015,
+   "threshold": 4.0
+  },
+  {
+   "rule": "T",
+   "season": 2016,
+   "threshold": 4.0
+  },
+  {
+   "rule": "T",
+   "season": 2017,
+   "threshold": 4.0
+  },
+  {
+   "rule": "T",
+   "season": 2018,
+   "threshold": 8.0
+  },
+  {
+   "rule": "T",
+   "season": 2019,
+   "threshold": 8.0
+  },
+  {
+   "rule": "T",
+   "season": 2020,
+   "threshold": 8.0
+  },
+  {
+   "rule": "T",
+   "season": 2021,
+   "threshold": 8.0
+  },
+  {
+   "rule": "T",
+   "season": 2022,
+   "threshold": 8.0
+  },
+  {
+   "rule": "P",
+   "season": 2014,
+   "threshold": NaN
+  },
+  {
+   "rule": "P",
+   "season": 2015,
+   "threshold": 4.0
+  },
+  {
+   "rule": "P",
+   "season": 2016,
+   "threshold": 4.0
+  },
+  {
+   "rule": "P",
+   "season": 2017,
+   "threshold": 5.0
+  },
+  {
+   "rule": "P",
+   "season": 2018,
+   "threshold": 5.0
+  },
+  {
+   "rule": "P",
+   "season": 2019,
+   "threshold": 5.0
+  },
+  {
+   "rule": "P",
+   "season": 2020,
+   "threshold": 2.0
+  },
+  {
+   "rule": "P",
+   "season": 2021,
+   "threshold": 5.0
+  },
+  {
+   "rule": "P",
+   "season": 2022,
+   "threshold": 5.0
+  }
+ ]
+}
