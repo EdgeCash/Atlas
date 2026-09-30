@@ -1,6 +1,42 @@
 {
   "history": [
     {
+      "at": "2026-09-30T15:02:00.347513+00:00",
+      "detail": "59 cards, 16 NFL cards, 117 teams, 32 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-30T15:02:00.345357+00:00",
+      "detail": "12 files",
+      "name": "social",
+      "ok": true
+    },
+    {
+      "at": "2026-09-30T15:01:53.633863+00:00",
+      "detail": "captured during the heavy refresh",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-09-30T15:01:53.631448+00:00",
+      "detail": "warehouse in 30s; nfl-ingest in 3s; nfl-warehouse in 20s; model in 39s; market in 8s; dfs-capture in 4s; cfb-players in 61s; availability in 2s; plays in 36s; dfs in 261s; other-models in 4s; site in 11s",
+      "name": "heavy",
+      "ok": true
+    },
+    {
+      "at": "2026-09-30T15:01:53.479368+00:00",
+      "detail": "59 cards, 16 NFL cards, 117 teams, 32 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-09-30T15:01:53.477280+00:00",
+      "detail": "12 files",
+      "name": "social",
+      "ok": true
+    },
+    {
       "at": "2026-09-30T14:08:41.972920+00:00",
       "detail": "market in 9s",
       "mode": "ordinary",
@@ -1254,69 +1290,29 @@
       "detail": "56 cards, 17 NFL cards, 112 teams, 30 NFL teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-09-27T20:38:17.094208+00:00",
-      "detail": "market in 6s",
-      "mode": "NFL Sunday",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-09-27T20:38:16.970411+00:00",
-      "detail": "56 cards, 17 NFL cards, 112 teams, 30 NFL teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-09-27T20:23:23.036196+00:00",
-      "detail": "market in 5s",
-      "mode": "NFL Sunday",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-09-27T20:23:22.906097+00:00",
-      "detail": "56 cards, 19 NFL cards, 112 teams, 31 NFL teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-09-27T20:08:18.923629+00:00",
-      "detail": "market in 7s",
-      "mode": "NFL Sunday",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-09-27T20:08:18.770914+00:00",
-      "detail": "56 cards, 19 NFL cards, 112 teams, 31 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-09-30T14:08:41.804478+00:00",
+      "at": "2026-09-30T15:02:00.347513+00:00",
       "detail": "59 cards, 16 NFL cards, 117 teams, 32 NFL teams",
       "name": "build",
       "ok": true
     },
     "heavy": {
-      "at": "2026-09-29T14:58:52.049244+00:00",
-      "detail": "warehouse in 30s; nfl-ingest in 3s; nfl-warehouse in 20s; model in 47s; market in 10s; dfs-capture in 5s; cfb-players in 107s; availability in 3s; plays in 41s; dfs in 260s; other-models in 4s; site in 10s",
+      "at": "2026-09-30T15:01:53.631448+00:00",
+      "detail": "warehouse in 30s; nfl-ingest in 3s; nfl-warehouse in 20s; model in 39s; market in 8s; dfs-capture in 4s; cfb-players in 61s; availability in 2s; plays in 36s; dfs in 261s; other-models in 4s; site in 11s",
       "name": "heavy",
       "ok": true
     },
     "poll": {
-      "at": "2026-09-30T14:08:41.972920+00:00",
-      "detail": "market in 9s",
-      "mode": "ordinary",
+      "at": "2026-09-30T15:01:53.633863+00:00",
+      "detail": "captured during the heavy refresh",
       "name": "poll",
       "ok": true
     },
     "social": {
-      "at": "2026-09-29T14:58:59.001200+00:00",
+      "at": "2026-09-30T15:02:00.345357+00:00",
       "detail": "12 files",
       "name": "social",
       "ok": true
@@ -1324,26 +1320,25 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-09-30T14:08:41.804478+00:00",
+      "at": "2026-09-30T15:02:00.347513+00:00",
       "detail": "59 cards, 16 NFL cards, 117 teams, 32 NFL teams",
       "name": "build",
       "ok": true
     },
     "heavy": {
-      "at": "2026-09-29T14:58:52.049244+00:00",
-      "detail": "warehouse in 30s; nfl-ingest in 3s; nfl-warehouse in 20s; model in 47s; market in 10s; dfs-capture in 5s; cfb-players in 107s; availability in 3s; plays in 41s; dfs in 260s; other-models in 4s; site in 10s",
+      "at": "2026-09-30T15:01:53.631448+00:00",
+      "detail": "warehouse in 30s; nfl-ingest in 3s; nfl-warehouse in 20s; model in 39s; market in 8s; dfs-capture in 4s; cfb-players in 61s; availability in 2s; plays in 36s; dfs in 261s; other-models in 4s; site in 11s",
       "name": "heavy",
       "ok": true
     },
     "poll": {
-      "at": "2026-09-30T14:08:41.972920+00:00",
-      "detail": "market in 9s",
-      "mode": "ordinary",
+      "at": "2026-09-30T15:01:53.633863+00:00",
+      "detail": "captured during the heavy refresh",
       "name": "poll",
       "ok": true
     },
     "social": {
-      "at": "2026-09-29T14:58:59.001200+00:00",
+      "at": "2026-09-30T15:02:00.345357+00:00",
       "detail": "12 files",
       "name": "social",
       "ok": true
