@@ -1,0 +1,53 @@
+{
+ "threshold": 5.0,
+ "bets": 635,
+ "units": -27.729610081042004,
+ "per_bet": -0.04366867729297953,
+ "beat_market": 0.00012330754601619557,
+ "beat_lower": -0.03800919475835466,
+ "units_shaded": -36.342782091971515,
+ "seasons_scored": [
+  2023,
+  2024,
+  2025
+ ],
+ "seasons_up": 0,
+ "per_season": {
+  "2023": {
+   "bets": 211,
+   "units": -8.01269587330548
+  },
+  "2024": {
+   "bets": 206,
+   "units": -7.358741694946419
+  },
+  "2025": {
+   "bets": 218,
+   "units": -12.358172512790102
+  }
+ },
+ "notes": {
+  "2023": {
+   "games": 1249,
+   "at_off_left_out": 2,
+   "excluded": false
+  },
+  "2024": {
+   "games": 1304,
+   "at_off_left_out": 0,
+   "excluded": false
+  },
+  "2025": {
+   "games": 1244,
+   "at_off_left_out": 0,
+   "excluded": false
+  }
+ },
+ "draftkings_share": 0.9700787401574803,
+ "c1_units": false,
+ "c2_beats_market": false,
+ "c3_seasons": false,
+ "c4_shaded": false,
+ "c5_bets": true,
+ "real": false
+}

@@ -4,10 +4,12 @@
 
 | Season | Games | Of which closed at the off | Consensus close | DraftKings close (games) | Atlas | Left out |
 |---|---|---|---|---|---|---|
-| 2024-25 | 1,224 | 144 | 0.2321 | 0.2322 (1,224) | 0.2347 | – |
+| 2022-23 | 361 | 0 | 0.2356 | 0.2353 (361) | 0.2366 | – |
+| 2023-24 | 1,251 | 0 | 0.2333 | 0.2338 (1,218) | 0.2363 | 2 closed at the off (too few to judge) |
+| 2024-25 | 1,306 | 226 | 0.2318 | 0.2319 (1,306) | 0.2352 | – |
 | 2025-26 | 1,253 | 1,251 | 0.2438 | 0.2440 (1,253) | 0.2456 | – |
-| 2022-26 pooled | 2,477 | 1,395 | 0.2380 | 0.2382 (2,477) | 0.2402 | – |
+| 2022-26 pooled | 4,171 | 1,477 | 0.2362 | 0.2364 (4,138) | 0.2388 | 2 closed at the off |
 
 A close taken at the off is a book's last line on the pregame market as it came off the board, for games whose lines came back stamped after puck drop. Those count only when a season has 30 or more and they score like pregame closes (Brier 0.22 or worse): an in-game price knows the score.
 
-Seasons backfilled: 2025-26 done.
+Seasons backfilled: 2023-24 done, 2024-25 done, 2025-26 done.
