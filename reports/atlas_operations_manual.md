@@ -1,6 +1,6 @@
 # Atlas Operations Manual
 
-*Generated 2026-09-30 14:55 UTC by `python -m atlas.live check`. Atlas research is
+*Generated 2026-09-30 16:07 UTC by `python -m atlas.live check`. Atlas research is
 complete; this document is about keeping the live tracker alive and honest for
 two seasons.*
 
@@ -17,11 +17,11 @@ two seasons.*
 |---|---|
 | Signals recorded | 228 |
 | Grades recorded | 116 |
-| Line snapshots | 2,187 |
-| Tracker runs logged | 241 |
+| Line snapshots | 2,269 |
+| Tracker runs logged | 242 |
 | Blocking data-quality exceptions | 0 |
 | Monitor alerts firing | 3 |
-| Replays clean | 5 of 6 |
+| Replays clean | 6 of 6 |
 
 ---
 
@@ -100,18 +100,18 @@ trace(Store.open(), "<signal_id>")   # signal, grade, full line history, run
 
 | Table | Rows | Columns | Primary key |
 |---|---|---|---|
-| runs | 241 | 14 | run_id |
-| numbers | 2,420 | 8 | game_id, market, model_version |
+| runs | 242 | 14 | run_id |
+| numbers | 2,644 | 8 | game_id, market, model_version, refreshed_at |
 | projections | 5,213 | 49 | sport, game_id, model_version |
 | calibration | 11,210 | 10 | sport, game_id, market |
 | card_grades | 140 | 17 | sport, game_id |
-| other_models | 376 | 9 | sport, game_id, model |
-| dfs_slates | 47 | 7 | draft_group_id |
-| dfs_salaries | 9,849 | 15 | draft_group_id, player_id |
+| other_models | 382 | 9 | sport, game_id, model |
+| dfs_slates | 65 | 7 | draft_group_id |
+| dfs_salaries | 12,893 | 15 | draft_group_id, player_id |
 | dfs_projections | 1,290 | 18 | draft_group_id, player_id_dk |
-| availability | 338 | 13 | conference, report_id, team, player |
-| games | 159 | 14 | game_id |
-| snapshots | 2,187 | 11 | game_id, book, market, captured_at |
+| availability | 348 | 13 | conference, report_id, team, player |
+| games | 184 | 15 | game_id |
+| snapshots | 2,269 | 11 | game_id, book, market, captured_at |
 | signals | 228 | 17 | signal_id |
 | grades | 116 | 14 | signal_id |
 | market_shape | 324 | 5 | sport, market, point |
@@ -159,8 +159,12 @@ Replays randomly chosen periods and checks that the signals, the grades and
 the statistics all rebuild from the stored inputs. Signals replay against the
 **first snapshot** for each game, book and market — the poll that first sees a
 game writes both in the same pass, so the first observation is the entry line
-by construction — and against the **model version the signal names**, which is
-why `tracking/numbers.csv` keeps every version rather than being overwritten.
+by construction — and against the **number the signal was formed from**: the
+model version it names, at the latest refresh of that version at or before the
+signal. New results change every number under one version, so a refresh keeps
+each superseded number a signal was formed from rather than overwriting it
+(`scripts/restore_numbers.py` put back the ones overwritten before 30 September
+2026, from git history).
 
 ---
 
