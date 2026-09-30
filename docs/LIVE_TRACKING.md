@@ -53,8 +53,8 @@ to three decimals, so an unchanged row produces no diff.
 | File | Contents |
 |---|---|
 | `numbers.csv` | Atlas's number per scheduled game and market, with the model version and when it was refreshed; a refresh keeps each earlier number a signal was formed from, so every signal replays against its own |
-| `games.csv` | every game seen, with kickoff and status |
-| `snapshots.csv` | append-on-change line observations, timestamped (Track 2) |
+| `games.csv` | every game seen, with kickoff, status and sport (ncaaf, nfl, nhl; empty on football rows from before 30 September 2026) |
+| `snapshots.csv` | append-on-change line observations, timestamped (Track 2); the NHL's moneyline is a `moneyline` row with no line, its puck line a `margin` |
 | `signals.csv` | immutable opinions (Track 1) |
 | `grades.csv` | one row per graded signal (Track 3) |
 

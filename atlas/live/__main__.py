@@ -56,7 +56,7 @@ def _days(horizon: int) -> list[date]:
 def _games_frame(quotes: pd.DataFrame, now: str) -> pd.DataFrame:
     columns = ["game_id", "season", "week", "kickoff", "home_team", "away_team",
                "home_team_id", "away_team_id", "status", "completed",
-               "home_score", "away_score"]
+               "home_score", "away_score", "sport"]
     games = quotes[[c for c in columns if c in quotes.columns]].drop_duplicates("game_id")
     games = games.copy()
     games["first_seen_at"] = now

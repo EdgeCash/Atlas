@@ -5,8 +5,11 @@ the NHL: the data, the empirical profile, the factors and their measured
 sizes, the game model, the player-prop model, how both are validated, and the
 order to build them in. It follows `MODEL_PLAN_NFL.md` section for section.
 
-**Status: nothing exists.** Atlas has no NHL data, warehouse, model, card or
-owner-page coverage. Everything below is a plan. Every number in it was
+**Status: step 0's capture is running** (30 September 2026): every poll
+records ESPN's DraftKings moneyline, puck line and total and the NHL finals
+(`atlas/live/provider.py`), and the owner capture seals every BettingPros
+book's NHL lines and player props (`atlas/owner/nhl_capture.py`). Nothing
+prices or shows an NHL line. The rest below is the plan. Every number in it was
 measured on 30 September 2026 from the sources in §2, unless it says it is
 cited; step 1's warehouse has to reproduce §3 to the decimal before anything
 is built on it, as the NFL's did.

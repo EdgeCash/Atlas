@@ -47,7 +47,10 @@ MARKETS = {
     "ncaaf": {"spread": 200, "total": 199, "moneyline": 198},
     "nfl": {"spread": 3, "total": 2, "moneyline": 1},
 }
-SPORT_NAMES = {"ncaaf": "NCAAF", "nfl": "NFL"}
+SPORT_NAMES = {"ncaaf": "NCAAF", "nfl": "NFL", "nhl": "NHL"}
+#: The game markets of a sport whose ids are not fixed above, found in its catalogue by slug at run
+#: time (`atlas/owner/nhl_capture.py`): the puck line is the NHL's spread.
+GAME_SLUGS = {"moneyline": ("moneyline",), "spread": ("spread", "puck-line"), "total": ("total", "over-under")}
 #: The consensus pseudo-book: the reference line, never a book to take.
 CONSENSUS = 0
 #: Prediction markets quote in their own way (a -99900 "cost" is a filled market); they are
@@ -130,8 +133,12 @@ def _text(value) -> str | None:
 
 def events(client: Client, sport: str, season: int, week: int) -> pd.DataFrame:
     """The week's games as the API lists them, with each side's school and mascot for matching."""
+    return _events(client.paged("/events", "events", sport=SPORT_NAMES[sport], season=season, week=week), sport)
+
+
+def _events(listed: list[dict], sport: str) -> pd.DataFrame:
     rows = []
-    for e in client.paged("/events", "events", sport=SPORT_NAMES[sport], season=season, week=week):
+    for e in listed:
         sides = {}
         for p in e.get("participants") or []:
             team = p.get("team") or {}
@@ -153,6 +160,12 @@ def events(client: Client, sport: str, season: int, week: int) -> pd.DataFrame:
             "forecast_temp": pd.to_numeric(weather.get("forecast_temp"), errors="coerce"),
         })
     return pd.DataFrame(rows, columns=EVENT_COLUMNS)
+
+
+def events_on(client: Client, sport: str, day: str) -> pd.DataFrame:
+    """The day's games as the API lists them, for a sport without weeks (the NHL): ``day`` is an
+    Eastern date, YYYY-MM-DD."""
+    return _events(client.paged("/events", "events", sport=SPORT_NAMES[sport], date=day), sport)
 
 
 def _current(lines: list[dict]) -> dict | None:
@@ -197,13 +210,17 @@ def parse_offers(body: dict, sport: str, market: str, captured_at: str) -> pd.Da
 
 
 def offers(client: Client, sport: str, event_ids: list[int], markets: tuple[str, ...] = ("total", "spread"),
-           captured_at: str | None = None) -> pd.DataFrame:
-    """Every book's current line on each market for the events given, a batch at a time."""
+           captured_at: str | None = None, market_ids: dict[str, int] | None = None) -> pd.DataFrame:
+    """Every book's current line on each market for the events given, a batch at a time. ``market_ids``
+    numbers the markets for a sport not in :data:`MARKETS`."""
     captured_at = captured_at or datetime.now(UTC).replace(microsecond=0).isoformat()
     parts = []
     ids = [int(i) for i in event_ids]
+    known = market_ids if market_ids is not None else MARKETS[sport]
     for market in markets:
-        market_id = MARKETS[sport][market]
+        if market not in known:
+            continue
+        market_id = known[market]
         for start in range(0, len(ids), BATCH):
             batch = ids[start:start + BATCH]
             try:

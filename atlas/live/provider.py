@@ -9,7 +9,10 @@ relying on forever, so the provider is an interface with one implementation
 rather than a hard-coded fetch.
 
 Orientation matches the rest of Atlas: ``margin`` is home-oriented, so a home
-favourite by 7 is ``+7``, and a total is a total.
+favourite by 7 is ``+7``, and a total is a total. The NHL's puck line is its
+``margin`` (a home favourite at -1.5 is ``+1.5``), and its moneyline is a
+``moneyline`` row with no line: ``price`` is the home side's, ``other_price``
+the away side's.
 """
 
 from __future__ import annotations
@@ -31,6 +34,7 @@ SCOREBOARD = (
 SCOREBOARDS = {
     "ncaaf": SCOREBOARD,
     "nfl": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+    "nhl": "https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard",
 }
 
 #: ESPN groups: 80 is all FBS. Without it the feed is mostly FCS noise.
@@ -75,12 +79,19 @@ def _line_block(block: dict | None, key: str) -> tuple[float | None, float | Non
     return _to_float(raw_line, even=0.0), _to_float(inner.get("odds"), even=100.0)
 
 
+def _season(event: dict, sport: str) -> int | None:
+    """The season as Atlas numbers it: the year it starts. ESPN numbers a hockey season by the
+    year it ends (2026-27 is 2027); football's start and end in the same year."""
+    year = int((event.get("season") or {}).get("year") or 0) or None
+    return year - 1 if year and sport == "nhl" else year
+
+
 @dataclass(frozen=True)
 class EspnScoreboard:
     """ESPN's public scoreboard. No key, no quota, one book.
 
-    The same feed serves college (``sport="ncaaf"``, FBS only) and the NFL;
-    event ids are ESPN's and unique across the two.
+    The same feed serves college (``sport="ncaaf"``, FBS only), the NFL and
+    the NHL; event ids are ESPN's and unique across the three.
     """
 
     name: str = "espn"
@@ -130,7 +141,7 @@ class EspnScoreboard:
                 "captured_at": captured,
                 "game_id": int(event["id"]),
                 "kickoff": event.get("date"),
-                "season": int((event.get("season") or {}).get("year") or 0) or None,
+                "season": _season(event, self.sport),
                 "week": int((event.get("week") or {}).get("number") or 0) or None,
                 "home_team": (home.get("team") or {}).get("displayName"),
                 "away_team": (away.get("team") or {}).get("displayName"),
@@ -141,6 +152,7 @@ class EspnScoreboard:
                 "status": status,
                 "completed": bool((comp.get("status", {}).get("type", {}) or {})
                                   .get("completed", False)),
+                "sport": self.sport,
             }
 
             for odds in comp.get("odds", []) or []:
@@ -173,13 +185,32 @@ class EspnScoreboard:
                         "line": over_now, "price": over_price, "other_price": under_price,
                         "open_line": over_open, "open_price": over_open_price,
                     })
+
+                # The moneyline has no line; ESPN quotes it on the NHL, and on football too.
+                moneyline = odds.get("moneyline") or {}
+                _, ml_home = _line_block(moneyline.get("home"), "close")
+                _, ml_home_open = _line_block(moneyline.get("home"), "open")
+                _, ml_away = _line_block(moneyline.get("away"), "close")
+                if self.sport in MONEYLINE_SPORTS and (ml_home is not None or ml_home_open is not None):
+                    out.append({
+                        **base, "book": book, "market": "moneyline",
+                        "line": None, "price": ml_home, "other_price": ml_away,
+                        "open_line": None, "open_price": ml_home_open,
+                    })
         return out
 
 
-PROVIDERS: dict[str, OddsProvider] = {"espn": EspnScoreboard(sport="ncaaf"), "espn-nfl": EspnScoreboard(sport="nfl")}
+#: The sports whose moneyline is captured. Football's is left out: nothing reads it, and every
+#: new stream is a row per change in the committed record.
+MONEYLINE_SPORTS = frozenset({"nhl"})
 
-#: What one poll captures: every sport Atlas publishes a card for.
-POLLED: tuple[str, ...] = ("espn", "espn-nfl")
+PROVIDERS: dict[str, OddsProvider] = {"espn": EspnScoreboard(sport="ncaaf"), "espn-nfl": EspnScoreboard(sport="nfl"),
+                                      "espn-nhl": EspnScoreboard(sport="nhl")}
+
+#: What one poll captures: every sport Atlas publishes a card for, and the NHL, whose closing
+#: lines are kept from opening night so its model has a market to be measured against
+#: (docs/MODEL_PLAN_NHL.md, step 0). Nothing reads an NHL line into a signal or a card yet.
+POLLED: tuple[str, ...] = ("espn", "espn-nfl", "espn-nhl")
 
 
 def get_provider(name: str = "espn") -> OddsProvider:
