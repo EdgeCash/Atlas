@@ -5,7 +5,7 @@ the NHL: the data, the empirical profile, the factors and their measured
 sizes, the game model, the player-prop model, how both are validated, and the
 order to build them in. It follows `MODEL_PLAN_NFL.md` section for section.
 
-**Status (30 September 2026): steps 0 to 9 are done; the game model meets v1's bar, and no curated-play rule clears its own**
+**Status (30 September 2026): steps 0 to 9 are done; the game model meets v1's bar, and no curated-play rule clears its own, the puck line's fresh test on 2023–26 included**
 (`reports/nhl_model.md`: better than Elo and the goals-based Poisson model on
 every row out of sample). Every poll records
 ESPN's DraftKings moneyline, puck line and total and the NHL finals
@@ -20,7 +20,10 @@ and the grid are built and scored (`atlas/models/nhl_state.py`,
 per game, graded in points of win probability) and on the owner's board,
 parlays and exchange board (`atlas/owner/nhl_board.py`), and in the pick'em
 (`atlas/owner/pickem.py`), with Atlas's own player projections beside the
-market's (`atlas/models/nhl_props.py`, `reports/nhl_props.md`). The rest below is the plan, with what the
+market's (`atlas/models/nhl_props.py`, `reports/nhl_props.md`). BettingPros' closing lines for 2023–24 to
+2025–26 are backfilled and sealed (`atlas/owner/nhl_history.py`): the consensus close leads Atlas's moneyline by
+0.002 to 0.003 of Brier in each season (`reports/nhl_market_recent.md`), and the puck line, tested again on
+those seasons, lost (`reports/nhl_puckline_fresh.md`, step 9). The rest below is the plan, with what the
 build changed marked where it did. Every number in it was
 measured on 30 September 2026 from the sources in §2, unless it says it is
 cited; step 1's warehouse has to reproduce §3 to the decimal before anything
@@ -104,7 +107,7 @@ to be checked on the first game days.
 |---|---|---|
 | SportsBookReviewsOnline archive (`/scoresoddsarchives/nhl-odds-YYYY-YY`) | 2010–11 → 2021–22 verified complete (e.g. 1,401 games in 2021–22 with playoffs; pages go back to 2007–08); 2022–23 stops on 27 November | **fetched and parsed**: opening and closing moneyline, puck line with price, opening and closing total with price. Needs a browser user agent. Personal-use archive: cache it, never republish it |
 | The Odds API, historical | from late 2020 | paid; fills 2022–23 → 2025–26 |
-| BettingPros partner API, `/offers` by event | depth measured by the backfill itself | **the owner's choice (30 September 2026).** `atlas/owner/nhl_history.py`, a step of the heavy refresh: 2025–26 back to 2022–23, newest first, 500 calls a run, each game matched to the warehouse and each kept book's last main pregame line taken as its close (the consensus, DraftKings, FanDuel), sealed in `tracking/owner_nhl_history/`; a season with no pregame line is where the key's history ends and nothing older is asked for. The market row for those seasons: `reports/nhl_market_recent.md`. First run (30 September 2026): 2024–25's first 612 games closed pregame at every book kept (every event matched, 1,306 of 1,306), the consensus's Brier 0.2348 against Atlas's 0.2371; 2025–26's lines all came back stamped after puck drop, so from the second run a book's close falls back to its last line as it came off the board, counted in the market row only when a season's such closes score like pregame ones |
+| BettingPros partner API, `/offers` by event | depth measured by the backfill itself | **the owner's choice (30 September 2026).** `atlas/owner/nhl_history.py`, a step of the heavy refresh: 2025–26 back to 2022–23, newest first, 500 calls a run, each game matched to the warehouse and each kept book's last main pregame line taken as its close (the consensus, DraftKings, FanDuel), sealed in `tracking/owner_nhl_history/`; a season with no pregame line is where the key's history ends and nothing older is asked for. The market row for those seasons: `reports/nhl_market_recent.md`. First run (30 September 2026): 2025–26's lines all came back stamped after puck drop, so from the second run a book's close falls back to its last line as it came off the board, counted in the market row only when a season's such closes score like pregame ones. By the third run, the same day, 2023–24, 2024–25 and 2025–26 were in, with a consensus close on every matched game (1,332, 1,306 and 1,253). 2023–24 closed pregame and 2024–25 mostly did (226 games at the off); 2025–26 closed almost entirely at the off, a minute after puck drop at the median, and those closes score like pregame ones (Brier 0.2438), so they count. The consensus close's Brier against Atlas's: 0.2333 and 0.2363 in 2023–24, 0.2318 and 0.2352 in 2024–25, 0.2438 and 0.2456 in 2025–26. 2022–23 is filling, 500 calls a heavy run |
 | sports-statistics.com | ESPN-derived skater (1.01M rows) and goalie box scores, keyed by ESPN event id | a cross-check only: the NHL API is the primary, and the download was not reachable from here |
 
 The market benchmark therefore exists for 2010–11 to 2021–22 now, and for
@@ -454,7 +457,7 @@ Brier; a model that closes a fifth of it is doing well.
 | 6 | Wire into the card and grade (`nhl.html` board, the live and site layers take a third sport), the owner board, parlays and the exchanges (Kalshi and Polymarket list NHL games) | **public side done** — the heavy refresh publishes `tracking/nhl_projections.csv` and the NHL's moneyline record (11,764 games since 2013–14 against the closing line) into `tracking/calibration.csv`; `nhl.html` and a card per game (`atlas/site/nhl.py`): Atlas's chance beside DraftKings' de-vigged moneyline, the grade in points of win probability from that record, the grid, the goalies, the model's reading; the audit passes. No NHL signal or public record page yet. **Owner side done** — the owner board prices every book's NHL moneyline, puck line and total by the grid pulled toward the consensus by the share of its disagreement that has turned out real (0.46 on that record), logs its picks once in `tracking/owner_nhl/` and grades them on the final and the close; the same legs feed the parlays and the exchange board (`atlas/owner/nhl_board.py`, `docs/OWNER_BOARD.md`) |
 | 7 | Props v1: the Pick'em engine on NHL slugs, with §3's shapes, graded from the NHL box score | **done** — the pick'em slate takes the NHL's games; shots on goal, points, goals, assists, saves, blocked shots and hits priced from every book's two-sided price along §3's count shapes (saves 1.9, measured again around a game-level expectation of shots against: 1.92), graded from ESPN's hockey box score, which matches the NHL's to the skater (`atlas/sources/nhl.py`); PrizePicks' standard payouts assumed until the owner confirms them |
 | 8 | Props v2: Atlas's player projections, walk-forward | **done** — ice time × rates per second (shrunk lightly to the position: players differ, hits most) × the opponent, the arena (counted neutral, so a home rink is not in the rate and the factor both) and home, a Poisson layer a season at a time on the three before; saves on the empirical shape of saves over their expectation (they lean left: the pulled goalie). Better than the season-mean Poisson at every common line pooled over 2022–26 (shots 0.2112 against 0.2163 at 1.5, saves 0.2282 against 0.2509 at 24.5; hits only just, and not in 2024–26, when league hitting fell) (`reports/nhl_props.md`). Sealed for the owner each heavy refresh; the pick'em shows Atlas's probability beside fair and logs it, so the two meet on the same lines |
-| 9 | Curated NHL plays: rules pre-registered on the walk-forward before any is logged, as the football rules were | **done — no rule clears its bar; there are no curated NHL plays.** Three rules (the side of Atlas's disagreement with the closing moneyline, total and puck line) registered in `docs/NHL_PLAYS_PREREGISTRATION.md` before any was scored, then scored once (`reports/nhl_plays.md`, `make nhl-plays`). None beat the market's own probability beyond chance on 2020–23. The puck line came closest: +34.5 units on 997 bets, every deciding season up and still up five cents worse, but won 2.3 points above the market's probability with a lower bound of −1.4. The owner board's NHL picks (step 6) carry on, on their own record; a changed model is a new registration. At the owner's request a fresh test of the puck line on 2023–26, seasons it never saw, is registered (`docs/NHL_PUCKLINE_FRESH_PREREGISTRATION.md`: the same rule at the 5-point threshold the archive picks) and scores itself once, in the heavy refresh, when the BettingPros backfill has all three seasons (`reports/nhl_puckline_fresh.md`) |
+| 9 | Curated NHL plays: rules pre-registered on the walk-forward before any is logged, as the football rules were | **done — no rule clears its bar; there are no curated NHL plays.** Three rules (the side of Atlas's disagreement with the closing moneyline, total and puck line) registered in `docs/NHL_PLAYS_PREREGISTRATION.md` before any was scored, then scored once (`reports/nhl_plays.md`, `make nhl-plays`). None beat the market's own probability beyond chance on 2020–23. The puck line came closest: +34.5 units on 997 bets, every deciding season up and still up five cents worse, but won 2.3 points above the market's probability with a lower bound of −1.4. The owner board's NHL picks (step 6) carry on, on their own record; a changed model is a new registration. At the owner's request the puck line was tested again on 2023–26, seasons it had never been scored on (`docs/NHL_PUCKLINE_FRESH_PREREGISTRATION.md`: the same rule at the 5-point threshold the archive picks, the BettingPros consensus close at ±1.5 as the market, DraftKings' price else FanDuel's), and scored once by the heavy refresh on 30 September 2026 (`reports/nhl_puckline_fresh.md`). **It fails four of the five criteria:** −27.7 units on 635 bets (−4.4% a bet), won 0.0 points above the market's probability (lower bound −3.8), no season up (2023–24 −8.0, 2024–25 −7.4, 2025–26 −12.4), −36.3 five cents worse; only the count of bets is met. Its side covered as often as the close said it would, so the loss is the books' margin and the 2020–23 result reads as noise. The puck line is not a curated play and is not re-run; a further test is a further registration |
 
 Steps 0 and 7 reuse code that exists and can run within days of a go-ahead;
 steps 1–5 are the NFL's steps 0–5 again, weeks rather than days. Nothing
@@ -467,8 +470,10 @@ reaches the public site until step 5's table is filled in and passes.
 - **Historical closing lines for 2022–23 to 2025–26:** *decided 30 September
   2026: BettingPros.* The heavy refresh backfills them and measures the key's
   depth as it goes (`atlas/owner/nhl_history.py`, §2); the market row for the
-  recent seasons follows (`reports/nhl_market_recent.md`). The Odds API stays
-  the fallback for any season the key does not reach.
+  recent seasons follows (`reports/nhl_market_recent.md`). 2023–24 to 2025–26
+  were in by the third run (30 September 2026), which scored the puck line's
+  fresh test (step 9); 2022–23 is filling. The Odds API stays the fallback for
+  any season the key does not reach.
 - **PrizePicks' NHL payouts:** the same table as football's is assumed; a
   state that pays differently changes `PAYOUTS`.
 - No new credentials: the NHL API and ESPN are keyless, and BettingPros is
@@ -480,7 +485,11 @@ reaches the public site until step 5's table is filled in and passes.
 
 - **There may be little room.** The closing line's lead over "home, always"
   is 0.010 of Brier. A model between Elo and the market is an honest product;
-  "we beat Vegas" is not a claim this plan expects to make.
+  "we beat Vegas" is not a claim this plan expects to make. Measured on
+  2023–26: the consensus close leads Atlas's moneyline by 0.002 to 0.003 of
+  Brier in every season, and where Atlas disagreed with the puck line's close
+  by 5 points or more its side covered exactly as often as the close said
+  (`reports/nhl_puckline_fresh.md`).
 - **The goalie is announced late.** Starters are often confirmed at the
   morning skate or warm-ups; a number published the night before prices an
   expected starter and must say so, and move when the starter is known.
