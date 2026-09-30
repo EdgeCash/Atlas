@@ -142,11 +142,11 @@ COUNT_MOVES = {"rec": 1.5, "sv": 3.0}
 
 PICK_COLUMNS = ["pick_id", "day", "logged_at", "sport", "season", "week", "game_id", "kickoff", "game", "player_key",
                 "player", "team", "market", "side", "line", "p", "p_push", "books", "book_line", "close_line", "close_p",
-                "close_at", "actual", "outcome", "graded_at"]
+                "close_at", "actual", "outcome", "graded_at", "p_atlas"]
 SLIP_COLUMNS = ["slip_id", "day", "logged_at", "season", "week", "kind", "n", "pick_ids", "payouts", "ev", "p_profit",
                 "kelly", "growth", "first_kickoff", "last_kickoff"]
 PRICED_COLUMNS = ["sport", "event_id", "game_id", "kickoff", "day", "player_key", "player", "team", "position", "market",
-                  "line", "p_over", "p_under", "p_push", "books", "book_line", "side", "p", "updated"]
+                  "line", "p_over", "p_under", "p_push", "books", "book_line", "side", "p", "updated", "p_atlas"]
 
 
 def picks_path() -> Path:
@@ -366,9 +366,47 @@ def price(props: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
         rows.append({"sport": first["sport"], "event_id": int(event_id), "game_id": str(first["game_id"]),
                      "kickoff": first["kickoff"], "day": first["day"], "player_key": str(player_key),
                      "player": first["player"], "team": first["team"], "position": first["position"], "market": market,
-                     "line": line, **fair, "side": side, "p": fair["p_" + side], "updated": updated})
+                     "line": line, **fair, "side": side, "p": fair["p_" + side], "updated": updated,
+                     "p_atlas": float("nan")})
     out = pd.DataFrame(rows, columns=PRICED_COLUMNS)
     return out.sort_values("p", ascending=False).reset_index(drop=True), counts
+
+
+def atlas_beside(priced: pd.DataFrame, snap: dict | None, events: pd.DataFrame) -> pd.DataFrame:
+    """Atlas's own probability of each NHL pick's side (`atlas/models/nhl_props.py`), beside the market's fair
+    one, never instead of it: the player found by name (and team, where two share one) in the heavy refresh's
+    sealed snapshot, on the team BettingPros lists him on, against that night's opponent."""
+    if snap is None or priced.empty or events.empty:
+        return priced
+    from atlas.models import nhl_props
+    from atlas.sources import nhl
+
+    code = lambda t: nhl.ESPN_CODES.get(str(t), str(t)) if isinstance(t, str) and t else None  # noqa: E731
+    ev = events.drop_duplicates("event_id").set_index("event_id")
+    people = {kind: {} for kind in ("skaters", "goalies")}
+    for kind in people:
+        for r in snap[kind].to_dict("records"):
+            people[kind].setdefault(name_key(r["name"]), []).append(r)
+    out = priced.copy()
+    for i, r in out[out["sport"] == "nhl"].iterrows():
+        stat = nhl_props.MARKETS.get(str(r["market"]))
+        if stat is None or r["event_id"] not in ev.index:
+            continue
+        home, away = code(ev.loc[r["event_id"], "home_abbr"]), code(ev.loc[r["event_id"], "visitor_abbr"])
+        found = people["goalies" if stat == "saves" else "skaters"].get(name_key(r["player"]), [])
+        team = code(r["team"])
+        if len(found) > 1:
+            found = [f for f in found if f["team"] == team] or found[:0]
+        if len(found) != 1:
+            continue
+        who = found[0]
+        team = team if team in (home, away) else (who["team"] if who["team"] in (home, away) else None)
+        if team is None:
+            continue
+        mu = nhl_props.expect(snap, who, team, away if team == home else home, home, stat, goalie=who)
+        if math.isfinite(mu):
+            out.loc[i, "p_atlas"] = nhl_props.prob(mu, float(r["line"]), str(r["side"]), *nhl_props.shape(snap, stat))
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -561,7 +599,8 @@ def log(picks: pd.DataFrame, slips: pd.DataFrame, priced: pd.DataFrame, chosen: 
                      "player": r.player, "team": r.team, "market": r.market, "side": r.side, "line": float(r.line),
                      "p": round(float(r.p), 4), "p_push": round(float(r.p_push), 4), "books": int(r.books),
                      "book_line": float(r.book_line), "close_line": float(r.line), "close_p": round(float(r.p), 4),
-                     "close_at": stamp, "actual": None, "outcome": None, "graded_at": None})
+                     "close_at": stamp, "actual": None, "outcome": None, "graded_at": None,
+                     "p_atlas": round(float(r.p_atlas), 4) if pd.notna(r.p_atlas) else None})
     fresh = pd.DataFrame(rows, columns=PICK_COLUMNS)
     new_picks = fresh[~fresh["pick_id"].isin(set(picks["pick_id"]))] if len(picks) else fresh
     slip_rows = []
@@ -785,11 +824,12 @@ def sections(priced: pd.DataFrame, chosen: pd.DataFrame, picks: pd.DataFrame, sl
         pid = pick_id(r["day"], r["event_id"], r["player_key"], r["market"], r["side"])
         who = " · ".join(x for x in (r["team"], r["position"]) if isinstance(x, str) and x)
         tie = f"tie {r['p_push']:.0%}" if r["p_push"] >= 0.005 else ""
+        atlas = f"Atlas {r['p_atlas']:.0%}" if pd.notna(r.get("p_atlas")) else ""
         return [[r["player"], f"{who} · {names.get(str(r['game_id']), '')} · {_eastern(r['kickoff'])}"],
                 [f"{_side_word(r['side'])} {float(r['line']):g} {LABELS.get(r['market'], r['market'])}",
                  "logged" if pid in logged else ""],
                 [f"books' line {float(r['book_line']):g}", f"{int(r['books'])} books"],
-                [f"{r['p']:.1%}", tie]]
+                [f"{r['p']:.1%}", " · ".join(x for x in (tie, atlas) if x)]]
 
     head = ["Player", "Pick", "Market", "Fair"]
     top = [pick_row(r) for _, r in board.head(TOP_ROWS).iterrows()]
@@ -807,7 +847,10 @@ def sections(priced: pd.DataFrame, chosen: pd.DataFrame, picks: pd.DataFrame, sl
         "around a player's mean; receptions and every NHL stat a count, at the spread measured for it), the median "
         "across books. The books' line is the median of theirs. A tie on a whole-number line drops the pick from "
         "the entry, as PrizePicks settles it. The NHL is priced on PrizePicks' standard payout table too: confirm it "
-        "in the app."]}
+        "in the app.",
+        "Atlas, on an NHL line, is Atlas's own probability of the side from its player projection (ice time, rates, "
+        "the opponent and the arena, walk-forward; reports/nhl_props.md): shown beside fair, never instead of it, "
+        "and logged with each pick, so the two can be compared on the same lines."]}
     out = [slip_card, board_card]
 
     if len(picks):
@@ -825,6 +868,13 @@ def sections(priced: pd.DataFrame, chosen: pd.DataFrame, picks: pd.DataFrame, sl
                  f"{wins / len(decided):.1%} ({pd.to_numeric(decided['p']).mean():.1%})" if len(decided) else "–"],
                 ["Closed toward the pick", f"{int((moved > 0).sum())} of {int(moved.notna().sum())}, "
                  f"{_num(moved.mean(), '{:+.1%}')} fair probability on average" if moved.notna().any() else "–"]]
+        beside = decided[pd.to_numeric(decided["p_atlas"], errors="coerce").notna()] if "p_atlas" in decided \
+            else decided.iloc[0:0]
+        if len(beside):
+            won = (beside["outcome"] == "win").astype(float)
+            rows.append(["Brier, fair and Atlas (NHL, same picks)",
+                         f"{((pd.to_numeric(beside['p']) - won) ** 2).mean():.4f} and "
+                         f"{((pd.to_numeric(beside['p_atlas']) - won) ** 2).mean():.4f} on {len(beside)}"])
         graded = slip_results(slips, picks) if len(slips) else slips.assign(result=[], multiple=[])
         settled = graded[graded["result"] != "open"] if len(graded) else graded
         if len(slips):
@@ -897,13 +947,26 @@ def fetch(client, events: pd.DataFrame, now: datetime) -> pd.DataFrame:
     return pd.concat(parts, ignore_index=True)
 
 
+def _snapshot(passphrase: str, where: Path | None = None) -> dict | None:
+    """The NHL player projections the heavy refresh sealed; None when there are none or they cannot be read."""
+    try:
+        from atlas.models import nhl_props
+
+        return nhl_props.load(passphrase, where)
+    except Exception as error:  # noqa: BLE001 - the type only; the pick'em stands without it
+        LOG.warning("pickem: no NHL player projections (%s)", type(error).__name__)
+        return None
+
+
 def build(client, events: pd.DataFrame, games: pd.DataFrame, names: dict, passphrase: str, now: datetime, *,
-          picks_where: Path | None = None, slips_where: Path | None = None, box=box_score) -> list[dict]:
+          picks_where: Path | None = None, slips_where: Path | None = None, box=box_score,
+          projections_where: Path | None = None) -> list[dict]:
     """The day's pick'em: priced, optimised, logged once, followed, graded, shown. Never raises."""
     try:
         picks_where, slips_where = picks_where or picks_path(), slips_where or slips_path()
         props = fetch(client, events, now)
         priced, counts = price(props)
+        priced = atlas_beside(priced, _snapshot(passphrase, projections_where), events)
         chosen = optimize(priced)
         day = str(priced["day"].iloc[0]) if len(priced) else None
         LOG.info(summary(counts, priced, chosen, day))
