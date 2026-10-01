@@ -235,9 +235,10 @@ NHL rows are filed by the ISO week of puck drop. PrizePicks' NHL payouts are ass
 they say nothing about the lines PrizePicks set well. The ledger logs every standard NHL line on the slate, pick or
 not, once a day at the same moment, with fair, Atlas and the box-score actual (`tracking/owner_prop_ledger/`, sealed by
 the ISO week of puck drop), and scores fair, Atlas and 0.50 on the same lines per stat: Brier, log loss, the paired
-difference with its 95% interval, and each one's side's hit rate. The saves verdict is pre-registered
-(`docs/NHL_SAVES_PREREGISTRATION.md`): judged at 300 decided goalie lines, cleared only by beating fair and the coin
-flip and hitting PrizePicks' two-pick break-even. A card on the Pick'em tab.
+difference with its 95% interval, and each one's side's hit rate. Two verdicts are pre-registered: saves
+(`docs/NHL_SAVES_PREREGISTRATION.md`), judged at 300 decided goalie lines, and shots on goal
+(`docs/NHL_SHOTS_PREREGISTRATION.md`), judged at 1,000 lines because the edge expected is smaller; each cleared only by
+beating fair and the coin flip and hitting PrizePicks' two-pick break-even. A card on the Pick'em tab.
 
 **The NHL's history** (`atlas/owner/nhl_history.py`, the owner's choice for the archive's gap). Each heavy
 refresh spends up to 500 calls filling the NHL's closing lines for 2025-26 back to 2022-23, newest first: the
