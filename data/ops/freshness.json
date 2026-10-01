@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-10-01T22:09:18.990212+00:00",
+      "detail": "market in 9s",
+      "mode": "Thursday night",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-10-01T22:09:18.826796+00:00",
+      "detail": "63 cards, 17 NFL cards, 57 NHL cards, 119 teams, 32 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-10-01T21:53:42.394695+00:00",
       "detail": "market in 6s",
       "mode": "Thursday night",
@@ -1265,24 +1278,11 @@
       "detail": "56 cards, 17 NFL cards, 112 teams, 32 NFL teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-09-28T23:23:33.989042+00:00",
-      "detail": "market in 8s",
-      "mode": "Monday night",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-09-28T23:23:33.844472+00:00",
-      "detail": "56 cards, 17 NFL cards, 112 teams, 32 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-10-01T21:53:42.278252+00:00",
+      "at": "2026-10-01T22:09:18.826796+00:00",
       "detail": "63 cards, 17 NFL cards, 57 NHL cards, 119 teams, 32 NFL teams",
       "name": "build",
       "ok": true
@@ -1294,8 +1294,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-01T21:53:42.394695+00:00",
-      "detail": "market in 6s",
+      "at": "2026-10-01T22:09:18.990212+00:00",
+      "detail": "market in 9s",
       "mode": "Thursday night",
       "name": "poll",
       "ok": true
@@ -1309,7 +1309,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-10-01T21:53:42.278252+00:00",
+      "at": "2026-10-01T22:09:18.826796+00:00",
       "detail": "63 cards, 17 NFL cards, 57 NHL cards, 119 teams, 32 NFL teams",
       "name": "build",
       "ok": true
@@ -1321,8 +1321,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-01T21:53:42.394695+00:00",
-      "detail": "market in 6s",
+      "at": "2026-10-01T22:09:18.990212+00:00",
+      "detail": "market in 9s",
       "mode": "Thursday night",
       "name": "poll",
       "ok": true
