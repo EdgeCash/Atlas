@@ -793,7 +793,7 @@ def build(passphrase: str, *, store=None, research: pd.DataFrame | None = None, 
                 *pickem.build(client, every_event, games, names, passphrase, now, picks_where=pickem_where,
                               slips_where=slips_where),
                 *highfive.build(both, finals, games, names, passphrase, now, calibration=calibration,
-                                where=highfive_where)]
+                                nhl_projections=nhl_projections, where=highfive_where)]
     except Exception as error:  # noqa: BLE001 - the type only: a message could quote a line
         LOG.error("board not built: %s", type(error).__name__)
         return [{"title": "The board", "tab": "Board",

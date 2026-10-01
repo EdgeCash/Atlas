@@ -24,9 +24,11 @@ for the Eastern day with games are:
    line and price shown; never revised. Graded win, loss or push on the final
    score, in units at the price logged.
 
-Two labels are recorded with each play and are not filters: the model's hit
-rate over its last 100 decided walk-forward results in the play's market at
-the time (`form`), and the market's probability of the side (`p_fair`).
+Three labels are recorded with each play and are not filters: the model's
+hit rate over its last 100 decided walk-forward results in the play's market
+at the time (`form`), the market's probability of the side (`p_fair`), and
+for an NHL play whether it falls inside the first 28 days of its season's
+first puck drop (`early`; see the label registration below).
 
 ## Why this rule, and what it predicts
 
@@ -55,6 +57,38 @@ plays use, and not before:
 
 The rule is frozen. A change to any bar, the shrink, the cap or the hour is a
 new rule with a new id and a record that starts the day it is frozen.
+
+## Label registered 1 October 2026: the first month of the NHL season
+
+Found after the fact, in the slicing that followed the backtest, and so
+registered as a label and not a rule. On the 2013-22 walk-forward at the
+close, Atlas's NHL picks on the side the market favoured, by weeks since the
+season's first puck drop (`reports/highfive_backtest.md`, "by phase"):
+
+| | Games | Hit | Market fair | Edge over fair | Units / 100 | Seasons up |
+|---|---|---|---|---|---|---|
+| weeks 1-4 | 765 | 63.4% | 57.7% | +5.7 pt | +5.6 | 6 of 10 |
+| weeks 5 on | 3,995 | 60.6% | 58.5% | +2.1 pt | about −1 | 3 to 4 of 10 |
+
+A mechanism is plausible (a state model carrying last season's information
+forward against a market still finding its prices), but a slice found by
+looking is a hypothesis, and one of several slices looked at. So:
+
+- **The label.** Every NHL play logged under `daily-v1` records `early`:
+  true when its puck drop is inside 28 days of the first puck drop the store
+  knows of for that season (the walk-forward's weeks 1 to 4), false after,
+  unknown when the store has no games of that season yet. It changes no
+  pick, no rank and no cap.
+- **The prediction.** Early NHL plays hit the market's probability plus 3 to
+  8 points and pay between +2% and +8% a play at the prices logged; later
+  NHL plays hit the market's probability plus 0 to 4 points.
+- **What would make it a rule.** Judged at 100 decided early plays, across
+  at least two seasons, and not before: the 95% lower bound of (hit rate
+  minus the mean market probability) above zero, and units positive. Then
+  a new rule with a new id, and a record that starts the day it is frozen.
+  Until then the label is shown as a split on the record and nothing else.
+- **What would retire it.** 100 decided early plays with the edge over fair
+  at or below the later plays'.
 
 ## What it is not
 

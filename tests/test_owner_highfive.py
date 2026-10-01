@@ -171,3 +171,28 @@ def test_the_public_page_and_script_never_name_the_tab():
     for text in (script, page):
         assert "Daily plays" not in text and "High Five" not in text and "highfive" not in text.lower()
         assert '"Daily"' not in text
+
+
+def test_the_early_label_is_the_first_four_weeks_of_the_nhl_season_and_never_a_filter():
+    games = pd.DataFrame({"game_id": ["5", "6", "7", "n1"], "season": [2026] * 4, "sport": "nhl",
+                          "kickoff": ["2026-09-26T20:00:00Z", "2026-09-26T21:00:00Z", "2026-09-26T22:00:00Z",
+                                      "2026-09-01T23:00:00Z"]})                              # n1: the season's opener
+    projections = pd.DataFrame({"game_id": ["5"], "season": [2026], "kickoff": ["2026-09-26T20:00:00Z"]})
+    first, season_of = highfive.openers(games, projections)
+    assert first == {2026: pd.Timestamp("2026-09-01T23:00:00Z")} and season_of["5"] == 2026
+    w = highfive.pick_wagers(_legs(), NOW, first=first, season_of=season_of)
+    assert w.set_index("game_id")["early"].to_dict() == {"5": True, "1": None, "3": None, "4": None}
+    assert list(w["game_id"]) == ["5", "1", "3", "4"]                                   # the label changes nothing
+    # Past 28 days from the opener the label is false; with no opener known it is unknown, not guessed.
+    late_first = {2026: pd.Timestamp("2026-08-20T23:00:00Z")}
+    assert highfive.pick_wagers(_legs(), NOW, first=late_first, season_of=season_of).set_index("game_id")["early"]["5"] is False
+    assert highfive.pick_wagers(_legs(), NOW).set_index("game_id")["early"]["5"] is None
+    assert highfive.openers(None, None) == ({}, {})
+    # The label is logged, and the record splits on it.
+    record, _ = highfive.log(pd.DataFrame(columns=highfive.COLUMNS), w, NAMES, GAMES, NOW)
+    assert record.set_index("game_id")["early"].to_dict() == {"5": True, "1": None, "3": None, "4": None}
+    sec = highfive.sections(w, record, NAMES, NOW)
+    rec = next(t for t in sec[0]["tables"] if t["title"].startswith("The record"))
+    names = [r[0] for r in rec["rows"]]
+    assert "NHL, first four weeks of the season" in names and "NHL, from the fifth week" not in names   # none later yet
+    assert "first month" in sec[0]["tables"][0]["rows"][0][4][1]
