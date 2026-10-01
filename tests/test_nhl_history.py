@@ -152,7 +152,8 @@ def test_the_backfill_keeps_three_books_seals_and_resumes_within_its_budget(tmp_
     ml = closes[(closes["market"] == "moneyline") & (closes["book_id"] == 0) & (closes["side"] == "home")]
     assert set(ml["cost"]) == {-140.0}                                                 # the close, not the open
     text = (where / "closes-2025.enc.json").read_text()
-    assert "moneyline" not in text and "CBJ" not in text
+    # The JSON tokens, quotes included: base64 never holds a quote, so a three-letter code cannot appear by chance.
+    assert '"moneyline"' not in text and '"CBJ"' not in text
     with pytest.raises(sealed.Unreadable):
         hist.load("not the key", where)
     before = int((record["kind"] == "tried").sum())
