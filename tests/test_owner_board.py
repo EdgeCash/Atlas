@@ -298,12 +298,12 @@ def test_the_board_rides_in_the_plays_box_and_only_when_bettingpros_is_configure
     assert data["sections"][0]["title"].startswith("Picks now") and fake.calls >= 3
     # Every section says which tab it belongs in; the exchanges ride behind the board and the parlays.
     tabs = [s.get("tab") for s in data["sections"]]
-    assert tabs == ["Board", "Board", "Board", "Board", "Parlays", "Trading", "Trading", "Trading", "Pick'em", "Pick'em",
+    assert tabs == ["Board", "Board", "Board", "Board", "Parlays", "Trading", "Trading", "Trading", "Pick'em", "Pick'em", "Pick'em",
                     "Daily", "Plays"]
     daily = next(s for s in data["sections"] if s["tab"] == "Daily")
     assert daily["title"] == "Daily plays" and "could not build" not in " ".join(daily["notes"])
     pickem_cards = [s["title"] for s in data["sections"] if s["tab"] == "Pick'em"]
-    assert pickem_cards == ["Slips for Sat Sep 26 (0)", "Pick board"]            # no prop markets listed: nothing priced
+    assert pickem_cards == ["Slips for Sat Sep 26 (0)", "Pick board", "Prop ledger: Atlas against PrizePicks' lines"]
     trading = next(s for s in data["sections"] if s["tab"] == "Trading")
     assert trading["title"] == "Positions for Sat Sep 26 (1)"
     positions = trading["tables"][0]

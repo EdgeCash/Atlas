@@ -34,6 +34,7 @@ no dashboard. It produces a warehouse, a measurement, and a recommendation.
 | Phase 5 operations manual | [`docs/LIVE_TRACKING.md`](docs/LIVE_TRACKING.md) |
 | **Curated plays: how they work** | [`docs/CURATED_PLAYS.md`](docs/CURATED_PLAYS.md) |
 | **The owner's board** (every book, priced) | [`docs/OWNER_BOARD.md`](docs/OWNER_BOARD.md) |
+| **NHL saves against PrizePicks' lines**: pre-registration | [`docs/NHL_SAVES_PREREGISTRATION.md`](docs/NHL_SAVES_PREREGISTRATION.md) |
 | **The daily plays** (rule daily-v1) · pre-registration · backtest | [`docs/DAILY_PLAYS.md`](docs/DAILY_PLAYS.md) · [`docs/DAILY_PLAYS_PREREGISTRATION.md`](docs/DAILY_PLAYS_PREREGISTRATION.md) · [`reports/highfive_backtest.md`](reports/highfive_backtest.md) |
 | Curated plays audit (26 Sep 2026) | [`docs/CURATED_PLAYS_AUDIT.md`](docs/CURATED_PLAYS_AUDIT.md) |
 | NFL quarterback rule: pre-registration and result (not shown) | [`docs/NFL_QB_RULE_PREREGISTRATION.md`](docs/NFL_QB_RULE_PREREGISTRATION.md) · [`reports/nfl_qb_rule_test.md`](reports/nfl_qb_rule_test.md) |
