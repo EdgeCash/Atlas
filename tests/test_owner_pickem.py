@@ -343,7 +343,7 @@ def test_the_pickem_step_logs_grades_and_shows_three_cards(tmp_path, monkeypatch
     monkeypatch.setattr(pickem, "fetch", lambda client, events, now: props.merge(
         pickem.slate(events, now)[["event_id", "game_id", "kickoff", "day"]], on="event_id") if len(pickem.slate(events, now))
         else props.iloc[0:0].assign(game_id=[], kickoff=[], day=[]))
-    where = {"picks_where": tmp_path / "picks", "slips_where": tmp_path / "slips"}
+    where = {"picks_where": tmp_path / "picks", "slips_where": tmp_path / "slips", "ledger_where": tmp_path / "ledger"}
     cards = pickem.build(None, _events(), _games(), NAMES, KEY, NOW, **where)
     assert [c["title"] for c in cards][:2] == [f"Slips for Sun Sep 27 ({len(cards[0]['tables'][0]['rows'])})", "Pick board"]
     assert {c["tab"] for c in cards} == {"Pick'em"} and all(c["notes"] for c in cards)
@@ -360,9 +360,10 @@ def test_the_pickem_step_logs_grades_and_shows_three_cards(tmp_path, monkeypatch
                         for n in ("Drake London", "Bijan Robinson", "Jordan Love", "Jahan Dotson")])
     monday = datetime(2026, 9, 28, 14, 0, tzinfo=UTC)
     cards = pickem.build(None, _events(), _games(completed=True), NAMES, KEY, monday, box=lambda s, g: box, **where)
-    record = dict(cards[-1]["tables"][0]["rows"])
+    record_card = next(c for c in cards if c["title"] == "Pick'em record")
+    record = dict(record_card["tables"][0]["rows"])
     assert record["Graded"] == record["Picks logged"] and record["Won-lost-tie-void"].count("-") == 3
-    assert cards[-1]["tables"][1]["title"] == "Latest graded picks"
+    assert record_card["tables"][1]["title"] == "Latest graded picks"
 
 
 def test_the_step_never_raises():

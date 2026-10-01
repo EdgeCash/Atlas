@@ -960,8 +960,9 @@ def _snapshot(passphrase: str, where: Path | None = None) -> dict | None:
 
 def build(client, events: pd.DataFrame, games: pd.DataFrame, names: dict, passphrase: str, now: datetime, *,
           picks_where: Path | None = None, slips_where: Path | None = None, box=box_score,
-          projections_where: Path | None = None) -> list[dict]:
-    """The day's pick'em: priced, optimised, logged once, followed, graded, shown. Never raises."""
+          projections_where: Path | None = None, ledger_where: Path | None = None) -> list[dict]:
+    """The day's pick'em: priced, optimised, logged once, followed, graded, shown; then the prop ledger
+    (`atlas/owner/ledger.py`), every NHL line scored against Atlas. Never raises."""
     try:
         picks_where, slips_where = picks_where or picks_path(), slips_where or slips_path()
         props = fetch(client, events, now)
@@ -987,7 +988,10 @@ def build(client, events: pd.DataFrame, games: pd.DataFrame, names: dict, passph
             seal(picks, passphrase, touched, picks_where, PICK_COLUMNS, names_)
             if len(slips):
                 seal(slips, passphrase, touched & _weeks(slips), slips_where, SLIP_COLUMNS, names_)
-        return sections(priced, chosen, picks, slips, counts, names, now, day)
+        from atlas.owner import ledger
+
+        return [*sections(priced, chosen, picks, slips, counts, names, now, day),
+                *ledger.build(priced, games, names, passphrase, now, where=ledger_where, box=box, day=day)]
     except Exception as error:  # noqa: BLE001 - the type and the place: a message could quote a line
         from atlas.util import where
 

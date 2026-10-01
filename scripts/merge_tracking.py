@@ -48,6 +48,7 @@ SEALED: dict[str, list[str]] = {
     "owner_trading": ["position_id"],
     "owner_pickem": ["pick_id"],
     "owner_slips": ["slip_id"],
+    "owner_prop_ledger": ["ledger_id"],
     "owner_market": ["sport", "event_id", "market", "selection", "book_id", "captured_at"],
     "owner_props": ["sport", "event_id", "market", "player_key", "selection", "book_id", "captured_at"],
 }
