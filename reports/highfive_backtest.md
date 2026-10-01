@@ -42,6 +42,17 @@ The control: on the same days, the market's own top 5 favourites, no model.
 | Atlas-picked favourites | 690 | 515 | 420-270 | 60.9% | 57%–64% | 56.4% | 59.9% | +20 | +2.9% |
 | The market's own top favourites, same days | 1934 | 515 | 1192-742 | 61.6% | 59%–64% | 59.1% | 60.9% | -4 | -0.2% |
 
+### The favourite side by phase of the season
+
+Weeks since the season's first puck drop. The first-month row was found after the fact, in the slicing that followed the backtest, and is registered as a label on the daily plays, never a filter (`docs/DAILY_PLAYS_PREREGISTRATION.md`).
+
+| phase | games | hit | 95% | market fair | edge over fair | units / 100 | seasons up |
+|---|---|---|---|---|---|---|---|
+| weeks 1-4 | 765 | 63.4% | 60%–67% | 57.7% | +5.7 pt | +5.6 | 6 of 10 |
+| weeks 5-12 | 1579 | 60.2% | 58%–63% | 57.9% | +2.2 pt | -0.7 | 3 of 10 |
+| weeks 13-20 | 1355 | 60.7% | 58%–63% | 58.6% | +2.2 pt | -0.9 | 4 of 9 |
+| week 21 on | 1061 | 61.6% | 59%–65% | 59.5% | +2.1 pt | -1.0 | 3 of 8 |
+
 ## Top 5 a day
 
 ### A. Model's own probability: spreads, totals, NHL

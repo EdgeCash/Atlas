@@ -21,11 +21,14 @@ At most :data:`MAX_PLAYS` a day, one a game, and usually one or two. Nothing
 is padded. Each play is logged once, at the first run from 10:00 ET on its
 day, into a sealed record (``tracking/owner_highfive/``), never revised, and
 graded win, loss or push on the final score in units at the price logged.
-Two labels ride with each play for the record to test, never as filters:
-whether the model's last hundred results in that market were running at or
-above 50% (``form``), and the market's own probability of the side
-(``p_fair``). Shown only inside the owner page's ciphertext, under a tab the
-page's script does not name.
+Three labels ride with each play for the record to test, never as filters:
+the model's hit rate over its last hundred results in that market (``form``),
+the market's own probability of the side (``p_fair``), and whether an NHL
+play falls in the first four weeks of its season (``early``: on 2013-22
+Atlas's favourite-side picks in that window beat the market's probability by
+5.7 points, a post-hoc slice registered as a label in
+`docs/DAILY_PLAYS_PREREGISTRATION.md`). Shown only inside the owner page's
+ciphertext, under a tab the page's script does not name.
 """
 
 from __future__ import annotations
@@ -56,6 +59,9 @@ MIN_EV = 0.0
 #: The form label: the model's hit rate over this many of its latest decided results in the market.
 FORM_WINDOW = 100
 FORM_BAR = 0.50
+#: The early label: an NHL play inside this many days of its season's first puck drop (the walk-forward's
+#: weeks 1-4, `atlas/models/nhl_projection.week_of`).
+EARLY_DAYS = 28
 #: The day's plays are logged at the first run at or after this hour, Eastern, on that day.
 LOG_HOUR = 10
 MIN_GRADED = 100
@@ -63,8 +69,8 @@ BY_DAY = 14
 LATEST = 10
 
 COLUMNS = ["pick_id", "rule", "rank", "day", "logged_at", "sport", "season", "week", "game_id", "kickoff", "game",
-           "market", "side", "line", "book_id", "cost", "p", "p_fair", "ev", "basis", "form", "outcome", "profit",
-           "graded_at"]
+           "market", "side", "line", "book_id", "cost", "p", "p_fair", "ev", "basis", "form", "early", "outcome",
+           "profit", "graded_at"]
 #: Which calibration market a play's market is graded in (`tracking/calibration.csv`).
 CALIBRATION_MARKET = {"spread": "margin", "total": "total", "moneyline": "moneyline"}
 
@@ -115,13 +121,45 @@ def form(calibration: pd.DataFrame | None, now: datetime, window: int = FORM_WIN
     return out
 
 
+def openers(games: pd.DataFrame | None, nhl_projections: pd.DataFrame | None) -> tuple[dict, dict]:
+    """What the early label needs: each NHL season's first puck drop the store knows of, and each NHL game's
+    season, from the tracked games and the projections. A season the store has no games of has no opener,
+    and its plays' label is unknown rather than guessed."""
+    parts = []
+    for t in (games, nhl_projections):
+        if t is None or t.empty or not {"game_id", "season", "kickoff"} <= set(t.columns):
+            continue
+        part = t[t["sport"].astype(str) == "nhl"] if "sport" in t else t
+        parts.append(part[["game_id", "season", "kickoff"]])
+    if not parts:
+        return {}, {}
+    g = pd.concat(parts, ignore_index=True)
+    g = g.assign(game_id=g["game_id"].astype(str), season=pd.to_numeric(g["season"], errors="coerce"),
+                 kickoff=pd.to_datetime(g["kickoff"], utc=True, errors="coerce")).dropna()
+    first = g.groupby("season")["kickoff"].min()
+    return {int(s): k for s, k in first.items()}, dict(zip(g["game_id"], g["season"].astype(int), strict=True))
+
+
+def early(t: pd.DataFrame, first: dict, season_of: dict) -> list:
+    """The early label per leg: True inside :data:`EARLY_DAYS` of the NHL season's first puck drop, False
+    after, None for football and for a game whose season or opener is unknown."""
+    out = []
+    for r in t.itertuples():
+        season = season_of.get(str(r.game_id))
+        if str(r.sport) != "nhl" or season is None or season not in first or pd.isna(r.kickoff):
+            out.append(None)
+            continue
+        out.append(bool(pd.Timestamp(r.kickoff) < first[season] + pd.Timedelta(days=EARLY_DAYS)))
+    return out
+
+
 def pick_wagers(legs: pd.DataFrame, now: datetime, calibration: pd.DataFrame | None = None,
-                cap: int = MAX_PLAYS) -> pd.DataFrame:
+                cap: int = MAX_PLAYS, first: dict | None = None, season_of: dict | None = None) -> pd.DataFrame:
     """Rule ``daily-v1`` on today's legs (the Eastern day of ``now`` with games, else the next): NHL sides the
     market favours with positive Atlas EV, ranked by it; football sides on Atlas's side of the line with
     positive price edge, ranked by it; one a game at its best book; at most ``cap``. Empty columns when
     nothing passes."""
-    extra = ["score", "p", "day", "rank", "basis", "form"]
+    extra = ["score", "p", "day", "rank", "basis", "form", "early"]
     if legs.empty:
         return legs.reindex(columns=[*legs.columns, *extra])
     t = legs.copy()
@@ -147,6 +185,7 @@ def pick_wagers(legs: pd.DataFrame, now: datetime, calibration: pd.DataFrame | N
     f = form(calibration, now)
     t["form"] = [f.get((str(s), CALIBRATION_MARKET.get(str(m), str(m))), np.nan)
                  for s, m in zip(t["sport"], t["market"], strict=True)]
+    t["early"] = early(t, first or {}, season_of or {})
     return t
 
 
@@ -204,7 +243,8 @@ def rows_for(chosen: pd.DataFrame, names: dict, week_of: dict, stamp: str) -> li
             "market": r.market, "side": r.side, "line": float(r.line), "book_id": int(r.book_id), "cost": float(r.cost),
             "p": round(float(r.p), 4), "p_fair": round(float(r.p_fair), 4) if pd.notna(r.p_fair) else None,
             "ev": round(float(r.score), 4), "basis": r.basis,
-            "form": round(float(r.form), 4) if pd.notna(r.form) else None})
+            "form": round(float(r.form), 4) if pd.notna(r.form) else None,
+            "early": None if r.early is None or (isinstance(r.early, float) and np.isnan(r.early)) else bool(r.early)})
     return rows
 
 
@@ -313,6 +353,8 @@ def _labels(r) -> str:
     pf = r.get("p_fair")
     if pf is not None and pd.notna(pf) and str(r.get("sport")) == "nhl":
         out.append(f"market {float(pf):.0%}")
+    if r.get("early") is True:
+        out.append("first month")
     return " · ".join(out)
 
 
@@ -356,6 +398,9 @@ def sections(chosen: pd.DataFrame, record: pd.DataFrame, names: dict, now: datet
         f = pd.to_numeric(record["form"], errors="coerce")
         splits += [(f"Form at or above {FORM_BAR:.0%} when logged", record[f >= FORM_BAR]),
                    (f"Form below {FORM_BAR:.0%}", record[f < FORM_BAR])]
+        e = record["early"] if "early" in record else pd.Series(None, index=record.index)
+        splits += [("NHL, first four weeks of the season", record[e.eq(True)]),
+                   ("NHL, from the fifth week", record[e.eq(False)])]
         days = int(record["day"].nunique())
         tables.append({"title": f"The record ({days} {'day' if days == 1 else 'days'}, {len(record)} plays)",
                        "head": ["", "W-L-P", "Hit rate (95%)", "Break-even (logged P)", "Units", "Per play"],
@@ -386,8 +431,10 @@ def sections(chosen: pd.DataFrame, record: pd.DataFrame, names: dict, now: datet
         "carries no signal, so the shopping edge is what is being bet. Untested historically; this record is the test.",
         f"Each play is logged once, at the first run from {LOG_HOUR}:00 ET on its day, at the line and price shown, "
         f"and graded win, loss or push on the final score in units at that price. Labels, not filters: the model's hit "
-        f"rate over its last {FORM_WINDOW} decided results in that market when the play was logged (form), and the "
-        f"market's probability of the side. Nothing is read from fewer than {MIN_GRADED} decided plays. "
+        f"rate over its last {FORM_WINDOW} decided results in that market when the play was logged (form), the "
+        f"market's probability of the side, and whether an NHL play fell inside the first {EARLY_DAYS} days of its "
+        f"season (on 2013-22 Atlas's favourites in that window beat the market's probability by 5.7 points, a slice "
+        f"found after the fact and registered as a label). Nothing is read from fewer than {MIN_GRADED} decided plays. "
         f"Built {_eastern(now)} ET.",
     ]
     return [{"title": "Daily plays", "tab": TAB, "notes": notes, "tables": tables}]
@@ -399,11 +446,13 @@ def sections(chosen: pd.DataFrame, record: pd.DataFrame, names: dict, now: datet
 
 
 def build(legs: pd.DataFrame, finals: pd.DataFrame, games: pd.DataFrame, names: dict, passphrase: str,
-          now: datetime, *, calibration: pd.DataFrame | None = None, where: Path | None = None) -> list[dict]:
+          now: datetime, *, calibration: pd.DataFrame | None = None, nhl_projections: pd.DataFrame | None = None,
+          where: Path | None = None) -> list[dict]:
     """Choose, log once, grade and show the day's plays. Never raises."""
     try:
         where = where or path()
-        chosen = pick_wagers(legs, now, calibration)
+        first, season_of = openers(games, nhl_projections)
+        chosen = pick_wagers(legs, now, calibration, first=first, season_of=season_of)
         record = load(passphrase, where)
         record, weeks = log(record, chosen, names, games, now)
         if weeks:

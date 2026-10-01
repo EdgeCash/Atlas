@@ -58,14 +58,19 @@ line and price shown, sealed and never revised. Before then the tab is live
 and marked provisional. Graded win, loss or push on the final score, in units
 at the price logged. There is no closing-line grading, by design.
 
-Two labels ride with each play, recorded so the record can test them and never
-used as filters: `form`, the model's hit rate over its last 100 decided
+Three labels ride with each play, recorded so the record can test them and
+never used as filters: `form`, the model's hit rate over its last 100 decided
 walk-forward results in the play's market when the play was logged (a filter
 on it looked good in the backtest and is exactly the kind of thing that looks
-good in a backtest), and `p_fair`, the market's probability of the side.
+good in a backtest); `p_fair`, the market's probability of the side; and
+`early`, whether an NHL play falls inside the first 28 days of its season (on
+2013-22 Atlas's favourites in that window beat the market's probability by
+5.7 points, a slice found after the fact and registered as a label on
+1 October 2026, with what would make it a rule, in the pre-registration).
 
 The tab shows the day's plays, then the record split as pre-registered (all
-plays, NHL, football, form at or above 50%, form below), each with
+plays, NHL, football, form at or above 50%, form below, NHL first four weeks,
+NHL from the fifth week), each with
 won-lost-push, hit rate with its 95% range, break-even at the prices taken
 beside the mean probability logged, units and per play; a day-by-day line;
 and the latest graded plays. Nothing is read from fewer than 100 decided

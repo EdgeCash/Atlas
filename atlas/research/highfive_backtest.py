@@ -127,6 +127,24 @@ def quintiles(c: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows).T
 
 
+def phases(c: pd.DataFrame) -> pd.DataFrame:
+    """The NHL favourite-side picks by phase of the season (weeks since the first puck drop): hit rate against
+    the market's own probability, and units. The first-month row is the one registered as a label."""
+    n = c[(c["sport"] == "nhl") & (c["won"] != 0.5) & (c["p_fair"] >= 0.5)].copy()
+    n["phase"] = pd.cut(n["week"], [0, 4, 12, 20, 60], labels=["weeks 1-4", "weeks 5-12", "weeks 13-20", "week 21 on"])
+    n["profit"] = np.where(n["won"] == 1, n["dec"] - 1, -1.0)
+    rows = {}
+    for k, p in n.groupby("phase", observed=True):
+        w = int((p["won"] == 1).sum())
+        lo, hi = wilson(w, len(p))
+        edge = (p["won"] == 1).mean() - p["p_fair"].mean()
+        rows[str(k)] = {"games": len(p), "hit": f"{w / len(p):.1%}", "95%": f"{lo:.0%}–{hi:.0%}",
+                        "market fair": f"{p['p_fair'].mean():.1%}", "edge over fair": f"{100 * edge:+.1f} pt",
+                        "units / 100": f"{100 * p['profit'].mean():+.1f}",
+                        "seasons up": f"{int((p.groupby('season')['profit'].sum() > 0).sum())} of {p['season'].nunique()}"}
+    return pd.DataFrame(rows).T
+
+
 def _md(df: pd.DataFrame, index_name: str = "") -> str:
     cols = [index_name, *df.columns]
     lines = ["| " + " | ".join(str(c) for c in cols) + " |", "|" + "---|" * len(cols)]
@@ -184,6 +202,10 @@ def report(c: pd.DataFrame, nfl_in: bool) -> str:
            "overclaims and adds nothing.", "", _md(sides, "side"), "",
            f"The control: on the same days, the market's own top {TOP} favourites, no model.", "",
            _md(control, "rule"), "",
+           "### The favourite side by phase of the season", "",
+           "Weeks since the season's first puck drop. The first-month row was found after the fact, in the slicing "
+           "that followed the backtest, and is registered as a label on the daily plays, never a filter "
+           "(`docs/DAILY_PLAYS_PREREGISTRATION.md`).", "", _md(phases(c), "phase"), "",
            f"## Top {TOP} a day", ""]
     for name, t in variants.items():
         pcol = "p_A" if name.startswith("A") else "p_B"
