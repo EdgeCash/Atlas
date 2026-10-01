@@ -81,7 +81,7 @@ def test_lines_are_graded_from_the_box_and_scored_fair_against_atlas_against_the
     assert saves["hit_fair"] == 0.5 and saves["hit_atlas"] == 1.0
 
 
-def _synthetic(n, edge, atlas_better=True):
+def _synthetic(n, edge, atlas_better=True, market="saves"):
     """n decided saves lines where the books' fair is 0.55 and Atlas says 0.55 plus ``edge``; the outcomes are
     exactly calibrated to Atlas when it is better and to fair when it is not (no sampling noise)."""
     p_fair = np.full(n, 0.55)
@@ -89,7 +89,7 @@ def _synthetic(n, edge, atlas_better=True):
     truth = p_atlas if atlas_better else p_fair
     won = (np.arange(n) + 0.5) / n < truth
     return pd.DataFrame({"ledger_id": [str(i) for i in range(n)]}).reindex(columns=ledger.COLUMNS) \
-        .assign(market="saves", p=p_fair, p_atlas=p_atlas, outcome=np.where(won, "win", "loss"))
+        .assign(market=market, p=p_fair, p_atlas=p_atlas, outcome=np.where(won, "win", "loss"))
 
 
 def test_the_saves_verdict_is_pre_registered_collecting_then_clears_or_fails():
@@ -99,14 +99,22 @@ def test_the_saves_verdict_is_pre_registered_collecting_then_clears_or_fails():
     assert ledger.verdict(ledger.score(_synthetic(400, 0.15, atlas_better=True))).startswith("Saves: clears at 400")
     assert ledger.verdict(ledger.score(_synthetic(400, 0.15, atlas_better=False))).startswith("Saves: fails at 400")
     assert ledger.BET_BAR == pytest.approx(1 / 3 ** 0.5)
+    # Shots on goal: the same bars at a larger size, since the edge expected is smaller and the lines are many.
+    shots = lambda n, better: ledger.verdict(ledger.score(_synthetic(n, 0.06, better, market="shots")), "sog")  # noqa: E731
+    assert shots(400, True).startswith("Shots on goal: collecting, 400 of 1000")
+    assert shots(1200, True).startswith("Shots on goal: clears at 1200")
+    assert shots(1200, False).startswith("Shots on goal: fails at 1200")
+    # A saves fixture says nothing about shots, and the other way round.
+    assert ledger.verdict(ledger.score(_synthetic(400, 0.15)), "sog").startswith("Shots on goal: collecting, 0 of 1000")
 
 
 def test_the_section_and_the_step_never_raise(tmp_path):
     out = ledger.build(_priced(), GAMES, NAMES, KEY, NOW, where=tmp_path / "l", box=_box, day="2026-10-08")
     assert out[0]["tab"] == "Pick'em" and out[0]["title"].startswith("Prop ledger")
-    assert out[0]["tables"][0]["title"].startswith("Saves: collecting")
+    verdicts = dict(out[0]["tables"][0]["rows"])
+    assert verdicts["Saves"].startswith("Saves: collecting") and verdicts["Shots on goal"].startswith("Shots on goal: collecting")
     assert len(ledger.load(KEY, tmp_path / "l")) == 4
     empty = ledger.build(_priced().iloc[0:0], GAMES, NAMES, KEY, NOW, where=tmp_path / "e", box=_box, day=None)
-    assert "No NHL line graded yet" in empty[0]["tables"][0]["rows"][0][0]
+    assert "No NHL line graded yet" in empty[0]["tables"][1]["rows"][0][0]
     broken = ledger.build(None, None, {}, KEY, NOW, where=tmp_path / "b", day="2026-10-08")
     assert "could not build the prop ledger" in broken[0]["notes"][0]

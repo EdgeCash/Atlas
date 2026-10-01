@@ -11,9 +11,12 @@ final. Then, per stat, on the same lines: the Brier and log loss of fair, of
 Atlas, and of 0.50 (the line as PrizePicks set it, a coin flip), the paired
 difference with its 95% interval, and the hit rate of each one's side.
 
-The saves test is pre-registered (`docs/NHL_SAVES_PREREGISTRATION.md`): the
-one stat where the walk-forward found a large edge over a season-mean
-baseline, judged at :data:`SAVES_N` decided goalie lines and not before.
+Two tests are pre-registered and judged from the same scores, each at its
+own size and not before: saves (`docs/NHL_SAVES_PREREGISTRATION.md`), where
+the walk-forward found a large edge over a season-mean baseline, at
+:data:`SAVES_N` decided goalie lines; and shots on goal
+(`docs/NHL_SHOTS_PREREGISTRATION.md`), where the edge was small and the
+lines are many, at :data:`SHOTS_N`.
 Logged at the first run from 10:00 ET, like the picks; sealed in
 ``tracking/owner_prop_ledger/`` by the ISO week of puck drop; shown only
 inside the owner page's ciphertext, on the Pick'em tab.
@@ -40,10 +43,11 @@ SPORT = "nhl"
 COLUMNS = ["ledger_id", "day", "logged_at", "sport", "season", "week", "game_id", "kickoff", "game", "player_key",
            "player", "team", "position", "market", "side", "line", "p", "p_push", "books", "p_atlas", "actual",
            "outcome", "graded_at"]
-#: The saves test: judged at this many decided goalie lines with an Atlas probability; failed at the larger
-#: number if Atlas is still no better than the coin flip.
-SAVES_N = 300
-SAVES_FAIL_N = 500
+#: The pre-registered tests: judged at the first count of decided lines with an Atlas probability, failed at
+#: the second if Atlas is still no better than the coin flip. Shots need more: the edge expected is smaller.
+SAVES_N, SAVES_FAIL_N = 300, 500
+SHOTS_N, SHOTS_FAIL_N = 1000, 2000
+TESTS = {"sv": ("Saves", SAVES_N, SAVES_FAIL_N), "sog": ("Shots on goal", SHOTS_N, SHOTS_FAIL_N)}
 #: The bet-shaped bar: PrizePicks' two-pick Power break-even per pick.
 BET_BAR = pickem.break_even("power", 2)
 #: Stats by the pick'em's code (`pickem.STATS`), saves first, with the words shown for each.
@@ -169,30 +173,34 @@ def score(ledger: pd.DataFrame) -> pd.DataFrame:
         .drop(columns="_o").reset_index(drop=True)
 
 
-def verdict(scores: pd.DataFrame) -> str:
-    """The pre-registered saves test, read from the scores: collecting, clears, not proven, or fails."""
-    s = scores[scores["stat"] == SAVES]
+def verdict(scores: pd.DataFrame, stat: str = SAVES) -> str:
+    """A pre-registered test (:data:`TESTS`), read from the scores: collecting, clears, not proven, or fails.
+    The same three bars for each: beats fair with the paired interval below zero, beats the coin flip, and its
+    side hits PrizePicks' two-pick break-even."""
+    name, judged_at, fail_at = TESTS[stat]
+    what = "goalie lines" if stat == SAVES else "lines"
+    s = scores[scores["stat"] == stat]
     if s.empty or not s["with_atlas"].iloc[0]:
-        return f"Saves: collecting, 0 of {SAVES_N} decided goalie lines with an Atlas probability."
+        return f"{name}: collecting, 0 of {judged_at} decided {what} with an Atlas probability."
     r = s.iloc[0]
     n = int(r["with_atlas"])
-    if n < SAVES_N:
-        return (f"Saves: collecting, {n} of {SAVES_N} decided goalie lines with an Atlas probability. Nothing is "
+    if n < judged_at:
+        return (f"{name}: collecting, {n} of {judged_at} decided {what} with an Atlas probability. Nothing is "
                 "read before then.")
     better_than_fair = r["diff_high"] < 0
     better_than_half = r["brier_atlas"] < 0.25
     bet = r["hit_atlas"] >= BET_BAR
     if better_than_fair and better_than_half and bet:
-        return (f"Saves: clears at {n}. Atlas's Brier {r['brier_atlas']:.4f} beats fair's {r['brier_fair']:.4f} "
+        return (f"{name}: clears at {n}. Atlas's Brier {r['brier_atlas']:.4f} beats fair's {r['brier_fair']:.4f} "
                 f"(paired 95% interval {r['diff_low']:+.4f} to {r['diff_high']:+.4f}) and the coin flip, and its "
                 f"side hits {r['hit_atlas']:.1%} against a {BET_BAR:.1%} break-even.")
-    if not better_than_fair or (n >= SAVES_FAIL_N and not better_than_half):
+    if not better_than_fair or (n >= fail_at and not better_than_half):
         why = ("no better than fair's probability" if not better_than_fair else
                f"no better than the coin flip at {n}")
-        return f"Saves: fails at {n}: Atlas's Brier {r['brier_atlas']:.4f} is {why}."
-    return (f"Saves: not proven at {n}. Atlas's Brier {r['brier_atlas']:.4f} against fair's {r['brier_fair']:.4f} and "
-            f"0.25; its side hits {r['hit_atlas']:.1%} against a {BET_BAR:.1%} break-even. "
-            + ("Judged again at " + str(SAVES_FAIL_N) + "." if n < SAVES_FAIL_N else ""))
+        return f"{name}: fails at {n}: Atlas's Brier {r['brier_atlas']:.4f} is {why}."
+    return (f"{name}: not proven at {n}. Atlas's Brier {r['brier_atlas']:.4f} against fair's {r['brier_fair']:.4f} "
+            f"and 0.25; its side hits {r['hit_atlas']:.1%} against a {BET_BAR:.1%} break-even. "
+            + (f"Judged again at {fail_at}." if n < fail_at else ""))
 
 
 # ---------------------------------------------------------------------------
@@ -220,7 +228,9 @@ def section(ledger: pd.DataFrame, now: datetime) -> list[dict]:
                      [f"Atlas {_f(r.brier_atlas)}", f"log loss {_f(r.logloss_atlas)}"],
                      [f"{_f(r.diff, '{:+.4f}')}", f"95% {_f(r.diff_low, '{:+.4f}')} to {_f(r.diff_high, '{:+.4f}')}"],
                      [f"fair's side {_f(r.hit_fair, '{:.1%}')}", f"Atlas's side {_f(r.hit_atlas, '{:.1%}')}"]])
-    tables = [{"title": verdict(scores), "stack": True,
+    tables = [{"title": "Pre-registered verdicts", "head": ["Test", "Where it stands"],
+               "rows": [[TESTS[stat][0], verdict(scores, stat)] for stat in TESTS]},
+              {"title": "Every stat, on the same lines", "stack": True,
                "head": ["Stat", "Brier, fair", "Brier, Atlas", "Atlas − fair", "Hit rate"],
                "rows": rows or [["No NHL line graded yet.", "", "", "", ""]]}]
     notes = [
@@ -232,11 +242,13 @@ def section(ledger: pd.DataFrame, now: datetime) -> list[dict]:
         "matchup and the expected starter. Three forecasts are scored on the same lines: the books' fair probability, "
         "Atlas, and 0.50 (the line as a coin flip, Brier 0.25). The Atlas columns are on the lines Atlas priced; "
         "the difference is paired, line by line, with a normal 95% interval.",
-        f"The saves test is pre-registered (docs/NHL_SAVES_PREREGISTRATION.md): judged at {SAVES_N} decided goalie "
-        f"lines with an Atlas probability. It clears when Atlas's Brier beats fair's with the paired interval below "
-        f"zero, beats 0.25, and Atlas's side hits {BET_BAR:.1%} or better, PrizePicks' two-pick Power break-even. It "
-        f"fails when Atlas is no better than fair at {SAVES_N}, or no better than the coin flip at {SAVES_FAIL_N}. "
-        f"Built {_eastern(now)} ET.",
+        f"Two tests are pre-registered: saves (docs/NHL_SAVES_PREREGISTRATION.md), judged at {SAVES_N} decided goalie "
+        f"lines with an Atlas probability, and shots on goal (docs/NHL_SHOTS_PREREGISTRATION.md), judged at {SHOTS_N} "
+        f"lines because the edge expected is smaller and the lines are many. Each clears when Atlas's Brier beats "
+        f"fair's with the paired interval below zero, beats 0.25, and Atlas's side hits {BET_BAR:.1%} or better, "
+        f"PrizePicks' two-pick Power break-even; each fails when Atlas is no better than fair at its first count, or "
+        f"no better than the coin flip at its second ({SAVES_FAIL_N} and {SHOTS_FAIL_N}). The other stats are shown "
+        f"with no verdict registered. Built {_eastern(now)} ET.",
     ]
     return [{"title": "Prop ledger: Atlas against PrizePicks' lines", "tab": "Pick'em", "tables": tables,
              "notes": notes}]
