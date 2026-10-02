@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-10-02T23:51:47.750996+00:00",
+      "detail": "market in 7s",
+      "mode": "Friday night",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-10-02T23:51:47.617522+00:00",
+      "detail": "64 cards, 16 NFL cards, 51 NHL cards, 114 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-10-02T23:39:09.397941+00:00",
       "detail": "market in 13s",
       "mode": "Friday night",
@@ -1265,24 +1278,11 @@
       "detail": "12 files",
       "name": "social",
       "ok": true
-    },
-    {
-      "at": "2026-09-30T14:08:41.972920+00:00",
-      "detail": "market in 9s",
-      "mode": "ordinary",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-09-30T14:08:41.804478+00:00",
-      "detail": "59 cards, 16 NFL cards, 117 teams, 32 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-10-02T23:39:09.249782+00:00",
+      "at": "2026-10-02T23:51:47.617522+00:00",
       "detail": "64 cards, 16 NFL cards, 51 NHL cards, 114 teams, 30 NFL teams",
       "name": "build",
       "ok": true
@@ -1294,8 +1294,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-02T23:39:09.397941+00:00",
-      "detail": "market in 13s",
+      "at": "2026-10-02T23:51:47.750996+00:00",
+      "detail": "market in 7s",
       "mode": "Friday night",
       "name": "poll",
       "ok": true
@@ -1309,7 +1309,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-10-02T23:39:09.249782+00:00",
+      "at": "2026-10-02T23:51:47.617522+00:00",
       "detail": "64 cards, 16 NFL cards, 51 NHL cards, 114 teams, 30 NFL teams",
       "name": "build",
       "ok": true
@@ -1321,8 +1321,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-02T23:39:09.397941+00:00",
-      "detail": "market in 13s",
+      "at": "2026-10-02T23:51:47.750996+00:00",
+      "detail": "market in 7s",
       "mode": "Friday night",
       "name": "poll",
       "ok": true
