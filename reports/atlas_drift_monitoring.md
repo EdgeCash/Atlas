@@ -1,6 +1,6 @@
 # Atlas Drift Monitoring
 
-*Generated 2026-10-02 22:52 UTC by `python -m atlas.live check`. Every alarm compares
+*Generated 2026-10-02 23:07 UTC by `python -m atlas.live check`. Every alarm compares
 the most recent week of the record against its own history.*
 
 ---
@@ -14,7 +14,7 @@ worse problem than the drift it was watching for.
 | Alarm | Severity | Observed | Threshold | Detail |
 |---|---|---|---|---|
 | signal volume | alarm | -0.9286 | 0.5 | week 6: 8 signals against 112 the week before (-93%) |
-| silence | ok | 0.7501 | 7 | last signal 0.8 days ago (2026-10-02) |
+| silence | ok | 0.7604 | 7 | last signal 0.8 days ago (2026-10-02) |
 | single book | alarm | 1.0000 | 1 | 100% of signals from book 'DraftKings' (1 distinct) |
 | single market | ok | 0.5000 | 1 | 50% of signals from market 'margin' (2 distinct) |
 | model output (margin) | ok | n/a | 3 | 4 recent / 114 prior rows; too few to compare |
@@ -66,7 +66,7 @@ newest week never finds.
 | 2026-w04 | grades | 116 | 116 | 0 | 0 | yes | exact match |
 | 2026-w04 | statistics | 12 | 12 | 0 | 0 | yes | recomputed from the replayed grades |
 | 2026-w05 | signals | 112 | 112 | 0 | 0 | yes | exact match |
-| 2026-w05 | grades | 4 | 4 | 0 | 0 | yes | exact match |
+| 2026-w05 | grades | 8 | 8 | 0 | 0 | yes | exact match |
 | 2026-w05 | statistics | 8 | 8 | 0 | 0 | yes | recomputed from the replayed grades |
 | 2026-w06 | signals | 8 | 8 | 0 | 0 | yes | exact match |
 | 2026-w06 | grades | 0 | 0 | 0 | 0 | yes | no grades in this period |
