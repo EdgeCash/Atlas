@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-10-02T03:53:50.245952+00:00",
+      "detail": "market in 10s",
+      "mode": "ordinary",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-10-02T03:53:50.102696+00:00",
+      "detail": "66 cards, 16 NFL cards, 49 NHL cards, 117 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-10-02T02:53:44.449355+00:00",
       "detail": "market in 10s",
       "mode": "Thursday night",
@@ -1265,24 +1278,11 @@
       "detail": "57 cards, 16 NFL cards, 114 teams, 32 NFL teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-09-29T08:53:38.817475+00:00",
-      "detail": "market in 7s",
-      "mode": "ordinary",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-09-29T08:53:38.663487+00:00",
-      "detail": "57 cards, 16 NFL cards, 114 teams, 32 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-10-02T02:53:44.314698+00:00",
+      "at": "2026-10-02T03:53:50.102696+00:00",
       "detail": "66 cards, 16 NFL cards, 49 NHL cards, 117 teams, 30 NFL teams",
       "name": "build",
       "ok": true
@@ -1294,9 +1294,9 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-02T02:53:44.449355+00:00",
+      "at": "2026-10-02T03:53:50.245952+00:00",
       "detail": "market in 10s",
-      "mode": "Thursday night",
+      "mode": "ordinary",
       "name": "poll",
       "ok": true
     },
@@ -1309,7 +1309,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-10-02T02:53:44.314698+00:00",
+      "at": "2026-10-02T03:53:50.102696+00:00",
       "detail": "66 cards, 16 NFL cards, 49 NHL cards, 117 teams, 30 NFL teams",
       "name": "build",
       "ok": true
@@ -1321,9 +1321,9 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-02T02:53:44.449355+00:00",
+      "at": "2026-10-02T03:53:50.245952+00:00",
       "detail": "market in 10s",
-      "mode": "Thursday night",
+      "mode": "ordinary",
       "name": "poll",
       "ok": true
     },
