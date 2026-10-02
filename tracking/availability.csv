@@ -476,3 +476,132 @@ captured_at,conference,report_id,publish_date,posted_time,time_zone,report_type,
 2026-10-01T15:30:34+00:00,SEC,3016,2026-09-30,19:10:00,CT,Initial,Texas A&M,Arkansas,16,Helaman Casuga,Available,NonExempt
 2026-10-01T15:30:34+00:00,SEC,3016,2026-09-30,19:10:00,CT,Initial,Texas A&M,Arkansas,10,Marcel Reed,Available,NonExempt
 2026-10-01T15:30:34+00:00,SEC,3016,2026-09-30,19:10:00,CT,Initial,Texas A&M,Arkansas,19,Paxton Land,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2932,2026-10-01,20:00:00,ET,Update 2,Pittsburgh,Virginia Tech,8,Angelo Renda,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2932,2026-10-01,20:00:00,ET,Update 2,Pittsburgh,Virginia Tech,12,Beau Jackson,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2932,2026-10-01,20:00:00,ET,Update 2,Pittsburgh,Virginia Tech,16,Corey Dailey,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2932,2026-10-01,20:00:00,ET,Update 2,Pittsburgh,Virginia Tech,19,Davin Friedman,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2932,2026-10-01,20:00:00,ET,Update 2,Pittsburgh,Virginia Tech,15,Holden Geriner,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2932,2026-10-01,20:00:00,ET,Update 2,Pittsburgh,Virginia Tech,6,Mason Heintschel,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2932,2026-10-01,20:00:00,ET,Update 2,Virginia Tech,Pittsburgh,22,Bryce Baker,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2932,2026-10-01,20:00:00,ET,Update 2,Virginia Tech,Pittsburgh,17,Ethan Grunkemeyer,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2932,2026-10-01,20:00:00,ET,Update 2,Virginia Tech,Pittsburgh,12,Kelden Ryan,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2932,2026-10-01,20:00:00,ET,Update 2,Virginia Tech,Pittsburgh,14,Troy Huhn,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2947,2026-10-01,21:00:00,ET,Update 1,Boston College,SMU,18,Anthony Coellner,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2947,2026-10-01,21:00:00,ET,Update 1,Boston College,SMU,13,Enzo Arjona,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2947,2026-10-01,21:00:00,ET,Update 1,Boston College,SMU,11,Femi Babalola,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2947,2026-10-01,21:00:00,ET,Update 1,Boston College,SMU,15,Grayson Wilson,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2947,2026-10-01,21:00:00,ET,Update 1,Boston College,SMU,7,Jake Coniglio,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2947,2026-10-01,21:00:00,ET,Update 1,Boston College,SMU,10,Mason McKenzie,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2947,2026-10-01,21:00:00,ET,Update 1,SMU,Boston College,14,Charlie Fiser,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2947,2026-10-01,21:00:00,ET,Update 1,SMU,Boston College,12,Cole Leinart,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2947,2026-10-01,21:00:00,ET,Update 1,SMU,Boston College,7,Kevin Jennings,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2947,2026-10-01,21:00:00,ET,Update 1,SMU,Boston College,28,Mabrey Mettauer,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2947,2026-10-01,21:00:00,ET,Update 1,SMU,Boston College,1,Ty Hawkins,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2955,2026-10-01,20:00:00,ET,Update 1,Stanford,Wake Forest,17,Charlie Mirer,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2955,2026-10-01,20:00:00,ET,Update 1,Stanford,Wake Forest,8,Davis Warren,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2955,2026-10-01,20:00:00,ET,Update 1,Stanford,Wake Forest,27,Devin Mignery,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2955,2026-10-01,20:00:00,ET,Update 1,Stanford,Wake Forest,10,Dylan Rizk,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2955,2026-10-01,20:00:00,ET,Update 1,Stanford,Wake Forest,9,Michael Mitchell Jr.,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2955,2026-10-01,20:00:00,ET,Update 1,Wake Forest,Stanford,13,Billy Johnson,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2955,2026-10-01,20:00:00,ET,Update 1,Wake Forest,Stanford,15,Gannon Jones,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2955,2026-10-01,20:00:00,ET,Update 1,Wake Forest,Stanford,3,Gio Lopez,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2955,2026-10-01,20:00:00,ET,Update 1,Wake Forest,Stanford,17,Grant Lawless,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2955,2026-10-01,20:00:00,ET,Update 1,Wake Forest,Stanford,6,Steele Pizzella,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2986,2026-10-01,20:00:00,ET,Update 1,Louisville,NC State,10,Briggs Cherry,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2986,2026-10-01,20:00:00,ET,Update 1,Louisville,NC State,11,Davin Wydner,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2986,2026-10-01,20:00:00,ET,Update 1,Louisville,NC State,3,Lincoln Kienholz,Questionable,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2986,2026-10-01,20:00:00,ET,Update 1,Louisville,NC State,19,Mason Fields,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2986,2026-10-01,20:00:00,ET,Update 1,Louisville,NC State,17,Ryan Zimmerman,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2986,2026-10-01,20:00:00,ET,Update 1,NC State,Louisville,11,CJ Bailey,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2986,2026-10-01,20:00:00,ET,Update 1,NC State,Louisville,15,Hudson Wilharm,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2986,2026-10-01,20:00:00,ET,Update 1,NC State,Louisville,16,Parker Thompson,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2986,2026-10-01,20:00:00,ET,Update 1,NC State,Louisville,12,Tad Hudson,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2986,2026-10-01,20:00:00,ET,Update 1,NC State,Louisville,10,Will Wilson,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2990,2026-10-01,20:00:00,ET,Update 1,Florida State,Virginia,14,Ashton Daniels,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2990,2026-10-01,20:00:00,ET,Update 1,Florida State,Virginia,4,Dean DeNobile,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2990,2026-10-01,20:00:00,ET,Update 1,Florida State,Virginia,16,Jaden O'Neal,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2990,2026-10-01,20:00:00,ET,Update 1,Florida State,Virginia,9,Kevin Sperry,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2990,2026-10-01,20:00:00,ET,Update 1,Florida State,Virginia,1,Malachi Marshall,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2990,2026-10-01,20:00:00,ET,Update 1,Florida State,Virginia,12,Michael Grant,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2990,2026-10-01,20:00:00,ET,Update 1,Virginia,Florida State,7,Beau Pribula,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2990,2026-10-01,20:00:00,ET,Update 1,Virginia,Florida State,14,Boone Lourd,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2990,2026-10-01,20:00:00,ET,Update 1,Virginia,Florida State,6,Cole Geer,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2990,2026-10-01,20:00:00,ET,Update 1,Virginia,Florida State,10,Eli Holstein,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,2990,2026-10-01,20:00:00,ET,Update 1,Virginia,Florida State,16,Ely Hamrick,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,3022,2026-10-01,20:00:00,ET,Update 1,Clemson,Miami,5,Brock Bradley,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,3022,2026-10-01,20:00:00,ET,Update 1,Clemson,Miami,17,Christopher Vizzina,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,3022,2026-10-01,20:00:00,ET,Update 1,Clemson,Miami,9,Colson Brown,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,3022,2026-10-01,20:00:00,ET,Update 1,Clemson,Miami,2,Tait Reynolds,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,3022,2026-10-01,20:00:00,ET,Update 1,Clemson,Miami,14,Trent Pearman,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,3022,2026-10-01,20:00:00,ET,Update 1,Miami,Clemson,10,Darian Mensah,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,3022,2026-10-01,20:00:00,ET,Update 1,Miami,Clemson,11,Dereon Coleman,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,3022,2026-10-01,20:00:00,ET,Update 1,Miami,Clemson,18,Joe Borchers,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,3022,2026-10-01,20:00:00,ET,Update 1,Miami,Clemson,15,Judd Anderson,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,3022,2026-10-01,20:00:00,ET,Update 1,Miami,Clemson,5,Luke Nickel,Available,NonExempt
+2026-10-02T14:47:57+00:00,ACC,3022,2026-10-01,20:00:00,ET,Update 1,Miami,Clemson,18,Vinny Gonzalez,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2939,2026-10-01,19:10:00,CT,Update 1,Alabama,Mississippi State,10,Austin Mack,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2939,2026-10-01,19:10:00,CT,Update 1,Alabama,Mississippi State,15,Jett Thomalla,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2939,2026-10-01,19:10:00,CT,Update 1,Alabama,Mississippi State,19,John Cooper,Exempt,Exempt
+2026-10-02T14:47:57+00:00,SEC,2939,2026-10-01,19:10:00,CT,Update 1,Alabama,Mississippi State,13,John Gazzaniga,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2939,2026-10-01,19:10:00,CT,Update 1,Alabama,Mississippi State,12,Keelon Russell,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2939,2026-10-01,19:10:00,CT,Update 1,Alabama,Mississippi State,11,Tayden-Evan Kaawa,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2939,2026-10-01,19:10:00,CT,Update 1,Mississippi State,Alabama,17,AJ Swann,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2939,2026-10-01,19:10:00,CT,Update 1,Mississippi State,Alabama,14,Brodie McWhorter,Exempt,Exempt
+2026-10-02T14:47:57+00:00,SEC,2939,2026-10-01,19:10:00,CT,Update 1,Mississippi State,Alabama,8,Jaden Rashada,Exempt,Exempt
+2026-10-02T14:47:57+00:00,SEC,2939,2026-10-01,19:10:00,CT,Update 1,Mississippi State,Alabama,1,Kamario Taylor,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2939,2026-10-01,19:10:00,CT,Update 1,Mississippi State,Alabama,15,"Parker ""Billy"" Puckett",Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2968,2026-10-01,19:10:00,CT,Update 1,Georgia,Vanderbilt,18,Bryson Beaver,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2968,2026-10-01,19:10:00,CT,Update 1,Georgia,Vanderbilt,17,Colter Ginn,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2968,2026-10-01,19:10:00,CT,Update 1,Georgia,Vanderbilt,14,Gunner Stockton,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2968,2026-10-01,19:10:00,CT,Update 1,Georgia,Vanderbilt,19,Hezekiah Millender,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2968,2026-10-01,19:10:00,CT,Update 1,Georgia,Vanderbilt,25,Jake Bobo,Exempt,Exempt
+2026-10-02T14:47:57+00:00,SEC,2968,2026-10-01,19:10:00,CT,Update 1,Georgia,Vanderbilt,15,Ryan Montgomery,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2968,2026-10-01,19:10:00,CT,Update 1,Georgia,Vanderbilt,12,Ryan Puglisi,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2968,2026-10-01,19:10:00,CT,Update 1,Vanderbilt,Georgia,1,Blaze Berlowitz,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2968,2026-10-01,19:10:00,CT,Update 1,Vanderbilt,Georgia,14,Drew Cowart,Exempt,Exempt
+2026-10-02T14:47:57+00:00,SEC,2968,2026-10-01,19:10:00,CT,Update 1,Vanderbilt,Georgia,11,Jack Elliott,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2968,2026-10-01,19:10:00,CT,Update 1,Vanderbilt,Georgia,2,Jared Curtis,Questionable,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2968,2026-10-01,19:10:00,CT,Update 1,Vanderbilt,Georgia,10,Whit Muschamp,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2978,2026-10-01,19:10:00,CT,Update 1,Florida,Missouri,12,Aaron Philo,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2978,2026-10-01,19:10:00,CT,Update 1,Florida,Missouri,10,Aaron Williams,Exempt,Exempt
+2026-10-02T14:47:57+00:00,SEC,2978,2026-10-01,19:10:00,CT,Update 1,Florida,Missouri,16,Aidan Warner,Exempt,Exempt
+2026-10-02T14:47:57+00:00,SEC,2978,2026-10-01,19:10:00,CT,Update 1,Florida,Missouri,9,Tramell Jones Jr.,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2978,2026-10-01,19:10:00,CT,Update 1,Florida,Missouri,11,Will Griffin,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2978,2026-10-01,19:10:00,CT,Update 1,Missouri,Florida,13,Austin Simmons,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2978,2026-10-01,19:10:00,CT,Update 1,Missouri,Florida,14,Brett Brown,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2978,2026-10-01,19:10:00,CT,Update 1,Missouri,Florida,7,Gavin Sidwar,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2978,2026-10-01,19:10:00,CT,Update 1,Missouri,Florida,5,Matt Zollers,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2978,2026-10-01,19:10:00,CT,Update 1,Missouri,Florida,10,Nick Evers,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2982,2026-10-01,19:10:00,CT,Update 1,Auburn,Tennessee,17,Byrum Brown,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2982,2026-10-01,19:10:00,CT,Update 1,Auburn,Tennessee,16,John Colvin,Exempt,Exempt
+2026-10-02T14:47:57+00:00,SEC,2982,2026-10-01,19:10:00,CT,Update 1,Auburn,Tennessee,3,Locklan Hewlett,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2982,2026-10-01,19:10:00,CT,Update 1,Auburn,Tennessee,19,Rhys Brush,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2982,2026-10-01,19:10:00,CT,Update 1,Auburn,Tennessee,10,Tristan Ti'a,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2982,2026-10-01,19:10:00,CT,Update 1,Auburn,Tennessee,11,Will Myers,Exempt,Exempt
+2026-10-02T14:47:57+00:00,SEC,2982,2026-10-01,19:10:00,CT,Update 1,Tennessee,Auburn,11,Faizon Brandon,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2982,2026-10-01,19:10:00,CT,Update 1,Tennessee,Auburn,12,George MacIntyre,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,2982,2026-10-01,19:10:00,CT,Update 1,Tennessee,Auburn,13,Mason Phillips,Exempt,Exempt
+2026-10-02T14:47:57+00:00,SEC,2982,2026-10-01,19:10:00,CT,Update 1,Tennessee,Auburn,8,Ryan Staub,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,3004,2026-10-01,19:10:00,CT,Update 1,Kentucky,South Carolina,14,Brennen Ward,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,3004,2026-10-01,19:10:00,CT,Update 1,Kentucky,South Carolina,10,Callum Wither,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,3004,2026-10-01,19:10:00,CT,Update 1,Kentucky,South Carolina,15,Carson Cruver,Exempt,Exempt
+2026-10-02T14:47:57+00:00,SEC,3004,2026-10-01,19:10:00,CT,Update 1,Kentucky,South Carolina,16,JacQai Long,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,3004,2026-10-01,19:10:00,CT,Update 1,Kentucky,South Carolina,3,Kenny Minchey,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,3004,2026-10-01,19:10:00,CT,Update 1,Kentucky,South Carolina,9,Matt Ponatoski,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,3004,2026-10-01,19:10:00,CT,Update 1,Kentucky,South Carolina,17,William Drakeford Jr.,Exempt,Exempt
+2026-10-02T14:47:57+00:00,SEC,3004,2026-10-01,19:10:00,CT,Update 1,South Carolina,Kentucky,19,Brandon Cunningham,Exempt,Exempt
+2026-10-02T14:47:57+00:00,SEC,3004,2026-10-01,19:10:00,CT,Update 1,South Carolina,Kentucky,12,Cutter Woods,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,3004,2026-10-01,19:10:00,CT,Update 1,South Carolina,Kentucky,25,Jimmy Francis,Exempt,Exempt
+2026-10-02T14:47:57+00:00,SEC,3004,2026-10-01,19:10:00,CT,Update 1,South Carolina,Kentucky,16,LaNorris Sellers,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,3004,2026-10-01,19:10:00,CT,Update 1,South Carolina,Kentucky,11,Landon Duckworth,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,3004,2026-10-01,19:10:00,CT,Update 1,South Carolina,Kentucky,15,Lucian Anderson III,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,3017,2026-10-01,19:10:00,CT,Update 1,Arkansas,Texas A&M,2,AJ Hill,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,3017,2026-10-01,19:10:00,CT,Update 1,Arkansas,Texas A&M,16,Braeden Fuller,Exempt,Exempt
+2026-10-02T14:47:57+00:00,SEC,3017,2026-10-01,19:10:00,CT,Update 1,Arkansas,Texas A&M,10,Cade Trotter,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,3017,2026-10-01,19:10:00,CT,Update 1,Arkansas,Texas A&M,14,Hank Hendrix,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,3017,2026-10-01,19:10:00,CT,Update 1,Arkansas,Texas A&M,7,KJ Jackson,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,3017,2026-10-01,19:10:00,CT,Update 1,Texas A&M,Arkansas,13,Brady Hart,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,3017,2026-10-01,19:10:00,CT,Update 1,Texas A&M,Arkansas,14,Eli Morcos,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,3017,2026-10-01,19:10:00,CT,Update 1,Texas A&M,Arkansas,16,Helaman Casuga,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,3017,2026-10-01,19:10:00,CT,Update 1,Texas A&M,Arkansas,10,Marcel Reed,Available,NonExempt
+2026-10-02T14:47:57+00:00,SEC,3017,2026-10-01,19:10:00,CT,Update 1,Texas A&M,Arkansas,19,Paxton Land,Available,NonExempt
