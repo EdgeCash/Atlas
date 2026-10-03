@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-10-03T03:54:42.207554+00:00",
+      "detail": "market in 11s",
+      "mode": "ordinary",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-10-03T03:54:42.060983+00:00",
+      "detail": "109 cards, 16 NFL cards, 48 NHL cards, 136 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-10-03T02:54:39.938316+00:00",
       "detail": "market in 11s",
       "mode": "Friday night",
@@ -1274,23 +1287,11 @@
       "detail": "12 files",
       "name": "social",
       "ok": true
-    },
-    {
-      "at": "2026-09-30T20:46:54.705877+00:00",
-      "detail": "59 cards, 16 NFL cards, 50 NHL cards, 117 teams, 32 NFL teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-09-30T20:46:54.703769+00:00",
-      "detail": "12 files",
-      "name": "social",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-10-03T02:54:39.771677+00:00",
+      "at": "2026-10-03T03:54:42.060983+00:00",
       "detail": "109 cards, 16 NFL cards, 48 NHL cards, 136 teams, 30 NFL teams",
       "name": "build",
       "ok": true
@@ -1302,9 +1303,9 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-03T02:54:39.938316+00:00",
+      "at": "2026-10-03T03:54:42.207554+00:00",
       "detail": "market in 11s",
-      "mode": "Friday night",
+      "mode": "ordinary",
       "name": "poll",
       "ok": true
     },
@@ -1317,7 +1318,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-10-03T02:54:39.771677+00:00",
+      "at": "2026-10-03T03:54:42.060983+00:00",
       "detail": "109 cards, 16 NFL cards, 48 NHL cards, 136 teams, 30 NFL teams",
       "name": "build",
       "ok": true
@@ -1329,9 +1330,9 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-03T02:54:39.938316+00:00",
+      "at": "2026-10-03T03:54:42.207554+00:00",
       "detail": "market in 11s",
-      "mode": "Friday night",
+      "mode": "ordinary",
       "name": "poll",
       "ok": true
     },
