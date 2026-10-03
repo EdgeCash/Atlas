@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-10-03T02:09:14.974896+00:00",
+      "detail": "market in 12s",
+      "mode": "Friday night",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-10-03T02:09:14.822016+00:00",
+      "detail": "109 cards, 16 NFL cards, 48 NHL cards, 136 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-10-03T01:54:10.664246+00:00",
       "detail": "market in 11s",
       "mode": "Friday night",
@@ -1270,24 +1283,12 @@
       "detail": "12 files",
       "name": "social",
       "ok": true
-    },
-    {
-      "at": "2026-09-30T19:52:56.975697+00:00",
-      "detail": "captured during the heavy refresh",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-09-30T19:52:56.973465+00:00",
-      "detail": "warehouse in 22s; nfl-ingest in 3s; nfl-warehouse in 14s; nhl-ingest in 208s; nhl-warehouse in 5s; model in 73s; market in 6s; nhl-history in 767s; dfs-capture in 7s; cfb-players in 50s; availability in 2s; plays in 36s; dfs in 145s; other-models in 3s; site in 17s",
-      "name": "heavy",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-10-03T01:54:10.507957+00:00",
-      "detail": "109 cards, 16 NFL cards, 49 NHL cards, 136 teams, 30 NFL teams",
+      "at": "2026-10-03T02:09:14.822016+00:00",
+      "detail": "109 cards, 16 NFL cards, 48 NHL cards, 136 teams, 30 NFL teams",
       "name": "build",
       "ok": true
     },
@@ -1298,8 +1299,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-03T01:54:10.664246+00:00",
-      "detail": "market in 11s",
+      "at": "2026-10-03T02:09:14.974896+00:00",
+      "detail": "market in 12s",
       "mode": "Friday night",
       "name": "poll",
       "ok": true
@@ -1313,8 +1314,8 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-10-03T01:54:10.507957+00:00",
-      "detail": "109 cards, 16 NFL cards, 49 NHL cards, 136 teams, 30 NFL teams",
+      "at": "2026-10-03T02:09:14.822016+00:00",
+      "detail": "109 cards, 16 NFL cards, 48 NHL cards, 136 teams, 30 NFL teams",
       "name": "build",
       "ok": true
     },
@@ -1325,8 +1326,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-03T01:54:10.664246+00:00",
-      "detail": "market in 11s",
+      "at": "2026-10-03T02:09:14.974896+00:00",
+      "detail": "market in 12s",
       "mode": "Friday night",
       "name": "poll",
       "ok": true
