@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-10-03T16:09:40.513061+00:00",
+      "detail": "market in 12s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-10-03T16:09:40.334218+00:00",
+      "detail": "98 cards, 16 NFL cards, 62 NHL cards, 131 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-10-03T15:55:33.673504+00:00",
       "detail": "market in 12s",
       "mode": "NCAAF Saturday",
@@ -1279,24 +1292,12 @@
       "detail": "12 files",
       "name": "social",
       "ok": true
-    },
-    {
-      "at": "2026-10-01T15:36:33.266375+00:00",
-      "detail": "captured during the heavy refresh",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-10-01T15:36:33.263050+00:00",
-      "detail": "warehouse in 30s; nfl-ingest in 2s; nfl-warehouse in 20s; nhl-ingest in 103s; nhl-warehouse in 15s; model in 133s; market in 9s; nhl-history in 3s; dfs-capture in 6s; cfb-players in 45s; availability in 3s; plays in 69s; dfs in 276s; other-models in 2s; site in 10s",
-      "name": "heavy",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-10-03T15:55:33.504798+00:00",
-      "detail": "108 cards, 16 NFL cards, 62 NHL cards, 136 teams, 30 NFL teams",
+      "at": "2026-10-03T16:09:40.334218+00:00",
+      "detail": "98 cards, 16 NFL cards, 62 NHL cards, 131 teams, 30 NFL teams",
       "name": "build",
       "ok": true
     },
@@ -1307,7 +1308,7 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-03T15:55:33.673504+00:00",
+      "at": "2026-10-03T16:09:40.513061+00:00",
       "detail": "market in 12s",
       "mode": "NCAAF Saturday",
       "name": "poll",
@@ -1322,8 +1323,8 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-10-03T15:55:33.504798+00:00",
-      "detail": "108 cards, 16 NFL cards, 62 NHL cards, 136 teams, 30 NFL teams",
+      "at": "2026-10-03T16:09:40.334218+00:00",
+      "detail": "98 cards, 16 NFL cards, 62 NHL cards, 131 teams, 30 NFL teams",
       "name": "build",
       "ok": true
     },
@@ -1334,7 +1335,7 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-03T15:55:33.673504+00:00",
+      "at": "2026-10-03T16:09:40.513061+00:00",
       "detail": "market in 12s",
       "mode": "NCAAF Saturday",
       "name": "poll",
