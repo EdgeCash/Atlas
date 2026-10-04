@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-10-04T21:24:07.801427+00:00",
+      "detail": "market in 14s",
+      "mode": "NFL Sunday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-10-04T21:24:07.654707+00:00",
+      "detail": "58 cards, 16 NFL cards, 48 NHL cards, 116 teams, 29 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-10-04T21:09:07.974937+00:00",
       "detail": "market in 14s",
       "mode": "NFL Sunday",
@@ -1286,24 +1299,11 @@
       "detail": "108 cards, 16 NFL cards, 62 NHL cards, 136 teams, 30 NFL teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-10-03T14:53:51.592441+00:00",
-      "detail": "market in 13s",
-      "mode": "NCAAF Saturday",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-10-03T14:53:51.436006+00:00",
-      "detail": "109 cards, 16 NFL cards, 62 NHL cards, 136 teams, 30 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-10-04T21:09:07.795429+00:00",
+      "at": "2026-10-04T21:24:07.654707+00:00",
       "detail": "58 cards, 16 NFL cards, 48 NHL cards, 116 teams, 29 NFL teams",
       "name": "build",
       "ok": true
@@ -1315,7 +1315,7 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-04T21:09:07.974937+00:00",
+      "at": "2026-10-04T21:24:07.801427+00:00",
       "detail": "market in 14s",
       "mode": "NFL Sunday",
       "name": "poll",
@@ -1330,7 +1330,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-10-04T21:09:07.795429+00:00",
+      "at": "2026-10-04T21:24:07.654707+00:00",
       "detail": "58 cards, 16 NFL cards, 48 NHL cards, 116 teams, 29 NFL teams",
       "name": "build",
       "ok": true
@@ -1342,7 +1342,7 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-04T21:09:07.974937+00:00",
+      "at": "2026-10-04T21:24:07.801427+00:00",
       "detail": "market in 14s",
       "mode": "NFL Sunday",
       "name": "poll",
