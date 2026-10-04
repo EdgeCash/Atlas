@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-10-04T23:09:20.864464+00:00",
+      "detail": "market in 15s",
+      "mode": "NFL Sunday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-10-04T23:09:20.685533+00:00",
+      "detail": "58 cards, 16 NFL cards, 47 NHL cards, 116 teams, 29 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-10-04T22:54:28.920711+00:00",
       "detail": "market in 15s",
       "mode": "NFL Sunday",
@@ -1286,24 +1299,11 @@
       "detail": "96 cards, 16 NFL cards, 62 NHL cards, 130 teams, 30 NFL teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-10-03T16:39:30.834232+00:00",
-      "detail": "market in 12s",
-      "mode": "NCAAF Saturday",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-10-03T16:39:30.682504+00:00",
-      "detail": "97 cards, 16 NFL cards, 62 NHL cards, 130 teams, 30 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-10-04T22:54:28.728727+00:00",
+      "at": "2026-10-04T23:09:20.685533+00:00",
       "detail": "58 cards, 16 NFL cards, 47 NHL cards, 116 teams, 29 NFL teams",
       "name": "build",
       "ok": true
@@ -1315,7 +1315,7 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-04T22:54:28.920711+00:00",
+      "at": "2026-10-04T23:09:20.864464+00:00",
       "detail": "market in 15s",
       "mode": "NFL Sunday",
       "name": "poll",
@@ -1330,7 +1330,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-10-04T22:54:28.728727+00:00",
+      "at": "2026-10-04T23:09:20.685533+00:00",
       "detail": "58 cards, 16 NFL cards, 47 NHL cards, 116 teams, 29 NFL teams",
       "name": "build",
       "ok": true
@@ -1342,7 +1342,7 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-04T22:54:28.920711+00:00",
+      "at": "2026-10-04T23:09:20.864464+00:00",
       "detail": "market in 15s",
       "mode": "NFL Sunday",
       "name": "poll",
