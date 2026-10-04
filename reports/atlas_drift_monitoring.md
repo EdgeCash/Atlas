@@ -1,6 +1,6 @@
 # Atlas Drift Monitoring
 
-*Generated 2026-10-04 16:07 UTC by `python -m atlas.live check`. Every alarm compares
+*Generated 2026-10-04 16:22 UTC by `python -m atlas.live check`. Every alarm compares
 the most recent week of the record against its own history.*
 
 ---
@@ -13,15 +13,15 @@ worse problem than the drift it was watching for.
 
 | Alarm | Severity | Observed | Threshold | Detail |
 |---|---|---|---|---|
-| signal volume | ok | -0.1964 | 0.5 | week 6: 90 signals against 112 the week before (-20%) |
-| silence | ok | 0.0209 | 7 | last signal 0.0 days ago (2026-10-04) |
+| signal volume | ok | -0.1607 | 0.5 | week 6: 94 signals against 112 the week before (-16%) |
+| silence | ok | 0.0000 | 7 | last signal 0.0 days ago (2026-10-04) |
 | single book | alarm | 1.0000 | 1 | 100% of signals from book 'DraftKings' (1 distinct) |
 | single market | ok | 0.5000 | 1 | 50% of signals from market 'margin' (2 distinct) |
-| model output (margin) | ok | 2.0711 | 3 | mean Atlas number moved +2.07 points against prior weeks |
-| model output (total) | ok | -0.1463 | 3 | mean Atlas number moved -0.15 points against prior weeks |
-| disagreement shape (margin) | ok | 0.8040 | 0.01 | KS statistic 0.108, p = 0.8040 |
-| disagreement shape (total) | ok | 0.4602 | 0.01 | KS statistic 0.144, p = 0.4602 |
-| primary rate | watch | 6.6000 | 0.5 | 3.3% of signals primary against 0.4% before (+660%) |
+| model output (margin) | ok | 1.7005 | 3 | mean Atlas number moved +1.70 points against prior weeks |
+| model output (total) | ok | -0.1368 | 3 | mean Atlas number moved -0.14 points against prior weeks |
+| disagreement shape (margin) | ok | 0.9034 | 0.01 | KS statistic 0.093, p = 0.9034 |
+| disagreement shape (total) | ok | 0.6984 | 0.01 | KS statistic 0.117, p = 0.6984 |
+| primary rate | watch | 6.2766 | 0.5 | 3.2% of signals primary against 0.4% before (+628%) |
 | college state | ok | n/a | 36 | not due until Mon 16:00 UTC |
 
 ---
@@ -68,7 +68,7 @@ newest week never finds.
 | 2026-w05 | signals | 112 | 112 | 0 | 0 | yes | exact match |
 | 2026-w05 | grades | 112 | 112 | 0 | 0 | yes | exact match |
 | 2026-w05 | statistics | 12 | 12 | 0 | 0 | yes | recomputed from the replayed grades |
-| 2026-w06 | signals | 90 | 90 | 0 | 0 | yes | exact match |
+| 2026-w06 | signals | 94 | 94 | 0 | 0 | yes | exact match |
 | 2026-w06 | grades | 0 | 0 | 0 | 0 | yes | no grades in this period |
 | 2026-w06 | statistics | 0 | 0 | 0 | 0 | yes | no graded signals in period |
 
