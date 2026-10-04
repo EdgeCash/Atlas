@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-10-04T08:54:28.497881+00:00",
+      "detail": "market in 13s",
+      "mode": "ordinary",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-10-04T08:54:28.340444+00:00",
+      "detail": "58 cards, 29 NFL cards, 49 NHL cards, 116 teams, 32 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-10-04T07:54:48.539634+00:00",
       "detail": "market in 13s",
       "mode": "ordinary",
@@ -1283,24 +1296,11 @@
       "detail": "66 cards, 16 NFL cards, 53 NHL cards, 117 teams, 30 NFL teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-10-02T21:09:06.417534+00:00",
-      "detail": "market in 10s",
-      "mode": "Friday night",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-10-02T21:09:06.240091+00:00",
-      "detail": "66 cards, 16 NFL cards, 53 NHL cards, 117 teams, 30 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-10-04T07:54:48.386825+00:00",
+      "at": "2026-10-04T08:54:28.340444+00:00",
       "detail": "58 cards, 29 NFL cards, 49 NHL cards, 116 teams, 32 NFL teams",
       "name": "build",
       "ok": true
@@ -1312,7 +1312,7 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-04T07:54:48.539634+00:00",
+      "at": "2026-10-04T08:54:28.497881+00:00",
       "detail": "market in 13s",
       "mode": "ordinary",
       "name": "poll",
@@ -1327,7 +1327,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-10-04T07:54:48.386825+00:00",
+      "at": "2026-10-04T08:54:28.340444+00:00",
       "detail": "58 cards, 29 NFL cards, 49 NHL cards, 116 teams, 32 NFL teams",
       "name": "build",
       "ok": true
@@ -1339,7 +1339,7 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-04T07:54:48.539634+00:00",
+      "at": "2026-10-04T08:54:28.497881+00:00",
       "detail": "market in 13s",
       "mode": "ordinary",
       "name": "poll",
