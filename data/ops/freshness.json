@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-10-04T12:39:14.986329+00:00",
+      "detail": "market in 14s",
+      "mode": "NFL Sunday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-10-04T12:39:14.769187+00:00",
+      "detail": "58 cards, 29 NFL cards, 49 NHL cards, 116 teams, 32 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-10-04T12:24:24.200198+00:00",
       "detail": "market in 14s",
       "mode": "NFL Sunday",
@@ -1283,24 +1296,11 @@
       "detail": "64 cards, 16 NFL cards, 51 NHL cards, 114 teams, 30 NFL teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-10-02T23:23:32.330230+00:00",
-      "detail": "market in 6s",
-      "mode": "Friday night",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-10-02T23:23:32.168131+00:00",
-      "detail": "64 cards, 16 NFL cards, 51 NHL cards, 114 teams, 30 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-10-04T12:24:24.054034+00:00",
+      "at": "2026-10-04T12:39:14.769187+00:00",
       "detail": "58 cards, 29 NFL cards, 49 NHL cards, 116 teams, 32 NFL teams",
       "name": "build",
       "ok": true
@@ -1312,7 +1312,7 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-04T12:24:24.200198+00:00",
+      "at": "2026-10-04T12:39:14.986329+00:00",
       "detail": "market in 14s",
       "mode": "NFL Sunday",
       "name": "poll",
@@ -1327,7 +1327,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-10-04T12:24:24.054034+00:00",
+      "at": "2026-10-04T12:39:14.769187+00:00",
       "detail": "58 cards, 29 NFL cards, 49 NHL cards, 116 teams, 32 NFL teams",
       "name": "build",
       "ok": true
@@ -1339,7 +1339,7 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-04T12:24:24.200198+00:00",
+      "at": "2026-10-04T12:39:14.986329+00:00",
       "detail": "market in 14s",
       "mode": "NFL Sunday",
       "name": "poll",
