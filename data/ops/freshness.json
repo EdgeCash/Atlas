@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-10-06T05:54:40.808636+00:00",
+      "detail": "market in 15s",
+      "mode": "ordinary",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-10-06T05:54:40.652950+00:00",
+      "detail": "60 cards, 15 NFL cards, 40 NHL cards, 118 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-10-06T04:54:43.229783+00:00",
       "detail": "market in 15s",
       "mode": "ordinary",
@@ -1286,24 +1299,11 @@
       "detail": "58 cards, 29 NFL cards, 49 NHL cards, 116 teams, 32 NFL teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-10-04T09:54:41.408327+00:00",
-      "detail": "market in 13s",
-      "mode": "ordinary",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-10-04T09:54:41.229942+00:00",
-      "detail": "58 cards, 29 NFL cards, 49 NHL cards, 116 teams, 32 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-10-06T04:54:43.038922+00:00",
+      "at": "2026-10-06T05:54:40.652950+00:00",
       "detail": "60 cards, 15 NFL cards, 40 NHL cards, 118 teams, 30 NFL teams",
       "name": "build",
       "ok": true
@@ -1315,7 +1315,7 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-06T04:54:43.229783+00:00",
+      "at": "2026-10-06T05:54:40.808636+00:00",
       "detail": "market in 15s",
       "mode": "ordinary",
       "name": "poll",
@@ -1330,7 +1330,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-10-06T04:54:43.038922+00:00",
+      "at": "2026-10-06T05:54:40.652950+00:00",
       "detail": "60 cards, 15 NFL cards, 40 NHL cards, 118 teams, 30 NFL teams",
       "name": "build",
       "ok": true
@@ -1342,7 +1342,7 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-06T04:54:43.229783+00:00",
+      "at": "2026-10-06T05:54:40.808636+00:00",
       "detail": "market in 15s",
       "mode": "ordinary",
       "name": "poll",
