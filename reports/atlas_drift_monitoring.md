@@ -1,6 +1,6 @@
 # Atlas Drift Monitoring
 
-*Generated 2026-10-06 08:52 UTC by `python -m atlas.live check`. Every alarm compares
+*Generated 2026-10-22 23:17 UTC by `python -m atlas.live check`. Every alarm compares
 the most recent week of the record against its own history.*
 
 ---
@@ -13,16 +13,16 @@ worse problem than the drift it was watching for.
 
 | Alarm | Severity | Observed | Threshold | Detail |
 |---|---|---|---|---|
-| signal volume | ok | 0.0357 | 0.5 | week 6: 116 signals against 112 the week before (+4%) |
-| silence | ok | 1.6564 | 7 | last signal 1.7 days ago (2026-10-04) |
+| signal volume | ok | -0.1379 | 0.5 | week 8: 100 signals against 116 the week before (-14%) |
+| silence | ok | 0.0000 | 7 | last signal 0.0 days ago (2026-10-22) |
 | single book | alarm | 1.0000 | 1 | 100% of signals from book 'DraftKings' (1 distinct) |
 | single market | ok | 0.5000 | 1 | 50% of signals from market 'margin' (2 distinct) |
-| model output (margin) | ok | 1.2761 | 3 | mean Atlas number moved +1.28 points against prior weeks |
-| model output (total) | ok | -0.5193 | 3 | mean Atlas number moved -0.52 points against prior weeks |
-| disagreement shape (margin) | ok | 0.8232 | 0.01 | KS statistic 0.097, p = 0.8232 |
-| disagreement shape (total) | ok | 0.9800 | 0.01 | KS statistic 0.071, p = 0.9800 |
-| primary rate | watch | 6.8621 | 0.5 | 3.4% of signals primary against 0.4% before (+686%) |
-| college state | ok | n/a | 36 | no refresh on one side of the last game day to compare |
+| model output (margin) | ok | -0.5145 | 3 | mean Atlas number moved -0.51 points against prior weeks |
+| model output (total) | ok | -0.2694 | 3 | mean Atlas number moved -0.27 points against prior weeks |
+| disagreement shape (margin) | ok | 0.4519 | 0.01 | KS statistic 0.133, p = 0.4519 |
+| disagreement shape (total) | ok | 0.1707 | 0.01 | KS statistic 0.173, p = 0.1707 |
+| primary rate | watch | -1.0000 | 0.5 | 0.0% of signals primary against 1.5% before (-100%) |
+| college state | ok | 346.0000 | 1 | 346 more team-games assimilated since Saturday noon ET |
 
 ---
 
@@ -69,8 +69,8 @@ newest week never finds.
 | 2026-w05 | grades | 112 | 112 | 0 | 0 | yes | exact match |
 | 2026-w05 | statistics | 12 | 12 | 0 | 0 | yes | recomputed from the replayed grades |
 | 2026-w06 | signals | 116 | 116 | 0 | 0 | yes | exact match |
-| 2026-w06 | grades | 0 | 0 | 0 | 0 | yes | no grades in this period |
-| 2026-w06 | statistics | 0 | 0 | 0 | 0 | yes | no graded signals in period |
+| 2026-w06 | grades | 116 | 116 | 0 | 0 | yes | exact match |
+| 2026-w06 | statistics | 16 | 16 | 0 | 0 | yes | recomputed from the replayed grades |
 
 A **signals** mismatch means the record is not reproducible. A **grades**
 mismatch means the grading logic changed under a published number. A

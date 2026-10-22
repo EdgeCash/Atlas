@@ -1,6 +1,6 @@
 # Atlas Live CLV Tracking
 
-*Generated 2026-10-06 08:52 UTC by `python -m atlas.live report`. Updated on every run
+*Generated 2026-10-22 23:17 UTC by `python -m atlas.live report`. Updated on every run
 of the tracker. Source tables are the CSVs in `tracking/`, which are committed
 alongside this file so the record can be audited row by row.*
 
@@ -15,14 +15,14 @@ alongside this file so the record can be audited row by row.*
 
 | | |
 |---|---|
-| Signals recorded | 344 |
+| Signals recorded | 444 |
 | Primary signals | 5 |
-| Graded (decided) | 1 |
-| Awaiting kickoff | 116 |
+| Graded (decided) | 5 |
+| Awaiting kickoff | 100 |
 | Seasons of tracking | 1 of 2 required |
 | Verdict possible at | 124 graded primary signals |
 
-**The record is too short to decide anything.** 1 graded signals against the 124 needed to separate the beat rate from a coin flip. Numbers below are reported because they are the record, not because they mean anything yet.
+**The record is too short to decide anything.** 5 graded signals against the 124 needed to separate the beat rate from a coin flip. Numbers below are reported because they are the record, not because they mean anything yet.
 
 ---
 
@@ -33,9 +33,9 @@ signal existed. They are checked, never tuned.
 
 | Criterion | Observed | Threshold | Graded | Status | Requirement |
 |---|---|---|---|---|---|
-| CLV beat rate | 1.0000 | 0.55 | 1 | collecting | must stay at or above 55% |
-| Mean CLV | 1.0000 | 0.49 | 1 | collecting | must stay at or above 0.49 points |
-| Execution window | 1.0000 | 0.5 | 1 | collecting | share of signals where the line had already moved 0.5+ points toward Atlas before it spoke |
+| CLV beat rate | 1.0000 | 0.55 | 5 | collecting | must stay at or above 55% |
+| Mean CLV | 1.2000 | 0.49 | 5 | collecting | must stay at or above 0.49 points |
+| Execution window | 0.2000 | 0.5 | 5 | collecting | share of signals where the line had already moved 0.5+ points toward Atlas before it spoke |
 
 ---
 
@@ -45,34 +45,36 @@ signal existed. They are checked, never tuned.
 
 | Season | Signals | Graded | Pushes | Beat rate | 95% low | 95% high | p vs 50% | Mean CLV | Median CLV | Mean CLV (prob) | Flagged |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| 2026 | 1 | 1 | 0 | 1.0000 | 0.2065 | 1.0000 | 0.5000 | 1.0000 | 1 | 0.0460 | 1 |
+| 2026 | 5 | 5 | 0 | 1.0000 | 0.5655 | 1.0000 | 0.0312 | 1.2000 | 1 | 0.0406 | 1 |
 
 ### By week
 
 | Season | Week | Signals | Graded | Pushes | Beat rate | Mean CLV | Median CLV | Mean CLV (prob) | Flagged |
 |---|---|---|---|---|---|---|---|---|---|
 | 2026 | 4.0000 | 1 | 1 | 0 | 1.0000 | 1.0000 | 1 | 0.0460 | 1 |
+| 2026 | 6.0000 | 4 | 4 | 0 | 1.0000 | 1.2500 | 1 | 0.0393 | 0 |
 
 ### By day
 
 | Date | Signals | Graded | Pushes | Beat rate | Mean CLV | Median CLV | Mean CLV (prob) | Flagged |
 |---|---|---|---|---|---|---|---|---|
 | 2026-09-26 | 1 | 1 | 0 | 1.0000 | 1.0000 | 1 | 0.0460 | 1 |
+| 2026-10-22 | 4 | 4 | 0 | 1.0000 | 1.2500 | 1 | 0.0393 | 0 |
 
 ### By book
 
 | Book | Signals | Graded | Pushes | Beat rate | Mean CLV | Median CLV | Mean CLV (prob) | Flagged |
 |---|---|---|---|---|---|---|---|---|
-| DraftKings | 1 | 1 | 0 | 1.0000 | 1.0000 | 1 | 0.0460 | 1 |
+| DraftKings | 5 | 5 | 0 | 1.0000 | 1.2000 | 1 | 0.0406 | 1 |
 
 ### Every population, including the ones the criteria ignore
 
 | Population | Signals | Graded | Pushes | Beat rate | 95% low | 95% high | p vs 50% | Mean CLV | Median CLV | Mean CLV (prob) | Flagged |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| observed | 222 | 170 | 52 | 0.5118 | 0.4372 | 0.5858 | 0.4091 | 0.1306 | 0 | 0.0028 | 50 |
-| primary | 1 | 1 | 0 | 1.0000 | 0.2065 | 1.0000 | 0.5000 | 1.0000 | 1 | 0.0460 | 1 |
-| secondary | 5 | 4 | 1 | 0.7500 | 0.3006 | 0.9544 | 0.3125 | 1.0000 | 1 | 0.0216 | 2 |
-| all | 228 | 175 | 53 | 0.5200 | 0.4463 | 0.5928 | 0.3251 | 0.1535 | 0 | 0.0034 | 53 |
+| observed | 329 | 259 | 70 | 0.5328 | 0.4720 | 0.5927 | 0.1601 | 0.2188 | 0 | 0.0046 | 57 |
+| primary | 5 | 5 | 0 | 1.0000 | 0.5655 | 1.0000 | 0.0312 | 1.2000 | 1 | 0.0406 | 1 |
+| secondary | 10 | 9 | 1 | 0.6667 | 0.3542 | 0.8794 | 0.2539 | 0.6500 | 0.5 | 0.0150 | 2 |
+| all | 344 | 273 | 71 | 0.5458 | 0.4865 | 0.6038 | 0.0731 | 0.2456 | 0 | 0.0054 | 60 |
 
 `primary` is the population the criteria are evaluated on: totals at or above
 the historical 90th percentile of disagreement. `secondary` is the same cut on
@@ -103,10 +105,10 @@ beat rate and reported separately.
 
 | Table | Rows | What it holds |
 |---|---|---|
-| `tracking/games.csv` | 286 | every game seen, with kickoff and status |
-| `tracking/snapshots.csv` | 4,416 | append-on-change line observations, timestamped |
-| `tracking/signals.csv` | 344 | immutable opinions |
-| `tracking/grades.csv` | 228 | one row per graded signal |
+| `tracking/games.csv` | 360 | every game seen, with kickoff and status |
+| `tracking/snapshots.csv` | 4,573 | append-on-change line observations, timestamped |
+| `tracking/signals.csv` | 444 | immutable opinions |
+| `tracking/grades.csv` | 344 | one row per graded signal |
 
 ---
 
