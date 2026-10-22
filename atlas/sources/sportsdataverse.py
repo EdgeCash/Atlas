@@ -176,11 +176,25 @@ def fetch_play_by_play(raw: Path, season: int, *, refresh: bool = False, keep_fu
             LOG.warning("refresh of play-by-play %s failed; the cached copy stands", season)
             return dest
         raise
-    df = _read_available_columns(full, PBP_COLUMNS)
+    df = numeric_ids(_read_available_columns(full, PBP_COLUMNS))
     write_parquet(df, dest)
     if not keep_full:
         full.unlink(missing_ok=True)
     return dest
+
+
+#: Team ids are numbers in every season's file up to 2025; the 2026 file
+#: publishes them as text ('151'), and a season mixing the two cannot be
+#: written to parquet (the heavy rebuild failed on it from 4 October 2026).
+ID_COLUMNS = ("home_team_id", "away_team_id")
+
+
+def numeric_ids(df: pd.DataFrame) -> pd.DataFrame:
+    """The team id columns as numbers, whatever type the source file used."""
+    for column in ID_COLUMNS:
+        if column in df.columns and not pd.api.types.is_numeric_dtype(df[column]):
+            df[column] = pd.to_numeric(df[column], errors="coerce")
+    return df
 
 
 def _read_available_columns(path: Path, wanted: list[str]) -> pd.DataFrame:

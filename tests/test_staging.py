@@ -207,3 +207,35 @@ def test_transfer_portal_quality_is_summed_in_and_out_and_zero_before_the_portal
     assert out.loc[2, "home_portal_out"] == pytest.approx(0.75)            # unrated: the floor
     assert out.loc[2, "away_portal_out"] == pytest.approx(0.90) and out.loc[2, "away_portal_in"] == 0.0
     assert out.loc[1, "home_portal_in"] == 0.0 and out.loc[1, "away_portal_out"] == 0.0   # 2020: no portal
+
+
+def test_a_season_whose_file_has_team_ids_as_text_still_builds(synthetic_build, tmp_path):
+    """The 2026 play-by-play file publishes team ids as text ('151') where
+    every earlier season has numbers; a build mixing the two failed to write
+    its parquet from 4 October 2026."""
+    import shutil
+
+    from atlas.sources import sportsdataverse as sdv
+
+    raw = synthetic_build["paths"].raw
+    seasons = sorted(int(p.stem.split("_")[1]) for p in (raw / "pbp").glob("pbp_*.parquet"))[:2]
+    (tmp_path / "raw" / "pbp").mkdir(parents=True)
+    for season in seasons:
+        shutil.copy(sdv.pbp_path(raw, season), sdv.pbp_path(tmp_path / "raw", season))
+    text = pd.read_parquet(sdv.pbp_path(tmp_path / "raw", seasons[-1]))
+    text[list(sdv.ID_COLUMNS)] = text[list(sdv.ID_COLUMNS)].astype(str)
+    text.to_parquet(sdv.pbp_path(tmp_path / "raw", seasons[-1]), index=False)
+
+    (tmp_path / "ref").mkdir()
+    built = efficiency.build_efficiency(tmp_path / "raw", tmp_path, seasons)
+    expected = efficiency.build_efficiency(raw, tmp_path / "ref", seasons)
+    assert pd.api.types.is_numeric_dtype(built["team_id"])
+    pd.testing.assert_frame_equal(built.reset_index(drop=True), expected.reset_index(drop=True), check_dtype=False)
+
+
+def test_numeric_ids_leaves_numbers_alone_and_converts_text():
+    from atlas.sources import sportsdataverse as sdv
+
+    df = pd.DataFrame({"home_team_id": ["151", "2166"], "away_team_id": [25, 277], "game_id": [1, 2]})
+    out = sdv.numeric_ids(df)
+    assert out["home_team_id"].tolist() == [151, 2166] and out["away_team_id"].tolist() == [25, 277]
