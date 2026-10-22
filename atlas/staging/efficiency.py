@@ -79,6 +79,8 @@ def build_efficiency(raw: Path, staging: Path, seasons: list[int]) -> pd.DataFra
 def _season_efficiency(pbp: pd.DataFrame, season: int) -> pd.DataFrame:
     pbp = pbp.dropna(subset=["game_id", "pos_team", "def_pos_team"]).copy()
     pbp["game_id"] = pbp["game_id"].astype("int64")
+    # A copy cached before the fetch normalised its ids still has them as text.
+    pbp = sdv.numeric_ids(pbp)
     pbp["season"] = season
 
     # Resolve the offensive/defensive team ids from the team names.
