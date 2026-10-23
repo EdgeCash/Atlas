@@ -1,6 +1,6 @@
 # Atlas on Polymarket US
 
-*Rebuilt every run; this one at 2026-10-23 23:23 UTC.*
+*Rebuilt every run; this one at 2026-10-23 23:37 UTC.*
 
 Polymarket US, the CFTC-regulated exchange, is the one venue Atlas is priced
 against. It lists a moneyline, a ladder of spreads and a ladder of totals on
@@ -57,9 +57,9 @@ side at disagreements this large or larger, never below one half.
 
 | Sport | Market | Games | Atlas, median gap | Atlas, largest gap | Anchored, median gap |
 |---|---|---|---|---|---|
-| NBA | margin | 10 | 3.1 | 9.4 | 0.11 |
-| NBA | total | 10 | 2.8 | 9.3 | 0.13 |
-| NCAAF | margin | 47 | 2.2 | 10.3 | 0.00 |
+| NBA | margin | 10 | 3.1 | 10.7 | 0.12 |
+| NBA | total | 10 | 2.8 | 13.6 | 0.13 |
+| NCAAF | margin | 47 | 1.9 | 8.6 | 0.00 |
 | NCAAF | total | 47 | 2.5 | 6.2 | 0.52 |
 | NFL | margin | 12 | 0.9 | 3.1 | 0.01 |
 | NFL | total | 12 | 1.6 | 4.9 | 0.20 |
@@ -71,7 +71,7 @@ construction.
 
 ## Player props
 
-Player props this run: NBA (points, rebounds, assists, threes, steals, blocks, the three combined): 3059 contracts on 10 games, 2225 with an Atlas projection beside them, 0 graded so far. Atlas's numbers are `atlas/models/nba_props.py` (`reports/nba_props.md`) and `atlas/models/nhl_props.py` (`reports/nhl_props.md`). Each player-stat's main line is kept in `tracking/polymarket_props.csv` with Atlas's probability as it stood, and graded against the box score and the close into `tracking/prop_record.csv`, the record that decides, a sport at a time, what Atlas's disagreement is worth there.
+Player props this run: NBA (points, rebounds, assists, threes, steals, blocks, the three combined): 3170 contracts on 10 games, 2317 with an Atlas projection beside them, 0 graded so far. Atlas's numbers are `atlas/models/nba_props.py` (`reports/nba_props.md`) and `atlas/models/nhl_props.py` (`reports/nhl_props.md`). Each player-stat's main line is kept in `tracking/polymarket_props.csv` with Atlas's probability as it stood, and graded against the box score and the close into `tracking/prop_record.csv`, the record that decides, a sport at a time, what Atlas's disagreement is worth there.
 
 ## The favorites rule
 
@@ -86,8 +86,11 @@ rate, in points, with one standard error.
 | Phase | Threshold | Taken | Graded | Win rate | Break-even | Edge (pts) | Profit per $ |
 |---|---|---|---|---|---|---|---|
 | in play | 80% | 2 | 0 |  |  |  |  |
-| pregame | 80% | 35 | 0 |  |  |  |  |
-| pregame | 85% | 16 | 0 |  |  |  |  |
+| in play | 85% | 3 | 0 |  |  |  |  |
+| in play | 90% | 1 | 0 |  |  |  |  |
+| in play | 95% | 1 | 0 |  |  |  |  |
+| pregame | 80% | 36 | 0 |  |  |  |  |
+| pregame | 85% | 17 | 0 |  |  |  |  |
 | pregame | 90% | 10 | 0 |  |  |  |  |
 | pregame | 95% | 1 | 0 |  |  |  |  |
 
