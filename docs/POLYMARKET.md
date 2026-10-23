@@ -189,6 +189,28 @@ market and declines by the fee. That is the model, not a bug: a share that
 rises on the record will widen what the rule takes without a line of code
 changing.
 
+## The favorites rule
+
+A second paper rule beside Atlas's, with no projection in it
+(`atlas/polymarket/favorites.py`). The idea under test is the one that
+looks obvious on the app: a side at 86% is going to win, so buy it and
+collect the few cents. The price says otherwise - 86% is the market's
+estimate of how often that side wins, and the contract costs 86 cents plus
+the fee - so the question is only whether the venue's favorites win more
+often than they cost, in play or before the game, in any sport, at any
+threshold. Every run takes a paper position on each moneyline (the
+favorite side of a game; a deep spread or total at 90 cents is the ladder's
+edge, not a favorite) the first time its ask reaches 80, 85, 90 and 95
+cents, at that ask plus the fee,
+noting the phase and the minutes since kickoff; once the game is four hours
+gone the venue's settlement grades it (at most forty reads a run). The
+record is `tracking/favorites.csv`, in the clear, since it is a rule on
+public prices rather than Atlas's own positions; the public report and the
+owner page sum it by phase and threshold, and by sport: the win rate
+against the break-even rate (the mean cost), with a standard error, and the
+profit per dollar staked. Positive and several errors wide, over hundreds
+of positions, before it means anything.
+
 ## Paper only
 
 Nothing here buys anything. Before real money, confirm: that each market's

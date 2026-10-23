@@ -20,7 +20,7 @@ import pandas as pd
 from atlas.live import probability
 from atlas.live.store import Store
 from atlas.owner import crypto
-from atlas.polymarket import match, page, positions, pricing, props, report, source
+from atlas.polymarket import favorites, match, page, positions, pricing, props, report, source
 from atlas.util import get_logger, offline
 
 LOG = get_logger(__name__)
@@ -80,14 +80,17 @@ def refresh(*, now: datetime | None = None, heavy: bool = False, store: Store | 
         # The player props, read from the same events: kept, graded, priced, and positioned when the key
         # is set (atlas/polymarket/props.py). Never fails the run.
         prop_sections, prop_summary = props.refresh(store, events, pairs, now, passphrase or None)
-        report.write(priced, up, store.read("calibration"), now, props=prop_summary)
+        # The favorites rule, on this run's quotes: no projection in it (atlas/polymarket/favorites.py).
+        fav_record, fav_section = favorites.refresh(store, quotes, now)
+        report.write(priced, up, store.read("calibration"), now, props=prop_summary,
+                     favorites_text=favorites.text(fav_record))
         if passphrase:
             from atlas.owner import paper
 
             research = _research()
             finals = paper.results(research, store.read("games"))
             chosen, graded = positions.run(priced, finals, record, passphrase, now)
-            sections = [*page.sections(priced, chosen, graded, now), *prop_sections]
+            sections = [*page.sections(priced, chosen, graded, now), *prop_sections, fav_section]
         else:
             reason = "The owner key is not configured."
     except Exception as error:  # noqa: BLE001 - the type only: a message could quote a price
