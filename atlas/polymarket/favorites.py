@@ -48,7 +48,9 @@ SETTLEMENT_READS = 40
 COLUMNS = ["formed_at", "threshold", "phase", "minutes_in", "sport", "game_id", "event_id", "event_slug", "game_start",
            "label", "market", "side", "long", "line", "market_id", "market_slug", "token_id", "ask", "bid", "spread",
            "fee_rate", "fee", "cost", "payout", "won", "profit", "graded_at"]
-TAB = "Favorites"
+TAB = "Poly Snipe"
+#: The owner page lists this many of the latest positions, one row per side.
+LATEST = 30
 
 
 def _truthy(value) -> bool:
@@ -183,10 +185,42 @@ def _table(s: pd.DataFrame, head: list[str]) -> dict:
                                   "Edge (pts)", "Profit per $"], "stack": True, "rows": rows}
 
 
+def latest(record: pd.DataFrame, n: int = LATEST) -> dict | None:
+    """The newest positions, one row per side at the lowest threshold it reached: what the rule took and
+    how each stands (pending, won, lost, or settled at a price)."""
+    if record is None or record.empty:
+        return None
+    r = record.sort_values(["formed_at", "threshold"], kind="stable")
+    r = r.drop_duplicates("token_id", keep="first").tail(n).iloc[::-1]
+    rows = []
+    for x in r.itertuples():
+        won = pd.to_numeric(pd.Series([x.won]), errors="coerce").iloc[0]
+        payout = pd.to_numeric(pd.Series([x.payout]), errors="coerce").iloc[0]
+        if pd.isna(won):
+            state = "pending"
+        elif won >= 1.0:
+            state = "won"
+        elif pd.notna(payout) and payout > 0.0:
+            state = f"settled {payout:.2f}"
+        else:
+            state = "lost"
+        when = pd.to_datetime(x.formed_at, utc=True, errors="coerce")
+        minutes = float(x.minutes_in) if pd.notna(x.minutes_in) else float("nan")
+        phase = (f"in play, {minutes:.0f}'" if minutes >= 0 else f"pregame, {-minutes / 60:.1f}h out") \
+            if math.isfinite(minutes) else str(x.phase).replace("_", " ")
+        rows.append([[str(x.label), str(x.sport).upper()], str(x.side), f"{float(x.ask):.2f}", phase,
+                     when.tz_convert("America/New_York").strftime("%a %H:%M") if pd.notna(when) else "", state])
+    return {"title": f"Latest positions ({len(rows)} sides)", "head": ["Game", "Side", "Ask", "Phase", "Taken", "Result"],
+            "stack": True, "rows": rows}
+
+
 def section(record: pd.DataFrame, now: datetime) -> dict:
-    """The owner page's section: the rule's record by phase and threshold, and by sport at the lowest."""
+    """The owner page's section: the rule's record by phase and threshold, by sport at the lowest, and the
+    latest positions taken."""
     s = summary(record)
     tables = [_table(s, ["phase", "threshold"])] if len(s) else []
+    if len(tables):
+        tables[0]["title"] = "By phase and threshold"
     if len(record):
         low = record[pd.to_numeric(record["threshold"], errors="coerce").round(2) == round(THRESHOLDS[0], 2)]
         by_sport = summary(low, by=("sport", "phase"))
@@ -194,9 +228,13 @@ def section(record: pd.DataFrame, now: datetime) -> dict:
             t = _table(by_sport, ["sport", "phase"])
             t["title"] = f"By sport, at the {THRESHOLDS[0]:.0%} threshold"
             tables.append(t)
+    new = latest(record)
+    if new:
+        tables.append(new)
     n = int(len(record)) if record is not None else 0
     graded = int(pd.to_numeric(record["won"], errors="coerce").notna().sum()) if n else 0
-    return {"title": f"Favorites rule ({graded} of {n} graded)", "tab": TAB, "tables": tables, "notes": [
+    return {"title": f"Poly Snipe: the favorites rule ({graded} of {n} positions graded)", "tab": TAB,
+            "tables": tables, "notes": [
         "A paper position on every moneyline the first time its ask reaches each threshold, at that ask plus "
         "the fee, in play or before the game; graded by the venue's settlement. No projection is in it: the "
         "question is whether the venue's favorites win more often than they cost.",
@@ -238,7 +276,7 @@ def refresh(store, quotes: pd.DataFrame, now: datetime) -> tuple[pd.DataFrame, d
         return record, section(record, now)
     except Exception as error:  # noqa: BLE001 - the type only
         LOG.error("favorites not refreshed: %s", type(error).__name__)
-        return pd.DataFrame(columns=COLUMNS), {"title": "Favorites rule", "tab": TAB, "tables": [],
+        return pd.DataFrame(columns=COLUMNS), {"title": "Poly Snipe: the favorites rule", "tab": TAB, "tables": [],
                                                "notes": [f"This run could not keep the rule ({type(error).__name__})."]}
 
 
