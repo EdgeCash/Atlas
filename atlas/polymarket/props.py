@@ -18,8 +18,16 @@ Stat O/U line". Every run:
    (`atlas/polymarket/pricing.py`);
 4. **takes paper positions** by the same rule as the game markets, one per
    player-stat, in their own sealed record (``tracking/polymarket_prop_positions/``),
-   graded on the box score (a player who did not play is a push) and
-   against the close.
+   graded on the box score the venue's way (a player who did not take the
+   court resolves No, the under) and against the close.
+
+ESPN's injury report is read every run (`atlas/sources/nba_availability.py`)
+and applied before any of it: a player listed Out is priced at a 3% chance of
+taking the court, a game-time decision at 55% and nine tenths of his minutes,
+his minutes go to his teammates, and the chance of not playing goes to the
+under in full, as the venue resolves it (`atlas/models/nba_props.AVAILABILITY`).
+The model's own record still counts a player who did not play as a push: it
+measures the rate model, not the report.
 
 Nothing here buys anything.
 """
@@ -28,7 +36,6 @@ from __future__ import annotations
 
 import math
 import re
-import unicodedata
 from datetime import datetime
 from pathlib import Path
 
@@ -36,8 +43,9 @@ import numpy as np
 import pandas as pd
 
 from atlas.live.store import SCHEMA
+from atlas.models import nba_props
 from atlas.polymarket import match, page, positions, pricing, source
-from atlas.util import get_logger
+from atlas.util import get_logger, offline
 
 LOG = get_logger(__name__)
 
@@ -64,13 +72,8 @@ def path() -> Path:
 # ---------------------------------------------------------------------------
 
 
-def key(name) -> str:
-    """A player's name as a key: lowercased, accents and punctuation dropped, suffixes dropped."""
-    text = unicodedata.normalize("NFKD", str(name or ""))
-    text = "".join(ch for ch in text if not unicodedata.combining(ch)).lower()
-    text = re.sub(r"[.'’\-]", "", text)
-    words = [w for w in text.split() if w not in ("jr", "sr", "ii", "iii", "iv")]
-    return " ".join(words)
+#: A player's name as a key: lowercased, accents and punctuation dropped, suffixes dropped.
+key = nba_props.name_key
 
 
 def prop_quotes(events: list[dict], league: source.League, captured_at) -> pd.DataFrame:
@@ -114,7 +117,7 @@ def prop_quotes(events: list[dict], league: source.League, captured_at) -> pd.Da
                     "bid": bids[i], "ask": asks[i], "mid": mids[i], "last": lasts[i],
                     "spread": source._round(source._num(m.get("spread"))),
                     "liquidity": source._num(m.get("liquidityNum", m.get("liquidity"))), "fee_rate": source.fee_rate(m),
-                    "accepting": accepting, "p_atlas": float("nan"), "atlas_mean": float("nan"),
+                    "accepting": accepting, "p_atlas": float("nan"), "atlas_mean": float("nan"), "status": "",
                 })
     return pd.DataFrame(rows, columns=PROP_COLUMNS)
 
@@ -148,26 +151,28 @@ def _players_by_team(snap: dict) -> dict[tuple[int, str], pd.Series]:
     return out
 
 
-def expectations(q: pd.DataFrame, snap: dict | None) -> pd.DataFrame:
-    """Each prop with Atlas's expectation of the stat and its probability of the side: the player found by
-    name on one of the game's two teams in the snapshot; nan where he is not."""
-    from atlas.models import nba_props
-
+def expectations(q: pd.DataFrame, snap: dict | None, availability: pd.DataFrame | None = None) -> pd.DataFrame:
+    """Each prop with Atlas's expectation of the stat (when the player plays), his status on the injury
+    report, and Atlas's probability of the side with his chance of playing in it: the player found by name
+    on one of the game's two teams in the snapshot; nan where he is not."""
     out = q.copy()
     out["atlas_mean"] = np.nan
     out["p_atlas"] = np.nan
+    out["status"] = ""
     if snap is None or out.empty or "home_team_id" not in out:
         return out
+    snap = nba_props.adjust(snap, availability)
     by_team = _players_by_team(snap)
     cache: dict[tuple, dict] = {}
-    means, probs = [], []
+    means, probs, statuses = [], [], []
     for r in out.itertuples():
-        mean_, p = float("nan"), float("nan")
+        mean_, p, status = float("nan"), float("nan"), ""
         try:
             home_id, away_id = int(r.home_team_id), int(r.away_team_id)
         except (TypeError, ValueError):
             means.append(mean_)
             probs.append(p)
+            statuses.append(status)
             continue
         k = key(r.player)
         for team_id, opp_id, home in ((home_id, away_id, True), (away_id, home_id, False)):
@@ -178,12 +183,15 @@ def expectations(q: pd.DataFrame, snap: dict | None) -> pd.DataFrame:
             if ck not in cache:
                 cache[ck] = nba_props.expect(snap, row._asdict(), team_id, opp_id, home)
             mean_ = cache[ck].get(str(r.stat), float("nan"))
+            status = str(row.status or "")
             if math.isfinite(mean_):
-                p = nba_props.prob(mean_, float(r.line), str(r.side), nba_props.dispersion(snap, str(r.stat)))
+                p = nba_props.prob_available(mean_, float(r.line), str(r.side),
+                                             nba_props.dispersion(snap, str(r.stat)), float(row.p_play))
             break
         means.append(mean_)
         probs.append(p)
-    out["atlas_mean"], out["p_atlas"] = means, probs
+        statuses.append(status)
+    out["atlas_mean"], out["p_atlas"], out["status"] = means, probs, statuses
     return out
 
 
@@ -314,8 +322,9 @@ def price(q: pd.DataFrame, calibration: pd.DataFrame | None) -> pd.DataFrame:
 
 
 def grade_positions(record: pd.DataFrame, results: pd.DataFrame, quotes: pd.DataFrame, now: datetime) -> pd.DataFrame:
-    """Each position with its outcome from the box score (a player who did not play, or a tie on a whole
-    line, is a push), its return, and Polymarket's close for the contract."""
+    """Each position with its outcome from the box score the venue's way (a player who did not take the
+    court resolves No, so the under wins and the over loses; a tie on a whole line is a push), its return,
+    and Polymarket's close for the contract."""
     if record.empty:
         return record.assign(outcome=pd.Series(dtype=str), profit=pd.Series(dtype=float), pnl=pd.Series(dtype=float),
                              close=pd.Series(dtype=float), clv=pd.Series(dtype=float))
@@ -326,7 +335,9 @@ def grade_positions(record: pd.DataFrame, results: pd.DataFrame, quotes: pd.Data
         value, played = _value(results, x.game_id, x.player, x.stat)
         if played is None:
             outcomes.append("open")
-        elif not played or not math.isfinite(value) or value == float(x.line):
+        elif not played or not math.isfinite(value):
+            outcomes.append("win" if str(x.side) == "under" else "loss")
+        elif value == float(x.line):
             outcomes.append("push")
         else:
             over = value > float(x.line)
@@ -354,7 +365,9 @@ def _contract(x) -> str:
 
 def _atlas(x) -> str:
     m = pd.to_numeric(getattr(x, "atlas_mean", np.nan), errors="coerce")
-    return f"Atlas {float(m):.1f}" if pd.notna(m) else "Atlas –"
+    status = str(getattr(x, "status", "") or "")
+    text = f"Atlas {float(m):.1f}" if pd.notna(m) else "Atlas –"
+    return f"{text} · {status}" if status and status != "nan" else text
 
 
 def sections(priced: pd.DataFrame, chosen: pd.DataFrame, graded: pd.DataFrame, now: datetime,
@@ -374,7 +387,9 @@ def sections(priced: pd.DataFrame, chosen: pd.DataFrame, graded: pd.DataFrame, n
                 "Fair is Polymarket's probability pulled toward Atlas's projection by the share of Atlas's "
                 "disagreement the prop record has shown to be real: zero until the record says otherwise, so at "
                 "first nothing here clears the fee. Atlas is minutes times a rate times the game "
-                "(atlas/models/nba_props.py).",
+                "(atlas/models/nba_props.py), with ESPN's injury report applied: a player listed out is priced "
+                "at a 3% chance of taking the court, a game-time decision at 55%, and the venue resolves a "
+                "player who does not play as No.",
                 *([note] if note else [])]}]
     tables = []
     upcoming = priced[pd.to_datetime(priced["kickoff"], utc=True, errors="coerce") > pd.Timestamp(now)] \
@@ -452,24 +467,27 @@ def record_section(record: pd.DataFrame) -> dict | None:
 
 
 def refresh(store, events: list[dict], pairs: pd.DataFrame, now: datetime, passphrase: str | None,
-            *, snap: dict | None = None, player_games: pd.DataFrame | None = None) -> tuple[list[dict], dict]:
-    """The props step of the Polymarket run: read, keep, grade, price, position. Returns (the owner page's
-    sections, a coverage summary for the public report). Never raises."""
-    from atlas.models import nba_props
+            *, snap: dict | None = None, player_games: pd.DataFrame | None = None,
+            availability: pd.DataFrame | None = None) -> tuple[list[dict], dict]:
+    """The props step of the Polymarket run: the injury report, then read, keep, grade, price, position.
+    Returns (the owner page's sections, a coverage summary for the public report). Never raises."""
+    from atlas.sources import nba_availability
 
-    summary = {"contracts": 0, "projected": 0, "games": 0, "graded": 0}
+    summary = {"contracts": 0, "projected": 0, "games": 0, "graded": 0, "listed": 0}
     try:
         snap = snap or nba_props.load_state()
         if snap is None:
             LOG.info("props: no NBA props snapshot yet; nothing priced")
             return [{"title": "Props", "tab": TAB, "tables": [],
                      "notes": ["No NBA player snapshot yet: the next heavy refresh writes one."]}], summary
+        if availability is None and not offline():
+            availability = nba_availability.capture(store, now)
         q = prop_quotes(events, source.LEAGUES[SPORT], now)
         if len(pairs):
             q = match.attach(q, pairs[pairs["sport"].astype(str) == SPORT])
         else:
             q = q.assign(kickoff=None, label=None, home_team_id=None, away_team_id=None)
-        q = expectations(q, snap)
+        q = expectations(q, snap, availability)
         matched = q[q["game_id"].notna()]
         kept = main_lines(matched)
         record = store.read("polymarket_props")
@@ -494,7 +512,9 @@ def refresh(store, events: list[dict], pairs: pd.DataFrame, now: datetime, passp
         priced = price(matched, calibration)
         summary = {"contracts": int(len(q) // 2), "projected": int(pd.to_numeric(priced["p_raw"], errors="coerce").notna().sum() // 2)
                    if len(priced) else 0, "games": int(matched["game_id"].nunique()) if len(matched) else 0,
-                   "graded": int(len(graded_record))}
+                   "graded": int(len(graded_record)),
+                   "listed": int(matched[matched["status"].astype(str).str.len() > 0]["player"].nunique())
+                   if len(matched) else 0}
         if not passphrase:
             return [], summary
         chosen, graded = positions.run(priced, results, record, passphrase, now, where=path(), unit="prop_key",
