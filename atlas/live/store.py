@@ -107,15 +107,13 @@ SCHEMA: dict[str, list[str]] = {
     # close every position is graded against.
     "polymarket_quotes": [
         "captured_at", "last_seen_at", "sport", "game_id", "event_id", "event_slug", "game_start", "away", "home",
-        "market_id", "condition_id", "token_id", "market", "side", "line", "bid", "ask", "mid", "last", "spread",
+        "market_id", "market_slug", "token_id", "market", "side", "long", "line", "bid", "ask", "mid", "last", "spread",
         "liquidity", "fee_rate", "accepting", "min_size", "tick",
     ],
-    # Each player prop's main line on Polymarket (atlas/polymarket/props.py), with
-    # Atlas's probability of the over as it stood when the quote was first seen.
     "polymarket_props": [
         "captured_at", "last_seen_at", "sport", "game_id", "event_id", "event_slug", "game_start", "away", "home",
-        "player", "stat", "market_id", "condition_id", "token_id", "side", "line", "bid", "ask", "mid", "last",
-        "spread", "liquidity", "fee_rate", "accepting", "p_atlas", "atlas_mean", "status",
+        "player", "team_side", "stat", "market_id", "market_slug", "token_id", "side", "long", "line", "bid", "ask",
+        "mid", "last", "spread", "liquidity", "fee_rate", "accepting", "p_atlas", "atlas_mean", "status",
     ],
     # ESPN's NBA injury report, every run (atlas/sources/nba_availability.py): one row per player, report
     # time and status, captured_at the first run that saw it.
@@ -123,9 +121,6 @@ SCHEMA: dict[str, list[str]] = {
         "captured_at", "reported_at", "team_id", "team", "player_id", "player", "position", "status", "fantasy",
         "injury", "return_date", "note",
     ],
-    # Every prop graded from the box score: what Atlas said, what Polymarket's
-    # close said, and what happened. The share of Atlas's disagreement the
-    # props pricing takes is fitted on it.
     "prop_record": [
         "token_id", "game_id", "kickoff", "sport", "player", "stat", "line", "p_atlas", "p_close", "value", "played",
         "won", "graded_at",

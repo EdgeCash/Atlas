@@ -304,6 +304,17 @@ def publish_projections(store: Store) -> int:
         from atlas.util import where
 
         LOG.warning("no NBA props snapshot this refresh: %s at %s", type(error).__name__, where(error))
+    # The NHL's players (docs/MODEL_PLAN_NHL.md, step 8): each active skater's ice time and rates after his
+    # latest game, the snapshot the props pricing reads (atlas/polymarket/props.py).
+    try:
+        from atlas.models import nhl_props
+
+        LOG.info("published the NHL props snapshot: %d skaters",
+                 nhl_props.publish(datetime.fromisoformat(now), root=paths.root, warehouse=paths.warehouse))
+    except Exception as error:  # noqa: BLE001 - logged; the rest of the publish stands
+        from atlas.util import where
+
+        LOG.warning("no NHL props snapshot this refresh: %s at %s", type(error).__name__, where(error))
     # The NHL (docs/MODEL_PLAN_NHL.md, step 6): the stored model walked to today,
     # each game ahead gridded, and its moneyline record for the grade. Its
     # absence or failure never takes football's publish down with it.

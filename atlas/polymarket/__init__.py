@@ -3,7 +3,7 @@
 Polymarket lists a moneyline, a ladder of spreads and a ladder of totals on
 every NFL, NBA, NHL and college football game, as binary contracts that cost
 their price and pay one dollar. Its prices are public, read without a key
-from its Gamma and CLOB APIs (`source.py`), so unlike every sportsbook
+from the exchange's public API (`source.py`), so unlike every sportsbook
 before it the market Atlas is measured against can be captured, timestamped
 and committed in the clear (``tracking/polymarket_quotes.csv``).
 

@@ -1,17 +1,20 @@
-"""Polymarket's game markets, read from its public APIs and kept as a timestamped record.
+"""Polymarket US's game markets, read from its public API and kept as a timestamped record.
 
-Two services, neither needing a key:
+Polymarket US (``polymarket.us``) is the CFTC-regulated exchange: dollar
+contracts on a central order book, one instrument per market whose Yes is
+bought at the ask and whose No is the same instrument sold, so a No costs one
+less the bid. Its public gateway (``gateway.polymarket.us``) needs no key:
 
-* **Gamma** (``gamma-api.polymarket.com``) lists events and their markets.
-  A game is one event (``nfl-kc-sea-2026-10-26``, "Chiefs vs. Seahawks")
-  carrying a moneyline, a ladder of spreads and a ladder of totals, each a
-  two-outcome market with a best bid and ask, a midpoint per outcome, the
-  book's depth in dollars and its fee schedule. Player props, halves,
-  quarters and exact margins hang off separate events and are not read.
-* **CLOB** (``clob.polymarket.com``) is the order book itself: the depth at
-  the best ask for a contract about to be bought (:func:`book`), and the
-  price history that stands in for a close the poll missed
-  (:func:`history`).
+* ``/v2/leagues/{slug}/events`` lists a league's games, fifty a page, each
+  with its teams, its start and its market counts but only its headline
+  market;
+* ``/v1/events?slug=`` returns one game with every market on it: the
+  moneyline, the ladders of spreads and totals, the periods and team
+  totals, and the player props (`atlas/polymarket/props.py`);
+* ``/v1/markets/{slug}/bbo`` is the top of one market's book with the shares
+  resting on each side (:func:`depth`), ``/v1/price-history`` its stored
+  prices (:func:`history`) and ``/v1/markets/{slug}/settlement`` what it
+  settled at (:func:`settlement`).
 
 Every quote is written to ``tracking/polymarket_quotes.csv`` in the clear,
 append-on-change (`fold`): a row per contract per observed price, with the
@@ -20,23 +23,25 @@ the research never had - the market as it stood when Atlas spoke - and the
 close every position is graded against.
 
 Conventions, checked against the API on 23 October 2026 and pinned by tests:
-the first outcome of a moneyline or spread is the **away** side (the
-league's ``ordering`` is ``away`` for all three; the title reads "Away vs.
-Home"); a spread's ``line`` is the handicap of the team its question names
-("Spread: Chiefs (-1.5)"), and the other side's is its negative; a total's
-``line`` is the total and its outcomes are Over and Under; ``bestBid`` and
-``bestAsk`` are the first outcome's, so the second's are their complements;
-the taker fee per contract is ``rate x price x (1 - price)`` (the docs'
-formula), ``rate`` read from the market's own ``feeSchedule``.
+an event's ``teams`` are listed away first, as its title reads "Away vs.
+Home"; a winner's or a spread's sides carry the team's id, and a spread's
+long side is the team the question names at the handicap its description
+shows ("+15.50"), the other side the opponent at its negative; a total's
+sides are Over and Under at the market's ``line``; ``bestBidQuote`` and
+``bestAskQuote`` are the long side's, so the short side's are their
+complements; the taker fee per contract is ``coefficient x price x (1 -
+price)``, the coefficient (0.0695 on every market that day) read from the
+market itself. A side's id is the contract's handle in the record, the
+market's slug its handle on the API.
 """
 
 from __future__ import annotations
 
-import json
 import math
 import re
+import time
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import UTC, datetime, timedelta
 
 import numpy as np
 import pandas as pd
@@ -45,34 +50,38 @@ from atlas.util import get_logger, http_get, session
 
 LOG = get_logger(__name__)
 
-GAMMA = "https://gamma-api.polymarket.com"
-CLOB = "https://clob.polymarket.com"
-PAGE = 100
+GATEWAY = "https://gateway.polymarket.us"
+PAGE = 50
+#: Games read each run: from a few hours ago (a game under way keeps its close) to this far ahead.
+BEHIND = timedelta(hours=6)
+HORIZON = timedelta(days=3)
+#: Between requests: the gateway allows 25 a second, and a poll needs no more than a few a second.
+PAUSE = 0.06
 
 
 @dataclass(frozen=True)
 class League:
     sport: str          # Atlas's name
-    series: int         # Gamma's series id for the league's games
-    tag: int            # Gamma's tag id
-    slug: str           # the prefix of a game event's slug
-    ordering: str = "away"   # which side the first outcome is
+    slug: str           # the league's slug on the gateway
+    word: str           # the sport's word in its market types ("basketball_team_full_game_winner")
 
 
-#: Gamma's ``/sports`` on 23 October 2026.
+#: The gateway's leagues on 23 October 2026.
 LEAGUES = {
-    "nfl": League("nfl", 12185, 450, "nfl"),
-    "nhl": League("nhl", 10346, 899, "nhl"),
-    "ncaaf": League("ncaaf", 12756, 100351, "cfb"),
-    "nba": League("nba", 10345, 745, "nba"),
+    "nfl": League("nfl", "nfl", "football"),
+    "nhl": League("nhl", "nhl", "hockey"),
+    "ncaaf": League("ncaaf", "cfb", "football"),
+    "nba": League("nba", "nba", "basketball"),
 }
-#: Polymarket's ``sportsMarketType`` to Atlas's market.
-GAME_MARKETS = {"moneyline": "moneyline", "spreads": "spread", "totals": "total"}
-SPREAD_QUESTION = re.compile(r"^Spread:\s*(?P<team>.+?)\s*\((?P<line>[-+]?\d+(?:\.\d+)?)\)\s*$")
+#: The tail of a game market's ``sportsMarketType`` to Atlas's market.
+GAME_MARKETS = {"team_full_game_winner": "moneyline", "team_full_game_spread": "spread",
+                "team_full_game_total": "total"}
+HANDICAP = re.compile(r"^\s*([-+]?\d+(?:\.\d+)?)\s*$")
+OPEN = "MARKET_STATUS_OPEN"
 
 QUOTE_COLUMNS = [
     "captured_at", "last_seen_at", "sport", "game_id", "event_id", "event_slug", "game_start", "away", "home",
-    "market_id", "condition_id", "token_id", "market", "side", "line", "bid", "ask", "mid", "last", "spread",
+    "market_id", "market_slug", "token_id", "market", "side", "long", "line", "bid", "ask", "mid", "last", "spread",
     "liquidity", "fee_rate", "accepting", "min_size", "tick",
 ]
 #: A contract's stream in the record, and what has to change to earn a new row.
@@ -83,49 +92,69 @@ SIGHTING = ["last_seen_at", "liquidity", "accepting", "game_id"]
 
 
 # ---------------------------------------------------------------------------
-# Gamma
+# The gateway
 # ---------------------------------------------------------------------------
 
 
-def _get(url: str, params: dict | None = None, sess=None, **kw):
-    return http_get(url, params=params, sess=sess, timeout=kw.pop("timeout", 30), **kw).json()
+def _get(path: str, params: dict | None = None, sess=None, **kw):
+    return http_get(f"{GATEWAY}{path}", params=params, sess=sess, timeout=kw.pop("timeout", 60), **kw).json()
 
 
-def fetch_events(league: League, sess=None, *, closed: bool = False) -> list[dict]:
-    """Every open event of the league's series, paged."""
+def _utc(value):
+    t = pd.to_datetime(value, utc=True, errors="coerce")
+    return t if pd.notna(t) else pd.NaT
+
+
+def fetch_listing(league: League, sess=None) -> list[dict]:
+    """The league's games as the gateway lists them: a stub per event, its headline market only."""
     sess = sess or session()
     out: list[dict] = []
     offset = 0
     while True:
-        page = _get(f"{GAMMA}/events", {"series_id": league.series, "active": "true",
-                                        "closed": "true" if closed else "false", "limit": PAGE, "offset": offset,
-                                        "order": "startDate", "ascending": "true"}, sess)
-        if not isinstance(page, list):
+        page = _get(f"/v2/leagues/{league.slug}/events", {"limit": PAGE, "offset": offset}, sess)
+        events = page.get("events") if isinstance(page, dict) else None
+        if not events:
             break
-        out.extend(page)
-        if len(page) < PAGE:
+        out.extend(events)
+        if len(events) < PAGE:
             break
         offset += PAGE
+        time.sleep(PAUSE)
     return out
 
 
 def fetch_event(slug: str, sess=None) -> dict | None:
-    found = _get(f"{GAMMA}/events", {"slug": slug}, sess)
-    return found[0] if isinstance(found, list) and found else None
+    """One game with every market on it."""
+    found = _get("/v1/events", {"slug": slug}, sess)
+    events = found.get("events") if isinstance(found, dict) else None
+    return events[0] if events else None
 
 
-def _list(value) -> list:
-    if value is None:
-        return []
-    if isinstance(value, str):
-        try:
-            value = json.loads(value)
-        except ValueError:
-            return []
-    return list(value) if isinstance(value, list) else []
+def start_of(event: dict):
+    return _utc(event.get("startTime") or event.get("startDate"))
+
+
+def fetch_events(league: League, sess=None, *, now: datetime | None = None, behind: timedelta = BEHIND,
+                 horizon: timedelta = HORIZON) -> list[dict]:
+    """Every game of the league inside the window, each read in full."""
+    sess = sess or session()
+    now = pd.Timestamp(now or datetime.now(UTC))
+    now = now.tz_localize("UTC") if now.tzinfo is None else now.tz_convert("UTC")
+    out: list[dict] = []
+    for stub in fetch_listing(league, sess):
+        start = start_of(stub)
+        if pd.isna(start) or start < now - behind or start > now + horizon:
+            continue
+        full = fetch_event(str(stub.get("slug")), sess)
+        if full:
+            out.append(full)
+        time.sleep(PAUSE)
+    return out
 
 
 def _num(value) -> float:
+    if isinstance(value, dict):
+        value = value.get("value")
     try:
         v = float(value)
     except (TypeError, ValueError):
@@ -139,181 +168,226 @@ def _round(value: float) -> float:
     return round(value, 3) if math.isfinite(value) else value
 
 
-def game_markets(event: dict) -> list[dict]:
-    return [m for m in event.get("markets") or [] if m.get("sportsMarketType") in GAME_MARKETS]
+def market_kind(market: dict, league: League) -> str | None:
+    """Atlas's market for a full-game market of the league's sport; None for anything else."""
+    kind = str(market.get("sportsMarketType") or "")
+    prefix = f"{league.word}_"
+    if not kind.startswith(prefix):
+        return None
+    return GAME_MARKETS.get(kind[len(prefix):])
 
 
-def is_game(event: dict) -> bool:
-    """A game event, as opposed to its props, halves or exact margins: it carries a game market."""
-    return bool(game_markets(event))
+def game_markets(event: dict, league: League) -> list[dict]:
+    return [m for m in event.get("markets") or [] if market_kind(m, league)]
 
 
-def teams(event: dict, league: League) -> tuple[str | None, str | None]:
-    """(away, home) from the title "Away vs. Home", by the league's ordering."""
+def is_game(event: dict, league: League | None = None) -> bool:
+    """A game event: it carries a full-game market."""
+    leagues = [league] if league else list(LEAGUES.values())
+    return any(game_markets(event, lg) for lg in leagues)
+
+
+def team_name(team: dict) -> str:
+    """The team's full name as the scoreboard would have it: "Chicago Bulls" from a nickname and a city,
+    "Pittsburgh Steelers" or "North Carolina Central" from a name that is already whole."""
+    name, safe = str(team.get("name") or "").strip(), str(team.get("safeName") or "").strip()
+    if " " in name or not safe:
+        return name or safe
+    return safe if name.lower() in safe.lower() else f"{safe} {name}"
+
+
+def teams(event: dict, league: League | None = None) -> tuple[str | None, str | None]:
+    """(away, home): the event's teams, listed away first, as its title reads "Away vs. Home"."""
+    listed = event.get("teams") or []
+    if len(listed) == 2:
+        return team_name(listed[0]), team_name(listed[1])
     title = str(event.get("title") or "")
     parts = re.split(r"\s+vs\.?\s+", title, maxsplit=1, flags=re.IGNORECASE)
-    if len(parts) != 2:
+    return (parts[0].strip(), parts[1].strip()) if len(parts) == 2 else (None, None)
+
+
+def team_ids(event: dict) -> tuple[int | None, int | None]:
+    listed = event.get("teams") or []
+    if len(listed) != 2:
         return None, None
-    first, second = parts[0].strip(), parts[1].strip()
-    return (first, second) if league.ordering == "away" else (second, first)
+    ids = []
+    for t in listed:
+        raw = t.get("id")
+        ids.append(int(raw) if raw is not None and str(raw).isdigit() else None)
+    return ids[0], ids[1]
 
 
 def fee_rate(market: dict) -> float:
-    """The market's taker fee rate, from its own schedule; zero on a fee-free market."""
-    if not market.get("feesEnabled"):
-        return 0.0
-    schedule = market.get("feeSchedule") or {}
-    rate = _num(schedule.get("rate"))
-    if math.isfinite(rate):
-        return rate
-    bps = _num(market.get("takerBaseFee"))
-    return bps / 10_000.0 if math.isfinite(bps) else 0.0
+    """The market's taker fee coefficient, from the market itself."""
+    rate = _num(market.get("feeCoefficient"))
+    return rate if math.isfinite(rate) else 0.0
 
 
-def _game_start(market: dict, event: dict):
-    for key in ("gameStartTime", "endDate"):
-        raw = market.get(key) or event.get(key)
+def game_start(market: dict, event: dict):
+    for raw in (market.get("gameStartTime"), event.get("startTime"), event.get("startDate")):
         if raw:
-            t = pd.to_datetime(raw, utc=True, errors="coerce")
+            t = _utc(raw)
             if pd.notna(t):
                 return t
     return pd.NaT
 
 
-def _sides(kind: str, outcomes: list, away: str | None, home: str | None, ordering: str) -> list[str | None]:
+def side_of(side: dict, kind: str, event: dict) -> str | None:
+    """Which side of the game a market side is: over or under, or the away or home team by the team id the
+    side carries, else by its name."""
+    label = str(side.get("description") or "").strip().lower()
     if kind == "total":
-        return [{"over": "over", "under": "under"}.get(str(o).strip().lower()) for o in outcomes]
-    names = [str(o).strip().lower() for o in outcomes]
-    by_name = []
-    for n in names:
-        if away and n == away.lower():
-            by_name.append("away")
-        elif home and n == home.lower():
-            by_name.append("home")
-        else:
-            by_name.append(None)
-    if sorted(x for x in by_name if x) == ["away", "home"]:
-        return by_name
-    first = "away" if ordering == "away" else "home"
-    second = "home" if first == "away" else "away"
-    return [first, second]
+        return {"over": "over", "under": "under"}.get(label)
+    away_id, home_id = team_ids(event)
+    raw = side.get("teamId")
+    tid = int(raw) if raw is not None and str(raw).isdigit() else None
+    if tid is not None and tid == away_id:
+        return "away"
+    if tid is not None and tid == home_id:
+        return "home"
+    away, home = teams(event)
+    for name, which in ((away, "away"), (home, "home")):
+        if name and label and (label == name.lower() or label in name.lower().split()):
+            return which
+    return None
 
 
-def _lines(kind: str, market: dict, outcomes: list) -> list[float]:
-    line = _num(market.get("line"))
-    if kind == "moneyline":
-        return [0.0, 0.0]
-    if kind == "total":
-        return [line, line]
-    m = SPREAD_QUESTION.match(str(market.get("question") or ""))
-    if m is None:
-        return [float("nan"), float("nan")]
-    named, handicap = m.group("team").strip().lower(), _num(m.group("line"))
-    if not math.isfinite(handicap):
-        handicap = line
-    names = [str(o).strip().lower() for o in outcomes]
-    if named == names[0]:
-        return [handicap, -handicap]
-    if named == names[1]:
-        return [-handicap, handicap]
-    return [float("nan"), float("nan")]
+def accepting(market: dict) -> bool:
+    return str(market.get("status") or "") == OPEN and bool(market.get("active", True)) and not bool(market.get("closed"))
 
 
 def quotes(events: list[dict], league: League, captured_at: datetime | str) -> pd.DataFrame:
-    """One row per contract (an outcome of a game market) across the events, as of ``captured_at``."""
+    """One row per contract (a side of a full-game market) across the events, as of ``captured_at``."""
     stamp = pd.Timestamp(captured_at)
     stamp = (stamp.tz_localize("UTC") if stamp.tzinfo is None else stamp.tz_convert("UTC"))
     stamp = stamp.replace(microsecond=0).isoformat()
     rows = []
     for event in events:
-        markets = game_markets(event)
+        markets = game_markets(event, league)
         if not markets:
             continue
         away, home = teams(event, league)
         for m in markets:
-            kind = GAME_MARKETS[m["sportsMarketType"]]
-            outcomes, prices, tokens = _list(m.get("outcomes")), _list(m.get("outcomePrices")), _list(m.get("clobTokenIds"))
-            if len(outcomes) != 2 or len(tokens) != 2:
+            kind = market_kind(m, league)
+            sides = m.get("marketSides") or []
+            if len(sides) != 2 or kind is None:
                 continue
-            sides = _sides(kind, outcomes, away, home, league.ordering)
-            lines = _lines(kind, m, outcomes)
-            if None in sides or any(not math.isfinite(x) for x in lines):
+            long_, short = (sides[0], sides[1]) if sides[0].get("long", True) else (sides[1], sides[0])
+            which = [side_of(long_, kind, event), side_of(short, kind, event)]
+            if kind == "moneyline":
+                lines = [0.0, 0.0]
+            elif kind == "total":
+                line = _num(m.get("line"))
+                lines = [line, line]
+            else:
+                hm = HANDICAP.match(str(long_.get("description") or ""))
+                handicap = _num(hm.group(1)) if hm else float("nan")
+                if not math.isfinite(handicap):
+                    handicap = _num(m.get("line"))
+                lines = [handicap, -handicap]
+            if None in which or sorted(which) not in (["away", "home"], ["over", "under"]) \
+                    or any(not math.isfinite(x) for x in lines):
                 continue
-            bid0, ask0 = _round(_num(m.get("bestBid"))), _round(_num(m.get("bestAsk")))
+            bid0, ask0 = _round(_num(m.get("bestBidQuote"))), _round(_num(m.get("bestAskQuote")))
             bids = [bid0, _round(1.0 - ask0) if math.isfinite(ask0) else float("nan")]
             asks = [ask0, _round(1.0 - bid0) if math.isfinite(bid0) else float("nan")]
-            mids = [_round(_num(prices[i])) if i < len(prices) else float("nan") for i in range(2)]
-            last0 = _round(_num(m.get("lastTradePrice")))
-            lasts = [last0, _round(1.0 - last0) if math.isfinite(last0) else float("nan")]
-            start = _game_start(m, event)
-            accepting = bool(m.get("acceptingOrders")) and bool(m.get("active", True)) and not bool(m.get("closed"))
-            for i in range(2):
+            mids = [_round((b + a) / 2.0) if math.isfinite(b) and math.isfinite(a) else float("nan")
+                    for b, a in zip(bids, asks, strict=True)]
+            spread = _round(ask0 - bid0) if math.isfinite(ask0) and math.isfinite(bid0) else float("nan")
+            start = game_start(m, event)
+            open_ = accepting(m)
+            for i, side in enumerate((long_, short)):
                 rows.append({
                     "captured_at": stamp, "last_seen_at": stamp, "sport": league.sport, "game_id": None,
                     "event_id": str(event.get("id")), "event_slug": event.get("slug"),
                     "game_start": start.isoformat() if pd.notna(start) else None, "away": away, "home": home,
-                    "market_id": str(m.get("id")), "condition_id": m.get("conditionId"), "token_id": str(tokens[i]),
-                    "market": kind, "side": sides[i], "line": lines[i], "bid": bids[i], "ask": asks[i],
-                    "mid": mids[i], "last": lasts[i], "spread": _round(_num(m.get("spread"))),
-                    "liquidity": _num(m.get("liquidityNum", m.get("liquidity"))), "fee_rate": fee_rate(m),
-                    "accepting": accepting, "min_size": _num(m.get("orderMinSize")),
+                    "market_id": str(m.get("id")), "market_slug": m.get("slug"), "token_id": str(side.get("id")),
+                    "market": kind, "side": which[i], "long": i == 0, "line": lines[i], "bid": bids[i], "ask": asks[i],
+                    "mid": mids[i], "last": float("nan"), "spread": spread, "liquidity": float("nan"),
+                    "fee_rate": fee_rate(m), "accepting": open_, "min_size": _num(m.get("minimumTradeQty")),
                     "tick": _num(m.get("orderPriceMinTickSize")),
                 })
     return pd.DataFrame(rows, columns=QUOTE_COLUMNS)
 
 
-def capture_events(leagues=None, sess=None) -> dict[str, list[dict]]:
-    """Every open event of every league, by sport. A league that fails is logged and skipped."""
+def capture_events(leagues=None, sess=None, *, now: datetime | None = None) -> dict[str, list[dict]]:
+    """Every game inside the window of every league, read in full, by sport. A league that fails is logged
+    and skipped."""
     sess = sess or session()
     out: dict[str, list[dict]] = {}
     for league in (leagues or LEAGUES.values()):
         try:
-            out[league.sport] = fetch_events(league, sess)
+            out[league.sport] = fetch_events(league, sess, now=now)
         except Exception as error:  # noqa: BLE001 - one league's outage is not the run's
             LOG.warning("polymarket: %s not read (%s)", league.sport, type(error).__name__)
     return out
 
 
 def capture(now: datetime, leagues=None, sess=None, events: dict[str, list[dict]] | None = None) -> pd.DataFrame:
-    """Every open game contract of every league, quoted as of ``now``, from ``events`` (fetched here when
+    """Every full-game contract of every league, quoted as of ``now``, from ``events`` (fetched here when
     not given). A league that fails is logged and skipped: the others' quotes stand."""
-    events = events if events is not None else capture_events(leagues, sess)
+    events = events if events is not None else capture_events(leagues, sess, now=now)
     parts = []
     for league in (leagues or LEAGUES.values()):
         if league.sport not in events:
             continue
         q = quotes(events[league.sport], league, now)
         LOG.info("polymarket: %s, %d events, %d game markets quoted", league.sport,
-                 sum(1 for e in events[league.sport] if is_game(e)), len(q) // 2)
+                 sum(1 for e in events[league.sport] if is_game(e, league)), len(q) // 2)
         parts.append(q)
     parts = [p for p in parts if len(p)]
     return pd.concat(parts, ignore_index=True) if parts else pd.DataFrame(columns=QUOTE_COLUMNS)
 
 
 # ---------------------------------------------------------------------------
-# CLOB
+# One market's book, prices and settlement
 # ---------------------------------------------------------------------------
 
 
-def book(token_id: str, sess=None) -> dict:
-    """The order book for one contract: best bid and ask with their sizes, and the dollars resting on the
-    ask side within five cents of the best. What a position can actually be filled at."""
-    raw = _get(f"{CLOB}/book", {"token_id": str(token_id)}, sess)
-    bids = sorted(((_num(b.get("price")), _num(b.get("size"))) for b in raw.get("bids") or []), reverse=True)
-    asks = sorted((_num(a.get("price")), _num(a.get("size"))) for a in raw.get("asks") or [])
-    best_bid = bids[0] if bids else (float("nan"), 0.0)
-    best_ask = asks[0] if asks else (float("nan"), 0.0)
-    near = sum(p * s for p, s in asks if math.isfinite(p) and p <= best_ask[0] + 0.05) if asks else 0.0
-    return {"bid": best_bid[0], "bid_size": best_bid[1], "ask": best_ask[0], "ask_size": best_ask[1],
-            "ask_dollars_near": near}
+def depth(market_slug: str, side_long: bool, sess=None) -> dict:
+    """The top of the market's book for one side: its bid and ask, the spread, and the dollars that can be
+    bought at the ask (the shares resting there times the price). The short side is the long one inverted."""
+    raw = (_get(f"/v1/markets/{market_slug}/bbo", sess=sess) or {}).get("marketData") or {}
+    bid, ask = _num(raw.get("bestBid")), _num(raw.get("bestAsk"))
+    bid_shares, ask_shares = _num(raw.get("bidShares")), _num(raw.get("askShares"))
+    if not side_long:
+        bid, ask = (1.0 - ask if math.isfinite(ask) else float("nan")), (1.0 - bid if math.isfinite(bid) else float("nan"))
+        ask_shares, bid_shares = bid_shares, ask_shares
+    dollars = ask_shares * ask if math.isfinite(ask_shares) and math.isfinite(ask) else float("nan")
+    return {"bid": _round(bid), "ask": _round(ask),
+            "spread": _round(ask - bid) if math.isfinite(ask) and math.isfinite(bid) else float("nan"),
+            "ask_shares": ask_shares, "ask_dollars": dollars, "state": raw.get("state")}
 
 
-def history(token_id: str, sess=None, *, interval: str = "max", fidelity: int = 60) -> pd.DataFrame:
-    """The contract's price history: (``at``, ``price``), oldest first."""
-    raw = _get(f"{CLOB}/prices-history", {"market": str(token_id), "interval": interval, "fidelity": fidelity}, sess)
-    rows = [{"at": pd.Timestamp(int(h["t"]), unit="s", tz="UTC"), "price": _num(h.get("p"))}
-            for h in raw.get("history") or [] if "t" in h]
-    return pd.DataFrame(rows, columns=["at", "price"]).sort_values("at").reset_index(drop=True)
+def history(market_slug: str, sess=None, *, start=None, end=None, interval: str = "INTERVAL_ALL",
+            fidelity: int = 180) -> pd.DataFrame:
+    """The market's stored prices: (``at``, ``long``, ``short``), oldest first. A ``start`` and ``end``
+    (within a day of each other) read that window minute by minute; otherwise ``interval`` at ``fidelity``."""
+    params: dict = {"symbol": market_slug}
+    if start is not None and end is not None:
+        params.update({"timestamp.startTimestamp": int(pd.Timestamp(start).timestamp()),
+                       "timestamp.endTimestamp": int(pd.Timestamp(end).timestamp()), "fidelity": 1})
+    else:
+        params.update({"fixedInterval": interval, "fidelity": fidelity})
+    raw = _get("/v1/price-history", params, sess)
+    rows = [{"at": pd.Timestamp(int(h["timestamp"]), unit="s", tz="UTC"), "long": _num(h.get("longPrice")),
+             "short": _num(h.get("shortPrice"))} for h in (raw.get("history") or []) if "timestamp" in h]
+    return pd.DataFrame(rows, columns=["at", "long", "short"]).sort_values("at").reset_index(drop=True)
+
+
+def settlement(market_slug: str, sess=None) -> float:
+    """What the market settled at, one or zero for the long side (or the last fair price where its rules say
+    so); nan when it has not settled."""
+    try:
+        raw = _get(f"/v1/markets/{market_slug}/settlement", sess=sess)
+    except Exception:  # noqa: BLE001 - not settled, or not found: the same answer
+        return float("nan")
+    data = raw.get("marketData") or raw if isinstance(raw, dict) else {}
+    for key in ("settlementPx", "settlementPrice", "price"):
+        v = _num(data.get(key))
+        if math.isfinite(v):
+            return v
+    return float("nan")
 
 
 # ---------------------------------------------------------------------------
@@ -344,7 +418,7 @@ def _same(a, b) -> bool:
 
 #: Identifiers, kept as text: read back from the record a game id is a number, and a number's column
 #: cannot take the text the next capture brings.
-IDS = ("game_id", "event_id", "market_id", "condition_id", "token_id")
+IDS = ("game_id", "event_id", "market_id", "token_id")
 
 
 def _text_ids(frame: pd.DataFrame) -> pd.DataFrame:
@@ -388,6 +462,8 @@ def fold(existing: pd.DataFrame, incoming: pd.DataFrame, cols: list[str] | None 
             for c in [c for c in SIGHTING if c in cols]:
                 value = row.get(c)
                 if c == "game_id" and (value is None or (isinstance(value, float) and math.isnan(value))):
+                    continue
+                if c == "liquidity" and (value is None or (isinstance(value, float) and math.isnan(value))):
                     continue
                 if held is not None:
                     held[c] = value
@@ -433,3 +509,26 @@ def close(record: pd.DataFrame, token_id: str, start) -> float:
         return mid
     bid, ask = _num(last["bid"]), _num(last["ask"])
     return (bid + ask) / 2.0 if math.isfinite(bid) and math.isfinite(ask) else float("nan")
+
+
+def venue_close(record: pd.DataFrame, token_id: str, start, sess=None) -> float:
+    """The close from the venue's own price history when the record has none: the last stored price of the
+    contract's side in the two hours before the start."""
+    r = record[record[STREAM].astype(str) == str(token_id)] if len(record) else record
+    if r.empty:
+        return float("nan")
+    row = r.iloc[-1]
+    cutoff = pd.Timestamp(start)
+    cutoff = cutoff.tz_localize("UTC") if cutoff.tzinfo is None else cutoff.tz_convert("UTC")
+    h = history(str(row["market_slug"]), sess, start=cutoff - timedelta(hours=2), end=cutoff)
+    if h.empty:
+        return float("nan")
+    before = h[h["at"] <= cutoff]
+    if before.empty:
+        return float("nan")
+    column = "long" if _truthy(row.get("long")) else "short"
+    return float(before[column].iloc[-1])
+
+
+def _truthy(value) -> bool:
+    return str(value).strip().lower() in ("true", "1", "1.0")

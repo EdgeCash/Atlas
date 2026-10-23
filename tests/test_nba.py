@@ -150,21 +150,14 @@ def test_the_calibration_rows_price_the_football_way_on_polymarket(nba_frame, tm
     assert n == len(margin) and 0.0 <= k <= 1.0
     assert pricing.edge_curve(cal, "nba") is None                                    # thin: no curve on a toy league
     league = source.LEAGUES["nba"]
-    ev = {"id": "9001", "slug": "nba-lal-bos-2026-10-24", "title": "Lakers vs. Celtics", "markets": [
-        {"id": "1", "question": "Lakers vs. Celtics", "sportsMarketType": "moneyline", "outcomes": '["Lakers", "Celtics"]',
-         "outcomePrices": '["0.4", "0.6"]', "clobTokenIds": '["a", "b"]', "conditionId": "0x1", "bestBid": 0.39,
-         "bestAsk": 0.41, "spread": 0.02, "gameStartTime": "2026-10-24 23:30:00+00", "feesEnabled": True,
-         "feeSchedule": {"rate": 0}, "liquidityNum": 50000.0, "acceptingOrders": True, "active": True, "closed": False},
-        {"id": "2", "question": "Spread: Celtics (-4.5)", "sportsMarketType": "spreads", "line": -4.5,
-         "outcomes": '["Celtics", "Lakers"]', "outcomePrices": '["0.5", "0.5"]', "clobTokenIds": '["c", "d"]',
-         "conditionId": "0x2", "bestBid": 0.49, "bestAsk": 0.51, "spread": 0.02, "gameStartTime": "2026-10-24 23:30:00+00",
-         "feesEnabled": True, "feeSchedule": {"rate": 0}, "liquidityNum": 50000.0, "acceptingOrders": True,
-         "active": True, "closed": False},
-        {"id": "3", "question": "Lakers vs. Celtics: O/U 225.5", "sportsMarketType": "totals", "line": 225.5,
-         "outcomes": '["Over", "Under"]', "outcomePrices": '["0.5", "0.5"]', "clobTokenIds": '["e", "f"]',
-         "conditionId": "0x3", "bestBid": 0.49, "bestAsk": 0.51, "spread": 0.02, "gameStartTime": "2026-10-24 23:30:00+00",
-         "feesEnabled": True, "feeSchedule": {"rate": 0}, "liquidityNum": 50000.0, "acceptingOrders": True,
-         "active": True, "closed": False}]}
+    from atlas.testing import polymarket_us as us
+
+    lal, bos = us.team(1487, "Lakers", "Los Angeles"), us.team(1500, "Celtics", "Boston")
+    tip = "2026-10-24T23:30:00Z"
+    ev = us.event("9001", "nba-lal-bos-2026-10-24", lal, bos, [
+        us.moneyline(1, "basketball", lal, bos, 0.39, 0.41, fee=0.0, start=tip),
+        us.spread(2, "basketball", bos, lal, -4.5, 0.49, 0.51, fee=0.0, start=tip),      # the Celtics named
+        us.total(3, "basketball", lal, bos, 225.5, 0.49, 0.51, fee=0.0, start=tip)], start=tip)
     now = datetime(2026, 10, 24, 14, 0, tzinfo=UTC)
     q = source.quotes([ev], league, now)
     assert set(q["side"]) == {"away", "home", "over", "under"} and (q["fee_rate"] == 0.0).all()

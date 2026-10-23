@@ -39,6 +39,7 @@ import argparse
 import json
 import math
 from dataclasses import asdict, dataclass, replace
+from datetime import UTC, datetime
 from pathlib import Path
 
 import numpy as np
@@ -612,10 +613,57 @@ def prob(mean_: float, line: float, side: str, dispersion: float, ratio=None) ->
 # ---------------------------------------------------------------------------
 
 
-def load_tables() -> dict:
+def load_tables(warehouse: Path | None = None) -> dict:
     from atlas.staging.nhl import build
 
-    return {t: build.load(t) for t in ("skater_games", "goalie_games", "team_games")}
+    return {t: build.load(t, warehouse) for t in ("skater_games", "goalie_games", "team_games")}
+
+
+# ---------------------------------------------------------------------------
+# The snapshot as a file: written by the heavy refresh, read by the props pricing
+# ---------------------------------------------------------------------------
+
+FRAMES = ("skaters", "goalies", "teams", "arenas")
+
+
+def state_path(warehouse: Path | None = None) -> Path:
+    return (warehouse or config.paths().warehouse) / "nhl_props_state.json"
+
+
+def save_state(snap: dict, where: Path | None = None) -> Path:
+    where = where or state_path()
+    where.parent.mkdir(parents=True, exist_ok=True)
+    data = {**snap, **{f: json.loads(snap[f].to_json(orient="records", date_format="iso")) for f in FRAMES},
+            "version": VERSION, "built_at": datetime.now(UTC).replace(microsecond=0).isoformat()}
+    where.write_text(json.dumps(data) + "\n")
+    return where
+
+
+def load_state(where: Path | None = None) -> dict | None:
+    where = where or state_path()
+    if not where.exists():
+        return None
+    raw = json.loads(where.read_text())
+    return {**raw, **{f: pd.DataFrame(raw[f]) for f in FRAMES}}
+
+
+def load_spec(root: Path | None = None) -> Spec:
+    """The tuned half-lives and priors the report saved; the defaults before any report."""
+    where = json_path(root or config.paths().root)
+    if not where.exists():
+        return Spec()
+    try:
+        return Spec(**json.loads(where.read_text())["spec"])
+    except (KeyError, TypeError, ValueError):
+        return Spec()
+
+
+def publish(now, *, root: Path | None = None, warehouse: Path | None = None) -> int:
+    """The heavy refresh's step: the snapshot written where the props pricing reads it. Returns the skaters
+    in it."""
+    snap = snapshot(load_tables(warehouse), now, load_spec(root))
+    save_state(snap, state_path(warehouse))
+    return int(len(snap["skaters"]))
 
 
 def write_report(spec: Spec, table: pd.DataFrame, by_season: pd.DataFrame, layers: dict, root: Path) -> Path:

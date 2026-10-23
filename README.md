@@ -1,22 +1,23 @@
-# Atlas - a sports research warehouse, priced against Polymarket
+# Atlas - a sports research warehouse, priced against Polymarket US
 
 A point-in-time-correct historical database for college football, the NFL,
 the NHL and the NBA, the models fitted on it, and the research that answered one
 question: **which variables actually predict games?** Almost none that the
 market has not already priced - and the one place that finding is now put to
-work is **Polymarket**, the only venue Atlas prices against.
+work is **Polymarket US**, the only venue Atlas prices against.
 
-## Atlas on Polymarket
+## Atlas on Polymarket US
 
-From 23 October 2026 the owner-side model is Polymarket only. Every run
-reads Polymarket's public game markets (a moneyline, a ladder of spreads and
-a ladder of totals on every NFL, NBA, NHL and college football game) without a
-key, matches each game to the one Atlas projects, keeps every main-line
-quote timestamped in `tracking/polymarket_quotes.csv`, prices every
-contract by Atlas **anchored to Polymarket by what the walk-forward record
-says Atlas's disagreement has been worth**, and takes paper positions by a
-fixed rule, logged once and graded on the result and against Polymarket's
-close. Where the record says Atlas adds nothing to the market - football
+From 23 October 2026 the owner-side model is Polymarket US only: the
+CFTC-regulated exchange, the one an account in the United States trades.
+Every run reads its public game markets (a moneyline, a ladder of spreads
+and a ladder of totals on every NFL, NBA, NHL and college football game, and
+the player props on the NBA's and the NHL's) without a key, matches each
+game to the one Atlas projects, keeps every main-line quote timestamped in
+`tracking/polymarket_quotes.csv`, prices every contract by Atlas **anchored
+to the market by what the walk-forward record says Atlas's disagreement has
+been worth**, and takes paper positions by a fixed rule, logged once and
+graded on the result and against the exchange's close. Where the record says Atlas adds nothing to the market - football
 spreads, the NHL - Atlas is priced as the market and nothing clears the fee.
 Where it says the size of Atlas's disagreement has been worth something -
 college totals - the rule can take a contract.
@@ -478,7 +479,7 @@ tests/                 offline suite, no network
 | Meteostat bulk files | no | hourly station weather - kickoff temperature, wind, precipitation, humidity |
 | sportsdataverse rosters | no | season rosters - transfer and first-year identification |
 | CollegeFootballData API | free key | SP+ (overall/offence/defence), recruiting, roster talent, returning production, coaching staffs, weekly polls |
-| Polymarket Gamma and CLOB APIs | no | every game market's contracts, prices, depth and fee schedule; the order book; price history |
+| Polymarket US public gateway | no | every game's markets with the top of each book and its fee coefficient; a market's book, price history and settlement |
 | hoopR NBA data (sportsdataverse) | no | ESPN's NBA schedules and team box scores, 2002 on |
 | SportsBookReviewsOnline odds archive | no | NHL and NBA closing lines, 2007-08 to 2022-23 (personal use; cached, never republished) |
 

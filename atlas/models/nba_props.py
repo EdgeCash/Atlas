@@ -342,8 +342,9 @@ def snapshot(players: pd.DataFrame, team_games: pd.DataFrame, now, spec: Spec | 
 
 #: ESPN's injury statuses, lowercased: the chance the player takes the court, and the share of his usual
 #: minutes he plays when he does. Stated, not fitted: no archive of reports exists to walk forward on, so
-#: the capture (atlas/sources/nba_availability.py) is building one. Polymarket resolves a player who does
-#: not take the court as No, so the chance of not playing goes to the under in full (:func:`prob_available`).
+#: the capture (atlas/sources/nba_availability.py) is building one. Polymarket US settles a player who does
+#: not take the court at the last fair market price, so the chance of not playing goes to the market's own
+#: price (:func:`prob_available`); a venue that resolves him as No sends it to the under in full.
 AVAILABILITY = {"out": (0.03, 1.0), "day-to-day": (0.55, 0.9)}
 #: A listed player's minutes go to his teammates in the rotation, in proportion to theirs, up to a cap.
 ROTATION_MINUTES = 8.0
@@ -439,13 +440,18 @@ def prob(mean_: float, line: float, side: str, dispersion: float) -> float:
     return over if side == "over" else under
 
 
-def prob_available(mean_: float, line: float, side: str, dispersion: float, p_play: float = 1.0) -> float:
+def prob_available(mean_: float, line: float, side: str, dispersion: float, p_play: float = 1.0,
+                   settle: float | None = None) -> float:
     """:func:`prob` for a player who may not take the court: ``mean_`` is his expectation when he plays,
-    ``p_play`` the chance he does. The venue resolves a player who does not play as No, the under."""
+    ``p_play`` the chance he does. ``settle`` is what the venue pays the over when he does not: the market's
+    own price where it settles at the last fair price (Polymarket US), None where it resolves him as No."""
     p_play = float(np.clip(p_play, 0.0, 1.0))
-    if side == "over":
-        return p_play * prob(mean_, line, "over", dispersion)
-    return (1.0 - p_play) + p_play * prob(mean_, line, "under", dispersion)
+    over = p_play * prob(mean_, line, "over", dispersion)
+    under = p_play * prob(mean_, line, "under", dispersion)
+    if settle is None or not np.isfinite(settle):
+        return over if side == "over" else under + (1.0 - p_play)
+    settle = float(np.clip(settle, 0.0, 1.0))
+    return over + (1.0 - p_play) * settle if side == "over" else under + (1.0 - p_play) * (1.0 - settle)
 
 
 def dispersion(snap: dict, stat: str) -> float:

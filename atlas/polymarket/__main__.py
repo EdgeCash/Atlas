@@ -1,4 +1,4 @@
-"""Atlas on Polymarket, as a run.
+"""Atlas on Polymarket US, as a run.
 
     python -m atlas.polymarket refresh [--heavy]   # every run: capture, record, price, log, grade, seal, report
     python -m atlas.polymarket capture             # the quotes into the record and nothing else
@@ -77,9 +77,9 @@ def refresh(*, now: datetime | None = None, heavy: bool = False, store: Store | 
         quotes, up, record, events, pairs = capture(store, now)
         priced = price(store, quotes)
         passphrase = os.environ.get(crypto.SECRET, "").strip()
-        # The NBA's player props, read from the same events: kept, graded, priced, and positioned when the
-        # key is set (atlas/polymarket/props.py). Never fails the run.
-        prop_sections, prop_summary = props.refresh(store, events.get("nba", []), pairs, now, passphrase or None)
+        # The player props, read from the same events: kept, graded, priced, and positioned when the key
+        # is set (atlas/polymarket/props.py). Never fails the run.
+        prop_sections, prop_summary = props.refresh(store, events, pairs, now, passphrase or None)
         report.write(priced, up, store.read("calibration"), now, props=prop_summary)
         if passphrase:
             from atlas.owner import paper
@@ -99,7 +99,7 @@ def refresh(*, now: datetime | None = None, heavy: bool = False, store: Store | 
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="Atlas on Polymarket")
+    ap = argparse.ArgumentParser(description="Atlas on Polymarket US")
     ap.add_argument("command", nargs="?", choices=["refresh", "capture", "show"], default="show")
     ap.add_argument("--heavy", action="store_true", help="this is the daily rebuild")
     args = ap.parse_args()

@@ -1,27 +1,35 @@
-# Atlas on Polymarket
+# Atlas on Polymarket US
 
-From 23 October 2026. Polymarket is the one venue Atlas is priced against:
-every sportsbook, the pick'em sites, daily fantasy and the other prediction
-exchange were retired that day (the sealed records they left are kept under
-`tracking/owner_*` and are not read). Code: `atlas/polymarket/`; the owner
-page's box: `atlas/owner/page.py`; the public page about the model:
+From 23 October 2026. Polymarket US is the one venue Atlas is priced
+against: every sportsbook, the pick'em sites, daily fantasy and the other
+prediction exchange were retired on 22 October (the sealed records they left
+are kept under `tracking/owner_*` and are not read), and the global
+Polymarket, read for one day, gave way to the US exchange on the 23rd (its
+day's record is kept as `tracking/polymarket_global_*.csv` and is not read).
+Code: `atlas/polymarket/`; the owner page's box: `atlas/owner/page.py`; the
+public page about the model:
 [`reports/polymarket_model.md`](../reports/polymarket_model.md).
 
-## Why Polymarket
+## Why Polymarket US
 
-Three things no sportsbook offered, and all three were gaps the research
-named:
+Polymarket US (`polymarket.us`) is the CFTC-regulated exchange: dollar
+contracts on a central order book, one instrument per market, bought at the
+ask as Yes or sold as No at one less the bid, and the one an account in the
+United States trades. Three things no sportsbook offered, and all three were
+gaps the research named:
 
-- **The market is public and keyed to nothing.** Polymarket's Gamma and
-  CLOB APIs list every game market and its order book without a key, so the
-  market Atlas is measured against can be captured, timestamped and
-  committed in the clear. Phase 4 found that "Atlas holds no timestamped
-  odds, so the optimal execution window cannot be measured at all";
-  `tracking/polymarket_quotes.csv` is that archive.
+- **The market is public and keyed to nothing.** The exchange's public
+  gateway (`gateway.polymarket.us`) lists every game, every market on it
+  and the top of each book without a key, so the market Atlas is measured
+  against can be captured, timestamped and committed in the clear. Phase 4
+  found that "Atlas holds no timestamped odds, so the optimal execution
+  window cannot be measured at all"; `tracking/polymarket_quotes.csv` is
+  that archive.
 - **The price is the whole price.** A contract costs its ask plus a taker
-  fee the market itself declares (`feeSchedule`), and pays one dollar. There
-  is no margin to strip and no "best book" to hunt: the question is only
-  whether Atlas's probability clears the ask and the fee.
+  fee the market itself declares (`feeCoefficient`, 0.0695 on every market
+  on 23 October: `0.0695 × price × (1 − price)` a contract), and pays one
+  dollar. There is no margin to strip and no "best book" to hunt: the
+  question is only whether Atlas's probability clears the ask and the fee.
 - **A ladder, not a line.** Each game carries a moneyline, a ladder of
   spreads and a ladder of totals. Atlas's projection is a distribution, and
   a ladder is what a distribution prices.
@@ -30,9 +38,12 @@ named:
 
 Every run, heavy or poll (`python -m atlas.polymarket refresh`):
 
-1. **Capture** (`source.py`, `match.py`). Every open event of the NFL, NBA,
-   NHL and college football series is read from Gamma; the game markets
-   (moneyline, spreads, totals) are parsed to one row per contract. Each
+1. **Capture** (`source.py`, `match.py`). Every NFL, NBA, NHL and college
+   football game from six hours ago to three days ahead is read in full
+   from the gateway (the league's listing, then each game by its slug); the
+   full-game markets (moneyline, spreads, totals) are parsed to one row per
+   contract, the long side and the short, with the market's slug as its
+   handle on the API. Each
    event is matched to the Atlas game it is - same sport, starts within
    three hours, each short name contained in ESPN's full name on the same
    side; a game that would match only with the sides swapped is left
@@ -40,7 +51,11 @@ Every run, heavy or poll (`python -m atlas.polymarket refresh`):
    games' main lines (the moneyline, and the spread and the total the market
    prices nearest to even, both sides of each) are folded into
    `tracking/polymarket_quotes.csv` append-on-change, with the time first
-   and last seen. The rest of the ladder is read and priced, not kept.
+   and last seen. The rest of the ladder is read and priced, not kept. The
+   gateway's game feed carries the top of each book but not what rests
+   there, so the depth of a contract is read from its book
+   (`/v1/markets/{slug}/bbo`) only for the contracts that clear the rest of
+   the rule, up to forty a run (`positions.deepen`).
 2. **Price** (`pricing.py`). For every contract, three probabilities:
    Polymarket's own (the two outcomes' midpoints normalised to one);
    Atlas's raw reading of the line (the fitted market shape centred on the
@@ -64,10 +79,10 @@ Every run, heavy or poll (`python -m atlas.polymarket refresh`):
    The day's set is logged once, at the first run from 10:00 ET, at the
    prices shown then, into `tracking/polymarket_positions/` (sealed, one
    file per ISO week), and never revised.
-4. **Grade.** On the final score (a push refunded) and against Polymarket's
+4. **Grade.** On the final score (a push refunded) and against the venue's
    close: the contract's last midpoint seen before the game started (the
-   venue's own price history stands in when the record has none), less the
-   ask bought at.
+   exchange's own price history, `/v1/price-history`, stands in when the
+   record has none), less the ask bought at.
 5. **Publish.** The owner page's box (`atlas/owner/page.py`: Positions for
    the day, the board, the record; then the paper tracker and the readers)
    sealed under `ATLAS_OWNER_KEY` into `data/owner/page.enc.json`, which the
@@ -77,10 +92,11 @@ Every run, heavy or poll (`python -m atlas.polymarket refresh`):
 
 ## Player props
 
-The NBA events carry player markets too - "Name: Points O/U 24.5", Yes the
-over and No the under, a ladder of lines for each stat - and the same run
-prices them (`atlas/polymarket/props.py`), for points, rebounds, assists
-and threes.
+The NBA and NHL games carry player markets too - "Will Name record at least
+N points", Yes and No, a ladder of N for each stat - and the same run
+prices them (`atlas/polymarket/props.py`): points, rebounds, assists and
+threes in the NBA; points, goals and assists in the NHL. "At least N" is
+kept as the over at N − ½, so a record row reads as a sportsbook's would.
 
 - **Atlas's number** is minutes times a per-minute rate times the game
   (`atlas/models/nba_props.py`): exponentially weighted minutes and rates
@@ -90,28 +106,34 @@ and threes.
   The heavy refresh writes every rostered player's state into
   `data/warehouse/nba_props_state.json`; a poll reads it. Walk-forward,
   Atlas's Brier beats a Poisson on the player's season mean at every stat
-  and line (`reports/nba_props.md`).
+  and line (`reports/nba_props.md`). The NHL's number is ice time times a
+  rate times the game (`atlas/models/nhl_props.py`, `docs/MODEL_PLAN_NHL.md`
+  step 8), its snapshot written the same way into
+  `data/warehouse/nhl_props_state.json`; the player is found on the team
+  the venue lists him on, by the team's code from the game projection.
 - **The injury report.** ESPN's NBA injuries feed is read every run
   (`atlas/sources/nba_availability.py`), kept in `tracking/nba_availability.csv`,
   and applied before anything is priced: a player listed Out is given a 3%
   chance of taking the court, a game-time decision 55% and nine tenths of
   his minutes, and the minutes a team is without go to its rotation. The
-  chance of not playing goes to the under in full, because the venue's
-  rules resolve a player who does not take the court as No. Those two
-  numbers are stated, not fitted - there is no archive of reports to walk
-  forward on, which is what the capture is building - and the board shows
-  the status beside Atlas's number.
+  chance of not playing goes to the market's own price, because the
+  exchange's rules settle a player who does not take the court at the last
+  fair market price (a venue that resolved him as No would send it to the
+  under in full). Those two numbers are stated, not fitted - there is no
+  archive of reports to walk forward on, which is what the capture is
+  building - and the board shows the status beside Atlas's number.
 - **The record.** The main line of each player's stat (the one the market
   prices nearest to even) on a matched game is folded into
   `tracking/polymarket_props.csv` append-on-change, and graded against the
   box score into `tracking/prop_record.csv` once the game is final - a
-  player who did not play is a push there, since the record measures the
-  rate model; a paper position on him is graded the venue's way, the under
-  winning.
+  player who did not play is a push, in the record (which measures the rate
+  model) and on a paper position (which the venue settles at the last
+  price). The NHL's box score is the warehouse's skater games, whose game
+  ids are the league's, mapped to Atlas's through the game projection.
 - **The pricing** is the game markets' rule in probability space: fair is
-  Polymarket's probability pulled toward Atlas's by the share of Atlas's
-  disagreement the prop record has shown to be real, fitted through the
-  market the same way and clipped to [0, 1]. The share starts at zero,
+  the market's probability pulled toward Atlas's by the share of Atlas's
+  disagreement the sport's prop record has shown to be real, fitted through
+  the market the same way and clipped to [0, 1]. The share starts at zero,
   because the record starts empty - so at first every prop is a projection
   beside the market and nothing clears the fee. That is deliberate: the
   props take positions only once their own graded record says the model's
@@ -148,7 +170,9 @@ changing.
 ## Paper only
 
 Nothing here buys anything. Before real money, confirm: that each market's
-fee schedule is what the API says; that the depth figure (the market's
-resting dollars) is depth at the ask, which `source.book` reads from the
-order book for a contract about to be bought; and that an account can trade
-the global Polymarket at all from where it is.
+fee coefficient is what the API says and the taker tier the account sits
+in; that the depth figure (the shares resting at the best ask times the
+price, from `/v1/markets/{slug}/bbo`) fills at that price for the size
+meant; and that the settlement rules the pricing assumes (a player who does
+not play settled at the last fair price; a game moved more than two days
+settled the same way) are the ones on each market's page.
