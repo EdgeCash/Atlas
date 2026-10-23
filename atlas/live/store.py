@@ -129,6 +129,13 @@ SCHEMA: dict[str, list[str]] = {
         "captured_at", "reported_at", "team_id", "team", "team_abbr", "player_id", "player", "position", "status",
         "fantasy", "injury", "return_date", "note",
     ],
+    # The favorites rule (atlas/polymarket/favorites.py): a paper position on each contract the first time
+    # its ask reaches each threshold, graded by the venue's settlement. A rule on public prices, in the clear.
+    "favorites": [
+        "formed_at", "threshold", "phase", "minutes_in", "sport", "game_id", "event_id", "event_slug", "game_start",
+        "label", "market", "side", "long", "line", "market_id", "market_slug", "token_id", "ask", "bid", "spread",
+        "fee_rate", "fee", "cost", "payout", "won", "profit", "graded_at",
+    ],
     "prop_record": [
         "token_id", "game_id", "kickoff", "sport", "player", "stat", "line", "p_atlas", "p_close", "value", "played",
         "won", "graded_at",
@@ -199,6 +206,7 @@ KEYS: dict[str, list[str]] = {
     "polymarket_quotes": ["token_id", "captured_at"],
     "polymarket_props": ["token_id", "captured_at"],
     "prop_record": ["token_id"],
+    "favorites": ["token_id", "threshold"],
     "nba_availability": ["player_id", "reported_at", "status"],
     "nfl_availability": ["player_id", "reported_at", "status"],
     "nhl_availability": ["player_id", "reported_at", "status"],
@@ -224,6 +232,7 @@ SORT: dict[str, list[str]] = {
     "polymarket_quotes": ["sport", "game_start", "event_id", "market", "line", "side", "captured_at"],
     "polymarket_props": ["sport", "game_start", "event_id", "player", "stat", "line", "side", "captured_at"],
     "prop_record": ["kickoff", "game_id", "player", "stat"],
+    "favorites": ["game_start", "sport", "event_id", "market", "line", "side", "threshold"],
     "nba_availability": ["reported_at", "team", "player"],
     "nfl_availability": ["reported_at", "team", "player"],
     "nhl_availability": ["reported_at", "team", "player"],

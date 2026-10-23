@@ -72,7 +72,9 @@ def _props(summary: dict | None) -> str:
     if not summary or not summary.get("contracts"):
         return "No player props were read this run."
     parts = []
-    for sport, stats in (("nba", "points, rebounds, assists, threes"), ("nhl", "points, goals, assists")):
+    for sport, stats in (("nba", "points, rebounds, assists, threes, steals, blocks, the three combined"),
+                         ("nhl", "points, goals, assists"),
+                         ("nfl", "yards, receptions, touchdowns, attempts, completions, carries")):
         s = (summary.get("sports") or {}).get(sport) or {}
         if s.get("contracts"):
             parts.append(f"{sport.upper()} ({stats}): {s['contracts']} contracts on {s['games']} games, "
@@ -85,7 +87,7 @@ def _props(summary: dict | None) -> str:
 
 
 def write(priced: pd.DataFrame, upcoming: pd.DataFrame, calibration: pd.DataFrame | None, now: datetime,
-          where: Path | None = None, props: dict | None = None) -> Path:
+          where: Path | None = None, props: dict | None = None, favorites_text: str | None = None) -> Path:
     shares = pricing.shares_table(calibration)
     shares_rows = shares.assign(**{
         "Sport": shares["sport"].str.upper(), "Market": shares["market"],
@@ -143,6 +145,18 @@ construction.
 ## Player props
 
 {_props(props)}
+
+## The favorites rule
+
+A second paper rule beside Atlas's, with no projection in it
+(`atlas/polymarket/favorites.py`): a position on every moneyline the first
+time its ask reaches 80, 85, 90 and 95 cents, in play or before the game,
+at that ask plus the fee, graded by the venue's settlement and kept in
+`tracking/favorites.csv`. The question is whether the venue's favorites
+win more often than they cost. Edge is the win rate less the break-even
+rate, in points, with one standard error.
+
+{favorites_text or "No favorites positions yet."}
 
 ## The record
 
