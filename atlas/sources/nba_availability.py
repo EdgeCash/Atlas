@@ -1,6 +1,7 @@
-"""ESPN's NBA injury report, captured every run: who is out, who is a game-time decision.
+"""ESPN's injury reports, captured every run: who is out, who is a game-time decision.
 
-    python -m atlas.sources.nba_availability        # capture the current report into tracking/
+    python -m atlas.sources.nba_availability                 # the NBA's, into tracking/
+    python -m atlas.sources.nba_availability --sport nhl     # the NHL's (or nfl)
 
 ESPN publishes one public feed of every team's current injuries
 (``site.api.espn.com/.../basketball/nba/injuries``): each listed player with
@@ -36,8 +37,9 @@ from atlas.util import get_logger, offline
 LOG = get_logger(__name__)
 
 ENDPOINT = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/injuries"
-#: ESPN's injury feeds by sport: the NBA's, and the NFL's for the football props.
-ENDPOINTS = {"nba": ENDPOINT, "nfl": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries"}
+#: ESPN's injury feeds by sport, one shape: the NBA's, the NFL's and the NHL's, each for its props.
+ENDPOINTS = {"nba": ENDPOINT, "nfl": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries",
+             "nhl": "https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/injuries"}
 USER_AGENT = "Atlas sports research (github.com/EdgeCash/Atlas; one request a run)"
 COLUMNS = SCHEMA["nba_availability"]
 #: ".../nba/player/_/id/4712863/mouhamed-gueye" -> 4712863

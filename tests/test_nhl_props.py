@@ -156,3 +156,68 @@ def test_the_snapshot_is_saved_read_back_and_prices_a_prop_on_polymarket_us(leag
     value, played = props._value(results, "nhl", "901", "Alpha Aaa", "points")
     assert played and value >= 0
     assert props._value(results, "nhl", "901", "Nobody", "points") == (pytest.approx(float("nan"), nan_ok=True), False)
+
+
+def test_the_injury_report_sets_the_chance_of_dressing(league):
+    from atlas.sources.nba_availability import COLUMNS
+
+    snap = nhl_props.snapshot(league, datetime(2023, 10, 1, tzinfo=UTC))
+    report = pd.DataFrame([
+        {"player": "Alpha Aaa", "team_abbr": "AAA", "status": "Out"},
+        {"player": "Bravo Aaa", "team_abbr": "AAA", "status": "Day-To-Day"},
+        {"player": "Charlie Aaa", "team_abbr": "AAA", "status": "Injured Reserve"},
+        {"player": "Alpha Bbb", "team_abbr": "CCC", "status": "Out"},                   # not his team
+        {"player": "Delta Bbb", "team_abbr": "BBB", "status": "Probable"},              # a status not known
+    ], columns=COLUMNS)
+    adj = nhl_props.adjust(snap, report)
+    p = adj["skaters"].set_index("name")
+    assert p.loc["Alpha Aaa", "p_play"] == 0.03 and p.loc["Alpha Aaa", "status"] == "out"
+    assert p.loc["Bravo Aaa", "p_play"] == 0.5 and p.loc["Bravo Aaa", "status"] == "day-to-day"
+    assert p.loc["Charlie Aaa", "p_play"] == 0.0 and p.loc["Charlie Aaa", "status"] == "injured reserve"
+    assert p.loc["Alpha Bbb", "p_play"] == 1.0 and p.loc["Delta Bbb", "p_play"] == 1.0
+    assert "p_play" not in snap["skaters"] and adj["goalies"] is snap["goalies"]
+    assert (nhl_props.adjust(snap, None)["skaters"]["p_play"] == 1.0).all()
+    assert (nhl_props.adjust(snap, pd.DataFrame(columns=COLUMNS))["skaters"]["p_play"] == 1.0).all()
+
+
+def test_espn_abbreviations_are_read_to_the_nhl_codes(league):
+    from atlas.sources.nba_availability import COLUMNS
+    from atlas.sources.nhl import ESPN_CODES
+    from atlas.staging.nhl.games import TEAMS
+
+    assert all(code in TEAMS or code == "PHX" for code in ESPN_CODES.values())
+    snap = nhl_props.snapshot(league, datetime(2023, 10, 1, tzinfo=UTC))
+    snap["skaters"].loc[snap["skaters"]["name"] == "Alpha Aaa", "team"] = "TBL"
+    report = pd.DataFrame([{"player": "Alpha Aaa", "team_abbr": "TB", "status": "Out"}], columns=COLUMNS)
+    assert nhl_props.adjust(snap, report)["skaters"].set_index("name").loc["Alpha Aaa", "p_play"] == 0.03
+
+
+def test_a_listed_skater_is_priced_with_his_chance_of_dressing(league):
+    from atlas.polymarket import match, props, source
+    from atlas.sources.nba_availability import COLUMNS, parse
+    from atlas.testing import polymarket_us as us
+
+    now = datetime(2023, 10, 1, tzinfo=UTC)
+    snap = nhl_props.snapshot(league, now)
+    aaa, bbb = us.team(1, "Aaa Alphas", "Aaa"), us.team(2, "Bbb Bravos", "Bbb")
+    start = "2023-10-02T23:00:00Z"
+    ev = us.event("5001", "nhl-bbb-aaa-2023-10-02", bbb, aaa, [
+        us.prop(1, "hockey_player_points", "Alpha Aaa", 1, 0.55, 0.57, team=aaa, start=start)], start=start)
+    pairs = pd.DataFrame([{"event_id": "5001", "game_id": "901", "sport": "nhl", "kickoff": start, "season": 2023,
+                           "week": 1, "home_team": "Aaa Alphas", "away_team": "Bbb Bravos",
+                           "label": "Bbb Bravos @ Aaa Alphas", "home_team_id": None, "away_team_id": None}])
+    q = match.attach(props.prop_quotes([ev], source.LEAGUES["nhl"], now), pairs)
+    snaps = {"nba": None, "nhl": snap, "nfl": None}
+    plain = props.expectations(q, snaps, codes={"901": ("BBB", "AAA")}).set_index("side")
+    # The feed's shape: a team with one listed skater, parsed as the capture would.
+    payload = {"injuries": [{"id": "1", "displayName": "Aaa Alphas", "injuries": [
+        {"status": "Day-To-Day", "date": "2023-10-01T12:00Z", "shortComment": "lower body",
+         "details": {"fantasyStatus": {"abbreviation": "DTD"}, "type": "Lower Body", "returnDate": "2023-10-02"},
+         "athlete": {"id": "100", "displayName": "Alpha Aaa", "position": {"abbreviation": "C"},
+                     "team": {"abbreviation": "AAA"}}}]}]}
+    report = parse(payload, now)
+    assert list(report.columns) == COLUMNS and report.loc[0, "team_abbr"] == "AAA" and report.loc[0, "status"] == "Day-To-Day"
+    listed = props.expectations(q, snaps, codes={"901": ("BBB", "AAA")}, nhl_availability=report).set_index("side")
+    assert listed.loc["over", "status"] == "day-to-day" and listed.loc["over", "atlas_mean"] == plain.loc["over", "atlas_mean"]
+    assert listed.loc["over", "p_atlas"] == pytest.approx(0.5 * plain.loc["over", "p_atlas"] + 0.5 * 0.56)
+    assert listed.loc["under", "p_atlas"] == pytest.approx(0.5 * plain.loc["under", "p_atlas"] + 0.5 * 0.44)
