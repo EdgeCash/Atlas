@@ -226,6 +226,13 @@ jobs:
           POLYMARKET_US_LIVE: ${{ secrets.POLYMARKET_US_LIVE }}
           POLYMARKET_US_ARMED: ${{ secrets.POLYMARKET_US_ARMED }}
           ATLAS_LIVE_BANKROLL: ${{ secrets.ATLAS_LIVE_BANKROLL }}
+          # The live step's caps, stop and floor, as repository variables (Settings ->
+          # Secrets and variables -> Actions -> Variables); unset, the module's own hold.
+          MAX_ORDER_DOLLARS: ${{ vars.MAX_ORDER_DOLLARS }}
+          MAX_DAY_DOLLARS: ${{ vars.MAX_DAY_DOLLARS }}
+          MAX_OPEN_DOLLARS: ${{ vars.MAX_OPEN_DOLLARS }}
+          LOSS_STOP_DOLLARS: ${{ vars.LOSS_STOP_DOLLARS }}
+          BALANCE_FLOOR: ${{ vars.BALANCE_FLOOR }}
         # --force because the gate above has already decided, in Eastern time
         # and tolerant of a late start. Letting the task re-apply the strict
         # should_poll() minute test here would undo exactly that.
