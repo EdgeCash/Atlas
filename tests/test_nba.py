@@ -195,6 +195,11 @@ def test_the_live_tracker_knows_the_nba():
 
     et = ZoneInfo("America/New_York")
     assert schedule.game_day(datetime(2026, 11, 8, 21, 0, tzinfo=et)).name == "NBA Sunday night"
+    # Every night in the NBA's months is a game-day window, whichever schedule names it; not in July.
+    for day in range(9, 16):                                           # Mon 9 Nov 2026 .. Sun 15 Nov
+        assert schedule.game_day(datetime(2026, 11, day, 21, 30, tzinfo=et)) is not None
+    assert schedule.game_day(datetime(2026, 11, 10, 21, 30, tzinfo=et)).name == "NHL Tuesday night"
+    assert schedule.game_day(datetime(2027, 7, 13, 21, 30, tzinfo=et)) is None
     assert schedule.game_day(datetime(2026, 9, 27, 21, 0, tzinfo=et)) is None       # not in September
 
 
