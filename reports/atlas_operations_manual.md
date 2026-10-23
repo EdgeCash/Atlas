@@ -1,6 +1,6 @@
 # Atlas Operations Manual
 
-*Generated 2026-10-23 11:52 UTC by `python -m atlas.live check`. Atlas research is
+*Generated 2026-10-23 12:43 UTC by `python -m atlas.live check`. Atlas research is
 complete; this document is about keeping the live tracker alive and honest for
 two seasons.*
 
@@ -17,8 +17,8 @@ two seasons.*
 |---|---|
 | Signals recorded | 444 |
 | Grades recorded | 346 |
-| Line snapshots | 4,710 |
-| Tracker runs logged | 540 |
+| Line snapshots | 4,722 |
+| Tracker runs logged | 541 |
 | Blocking data-quality exceptions | 0 |
 | Monitor alerts firing | 2 |
 | Replays clean | 9 of 9 |
@@ -100,22 +100,22 @@ trace(Store.open(), "<signal_id>")   # signal, grade, full line history, run
 
 | Table | Rows | Columns | Primary key |
 |---|---|---|---|
-| runs | 540 | 14 | run_id |
-| numbers | 2,668 | 8 | game_id, market, model_version, refreshed_at |
-| projections | 5,982 | 49 | sport, game_id, model_version |
-| nhl_projections | 135 | 42 | game_id, model_version |
-| calibration | 23,115 | 10 | sport, game_id, market |
+| runs | 541 | 14 | run_id |
+| numbers | 2,768 | 8 | game_id, market, model_version, refreshed_at |
+| projections | 6,225 | 49 | sport, game_id, model_version |
+| nhl_projections | 136 | 42 | game_id, model_version |
+| calibration | 49,732 | 10 | sport, game_id, market |
 | card_grades | 277 | 17 | sport, game_id |
 | other_models | 728 | 9 | sport, game_id, model |
-| polymarket_quotes | 1,477 | 25 | token_id, captured_at |
+| polymarket_quotes | 1,543 | 25 | token_id, captured_at |
 | polymarket_props | 0 | 26 | token_id, captured_at |
 | prop_record | 0 | 13 | token_id |
 | availability | 877 | 13 | conference, report_id, team, player |
 | games | 373 | 15 | game_id |
-| snapshots | 4,710 | 11 | game_id, book, market, captured_at |
+| snapshots | 4,722 | 11 | game_id, book, market, captured_at |
 | signals | 444 | 17 | signal_id |
 | grades | 346 | 14 | signal_id |
-| market_shape | 324 | 5 | sport, market, point |
+| market_shape | 486 | 5 | sport, market, point |
 
 Storage is CSV, not a database file: it survives the container, a scheduled
 job can commit it, and a reviewer can read its diff. Writes are atomic, sorted
