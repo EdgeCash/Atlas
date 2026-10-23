@@ -226,13 +226,27 @@ without sending it.
 What it orders is what the paper rule chose: as the day's positions are
 logged, each becomes a limit order at the ask it was logged at,
 immediate-or-cancel, for the stake's worth of contracts at the live
-bankroll (`ATLAS_LIVE_BANKROLL`, dollars); never a market order, never a
-resting one. Each is checked against the caps before it goes - $25 an
-order, $100 a day, $250 open across unsettled positions - and against the
-stop: when the orders settled over the trailing three days have lost more
-than $50, nothing is placed until that window clears. The caps are
-constants in the module, overridable by environment for the owner, never
-widened by anything the venue or the market says. Every order, sent or
+bankroll (`ATLAS_LIVE_BANKROLL`, dollars), sized down to the dollars-per-order
+cap; never a market order, never a resting one. Each is checked against
+the caps before it goes - $100 a day, $250 open across unsettled positions
+- against the stop (when the orders settled over the trailing three days
+have lost more than $50, nothing is placed until that window clears), and
+against the floor: before a run places anything (a dry run too) it reads
+the account's balance from the venue, cash plus the value of what it
+holds, and places nothing while that is below half the bankroll or of the
+highest balance it has read, whichever is more - the floor moves up with
+the account, never down - or when the balance cannot be read at all. Two
+rules feed the step, each order's row naming its rule: the model's
+positions as they are logged once a day, and the favorites rule's
+positions as they are taken every poll, at the 85-cent crossing only; the
+repository variable `LIVE_RULES` names which of the two the step takes
+(`favorites`, `model`, or both, the default). The caps, the stop and the floor are
+constants in the module, set for the owner as repository variables
+(`MAX_ORDER_DOLLARS`, `MAX_DAY_DOLLARS`, `MAX_OPEN_DOLLARS`,
+`LOSS_STOP_DOLLARS`, `BALANCE_FLOOR`), never widened by anything the venue
+or the market says. A soft launch is the variables at `MAX_ORDER_DOLLARS=1`
+with the bankroll set to the account's balance: every position becomes a
+one-dollar order, and the floor stops the step at half. Every order, sent or
 not, is a row in a ledger sealed with the owner key beside the positions
 record (`tracking/polymarket_live/`), with the order id, the state, the
 fill and fee, and later the settlement and the profit; the owner page's

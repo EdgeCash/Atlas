@@ -363,7 +363,7 @@ def run(priced: pd.DataFrame, finals: pd.DataFrame, quotes: pd.DataFrame, passph
             from atlas.polymarket import orders
 
             try:
-                orders.place(record[record["position_id"].isin(new_ids)], passphrase, now)
+                orders.place(record[record["position_id"].isin(new_ids)], passphrase, now, rule="model")
             except Exception as error:  # noqa: BLE001 - the type only
                 LOG.error("live orders not placed: %s", type(error).__name__)
     return chosen, (grader or grade)(record, finals, quotes, now)

@@ -11,13 +11,21 @@ without sending it. That is the state this ships in.
 What it orders is what the paper rule chose: as the day's positions are
 logged (`atlas/polymarket/positions.py`), each becomes a limit order at the
 ask it was logged at, immediate-or-cancel, for the stake's worth of
-contracts at the live bankroll (``ATLAS_LIVE_BANKROLL``, dollars). Never a
-market order, never a resting one. Each order is checked against the caps
-before it goes - dollars per order, dollars per day, dollars open across
-unsettled positions - and against the stop: when the orders settled over
-the trailing :data:`LOSS_WINDOW_DAYS` days have lost more than
-:data:`LOSS_STOP_DOLLARS`, nothing is placed until that window clears. The
-caps and the stop are constants here, overridable by environment for the
+contracts at the live bankroll (``ATLAS_LIVE_BANKROLL``, dollars), clipped
+to the dollars-per-order cap. Never a market order, never a resting one.
+Each order is checked against the caps before it goes - dollars per day,
+dollars open across unsettled positions - against the stop (when the
+orders settled over the trailing :data:`LOSS_WINDOW_DAYS` days have lost
+more than the cap, nothing is placed until that window clears), and
+against the floor: before a live run places anything it reads the
+account's balance from the venue, cash plus the value of what it holds,
+and places nothing while that is below the floor's share of the bankroll
+or of the highest balance it has read, whichever is more (the floor moves
+up with the account, never down), or when the balance cannot be read at
+all. Two rules feed it: the model's positions as they are logged, and the
+favorites rule's positions as they are taken (`atlas/polymarket/favorites.py`);
+each order's row names its rule. The caps, the stop
+and the floor are constants here, overridable by environment for the
 owner, never widened by anything the venue or the market says.
 
 Every order, sent or not, is a row in the ledger, sealed with the owner
@@ -52,16 +60,22 @@ ARMED = "POLYMARKET_US_ARMED"
 PHRASE = "place real orders on polymarket us"
 #: The bankroll the stakes are sized against, in dollars; none, and nothing is sized.
 BANKROLL = "ATLAS_LIVE_BANKROLL"
-#: The only path this module may call to place an order.
+#: Which rules' positions the step takes, comma-separated: ``favorites``, ``model``, or both.
+RULES = "LIVE_RULES"
+DEFAULT_RULES = ("favorites", "model")
+#: The only path this module may call to place an order, and the one it reads the balance from.
 ORDERS = "/v1/orders"
-#: The caps, in dollars, and the stop's window in days. Environment overrides for the owner.
-CAPS = {"MAX_ORDER_DOLLARS": 25.0, "MAX_DAY_DOLLARS": 100.0, "MAX_OPEN_DOLLARS": 250.0, "LOSS_STOP_DOLLARS": 50.0}
+BALANCES = "/v1/account/balances"
+#: The caps, in dollars, and the stop's window in days. Environment overrides for the owner. The floor is
+#: the share of the bankroll the account's balance (cash plus holdings) may not fall below.
+CAPS = {"MAX_ORDER_DOLLARS": 25.0, "MAX_DAY_DOLLARS": 100.0, "MAX_OPEN_DOLLARS": 250.0, "LOSS_STOP_DOLLARS": 50.0,
+        "BALANCE_FLOOR": 0.5}
 LOSS_WINDOW_DAYS = 3
 SETTLEMENT_READS = 20
 BLOCK_SECONDS = "10"
 COLUMNS = ["order_id", "placed_at", "mode", "day", "year", "week", "position_id", "sport", "game_id", "kickoff",
            "label", "market", "side", "long", "line", "market_slug", "token_id", "ask", "price", "quantity", "cost",
-           "state", "filled", "avg_px", "fee", "paid", "payout", "profit", "graded_at", "note"]
+           "state", "filled", "avg_px", "fee", "paid", "payout", "profit", "graded_at", "note", "equity", "rule"]
 TAB = "Live"
 
 
@@ -73,6 +87,11 @@ def mode() -> str:
 def armed() -> bool:
     """Live, and the arming secret carries the phrase exactly."""
     return mode() == "live" and os.environ.get(ARMED, "") == PHRASE
+
+
+def rules() -> tuple[str, ...]:
+    raw = [r.strip().lower() for r in os.environ.get(RULES, "").split(",") if r.strip()]
+    return tuple(r for r in raw if r in DEFAULT_RULES) or DEFAULT_RULES
 
 
 def caps() -> dict[str, float]:
@@ -134,7 +153,8 @@ def day_dollars(ledger: pd.DataFrame, day: str) -> float:
     """What the day's sent orders cost at the ask, filled or not (the cap is on what was risked)."""
     if ledger.empty:
         return 0.0
-    sent = (ledger["mode"].astype(str) == "live") & (ledger["day"].astype(str) == str(day))
+    sent = (ledger["mode"].astype(str) == "live") & (ledger["day"].astype(str) == str(day)) \
+        & (ledger["state"].astype(str) != "refused")
     return float(_num(ledger["cost"])[sent].sum())
 
 
@@ -158,15 +178,53 @@ def stopped(ledger: pd.DataFrame, now: datetime) -> str | None:
 
 
 def check(cost: float, ledger: pd.DataFrame, day: str, now: datetime) -> str | None:
-    """Why an order of ``cost`` dollars may not go: a cap or the stop; None when it may."""
+    """Why an order of ``cost`` dollars may not go: a cap or the stop; None when it may. The per-order cap
+    is not here: an order is sized down to it (:func:`size`), not refused."""
     c = caps()
-    if cost > c["MAX_ORDER_DOLLARS"]:
-        return f"cap:order ${cost:.2f} exceeds ${c['MAX_ORDER_DOLLARS']:.0f}"
     if day_dollars(ledger, day) + cost > c["MAX_DAY_DOLLARS"]:
         return f"cap:day ${day_dollars(ledger, day) + cost:.2f} exceeds ${c['MAX_DAY_DOLLARS']:.0f}"
     if open_dollars(ledger) + cost > c["MAX_OPEN_DOLLARS"]:
         return f"cap:open ${open_dollars(ledger) + cost:.2f} exceeds ${c['MAX_OPEN_DOLLARS']:.0f}"
     return stopped(ledger, now)
+
+
+def size(row, roll: float) -> float:
+    """The stake's worth of contracts at the bankroll, clipped to the dollars-per-order cap."""
+    ask = float(row.ask)
+    if roll <= 0 or not math.isfinite(ask) or ask <= 0:
+        return 0.0
+    dollars = min(float(row.stake) * roll, caps()["MAX_ORDER_DOLLARS"])
+    return max(account.MIN_QUANTITY, round(dollars / ask, 2))
+
+
+def balances(signer: account.Signer, sess: requests.Session | None = None) -> dict[str, float]:
+    """The account as the venue states it: cash, the value of what it holds, and the two together."""
+    sess = sess or requests.Session()
+    r = sess.get(account.API + BALANCES, headers=signer.headers("GET", BALANCES), timeout=account.TIMEOUT)
+    r.raise_for_status()
+    rows = (r.json() or {}).get("balances") or []
+    usd = next((b for b in rows if str(b.get("currency", "USD")).upper() == "USD"), rows[0] if rows else {})
+    cash = float(usd.get("currentBalance") or 0.0)
+    assets = float(usd.get("assetNotional") or 0.0)
+    return {"cash": cash, "assets": assets, "equity": cash + assets}
+
+
+def peak(ledger: pd.DataFrame) -> float:
+    """The highest balance the ledger has read; nan before any."""
+    if ledger.empty or "equity" not in ledger:
+        return float("nan")
+    seen = _num(ledger["equity"]).dropna()
+    return float(seen.max()) if len(seen) else float("nan")
+
+
+def floor(equity: float, roll: float, high: float = float("nan")) -> str | None:
+    """The floor, in force when the account's balance is below its share of the bankroll or of the highest
+    balance read (``high``), whichever is more: it moves up with the account, never down."""
+    share = caps()["BALANCE_FLOOR"]
+    reference = max(roll, high) if math.isfinite(high) else roll
+    if reference > 0 and equity < share * reference:
+        return f"floor: balance ${equity:.2f} below {share:.0%} of ${reference:.0f}"
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -219,22 +277,34 @@ def _stamp(now: datetime) -> str:
 
 
 def place(positions_: pd.DataFrame, passphrase: str, now: datetime, *, where: Path | None = None,
-          signer: account.Signer | None = None, sess: requests.Session | None = None) -> pd.DataFrame:
+          signer: account.Signer | None = None, sess: requests.Session | None = None,
+          rule: str = "model") -> pd.DataFrame:
     """The ledger with an order for each of ``positions_`` (rows of the positions record, just logged):
     sent when live and armed, previewed and written as ``dry`` when dry, nothing when off. Each row says
     what happened; a cap, the stop, or a failure marks it and the rest go on."""
     m = mode()
     if m == "off" or positions_ is None or positions_.empty or offline():
         return pd.DataFrame(columns=COLUMNS)
+    if rule not in rules():
+        LOG.info("live (%s): the %s rule is not on (%s)", m, rule, ",".join(rules()))
+        return pd.DataFrame(columns=COLUMNS)
     ledger = load(passphrase, where)
     signer = signer or account.Signer.from_env()
     sess = sess or requests.Session()
     roll = bankroll()
     stamp = _stamp(now)
+    # The account is read first, in a dry run too: no balance, or one below the floor, and nothing goes.
+    equity, held = float("nan"), None
+    if signer is not None and roll > 0:
+        try:
+            equity = balances(signer, sess)["equity"]
+            held = floor(equity, roll, peak(ledger))
+        except Exception as error:  # noqa: BLE001 - the type only
+            held = f"no balance read ({type(error).__name__})"
     rows = []
     for x in positions_.itertuples(index=False):
         ask = float(x.ask)
-        qty = account.quantity(x, roll) if roll > 0 else 0.0
+        qty = size(x, roll)
         cost = round(qty * ask, 2)
         row = {**dict.fromkeys(COLUMNS), "order_id": "", "placed_at": stamp, "mode": m, "day": x.day, "year": x.year,
                "week": x.week, "position_id": x.position_id, "sport": x.sport, "game_id": x.game_id,
@@ -242,8 +312,10 @@ def place(positions_: pd.DataFrame, passphrase: str, now: datetime, *, where: Pa
                "line": x.line, "market_slug": x.market_slug, "token_id": x.token_id, "ask": ask,
                "price": float(account.order(x, 1.0)["price"]["value"]), "quantity": qty, "cost": cost,
                "state": "", "filled": 0.0, "avg_px": float("nan"), "fee": float("nan"), "paid": 0.0,
-               "payout": float("nan"), "profit": float("nan"), "graded_at": None, "note": ""}
+               "payout": float("nan"), "profit": float("nan"), "graded_at": None, "note": "", "equity": equity,
+               "rule": rule}
         why = "no bankroll" if roll <= 0 else (None if signer else "no key")
+        why = why or held
         why = why or check(cost, pd.concat([ledger, pd.DataFrame(rows, columns=COLUMNS)], ignore_index=True)
                            if rows else ledger, str(x.day), now)
         if why:
@@ -268,7 +340,7 @@ def place(positions_: pd.DataFrame, passphrase: str, now: datetime, *, where: Pa
     weeks = {(int(y), int(w)) for y, w in new[["year", "week"]].drop_duplicates().itertuples(index=False)}
     seal(out, passphrase, weeks, where)
     sent = int(((new["mode"] == "live") & new["state"].isin(["filled", "partial", "canceled", "sent"])).sum())
-    LOG.info("live (%s): %d orders written, %d sent, %d refused", m, len(new), sent,
+    LOG.info("live (%s, %s): %d orders written, %d sent, %d refused", m, rule, len(new), sent,
              int((new["state"] == "refused").sum()))
     return out
 
@@ -329,11 +401,16 @@ def section(ledger: pd.DataFrame, now: datetime) -> dict:
                      "Nothing is sent.",
               "live": "Live and armed: orders are sent." if armed() else
                       "Live but not armed: the arming secret does not carry the phrase; nothing is sent."}[m]
-    notes = [status,
-             f"Caps: ${c['MAX_ORDER_DOLLARS']:.0f} an order, ${c['MAX_DAY_DOLLARS']:.0f} a day, "
-             f"${c['MAX_OPEN_DOLLARS']:.0f} open; the stop holds while the orders settled over the last "
-             f"{LOSS_WINDOW_DAYS} days have lost more than ${c['LOSS_STOP_DOLLARS']:.0f}. "
-             f"Bankroll ${bankroll():,.0f}.",
+    equity = _num(ledger["equity"]).dropna() if len(ledger) and "equity" in ledger else pd.Series(dtype=float)
+    notes = [status + f" Rules on: {', '.join(rules())}.",
+             f"Caps: ${c['MAX_ORDER_DOLLARS']:.2f} an order (an order is sized down to it), "
+             f"${c['MAX_DAY_DOLLARS']:.0f} a day, ${c['MAX_OPEN_DOLLARS']:.0f} open; the stop holds while the "
+             f"orders settled over the last {LOSS_WINDOW_DAYS} days have lost more than "
+             f"${c['LOSS_STOP_DOLLARS']:.0f}; the floor holds while the account's balance is below "
+             f"{c['BALANCE_FLOOR']:.0%} of the bankroll or of the highest balance read, whichever is more. "
+             f"Bankroll ${bankroll():,.0f}"
+             + (f"; the balance last read ${float(equity.iloc[-1]):,.2f}, the highest ${float(equity.max()):,.2f}."
+                if len(equity) else "."),
              "Every order is a limit at the ask the position was logged at, immediate-or-cancel, for the stake's "
              "worth of contracts; never a market order, never a resting one."]
     if stop:
@@ -352,7 +429,8 @@ def section(ledger: pd.DataFrame, now: datetime) -> dict:
             filled = float(x.filled) if pd.notna(x.filled) else 0.0
             px = float(x.avg_px) if pd.notna(x.avg_px) else float("nan")
             profit = float(x.profit) if pd.notna(x.profit) else float("nan")
-            rows.append([[str(x.label), f"{str(x.sport).upper()} · {x.market} {x.side}"], str(x.mode),
+            rows.append([[str(x.label), f"{str(x.sport).upper()} · {x.market} {x.side} · {x.rule or 'model'}"],
+                         str(x.mode),
                          f"{float(x.quantity):g} @ {float(x.ask):.2f}",
                          f"{filled:g} @ {px:.2f}" if filled > 0 and math.isfinite(px) else "none",
                          f"{profit:+.2f}" if math.isfinite(profit) else "", f"{x.state} {x.note or ''}".strip()])
