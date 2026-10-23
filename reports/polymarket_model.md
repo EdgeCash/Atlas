@@ -1,32 +1,33 @@
-# Atlas on Polymarket
+# Atlas on Polymarket US
 
-*Rebuilt every run; this one at 2026-10-23 13:53 UTC.*
+*Rebuilt every run; this one at 2026-10-23 14:52 UTC.*
 
-Polymarket is the one venue Atlas is priced against. It lists a moneyline,
-a ladder of spreads and a ladder of totals on every NFL, NBA, NHL and college
-football game as binary contracts, and its prices are public: every run
-reads them from Polymarket's own API, matches each game to the one Atlas
-projects, and keeps every quote, timestamped, in
-`tracking/polymarket_quotes.csv`. That table is the point-in-time archive of
-the market Atlas is measured against.
+Polymarket US, the CFTC-regulated exchange, is the one venue Atlas is priced
+against. It lists a moneyline, a ladder of spreads and a ladder of totals on
+every NFL, NBA, NHL and college football game as dollar contracts on a
+central order book, and its prices are public: every run reads them from the
+exchange's own API, matches each game to the one Atlas projects, and keeps
+every quote, timestamped, in `tracking/polymarket_quotes.csv`. That table is
+the point-in-time archive of the market Atlas is measured against.
 
 ## Coverage this run
 
-| Sport | Games ahead | On Polymarket | Contracts | Median spread (main lines) | Median depth (main lines) | Fee rate |
+| Sport | Games ahead | On Polymarket US | Contracts | Median spread (main lines) | Median depth (where read) | Fee coefficient |
 |---|---|---|---|---|---|---|
-| NCAAF | 49 | 49 | 5358 | 3.0¢ | $10,709 | 3% |
-| NFL | 14 | 14 | 1568 | 2.0¢ | $46,734 | 3% |
-| NBA | 13 | 12 | 688 | 1.0¢ | $35,962 | 0% |
-| NHL | 2 | 2 | 24 | 1.0¢ | $88,672 | 5% |
+| NCAAF | 49 | 47 | 6298 | 1.0¢ | – | 0.0695 |
+| NFL | 14 | 12 | 1704 | 1.0¢ | – | 0.0695 |
+| NBA | 13 | 11 | 628 | 1.0¢ | – | 0.0695 |
+| NHL | 2 | 2 | 60 | 1.0¢ | – | 0.0695 |
 
 Spread is the gap between the best bid and the best ask on the contracts
-priced near even; depth is the dollars resting in the market. The fee is
-Polymarket's taker fee, `rate × price × (1 − price)` per contract, read from
-each market's own schedule.
+priced near even; depth is the dollars resting at the best ask, read from
+the book for the contracts that cleared the rest of the rule. The fee is the
+exchange's taker fee, `coefficient × price × (1 − price)` per contract, the
+coefficient read from each market.
 
-## How Atlas is anchored to Polymarket
+## How Atlas is anchored to the market
 
-Atlas's number for a game is never used raw. Polymarket's centre for the
+Atlas's number for a game is never used raw. The market's centre for the
 margin and the total is read off its own ladder of lines; Atlas's projection
 is pulled toward it by the share of Atlas's disagreement that has turned out
 real on the walk-forward record (`tracking/calibration.csv`), and every line
@@ -56,25 +57,25 @@ side at disagreements this large or larger, never below one half.
 
 | Sport | Market | Games | Atlas, median gap | Atlas, largest gap | Anchored, median gap |
 |---|---|---|---|---|---|
-| NBA | margin | 12 | 2.0 | 6.9 | 0.07 |
-| NBA | total | 12 | 3.0 | 7.6 | 0.20 |
-| NCAAF | margin | 49 | 2.1 | 7.7 | 0.00 |
-| NCAAF | total | 49 | 2.5 | 6.6 | 0.70 |
-| NFL | margin | 14 | 1.3 | 3.2 | 0.01 |
-| NFL | total | 14 | 1.2 | 4.8 | 0.40 |
+| NBA | margin | 11 | 1.7 | 5.5 | 0.06 |
+| NBA | total | 11 | 3.2 | 6.9 | 0.28 |
+| NCAAF | margin | 47 | 2.0 | 7.9 | 0.00 |
+| NCAAF | total | 47 | 2.5 | 6.6 | 0.48 |
+| NFL | margin | 12 | 1.2 | 3.2 | 0.01 |
+| NFL | total | 12 | 1.5 | 5.0 | 0.28 |
 
 In points of margin or total, per game: Atlas's own projection against
-Polymarket's centre, and the anchored number the contracts are priced from.
+the market's centre, and the anchored number the contracts are priced from.
 On a market where the share is zero the anchored gap is zero by
 construction.
 
 ## Player props
 
-NBA player props (points, rebounds, assists, threes) this run: 2032 contracts on 12 games, 2032 with an Atlas projection beside them (`atlas/models/nba_props.py`, `reports/nba_props.md`). Each player-stat's main line is kept in `tracking/polymarket_props.csv` with Atlas's probability as it stood, and graded against the box score and the close into `tracking/prop_record.csv`: 0 graded so far. Most prop books on Polymarket are thin; the record, not the depth, decides what Atlas's disagreement is worth there.
+Player props this run: NBA (points, rebounds, assists, threes): 1801 contracts on 11 games, 1801 with an Atlas projection beside them, 0 graded so far. Atlas's numbers are `atlas/models/nba_props.py` (`reports/nba_props.md`) and `atlas/models/nhl_props.py` (`reports/nhl_props.md`). Each player-stat's main line is kept in `tracking/polymarket_props.csv` with Atlas's probability as it stood, and graded against the box score and the close into `tracking/prop_record.csv`, the record that decides, a sport at a time, what Atlas's disagreement is worth there.
 
 ## The record
 
 Paper positions are taken by a fixed rule, logged once and graded on the
-result and against Polymarket's close. That record is the owner's, sealed
+result and against the venue's close. That record is the owner's, sealed
 in `tracking/polymarket_positions/`, and is not published here. Nothing on
 this page is a recommendation.
