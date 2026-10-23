@@ -1,5 +1,15 @@
 # Atlas — Product Roadmap
 
+> **Superseded, 22 October 2026.** This plan is for the consumer product:
+> the public cards, a second odds provider, the reliability record, payments.
+> Atlas became a Polymarket-only model that day ([`POLYMARKET.md`](POLYMARKET.md)):
+> the sportsbook board, the curated plays, daily fantasy and the Kalshi board
+> were retired, and the public site is a record of the model rather than a
+> product. "Next, in order" below no longer applies; the open questions now are
+> the ones in `POLYMARKET.md` ("What the record said on day one", "Paper only")
+> and the model plans (`MODEL_PLAN_NBA.md` and the others). Kept as the record
+> of what was planned.
+
 Where Atlas is, what this sprint changed, and what comes next in what order.
 
 `PRODUCT_EVOLUTION.md` is the argument for the transition from research platform

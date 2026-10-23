@@ -1,5 +1,13 @@
 # Atlas — Improvement Backlog
 
+> **Superseded, 22 October 2026.** Collected when Atlas was a consumer product
+> with a sportsbook board and public cards; Atlas became a Polymarket-only
+> model that day ([`POLYMARKET.md`](POLYMARKET.md)). Items here about the site,
+> the grade and the sportsbook providers no longer apply; the model-accuracy
+> items were overtaken by the NHL and NBA plans and the retunes they record.
+> Kept as the record of what was found. The owner-page research at the end
+> stands on its own.
+
 What to build next, in order, and the evidence for each. Collected on
 26 September 2026 from the model reports, the product docs checked against
 the code, and two days of running the live schedule. An item leaves this list

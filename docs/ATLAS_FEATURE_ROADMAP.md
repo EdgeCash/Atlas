@@ -1,5 +1,12 @@
 # Atlas — Feature Roadmap
 
+> **Superseded, 22 October 2026.** This is the feature order for the consumer
+> product, and it says "no other sports" and "no props". Atlas became a
+> Polymarket-only model that day ([`POLYMARKET.md`](POLYMARKET.md)), has since
+> added the NHL and the NBA ([`MODEL_PLAN_NHL.md`](MODEL_PLAN_NHL.md),
+> [`MODEL_PLAN_NBA.md`](MODEL_PLAN_NBA.md)) and prices NBA player props. The
+> Top 10 below is not the plan any more. Kept as the record of what was planned.
+
 The sequencing, and the final Top 10.
 
 Nothing here is built. This is what Atlas should eventually become and in what
