@@ -72,3 +72,8 @@ jobs:
       # logged (atlas/polymarket/account.py): previews only, never an order.
       POLYMARKET_US_KEY_ID: ${{ secrets.POLYMARKET_US_KEY_ID }}
       POLYMARKET_US_SECRET: ${{ secrets.POLYMARKET_US_SECRET }}
+      # The live step (atlas/polymarket/orders.py), armed off: the mode (unset, dry
+      # or live), the arming phrase, and the bankroll the stakes are sized against.
+      POLYMARKET_US_LIVE: ${{ secrets.POLYMARKET_US_LIVE }}
+      POLYMARKET_US_ARMED: ${{ secrets.POLYMARKET_US_ARMED }}
+      ATLAS_LIVE_BANKROLL: ${{ secrets.ATLAS_LIVE_BANKROLL }}

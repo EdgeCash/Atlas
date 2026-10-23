@@ -354,7 +354,16 @@ def run(priced: pd.DataFrame, finals: pd.DataFrame, quotes: pd.DataFrame, passph
             # The venue's own preview of each new position, at the ask it was logged at, where the key is set.
             from atlas.polymarket import account
 
-            record = account.preview(record, set(record["position_id"]) - before, now).reindex(columns=columns)
+            new_ids = set(record["position_id"]) - before
+            record = account.preview(record, new_ids, now).reindex(columns=columns)
             seal(record, passphrase, weeks, where, columns)
             LOG.info("polymarket: %d positions logged for %s", len(chosen), chosen["day"].iloc[0])
+            # The live step, armed off by default (atlas/polymarket/orders.py): the new positions as orders,
+            # sent only when the mode and arming secrets say so; a dry run writes what it would have sent.
+            from atlas.polymarket import orders
+
+            try:
+                orders.place(record[record["position_id"].isin(new_ids)], passphrase, now)
+            except Exception as error:  # noqa: BLE001 - the type only
+                LOG.error("live orders not placed: %s", type(error).__name__)
     return chosen, (grader or grade)(record, finals, quotes, now)
