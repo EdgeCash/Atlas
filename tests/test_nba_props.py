@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import math
 import os
 from datetime import UTC, datetime
 
@@ -48,16 +49,18 @@ def test_player_games_follow_the_conventions(tables):
     assert set(p["season"]) == set(SEASONS) and set(p["position"]) <= {"G", "F", "C"}
     assert p["player_id"].nunique() == 6 * len(TEAMS)
     assert (p[~p["played"]]["minutes"] == 0).all() and 0.03 < (~p["played"]).mean() < 0.15
-    assert {"points", "rebounds", "assists", "threes", "is_home", "opponent_id"} <= set(p.columns)
+    assert {*npr.STATS, "is_home", "opponent_id"} <= set(p.columns)
 
 
 def test_the_model_walks_forward_and_beats_the_season_mean(tables):
     p, tg = tables
     rows, layers = npr.walk(p, tg, npr.Spec(), [SEASONS[2]])
     assert set(layers) == {SEASONS[2]} and all(layers[SEASONS[2]][s]["dispersion"] >= 1.0 for s in npr.STATS)
-    assert (rows[["mu_points", "mu_rebounds", "mu_assists", "mu_threes"]] > 0).all().all()
+    assert (rows[[f"mu_{s}" for s in npr.STATS]] > 0).all().all()
+    assert (rows["mu_pra"] == rows["mu_points"] + rows["mu_rebounds"] + rows["mu_assists"]).all()
+    assert (rows["pra"] == rows["points"] + rows["rebounds"] + rows["assists"]).all()
     table = npr.score(rows, layers)
-    assert len(table) == sum(len(v) for v in npr.LINES.values())
+    assert len(table) == sum(len(v) for v in npr.LINES.values()) and "pra" in set(table["stat"])
     assert (table["brier_atlas"] < table["brier_naive"]).mean() >= 0.5
     assert npr.loglik(rows, layers) < 0
     text = npr.render(table, npr.Spec(), [SEASONS[2]])
@@ -73,7 +76,9 @@ def test_the_snapshot_projects_a_player_against_an_opponent_and_seals_nothing(ta
     bench = snap["players"].set_index("player").loc["BOS Player 5"]
     e = npr.expect(snap, star, 2, 13, True)
     assert e["points"] > npr.expect(snap, bench, 2, 13, True)["points"] > 0
-    assert set(e) == set(npr.STATS)
+    assert set(e) == {*npr.STATS, *npr.COMBINED}
+    assert e["pra"] == pytest.approx(e["points"] + e["rebounds"] + e["assists"]) and e["steals"] > 0 and e["blocks"] > 0
+    assert npr.dispersion(snap, "pra") >= 1.0 and math.isnan(npr.dispersion(snap, "no such stat"))
     assert all(np.isnan(v) for v in npr.expect(snap, star, 2, 999, True).values())      # a team it does not know
     d = npr.dispersion(snap, "points")
     assert 0.3 < npr.prob(e["points"], 14.5, "over", d) < 0.95
@@ -330,3 +335,46 @@ def test_expectations_carry_the_report_into_the_probabilities_and_the_board(tabl
     assert set(kept[kept["player"] == "BOS Player 0"]["status"]) == {"out"}
     assert store.append_new_only("nba_availability", report) == 3 and len(store.read("nba_availability")) == 3
     assert store.append_new_only("nba_availability", report) == 0                           # a re-read adds nothing
+
+
+def test_the_combined_and_defensive_props_are_read_and_priced(tables):
+    from atlas.polymarket import match
+
+    p, tg = tables
+    now = datetime(2025, 3, 1, 15, 0, tzinfo=UTC)
+    snap = npr.snapshot(p, tg, datetime(2025, 3, 1, tzinfo=UTC), npr.Spec())
+    ev = us.event("7001", "nba-lal-bos-2025-03-02", LAL, BOS, [
+        us.market(1, "basketball_player_points_rebounds_assists",
+                  "Will BOS Player 0 record at least 25 combined points, rebounds and assists in LAL vs. BOS?",
+                  "Yes", "No", 0.49, 0.51, line=25, long_team=BOS["id"], short_team=BOS["id"], start=TIP),
+        us.prop(2, "basketball_player_steals", "BOS Player 0", 1, 0.59, 0.61, team=BOS, start=TIP),
+        us.prop(3, "basketball_player_blocks", "LAL Player 1", 1, 0.39, 0.41, team=LAL, start=TIP),
+        us.prop(4, "basketball_player_points", "BOS Player 0", 15, 0.49, 0.51, team=BOS, start=TIP)], start=TIP)
+    q = props.prop_quotes([ev], source.LEAGUES["nba"], now)
+    assert set(q["stat"]) == {"pra", "steals", "blocks", "points"} and len(q) == 8
+    by = q.set_index(["player", "stat", "line", "side"])
+    assert by.loc[("BOS Player 0", "pra", 24.5, "over"), "ask"] == 0.51
+    e = props.expectations(match.attach(q, _pairs()), {"nba": snap, "nhl": None, "nfl": None})
+    by = e.set_index(["player", "stat", "line", "side"])
+    star = npr.expect(snap, snap["players"].set_index("player").loc["BOS Player 0"], 2, 13, True)
+    assert by.loc[("BOS Player 0", "pra", 24.5, "over"), "atlas_mean"] == pytest.approx(star["pra"])
+    assert by.loc[("BOS Player 0", "pra", 24.5, "over"), "atlas_mean"] \
+        == pytest.approx(by.loc[("BOS Player 0", "points", 14.5, "over"), "atlas_mean"] + star["rebounds"] + star["assists"])
+    for key in (("BOS Player 0", "pra", 24.5), ("BOS Player 0", "steals", 0.5), ("LAL Player 1", "blocks", 0.5)):
+        assert 0 < by.loc[(*key, "over"), "p_atlas"] < 1
+        assert by.loc[(*key, "over"), "p_atlas"] + by.loc[(*key, "under"), "p_atlas"] == pytest.approx(1.0)
+    # Graded from the box score: the combined stat is the sum of the three.
+    results = props.results_frame("nba", p)
+    assert {"steals", "blocks", "pra"} <= set(results.columns)
+    game = p[(p["player"] == "BOS Player 0") & p["played"]].iloc[-1]
+    value, played = props._value(results, "nba", str(game["game_id"]), "BOS Player 0", "pra")
+    assert played and value == game["points"] + game["rebounds"] + game["assists"]
+    assert props._value(results, "nba", str(game["game_id"]), "BOS Player 0", "steals") == (game["steals"], True)
+    # A snapshot written before the stats were added prices what it has, and nan for the rest.
+    old = {**snap, "layer": {s: snap["layer"][s] for s in ("points", "rebounds", "assists", "threes")},
+           "players": snap["players"].drop(columns=["steals_rate", "blocks_rate"]),
+           "teams": snap["teams"].drop(columns=["f_allow_steals", "f_allow_blocks"])}
+    e_old = props.expectations(match.attach(q, _pairs()), {"nba": old, "nhl": None, "nfl": None}).set_index(["player", "stat", "line", "side"])
+    assert e_old.loc[("BOS Player 0", "points", 14.5, "over"), "atlas_mean"] == pytest.approx(star["points"])
+    assert np.isnan(e_old.loc[("BOS Player 0", "steals", 0.5, "over"), "p_atlas"])
+    assert np.isnan(e_old.loc[("BOS Player 0", "pra", 24.5, "over"), "p_atlas"])

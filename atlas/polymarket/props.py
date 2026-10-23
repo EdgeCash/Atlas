@@ -1,9 +1,10 @@
 """Player props on Polymarket US: Atlas's projection beside the market's price, a record, and paper positions.
 
-Polymarket US lists, on each NBA and NHL game, a ladder of player props as
-Yes/No markets on "Will Name record at least N stat": points, rebounds,
-assists and threes in the NBA; points, goals and assists in the NHL. Every
-run:
+Polymarket US lists, on each NBA, NHL and NFL game, a ladder of player
+props as Yes/No markets on "Will Name record at least N stat": points,
+rebounds, assists, threes, steals, blocks and the first three combined in
+the NBA; points, goals and assists in the NHL; yards, receptions and
+touchdowns in the NFL. Every run:
 
 1. **reads** them with the game markets (`prop_quotes`), matches each to
    the Atlas game (`atlas/polymarket/match.py`) and the player to Atlas's
@@ -57,7 +58,9 @@ SPORTS = ("nba", "nhl", "nfl")
 #: The venue's ``sportsMarketType`` of each prop Atlas projects, by sport.
 PROP_TYPES = {
     "nba": {"basketball_player_points": "points", "basketball_player_rebounds": "rebounds",
-            "basketball_player_assists": "assists", "basketball_player_threes": "threes"},
+            "basketball_player_assists": "assists", "basketball_player_threes": "threes",
+            "basketball_player_steals": "steals", "basketball_player_blocks": "blocks",
+            "basketball_player_points_rebounds_assists": "pra"},
     "nhl": {"hockey_player_points": "points", "hockey_player_goals": "goals", "hockey_player_assists": "assists"},
     "nfl": {"football_player_receiving_yards": "receiving_yards", "football_player_receptions": "receptions",
             "football_player_rushing_yards": "rushing_yards", "football_player_passing_yards": "passing_yards",
@@ -248,9 +251,10 @@ def expectations(q: pd.DataFrame, snaps: dict[str, dict | None], availability: p
                     cache[ck] = nba_props.expect(nba_adj, row._asdict(), team_id, opp_id, home).get(str(r.stat), float("nan"))
                 mean_ = cache[ck]
                 status = str(row.status or "")
-                if math.isfinite(mean_):
-                    p = nba_props.prob_available(mean_, float(r.line), str(r.side), nba_props.dispersion(nba_adj, str(r.stat)),
-                                                 float(row.p_play), settle if math.isfinite(settle) else None)
+                d = nba_props.dispersion(nba_adj, str(r.stat))
+                if math.isfinite(mean_) and math.isfinite(d):
+                    p = nba_props.prob_available(mean_, float(r.line), str(r.side), d, float(row.p_play),
+                                                 settle if math.isfinite(settle) else None)
                 break
         elif sport == "nhl" and nhl is not None:
             away_code, home_code = codes.get(str(r.game_id), (None, None))
@@ -306,8 +310,8 @@ def expectations(q: pd.DataFrame, snaps: dict[str, dict | None], availability: p
 # The record, and the share it gives
 # ---------------------------------------------------------------------------
 
-RESULT_COLUMNS = ["sport", "game_id", "player_key", "played", "points", "rebounds", "assists", "threes", "goals",
-                  *nfl_props.STATS]
+RESULT_COLUMNS = ["sport", "game_id", "player_key", "played", "points", "rebounds", "assists", "threes", "steals",
+                  "blocks", "pra", "goals", *nfl_props.STATS]
 
 
 def results_frame(sport: str, games: pd.DataFrame | None, projections: pd.DataFrame | None = None) -> pd.DataFrame:

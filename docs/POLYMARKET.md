@@ -100,8 +100,9 @@ Every run, heavy or poll (`python -m atlas.polymarket refresh`):
 The NBA, NHL and NFL games carry player markets too - "Will Name record at
 least N points" (the NFL's "Will Name record 50+ receiving yards"), Yes and
 No, a ladder of N for each stat - and the same run prices them
-(`atlas/polymarket/props.py`): points, rebounds, assists and threes in the
-NBA; points, goals and assists in the NHL; receiving yards, receptions,
+(`atlas/polymarket/props.py`): points, rebounds, assists, threes, steals,
+blocks and the first three combined in the NBA; points, goals and assists
+in the NHL; receiving yards, receptions,
 rushing yards, passing yards, touchdowns and passing touchdowns in the NFL.
 "At least N" and "N+" are kept as the over at N − ½, so a record row reads
 as a sportsbook's would.
