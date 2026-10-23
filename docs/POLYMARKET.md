@@ -205,7 +205,9 @@ cents, at that ask plus the fee,
 noting the phase and the minutes since kickoff; once the game is four hours
 gone the venue's settlement grades it (at most forty reads a run). The
 record is `tracking/favorites.csv`, in the clear, since it is a rule on
-public prices rather than Atlas's own positions; the public report and the
+public prices rather than Atlas's own positions, each position carrying
+the period and the clock the scoreboard had for the game at that poll and
+whether that was the final period; the public report and the
 owner page sum it by phase and threshold, and by sport: the win rate
 against the break-even rate (the mean cost), with a standard error, and the
 profit per dollar staked. Positive and several errors wide, over hundreds
@@ -240,7 +242,9 @@ rules feed the step, each order's row naming its rule: the model's
 positions as they are logged once a day, and the favorites rule's
 positions as they are taken every poll, at the 85-cent crossing only; the
 repository variable `LIVE_RULES` names which of the two the step takes
-(`favorites`, `model`, or both, the default). The caps, the stop and the floor are
+(`favorites`, `model`, or both, the default), and `LIVE_PHASE` set to
+`late` confines the favorites' orders to games in their final regulation
+period or past it, as the scoreboard stood at the poll. The caps, the stop and the floor are
 constants in the module, set for the owner as repository variables
 (`MAX_ORDER_DOLLARS`, `MAX_DAY_DOLLARS`, `MAX_OPEN_DOLLARS`,
 `LOSS_STOP_DOLLARS`, `BALANCE_FLOOR`), never widened by anything the venue

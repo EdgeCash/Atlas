@@ -137,7 +137,8 @@ class EspnScoreboard:
             if not home or not away:
                 continue
 
-            status = (comp.get("status", {}).get("type", {}) or {}).get("name", "")
+            state = comp.get("status", {}) or {}
+            status = (state.get("type", {}) or {}).get("name", "")
             base = {
                 "captured_at": captured,
                 "game_id": int(event["id"]),
@@ -151,8 +152,10 @@ class EspnScoreboard:
                 "home_score": _to_float(home.get("score")),
                 "away_score": _to_float(away.get("score")),
                 "status": status,
-                "completed": bool((comp.get("status", {}).get("type", {}) or {})
-                                  .get("completed", False)),
+                "completed": bool((state.get("type", {}) or {}).get("completed", False)),
+                # Where the game stands when the board was read: the period and the clock on it.
+                "period": int(state.get("period") or 0) or None,
+                "clock": state.get("displayClock"),
                 "sport": self.sport,
             }
 

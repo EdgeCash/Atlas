@@ -96,11 +96,12 @@ def test_the_summary_is_the_win_rate_against_the_break_even_rate():
     assert favorites.summary(pd.DataFrame(columns=favorites.COLUMNS)).empty
     sec = favorites.section(record, NOW)
     assert sec["title"] == "Poly Snipe: the favorites rule (11 of 12 positions graded)" and sec["tab"] == "Poly Snipe"
-    assert len(sec["tables"]) == 3 and sec["tables"][0]["title"] == "By phase and threshold"
+    assert len(sec["tables"]) == 4 and sec["tables"][0]["title"] == "By phase and threshold"
     assert sec["tables"][0]["rows"][0][:3] == ["in play", "85%", "11 / 10"] and json.dumps(sec)
-    assert sec["tables"][1]["title"].startswith("By sport, at the 80%")
-    assert sec["tables"][2]["title"] == "Latest positions (12 sides)" and len(sec["tables"][2]["rows"]) == 12
-    assert {r[5] for r in sec["tables"][2]["rows"]} == {"won", "lost", "pending"}
+    assert sec["tables"][1]["title"].startswith("By stage of the game") and sec["tables"][1]["rows"][0][0] == "in play early"
+    assert sec["tables"][2]["title"].startswith("By sport, at the 80%")
+    assert sec["tables"][3]["title"] == "Latest positions (12 sides)" and len(sec["tables"][3]["rows"]) == 12
+    assert {r[5] for r in sec["tables"][3]["rows"]} == {"won", "lost", "pending"}
     text = favorites.text(record)
     assert "| in play | 85% | 11 | 10 | 90.0% | 87.0% | +3.0 ± 9.5 | " in text
     assert favorites.text(pd.DataFrame(columns=favorites.COLUMNS)) == "No favorites positions yet."
@@ -153,3 +154,56 @@ def test_the_rules_positions_reach_the_live_step_at_the_order_threshold(tmp_path
     favorites.refresh(store2, pd.DataFrame([_quote("t9", 0.9, slug="m9")]), NOW + timedelta(minutes=30), passphrase="key")
     assert len(placed) == 1
     assert favorites.as_positions(pd.DataFrame(columns=favorites.COLUMNS)).empty
+
+
+def _games(rows):
+    return pd.DataFrame([{"game_id": "901", "sport": "nba", "status": "STATUS_IN_PROGRESS", **r} for r in rows])
+
+
+def test_each_position_carries_where_the_game_stood_and_whether_it_was_late():
+    q = pd.DataFrame([_quote("t1", 0.86), _quote("t2", 0.90, start="2026-10-25T00:00:00Z", slug="m2")])
+    q.loc[1, "game_id"] = "902"                                                       # tomorrow's game, not on the board
+    record, _ = favorites.take(pd.DataFrame(columns=favorites.COLUMNS), q, NOW, _games([{"period": 4, "clock": "3:21"}]))
+    by = record.set_index(["token_id", "threshold"])
+    late = by.loc[("t1", 0.85)]
+    assert late["period"] == 4.0 and late["clock"] == "3:21" and bool(late["late"])
+    pre = by.loc[("t2", 0.85)]
+    assert pd.isna(pre["period"]) and not bool(pre["late"])                         # pregame: no state, not late
+    early, _ = favorites.take(pd.DataFrame(columns=favorites.COLUMNS), q, NOW, _games([{"period": 2, "clock": "5:00"}]))
+    assert not bool(early.set_index(["token_id", "threshold"]).loc[("t1", 0.85)]["late"])
+    overtime, _ = favorites.take(pd.DataFrame(columns=favorites.COLUMNS), q, NOW, _games([{"period": 5, "clock": "2:00"}]))
+    assert bool(overtime.set_index(["token_id", "threshold"]).loc[("t1", 0.85)]["late"])
+    none, _ = favorites.take(pd.DataFrame(columns=favorites.COLUMNS), q, NOW, None)
+    assert pd.isna(none["period"]).all() and not none["late"].map(bool).any()
+    assert favorites.is_late("nhl", 3, "in_play") and not favorites.is_late("nhl", 2, "in_play")
+    assert not favorites.is_late("nba", 4, "pregame") and not favorites.is_late("mls", 2, "in_play")
+    assert list(favorites.stage(record)) == ["in play late", "in play late", "pregame", "pregame", "pregame"][:len(record)]
+    s = favorites.summary(record, by=("stage", "threshold"))
+    assert set(s["stage"]) == {"in play late", "pregame"}
+    sec = favorites.section(record, NOW)
+    row = next(r for r in sec["tables"][-1]["rows"] if r[2] == "0.86")
+    assert row[3] == "in play, P4 3:21"
+
+
+def test_the_late_switch_confines_the_live_step(tmp_path, monkeypatch):
+    from atlas.live.store import Store
+    from atlas.polymarket import orders
+
+    monkeypatch.setenv("ATLAS_OFFLINE", "1")
+    monkeypatch.setenv(orders.MODE, "dry")
+    monkeypatch.setenv(favorites.ORDER_PHASE, "late")
+    placed = []
+    monkeypatch.setattr(orders, "place", lambda pos, passphrase, now, **kw: placed.append(pos))
+    store = Store.open(tmp_path / "tracking")
+    store.write("games", pd.DataFrame([{"game_id": "901", "sport": "nba", "status": "STATUS_IN_PROGRESS", "period": 2,
+                                        "clock": "5:00", "kickoff": "2026-10-24T00:00:00Z"}]))
+    favorites.refresh(store, pd.DataFrame([_quote("t1", 0.86)]), NOW, passphrase="key")
+    assert not placed                                                                # second quarter: held back
+    store.write("games", pd.DataFrame([{"game_id": "901", "sport": "nba", "status": "STATUS_IN_PROGRESS", "period": 4,
+                                        "clock": "1:00", "kickoff": "2026-10-24T00:00:00Z"}]))
+    favorites.refresh(store, pd.DataFrame([_quote("t2", 0.88, slug="m2")]), NOW + timedelta(minutes=15), passphrase="key")
+    assert len(placed) == 1 and list(placed[0]["position_id"]) == ["fav:t2:0.85"]
+    monkeypatch.delenv(favorites.ORDER_PHASE)
+    favorites.refresh(store, pd.DataFrame([_quote("t3", 0.87, slug="m3", start="2026-10-25T00:00:00Z")]),
+                      NOW + timedelta(minutes=30), passphrase="key")
+    assert len(placed) == 2                                                          # any phase: pregame goes too
