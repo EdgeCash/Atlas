@@ -75,6 +75,44 @@ Every run, heavy or poll (`python -m atlas.polymarket refresh`):
    page, which carries coverage, the anchoring and the distances and no
    position.
 
+## Player props
+
+The NBA events carry player markets too - "Name: Points O/U 24.5", Yes the
+over and No the under, a ladder of lines for each stat - and the same run
+prices them (`atlas/polymarket/props.py`), for points, rebounds, assists
+and threes.
+
+- **Atlas's number** is minutes times a per-minute rate times the game
+  (`atlas/models/nba_props.py`): exponentially weighted minutes and rates
+  for the player, a prior of the position's rate for anyone new, and a
+  game layer fitted each season on home court, the opponent's allowance
+  and the pace, with a negative-binomial spread around the expectation.
+  The heavy refresh writes every rostered player's state into
+  `data/warehouse/nba_props_state.json`; a poll reads it. Walk-forward,
+  Atlas's Brier beats a Poisson on the player's season mean at every stat
+  and line (`reports/nba_props.md`).
+- **The record.** The main line of each player's stat (the one the market
+  prices nearest to even) on a matched game is folded into
+  `tracking/polymarket_props.csv` append-on-change, and graded against the
+  box score into `tracking/prop_record.csv` once the game is final - a
+  player who did not play is a push.
+- **The pricing** is the game markets' rule in probability space: fair is
+  Polymarket's probability pulled toward Atlas's by the share of Atlas's
+  disagreement the prop record has shown to be real, fitted through the
+  market the same way and clipped to [0, 1]. The share starts at zero,
+  because the record starts empty - so at first every prop is a projection
+  beside the market and nothing clears the fee. That is deliberate: the
+  props take positions only once their own graded record says the model's
+  disagreement is worth something.
+- **Positions**, when they come, follow the same rule as the games (the
+  same spread, depth and probability gates, +2% after the fee, quarter
+  Kelly, the same caps) with one position per player's stat and at most
+  ten a day, logged once into `tracking/polymarket_prop_positions/`.
+
+The owner page carries a Props tab - the day's prop positions, the board of
+every priced contract on an upcoming game, and the record by Atlas's
+confidence; the public report carries the coverage only.
+
 ## What the record said on day one
 
 Fitted on the walk-forward record as it stood on 23 October 2026:

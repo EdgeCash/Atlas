@@ -116,18 +116,21 @@ def eligible(p: pd.DataFrame, now: datetime) -> pd.Series:
     return ok.fillna(False)
 
 
-def positions(p: pd.DataFrame, now: datetime) -> pd.DataFrame:
-    """The day's positions under the rule, sized."""
+def positions(p: pd.DataFrame, now: datetime, *, unit: str = "game_id", columns: list[str] | None = None,
+              limit: int = MAX_POSITIONS) -> pd.DataFrame:
+    """The day's positions under the rule, sized: one per ``unit`` (a game; for a prop, a player's stat), at
+    most ``limit``, in ``columns``."""
+    columns = columns or COLUMNS
     if p.empty:
-        return pd.DataFrame(columns=COLUMNS)
+        return pd.DataFrame(columns=columns)
     t = p[eligible(p, now) & (pd.to_numeric(p["ev"], errors="coerce") >= MIN_EV)].copy()
     if t.empty:
-        return pd.DataFrame(columns=COLUMNS)
+        return pd.DataFrame(columns=columns)
     t["day"] = pd.to_datetime(t["kickoff"], utc=True).map(day_of)
     today = day_of(now)
     day = today if (t["day"] == today).any() else t["day"].min()
-    t = t[t["day"] == day].sort_values("ev", ascending=False).drop_duplicates(["game_id"], keep="first")
-    t = t.head(MAX_POSITIONS).copy()
+    t = t[t["day"] == day].sort_values("ev", ascending=False).drop_duplicates([unit], keep="first")
+    t = t.head(limit).copy()
     stake = np.minimum(KELLY_FRACTION * pd.to_numeric(t["kelly"], errors="coerce").fillna(0.0), MAX_STAKE)
     if stake.sum() > DAILY_CAP:
         stake = stake * DAILY_CAP / stake.sum()
@@ -136,13 +139,13 @@ def positions(p: pd.DataFrame, now: datetime) -> pd.DataFrame:
     t["formed_at"] = stamp
     weeks = [iso_week(k) for k in t["kickoff"]]
     t["year"], t["week"] = [y for y, _ in weeks], [w for _, w in weeks]
-    t["position_id"] = [str(uuid.uuid5(NAMESPACE, f"{d}|{g}|{m}|{s}|{float(ln):g}"))
-                        for d, g, m, s, ln in zip(t["day"], t["game_id"], t["market"], t["side"], t["line"], strict=True)]
+    t["position_id"] = [str(uuid.uuid5(NAMESPACE, f"{d}|{u}|{m}|{s}|{float(ln):g}"))
+                        for d, u, m, s, ln in zip(t["day"], t[unit], t["market"], t["side"], t["line"], strict=True)]
     t["kickoff"] = pd.to_datetime(t["kickoff"], utc=True).dt.strftime("%Y-%m-%dT%H:%M:%SZ")
     for c in ("ask", "fee", "cost", "p_market", "p_raw", "p", "ev", "kelly", "spread"):
         t[c] = pd.to_numeric(t[c], errors="coerce").astype(float).round(4)
     t["game_id"] = t["game_id"].astype(str)
-    return t.reindex(columns=COLUMNS).reset_index(drop=True)
+    return t.reindex(columns=columns).reset_index(drop=True)
 
 
 # ---------------------------------------------------------------------------
@@ -150,9 +153,10 @@ def positions(p: pd.DataFrame, now: datetime) -> pd.DataFrame:
 # ---------------------------------------------------------------------------
 
 
-def load(passphrase: str, where: Path | None = None) -> pd.DataFrame:
+def load(passphrase: str, where: Path | None = None, columns: list[str] | None = None) -> pd.DataFrame:
+    columns = columns or COLUMNS
     rows = sealed.load(where or path(), passphrase)
-    return pd.DataFrame(rows, columns=COLUMNS) if rows else pd.DataFrame(columns=COLUMNS)
+    return pd.DataFrame(rows, columns=columns) if rows else pd.DataFrame(columns=columns)
 
 
 def due(record: pd.DataFrame, chosen: pd.DataFrame, now: datetime) -> bool:
@@ -167,25 +171,28 @@ def due(record: pd.DataFrame, chosen: pd.DataFrame, now: datetime) -> bool:
     return not (len(record) and (record["day"].astype(str) == day).any())
 
 
-def log(record: pd.DataFrame, chosen: pd.DataFrame) -> tuple[pd.DataFrame, set]:
+def log(record: pd.DataFrame, chosen: pd.DataFrame, columns: list[str] | None = None) -> tuple[pd.DataFrame, set]:
     """Add the positions not yet logged, at the prices shown; a logged position is never revised."""
+    columns = columns or COLUMNS
     if chosen.empty:
         return record, set()
-    fresh = chosen.reindex(columns=COLUMNS)
+    fresh = chosen.reindex(columns=columns)
     new = fresh[~fresh["position_id"].isin(set(record["position_id"]))] if len(record) else fresh
     if new.empty:
         return record, set()
     weeks = {(int(y), int(w)) for y, w in new[["year", "week"]].drop_duplicates().itertuples(index=False)}
-    parts = [record.reindex(columns=COLUMNS), new] if len(record) else [new]
-    return pd.concat(parts, ignore_index=True).reindex(columns=COLUMNS), weeks
+    parts = [record.reindex(columns=columns), new] if len(record) else [new]
+    return pd.concat(parts, ignore_index=True).reindex(columns=columns), weeks
 
 
-def seal(record: pd.DataFrame, passphrase: str, weeks: set, where: Path | None = None) -> list[Path]:
+def seal(record: pd.DataFrame, passphrase: str, weeks: set, where: Path | None = None,
+         columns: list[str] | None = None) -> list[Path]:
+    columns = columns or COLUMNS
     where = where or path()
     out = []
     for year, week in sorted(weeks):
         part = record[(pd.to_numeric(record["year"]) == year) & (pd.to_numeric(record["week"]) == week)]
-        rows = json.loads(part.reindex(columns=COLUMNS).to_json(orient="records"))
+        rows = json.loads(part.reindex(columns=columns).to_json(orient="records"))
         out.append(sealed.seal(rows, passphrase, sealed.week_file(where, year, week),
                                names=[r.get("label") for r in rows]))
     return out
@@ -253,13 +260,16 @@ def grade(record: pd.DataFrame, finals: pd.DataFrame, quotes: pd.DataFrame, now:
 
 
 def run(priced: pd.DataFrame, finals: pd.DataFrame, quotes: pd.DataFrame, passphrase: str, now: datetime,
-        where: Path | None = None) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """The day's positions chosen, logged if due, and the record graded: (chosen, graded)."""
-    chosen = positions(priced, now)
-    record = load(passphrase, where)
+        where: Path | None = None, *, unit: str = "game_id", columns: list[str] | None = None,
+        grader=None) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """The day's positions chosen, logged if due, and the record graded: (chosen, graded). ``grader`` grades
+    the record (:func:`grade` on the final score by default; a prop's grader reads the box score)."""
+    columns = columns or COLUMNS
+    chosen = positions(priced, now, unit=unit, columns=columns)
+    record = load(passphrase, where, columns)
     if due(record, chosen, now):
-        record, weeks = log(record, chosen)
+        record, weeks = log(record, chosen, columns)
         if weeks:
-            seal(record, passphrase, weeks, where)
+            seal(record, passphrase, weeks, where, columns)
             LOG.info("polymarket: %d positions logged for %s", len(chosen), chosen["day"].iloc[0])
-    return chosen, grade(record, finals, quotes, now)
+    return chosen, (grader or grade)(record, finals, quotes, now)

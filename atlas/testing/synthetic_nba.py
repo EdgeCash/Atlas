@@ -35,8 +35,11 @@ def write_synthetic_nba_raw(raw: Path, seasons: list[int], *, seed: int = 11) ->
     strength = {code: s for (code, _), s in zip(TEAMS, rng.normal(0, 5, len(TEAMS)), strict=True)}
     first, last = min(seasons), max(seasons)
     ids = dict(TEAMS)
+    #: Six players a team: two starters who play a lot, two who play some, two reserves; one sits some nights.
+    roster = {code: [(ids[code] * 100 + j, f"{code} Player {j}", "GFC"[j % 3], 34.0 - 4.5 * j) for j in range(6)]
+              for code, _ in TEAMS}
     for season in seasons:
-        sched, box, odds = [], [], []
+        sched, box, pbox, odds = [], [], [], []
         start = pd.Timestamp(f"{season}-10-22T23:30Z")
         gid = int(f"{season % 100}1000000")
         for week in range(1, WEEKS + 1):
@@ -62,6 +65,26 @@ def write_synthetic_nba_raw(raw: Path, seasons: list[int], *, seed: int = 11) ->
                                   "away_display_name": NAMES[aa], "away_score": as_ if played else None})
                     if played:
                         for team, abbr, pts, side in ((home, ha, hs, "home"), (away, aa, as_, "away")):
+                            opp = away if side == "home" else home
+                            for pid, name, pos, base_min in roster[team]:
+                                dnp = rng.random() < 0.08
+                                mins = 0.0 if dnp else max(4.0, base_min + rng.normal(0, 4))
+                                rate = 0.55 + 0.1 * (strength[team] / 5.0)
+                                pbox.append({"game_id": gid, "season": season + 1, "season_type": 2 if week < WEEKS else 3,
+                                             "game_date": tip.strftime("%Y-%m-%d"), "athlete_id": pid,
+                                             "athlete_display_name": name, "athlete_position_abbreviation": pos,
+                                             "team_id": ids[team], "team_abbreviation": abbr,
+                                             "opponent_team_id": ids[opp], "home_away": side,
+                                             "minutes": round(mins), "points": 0 if dnp else rng.poisson(rate * mins),
+                                             "rebounds": 0 if dnp else rng.poisson(0.2 * mins),
+                                             "assists": 0 if dnp else rng.poisson(0.12 * mins),
+                                             "three_point_field_goals_made": 0 if dnp else rng.poisson(0.05 * mins),
+                                             "steals": 0 if dnp else rng.poisson(0.03 * mins),
+                                             "blocks": 0 if dnp else rng.poisson(0.02 * mins),
+                                             "field_goals_attempted": 0 if dnp else rng.poisson(0.4 * mins),
+                                             "free_throws_attempted": 0 if dnp else rng.poisson(0.1 * mins),
+                                             "turnovers": 0 if dnp else rng.poisson(0.06 * mins),
+                                             "starter": pid % 100 < 2, "did_not_play": dnp, "active": not dnp})
                             box.append({"game_id": gid, "season": season + 1, "team_id": ids[team],
                                         "team_abbreviation": abbr, "team_home_away": side, "team_score": pts,
                                         "opponent_team_id": ids[away if side == "home" else home],
@@ -82,6 +105,7 @@ def write_synthetic_nba_raw(raw: Path, seasons: list[int], *, seed: int = 11) ->
                       "away_score": 175})
         pd.DataFrame(sched).to_parquet(nba.path(raw, "schedule", season), index=False)
         pd.DataFrame(box).to_parquet(nba.path(raw, "team_box", season), index=False)
+        pd.DataFrame(pbox).to_parquet(nba.path(raw, "player_box", season), index=False)
         if odds:
             pd.DataFrame(odds).to_parquet(nba.path(raw, "odds", season), index=False)
     return raw

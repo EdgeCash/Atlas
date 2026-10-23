@@ -15,6 +15,9 @@ names say so. Everything lands under ``data/raw/nba/``:
                   staging drops it;
 * ``team_box``  - each team's box score per game: points, field goals, free
                   throws, rebounds, turnovers;
+* ``player_box`` - each player's box score per game, 2015-16 on: minutes,
+                  points, rebounds, assists, threes, steals, blocks, whether
+                  he started or did not play (the props model's history);
 * ``odds``      - SportsBookReviewsOnline's archive, 2007-08 to 2022-23: the
                   opening and closing spread and total and the closing
                   moneyline each way. A personal-use archive: cached, used for
@@ -42,13 +45,16 @@ from atlas.util import get_logger, http_get, session, write_parquet
 LOG = get_logger(__name__)
 
 HOOPR = "https://raw.githubusercontent.com/sportsdataverse/hoopR-nba-data/main/nba/{kind}/parquet/{name}_{file}.parquet"
-HOOPR_KINDS = {"schedule": ("schedules", "nba_schedule"), "team_box": ("team_box", "team_box")}
+HOOPR_KINDS = {"schedule": ("schedules", "nba_schedule"), "team_box": ("team_box", "team_box"),
+               "player_box": ("player_box", "player_box")}
 SBRO = "https://www.sportsbookreviewsonline.com/scoresoddsarchives/nba-odds-{slug}/"
 #: The archive needs a browser's user agent.
 BROWSER = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"
 
 #: The first season with the odds archive; the model's record starts here.
 FIRST_SEASON = 2007
+#: The first season of player box scores kept: the props model's history (docs/MODEL_PLAN_NBA.md, step 7).
+PROPS_FIRST_SEASON = 2015
 ODDS_SEASONS = range(2007, 2023)
 #: A spread never reaches this; a total never falls below it. How the archive's one column is read.
 SPREAD_CEILING = 60.0
@@ -59,6 +65,10 @@ SCHEDULE_COLUMNS = ["id", "date", "season", "season_type", "type_abbreviation", 
 BOX_COLUMNS = ["game_id", "season", "team_id", "team_abbreviation", "team_home_away", "team_score", "opponent_team_id",
                "field_goals_attempted", "free_throws_attempted", "offensive_rebounds", "total_turnovers", "assists",
                "three_point_field_goals_attempted"]
+PLAYER_COLUMNS = ["game_id", "season", "season_type", "game_date", "athlete_id", "athlete_display_name",
+                  "athlete_position_abbreviation", "team_id", "team_abbreviation", "opponent_team_id", "home_away",
+                  "minutes", "points", "rebounds", "assists", "three_point_field_goals_made", "steals", "blocks",
+                  "field_goals_attempted", "free_throws_attempted", "turnovers", "starter", "did_not_play", "active"]
 
 #: The archive's spellings to ESPN's abbreviation of the day. Seattle and New Jersey are the franchises
 #: that moved (Oklahoma City in 2008, Brooklyn in 2012); the schedule spells them as they were.
@@ -191,6 +201,17 @@ def parse_odds(html: str, season: int) -> pd.DataFrame:
                                       "home_ml_close"])
 
 
+def fetch_player_box(raw: Path, season: int, *, refresh: bool = False, sess=None) -> Path | None:
+    if season < PROPS_FIRST_SEASON:
+        return None
+    dest = path(raw, "player_box", season)
+    if dest.exists() and not refresh:
+        return dest
+    frame = _hoopr("player_box", season, sess or session())
+    keep = [c for c in PLAYER_COLUMNS if c in frame.columns]
+    return write_parquet(frame[keep].copy(), dest)
+
+
 def fetch_odds(raw: Path, season: int, *, refresh: bool = False) -> Path | None:
     if season not in ODDS_SEASONS:
         return None
@@ -229,6 +250,7 @@ def run(raw: Path | None = None, seasons: list[int] | None = None) -> None:
         refresh = season == live
         _safely(f"{season} schedule", fetch_schedule, raw, season, refresh=refresh, sess=sess)
         _safely(f"{season} team box", fetch_team_box, raw, season, refresh=refresh, sess=sess)
+        _safely(f"{season} player box", fetch_player_box, raw, season, refresh=refresh, sess=sess)
         _safely(f"{season} odds", fetch_odds, raw, season)
     LOG.info("nba raw cache: %s", nba_dir(raw))
 

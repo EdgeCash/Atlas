@@ -5,7 +5,7 @@ PYTHON ?= python3
 	site site-full site-serve site-audit site-shots launch-check \
 	ops-heavy ops-poll ops-social ops-health ops-status ops-crontab \
 	ops-backup ops-analytics perf seo ncaaf-benchmarks ncaaf-prior ncaaf-state ncaaf-total nfl-ingest nfl-warehouse nfl-benchmarks nfl-state nfl-total \
-	nhl-ingest nhl-warehouse nhl-xg nhl-benchmarks nhl-model nhl-props nhl-plays nba-ingest nba-warehouse nba-state nba-project
+	nhl-ingest nhl-warehouse nhl-xg nhl-benchmarks nhl-model nhl-props nhl-plays nba-ingest nba-warehouse nba-state nba-project nba-props nba-props-tune
 
 help:
 	@echo "Atlas Phase 1A - research warehouse"
@@ -54,6 +54,8 @@ help:
 	@echo "  make nba-warehouse     build data/warehouse/nba.duckdb"
 	@echo "  make nba-state         tune, walk forward and score the NBA state model; save its hyperparameters"
 	@echo "  make nba-project       project the NBA games ahead, to the terminal"
+	@echo "  make nba-props         walk forward and score the NBA player projections (step 7)"
+	@echo "  make nba-props-tune    tune the player projections' half-lives first, and save them"
 	@echo "  make perf       measure load time and LCP at three viewports"
 	@echo "  make seo        validate canonicals, meta, OpenGraph and sitemap"
 	@echo "  make site-full  warehouse + numbers + market + site, from scratch"
@@ -250,6 +252,12 @@ nba-state:
 
 nba-project:
 	$(PYTHON) -m atlas.models.nba_projection
+
+nba-props:
+	$(PYTHON) -m atlas.models.nba_props
+
+nba-props-tune:
+	$(PYTHON) -m atlas.models.nba_props --tune
 
 # College player box scores from ESPN (budgeted; newest first), for the college models' research tables.
 cfb-players:

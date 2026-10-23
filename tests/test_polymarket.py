@@ -404,6 +404,7 @@ def test_refresh_offline_keeps_the_record_and_seals_the_page_when_the_key_is_set
 
     monkeypatch.setenv("ATLAS_OFFLINE", "1")
     monkeypatch.setenv("ATLAS_TRACKING_DIR", str(tmp_path / "tracking"))
+    monkeypatch.setenv("ATLAS_DATA_DIR", str(tmp_path / "data"))                 # no NBA props snapshot here
     monkeypatch.delenv("ATLAS_COUNTER_URL", raising=False)
     monkeypatch.setattr("atlas.research.dataset.load_research_frame", lambda: pd.DataFrame(
         {"game_id": [401], "actual_margin": [3.0], "actual_total": [41.0]}))
@@ -421,7 +422,8 @@ def test_refresh_offline_keeps_the_record_and_seals_the_page_when_the_key_is_set
     assert owner_page.read(where)["box"] is None and "key" in owner_page.read(where)["reason"]
     monkeypatch.setenv(crypto.SECRET, KEY)
     secs = cli.refresh(now=NOW, store=store)
-    assert [s["tab"] for s in secs] == ["Polymarket", "Polymarket"]             # offline: no quotes this run, no positions
+    assert [s["tab"] for s in secs] == ["Polymarket", "Polymarket", "Props"]    # offline: no quotes this run, no positions
+    assert "snapshot" in secs[2]["notes"][0]                                      # props wait for the heavy refresh
     box = owner_page.read(where)["box"]
     data = json.loads(crypto.decrypt(box, KEY))
     assert [s["title"] for s in data["sections"]][:2] == ["Positions for Sat Oct 24 (0)", "Polymarket board"]

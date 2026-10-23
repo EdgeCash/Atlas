@@ -108,9 +108,11 @@ jobs:
           make nfl-state
           make nfl-total
 
-      - name: Retune the NBA model
+      - name: Retune the NBA models
         if: env.SPORTS == 'all' || env.SPORTS == 'nba'
-        run: make nba-state
+        run: |
+          make nba-state
+          make nba-props-tune
 
       - name: Keep the reports
         if: always()

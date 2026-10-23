@@ -118,7 +118,8 @@ def upcoming(games: pd.DataFrame, now: datetime, projections: pd.DataFrame | Non
     return g.reset_index(drop=True)
 
 
-PAIR_COLUMNS = ["event_id", "game_id", "sport", "kickoff", "season", "week", "home_team", "away_team", "label"]
+PAIR_COLUMNS = ["event_id", "game_id", "sport", "kickoff", "season", "week", "home_team", "away_team", "label",
+                "home_team_id", "away_team_id"]
 
 
 def label(away, home) -> str:
@@ -156,7 +157,9 @@ def match(quotes: pd.DataFrame, games: pd.DataFrame) -> pd.DataFrame:
         rows.append({"event_id": ev.event_id, "game_id": str(best.game_id), "sport": str(ev.sport),
                      "kickoff": best.kickoff, "season": getattr(best, "season", None),
                      "week": getattr(best, "week", None), "home_team": best.home_team, "away_team": best.away_team,
-                     "label": label(best.away_team, best.home_team), "_score": -best_key[0], "_gap": best_key[1]})
+                     "label": label(best.away_team, best.home_team),
+                     "home_team_id": getattr(best, "home_team_id", None), "away_team_id": getattr(best, "away_team_id", None),
+                     "_score": -best_key[0], "_gap": best_key[1]})
     if not rows:
         return pd.DataFrame(columns=PAIR_COLUMNS)
     pairs = pd.DataFrame(rows).sort_values(["_score", "_gap"], ascending=[False, True], kind="stable")
@@ -169,10 +172,11 @@ def attach(quotes: pd.DataFrame, pairs: pd.DataFrame) -> pd.DataFrame:
     """The quotes with their Atlas game, where matched; every quote is kept, matched or not."""
     if quotes.empty:
         return quotes
-    q = quotes.drop(columns=[c for c in ("game_id", "kickoff", "season", "week", "home_team", "away_team", "label")
-                             if c in quotes and c != "game_id"])
+    q = quotes.drop(columns=[c for c in ("kickoff", "season", "week", "home_team", "away_team", "label", "home_team_id",
+                                         "away_team_id") if c in quotes])
     if pairs.empty:
-        return q.assign(kickoff=None, season=None, week=None, home_team=None, away_team=None, label=None)
+        return q.assign(kickoff=None, season=None, week=None, home_team=None, away_team=None, label=None,
+                        home_team_id=None, away_team_id=None)
     p = pairs.drop(columns="sport").rename(columns={"game_id": "_game"})
     out = q.merge(p, on="event_id", how="left")
     out["game_id"] = out["_game"].where(out["_game"].notna(), out["game_id"] if "game_id" in out else None)
