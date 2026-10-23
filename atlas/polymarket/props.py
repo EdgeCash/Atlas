@@ -47,20 +47,25 @@ import numpy as np
 import pandas as pd
 
 from atlas.live.store import SCHEMA
-from atlas.models import nba_props, nhl_props
+from atlas.models import nba_props, nfl_props, nhl_props
 from atlas.polymarket import match, page, positions, pricing, source
 from atlas.util import get_logger, offline
 
 LOG = get_logger(__name__)
 
-SPORTS = ("nba", "nhl")
+SPORTS = ("nba", "nhl", "nfl")
 #: The venue's ``sportsMarketType`` of each prop Atlas projects, by sport.
 PROP_TYPES = {
     "nba": {"basketball_player_points": "points", "basketball_player_rebounds": "rebounds",
             "basketball_player_assists": "assists", "basketball_player_threes": "threes"},
     "nhl": {"hockey_player_points": "points", "hockey_player_goals": "goals", "hockey_player_assists": "assists"},
+    "nfl": {"football_player_receiving_yards": "receiving_yards", "football_player_receptions": "receptions",
+            "football_player_rushing_yards": "rushing_yards", "football_player_passing_yards": "passing_yards",
+            "football_player_touchdowns": "touchdowns", "football_player_passing_touchdowns": "passing_tds"},
 }
-QUESTION = re.compile(r"^Will\s+(?P<player>.+?)\s+record\s+at\s+least\s+(?P<n>\d+(?:\.\d+)?)\s", re.IGNORECASE)
+#: "Will Name record at least N points" (the NBA, the NHL) and "Will Name record N+ receiving yards" (the NFL).
+QUESTION = re.compile(r"^Will\s+(?P<player>.+?)\s+record\s+(?:at\s+least\s+(?P<n>\d+(?:\.\d+)?)\s|"
+                      r"(?P<n2>\d+(?:\.\d+)?)\+\s)", re.IGNORECASE)
 PROP_COLUMNS = SCHEMA["polymarket_props"]
 RECORD_COLUMNS = SCHEMA["prop_record"]
 POSITION_COLUMNS = [*positions.COLUMNS, "player", "stat", "atlas_mean"]
@@ -103,7 +108,7 @@ def prop_quotes(events: list[dict], league: source.League, captured_at) -> pd.Da
             if q is None or len(sides) != 2:
                 continue
             long_, short = (sides[0], sides[1]) if sides[0].get("long", True) else (sides[1], sides[0])
-            n = source._num(q.group("n"))
+            n = source._num(q.group("n") or q.group("n2"))
             if not math.isfinite(n):
                 continue
             line = n - 0.5
@@ -166,6 +171,18 @@ def _nhl_by_team(snap: dict) -> dict[tuple[str, str], pd.Series]:
     return {(str(row.team), key(row.name)): row for row in snap["skaters"].itertuples(index=False)}
 
 
+def _nfl_by_team(snap: dict) -> dict[tuple[str, str], pd.Series]:
+    return {(str(row.team), key(row.player)): row for row in snap["players"].itertuples(index=False)}
+
+
+def _nfl_codes(r) -> tuple[str | None, str | None]:
+    """(away, home) nflverse codes from the Atlas game's ESPN team ids."""
+    from atlas.staging.nfl.games import CODE_BY_ESPN_ID
+
+    home_id, away_id = _team_ids(r)
+    return CODE_BY_ESPN_ID.get(away_id), CODE_BY_ESPN_ID.get(home_id)
+
+
 def _team_ids(r) -> tuple[int | None, int | None]:
     try:
         return int(r.home_team_id), int(r.away_team_id)
@@ -174,11 +191,14 @@ def _team_ids(r) -> tuple[int | None, int | None]:
 
 
 def expectations(q: pd.DataFrame, snaps: dict[str, dict | None], availability: pd.DataFrame | None = None,
-                 codes: dict[str, tuple[str, str]] | None = None) -> pd.DataFrame:
+                 codes: dict[str, tuple[str, str]] | None = None, totals: dict[str, tuple[float, float]] | None = None,
+                 nfl_availability: pd.DataFrame | None = None) -> pd.DataFrame:
     """Each prop with Atlas's expectation of the stat (when the player plays), his status on the injury
     report, and Atlas's probability of the side with his chance of playing in it. The player is found by
     name on the team the venue lists him on: in the NBA by the team's id in the snapshot, in the NHL by
-    the team's code from the game projection (``codes``: game id to (away, home)); nan where he is not."""
+    the team's code from the game projection (``codes``: game id to (away, home)), in the NFL by the
+    team's code from the game's ESPN ids; ``totals`` is each NFL game's (away, home) implied total from
+    Atlas's projection. Nan where he is not found."""
     out = q.copy()
     out["atlas_mean"] = np.nan
     out["p_atlas"] = np.nan
@@ -187,10 +207,14 @@ def expectations(q: pd.DataFrame, snaps: dict[str, dict | None], availability: p
         return out
     nba = snaps.get("nba")
     nhl = snaps.get("nhl")
+    nfl = snaps.get("nfl")
     nba_adj = nba_props.adjust(nba, availability) if nba is not None else None
     nba_players = _nba_by_team(nba_adj) if nba_adj is not None else {}
     nhl_players = _nhl_by_team(nhl) if nhl is not None else {}
+    nfl_adj = nfl_props.adjust(nfl, nfl_availability) if nfl is not None else None
+    nfl_players = _nfl_by_team(nfl_adj) if nfl_adj is not None else {}
     codes = codes or {}
+    totals = totals or {}
     cache: dict[tuple, float] = {}
     means, probs, statuses = [], [], []
     for r in out.itertuples():
@@ -237,6 +261,28 @@ def expectations(q: pd.DataFrame, snaps: dict[str, dict | None], availability: p
                     dispersion, ratio = nhl_props.shape(nhl, str(r.stat))
                     p = nhl_props.prob(mean_, float(r.line), str(r.side), dispersion, ratio)
                 break
+        elif sport == "nfl" and nfl_adj is not None:
+            away_code, home_code = _nfl_codes(r)
+            away_total, home_total = totals.get(str(r.game_id), (None, None))
+            order = [(home_code, away_code, True, home_total), (away_code, home_code, False, away_total)]
+            if which == "away":
+                order.reverse()
+            for team, opp, home, implied in order:
+                if not team or not opp:
+                    continue
+                row = nfl_players.get((str(team), k))
+                if row is None:
+                    continue
+                ck = ("nfl", team, k, opp, str(r.stat))
+                if ck not in cache:
+                    cache[ck] = nfl_props.expect(nfl_adj, row._asdict(), str(team), str(opp), home, implied) \
+                        .get(str(r.stat), float("nan"))
+                mean_ = cache[ck]
+                status = str(row.status or "")
+                if math.isfinite(mean_):
+                    p = nba_props.prob_available(mean_, float(r.line), str(r.side), nfl_props.dispersion(nfl_adj, str(r.stat)),
+                                                 float(row.p_play), settle if math.isfinite(settle) else None)
+                break
         means.append(mean_)
         probs.append(p)
         statuses.append(status)
@@ -248,7 +294,8 @@ def expectations(q: pd.DataFrame, snaps: dict[str, dict | None], availability: p
 # The record, and the share it gives
 # ---------------------------------------------------------------------------
 
-RESULT_COLUMNS = ["sport", "game_id", "player_key", "played", "points", "rebounds", "assists", "threes", "goals"]
+RESULT_COLUMNS = ["sport", "game_id", "player_key", "played", "points", "rebounds", "assists", "threes", "goals",
+                  *nfl_props.STATS]
 
 
 def results_frame(sport: str, games: pd.DataFrame | None, projections: pd.DataFrame | None = None) -> pd.DataFrame:
@@ -263,6 +310,13 @@ def results_frame(sport: str, games: pd.DataFrame | None, projections: pd.DataFr
         r = players_stage.results(games)
         r["player_key"] = r["player"].map(key)
         r = r.drop_duplicates(["game_id", "player_key"], keep="last").assign(sport="nba", goals=np.nan)
+        return r.reindex(columns=RESULT_COLUMNS)
+    if sport == "nfl":
+        from atlas.staging.nfl import players as nfl_stage
+
+        r = nfl_stage.results(games)
+        r["player_key"] = r["player"].map(key)
+        r = r.drop_duplicates(["game_id", "player_key"], keep="last").assign(sport="nfl")
         return r.reindex(columns=RESULT_COLUMNS)
     if projections is None or projections.empty or "nhl_game_id" not in projections:
         return pd.DataFrame(columns=RESULT_COLUMNS)
@@ -534,12 +588,31 @@ def _codes(projections: pd.DataFrame | None) -> dict[str, tuple[str, str]]:
     return {str(g): (str(a), str(h)) for g, a, h in zip(p["game_id"], p["away_team"], p["home_team"], strict=True)}
 
 
+def _totals(projections: pd.DataFrame | None) -> dict[str, tuple[float, float]]:
+    """Each NFL game's (away, home) implied total from the latest Atlas projection of it: the total and the
+    margin (home less away) split."""
+    if projections is None or projections.empty or "sport" not in projections:
+        return {}
+    p = projections[projections["sport"].astype(str) == "nfl"]
+    if p.empty:
+        return {}
+    p = p.sort_values("refreshed_at", kind="stable").drop_duplicates("game_id", keep="last") if "refreshed_at" in p else p
+    out = {}
+    for g, m, t in zip(p["game_id"], pd.to_numeric(p["margin_mean"], errors="coerce"),
+                       pd.to_numeric(p["total_mean"], errors="coerce"), strict=True):
+        if pd.notna(m) and pd.notna(t):
+            out[str(g)] = ((float(t) - float(m)) / 2.0, (float(t) + float(m)) / 2.0)
+    return out
+
+
 def _load_snaps(snaps: dict | None) -> dict[str, dict | None]:
     out = dict(snaps or {})
     if "nba" not in out:
         out["nba"] = nba_props.load_state()
     if "nhl" not in out:
         out["nhl"] = nhl_props.load_state()
+    if "nfl" not in out:
+        out["nfl"] = nfl_props.load_state()
     return out
 
 
@@ -557,13 +630,18 @@ def _load_results(store, results: pd.DataFrame | None) -> pd.DataFrame:
         parts.append(results_frame("nhl", skaters, store.read("nhl_projections")))
     except Exception as error:  # noqa: BLE001
         LOG.info("props: no NHL skater games to grade with (%s)", type(error).__name__)
+    try:
+        weeks, _ = nfl_props.load_tables()
+        parts.append(results_frame("nfl", weeks))
+    except Exception as error:  # noqa: BLE001
+        LOG.info("props: no NFL player weeks to grade with (%s)", type(error).__name__)
     parts = [p for p in parts if len(p)]
     return pd.concat(parts, ignore_index=True) if parts else pd.DataFrame(columns=RESULT_COLUMNS)
 
 
 def refresh(store, events: dict[str, list[dict]], pairs: pd.DataFrame, now: datetime, passphrase: str | None,
             *, snaps: dict | None = None, results: pd.DataFrame | None = None,
-            availability: pd.DataFrame | None = None) -> tuple[list[dict], dict]:
+            availability: pd.DataFrame | None = None, nfl_availability: pd.DataFrame | None = None) -> tuple[list[dict], dict]:
     """The props step of the Polymarket run: the injury report, then read, keep, grade, price, position, for
     every sport with a snapshot. Returns (the owner page's sections, a coverage summary for the public
     report). Never raises."""
@@ -578,7 +656,10 @@ def refresh(store, events: dict[str, list[dict]], pairs: pd.DataFrame, now: date
                      "notes": ["No player snapshot yet: the next heavy refresh writes one."]}], summary
         if availability is None and not offline() and snaps.get("nba") is not None:
             availability = nba_availability.capture(store, now)
+        if nfl_availability is None and not offline() and snaps.get("nfl") is not None:
+            nfl_availability = nba_availability.capture(store, now, sport="nfl")
         codes = _codes(store.read("nhl_projections"))
+        totals = _totals(store.read("projections"))
         parts = []
         for sport in SPORTS:
             if snaps.get(sport) is None:
@@ -592,7 +673,7 @@ def refresh(store, events: dict[str, list[dict]], pairs: pd.DataFrame, now: date
                 q = q.assign(kickoff=None, label=None, home_team_id=None, away_team_id=None)
             parts.append(q)
         q = pd.concat(parts, ignore_index=True) if parts else prop_quotes([], source.LEAGUES["nba"], now)
-        q = expectations(q, snaps, availability, codes)
+        q = expectations(q, snaps, availability, codes, totals, nfl_availability)
         matched = q[q["game_id"].notna()] if len(q) else q
         kept = main_lines(matched) if len(matched) else matched
         record = store.read("polymarket_props")

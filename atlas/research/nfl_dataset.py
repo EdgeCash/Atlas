@@ -36,6 +36,15 @@ def load_players(warehouse: Path | None = None) -> pd.DataFrame:
         con.close()
 
 
+def load_table(name: str, warehouse: Path | None = None) -> pd.DataFrame:
+    """Any table of the NFL warehouse (``player_games``, ``team_weeks``)."""
+    con = duckdb.connect(str(warehouse_path(warehouse)), read_only=True)
+    try:
+        return con.execute(f"SELECT * FROM {name}").df()
+    finally:
+        con.close()
+
+
 def load_nfl_frame(warehouse: Path | None = None) -> pd.DataFrame:
     con = duckdb.connect(str(warehouse_path(warehouse)), read_only=True)
     try:

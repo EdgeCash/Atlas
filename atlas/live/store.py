@@ -118,8 +118,12 @@ SCHEMA: dict[str, list[str]] = {
     # ESPN's NBA injury report, every run (atlas/sources/nba_availability.py): one row per player, report
     # time and status, captured_at the first run that saw it.
     "nba_availability": [
-        "captured_at", "reported_at", "team_id", "team", "player_id", "player", "position", "status", "fantasy",
-        "injury", "return_date", "note",
+        "captured_at", "reported_at", "team_id", "team", "team_abbr", "player_id", "player", "position", "status",
+        "fantasy", "injury", "return_date", "note",
+    ],
+    "nfl_availability": [
+        "captured_at", "reported_at", "team_id", "team", "team_abbr", "player_id", "player", "position", "status",
+        "fantasy", "injury", "return_date", "note",
     ],
     "prop_record": [
         "token_id", "game_id", "kickoff", "sport", "player", "stat", "line", "p_atlas", "p_close", "value", "played",
@@ -192,6 +196,7 @@ KEYS: dict[str, list[str]] = {
     "polymarket_props": ["token_id", "captured_at"],
     "prop_record": ["token_id"],
     "nba_availability": ["player_id", "reported_at", "status"],
+    "nfl_availability": ["player_id", "reported_at", "status"],
     # One row per report and player: a report re-read keeps its first capture's rows current.
     "availability": ["conference", "report_id", "team", "player"],
     "games": ["game_id"],
@@ -215,6 +220,7 @@ SORT: dict[str, list[str]] = {
     "polymarket_props": ["sport", "game_start", "event_id", "player", "stat", "line", "side", "captured_at"],
     "prop_record": ["kickoff", "game_id", "player", "stat"],
     "nba_availability": ["reported_at", "team", "player"],
+    "nfl_availability": ["reported_at", "team", "player"],
     "availability": ["publish_date", "conference", "report_id", "team", "player"],
     "games": ["kickoff", "game_id"],
     "snapshots": ["game_id", "market", "book", "captured_at"],

@@ -97,11 +97,14 @@ Every run, heavy or poll (`python -m atlas.polymarket refresh`):
 
 ## Player props
 
-The NBA and NHL games carry player markets too - "Will Name record at least
-N points", Yes and No, a ladder of N for each stat - and the same run
-prices them (`atlas/polymarket/props.py`): points, rebounds, assists and
-threes in the NBA; points, goals and assists in the NHL. "At least N" is
-kept as the over at N − ½, so a record row reads as a sportsbook's would.
+The NBA, NHL and NFL games carry player markets too - "Will Name record at
+least N points" (the NFL's "Will Name record 50+ receiving yards"), Yes and
+No, a ladder of N for each stat - and the same run prices them
+(`atlas/polymarket/props.py`): points, rebounds, assists and threes in the
+NBA; points, goals and assists in the NHL; receiving yards, receptions,
+rushing yards, passing yards, touchdowns and passing touchdowns in the NFL.
+"At least N" and "N+" are kept as the over at N − ½, so a record row reads
+as a sportsbook's would.
 
 - **Atlas's number** is minutes times a per-minute rate times the game
   (`atlas/models/nba_props.py`): exponentially weighted minutes and rates
@@ -115,18 +118,28 @@ kept as the over at N − ½, so a record row reads as a sportsbook's would.
   rate times the game (`atlas/models/nhl_props.py`, `docs/MODEL_PLAN_NHL.md`
   step 8), its snapshot written the same way into
   `data/warehouse/nhl_props_state.json`; the player is found on the team
-  the venue lists him on, by the team's code from the game projection.
-- **The injury report.** ESPN's NBA injuries feed is read every run
-  (`atlas/sources/nba_availability.py`), kept in `tracking/nba_availability.csv`,
-  and applied before anything is priced: a player listed Out is given a 3%
+  the venue lists him on, by the team's code from the game projection. The
+  NFL's is his share of his team's pass or rush attempts times the team's
+  attempts, times his rate per target, carry or attempt, times the game
+  (`atlas/models/nfl_props.py`, `docs/MODEL_PLAN_NFL.md` step 9) - where
+  the game's size is the total Atlas's own projection implies for his
+  team, so a shootout the model expects is in his number; its snapshot is
+  `data/warehouse/nfl_props_state.json`, and the team is read from the
+  venue's ESPN id.
+- **The injury report.** ESPN's NBA and NFL injuries feeds are read every
+  run (`atlas/sources/nba_availability.py`), kept in
+  `tracking/nba_availability.csv` and `tracking/nfl_availability.csv`, and
+  applied before anything is priced: an NBA player listed Out is given a 3%
   chance of taking the court, a game-time decision 55% and nine tenths of
-  his minutes, and the minutes a team is without go to its rotation. The
-  chance of not playing goes to the market's own price, because the
-  exchange's rules settle a player who does not take the court at the last
-  fair market price (a venue that resolved him as No would send it to the
-  under in full). Those two numbers are stated, not fitted - there is no
-  archive of reports to walk forward on, which is what the capture is
-  building - and the board shows the status beside Atlas's number.
+  his minutes, and the minutes a team is without go to its rotation; an NFL
+  player listed Out 2%, Doubtful 10%, Questionable 75%, and on injured
+  reserve or suspended none. The chance of not playing goes to the market's
+  own price, because the exchange's rules settle a player who does not take
+  the field at the last fair market price (a venue that resolved him as No
+  would send it to the under in full). Those numbers are stated, not fitted
+  - there is no archive of reports to walk forward on, which is what the
+  capture is building - and the board shows the status beside Atlas's
+  number.
 - **The record.** The main line of each player's stat (the one the market
   prices nearest to even) on a matched game is folded into
   `tracking/polymarket_props.csv` append-on-change, and graded against the
