@@ -262,20 +262,30 @@ def quotes(events: list[dict], league: League, captured_at: datetime | str) -> p
     return pd.DataFrame(rows, columns=QUOTE_COLUMNS)
 
 
-def capture(now: datetime, leagues=None, sess=None) -> pd.DataFrame:
-    """Every open game contract of every league, quoted as of ``now``. A league that fails is logged and
-    skipped: the others' quotes stand."""
+def capture_events(leagues=None, sess=None) -> dict[str, list[dict]]:
+    """Every open event of every league, by sport. A league that fails is logged and skipped."""
     sess = sess or session()
-    parts = []
+    out: dict[str, list[dict]] = {}
     for league in (leagues or LEAGUES.values()):
         try:
-            events = fetch_events(league, sess)
-            q = quotes(events, league, now)
-            LOG.info("polymarket: %s, %d events, %d game markets quoted", league.sport,
-                     sum(1 for e in events if is_game(e)), len(q) // 2)
-            parts.append(q)
+            out[league.sport] = fetch_events(league, sess)
         except Exception as error:  # noqa: BLE001 - one league's outage is not the run's
             LOG.warning("polymarket: %s not read (%s)", league.sport, type(error).__name__)
+    return out
+
+
+def capture(now: datetime, leagues=None, sess=None, events: dict[str, list[dict]] | None = None) -> pd.DataFrame:
+    """Every open game contract of every league, quoted as of ``now``, from ``events`` (fetched here when
+    not given). A league that fails is logged and skipped: the others' quotes stand."""
+    events = events if events is not None else capture_events(leagues, sess)
+    parts = []
+    for league in (leagues or LEAGUES.values()):
+        if league.sport not in events:
+            continue
+        q = quotes(events[league.sport], league, now)
+        LOG.info("polymarket: %s, %d events, %d game markets quoted", league.sport,
+                 sum(1 for e in events[league.sport] if is_game(e)), len(q) // 2)
+        parts.append(q)
     parts = [p for p in parts if len(p)]
     return pd.concat(parts, ignore_index=True) if parts else pd.DataFrame(columns=QUOTE_COLUMNS)
 
@@ -350,11 +360,12 @@ def _text_ids(frame: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
-def fold(existing: pd.DataFrame, incoming: pd.DataFrame) -> tuple[pd.DataFrame, int]:
+def fold(existing: pd.DataFrame, incoming: pd.DataFrame, cols: list[str] | None = None) -> tuple[pd.DataFrame, int]:
     """Append each contract's quote only when it differs from the latest stored; a repeat sighting moves
     ``last_seen_at`` (and the depth, the acceptance flag and the matched game) on the stored row and
-    nothing else. Returns (the record, rows appended)."""
-    cols = QUOTE_COLUMNS
+    nothing else. Returns (the record, rows appended). ``cols`` is the table's columns (the game quotes'
+    by default; the props' are `atlas/polymarket/props.py`'s)."""
+    cols = cols or QUOTE_COLUMNS
     history_ = _text_ids(existing.reindex(columns=cols)).reset_index(drop=True) if len(existing) \
         else pd.DataFrame(columns=cols)
     incoming = _text_ids(incoming) if len(incoming) else incoming
@@ -374,7 +385,7 @@ def fold(existing: pd.DataFrame, incoming: pd.DataFrame) -> tuple[pd.DataFrame, 
         held = pending.get(key)
         held_row = held if held is not None else (history_.loc[latest[key]].to_dict() if key in latest else None)
         if held_row is not None and all(_same(held_row.get(c), row.get(c)) for c in QUOTE):
-            for c in SIGHTING:
+            for c in [c for c in SIGHTING if c in cols]:
                 value = row.get(c)
                 if c == "game_id" and (value is None or (isinstance(value, float) and math.isnan(value))):
                     continue

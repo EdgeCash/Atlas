@@ -20,7 +20,7 @@ import pandas as pd
 from atlas.live import probability
 from atlas.live.store import Store
 from atlas.owner import crypto
-from atlas.polymarket import match, page, positions, pricing, report, source
+from atlas.polymarket import match, page, positions, pricing, props, report, source
 from atlas.util import get_logger, offline
 
 LOG = get_logger(__name__)
@@ -37,13 +37,14 @@ def _research() -> pd.DataFrame | None:
         return None
 
 
-def capture(store: Store, now: datetime) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+def capture(store: Store, now: datetime) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, dict, pd.DataFrame]:
     """Read the venue, match the games, fold the quotes into the record. Returns (the matched quotes of
-    this run, the games ahead, the whole record). Offline, this run's quotes are empty and the record is
-    read as it stands."""
+    this run, the games ahead, the whole record, the events read by sport, the matched pairs). Offline,
+    this run's quotes are empty and the record is read as it stands."""
     games, proj, nhl = store.read("games"), store.read("projections"), store.read("nhl_projections")
     up = match.upcoming(games, now, proj, nhl)
-    fresh = source.capture(now) if not offline() else pd.DataFrame(columns=source.QUOTE_COLUMNS)
+    events = source.capture_events() if not offline() else {}
+    fresh = source.capture(now, events=events) if events else pd.DataFrame(columns=source.QUOTE_COLUMNS)
     pairs = match.match(fresh, up)
     attached = match.attach(fresh, pairs)
     record = store.read(TABLE)
@@ -54,7 +55,7 @@ def capture(store: Store, now: datetime) -> tuple[pd.DataFrame, pd.DataFrame, pd
         store.write(TABLE, record)
         LOG.info("polymarket: %d of %d games ahead matched; %d quotes read, %d kept, %d new rows in the record",
                  len(pairs), len(up), len(attached), len(kept), added)
-    return attached, up, record
+    return attached, up, record, events, pairs
 
 
 def price(store: Store, quotes: pd.DataFrame) -> pd.DataFrame:
@@ -73,17 +74,20 @@ def refresh(*, now: datetime | None = None, heavy: bool = False, store: Store | 
     reason = None
     try:
         store = store or Store.open()
-        quotes, up, record = capture(store, now)
+        quotes, up, record, events, pairs = capture(store, now)
         priced = price(store, quotes)
-        report.write(priced, up, store.read("calibration"), now)
         passphrase = os.environ.get(crypto.SECRET, "").strip()
+        # The NBA's player props, read from the same events: kept, graded, priced, and positioned when the
+        # key is set (atlas/polymarket/props.py). Never fails the run.
+        prop_sections, prop_summary = props.refresh(store, events.get("nba", []), pairs, now, passphrase or None)
+        report.write(priced, up, store.read("calibration"), now, props=prop_summary)
         if passphrase:
             from atlas.owner import paper
 
             research = _research()
             finals = paper.results(research, store.read("games"))
             chosen, graded = positions.run(priced, finals, record, passphrase, now)
-            sections = page.sections(priced, chosen, graded, now)
+            sections = [*page.sections(priced, chosen, graded, now), *prop_sections]
         else:
             reason = "The owner key is not configured."
     except Exception as error:  # noqa: BLE001 - the type only: a message could quote a price
@@ -110,7 +114,7 @@ def main() -> None:
     passphrase = os.environ.get(crypto.SECRET, "").strip()
     if not passphrase:
         raise SystemExit(f"{crypto.SECRET} is not set")
-    quotes, up, record = capture(store, now)
+    quotes, up, record, _, _ = capture(store, now)
     priced = price(store, quotes)
     from atlas.owner import paper
 

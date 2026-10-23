@@ -67,8 +67,20 @@ def distance(priced: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows, columns=cols)
 
 
+def _props(summary: dict | None) -> str:
+    if not summary:
+        return "No NBA player props were read this run."
+    return (f"NBA player props (points, rebounds, assists, threes) this run: {summary.get('contracts', 0)} contracts "
+            f"on {summary.get('games', 0)} games, {summary.get('projected', 0)} with an Atlas projection beside "
+            f"them (`atlas/models/nba_props.py`, `reports/nba_props.md`). Each player-stat's main line is kept in "
+            f"`tracking/polymarket_props.csv` with Atlas's probability as it stood, and graded against the box "
+            f"score and the close into `tracking/prop_record.csv`: {summary.get('graded', 0)} graded so far. Most "
+            f"prop books on Polymarket are thin; the record, not the depth, decides what Atlas's disagreement is "
+            f"worth there.")
+
+
 def write(priced: pd.DataFrame, upcoming: pd.DataFrame, calibration: pd.DataFrame | None, now: datetime,
-          where: Path | None = None) -> Path:
+          where: Path | None = None, props: dict | None = None) -> Path:
     shares = pricing.shares_table(calibration)
     shares_rows = shares.assign(**{
         "Sport": shares["sport"].str.upper(), "Market": shares["market"],
@@ -121,6 +133,10 @@ In points of margin or total, per game: Atlas's own projection against
 Polymarket's centre, and the anchored number the contracts are priced from.
 On a market where the share is zero the anchored gap is zero by
 construction.
+
+## Player props
+
+{_props(props)}
 
 ## The record
 

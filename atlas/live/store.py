@@ -110,6 +110,20 @@ SCHEMA: dict[str, list[str]] = {
         "market_id", "condition_id", "token_id", "market", "side", "line", "bid", "ask", "mid", "last", "spread",
         "liquidity", "fee_rate", "accepting", "min_size", "tick",
     ],
+    # Each player prop's main line on Polymarket (atlas/polymarket/props.py), with
+    # Atlas's probability of the over as it stood when the quote was first seen.
+    "polymarket_props": [
+        "captured_at", "last_seen_at", "sport", "game_id", "event_id", "event_slug", "game_start", "away", "home",
+        "player", "stat", "market_id", "condition_id", "token_id", "side", "line", "bid", "ask", "mid", "last",
+        "spread", "liquidity", "fee_rate", "accepting", "p_atlas", "atlas_mean",
+    ],
+    # Every prop graded from the box score: what Atlas said, what Polymarket's
+    # close said, and what happened. The share of Atlas's disagreement the
+    # props pricing takes is fitted on it.
+    "prop_record": [
+        "token_id", "game_id", "kickoff", "sport", "player", "stat", "line", "p_atlas", "p_close", "value", "played",
+        "won", "graded_at",
+    ],
     # The conferences' availability reports, quarterbacks only (atlas/sources/availability.py).
     "availability": [
         "captured_at", "conference", "report_id", "publish_date", "posted_time", "time_zone", "report_type",
@@ -174,6 +188,8 @@ KEYS: dict[str, list[str]] = {
     "other_models": ["sport", "game_id", "model"],
     # One row per observed price per contract, as the snapshots are.
     "polymarket_quotes": ["token_id", "captured_at"],
+    "polymarket_props": ["token_id", "captured_at"],
+    "prop_record": ["token_id"],
     # One row per report and player: a report re-read keeps its first capture's rows current.
     "availability": ["conference", "report_id", "team", "player"],
     "games": ["game_id"],
@@ -194,6 +210,8 @@ SORT: dict[str, list[str]] = {
     "card_grades": ["sport", "season", "week", "game_id"],
     "other_models": ["sport", "kickoff", "game_id", "model"],
     "polymarket_quotes": ["sport", "game_start", "event_id", "market", "line", "side", "captured_at"],
+    "polymarket_props": ["sport", "game_start", "event_id", "player", "stat", "line", "side", "captured_at"],
+    "prop_record": ["kickoff", "game_id", "player", "stat"],
     "availability": ["publish_date", "conference", "report_id", "team", "player"],
     "games": ["kickoff", "game_id"],
     "snapshots": ["game_id", "market", "book", "captured_at"],

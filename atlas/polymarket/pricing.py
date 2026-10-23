@@ -52,6 +52,9 @@ CALIBRATION_MARKET = {
     ("nfl", "moneyline"): "margin", ("nfl", "spread"): "margin", ("nfl", "total"): "total",
     ("nhl", "moneyline"): "moneyline", ("nhl", "spread"): "moneyline", ("nhl", "total"): "moneyline",
     ("nba", "moneyline"): "margin", ("nba", "spread"): "margin", ("nba", "total"): "total",
+    # A player prop's record (atlas/polymarket/props.py) is kept the moneyline way: the stored edge is the
+    # gap, in points of probability, between what Atlas claimed and what the close said.
+    ("nba", "player"): "player",
 }
 #: The share of Atlas's disagreement taken as real when the record cannot say.
 DEFAULT_SHARE: dict = {}

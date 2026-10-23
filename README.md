@@ -41,7 +41,7 @@ sealed records stay under `tracking/owner_*` and are not read.
 |---|---|
 | **Atlas on Polymarket**: how the venue is read, priced and traded on paper | [`docs/POLYMARKET.md`](docs/POLYMARKET.md) |
 | **The public page about the model** (rebuilt every run) | [`reports/polymarket_model.md`](reports/polymarket_model.md) |
-| **The NBA**: plan, model report | [`docs/MODEL_PLAN_NBA.md`](docs/MODEL_PLAN_NBA.md) · [`reports/nba_state.md`](reports/nba_state.md) |
+| **The NBA**: plan, model report, player props report | [`docs/MODEL_PLAN_NBA.md`](docs/MODEL_PLAN_NBA.md) · [`reports/nba_state.md`](reports/nba_state.md) · [`reports/nba_props.md`](reports/nba_props.md) |
 | Point-in-time warehouse (8 tables, parquet + DuckDB) | `data/warehouse/` |
 | Phase 1A research report | [`reports/atlas_research_report_v1.md`](reports/atlas_research_report_v1.md) |
 | Phase 1B opponent-adjustment report | [`reports/opponent_adjustment_report.md`](reports/opponent_adjustment_report.md) |
