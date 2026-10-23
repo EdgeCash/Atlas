@@ -64,8 +64,9 @@ class Window:
         return local.weekday() == (self.weekday + 1) % 7 and local.time() < self.end
 
 
-#: The months the NHL plays, regular season and playoffs.
+#: The months the NHL and the NBA play, regular season and playoffs.
 NHL_MONTHS = frozenset({10, 11, 12, 1, 2, 3, 4, 5, 6})
+NBA_MONTHS = NHL_MONTHS
 
 #: NCAAF Saturday 08:00 ET through midnight; NFL Sunday 07:00 to 20:00 ET;
 #: Monday, Thursday and Friday nights 17:00 to 23:00 ET. The weeknight windows
@@ -85,6 +86,9 @@ GAME_DAYS = (
     Window("NFL Sunday", weekday=6, start=time(7, 0), end=time(20, 0)),
     Window("NHL Tuesday night", weekday=1, start=time(18, 0), end=time(23, 0), months=NHL_MONTHS),
     Window("NHL Wednesday night", weekday=2, start=time(18, 0), end=time(23, 0), months=NHL_MONTHS),
+    # The NBA plays every night of the week; Sunday evening is the one the football and hockey
+    # windows leave uncovered, so each NBA close on a Sunday is taken within fifteen minutes too.
+    Window("NBA Sunday night", weekday=6, start=time(18, 0), end=time(23, 0), months=NBA_MONTHS),
 )
 
 

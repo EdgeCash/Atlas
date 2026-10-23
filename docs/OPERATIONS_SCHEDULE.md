@@ -45,7 +45,7 @@ Rebuilds everything, in this order:
 | — | record `heavy` and `poll` | **stamps are written before the pages** |
 | 6 | `atlas.site.build` | board, 58 cards, 116 team pages, social, status |
 
-(The NFL and NHL ingests and warehouses and the other-models panel run
+(The NFL, NHL and NBA ingests and warehouses and the other-models panel run
 between these; `atlas/ops/__main__.py` is the full list. The Polymarket step
 never fails the run and runs on every poll as well.)
 
@@ -103,6 +103,7 @@ Runtime: about 10 seconds.
 | NFL Sunday | Sunday | 07:00 → 20:00 |
 | NHL Tuesday night | Tuesday, October → June | 18:00 → 23:00 |
 | NHL Wednesday night | Wednesday, October → June | 18:00 → 23:00 |
+| NBA Sunday night | Sunday, October → June | 18:00 → 23:00 |
 
 The weeknight windows cover the NFL's 20:15 kickoffs and the Thursday and
 Friday college slates from 19:00, with two hours of pre-game movement before them and room
@@ -113,8 +114,10 @@ The NHL plays most nights, puck drop 19:00 to 22:30 ET. The football windows
 already cover Monday, Thursday, Friday, Saturday and most of Sunday; the two
 NHL windows add Tuesday and Wednesday nights in the months it plays, so every
 NHL closing line is taken within fifteen minutes of puck drop
-(`docs/MODEL_PLAN_NHL.md`, step 0). Each poll reads three ESPN scoreboards:
-college, the NFL and the NHL.
+(`docs/MODEL_PLAN_NHL.md`, step 0). The NBA plays every night; Sunday
+evening is the one the football and hockey windows leave uncovered, so it
+is added in the NBA's months. Each poll reads four ESPN scoreboards:
+college, the NFL, the NHL and the NBA.
 
 Inside a window the poller runs every 15 minutes. Outside, hourly.
 

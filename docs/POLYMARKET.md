@@ -30,8 +30,8 @@ named:
 
 Every run, heavy or poll (`python -m atlas.polymarket refresh`):
 
-1. **Capture** (`source.py`, `match.py`). Every open event of the NFL, NHL
-   and college football series is read from Gamma; the game markets
+1. **Capture** (`source.py`, `match.py`). Every open event of the NFL, NBA,
+   NHL and college football series is read from Gamma; the game markets
    (moneyline, spreads, totals) are parsed to one row per contract. Each
    event is matched to the Atlas game it is - same sport, starts within
    three hours, each short name contained in ESPN's full name on the same
@@ -85,6 +85,7 @@ Fitted on the walk-forward record as it stood on 23 October 2026:
 | NCAAF | total | the record's hit rate by gap (about 51% at a small gap, 56% at ten points) | 3,683 |
 | NFL | moneyline, spread | 1% | 1,669 |
 | NFL | total | the curve, which the record holds at one half: the NFL total has not beaten the close | 1,692 |
+| NBA | all three | what `reports/nba_state.md`'s record says, from the first heavy run after 23 October 2026 (`docs/MODEL_PLAN_NBA.md`) | 2012-13 to 2022-23 |
 | NHL | all three | 0% | 11,111 |
 
 So, as the research concluded, the only contracts the rule can take are

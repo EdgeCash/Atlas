@@ -34,8 +34,8 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
-#: Integer outcomes the distribution covers, for either market.
-SUPPORT = np.arange(-120, 181)
+#: Integer outcomes the distribution covers, for either market: a basketball total runs past 250.
+SUPPORT = np.arange(-120, 321)
 
 #: The closing line's error as a normal sd, when no fitted shape is stored.
 #: College: the README's closing-line MAEs (12.22 margin, 12.71 total) times
@@ -43,6 +43,8 @@ SUPPORT = np.arange(-120, 181)
 DEFAULT_SIGMA = {
     ("ncaaf", "margin"): 15.3, ("ncaaf", "total"): 15.9,
     ("nfl", "margin"): 13.4, ("nfl", "total"): 13.2,
+    # The NBA: the closing line's error on the odds archive, 2012-13 to 2022-23.
+    ("nba", "margin"): 12.2, ("nba", "total"): 18.0,
 }
 
 #: Where the root-find looks for the closing market's centre, around the line.

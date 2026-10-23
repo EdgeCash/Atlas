@@ -133,6 +133,24 @@ def test_the_record_appends_on_change_and_keeps_the_close():
     assert math.isnan(source.close(record, "nope", pd.Timestamp(START)))
 
 
+def test_the_record_read_back_from_disk_takes_the_next_capture(tmp_path):
+    """Written and read as CSV a game id is a number; the next capture's text id must still fold onto it."""
+    from atlas.live.store import Store
+
+    store = Store.open(tmp_path)
+    first = source.quotes([_event()], NFL, NOW).assign(game_id="401")
+    store.write("polymarket_quotes", first)
+    back = store.read("polymarket_quotes")
+    assert back["game_id"].dtype != object                                        # the point: it came back numeric
+    later = source.quotes([_event()], NFL, datetime(2026, 10, 24, 15, 4, tzinfo=UTC)).assign(game_id="401")
+    record, added = source.fold(back, later)
+    assert added == 0 and (record["game_id"].astype(str) == "401").all()
+    assert record["last_seen_at"].iloc[0] == "2026-10-24T15:04:00+00:00"
+    assert source.close(record, "t1a", pd.Timestamp(START)) == 0.425
+    store.write("polymarket_quotes", record)
+    assert len(store.read("polymarket_quotes")) == 10
+
+
 def test_the_record_keeps_the_moneyline_and_the_line_nearest_even():
     q = source.quotes([_event()], NFL, NOW)
     kept = source.main_lines(q)

@@ -272,6 +272,27 @@ def publish_projections(store: Store) -> int:
         shapes.append(probability.shapes_frame("nfl", nfl.grid, nfl.total.sigma))
     except Exception as error:  # noqa: BLE001 - logged; the college publish stands
         LOG.warning("no NFL projections this refresh: %s", error)
+    # The NBA (docs/MODEL_PLAN_NBA.md): the state carried through the season, the games inside its
+    # horizon projected, and its walk-forward record at the close for the pricing. Never takes the
+    # rest of the publish down with it.
+    try:
+        from atlas.models import nba_projection, nba_state
+        from atlas.research.nba_dataset import load_nba_frame
+
+        nba_frame = load_nba_frame(paths.warehouse)
+        nba = nba_projection.fit(nba_frame, choices=nba_state.load_choices(nba_state.choices_path(paths.root)))
+        nba_rows = nba_projection.project(nba, nba_projection.ahead(nba_frame, datetime.fromisoformat(now), nba.season))
+        nba_rows = _before_kickoff(nba_rows.assign(refreshed_at=now), now) if len(nba_rows) else nba_rows
+        if not nba_rows.empty:
+            store.upsert("projections", nba_rows)
+            published += len(nba_rows)
+            LOG.info("published %d NBA projections, model %s", len(nba_rows), nba.version)
+        calibration.append(nba_projection.history(paths))
+        shapes.append(probability.shapes_frame("nba", nba.grid, nba.total.sigma))
+    except Exception as error:  # noqa: BLE001 - logged; the rest of the publish stands
+        from atlas.util import where
+
+        LOG.warning("no NBA projections this refresh: %s at %s", type(error).__name__, where(error))
     # The NHL (docs/MODEL_PLAN_NHL.md, step 6): the stored model walked to today,
     # each game ahead gridded, and its moneyline record for the grade. Its
     # absence or failure never takes football's publish down with it.

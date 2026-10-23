@@ -65,6 +65,11 @@ def heavy(*, skip_warehouse: bool = False) -> int:
         # The NHL warehouse, with each season's expected goals. Under a minute;
         # never fails the run.
         ("nhl-warehouse", ["atlas.staging.nhl.build"]),
+        # The NBA's raw cache (docs/MODEL_PLAN_NBA.md): hoopR's schedule and
+        # box scores, the season in progress re-fetched; then its warehouse.
+        # Neither fails the run.
+        ("nba-ingest", ["atlas.sources.nba"]),
+        ("nba-warehouse", ["atlas.staging.nba.build"]),
         ("model", ["atlas.live", "refresh", "--no-rebuild"]),
         ("market", ["atlas.live", "run"]),
         # The SEC's and the ACC's availability reports, their quarterbacks,

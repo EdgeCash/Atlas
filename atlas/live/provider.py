@@ -35,6 +35,7 @@ SCOREBOARDS = {
     "ncaaf": SCOREBOARD,
     "nfl": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
     "nhl": "https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard",
+    "nba": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard",
 }
 
 #: ESPN groups: 80 is all FBS. Without it the feed is mostly FCS noise.
@@ -80,18 +81,18 @@ def _line_block(block: dict | None, key: str) -> tuple[float | None, float | Non
 
 
 def _season(event: dict, sport: str) -> int | None:
-    """The season as Atlas numbers it: the year it starts. ESPN numbers a hockey season by the
-    year it ends (2026-27 is 2027); football's start and end in the same year."""
+    """The season as Atlas numbers it: the year it starts. ESPN numbers a hockey or basketball season
+    by the year it ends (2026-27 is 2027); football's start and end in the same year."""
     year = int((event.get("season") or {}).get("year") or 0) or None
-    return year - 1 if year and sport == "nhl" else year
+    return year - 1 if year and sport in ("nhl", "nba") else year
 
 
 @dataclass(frozen=True)
 class EspnScoreboard:
     """ESPN's public scoreboard. No key, no quota, one book.
 
-    The same feed serves college (``sport="ncaaf"``, FBS only), the NFL and
-    the NHL; event ids are ESPN's and unique across the three.
+    The same feed serves college (``sport="ncaaf"``, FBS only), the NFL, the
+    NHL and the NBA; event ids are ESPN's and unique across the four.
     """
 
     name: str = "espn"
@@ -205,12 +206,13 @@ class EspnScoreboard:
 MONEYLINE_SPORTS = frozenset({"nhl"})
 
 PROVIDERS: dict[str, OddsProvider] = {"espn": EspnScoreboard(sport="ncaaf"), "espn-nfl": EspnScoreboard(sport="nfl"),
-                                      "espn-nhl": EspnScoreboard(sport="nhl")}
+                                      "espn-nhl": EspnScoreboard(sport="nhl"), "espn-nba": EspnScoreboard(sport="nba")}
 
-#: What one poll captures: every sport Atlas publishes a card for, and the NHL, whose closing
+#: What one poll captures: every sport Atlas publishes a card for, the NHL, whose closing
 #: lines are kept from opening night so its model has a market to be measured against
-#: (docs/MODEL_PLAN_NHL.md, step 0). Nothing reads an NHL line into a signal or a card yet.
-POLLED: tuple[str, ...] = ("espn", "espn-nfl", "espn-nhl")
+#: (docs/MODEL_PLAN_NHL.md, step 0), and the NBA, whose games and finals the Polymarket
+#: model matches and grades by (ESPN quotes no NBA odds; its close is Polymarket's).
+POLLED: tuple[str, ...] = ("espn", "espn-nfl", "espn-nhl", "espn-nba")
 
 
 def get_provider(name: str = "espn") -> OddsProvider:
