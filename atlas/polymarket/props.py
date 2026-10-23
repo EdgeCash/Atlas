@@ -3,8 +3,8 @@
 Polymarket US lists, on each NBA, NHL and NFL game, a ladder of player
 props as Yes/No markets on "Will Name record at least N stat": points,
 rebounds, assists, threes, steals, blocks and the first three combined in
-the NBA; points, goals and assists in the NHL; yards, receptions and
-touchdowns in the NFL. Every run:
+the NBA; points, goals and assists in the NHL; yards, receptions,
+touchdowns, attempts, completions and carries in the NFL. Every run:
 
 1. **reads** them with the game markets (`prop_quotes`), matches each to
    the Atlas game (`atlas/polymarket/match.py`) and the player to Atlas's
@@ -64,7 +64,9 @@ PROP_TYPES = {
     "nhl": {"hockey_player_points": "points", "hockey_player_goals": "goals", "hockey_player_assists": "assists"},
     "nfl": {"football_player_receiving_yards": "receiving_yards", "football_player_receptions": "receptions",
             "football_player_rushing_yards": "rushing_yards", "football_player_passing_yards": "passing_yards",
-            "football_player_touchdowns": "touchdowns", "football_player_passing_touchdowns": "passing_tds"},
+            "football_player_touchdowns": "touchdowns", "football_player_passing_touchdowns": "passing_tds",
+            "football_player_passing_completions": "completions", "football_player_passing_attempts": "attempts",
+            "football_player_rushing_attempts": "carries", "football_player_scrimmage_yards": "scrimmage_yards"},
 }
 #: "Will Name record at least N points" (the NBA, the NHL) and "Will Name record N+ receiving yards" (the NFL).
 QUESTION = re.compile(r"^Will\s+(?P<player>.+?)\s+record\s+(?:at\s+least\s+(?P<n>\d+(?:\.\d+)?)\s|"
@@ -295,9 +297,10 @@ def expectations(q: pd.DataFrame, snaps: dict[str, dict | None], availability: p
                         .get(str(r.stat), float("nan"))
                 mean_ = cache[ck]
                 status = str(row.status or "")
-                if math.isfinite(mean_):
-                    p = nba_props.prob_available(mean_, float(r.line), str(r.side), nfl_props.dispersion(nfl_adj, str(r.stat)),
-                                                 float(row.p_play), settle if math.isfinite(settle) else None)
+                d = nfl_props.dispersion(nfl_adj, str(r.stat))
+                if math.isfinite(mean_) and math.isfinite(d):
+                    p = nba_props.prob_available(mean_, float(r.line), str(r.side), d, float(row.p_play),
+                                                 settle if math.isfinite(settle) else None)
                 break
         means.append(mean_)
         probs.append(p)
@@ -311,7 +314,7 @@ def expectations(q: pd.DataFrame, snaps: dict[str, dict | None], availability: p
 # ---------------------------------------------------------------------------
 
 RESULT_COLUMNS = ["sport", "game_id", "player_key", "played", "points", "rebounds", "assists", "threes", "steals",
-                  "blocks", "pra", "goals", *nfl_props.STATS]
+                  "blocks", "pra", "goals", *nfl_props.STATS, *nfl_props.COMBINED]
 
 
 def results_frame(sport: str, games: pd.DataFrame | None, projections: pd.DataFrame | None = None) -> pd.DataFrame:

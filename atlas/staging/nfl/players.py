@@ -31,8 +31,10 @@ FIRST_SEASON = 2011
 POSITIONS = {"QB": "QB", "RB": "RB", "FB": "RB", "WR": "WR", "TE": "TE"}
 COUNTS = ["attempts", "completions", "passing_yards", "passing_tds", "carries", "rushing_yards", "rushing_tds",
           "targets", "receptions", "receiving_yards", "receiving_tds"]
-#: The stats a prop is priced on, and what each team's week records as allowed.
-PROP_STATS = ("receiving_yards", "receptions", "rushing_yards", "passing_yards", "touchdowns", "passing_tds")
+#: The stats a prop is priced on, and what each team's week records as allowed: the counts, and the
+#: opportunities themselves (a quarterback's attempts and completions, a back's carries are markets too).
+PROP_STATS = ("receiving_yards", "receptions", "rushing_yards", "passing_yards", "touchdowns", "passing_tds",
+              "completions", "attempts", "carries")
 COLUMNS = ["game_id", "espn_id", "season", "week", "season_type", "kickoff", "player_id", "player", "position",
            "team", "opponent", "home", *COUNTS, "touchdowns", "touches", "played"]
 TEAM_COLUMNS = ["game_id", "espn_id", "season", "week", "season_type", "kickoff", "team", "opponent", "home",
@@ -131,4 +133,5 @@ def results(players: pd.DataFrame) -> pd.DataFrame:
         return pd.DataFrame(columns=cols)
     out = players[players["espn_id"].notna()].copy()
     out["game_id"] = out["espn_id"].astype("int64").astype(str)
-    return out[cols].reset_index(drop=True)
+    out["scrimmage_yards"] = out["rushing_yards"] + out["receiving_yards"]
+    return out[[*cols, "scrimmage_yards"]].reset_index(drop=True)

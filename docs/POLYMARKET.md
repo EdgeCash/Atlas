@@ -103,7 +103,8 @@ No, a ladder of N for each stat - and the same run prices them
 (`atlas/polymarket/props.py`): points, rebounds, assists, threes, steals,
 blocks and the first three combined in the NBA; points, goals and assists
 in the NHL; receiving yards, receptions,
-rushing yards, passing yards, touchdowns and passing touchdowns in the NFL.
+rushing yards, passing yards, touchdowns, passing touchdowns, pass attempts,
+completions, carries and scrimmage yards in the NFL.
 "At least N" and "N+" are kept as the over at N − ½, so a record row reads
 as a sportsbook's would.
 
