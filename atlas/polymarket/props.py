@@ -190,9 +190,18 @@ def _team_ids(r) -> tuple[int | None, int | None]:
         return None, None
 
 
+def _available(p: float, p_play: float, settle: float, side: str) -> float:
+    """``p`` when the player plays; the chance he does not goes to the venue's settlement at the last price,
+    ``settle`` what the over is paid then (the under its complement)."""
+    if p_play >= 1.0 or not math.isfinite(settle):
+        return p
+    return p_play * p + (1.0 - p_play) * (settle if side == "over" else 1.0 - settle)
+
+
 def expectations(q: pd.DataFrame, snaps: dict[str, dict | None], availability: pd.DataFrame | None = None,
                  codes: dict[str, tuple[str, str]] | None = None, totals: dict[str, tuple[float, float]] | None = None,
-                 nfl_availability: pd.DataFrame | None = None) -> pd.DataFrame:
+                 nfl_availability: pd.DataFrame | None = None,
+                 nhl_availability: pd.DataFrame | None = None) -> pd.DataFrame:
     """Each prop with Atlas's expectation of the stat (when the player plays), his status on the injury
     report, and Atlas's probability of the side with his chance of playing in it. The player is found by
     name on the team the venue lists him on: in the NBA by the team's id in the snapshot, in the NHL by
@@ -210,7 +219,8 @@ def expectations(q: pd.DataFrame, snaps: dict[str, dict | None], availability: p
     nfl = snaps.get("nfl")
     nba_adj = nba_props.adjust(nba, availability) if nba is not None else None
     nba_players = _nba_by_team(nba_adj) if nba_adj is not None else {}
-    nhl_players = _nhl_by_team(nhl) if nhl is not None else {}
+    nhl_adj = nhl_props.adjust(nhl, nhl_availability) if nhl is not None else None
+    nhl_players = _nhl_by_team(nhl_adj) if nhl_adj is not None else {}
     nfl_adj = nfl_props.adjust(nfl, nfl_availability) if nfl is not None else None
     nfl_players = _nfl_by_team(nfl_adj) if nfl_adj is not None else {}
     codes = codes or {}
@@ -257,9 +267,11 @@ def expectations(q: pd.DataFrame, snaps: dict[str, dict | None], availability: p
                 if ck not in cache:
                     cache[ck] = nhl_props.expect(nhl, row._asdict(), str(team), str(opp), str(home_code), str(r.stat))
                 mean_ = cache[ck]
+                status = str(row.status or "")
                 if math.isfinite(mean_):
                     dispersion, ratio = nhl_props.shape(nhl, str(r.stat))
-                    p = nhl_props.prob(mean_, float(r.line), str(r.side), dispersion, ratio)
+                    p = _available(nhl_props.prob(mean_, float(r.line), str(r.side), dispersion, ratio),
+                                   float(row.p_play), settle, str(r.side))
                 break
         elif sport == "nfl" and nfl_adj is not None:
             away_code, home_code = _nfl_codes(r)
@@ -641,7 +653,8 @@ def _load_results(store, results: pd.DataFrame | None) -> pd.DataFrame:
 
 def refresh(store, events: dict[str, list[dict]], pairs: pd.DataFrame, now: datetime, passphrase: str | None,
             *, snaps: dict | None = None, results: pd.DataFrame | None = None,
-            availability: pd.DataFrame | None = None, nfl_availability: pd.DataFrame | None = None) -> tuple[list[dict], dict]:
+            availability: pd.DataFrame | None = None, nfl_availability: pd.DataFrame | None = None,
+            nhl_availability: pd.DataFrame | None = None) -> tuple[list[dict], dict]:
     """The props step of the Polymarket run: the injury report, then read, keep, grade, price, position, for
     every sport with a snapshot. Returns (the owner page's sections, a coverage summary for the public
     report). Never raises."""
@@ -658,6 +671,8 @@ def refresh(store, events: dict[str, list[dict]], pairs: pd.DataFrame, now: date
             availability = nba_availability.capture(store, now)
         if nfl_availability is None and not offline() and snaps.get("nfl") is not None:
             nfl_availability = nba_availability.capture(store, now, sport="nfl")
+        if nhl_availability is None and not offline() and snaps.get("nhl") is not None:
+            nhl_availability = nba_availability.capture(store, now, sport="nhl")
         codes = _codes(store.read("nhl_projections"))
         totals = _totals(store.read("projections"))
         parts = []
@@ -673,7 +688,7 @@ def refresh(store, events: dict[str, list[dict]], pairs: pd.DataFrame, now: date
                 q = q.assign(kickoff=None, label=None, home_team_id=None, away_team_id=None)
             parts.append(q)
         q = pd.concat(parts, ignore_index=True) if parts else prop_quotes([], source.LEAGUES["nba"], now)
-        q = expectations(q, snaps, availability, codes, totals, nfl_availability)
+        q = expectations(q, snaps, availability, codes, totals, nfl_availability, nhl_availability)
         matched = q[q["game_id"].notna()] if len(q) else q
         kept = main_lines(matched) if len(matched) else matched
         record = store.read("polymarket_props")

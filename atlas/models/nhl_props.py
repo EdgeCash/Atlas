@@ -591,6 +591,39 @@ def expect(snap: dict, player, team: str, opponent: str, home_team: str, stat: s
     return float(mean(f, stat, layer)[0])
 
 
+#: ESPN's injury statuses, lowercased, to the chance the skater dresses. Stated, not fitted: the capture
+#: (atlas/sources/nba_availability.py, the NHL's feed) is building the archive to fit them on. A skater on
+#: injured reserve is out at least a week; day-to-day in hockey is a coin toss until the warm-up.
+AVAILABILITY = {"out": 0.03, "injured reserve": 0.0, "day-to-day": 0.5}
+
+
+def adjust(snap: dict, availability: pd.DataFrame | None) -> dict:
+    """The snapshot with the injury report applied: each skater gets ``p_play``, his chance of dressing, and
+    ``status`` as listed, found by name on the team the report lists him on (ESPN's abbreviation read to
+    the NHL's code). The snapshot given is not changed."""
+    from atlas.models.nba_props import name_key
+    from atlas.sources.nhl import ESPN_CODES
+
+    skaters = snap["skaters"].copy()
+    skaters["p_play"] = 1.0
+    skaters["status"] = ""
+    if availability is None or len(availability) == 0 or skaters.empty:
+        return {**snap, "skaters": skaters}
+    listed: dict[tuple[str, str], str] = {}
+    for r in availability.itertuples(index=False):
+        status = str(r.status or "").strip().lower()
+        if status in AVAILABILITY:
+            abbr = str(getattr(r, "team_abbr", None) or "").upper()
+            listed[(ESPN_CODES.get(abbr, abbr), name_key(r.player))] = status
+    if not listed:
+        return {**snap, "skaters": skaters}
+    keys = [(str(t), name_key(n)) for t, n in zip(skaters["team"], skaters["name"], strict=True)]
+    status = pd.Series([listed.get(k, "") for k in keys], index=skaters.index)
+    skaters["status"] = status
+    skaters["p_play"] = status.map(lambda x: AVAILABILITY.get(x, 1.0)).astype(float)
+    return {**snap, "skaters": skaters}
+
+
 def shape(snap: dict, stat: str) -> tuple[float, list | None]:
     layer = snap["layer"][stat]
     return float(layer["dispersion"]), layer.get("ratio")

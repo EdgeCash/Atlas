@@ -125,6 +125,10 @@ SCHEMA: dict[str, list[str]] = {
         "captured_at", "reported_at", "team_id", "team", "team_abbr", "player_id", "player", "position", "status",
         "fantasy", "injury", "return_date", "note",
     ],
+    "nhl_availability": [
+        "captured_at", "reported_at", "team_id", "team", "team_abbr", "player_id", "player", "position", "status",
+        "fantasy", "injury", "return_date", "note",
+    ],
     "prop_record": [
         "token_id", "game_id", "kickoff", "sport", "player", "stat", "line", "p_atlas", "p_close", "value", "played",
         "won", "graded_at",
@@ -197,6 +201,7 @@ KEYS: dict[str, list[str]] = {
     "prop_record": ["token_id"],
     "nba_availability": ["player_id", "reported_at", "status"],
     "nfl_availability": ["player_id", "reported_at", "status"],
+    "nhl_availability": ["player_id", "reported_at", "status"],
     # One row per report and player: a report re-read keeps its first capture's rows current.
     "availability": ["conference", "report_id", "team", "player"],
     "games": ["game_id"],
@@ -221,6 +226,7 @@ SORT: dict[str, list[str]] = {
     "prop_record": ["kickoff", "game_id", "player", "stat"],
     "nba_availability": ["reported_at", "team", "player"],
     "nfl_availability": ["reported_at", "team", "player"],
+    "nhl_availability": ["reported_at", "team", "player"],
     "availability": ["publish_date", "conference", "report_id", "team", "player"],
     "games": ["kickoff", "game_id"],
     "snapshots": ["game_id", "market", "book", "captured_at"],

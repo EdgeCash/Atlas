@@ -126,14 +126,16 @@ as a sportsbook's would.
   team, so a shootout the model expects is in his number; its snapshot is
   `data/warehouse/nfl_props_state.json`, and the team is read from the
   venue's ESPN id.
-- **The injury report.** ESPN's NBA and NFL injuries feeds are read every
-  run (`atlas/sources/nba_availability.py`), kept in
-  `tracking/nba_availability.csv` and `tracking/nfl_availability.csv`, and
-  applied before anything is priced: an NBA player listed Out is given a 3%
-  chance of taking the court, a game-time decision 55% and nine tenths of
-  his minutes, and the minutes a team is without go to its rotation; an NFL
-  player listed Out 2%, Doubtful 10%, Questionable 75%, and on injured
-  reserve or suspended none. The chance of not playing goes to the market's
+- **The injury report.** ESPN's NBA, NFL and NHL injuries feeds are read
+  every run (`atlas/sources/nba_availability.py`), kept in
+  `tracking/nba_availability.csv`, `tracking/nfl_availability.csv` and
+  `tracking/nhl_availability.csv`, and applied before anything is priced: an
+  NBA player listed Out is given a 3% chance of taking the court, a game-time
+  decision 55% and nine tenths of his minutes, and the minutes a team is
+  without go to its rotation; an NFL player listed Out 2%, Doubtful 10%,
+  Questionable 75%, and on injured reserve or suspended none; an NHL skater
+  listed Out 3%, Day-To-Day an even chance, and on injured reserve none. The
+  chance of not playing goes to the market's
   own price, because the exchange's rules settle a player who does not take
   the field at the last fair market price (a venue that resolved him as No
   would send it to the under in full). Those numbers are stated, not fitted
