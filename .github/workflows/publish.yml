@@ -11,8 +11,11 @@ name: publish
 #
 # The cadence is decided in Eastern time by atlas/ops/schedule.py rather than
 # by cron, because cron here is UTC and the schedule has to survive both
-# daylight-saving transitions. The callers fire a deliberate superset and this
-# workflow's gate decides.
+# daylight-saving transitions. The poll's caller fires a deliberate superset
+# and this workflow's gate decides - including whether this tick is the day's
+# heavy refresh: the heavy run has no schedule of its own, because GitHub
+# fired its daily cron hours late and then cancelled it behind a poll
+# (schedule.gate). `mode: heavy` still comes from the Actions tab.
 
 on:
   workflow_call:
@@ -124,22 +127,22 @@ jobs:
           sys.path.insert(0, ".")
           from atlas.ops import schedule
 
-          mode = os.environ["MODE"]
+          requested = os.environ["MODE"]
           stamps = Path("data/ops/freshness.json")
-          last = None
+          last = {}
           if stamps.exists():
-              entry = json.loads(stamps.read_text()).get("last_ok", {}).get(mode)
-              if entry:
-                  last = datetime.fromisoformat(entry["at"])
+              for name, entry in json.loads(stamps.read_text()).get("last_ok", {}).items():
+                  last[name] = datetime.fromisoformat(entry["at"])
 
-          if os.environ.get("FORCE") == "true":
-              go, why = True, "forced from the Actions tab"
-          else:
-              go, why = schedule.due(mode, last)
+          # A poll tick runs the heavy refresh when the day's is due: the poll's
+          # ticks fire reliably and the heavy refresh's own cron did not
+          # (schedule.gate).
+          go, mode, why = schedule.gate(requested, last, force=os.environ.get("FORCE") == "true")
           print(f"go={'true' if go else 'false'}")
+          print(f"mode={mode}")
           print(f"why={why}")
           PY
-          echo "gate: $(grep '^why=' "$GITHUB_OUTPUT" | tail -1 | cut -d= -f2-)"
+          echo "gate: $(grep '^mode=' "$GITHUB_OUTPUT" | tail -1 | cut -d= -f2-) - $(grep '^why=' "$GITHUB_OUTPUT" | tail -1 | cut -d= -f2-)"
 
       - if: steps.gate.outputs.go != 'true'
         run: echo "Not this minute - ${{ steps.gate.outputs.why }}. Nothing to do."
@@ -175,7 +178,7 @@ jobs:
       # one there is nothing to render, and publishing a site built from an
       # empty warehouse would replace a good board with an empty one.
       - name: A poll needs a warehouse
-        if: steps.gate.outputs.go == 'true' && inputs.mode == 'poll' && steps.cache.outputs.cache-matched-key == ''
+        if: steps.gate.outputs.go == 'true' && steps.gate.outputs.mode == 'poll' && steps.cache.outputs.cache-matched-key == ''
         run: |
           echo "::error::No warehouse cache. Run the heavy workflow first (Actions -> site heavy -> Run workflow)."
           exit 1
@@ -186,7 +189,7 @@ jobs:
       # skipped entirely when no key is configured, which the warehouse
       # tolerates by dropping the enrichment columns.
       - name: Ingest
-        if: steps.gate.outputs.go == 'true' && inputs.mode == 'heavy'
+        if: steps.gate.outputs.go == 'true' && steps.gate.outputs.mode == 'heavy'
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
         run: python -m atlas.ingest
@@ -201,14 +204,14 @@ jobs:
           # consults the key. The data was always right; the provenance was not.
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
           ATLAS_OWNER_KEY: ${{ secrets.ATLAS_OWNER_KEY }}
-          ATLAS_COUNTER_TOKEN: ${{ inputs.mode == 'heavy' && secrets.ATLAS_COUNTER_TOKEN || '' }}
+          ATLAS_COUNTER_TOKEN: ${{ steps.gate.outputs.mode == 'heavy' && secrets.ATLAS_COUNTER_TOKEN || '' }}
         # --force because the gate above has already decided, in Eastern time
         # and tolerant of a late start. Letting the task re-apply the strict
         # should_poll() minute test here would undo exactly that.
-        run: python -m atlas.ops ${{ inputs.mode }} --force
+        run: python -m atlas.ops ${{ steps.gate.outputs.mode }} --force
 
       - name: Social assets
-        if: steps.gate.outputs.go == 'true' && inputs.mode == 'heavy'
+        if: steps.gate.outputs.go == 'true' && steps.gate.outputs.mode == 'heavy'
         run: make ops-social
 
       - name: Health
@@ -217,7 +220,7 @@ jobs:
         run: make ops-health
 
       - name: Save the warehouse
-        if: steps.gate.outputs.go == 'true' && inputs.mode == 'heavy'
+        if: steps.gate.outputs.go == 'true' && steps.gate.outputs.mode == 'heavy'
         uses: actions/cache/save@v4
         with:
           path: |
@@ -256,7 +259,7 @@ jobs:
       - name: Commit the record
         if: steps.gate.outputs.go == 'true'
         env:
-          MODE: ${{ inputs.mode }}
+          MODE: ${{ steps.gate.outputs.mode }}
           ATLAS_OWNER_KEY: ${{ secrets.ATLAS_OWNER_KEY }}
         run: |
           git config user.name "atlas-tracker"

@@ -1,23 +1,18 @@
 name: site heavy
 
-# 04:00 ET daily: warehouse, model, market, every page, social assets.
+# The heavy refresh from the Actions tab: warehouse, model, market, every
+# page, social assets. Forced by default, so it runs when asked.
 #
-# Cron here is UTC and has no notion of daylight saving, so several candidate
-# hours fire and publish.yml's Eastern-time gate lets exactly one through: the
-# first that is at or after 04:00 ET on a day with no heavy run yet. 08:12 UTC
-# is 04:12 EDT (Mar-Nov); 09:12 UTC is 04:12 EST (Nov-Mar).
-#
-# 10 and 11 UTC are backups. GitHub drops and delays scheduled runs under
-# load - the 04:00 run landed after 09:00 ET on 24 and 25 September 2026 - and
-# a backup that finds the day's heavy run done stops at the gate in seconds.
-#
-# Minute 12, off the hour where GitHub is busiest, and midway between the
-# poll's ticks (4, 19, 34, 49): the two share a concurrency group, and a heavy
-# run left pending behind a poll is cancelled if another poll queues behind it.
+# It has no schedule of its own any more. It had one - "12 8,9,10,11 * * *",
+# several candidate hours for publish.yml's Eastern-time gate to pick the
+# first at or after 04:00 ET from - and GitHub fired it once a day, hours
+# late, into a queue where the next poll cancelled it: no scheduled heavy
+# refresh succeeded between 3 and 23 October 2026, and the site lived on runs
+# started by hand. The poll's schedule (site-poll.yml) fires four times an
+# hour and has never missed by more than minutes, so the first poll tick at or
+# after 04:00 ET is now the day's heavy refresh (schedule.gate).
 
 on:
-  schedule:
-    - cron: "12 8,9,10,11 * * *"
   workflow_dispatch:
     inputs:
       force:
