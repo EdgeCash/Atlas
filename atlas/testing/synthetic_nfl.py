@@ -16,6 +16,17 @@ import pandas as pd
 #: franchise map is exercised.
 CODES = ["KC", "BUF", "LV", "DEN", "PHI", "DAL", "SF", "SEA"]
 WEEKS = 10
+#: Each team's skill players for the player weeks (`stats_player`): (first name, position, share of the
+#: team's pass attempts as targets, share of its rush attempts, yards a catch, yards a carry). A kicker is
+#: written too, for the staging to drop. The first receiver's share leans with the team's index, so the
+#: shares differ between teams and the model has something to recover.
+ROSTER = [("Quinn", "QB", 0.0, 0.08, 0.0, 5.0), ("Rex", "RB", 0.10, 0.62, 7.0, 4.4), ("Ray", "RB", 0.05, 0.30, 6.0, 4.0),
+          ("Wes", "WR", 0.27, 0.0, 13.5, 0.0), ("Will", "WR", 0.18, 0.0, 12.0, 0.0), ("Walt", "WR", 0.12, 0.0, 11.0, 0.0),
+          ("Ted", "TE", 0.15, 0.0, 10.5, 0.0), ("Kip", "K", 0.0, 0.0, 0.0, 0.0)]
+
+
+def player_name(first: str, team: str) -> str:
+    return f"{first} {team.title()}"
 
 
 def _code(code: str, season: int, first: int) -> str:
@@ -30,7 +41,7 @@ def write_synthetic_nfl_raw(raw: Path, seasons: list[int], *, seed: int = 7) -> 
     first = min(seasons)
     sched_rows, depth_rows, injury_rows = [], [], []
     for season in seasons:
-        plays = []
+        plays, weeks = [], []
         for week in range(1, WEEKS + 1):
             order = rng.permutation(len(CODES))
             for k in range(0, len(CODES), 2):
@@ -41,7 +52,8 @@ def write_synthetic_nfl_raw(raw: Path, seasons: list[int], *, seed: int = 7) -> 
                 gid = f"{season}_{week:02d}_{_code(away, season, first)}_{_code(home, season, first)}"
                 played = not (season == max(seasons) and week == WEEKS)   # the last week is still to play
                 sched_rows.append({
-                    "game_id": gid, "season": season, "game_type": "REG" if week <= WEEKS - 1 else "WC",
+                    "game_id": gid, "espn": 401_000_000 + season * 1000 + week * 10 + k // 2,
+                    "season": season, "game_type": "REG" if week <= WEEKS - 1 else "WC",
                     "week": week, "gameday": f"{season}-09-{7 + week:02d}", "gametime": "13:00",
                     "away_team": _code(away, season, first), "home_team": _code(home, season, first),
                     "away_score": as_ if played else None, "home_score": hs if played else None,
@@ -64,6 +76,7 @@ def write_synthetic_nfl_raw(raw: Path, seasons: list[int], *, seed: int = 7) -> 
                                             "gsis_id": f"qb-{team}", "position": "QB", "report_status": "Out"})
                 if not played:
                     continue
+                weeks.extend(_player_weeks(rng, season, week, gid, home, away, sched_rows[-1], first))
                 # ~40 plays a side, EPA around the strength gap; a garbage-time tail in the fourth quarter
                 pid = 0
                 for off, de in ((home, away), (away, home)):
@@ -89,7 +102,45 @@ def write_synthetic_nfl_raw(raw: Path, seasons: list[int], *, seed: int = 7) -> 
                             if p["rush"] == 0:
                                 p["pass"], p["play_type"] = 1, "pass"
         pd.DataFrame(plays).to_parquet(nfl / f"pbp_{season}.parquet", index=False)
+        pd.DataFrame(weeks).to_parquet(nfl / f"stats_player_{season}.parquet", index=False)
         pd.DataFrame([d for d in depth_rows if d["season"] == season]).to_parquet(nfl / f"depth_charts_{season}.parquet", index=False)
         pd.DataFrame([i for i in injury_rows if i["season"] == season]).to_parquet(nfl / f"injuries_{season}.parquet", index=False)
     pd.DataFrame(sched_rows).to_parquet(nfl / "schedules.parquet", index=False)
     return nfl
+
+
+def _player_weeks(rng, season: int, week: int, gid: str, home: str, away: str, game: dict, first: int) -> list[dict]:
+    """Both teams' player box scores for one game, in nflverse's ``stats_player`` columns. A team throws in
+    proportion to the total the line implies for it, so the game layer has a real effect to find."""
+    rows = []
+    for team, opp in ((home, away), (away, home)):
+        code, opp_code = _code(team, season, first), _code(opp, season, first)
+        spread = game["spread_line"] if team == home else -game["spread_line"]
+        tilt = ((game["total_line"] + spread) / 2.0) / (game["total_line"] / 2.0)
+        pass_attempts = int(rng.poisson(33 * tilt))
+        rush_attempts = int(rng.poisson(26))
+        lean = 0.02 * (CODES.index(team) - 3.5)
+        team_rows = []
+        for j, (name, pos, t_share, c_share, ypc_catch, ypc_carry) in enumerate(ROSTER):
+            share = t_share + (lean if j == 3 else -lean / 3 if j in (4, 5, 6) else 0.0)
+            targets = int(rng.binomial(pass_attempts, max(share, 0.0))) if share > 0 else 0
+            receptions = int(rng.binomial(targets, 0.65)) if targets else 0
+            rec_yards = int(max(0, round(receptions * ypc_catch + rng.normal(0, 4 * np.sqrt(receptions + 1)))))
+            rec_tds = int(rng.binomial(receptions, 0.07)) if receptions else 0
+            carries = int(rng.binomial(rush_attempts, c_share)) if c_share > 0 else 0
+            rush_yards = int(max(0, round(carries * ypc_carry + rng.normal(0, 3 * np.sqrt(carries + 1)))))
+            rush_tds = int(rng.binomial(carries, 0.04)) if carries else 0
+            team_rows.append({
+                "player_id": f"00-{team}-{pos}{j}", "player_name": f"{name[0]}.{code}", "player_display_name": player_name(name, team),
+                "position": pos, "position_group": pos, "season": season, "week": week,
+                "season_type": "REG" if week <= WEEKS - 1 else "POST", "game_id": gid, "team": code,
+                "opponent_team": opp_code, "completions": 0, "attempts": 0, "passing_yards": 0, "passing_tds": 0,
+                "carries": carries, "rushing_yards": rush_yards, "rushing_tds": rush_tds, "receptions": receptions,
+                "targets": targets, "receiving_yards": rec_yards, "receiving_tds": rec_tds})
+        qb = team_rows[0]
+        qb["attempts"] = pass_attempts
+        qb["completions"] = sum(r["receptions"] for r in team_rows)
+        qb["passing_yards"] = sum(r["receiving_yards"] for r in team_rows)
+        qb["passing_tds"] = sum(r["receiving_tds"] for r in team_rows)
+        rows.extend(team_rows)
+    return rows

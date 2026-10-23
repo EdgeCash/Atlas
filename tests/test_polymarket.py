@@ -358,6 +358,42 @@ def test_positions_take_one_a_game_under_the_rule_and_the_record_logs_once_at_te
     assert positions.outcome("moneyline", "away", 0.0, float("nan"), float("nan")) == "open"
 
 
+def test_the_exchanges_settlement_grades_a_position_over_the_score(monkeypatch):
+    p = _board()
+    chosen = positions.positions(p, NOW)
+    record = chosen.assign(position_id="x")
+    after = datetime(2026, 10, 25, 2, 0, tzinfo=UTC)
+    finals = pd.DataFrame([{"game_id": "401", "final_margin": -3.0, "final_total": 40.0}])   # the under on the score
+    quotes = source.quotes([_event()], NFL, NOW)
+    monkeypatch.setenv("ATLAS_OFFLINE", "1")
+    assert positions.grade(record, finals, quotes, after)["outcome"].iloc[0] == "loss"
+    monkeypatch.setenv("ATLAS_OFFLINE", "0")
+    asked = []
+
+    def settlement(slug):
+        asked.append(slug)
+        return 1.0
+    monkeypatch.setattr(source, "settlement", settlement)
+    g = positions.grade(record, finals, quotes, after)
+    x = g.iloc[0]
+    assert asked == [x["market_slug"]] and x["outcome"] == "win" and x["profit"] == pytest.approx((1 - x["cost"]) / x["cost"])
+    # A settle at the last fair price pays that price; the short side pays one less it.
+    monkeypatch.setattr(source, "settlement", lambda slug: 0.6)
+    x = positions.grade(record, finals, quotes, after).iloc[0]
+    assert x["outcome"] == "settled" and x["profit"] == pytest.approx(0.6 / x["cost"] - 1) and x["pnl"] == pytest.approx(x["stake"] * x["profit"])
+    short = positions.grade(record.assign(long=False), finals, quotes, after).iloc[0]
+    assert short["profit"] == pytest.approx(0.4 / short["cost"] - 1)
+    # Not started: the settlement is not asked for; not settled: the score decides.
+    asked.clear()
+    monkeypatch.setattr(source, "settlement", settlement)
+    none = pd.DataFrame(columns=["game_id", "final_margin", "final_total"])
+    assert positions.grade(record, none, quotes, NOW)["outcome"].iloc[0] == "open" and asked == []
+    monkeypatch.setattr(source, "settlement", lambda slug: float("nan"))
+    assert positions.grade(record, finals, quotes, after)["outcome"].iloc[0] == "loss"
+    secs = page.record_section(positions.grade(record.assign(long=False), finals, quotes, after).assign(close=0.5, clv=0.0))
+    assert secs is None or secs["tables"][0]["rows"][1][1] == "1"
+
+
 def test_the_rule_declines_wide_thin_tail_or_self_disagreeing_quotes():
     p = _board()
     ok = positions.eligible(p, NOW)

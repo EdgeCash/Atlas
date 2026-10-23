@@ -29,6 +29,21 @@ TEAMS = ["ARI", "ATL", "BAL", "BUF", "CAR", "CHI", "CIN", "CLE", "DAL", "DEN", "
          "JAX", "KC", "LA", "LAC", "LV", "MIA", "MIN", "NE", "NO", "NYG", "NYJ", "PHI", "PIT", "SEA", "SF",
          "TB", "TEN", "WAS"]
 TEAM_ID = {code: i + 1 for i, code in enumerate(TEAMS)}
+#: ESPN's team ids by nflverse code, the ids the live scoreboard's games carry (tracking/games.csv), so a
+#: player's team on the venue can be read back to his code in the warehouse.
+ESPN_TEAM_ID = {"ARI": 22, "ATL": 1, "BAL": 33, "BUF": 2, "CAR": 29, "CHI": 3, "CIN": 4, "CLE": 5, "DAL": 6,
+                "DEN": 7, "DET": 8, "GB": 9, "HOU": 34, "IND": 11, "JAX": 30, "KC": 12, "LA": 14, "LAC": 24,
+                "LV": 13, "MIA": 15, "MIN": 16, "NE": 17, "NO": 18, "NYG": 19, "NYJ": 20, "PHI": 21, "PIT": 23,
+                "SEA": 26, "SF": 25, "TB": 27, "TEN": 10, "WAS": 28}
+CODE_BY_ESPN_ID = {v: k for k, v in ESPN_TEAM_ID.items()}
+#: ESPN's abbreviations where they differ from nflverse's.
+CODE_BY_ESPN_ABBR = {"WSH": "WAS", "LAR": "LA"}
+
+
+def code_of(abbreviation) -> str:
+    """nflverse's code for a team abbreviation as ESPN writes it."""
+    raw = str(abbreviation or "").upper()
+    return CODE_BY_ESPN_ABBR.get(raw, FRANCHISE.get(raw, raw))
 
 GAME_COLUMNS = [
     "game_id", "espn_id", "season", "week", "season_type", "game_type", "kickoff", "home_team", "away_team",

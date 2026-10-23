@@ -85,11 +85,21 @@ def build(seasons: list[int] | None = None, *, include_scheduled: bool = True) -
         write_parquet(players, staging / "players.parquet")
         con.register("players", players)
         con.execute("CREATE OR REPLACE TABLE players AS SELECT * FROM players")
+        # The player weeks and the teams' weeks, for the props (atlas/models/nfl_props.py).
+        from atlas.staging.nfl import players as players_stage
+
+        player_games, team_weeks = players_stage.build(paths.raw, [s for s in seasons if s >= players_stage.FIRST_SEASON])
+        write_parquet(player_games, staging / "player_games.parquet")
+        write_parquet(team_weeks, staging / "team_weeks.parquet")
+        con.register("player_games", player_games)
+        con.execute("CREATE OR REPLACE TABLE player_games AS SELECT * FROM player_games")
+        con.register("team_weeks", team_weeks)
+        con.execute("CREATE OR REPLACE TABLE team_weeks AS SELECT * FROM team_weeks")
     finally:
         con.close()
     manifest = {"generated_at": datetime.now(UTC).isoformat(timespec="seconds"), "seasons": seasons,
                 "games": int(len(frame)), "completed": int(frame["completed"].sum()),
-                "columns": int(frame.shape[1])}
+                "columns": int(frame.shape[1]), "player_games": int(len(player_games))}
     (paths.warehouse / "NFL_MANIFEST.json").write_text(json.dumps(manifest, indent=1) + "\n")
     LOG.info("nfl warehouse -> %s (%d games, %d completed)", db, len(frame), manifest["completed"])
     return frame

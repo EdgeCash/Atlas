@@ -36,6 +36,8 @@ from atlas.util import get_logger, offline
 LOG = get_logger(__name__)
 
 ENDPOINT = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/injuries"
+#: ESPN's injury feeds by sport: the NBA's, and the NFL's for the football props.
+ENDPOINTS = {"nba": ENDPOINT, "nfl": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries"}
 USER_AGENT = "Atlas sports research (github.com/EdgeCash/Atlas; one request a run)"
 COLUMNS = SCHEMA["nba_availability"]
 #: ".../nba/player/_/id/4712863/mouhamed-gueye" -> 4712863
@@ -43,9 +45,9 @@ PLAYER_ID = re.compile(r"/id/(\d+)")
 NOTE_CHARS = 160
 
 
-def fetch(sess: requests.Session | None = None) -> dict:
+def fetch(sess: requests.Session | None = None, sport: str = "nba") -> dict:
     sess = sess or requests.Session()
-    r = sess.get(ENDPOINT, headers={"User-Agent": USER_AGENT}, timeout=30)
+    r = sess.get(ENDPOINTS[sport], headers={"User-Agent": USER_AGENT}, timeout=30)
     r.raise_for_status()
     return r.json()
 
@@ -78,6 +80,7 @@ def parse(payload: dict, captured_at) -> pd.DataFrame:
             rows.append({
                 "captured_at": stamp, "reported_at": entry.get("date"),
                 "team_id": int(team_id) if str(team_id).isdigit() else None, "team": team.get("displayName"),
+                "team_abbr": (athlete.get("team") or {}).get("abbreviation"),
                 "player_id": _player_id(athlete), "player": athlete.get("displayName"),
                 "position": (athlete.get("position") or {}).get("abbreviation"),
                 "status": entry.get("status"), "fantasy": fantasy, "injury": injury or None,
@@ -88,20 +91,22 @@ def parse(payload: dict, captured_at) -> pd.DataFrame:
     return out[out["player"].notna() & out["status"].notna()].reset_index(drop=True)
 
 
-def capture(store=None, now: datetime | None = None, sess: requests.Session | None = None) -> pd.DataFrame:
-    """The current report, folded into the store when one is given. Offline, or on any failure, an
-    empty frame: the run prices as if nobody were listed, and says so in the log."""
+def capture(store=None, now: datetime | None = None, sess: requests.Session | None = None,
+            sport: str = "nba") -> pd.DataFrame:
+    """The current report for ``sport``, folded into the store (``{sport}_availability``) when one is
+    given. Offline, or on any failure, an empty frame: the run prices as if nobody were listed, and says
+    so in the log."""
     now = now or datetime.now(UTC)
     if offline():
         return pd.DataFrame(columns=COLUMNS)
     try:
-        report = parse(fetch(sess), now)
+        report = parse(fetch(sess, sport), now)
     except Exception as error:  # noqa: BLE001 - the type only
-        LOG.warning("nba availability: not captured (%s)", type(error).__name__)
+        LOG.warning("%s availability: not captured (%s)", sport, type(error).__name__)
         return pd.DataFrame(columns=COLUMNS)
     if store is not None and len(report):
-        added = store.append_new_only("nba_availability", report)
-        LOG.info("nba availability: %d listed (%d out), %d new rows in the record", len(report),
+        added = store.append_new_only(f"{sport}_availability", report)
+        LOG.info("%s availability: %d listed (%d out), %d new rows in the record", sport, len(report),
                  int((report["status"].str.lower() == "out").sum()), added)
     return report
 
@@ -110,8 +115,9 @@ def main(argv: list[str] | None = None) -> int:
     from atlas.live.store import Store
 
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    parser.parse_args(argv)
-    report = capture(Store.open())
+    parser.add_argument("--sport", choices=sorted(ENDPOINTS), default="nba")
+    args = parser.parse_args(argv)
+    report = capture(Store.open(), sport=args.sport)
     print(report[["team", "player", "status", "fantasy", "injury", "return_date"]].to_string(index=False))
     return 0
 

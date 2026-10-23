@@ -130,7 +130,7 @@ def test_expectations_find_the_player_on_one_of_the_games_teams(tables):
 
     q = match.attach(props.prop_quotes([_event()], source.LEAGUES["nba"], datetime(2025, 3, 1, 15, 0, tzinfo=UTC)),
                      _pairs())
-    e = props.expectations(q, {"nba": snap, "nhl": None})
+    e = props.expectations(q, {"nba": snap, "nhl": None, "nfl": None})
     by = e.set_index(["player", "stat", "line", "side"])
     assert by.loc[("BOS Player 0", "points", 14.5, "over"), "atlas_mean"] > 10
     assert by.loc[("BOS Player 0", "points", 14.5, "over"), "p_atlas"] \
@@ -154,7 +154,7 @@ def test_the_record_grades_from_the_box_score_and_gives_the_share(tables, tmp_pa
 
     store = Store.open(tmp_path / "tracking")
     q = props.expectations(match.attach(props.prop_quotes([_event()], source.LEAGUES["nba"], now), _pairs()),
-                           {"nba": snap, "nhl": None})
+                           {"nba": snap, "nhl": None, "nfl": None})
     kept = props.main_lines(q[q["game_id"].notna()])
     record, added = source.fold(store.read("polymarket_props"), kept.reindex(columns=props.PROP_COLUMNS),
                                 cols=props.PROP_COLUMNS)
@@ -198,7 +198,7 @@ def test_refresh_reads_grades_prices_and_seals_offline(tables, tmp_path, monkeyp
     store = Store.open(tmp_path / "tracking")
     monkeypatch.setattr(props, "path", lambda: tmp_path / "prop_positions")
     sections, summary = props.refresh(store, {"nba": [_event()]}, _pairs(), now, KEY,
-                                      snaps={"nba": snap, "nhl": None}, results=props.results_frame("nba", p))
+                                      snaps={"nba": snap, "nhl": None, "nfl": None}, results=props.results_frame("nba", p))
     assert summary["contracts"] == 4 and summary["games"] == 1 and summary["projected"] == 3
     assert [s["title"] for s in sections][:2] == ["Prop positions for Sat Mar 1 (0)", "Props board"]
     board = sections[1]["tables"][0]
@@ -206,7 +206,7 @@ def test_refresh_reads_grades_prices_and_seals_offline(tables, tmp_path, monkeyp
     assert json.dumps(sections)
     assert len(store.read("polymarket_props")) == 6 and store.read("prop_record").empty
     # Without a snapshot the step says so and keeps nothing.
-    empty, _ = props.refresh(store, {"nba": [_event()]}, _pairs(), now, KEY, snaps={"nba": None, "nhl": None})
+    empty, _ = props.refresh(store, {"nba": [_event()]}, _pairs(), now, KEY, snaps={"nba": None, "nhl": None, "nfl": None})
     assert "No player snapshot yet" in empty[0]["notes"][0]
 
 
@@ -323,7 +323,7 @@ def test_expectations_carry_the_report_into_the_probabilities_and_the_board(tabl
     monkeypatch.setenv("ATLAS_TRACKING_DIR", str(tmp_path / "tracking"))
     monkeypatch.setattr(props, "path", lambda: tmp_path / "positions")
     store = Store.open(tmp_path / "tracking")
-    secs, summary = props.refresh(store, {"nba": [_event()]}, _pairs(), now, "pass", snaps={"nba": snap, "nhl": None},
+    secs, summary = props.refresh(store, {"nba": [_event()]}, _pairs(), now, "pass", snaps={"nba": snap, "nhl": None, "nfl": None},
                                   results=props.results_frame("nba", p), availability=report)
     assert summary["listed"] == 2 and summary["contracts"] == 4
     kept = store.read("polymarket_props")

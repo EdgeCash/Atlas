@@ -4,7 +4,7 @@ PYTHON ?= python3
 	live-refresh live-run live-report live-check live-reproduce \
 	site site-full site-serve site-audit site-shots launch-check \
 	ops-heavy ops-poll ops-social ops-health ops-status ops-crontab \
-	ops-backup ops-analytics perf seo ncaaf-benchmarks ncaaf-prior ncaaf-state ncaaf-total nfl-ingest nfl-warehouse nfl-benchmarks nfl-state nfl-total \
+	ops-backup ops-analytics perf seo ncaaf-benchmarks ncaaf-prior ncaaf-state ncaaf-total nfl-ingest nfl-warehouse nfl-benchmarks nfl-state nfl-total nfl-props nfl-props-tune \
 	nhl-ingest nhl-warehouse nhl-xg nhl-benchmarks nhl-model nhl-props nhl-plays nba-ingest nba-warehouse nba-state nba-project nba-props nba-props-tune
 
 help:
@@ -42,6 +42,8 @@ help:
 	@echo "  make nfl-warehouse     stage the NFL team-game tables and build data/warehouse/nfl.duckdb"
 	@echo "  make nfl-benchmarks    score the reference models the NFL model must beat"
 	@echo "  make nfl-state         run and score the NFL Kalman state model"
+	@echo "  make nfl-props         walk forward and score the NFL player projections"
+	@echo "  make nfl-props-tune    tune the player projections' half-lives first, and save them"
 	@echo "  make nfl-total         calibrate the NFL total and score the joint score grid"
 	@echo "  make nhl-ingest        fetch and cache the NHL's games, game logs, shots, odds archive and ESPN ids"
 	@echo "  make nhl-warehouse     build data/warehouse/nhl.duckdb and recompute the plan's profile from it"
@@ -304,6 +306,12 @@ nfl-benchmarks:
 # NFL plan, step 3: the state, carried across seasons, walk-forward.
 nfl-state:
 	$(PYTHON) -m atlas.models.nfl_state
+
+nfl-props:
+	$(PYTHON) -m atlas.models.nfl_props
+
+nfl-props-tune:
+	$(PYTHON) -m atlas.models.nfl_props --tune
 
 # NFL plan, step 5: the total and the 80x80 grid on top of the state.
 nfl-total:

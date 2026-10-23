@@ -107,6 +107,7 @@ jobs:
           make nfl-benchmarks
           make nfl-state
           make nfl-total
+          make nfl-props-tune
 
       - name: Retune the NBA models
         if: env.SPORTS == 'all' || env.SPORTS == 'nba'

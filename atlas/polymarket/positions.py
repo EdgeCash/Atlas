@@ -259,10 +259,55 @@ def deepen(p: pd.DataFrame, now: datetime, fetch=None, limit: int = DEPTH_READS)
     return out
 
 
+def _truthy(value) -> bool:
+    return str(value).strip().lower() in ("true", "1", "1.0")
+
+
+def settled(r: pd.DataFrame, now: datetime, fetch=None) -> pd.Series:
+    """What the exchange paid each started position per contract, from its settlement: one or zero, or the
+    last fair price where the market's rules settle so (a player who did not play, a game moved); nan where
+    it has not settled, the network is off, or the record holds no market slug. One read per market."""
+    out = pd.Series(np.nan, index=r.index, dtype=float)
+    if r.empty or offline() or "market_slug" not in r:
+        return out
+    fetch = fetch or source.settlement
+    kick = pd.to_datetime(r["kickoff"], utc=True, errors="coerce")
+    cache: dict[str, float] = {}
+    for i, x in r[kick <= pd.Timestamp(now)].iterrows():
+        slug = str(x.get("market_slug") or "")
+        if not slug or slug in ("nan", "None"):
+            continue
+        if slug not in cache:
+            try:
+                cache[slug] = float(fetch(slug))
+            except Exception as error:  # noqa: BLE001 - a settlement not read is a position graded on the score
+                LOG.info("polymarket: no settlement for a market (%s)", type(error).__name__)
+                cache[slug] = float("nan")
+        px = cache[slug]
+        if math.isfinite(px):
+            out.at[i] = px if _truthy(x.get("long")) else 1.0 - px
+    return out
+
+
+def apply_settlement(r: pd.DataFrame, payout: pd.Series) -> pd.DataFrame:
+    """The outcome and the return from the exchange's settlement where it has one, over the score's: a
+    payout of one is a win, of zero a loss, and anything between (the last fair price) a settle at that
+    price, whose return is the payout less the cost."""
+    has = payout.notna() & payout.between(0.0, 1.0)
+    if not has.any():
+        return r
+    cost = pd.to_numeric(r["cost"], errors="coerce")
+    r.loc[has, "outcome"] = np.select([payout[has] >= 0.999, payout[has] <= 0.001], ["win", "loss"], "settled")
+    r.loc[has, "profit"] = payout[has] / cost[has] - 1.0
+    r.loc[has, "pnl"] = pd.to_numeric(r.loc[has, "stake"], errors="coerce") * r.loc[has, "profit"]
+    return r
+
+
 def grade(record: pd.DataFrame, finals: pd.DataFrame, quotes: pd.DataFrame, now: datetime) -> pd.DataFrame:
     """Each position with its outcome, its return per dollar staked (a winning contract pays one dollar on
-    its cost; a push is refunded), its return on the bankroll, Polymarket's close for the contract and the
-    position's value against it (close less the ask bought at, in probability)."""
+    its cost; a push is refunded), its return on the bankroll, the venue's close for the contract and the
+    position's value against it (close less the ask bought at, in probability). The exchange's own
+    settlement, where it has one, overrides the score (:func:`apply_settlement`)."""
     if record.empty:
         return record.assign(outcome=pd.Series(dtype=str), profit=pd.Series(dtype=float),
                              pnl=pd.Series(dtype=float), close=pd.Series(dtype=float), clv=pd.Series(dtype=float))
@@ -276,6 +321,7 @@ def grade(record: pd.DataFrame, finals: pd.DataFrame, quotes: pd.DataFrame, now:
     r["profit"] = np.select([r["outcome"] == "win", r["outcome"] == "loss"], [(1.0 - cost) / cost, -1.0], 0.0)
     r.loc[r["outcome"] == "open", "profit"] = np.nan
     r["pnl"] = pd.to_numeric(r["stake"], errors="coerce") * r["profit"]
+    r = apply_settlement(r, settled(r, now))
     kick = pd.to_datetime(r["kickoff"], utc=True, errors="coerce")
     started = kick <= pd.Timestamp(now)
     r["close"] = [closing(quotes, tok, k) if s else float("nan")
