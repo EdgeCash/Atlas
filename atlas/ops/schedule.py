@@ -166,6 +166,28 @@ def due(event: str, last: datetime | None, moment: datetime | None = None,
     return True, f"last poll {waited:.0f}m ago, cadence {interval}m{where}"
 
 
+def gate(requested: str, last: dict[str, datetime | None], moment: datetime | None = None,
+         *, force: bool = False) -> tuple[bool, str, str]:
+    """What a scheduled tick should do: ``(go, mode, why)``.
+
+    The hosted scheduler fires the poll's ticks four times an hour and has done
+    so reliably; the heavy refresh's own daily cron it fired hours late, once a
+    day, and then cancelled while the run waited behind a poll - no scheduled
+    heavy refresh succeeded between 3 and 23 October 2026. So the heavy refresh
+    has no schedule of its own: a poll tick runs it when :func:`due` says the
+    day's rebuild has not happened yet, and polls otherwise. A ``heavy``
+    request (the Actions tab) is answered as before.
+    """
+    if force:
+        return True, requested, "forced from the Actions tab"
+    if requested == "poll":
+        go, why = due("heavy", last.get("heavy"), moment)
+        if go:
+            return True, "heavy", f"the heavy refresh is due ({why})"
+    go, why = due(requested, last.get(requested), moment)
+    return go, requested, why
+
+
 #: The crontab Atlas ships. Written in Eastern with an explicit CRON_TZ so the
 #: schedule does not move when the clocks do.
 CRONTAB = """\

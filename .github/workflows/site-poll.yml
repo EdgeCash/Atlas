@@ -1,7 +1,12 @@
 name: site poll
 
-# The market, and nothing else. Hourly most of the time, every fifteen minutes
-# inside the game-day windows in atlas/ops/schedule.py.
+# The market, and nothing else - except that the first tick at or after 04:00
+# ET each day is the heavy refresh (warehouse, model, every page, social),
+# because this schedule fires reliably and site-heavy.yml's own did not: it
+# landed hours late, once a day, and was cancelled while it waited behind a
+# poll. publish.yml's gate decides which this tick is (schedule.gate). Hourly
+# most of the time, every fifteen minutes inside the game-day windows in
+# atlas/ops/schedule.py.
 #
 # These crons are a deliberate superset. Cron is UTC, the product's schedule is
 # Eastern, and the two drift by an hour twice a season - so rather than encode
@@ -58,3 +63,8 @@ jobs:
       # page is sealed by every poll (atlas/polymarket/__main__.py); only
       # ciphertext leaves the runner.
       ATLAS_OWNER_KEY: ${{ secrets.ATLAS_OWNER_KEY }}
+      # For the tick that is the day's heavy refresh: the ingest's CFBD key and
+      # the reader counter the owner page reads. The gate withholds the counter
+      # token from an ordinary poll.
+      CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+      ATLAS_COUNTER_TOKEN: ${{ secrets.ATLAS_COUNTER_TOKEN }}

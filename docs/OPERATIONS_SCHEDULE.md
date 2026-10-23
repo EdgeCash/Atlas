@@ -240,7 +240,9 @@ timestamp a reader can see.** That is the entire point of `last` versus
 | Provider is down | the poll fails, the streak check fires after three |
 
 **Nothing retries automatically.** The next scheduled run is the retry, and it
-is at most fifteen minutes away. A task that retries inside its own window can
+is at most fifteen minutes away - the heavy refresh's included, since it rides
+the poll's ticks: the first at or after 04:00 ET on a day with no successful
+rebuild yet (`schedule.gate`, called from publish.yml's gate). A task that retries inside its own window can
 hammer a provider that is already struggling.
 
 **Two runs that overlap both keep their work.** The two callers share a

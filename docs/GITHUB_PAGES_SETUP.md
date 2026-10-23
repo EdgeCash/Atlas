@@ -15,8 +15,8 @@ Three workflows replace the two that never ran.
 | File | When | What |
 |---|---|---|
 | `publish.yml` | called, never scheduled | the only copy of the build, the Pages deploy and the commit-the-record step |
-| `site-heavy.yml` | 04:00 ET daily | ingest, warehouse, model, market, every page, social assets |
-| `site-poll.yml` | hourly; 15 min on game days | the market and nothing else |
+| `site-heavy.yml` | from the Actions tab only | ingest, warehouse, model, market, every page, social assets |
+| `site-poll.yml` | every 15 minutes; the gate lets through the hourly poll, the 15-minute poll on game days, and the day's heavy refresh at the first tick at or after 04:00 ET | the market, and once a day everything |
 
 `live-poll.yml` and `live-refresh.yml` are gone. They polled the market and
 maintained the reports but **never built the website**, and their schedule
@@ -32,10 +32,15 @@ freshness stamp. A run that is not due stops at the gate in a few seconds,
 before installing anything.
 
 The superset is also what survives GitHub dropping scheduled runs, which it
-does under load and most at the top of the hour. Both crons sit off the hour:
-the poll fires at :04, :19, :34 and :49 every day, and the heavy run at :12
-past 08:00-11:00 UTC, the later hours being backups the gate turns away once
-the day's heavy run has succeeded.
+does under load and most at the top of the hour. The one cron sits off the
+hour: the poll fires at :04, :19, :34 and :49 every day, and the gate makes
+the first tick at or after 04:00 ET the day's heavy refresh
+(`schedule.gate`). The heavy run had a cron of its own, at :12 past
+08:00-11:00 UTC; GitHub fired it once a day, hours late, into the shared
+concurrency group where the next poll cancelled it while it waited, and no
+scheduled heavy refresh succeeded between 3 and 23 October 2026. A schedule
+that fires reliably carrying the rebuild beats a second schedule that does
+not.
 
 ### The gate asks "is it due", not "is it the minute"
 

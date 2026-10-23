@@ -258,6 +258,29 @@ def test_heavy_does_not_run_twice_in_one_day():
     assert "already ran today" in why
 
 
+def test_a_poll_tick_carries_the_heavy_refresh_when_it_is_due():
+    """The heavy refresh has no schedule of its own: the poll's ticks fire reliably, its own did not."""
+    yesterday, today = _et(2026, 10, 22, 4, 5), _et(2026, 10, 23, 4, 5)
+    last = {"heavy": yesterday, "poll": _et(2026, 10, 23, 3, 4)}
+    go, mode, why = schedule.gate("poll", last, _et(2026, 10, 23, 4, 4))
+    assert go and mode == "heavy" and "heavy refresh is due" in why
+    # Before four the rebuild is not due, so the tick is an ordinary poll on the ordinary cadence.
+    go, mode, why = schedule.gate("poll", last, _et(2026, 10, 23, 3, 50))
+    assert not go and mode == "poll" and "cadence" in why
+    go, mode, _ = schedule.gate("poll", last, _et(2026, 10, 23, 3, 34) + timedelta(minutes=31))
+    assert go and mode == "heavy"
+    # Once the day's rebuild has run, the ticks are polls again.
+    go, mode, why = schedule.gate("poll", {"heavy": today, "poll": today}, _et(2026, 10, 23, 5, 4))
+    assert go and mode == "poll" and "cadence" in why
+    assert not schedule.gate("poll", {"heavy": today, "poll": _et(2026, 10, 23, 5, 4)}, _et(2026, 10, 23, 5, 19))[0]
+    # A heavy request from the Actions tab is answered as before, and force answers anything.
+    assert schedule.gate("heavy", {"heavy": today}, _et(2026, 10, 23, 8, 0)) == \
+        (False, "heavy", "heavy already ran today at 04:05 ET")
+    assert schedule.gate("heavy", {}, _et(2026, 10, 23, 8, 0))[:2] == (True, "heavy")
+    assert schedule.gate("poll", {"heavy": today}, _et(2026, 10, 23, 5, 19), force=True) == \
+        (True, "poll", "forced from the Actions tab")
+
+
 def test_due_explains_itself():
     """A scheduler that silently declines to run is the hard one to debug."""
     for event, last in (("poll", _et(2026, 9, 23, 10, 59)), ("heavy", _et(2026, 9, 23, 4, 0))):
