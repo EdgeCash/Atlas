@@ -52,7 +52,11 @@ FIRST_TEST_SEASON = 2012
 TUNING_SEASONS = 3
 WINDOW_SEASONS = 3
 #: A side's points sd of about 11 makes a margin sd of about 13 with the correlation the fit finds.
-GRID = {"q": (0.0, 0.3, 1.0), "phi": (0.4, 0.6, 0.8), "p_season": (5.0, 15.0, 45.0), "sigma": (10.5, 12.0)}
+#: The first walk-forward chose the bottom of the grid for ``p_season`` (5, from 5, 15, 45) and for ``q``
+#: (0, from 0, 0.3, 1) at nearly every season, and the top for ``phi`` (0.8) at most: the grid now reaches
+#: past each of them, and drops the values nothing chose.
+GRID = {"q": (0.0, 0.1, 0.3), "phi": (0.4, 0.6, 0.8, 0.9), "p_season": (1.0, 2.0, 5.0, 15.0),
+        "sigma": (10.5, 12.0)}
 #: Points a side can score: the total's support runs to twice this.
 MAX_POINTS = 200
 ORDER = ("naive", "elo", "state", "market")
