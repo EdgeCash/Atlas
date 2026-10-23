@@ -1,6 +1,6 @@
 # Atlas Operations Manual
 
-*Generated 2026-10-23 17:52 UTC by `python -m atlas.live check`. Atlas research is
+*Generated 2026-10-23 18:52 UTC by `python -m atlas.live check`. Atlas research is
 complete; this document is about keeping the live tracker alive and honest for
 two seasons.*
 
@@ -17,8 +17,8 @@ two seasons.*
 |---|---|
 | Signals recorded | 444 |
 | Grades recorded | 346 |
-| Line snapshots | 4,916 |
-| Tracker runs logged | 546 |
+| Line snapshots | 4,937 |
+| Tracker runs logged | 547 |
 | Blocking data-quality exceptions | 0 |
 | Monitor alerts firing | 2 |
 | Replays clean | 9 of 9 |
@@ -100,22 +100,22 @@ trace(Store.open(), "<signal_id>")   # signal, grade, full line history, run
 
 | Table | Rows | Columns | Primary key |
 |---|---|---|---|
-| runs | 546 | 14 | run_id |
+| runs | 547 | 14 | run_id |
 | numbers | 2,768 | 8 | game_id, market, model_version, refreshed_at |
 | projections | 6,225 | 49 | sport, game_id, model_version |
 | nhl_projections | 136 | 42 | game_id, model_version |
 | calibration | 49,732 | 10 | sport, game_id, market |
 | card_grades | 277 | 17 | sport, game_id |
 | other_models | 737 | 9 | sport, game_id, model |
-| polymarket_quotes | 722 | 26 | token_id, captured_at |
-| polymarket_props | 2,522 | 29 | token_id, captured_at |
-| nba_availability | 85 | 13 | player_id, reported_at, status |
+| polymarket_quotes | 852 | 26 | token_id, captured_at |
+| polymarket_props | 3,198 | 29 | token_id, captured_at |
+| nba_availability | 88 | 13 | player_id, reported_at, status |
 | nfl_availability | 0 | 13 | player_id, reported_at, status |
 | nhl_availability | 0 | 13 | player_id, reported_at, status |
 | prop_record | 0 | 13 | token_id |
 | availability | 1,019 | 13 | conference, report_id, team, player |
 | games | 385 | 15 | game_id |
-| snapshots | 4,916 | 11 | game_id, book, market, captured_at |
+| snapshots | 4,937 | 11 | game_id, book, market, captured_at |
 | signals | 444 | 17 | signal_id |
 | grades | 346 | 14 | signal_id |
 | market_shape | 486 | 5 | sport, market, point |
