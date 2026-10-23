@@ -20,7 +20,17 @@ import pandas as pd
 from atlas.live import probability
 from atlas.live.store import Store
 from atlas.owner import crypto
-from atlas.polymarket import favorites, match, page, positions, pricing, props, report, source
+from atlas.polymarket import (
+    favorites,
+    match,
+    orders,
+    page,
+    positions,
+    pricing,
+    props,
+    report,
+    source,
+)
 from atlas.util import get_logger, offline
 
 LOG = get_logger(__name__)
@@ -90,7 +100,9 @@ def refresh(*, now: datetime | None = None, heavy: bool = False, store: Store | 
             research = _research()
             finals = paper.results(research, store.read("games"))
             chosen, graded = positions.run(priced, finals, record, passphrase, now)
-            sections = [*page.sections(priced, chosen, graded, now), *prop_sections, fav_section]
+            ledger = orders.grade(orders.load(passphrase), passphrase, now) if orders.mode() != "off" else orders.load(passphrase)
+            sections = [*page.sections(priced, chosen, graded, now), *prop_sections, fav_section,
+                        orders.section(ledger, now)]
         else:
             reason = "The owner key is not configured."
     except Exception as error:  # noqa: BLE001 - the type only: a message could quote a price

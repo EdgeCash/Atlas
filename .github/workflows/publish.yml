@@ -51,6 +51,15 @@ on:
         required: false
       POLYMARKET_US_SECRET:
         required: false
+      # The live step (atlas/polymarket/orders.py): off unless POLYMARKET_US_LIVE is
+      # dry or live; orders are sent only when it is live and POLYMARKET_US_ARMED
+      # carries the exact phrase the module states. ATLAS_LIVE_BANKROLL sizes them.
+      POLYMARKET_US_LIVE:
+        required: false
+      POLYMARKET_US_ARMED:
+        required: false
+      ATLAS_LIVE_BANKROLL:
+        required: false
 
 permissions:
   contents: write      # commit tracking/ and the freshness stamp
@@ -214,6 +223,9 @@ jobs:
           ATLAS_COUNTER_TOKEN: ${{ steps.gate.outputs.mode == 'heavy' && secrets.ATLAS_COUNTER_TOKEN || '' }}
           POLYMARKET_US_KEY_ID: ${{ secrets.POLYMARKET_US_KEY_ID }}
           POLYMARKET_US_SECRET: ${{ secrets.POLYMARKET_US_SECRET }}
+          POLYMARKET_US_LIVE: ${{ secrets.POLYMARKET_US_LIVE }}
+          POLYMARKET_US_ARMED: ${{ secrets.POLYMARKET_US_ARMED }}
+          ATLAS_LIVE_BANKROLL: ${{ secrets.ATLAS_LIVE_BANKROLL }}
         # --force because the gate above has already decided, in Eastern time
         # and tolerant of a late start. Letting the task re-apply the strict
         # should_poll() minute test here would undo exactly that.

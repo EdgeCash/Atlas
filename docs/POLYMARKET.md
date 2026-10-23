@@ -211,6 +211,35 @@ against the break-even rate (the mean cost), with a standard error, and the
 profit per dollar staked. Positive and several errors wide, over hundreds
 of positions, before it means anything.
 
+## Going live, armed off
+
+The step that would place real orders exists and ships off
+(`atlas/polymarket/orders.py`). It is the one module that can place an order,
+and it will not until three things hold at once: the repository secret
+`POLYMARKET_US_LIVE` says `live`, the secret `POLYMARKET_US_ARMED` carries
+the exact phrase the module states, and the ledger's loss stop is not in
+force. Without the mode secret the step does nothing; with it set to `dry`
+it walks the whole path - the sizing, the caps, the stop, the venue's own
+preview of the order - and writes what it would have sent to the ledger
+without sending it.
+
+What it orders is what the paper rule chose: as the day's positions are
+logged, each becomes a limit order at the ask it was logged at,
+immediate-or-cancel, for the stake's worth of contracts at the live
+bankroll (`ATLAS_LIVE_BANKROLL`, dollars); never a market order, never a
+resting one. Each is checked against the caps before it goes - $25 an
+order, $100 a day, $250 open across unsettled positions - and against the
+stop: when the orders settled over the trailing three days have lost more
+than $50, nothing is placed until that window clears. The caps are
+constants in the module, overridable by environment for the owner, never
+widened by anything the venue or the market says. Every order, sent or
+not, is a row in a ledger sealed with the owner key beside the positions
+record (`tracking/polymarket_live/`), with the order id, the state, the
+fill and fee, and later the settlement and the profit; the owner page's
+Live tab sums it. To arm it for real: set the mode secret to `live`, the
+arming secret to the phrase, and the bankroll; to stop at once, change the
+mode secret.
+
 ## Paper only
 
 Nothing here buys anything. Before real money, confirm: that each market's
