@@ -11,7 +11,7 @@ import pandas as pd
 import pytest
 
 from atlas.models import nba_props as npr
-from atlas.polymarket import positions, props, source
+from atlas.polymarket import match, positions, props, source
 from atlas.research.nba_dataset import load_table
 from atlas.staging.nba import build as nba_build
 from atlas.testing.synthetic_nba import TEAMS, write_synthetic_nba_raw
@@ -222,15 +222,113 @@ def test_refresh_reads_grades_prices_and_seals_offline(tables, tmp_path, monkeyp
     assert "No NBA player snapshot yet" in empty[0]["notes"][0]
 
 
-def test_grading_positions_pushes_a_player_who_did_not_play():
-    record = pd.DataFrame([{**dict.fromkeys(props.POSITION_COLUMNS), "position_id": "x", "game_id": "901",
-                            "kickoff": "2025-03-02T00:30:00Z", "player": "LAL Player 1", "stat": "rebounds",
-                            "side": "over", "line": 5.5, "token_id": "p5", "ask": 0.5, "cost": 0.5, "stake": 0.01}])
+def test_grading_positions_resolves_a_player_who_did_not_play_as_no_like_the_venue():
+    base = {**dict.fromkeys(props.POSITION_COLUMNS), "game_id": "901", "kickoff": "2025-03-02T00:30:00Z",
+            "player": "LAL Player 1", "stat": "rebounds", "line": 5.5, "ask": 0.5, "cost": 0.5, "stake": 0.01}
+    record = pd.DataFrame([{**base, "position_id": "x", "side": "over", "token_id": "p5"},
+                           {**base, "position_id": "y", "side": "under", "token_id": "p6"}])
     results = pd.DataFrame([{"game_id": "901", "player_key": "lal player 1", "played": False, "points": 0.0,
                              "rebounds": 0.0, "assists": 0.0, "threes": 0.0}])
     g = props.grade_positions(record, results, pd.DataFrame(columns=props.PROP_COLUMNS),
                               datetime(2025, 3, 2, 5, 0, tzinfo=UTC))
-    assert g["outcome"].iloc[0] == "push" and g["pnl"].iloc[0] == 0.0
+    assert list(g["outcome"]) == ["loss", "win"] and g["pnl"].iloc[0] < 0 < g["pnl"].iloc[1]
     played = results.assign(played=True, rebounds=7.0)
-    assert props.grade_positions(record, played, pd.DataFrame(columns=props.PROP_COLUMNS),
-                                 datetime(2025, 3, 2, 5, 0, tzinfo=UTC))["outcome"].iloc[0] == "win"
+    assert list(props.grade_positions(record, played, pd.DataFrame(columns=props.PROP_COLUMNS),
+                                      datetime(2025, 3, 2, 5, 0, tzinfo=UTC))["outcome"]) == ["win", "loss"]
+
+
+def _espn_report(star_id: int) -> dict:
+    """ESPN's injuries feed, shrunk: the Celtics' star out (found by id), a Laker day-to-day (by name)."""
+    return {"timestamp": "2025-03-01T12:00Z", "status": "success", "injuries": [
+        {"id": "2", "displayName": "Boston Celtics", "injuries": [
+            {"id": "-1", "status": "Out", "date": "2025-02-27T19:38Z", "shortComment": "Sprained his ankle.",
+             "athlete": {"displayName": "BOS Player 0", "position": {"abbreviation": "G"},
+                         "links": [{"href": f"https://www.espn.com/nba/player/_/id/{star_id}/bos-player-0"}]},
+             "type": {"description": "out"},
+             "details": {"fantasyStatus": {"abbreviation": "OUT"}, "type": "Ankle", "location": "Leg",
+                         "detail": "Sprain", "side": "Left", "returnDate": "2025-03-10"}}]},
+        {"id": "13", "displayName": "Los Angeles Lakers", "injuries": [
+            {"id": "-2", "status": "Day-To-Day", "date": "2025-03-01T03:39Z", "shortComment": "Questionable.",
+             "athlete": {"displayName": "LAL Player 1", "position": {"abbreviation": "F"}, "links": []},
+             "type": {"description": "day-to-day"},
+             "details": {"fantasyStatus": {"abbreviation": "GTD"}, "type": "Shoulder", "side": "Not Specified",
+                         "returnDate": "2025-03-02"}},
+            {"id": "-3", "status": "Out", "date": "2025-03-01T03:40Z", "athlete": {"displayName": "Nobody Here"},
+             "details": {}}]},
+    ]}
+
+
+def test_the_injury_report_is_parsed_and_applied_to_the_snapshot(tables):
+    from atlas.sources import nba_availability as avail
+
+    p, tg = tables
+    snap = npr.snapshot(p, tg, datetime(2025, 3, 1, tzinfo=UTC), npr.Spec())
+    star_id = int(snap["players"].set_index("player").loc["BOS Player 0", "player_id"])
+    report = avail.parse(_espn_report(star_id), datetime(2025, 3, 1, 15, 0, tzinfo=UTC))
+    assert list(report.columns) == avail.COLUMNS and len(report) == 3
+    r = report.set_index("player")
+    assert r.loc["BOS Player 0", "player_id"] == star_id and r.loc["BOS Player 0", "injury"] == "Left Ankle Sprain"
+    assert r.loc["BOS Player 0", "return_date"] == "2025-03-10" and r.loc["BOS Player 0", "fantasy"] == "OUT"
+    assert pd.isna(r.loc["LAL Player 1", "player_id"]) and r.loc["LAL Player 1", "injury"] == "Shoulder"
+    assert r["captured_at"].iloc[0] == "2025-03-01T15:00:00+00:00"
+
+    before = snap["players"].set_index("player")
+    after = npr.adjust(snap, report)["players"].set_index("player")
+    assert snap["players"].columns.tolist() == npr.PLAYER_STATE                           # the given one is untouched
+    assert after.loc["BOS Player 0", "p_play"] == 0.03 and after.loc["BOS Player 0", "status"] == "out"
+    assert after.loc["BOS Player 0", "min_hat"] == before.loc["BOS Player 0", "min_hat"]  # when he plays, he plays
+    assert after.loc["LAL Player 1", "p_play"] == 0.55 and after.loc["LAL Player 1", "status"] == "day-to-day"
+    assert after.loc["LAL Player 1", "min_hat"] == pytest.approx(0.9 * before.loc["LAL Player 1", "min_hat"])
+    bos = after[after["team_id"] == before.loc["BOS Player 0", "team_id"]]
+    others = bos.index.drop("BOS Player 0")
+    assert (bos.loc[others, "min_hat"] >= before.loc[others, "min_hat"]).all()           # his minutes go to them
+    assert (bos.loc[others, "min_hat"] <= npr.MAX_MINUTES).all() and (bos.loc[others, "p_play"] == 1.0).all()
+    assert (bos.loc[others, "min_hat"] - before.loc[others, "min_hat"]).sum() == \
+        pytest.approx(0.97 * before.loc["BOS Player 0", "min_hat"], rel=1e-6) or \
+        (bos.loc[others, "min_hat"] == npr.MAX_MINUTES).any()
+    # Unlisted, the snapshot is itself.
+    same = npr.adjust(snap, None)["players"]
+    assert (same["p_play"] == 1.0).all() and (same["status"] == "").all() and \
+        same["min_hat"].tolist() == snap["players"]["min_hat"].tolist()
+    # The venue resolves a player who does not play as No: the chance goes to the under.
+    d = npr.dispersion(snap, "points")
+    assert npr.prob_available(20.0, 14.5, "over", d, 0.03) == pytest.approx(0.03 * npr.prob(20.0, 14.5, "over", d))
+    assert npr.prob_available(20.0, 14.5, "under", d, 0.03) + npr.prob_available(20.0, 14.5, "over", d, 0.03) \
+        == pytest.approx(1.0)
+    assert npr.prob_available(20.0, 14.5, "over", d, 1.0) == npr.prob(20.0, 14.5, "over", d)
+
+
+def test_expectations_carry_the_report_into_the_probabilities_and_the_board(tables, tmp_path, monkeypatch):
+    from atlas.live.store import Store
+    from atlas.sources import nba_availability as avail
+
+    p, tg = tables
+    snap = npr.snapshot(p, tg, datetime(2025, 3, 1, tzinfo=UTC), npr.Spec())
+    star_id = int(snap["players"].set_index("player").loc["BOS Player 0", "player_id"])
+    now = datetime(2025, 3, 1, 15, 0, tzinfo=UTC)
+    report = avail.parse(_espn_report(star_id), now)
+    q = match.attach(props.prop_quotes([_event()], source.LEAGUES["nba"], now), _pairs())
+    plain = props.expectations(q, snap).set_index(["player", "stat", "line", "side"])
+    e = props.expectations(q, snap, report).set_index(["player", "stat", "line", "side"])
+    star = ("BOS Player 0", "points", 14.5)
+    assert e.loc[(*star, "over"), "p_atlas"] < 0.05 < 0.95 < e.loc[(*star, "under"), "p_atlas"]
+    assert e.loc[(*star, "over"), "atlas_mean"] == plain.loc[(*star, "over"), "atlas_mean"]   # when he plays
+    assert e.loc[(*star, "over"), "status"] == "out" and plain.loc[(*star, "over"), "status"] == ""
+    laker = ("LAL Player 1", "rebounds", 5.5)
+    assert e.loc[(*laker, "over"), "p_atlas"] < plain.loc[(*laker, "over"), "p_atlas"]
+    assert e.loc[(*laker, "over"), "status"] == "day-to-day"
+    row = next(x for x in props.price(e.reset_index(), None).itertuples() if x.player == "BOS Player 0" and x.side == "over")
+    assert props._atlas(row).endswith(" · out")
+
+    # The run captures the report itself unless one is given or it is offline; here it is given.
+    monkeypatch.setenv("ATLAS_OFFLINE", "1")
+    monkeypatch.setenv("ATLAS_TRACKING_DIR", str(tmp_path / "tracking"))
+    monkeypatch.setattr(props, "path", lambda: tmp_path / "positions")
+    store = Store.open(tmp_path / "tracking")
+    secs, summary = props.refresh(store, [_event()], _pairs(), now, "pass", snap=snap, player_games=p,
+                                  availability=report)
+    assert summary["listed"] == 2 and summary["contracts"] == 4
+    kept = store.read("polymarket_props")
+    assert set(kept[kept["player"] == "BOS Player 0"]["status"]) == {"out"}
+    assert store.append_new_only("nba_availability", report) == 3 and len(store.read("nba_availability")) == 3
+    assert store.append_new_only("nba_availability", report) == 0                           # a re-read adds nothing

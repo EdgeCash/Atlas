@@ -340,6 +340,82 @@ def snapshot(players: pd.DataFrame, team_games: pd.DataFrame, now, spec: Spec | 
             "layer": layer, "spec": asdict(spec)}
 
 
+#: ESPN's injury statuses, lowercased: the chance the player takes the court, and the share of his usual
+#: minutes he plays when he does. Stated, not fitted: no archive of reports exists to walk forward on, so
+#: the capture (atlas/sources/nba_availability.py) is building one. Polymarket resolves a player who does
+#: not take the court as No, so the chance of not playing goes to the under in full (:func:`prob_available`).
+AVAILABILITY = {"out": (0.03, 1.0), "day-to-day": (0.55, 0.9)}
+#: A listed player's minutes go to his teammates in the rotation, in proportion to theirs, up to a cap.
+ROTATION_MINUTES = 8.0
+MAX_MINUTES = 38.0
+
+
+def name_key(name) -> str:
+    """A player's name as a key: lowercased, accents and punctuation dropped, suffixes dropped."""
+    import re
+    import unicodedata
+
+    text = unicodedata.normalize("NFKD", str(name or ""))
+    text = "".join(ch for ch in text if not unicodedata.combining(ch)).lower()
+    text = re.sub(r"[.'’\-]", "", text)
+    words = [w for w in text.split() if w not in ("jr", "sr", "ii", "iii", "iv")]
+    return " ".join(words)
+
+
+def adjust(snap: dict, availability: pd.DataFrame | None) -> dict:
+    """The snapshot with the injury report applied. Each player gets ``p_play``, his chance of taking the
+    court, and ``status`` as listed; a listed player's ``min_hat`` is what he plays when he does, and the
+    minutes the report takes from a team go to its unlisted rotation players in proportion to theirs. The
+    snapshot given is not changed."""
+    players = snap["players"].copy()
+    players["p_play"] = 1.0
+    players["status"] = ""
+    if availability is None or len(availability) == 0 or players.empty:
+        return {**snap, "players": players}
+    by_id: dict[int, str] = {}
+    by_name: dict[tuple[int, str], str] = {}
+    for r in availability.itertuples(index=False):
+        status = str(r.status or "").strip().lower()
+        if status not in AVAILABILITY:
+            continue
+        if pd.notna(r.player_id):
+            by_id[int(r.player_id)] = status
+        if pd.notna(r.team_id):
+            by_name[(int(r.team_id), name_key(r.player))] = status
+    listed = []
+    for i, row in players.iterrows():
+        status = by_id.get(int(row["player_id"])) if pd.notna(row["player_id"]) else None
+        if status is None:
+            try:
+                status = by_name.get((int(row["team_id"]), name_key(row["player"])))
+            except (TypeError, ValueError):
+                status = None
+        if status:
+            listed.append((i, status))
+    if not listed:
+        return {**snap, "players": players}
+    lost = pd.Series(0.0, index=players.index)
+    for i, status in listed:
+        p_play, share = AVAILABILITY[status]
+        usual = float(players.at[i, "min_hat"])
+        players.at[i, "p_play"] = p_play
+        players.at[i, "status"] = status
+        players.at[i, "min_hat"] = usual * share
+        # What the team is expected to be without, minutes a game.
+        lost.at[i] = usual - p_play * usual * share
+    for _team_id, idx in players.groupby("team_id").groups.items():
+        missing = float(lost.loc[idx].sum())
+        if missing <= 0:
+            continue
+        unlisted = [i for i in idx if players.at[i, "status"] == "" and players.at[i, "min_hat"] >= ROTATION_MINUTES]
+        if not unlisted:
+            continue
+        base = players.loc[unlisted, "min_hat"].astype(float)
+        extra = missing * base / base.sum()
+        players.loc[unlisted, "min_hat"] = np.minimum(base + extra, MAX_MINUTES)
+    return {**snap, "players": players}
+
+
 def expect(snap: dict, player, team_id, opponent_id, home: bool) -> dict[str, float]:
     """Atlas's expectation of each stat for one player (a :data:`PLAYER_STATE` row) on ``team_id`` against
     ``opponent_id``; nan when a team is not known."""
@@ -361,6 +437,15 @@ def prob(mean_: float, line: float, side: str, dispersion: float) -> float:
     over = float(p_over([mean_], line, dispersion)[0])
     under = 1.0 - float(p_over([mean_], line - 1 if whole else line, dispersion)[0])
     return over if side == "over" else under
+
+
+def prob_available(mean_: float, line: float, side: str, dispersion: float, p_play: float = 1.0) -> float:
+    """:func:`prob` for a player who may not take the court: ``mean_`` is his expectation when he plays,
+    ``p_play`` the chance he does. The venue resolves a player who does not play as No, the under."""
+    p_play = float(np.clip(p_play, 0.0, 1.0))
+    if side == "over":
+        return p_play * prob(mean_, line, "over", dispersion)
+    return (1.0 - p_play) + p_play * prob(mean_, line, "under", dispersion)
 
 
 def dispersion(snap: dict, stat: str) -> float:

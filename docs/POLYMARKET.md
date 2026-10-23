@@ -91,11 +91,23 @@ and threes.
   `data/warehouse/nba_props_state.json`; a poll reads it. Walk-forward,
   Atlas's Brier beats a Poisson on the player's season mean at every stat
   and line (`reports/nba_props.md`).
+- **The injury report.** ESPN's NBA injuries feed is read every run
+  (`atlas/sources/nba_availability.py`), kept in `tracking/nba_availability.csv`,
+  and applied before anything is priced: a player listed Out is given a 3%
+  chance of taking the court, a game-time decision 55% and nine tenths of
+  his minutes, and the minutes a team is without go to its rotation. The
+  chance of not playing goes to the under in full, because the venue's
+  rules resolve a player who does not take the court as No. Those two
+  numbers are stated, not fitted - there is no archive of reports to walk
+  forward on, which is what the capture is building - and the board shows
+  the status beside Atlas's number.
 - **The record.** The main line of each player's stat (the one the market
   prices nearest to even) on a matched game is folded into
   `tracking/polymarket_props.csv` append-on-change, and graded against the
   box score into `tracking/prop_record.csv` once the game is final - a
-  player who did not play is a push.
+  player who did not play is a push there, since the record measures the
+  rate model; a paper position on him is graded the venue's way, the under
+  winning.
 - **The pricing** is the game markets' rule in probability space: fair is
   Polymarket's probability pulled toward Atlas's by the share of Atlas's
   disagreement the prop record has shown to be real, fitted through the
