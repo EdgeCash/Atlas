@@ -73,9 +73,9 @@ def positions_section(chosen: pd.DataFrame, graded: pd.DataFrame, now: datetime)
             "tables": [{"title": "", "head": [*HEAD, "Stake"], "stack": True,
                         "rows": rows or [[f"Nothing clears {pos.MIN_EV:+.0%} after the fee.", "", "", "", ""]]}],
             "notes": [
-                "Paper only: nothing is bought. A contract costs its ask plus Polymarket's taker fee and pays $1 "
+                "Paper only: nothing is bought. A contract costs its ask plus Polymarket US's taker fee and pays $1 "
                 "if it wins.",
-                f"The rule: contracts Polymarket is accepting orders on, quoted inside {100 * pos.MAX_SPREAD:.0f}¢ "
+                f"The rule: contracts Polymarket US is accepting orders on, quoted inside {100 * pos.MAX_SPREAD:.0f}¢ "
                 f"with at least ${pos.MIN_LIQUIDITY:,.0f} of depth, fair between {pos.BAND[0]:.0%} and "
                 f"{pos.BAND[1]:.0%}, and priced in line with their own ladder; {pos.MIN_EV:+.0%} or more after "
                 f"the fee; one a game at the contract that pays best, at most {pos.MAX_POSITIONS} a day. Stake "
@@ -83,9 +83,10 @@ def positions_section(chosen: pd.DataFrame, graded: pd.DataFrame, now: datetime)
                 f"{pos.MAX_STAKE:.0%} each and {pos.DAILY_CAP:.0%} a day.",
                 f"The day's positions are logged once, at the first run from {pos.LOG_HOUR}:00 ET, at the prices "
                 "shown then (marked logged); the table keeps moving through the day.",
-                "Fair is Atlas anchored to Polymarket by what the walk-forward record says Atlas's disagreement "
-                "has been worth; market is Polymarket's own probability. Depth is the market's resting dollars, "
-                "not the size at the best ask: confirm the book before real money."]}
+                "Fair is Atlas anchored to the market by what the walk-forward record says Atlas's disagreement "
+                "has been worth; market is the venue's own probability. Depth is the dollars resting at the best "
+                "ask when the book was read, for the contracts that cleared the rest of the rule: confirm the "
+                "book before real money."]}
 
 
 def board_section(priced: pd.DataFrame, now: datetime) -> dict:
@@ -113,12 +114,12 @@ def board_section(priced: pd.DataFrame, now: datetime) -> dict:
                            str(n["total"])])
     tables.append({"title": "Contracts this run, by sport", "fold": True,
                    "head": ["Sport", "Games", "Moneylines", "Spreads", "Totals"], "rows": counts})
-    return {"title": "Polymarket board", "tab": TAB, "tables": tables, "notes": [
+    return {"title": "Polymarket US board", "tab": TAB, "tables": tables, "notes": [
         "Each game and market at the contract that pays best, whether or not it clears the bar; a contract the "
         "rule would not take says so. Expected value after the fee is fair ÷ (ask + fee) − 1.",
-        "The fee is Polymarket's taker fee, rate × price × (1 − price) per contract, the rate read from each "
-        "market's own schedule (3% on football, 5% on the NHL on 23 October 2026). Makers pay none.",
-        "Quotes are read from Polymarket's public API every run and kept in tracking/polymarket_quotes.csv."]}
+        "The fee is Polymarket US's taker fee, coefficient × price × (1 − price) per contract, the coefficient read "
+        "from each market (0.0695 on every market on 23 October 2026). Makers pay none below $10 million a month.",
+        "Quotes are read from Polymarket US's public API every run and kept in tracking/polymarket_quotes.csv."]}
 
 
 def record_section(graded: pd.DataFrame) -> dict | None:
@@ -144,8 +145,8 @@ def record_section(graded: pd.DataFrame) -> dict | None:
                                  [f"{x.outcome} {x.pnl:+.2%}" if pd.notna(x.pnl) else x.outcome,
                                   f"closed {_cents(x.close)}" if pd.notna(x.close) else ""]]
                                 for x in latest.itertuples()]})
-    return {"title": "Polymarket record (paper)", "tab": RECORD_TAB, "tables": tables, "notes": [
-        "Each position is graded on the final score (a push refunded) and against Polymarket's close: the "
+    return {"title": "Polymarket US record (paper)", "tab": RECORD_TAB, "tables": tables, "notes": [
+        "Each position is graded on the final score (a push refunded) and against the venue's close: the "
         "contract's last midpoint seen before the game started, less the ask it was bought at. Returns are shares "
         f"of the bankroll at the stakes shown. Nothing is read from fewer than {pos.MIN_GRADED} graded."]}
 

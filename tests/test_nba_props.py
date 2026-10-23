@@ -14,6 +14,7 @@ from atlas.models import nba_props as npr
 from atlas.polymarket import match, positions, props, source
 from atlas.research.nba_dataset import load_table
 from atlas.staging.nba import build as nba_build
+from atlas.testing import polymarket_us as us
 from atlas.testing.synthetic_nba import TEAMS, write_synthetic_nba_raw
 
 SEASONS = [2022, 2023, 2024]
@@ -86,33 +87,17 @@ def test_the_snapshot_projects_a_player_against_an_opponent_and_seals_nothing(ta
     assert npr.load_spec(tmp_path) == npr.Spec()
 
 
-def _event(line=14.5, mid=0.5, liq=5000.0, question="BOS Player 0: Points O/U 14.5", kind="points"):
-    return {"id": "7001", "slug": "nba-lal-bos-2025-03-02", "title": "Lakers vs. Celtics", "markets": [
-        {"id": "1", "question": question, "sportsMarketType": kind, "line": line, "outcomes": '["Yes", "No"]',
-         "outcomePrices": f'["{mid}", "{1 - mid}"]', "clobTokenIds": '["p1", "p2"]', "conditionId": "0xp1",
-         "bestBid": round(mid - 0.01, 3), "bestAsk": round(mid + 0.01, 3), "spread": 0.02,
-         "gameStartTime": "2025-03-02 00:30:00+00", "feesEnabled": True, "feeSchedule": {"rate": 0},
-         "liquidityNum": liq, "acceptingOrders": True, "active": True, "closed": False},
-        {"id": "2", "question": "BOS Player 0: Points O/U 19.5", "sportsMarketType": "points", "line": 19.5,
-         "outcomes": '["Yes", "No"]', "outcomePrices": '["0.2", "0.8"]', "clobTokenIds": '["p3", "p4"]',
-         "conditionId": "0xp2", "bestBid": 0.19, "bestAsk": 0.21, "spread": 0.02,
-         "gameStartTime": "2025-03-02 00:30:00+00", "feesEnabled": True, "feeSchedule": {"rate": 0},
-         "liquidityNum": 3000.0, "acceptingOrders": True, "active": True, "closed": False},
-        {"id": "3", "question": "LAL Player 1: Rebounds O/U 5.5", "sportsMarketType": "rebounds", "line": 5.5,
-         "outcomes": '["Yes", "No"]', "outcomePrices": '["0.5", "0.5"]', "clobTokenIds": '["p5", "p6"]',
-         "conditionId": "0xp3", "bestBid": 0.49, "bestAsk": 0.51, "spread": 0.02,
-         "gameStartTime": "2025-03-02 00:30:00+00", "feesEnabled": True, "feeSchedule": {"rate": 0},
-         "liquidityNum": 8000.0, "acceptingOrders": True, "active": True, "closed": False},
-        {"id": "4", "question": "Nobody Known: Assists O/U 3.5", "sportsMarketType": "assists", "line": 3.5,
-         "outcomes": '["Yes", "No"]', "outcomePrices": '["0.5", "0.5"]', "clobTokenIds": '["p7", "p8"]',
-         "conditionId": "0xp4", "bestBid": 0.49, "bestAsk": 0.51, "spread": 0.02,
-         "gameStartTime": "2025-03-02 00:30:00+00", "feesEnabled": True, "feeSchedule": {"rate": 0},
-         "liquidityNum": 8000.0, "acceptingOrders": True, "active": True, "closed": False},
-        {"id": "5", "question": "Lakers vs. Celtics", "sportsMarketType": "moneyline", "outcomes": '["Lakers", "Celtics"]',
-         "outcomePrices": '["0.4", "0.6"]', "clobTokenIds": '["g1", "g2"]', "conditionId": "0xg", "bestBid": 0.39,
-         "bestAsk": 0.41, "spread": 0.02, "gameStartTime": "2025-03-02 00:30:00+00", "feesEnabled": True,
-         "feeSchedule": {"rate": 0}, "liquidityNum": 50000.0, "acceptingOrders": True, "active": True, "closed": False},
-    ]}
+LAL, BOS = us.team(1487, "Lakers", "Los Angeles"), us.team(1500, "Celtics", "Boston")
+TIP = "2025-03-02T00:30:00Z"
+
+
+def _event():
+    return us.event("7001", "nba-lal-bos-2025-03-02", LAL, BOS, [
+        us.prop(1, "basketball_player_points", "BOS Player 0", 15, 0.49, 0.51, team=BOS, start=TIP),
+        us.prop(2, "basketball_player_points", "BOS Player 0", 20, 0.19, 0.21, team=BOS, start=TIP),
+        us.prop(3, "basketball_player_rebounds", "LAL Player 1", 6, 0.49, 0.51, team=LAL, start=TIP),
+        us.prop(4, "basketball_player_assists", "Nobody Known", 4, 0.49, 0.51, team=LAL, start=TIP),
+        us.moneyline(5, "basketball", LAL, BOS, 0.39, 0.41, start=TIP)], start=TIP)
 
 
 def _pairs():
@@ -129,7 +114,9 @@ def test_prop_quotes_are_read_as_yes_over_and_no_under_and_the_main_line_is_kept
     assert over.loc[("BOS Player 0", "points", 14.5, "over"), "ask"] == 0.51
     assert over.loc[("BOS Player 0", "points", 14.5, "under"), "ask"] == pytest.approx(0.51)
     assert over.loc[("BOS Player 0", "points", 19.5, "under"), "bid"] == pytest.approx(0.79)
-    assert (q["fee_rate"] == 0.0).all() and q["away"].iloc[0] == "Lakers" and q["home"].iloc[0] == "Celtics"
+    assert (q["fee_rate"] == 0.0695).all() and q["away"].iloc[0] == "Los Angeles Lakers" \
+        and q["home"].iloc[0] == "Boston Celtics"
+    assert set(q["team_side"]) == {"home", "away"} and set(q["line"]) == {14.5, 19.5, 5.5, 3.5}  # "at least N" is over N - 1/2
     kept = props.main_lines(q)
     assert set(kept[kept["player"] == "BOS Player 0"]["line"]) == {14.5}             # nearest even, not 19.5
     assert len(kept) == 6
@@ -143,7 +130,7 @@ def test_expectations_find_the_player_on_one_of_the_games_teams(tables):
 
     q = match.attach(props.prop_quotes([_event()], source.LEAGUES["nba"], datetime(2025, 3, 1, 15, 0, tzinfo=UTC)),
                      _pairs())
-    e = props.expectations(q, snap)
+    e = props.expectations(q, {"nba": snap, "nhl": None})
     by = e.set_index(["player", "stat", "line", "side"])
     assert by.loc[("BOS Player 0", "points", 14.5, "over"), "atlas_mean"] > 10
     assert by.loc[("BOS Player 0", "points", 14.5, "over"), "p_atlas"] \
@@ -166,7 +153,8 @@ def test_the_record_grades_from_the_box_score_and_gives_the_share(tables, tmp_pa
     from atlas.polymarket import match
 
     store = Store.open(tmp_path / "tracking")
-    q = props.expectations(match.attach(props.prop_quotes([_event()], source.LEAGUES["nba"], now), _pairs()), snap)
+    q = props.expectations(match.attach(props.prop_quotes([_event()], source.LEAGUES["nba"], now), _pairs()),
+                           {"nba": snap, "nhl": None})
     kept = props.main_lines(q[q["game_id"].notna()])
     record, added = source.fold(store.read("polymarket_props"), kept.reindex(columns=props.PROP_COLUMNS),
                                 cols=props.PROP_COLUMNS)
@@ -175,10 +163,10 @@ def test_the_record_grades_from_the_box_score_and_gives_the_share(tables, tmp_pa
     back = store.read("polymarket_props")
     assert (back["game_id"].astype(str) == "901").all()
     # Before the game, nothing to grade; after it, with a box score, the over side is graded.
-    results = pd.DataFrame([{"game_id": "901", "player_key": "bos player 0", "played": True, "points": 22.0,
-                             "rebounds": 5.0, "assists": 2.0, "threes": 1.0},
-                            {"game_id": "901", "player_key": "lal player 1", "played": False, "points": 0.0,
-                             "rebounds": 0.0, "assists": 0.0, "threes": 0.0}])
+    results = pd.DataFrame([{"sport": "nba", "game_id": "901", "player_key": "bos player 0", "played": True,
+                             "points": 22.0, "rebounds": 5.0, "assists": 2.0, "threes": 1.0},
+                            {"sport": "nba", "game_id": "901", "player_key": "lal player 1", "played": False,
+                             "points": 0.0, "rebounds": 0.0, "assists": 0.0, "threes": 0.0}])
     assert props.grade_record(back, store.read("prop_record"), results, now).empty
     after = datetime(2025, 3, 2, 5, 0, tzinfo=UTC)
     new = props.grade_record(back, store.read("prop_record"), results, after)
@@ -209,7 +197,8 @@ def test_refresh_reads_grades_prices_and_seals_offline(tables, tmp_path, monkeyp
     monkeypatch.setenv("ATLAS_OFFLINE", "1")
     store = Store.open(tmp_path / "tracking")
     monkeypatch.setattr(props, "path", lambda: tmp_path / "prop_positions")
-    sections, summary = props.refresh(store, [_event()], _pairs(), now, KEY, snap=snap, player_games=p)
+    sections, summary = props.refresh(store, {"nba": [_event()]}, _pairs(), now, KEY,
+                                      snaps={"nba": snap, "nhl": None}, results=props.results_frame("nba", p))
     assert summary["contracts"] == 4 and summary["games"] == 1 and summary["projected"] == 3
     assert [s["title"] for s in sections][:2] == ["Prop positions for Sat Mar 1 (0)", "Props board"]
     board = sections[1]["tables"][0]
@@ -217,24 +206,25 @@ def test_refresh_reads_grades_prices_and_seals_offline(tables, tmp_path, monkeyp
     assert json.dumps(sections)
     assert len(store.read("polymarket_props")) == 6 and store.read("prop_record").empty
     # Without a snapshot the step says so and keeps nothing.
-    monkeypatch.setattr(npr, "load_state", lambda *a, **k: None)
-    empty, _ = props.refresh(store, [_event()], _pairs(), now, KEY)
-    assert "No NBA player snapshot yet" in empty[0]["notes"][0]
+    empty, _ = props.refresh(store, {"nba": [_event()]}, _pairs(), now, KEY, snaps={"nba": None, "nhl": None})
+    assert "No player snapshot yet" in empty[0]["notes"][0]
 
 
-def test_grading_positions_resolves_a_player_who_did_not_play_as_no_like_the_venue():
-    base = {**dict.fromkeys(props.POSITION_COLUMNS), "game_id": "901", "kickoff": "2025-03-02T00:30:00Z",
+def test_grading_positions_pushes_a_player_who_did_not_play_as_the_venue_settles_him():
+    base = {**dict.fromkeys(props.POSITION_COLUMNS), "sport": "nba", "game_id": "901", "kickoff": "2025-03-02T00:30:00Z",
             "player": "LAL Player 1", "stat": "rebounds", "line": 5.5, "ask": 0.5, "cost": 0.5, "stake": 0.01}
     record = pd.DataFrame([{**base, "position_id": "x", "side": "over", "token_id": "p5"},
                            {**base, "position_id": "y", "side": "under", "token_id": "p6"}])
-    results = pd.DataFrame([{"game_id": "901", "player_key": "lal player 1", "played": False, "points": 0.0,
-                             "rebounds": 0.0, "assists": 0.0, "threes": 0.0}])
+    results = pd.DataFrame([{"sport": "nba", "game_id": "901", "player_key": "lal player 1", "played": False,
+                             "points": 0.0, "rebounds": 0.0, "assists": 0.0, "threes": 0.0}])
     g = props.grade_positions(record, results, pd.DataFrame(columns=props.PROP_COLUMNS),
                               datetime(2025, 3, 2, 5, 0, tzinfo=UTC))
-    assert list(g["outcome"]) == ["loss", "win"] and g["pnl"].iloc[0] < 0 < g["pnl"].iloc[1]
+    assert list(g["outcome"]) == ["push", "push"] and (g["pnl"] == 0.0).all()
     played = results.assign(played=True, rebounds=7.0)
     assert list(props.grade_positions(record, played, pd.DataFrame(columns=props.PROP_COLUMNS),
                                       datetime(2025, 3, 2, 5, 0, tzinfo=UTC))["outcome"]) == ["win", "loss"]
+    assert props.grade_positions(record, pd.DataFrame(columns=props.RESULT_COLUMNS), pd.DataFrame(columns=props.PROP_COLUMNS),
+                                 datetime(2025, 3, 2, 5, 0, tzinfo=UTC))["outcome"].tolist() == ["open", "open"]
 
 
 def _espn_report(star_id: int) -> dict:
@@ -296,6 +286,11 @@ def test_the_injury_report_is_parsed_and_applied_to_the_snapshot(tables):
     assert npr.prob_available(20.0, 14.5, "under", d, 0.03) + npr.prob_available(20.0, 14.5, "over", d, 0.03) \
         == pytest.approx(1.0)
     assert npr.prob_available(20.0, 14.5, "over", d, 1.0) == npr.prob(20.0, 14.5, "over", d)
+    # Settled at the last fair price instead: the chance of not playing goes to the market's own number.
+    assert npr.prob_available(20.0, 14.5, "over", d, 0.03, settle=0.6) == \
+        pytest.approx(0.03 * npr.prob(20.0, 14.5, "over", d) + 0.97 * 0.6)
+    assert npr.prob_available(20.0, 14.5, "over", d, 0.03, settle=0.6) \
+        + npr.prob_available(20.0, 14.5, "under", d, 0.03, settle=0.6) == pytest.approx(1.0)
 
 
 def test_expectations_carry_the_report_into_the_probabilities_and_the_board(tables, tmp_path, monkeypatch):
@@ -308,14 +303,17 @@ def test_expectations_carry_the_report_into_the_probabilities_and_the_board(tabl
     now = datetime(2025, 3, 1, 15, 0, tzinfo=UTC)
     report = avail.parse(_espn_report(star_id), now)
     q = match.attach(props.prop_quotes([_event()], source.LEAGUES["nba"], now), _pairs())
-    plain = props.expectations(q, snap).set_index(["player", "stat", "line", "side"])
-    e = props.expectations(q, snap, report).set_index(["player", "stat", "line", "side"])
+    plain = props.expectations(q, {"nba": snap}).set_index(["player", "stat", "line", "side"])
+    e = props.expectations(q, {"nba": snap}, report).set_index(["player", "stat", "line", "side"])
     star = ("BOS Player 0", "points", 14.5)
-    assert e.loc[(*star, "over"), "p_atlas"] < 0.05 < 0.95 < e.loc[(*star, "under"), "p_atlas"]
+    # Out: the venue settles a non-player at the last fair price, so Atlas's probability is the market's,
+    # less the 3% chance he plays after all.
+    assert abs(e.loc[(*star, "over"), "p_atlas"] - 0.5) < 0.03 < abs(plain.loc[(*star, "over"), "p_atlas"] - 0.5)
+    assert e.loc[(*star, "over"), "p_atlas"] + e.loc[(*star, "under"), "p_atlas"] == pytest.approx(1.0)
     assert e.loc[(*star, "over"), "atlas_mean"] == plain.loc[(*star, "over"), "atlas_mean"]   # when he plays
     assert e.loc[(*star, "over"), "status"] == "out" and plain.loc[(*star, "over"), "status"] == ""
     laker = ("LAL Player 1", "rebounds", 5.5)
-    assert e.loc[(*laker, "over"), "p_atlas"] < plain.loc[(*laker, "over"), "p_atlas"]
+    assert abs(e.loc[(*laker, "over"), "p_atlas"] - 0.5) < abs(plain.loc[(*laker, "over"), "p_atlas"] - 0.5)
     assert e.loc[(*laker, "over"), "status"] == "day-to-day"
     row = next(x for x in props.price(e.reset_index(), None).itertuples() if x.player == "BOS Player 0" and x.side == "over")
     assert props._atlas(row).endswith(" · out")
@@ -325,8 +323,8 @@ def test_expectations_carry_the_report_into_the_probabilities_and_the_board(tabl
     monkeypatch.setenv("ATLAS_TRACKING_DIR", str(tmp_path / "tracking"))
     monkeypatch.setattr(props, "path", lambda: tmp_path / "positions")
     store = Store.open(tmp_path / "tracking")
-    secs, summary = props.refresh(store, [_event()], _pairs(), now, "pass", snap=snap, player_games=p,
-                                  availability=report)
+    secs, summary = props.refresh(store, {"nba": [_event()]}, _pairs(), now, "pass", snaps={"nba": snap, "nhl": None},
+                                  results=props.results_frame("nba", p), availability=report)
     assert summary["listed"] == 2 and summary["contracts"] == 4
     kept = store.read("polymarket_props")
     assert set(kept[kept["player"] == "BOS Player 0"]["status"]) == {"out"}

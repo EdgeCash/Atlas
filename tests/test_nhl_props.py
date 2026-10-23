@@ -111,3 +111,48 @@ def test_the_snapshot_projects_a_player_against_an_opponent(league):
     assert 4 < nhl_props.expect(snap, None, "AAA", "BBB", "AAA", "saves", goalie=goalie) < 20
 
 
+
+
+def test_the_snapshot_is_saved_read_back_and_prices_a_prop_on_polymarket_us(league, tmp_path):
+    from atlas.polymarket import match, props, source
+    from atlas.testing import polymarket_us as us
+
+    now = datetime(2023, 10, 1, tzinfo=UTC)
+    snap = nhl_props.snapshot(league, now)
+    where = tmp_path / "nhl_props_state.json"
+    nhl_props.save_state(snap, where)
+    back = nhl_props.load_state(where)
+    assert back["season"] == 2023 and len(back["skaters"]) == 16 and back["layer"] == snap["layer"]
+    assert back["level"] == snap["level"] and len(back["teams"]) == len(snap["teams"])
+    assert nhl_props.load_state(tmp_path / "missing.json") is None
+    assert nhl_props.load_spec(tmp_path) == nhl_props.Spec()
+
+    aaa, bbb = us.team(1, "Aaa Alphas", "Aaa"), us.team(2, "Bbb Bravos", "Bbb")
+    start = "2023-10-02T23:00:00Z"
+    ev = us.event("5001", "nhl-bbb-aaa-2023-10-02", bbb, aaa, [
+        us.prop(1, "hockey_player_points", "Alpha Aaa", 1, 0.55, 0.57, team=aaa, start=start),
+        us.prop(2, "hockey_player_goals", "Alpha Aaa", 1, 0.25, 0.27, team=aaa, start=start),
+        us.prop(3, "hockey_player_assists", "Nobody", 1, 0.40, 0.42, team=bbb, start=start)], start=start)
+    q = props.prop_quotes([ev], source.LEAGUES["nhl"], now)
+    assert len(q) == 6 and set(q["line"]) == {0.5} and set(q["stat"]) == {"points", "goals", "assists"}
+    assert q.set_index(["player", "stat", "side"]).loc[("Alpha Aaa", "points", "under"), "ask"] == pytest.approx(0.45)
+    pairs = pd.DataFrame([{"event_id": "5001", "game_id": "901", "sport": "nhl", "kickoff": start, "season": 2023,
+                           "week": 1, "home_team": "Aaa Alphas", "away_team": "Bbb Bravos",
+                           "label": "Bbb Bravos @ Aaa Alphas", "home_team_id": None, "away_team_id": None}])
+    e = props.expectations(match.attach(q, pairs), {"nba": None, "nhl": back}, codes={"901": ("BBB", "AAA")})
+    by = e.set_index(["player", "stat", "side"])
+    assert by.loc[("Alpha Aaa", "points", "over"), "atlas_mean"] > by.loc[("Alpha Aaa", "goals", "over"), "atlas_mean"] > 0
+    assert by.loc[("Alpha Aaa", "points", "over"), "p_atlas"] + by.loc[("Alpha Aaa", "points", "under"), "p_atlas"] \
+        == pytest.approx(1.0)
+    assert math.isnan(by.loc[("Nobody", "assists", "over"), "p_atlas"])
+    priced = props.price(e, None)
+    assert (priced["share"] == 0.0).all() and (priced["market"].str.startswith("player:")).all()
+    # Graded from the skater games, whose game ids are the league's, through the projection that maps them.
+    sk = league["skater_games"]
+    gid = int(sk["game_id"].iloc[0])
+    proj = pd.DataFrame([{"game_id": "901", "nhl_game_id": gid, "away_team": "BBB", "home_team": "AAA"}])
+    results = props.results_frame("nhl", sk, proj)
+    assert set(results["sport"]) == {"nhl"} and (results["game_id"] == "901").all() and "alpha aaa" in set(results["player_key"])
+    value, played = props._value(results, "nhl", "901", "Alpha Aaa", "points")
+    assert played and value >= 0
+    assert props._value(results, "nhl", "901", "Nobody", "points") == (pytest.approx(float("nan"), nan_ok=True), False)

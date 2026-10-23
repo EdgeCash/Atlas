@@ -13,6 +13,7 @@ import pytest
 from atlas.live import probability
 from atlas.owner import crypto, sealed
 from atlas.polymarket import match, page, positions, pricing, report, source
+from atlas.testing import polymarket_us as us
 
 KEY = "correct horse battery staple"
 NOW = datetime(2026, 10, 24, 14, 4, tzinfo=UTC)                  # Saturday 10:04 ET
@@ -22,28 +23,19 @@ NFL = source.LEAGUES["nfl"]
 NCAAF = source.LEAGUES["ncaaf"]
 
 
-def _market(mid, question, kind, outcomes, prices, bid, ask, *, line=None, tokens=None, fees=True, rate=0.03,
-            liquidity=12_000.0, accepting=True, spread=None):
-    return {"id": str(mid), "question": question, "sportsMarketType": kind, "line": line,
-            "outcomes": json.dumps(outcomes), "outcomePrices": json.dumps([str(p) for p in prices]),
-            "clobTokenIds": json.dumps(tokens or [f"t{mid}a", f"t{mid}b"]), "conditionId": f"0xc{mid}",
-            "bestBid": bid, "bestAsk": ask, "spread": spread if spread is not None else round(ask - bid, 3),
-            "lastTradePrice": ask, "gameStartTime": START, "feesEnabled": fees,
-            "feeSchedule": {"exponent": 1, "rate": rate, "takerOnly": True}, "liquidityNum": liquidity,
-            "acceptingOrders": accepting, "active": True, "closed": False, "orderMinSize": 5,
-            "orderPriceMinTickSize": 0.01}
+CHIEFS = us.team(12, "Kansas City Chiefs", "KC Chiefs", "kc")
+SEAHAWKS = us.team(26, "Seattle Seahawks", "SEA Seahawks", "sea")
 
 
-def _event(eid="1001", slug="nfl-kc-sea-2026-10-24", title="Chiefs vs. Seahawks", markets=None):
-    return {"id": eid, "slug": slug, "title": title, "startDate": "2026-09-14T12:00:00Z", "markets": markets or [
-        _market(1, "Chiefs vs. Seahawks", "moneyline", ["Chiefs", "Seahawks"], [0.425, 0.575], 0.42, 0.43),
-        _market(2, "Spread: Chiefs (-1.5)", "spreads", ["Chiefs", "Seahawks"], [0.40, 0.60], 0.39, 0.41, line=-1.5),
-        _market(3, "Spread: Seahawks (-2.5)", "spreads", ["Chiefs", "Seahawks"], [0.58, 0.42], 0.57, 0.59, line=-2.5),
-        _market(4, "Chiefs vs. Seahawks: O/U 44.5", "totals", ["Over", "Under"], [0.50, 0.50], 0.49, 0.51, line=44.5),
-        _market(5, "Chiefs vs. Seahawks: O/U 50.5", "totals", ["Over", "Under"], [0.30, 0.70], 0.29, 0.31, line=50.5),
-        _market(6, "Patrick Mahomes: Passing Yards O/U 250.5", "passing_yards", ["Over", "Under"], [0.5, 0.5],
-                0.01, 0.97, line=250.5),
-    ]}
+def _event(eid="1001", slug="nfl-kc-sea-2026-10-24", away=CHIEFS, home=SEAHAWKS, markets=None):
+    return us.event(eid, slug, away, home, markets if markets is not None else [
+        us.moneyline(1, "football", away, home, 0.42, 0.43, start=START),
+        us.spread(2, "football", away, home, -1.5, 0.39, 0.41, start=START),        # the Chiefs named, at -1.5
+        us.spread(3, "football", home, away, -2.5, 0.41, 0.43, start=START),        # the Seahawks named, at -2.5
+        us.total(4, "football", away, home, 44.5, 0.49, 0.51, start=START),
+        us.total(5, "football", away, home, 50.5, 0.29, 0.31, start=START),
+        us.prop(6, "football_player_passing_yards", "Patrick Mahomes", 250, 0.01, 0.97, team=away, start=START),
+    ], start=START)
 
 
 def _games():
@@ -91,25 +83,32 @@ def test_quotes_read_sides_lines_prices_and_fees_by_the_venues_conventions():
     q = source.quotes([_event()], NFL, NOW).set_index(["market", "side", "line"])
     assert len(q) == 10                                                          # the prop is not a game market
     ml = q.loc[("moneyline", "away", 0.0)]
-    assert ml["bid"] == 0.42 and ml["ask"] == 0.43 and ml["mid"] == 0.425         # the first outcome is the away side
+    assert ml["bid"] == 0.42 and ml["ask"] == 0.43 and ml["mid"] == 0.425 and ml["long"]   # the away team is the long side
     home = q.loc[("moneyline", "home", 0.0)]
     assert home["bid"] == pytest.approx(0.57) and home["ask"] == pytest.approx(0.58) and home["mid"] == 0.575
     assert q.loc[("spread", "away", -1.5)]["mid"] == 0.40 and q.loc[("spread", "home", 1.5)]["mid"] == 0.60
     assert q.loc[("spread", "home", -2.5)]["mid"] == 0.42 and q.loc[("spread", "away", 2.5)]["mid"] == 0.58
     assert q.loc[("total", "over", 50.5)]["ask"] == 0.31 and q.loc[("total", "under", 50.5)]["ask"] == pytest.approx(0.71)
-    assert (q["fee_rate"] == 0.03).all() and (q["away"] == "Chiefs").all() and (q["home"] == "Seahawks").all()
+    assert (q["fee_rate"] == 0.0695).all() and (q["away"] == "Kansas City Chiefs").all() \
+        and (q["home"] == "Seattle Seahawks").all()
+    assert q["liquidity"].isna().all() and (q["spread"].round(3) == 0.02).sum() == 8      # depth is read from the book
     assert q["game_start"].iloc[0] == "2026-10-24T19:30:00+00:00" and q["captured_at"].iloc[0] == "2026-10-24T14:04:00+00:00"
-    free = _event(markets=[_market(9, "Chiefs vs. Seahawks", "moneyline", ["Chiefs", "Seahawks"], [0.5, 0.5], 0.49,
-                                   0.51, fees=False)])
+    assert q["market_slug"].iloc[0] == "m1" and set(q.reset_index()["token_id"]) >= {"s1a", "s1b"}
+    free = _event(markets=[us.moneyline(9, "football", CHIEFS, SEAHAWKS, 0.49, 0.51, fee=0.0)])
     assert (source.quotes([free], NFL, NOW)["fee_rate"] == 0.0).all()
-    assert source.fee_rate({"feesEnabled": True, "takerBaseFee": 1000}) == 0.1    # bps when no schedule
+    assert source.fee_rate({"feeCoefficient": "0.1"}) == 0.1 and source.fee_rate({}) == 0.0
+    assert source.team_name({"name": "Bulls", "safeName": "Chicago"}) == "Chicago Bulls"
+    assert source.team_name({"name": "Blackhawks", "safeName": "Chicago Blackhawks"}) == "Chicago Blackhawks"
+    assert source.team_name({"name": "North Carolina Central", "safeName": "North Carolina Central"}) == "North Carolina Central"
 
 
-def test_a_spread_whose_question_names_neither_outcome_is_not_read():
-    odd = _event(markets=[_market(7, "Spread: Someone (-3.5)", "spreads", ["Chiefs", "Seahawks"], [0.5, 0.5], 0.49,
-                                  0.51, line=-3.5)])
+def test_a_side_on_a_team_the_event_does_not_list_is_not_read():
+    odd = _event(markets=[us.market(7, "football_team_full_game_spread", "Will Someone cover 3.5?", "+3.50", "-3.50",
+                                    0.49, 0.51, line=3.5, long_team=999, short_team=998)])
     assert source.quotes([odd], NFL, NOW).empty
-    assert not source.is_game({"markets": [_market(8, "x", "passing_yards", ["Over", "Under"], [0.5, 0.5], 0.4, 0.6)]})
+    assert not source.is_game({"markets": [us.prop(8, "football_player_passing_yards", "x", 1, 0.4, 0.6)]})
+    closed = _event(markets=[us.moneyline(9, "football", CHIEFS, SEAHAWKS, 0.49, 0.51, status="MARKET_STATUS_CLOSED")])
+    assert not source.quotes([closed], NFL, NOW)["accepting"].any()
 
 
 def test_the_record_appends_on_change_and_keeps_the_close():
@@ -127,9 +126,9 @@ def test_the_record_appends_on_change_and_keeps_the_close():
     record, added = source.fold(record, moved)
     assert added == 1 and len(record) == 11
     latest = source.latest(record).set_index("token_id")
-    assert latest.loc["t1a", "mid"] == 0.455 and latest.loc["t1b", "mid"] == 0.575
-    assert source.close(record, "t1a", pd.Timestamp(START)) == 0.455
-    assert source.close(record, "t1a", pd.Timestamp("2026-10-24 15:00:00+00")) == 0.425   # before the move
+    assert latest.loc["s1a", "mid"] == 0.455 and latest.loc["s1b", "mid"] == 0.575
+    assert source.close(record, "s1a", pd.Timestamp(START)) == 0.455
+    assert source.close(record, "s1a", pd.Timestamp("2026-10-24 15:00:00+00")) == 0.425   # before the move
     assert math.isnan(source.close(record, "nope", pd.Timestamp(START)))
 
 
@@ -146,7 +145,7 @@ def test_the_record_read_back_from_disk_takes_the_next_capture(tmp_path):
     record, added = source.fold(back, later)
     assert added == 0 and (record["game_id"].astype(str) == "401").all()
     assert record["last_seen_at"].iloc[0] == "2026-10-24T15:04:00+00:00"
-    assert source.close(record, "t1a", pd.Timestamp(START)) == 0.425
+    assert source.close(record, "s1a", pd.Timestamp(START)) == 0.425
     store.write("polymarket_quotes", record)
     assert len(store.read("polymarket_quotes")) == 10
 
@@ -174,10 +173,11 @@ def test_names_match_by_their_words_and_an_exact_team_beats_a_longer_one():
 
 
 def test_events_match_the_right_game_on_the_right_sides():
-    events = [_event(), _event("1002", "cfb-okl-tx-2026-10-24", "Oklahoma vs. Texas", markets=[
-        _market(21, "Oklahoma vs. Texas", "moneyline", ["Oklahoma", "Texas"], [0.5, 0.5], 0.49, 0.51)]),
-        _event("1003", "cfb-sea-kc-2026-10-24", "Seahawks vs. Chiefs", markets=[
-            _market(31, "Seahawks vs. Chiefs", "moneyline", ["Seahawks", "Chiefs"], [0.5, 0.5], 0.49, 0.51)])]
+    oklahoma, texas = us.team(4, "Oklahoma"), us.team(3, "Texas")
+    events = [_event(), _event("1002", "cfb-okl-tx-2026-10-24", oklahoma, texas, markets=[
+        us.moneyline(21, "football", oklahoma, texas, 0.49, 0.51, start=START)]),
+        _event("1003", "nfl-sea-kc-2026-10-24", SEAHAWKS, CHIEFS, markets=[
+            us.moneyline(31, "football", SEAHAWKS, CHIEFS, 0.49, 0.51, start=START)])]
     q = pd.concat([source.quotes(events[:1], NFL, NOW), source.quotes(events[1:2], NCAAF, NOW),
                    source.quotes(events[2:], NFL, NOW)], ignore_index=True)
     up = match.upcoming(_games(), NOW, _projections(), None)
@@ -213,7 +213,7 @@ def test_the_fee_is_the_venues_formula_and_the_market_probability_is_normalised(
     assert pricing.fee(0.5, 0.03) == pytest.approx(0.0075) and pricing.fee(0.4, 0.05) == pytest.approx(0.012)
     p = _priced().set_index(["market", "side", "line"])
     assert p.loc[("moneyline", "away", 0.0), "p_market"] == pytest.approx(0.425)
-    assert p.loc[("total", "over", 44.5), "cost"] == pytest.approx(0.51 + 0.03 * 0.51 * 0.49)
+    assert p.loc[("total", "over", 44.5), "cost"] == pytest.approx(0.51 + 0.0695 * 0.51 * 0.49)
 
 
 def test_with_nothing_on_the_record_atlas_is_priced_as_the_market_and_nothing_clears_the_fee():
@@ -266,11 +266,12 @@ def test_a_margin_is_pulled_toward_atlas_by_the_share_and_the_moneyline_is_the_m
 
 
 def test_the_nhl_grid_is_anchored_in_probability_space():
-    nhl = source.League("nhl", 1, 1, "nhl")
-    ev = _event("2001", "nhl-col-utah-2026-10-24", "Avalanche vs. Utah", markets=[
-        _market(41, "Avalanche vs. Utah", "moneyline", ["Avalanche", "Utah"], [0.50, 0.50], 0.49, 0.51, rate=0.05),
-        _market(42, "Spread: Avalanche (-1.5)", "spreads", ["Avalanche", "Utah"], [0.30, 0.70], 0.29, 0.31, line=-1.5),
-        _market(43, "Avalanche vs. Utah: O/U 6.5", "totals", ["Over", "Under"], [0.5, 0.5], 0.49, 0.51, line=6.5)])
+    nhl = source.LEAGUES["nhl"]
+    col, utah = us.team(21, "Avalanche", "Colorado Avalanche"), us.team(22, "Mammoth", "Utah Mammoth")
+    ev = _event("2001", "nhl-col-utah-2026-10-24", col, utah, markets=[
+        us.moneyline(41, "hockey", col, utah, 0.49, 0.51, fee=0.05, start=START),
+        us.spread(42, "hockey", col, utah, -1.5, 0.29, 0.31, fee=0.05, start=START),
+        us.total(43, "hockey", col, utah, 6.5, 0.49, 0.51, fee=0.05, start=START)])
     q = source.quotes([ev], nhl, NOW).assign(game_id="501", kickoff=KICKOFF, label="Colorado Avalanche @ Utah Mammoth")
     grid = pd.DataFrame([{"game_id": 501, "kickoff": KICKOFF, "p_home": 0.40, "p_home_minus_1_5": 0.2,
                           "p_away_minus_1_5": 0.4, "p_over_6.5": 0.6, "model_version": "n1",
@@ -291,9 +292,29 @@ def test_the_nhl_grid_is_anchored_in_probability_space():
 
 
 def _board():
-    """Atlas four points over the market's total, with a record that backs totals and not margins."""
+    """Atlas four points over the market's total, with a record that backs totals and not margins; every
+    book read for its depth."""
     cal = _calibration(k=1.0, k_margin=0.0)
-    return _priced(calibration=cal, projections=_projections(total=49.0))
+    p = _priced(calibration=cal, projections=_projections(total=49.0))
+    p["liquidity"] = 12_000.0
+    return p
+
+
+def test_depth_is_read_from_the_book_for_the_candidates_only():
+    p = _priced(calibration=_calibration(k=1.0, k_margin=0.0), projections=_projections(total=49.0))
+    assert p["liquidity"].isna().all()
+    asked = []
+
+    def fetch(slug, long):
+        asked.append((slug, long))
+        return {"ask_dollars": 5_000.0, "spread": 0.03}
+    out = positions.deepen(p, NOW, fetch=fetch)
+    read = out[out["liquidity"].notna()]
+    assert len(read) == len(asked) >= 1 and (read["ev"] >= positions.MIN_EV).all() and (read["spread"] == 0.03).all()
+    assert out.loc[out["ev"] < positions.MIN_EV, "liquidity"].isna().all()
+    assert (read["market"] == "total").all() and set(read["side"]) == {"over"}
+    assert positions.positions(out, NOW)["liquidity"].iloc[0] == 5_000.0
+    assert positions.positions(p, NOW).empty                                        # unread depth takes nothing
 
 
 def test_positions_take_one_a_game_under_the_rule_and_the_record_logs_once_at_ten_eastern(tmp_path):
@@ -366,12 +387,19 @@ def test_the_daily_cap_scales_every_stake_down_together():
 
 
 def test_the_close_falls_back_to_the_venues_history_only_when_online(monkeypatch):
+    record = pd.DataFrame([{"token_id": "t", "market_slug": "m", "side": "away", "long": True,
+                            "captured_at": "2026-10-24T20:00:00+00:00", "last_seen_at": "2026-10-24T20:00:00+00:00",
+                            "mid": float("nan"), "bid": float("nan"), "ask": float("nan")}])
     monkeypatch.setenv("ATLAS_OFFLINE", "1")
     assert math.isnan(positions.closing(pd.DataFrame(), "t", pd.Timestamp(START)))
+    assert math.isnan(positions.closing(record, "t", pd.Timestamp(START)))
     monkeypatch.setenv("ATLAS_OFFLINE", "0")
-    monkeypatch.setattr(source, "history", lambda token: pd.DataFrame(
-        {"at": [pd.Timestamp("2026-10-24 18:00+00"), pd.Timestamp("2026-10-24 20:00+00")], "price": [0.44, 0.9]}))
-    assert positions.closing(pd.DataFrame(), "t", pd.Timestamp(START)) == 0.44
+    monkeypatch.setattr(source, "history", lambda slug, sess=None, **kw: pd.DataFrame(
+        {"at": [pd.Timestamp("2026-10-24 18:00+00"), pd.Timestamp("2026-10-24 20:00+00")],
+         "long": [0.44, 0.9], "short": [0.56, 0.1]}))
+    assert positions.closing(record, "t", pd.Timestamp(START)) == 0.44
+    assert positions.closing(record.assign(long=False, side="home"), "t", pd.Timestamp(START)) == 0.56
+    assert math.isnan(positions.closing(record, "nope", pd.Timestamp(START)))
 
 
 # ---------------------------------------------------------------------------
@@ -384,7 +412,8 @@ def test_the_sections_and_the_report_say_what_they_hold(tmp_path):
     chosen, graded = positions.run(p, pd.DataFrame(columns=["game_id", "final_margin", "final_total"]),
                                    source.quotes([_event()], NFL, NOW), KEY, NOW, where=tmp_path / "pos")
     secs = page.sections(p, chosen, graded, NOW)
-    assert [s["title"] for s in secs] == ["Positions for Sat Oct 24 (1)", "Polymarket board", "Polymarket record (paper)"]
+    assert [s["title"] for s in secs] == ["Positions for Sat Oct 24 (1)", "Polymarket US board",
+                                          "Polymarket US record (paper)"]
     assert secs[0]["tab"] == "Polymarket" and secs[2]["tab"] == "Record"
     row = secs[0]["tables"][0]["rows"][0]
     assert row[0][0] == "Kansas City Chiefs @ Seattle Seahawks" and row[1][1] == "NFL" and row[4][1] == "logged"
@@ -426,7 +455,7 @@ def test_refresh_offline_keeps_the_record_and_seals_the_page_when_the_key_is_set
     assert "snapshot" in secs[2]["notes"][0]                                      # props wait for the heavy refresh
     box = owner_page.read(where)["box"]
     data = json.loads(crypto.decrypt(box, KEY))
-    assert [s["title"] for s in data["sections"]][:2] == ["Positions for Sat Oct 24 (0)", "Polymarket board"]
+    assert [s["title"] for s in data["sections"]][:2] == ["Positions for Sat Oct 24 (0)", "Polymarket US board"]
     assert len(store.read("polymarket_quotes")) == 10                             # the record as it was
     assert (tmp_path / "polymarket_model.md").exists()
     assert sealed.load(tmp_path / "positions", KEY) == []

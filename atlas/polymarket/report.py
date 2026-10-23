@@ -1,6 +1,6 @@
 """The public page about the model: ``reports/polymarket_model.md``.
 
-What Polymarket quotes on the games Atlas projects, how far Atlas sits from
+What Polymarket US quotes on the games Atlas projects, how far Atlas sits from
 it, and what the record says that distance is worth. No position, no
 expected value and no contract is on it: the paper record is the owner's,
 sealed, and the page says so.
@@ -36,12 +36,13 @@ def coverage(priced: pd.DataFrame, upcoming: pd.DataFrame) -> pd.DataFrame:
         ahead = upcoming[upcoming["sport"].astype(str) == sport] if len(upcoming) else upcoming
         mine = priced[priced["sport"].astype(str) == sport] if len(priced) else priced
         main = mine[pd.to_numeric(mine["p_market"], errors="coerce").between(0.3, 0.7)] if len(mine) else mine
+        depth = pd.to_numeric(mine["liquidity"], errors="coerce") if len(mine) else pd.Series(dtype=float)
         rows.append({"Sport": sport.upper(), "Games ahead": len(ahead),
-                     "On Polymarket": int(mine["game_id"].nunique()) if len(mine) else 0,
+                     "On Polymarket US": int(mine["game_id"].nunique()) if len(mine) else 0,
                      "Contracts": len(mine),
                      "Median spread (main lines)": f"{100 * main['spread'].median():.1f}¢" if len(main) else "–",
-                     "Median depth (main lines)": f"${main['liquidity'].median():,.0f}" if len(main) else "–",
-                     "Fee rate": f"{100 * mine['fee_rate'].median():.0f}%" if len(mine) else "–"})
+                     "Median depth (where read)": f"${depth.median():,.0f}" if depth.notna().any() else "–",
+                     "Fee coefficient": f"{mine['fee_rate'].median():.4f}" if len(mine) else "–"})
     return pd.DataFrame(rows)
 
 
@@ -68,15 +69,19 @@ def distance(priced: pd.DataFrame) -> pd.DataFrame:
 
 
 def _props(summary: dict | None) -> str:
-    if not summary:
-        return "No NBA player props were read this run."
-    return (f"NBA player props (points, rebounds, assists, threes) this run: {summary.get('contracts', 0)} contracts "
-            f"on {summary.get('games', 0)} games, {summary.get('projected', 0)} with an Atlas projection beside "
-            f"them (`atlas/models/nba_props.py`, `reports/nba_props.md`). Each player-stat's main line is kept in "
-            f"`tracking/polymarket_props.csv` with Atlas's probability as it stood, and graded against the box "
-            f"score and the close into `tracking/prop_record.csv`: {summary.get('graded', 0)} graded so far. Most "
-            f"prop books on Polymarket are thin; the record, not the depth, decides what Atlas's disagreement is "
-            f"worth there.")
+    if not summary or not summary.get("contracts"):
+        return "No player props were read this run."
+    parts = []
+    for sport, stats in (("nba", "points, rebounds, assists, threes"), ("nhl", "points, goals, assists")):
+        s = (summary.get("sports") or {}).get(sport) or {}
+        if s.get("contracts"):
+            parts.append(f"{sport.upper()} ({stats}): {s['contracts']} contracts on {s['games']} games, "
+                         f"{s['projected']} with an Atlas projection beside them, {s['graded']} graded so far")
+    return ("Player props this run: " + "; ".join(parts) + ". Atlas's numbers are `atlas/models/nba_props.py` "
+            "(`reports/nba_props.md`) and `atlas/models/nhl_props.py` (`reports/nhl_props.md`). Each player-stat's "
+            "main line is kept in `tracking/polymarket_props.csv` with Atlas's probability as it stood, and graded "
+            "against the box score and the close into `tracking/prop_record.csv`, the record that decides, a sport "
+            "at a time, what Atlas's disagreement is worth there.")
 
 
 def write(priced: pd.DataFrame, upcoming: pd.DataFrame, calibration: pd.DataFrame | None, now: datetime,
@@ -89,30 +94,31 @@ def write(priced: pd.DataFrame, upcoming: pd.DataFrame, calibration: pd.DataFram
         "Games on the record": shares["games"]})[["Sport", "Market", "Share of Atlas's disagreement taken",
                                                   "Games on the record"]]
     stamp = pd.Timestamp(now).tz_convert("UTC").strftime("%Y-%m-%d %H:%M UTC")
-    text = f"""# Atlas on Polymarket
+    text = f"""# Atlas on Polymarket US
 
 *Rebuilt every run; this one at {stamp}.*
 
-Polymarket is the one venue Atlas is priced against. It lists a moneyline,
-a ladder of spreads and a ladder of totals on every NFL, NBA, NHL and college
-football game as binary contracts, and its prices are public: every run
-reads them from Polymarket's own API, matches each game to the one Atlas
-projects, and keeps every quote, timestamped, in
-`tracking/polymarket_quotes.csv`. That table is the point-in-time archive of
-the market Atlas is measured against.
+Polymarket US, the CFTC-regulated exchange, is the one venue Atlas is priced
+against. It lists a moneyline, a ladder of spreads and a ladder of totals on
+every NFL, NBA, NHL and college football game as dollar contracts on a
+central order book, and its prices are public: every run reads them from the
+exchange's own API, matches each game to the one Atlas projects, and keeps
+every quote, timestamped, in `tracking/polymarket_quotes.csv`. That table is
+the point-in-time archive of the market Atlas is measured against.
 
 ## Coverage this run
 
 {_md(coverage(priced, upcoming))}
 
 Spread is the gap between the best bid and the best ask on the contracts
-priced near even; depth is the dollars resting in the market. The fee is
-Polymarket's taker fee, `rate × price × (1 − price)` per contract, read from
-each market's own schedule.
+priced near even; depth is the dollars resting at the best ask, read from
+the book for the contracts that cleared the rest of the rule. The fee is the
+exchange's taker fee, `coefficient × price × (1 − price)` per contract, the
+coefficient read from each market.
 
-## How Atlas is anchored to Polymarket
+## How Atlas is anchored to the market
 
-Atlas's number for a game is never used raw. Polymarket's centre for the
+Atlas's number for a game is never used raw. The market's centre for the
 margin and the total is read off its own ladder of lines; Atlas's projection
 is pulled toward it by the share of Atlas's disagreement that has turned out
 real on the walk-forward record (`tracking/calibration.csv`), and every line
@@ -130,7 +136,7 @@ side at disagreements this large or larger, never below one half.
 {_md(distance(priced))}
 
 In points of margin or total, per game: Atlas's own projection against
-Polymarket's centre, and the anchored number the contracts are priced from.
+the market's centre, and the anchored number the contracts are priced from.
 On a market where the share is zero the anchored gap is zero by
 construction.
 
@@ -141,7 +147,7 @@ construction.
 ## The record
 
 Paper positions are taken by a fixed rule, logged once and graded on the
-result and against Polymarket's close. That record is the owner's, sealed
+result and against the venue's close. That record is the owner's, sealed
 in `tracking/polymarket_positions/`, and is not published here. Nothing on
 this page is a recommendation.
 """

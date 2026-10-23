@@ -59,7 +59,7 @@ LOG_HOUR = 10
 MIN_GRADED = 50
 
 COLUMNS = ["position_id", "formed_at", "day", "year", "week", "game_id", "sport", "kickoff", "label", "away", "home",
-           "market", "side", "line", "token_id", "market_id", "condition_id", "event_slug", "ask", "fee_rate", "fee",
+           "market", "side", "long", "line", "token_id", "market_id", "market_slug", "event_slug", "ask", "fee_rate", "fee",
            "cost", "p_market", "p_raw", "p", "ev", "kelly", "stake", "liquidity", "spread"]
 
 
@@ -217,16 +217,46 @@ def closing(quotes: pd.DataFrame, token_id, start) -> float:
     if math.isfinite(mid) or offline():
         return mid
     try:
-        h = source.history(str(token_id))
+        return source.venue_close(quotes, token_id, start)
     except Exception as error:  # noqa: BLE001 - a close the venue will not give is a close not read
         LOG.info("polymarket: no price history for a contract (%s)", type(error).__name__)
         return float("nan")
-    if h.empty:
-        return float("nan")
-    cutoff = pd.Timestamp(start)
-    cutoff = cutoff.tz_localize("UTC") if cutoff.tzinfo is None else cutoff.tz_convert("UTC")
-    before = h[h["at"] <= cutoff]
-    return float(before["price"].iloc[-1]) if len(before) else float("nan")
+
+
+#: How many contracts' books are read for their depth each run: the best by expected value that pass the
+#: rest of the rule, since the venue's event feed carries the top of the book but not what rests there.
+DEPTH_READS = 40
+
+
+def deepen(p: pd.DataFrame, now: datetime, fetch=None, limit: int = DEPTH_READS) -> pd.DataFrame:
+    """The candidates' depth and spread read from their books: the dollars at the ask fill ``liquidity``
+    where the capture left it unknown. ``fetch(market_slug, long)`` is :func:`source.depth`."""
+    if p.empty or "market_slug" not in p:
+        return p
+    fetch = fetch or source.depth
+    out = p.copy()
+    kick = pd.to_datetime(out["kickoff"], utc=True, errors="coerce")
+    liquidity = pd.to_numeric(out["liquidity"], errors="coerce")
+    want = (out["accepting"].astype(bool) & (kick > pd.Timestamp(now))
+            & (pd.to_numeric(out["ev"], errors="coerce") >= MIN_EV)
+            & pd.to_numeric(out["p"], errors="coerce").between(*BAND)
+            & (pd.to_numeric(out["spread"], errors="coerce") <= MAX_SPREAD)
+            & liquidity.isna()).fillna(False)
+    rows = out[want].sort_values("ev", ascending=False).head(limit)
+    read = 0
+    for i, r in rows.iterrows():
+        try:
+            d = fetch(str(r["market_slug"]), bool(r["long"]) if pd.notna(r.get("long")) else True)
+        except Exception as error:  # noqa: BLE001 - a book not read is a contract not taken
+            LOG.info("polymarket: no book for a contract (%s)", type(error).__name__)
+            continue
+        read += 1
+        out.at[i, "liquidity"] = d.get("ask_dollars", float("nan"))
+        if math.isfinite(d.get("spread", float("nan"))):
+            out.at[i, "spread"] = d["spread"]
+    if read:
+        LOG.info("polymarket: %d books read for depth", read)
+    return out
 
 
 def grade(record: pd.DataFrame, finals: pd.DataFrame, quotes: pd.DataFrame, now: datetime) -> pd.DataFrame:
@@ -265,6 +295,8 @@ def run(priced: pd.DataFrame, finals: pd.DataFrame, quotes: pd.DataFrame, passph
     """The day's positions chosen, logged if due, and the record graded: (chosen, graded). ``grader`` grades
     the record (:func:`grade` on the final score by default; a prop's grader reads the box score)."""
     columns = columns or COLUMNS
+    if not offline():
+        priced = deepen(priced, now)
     chosen = positions(priced, now, unit=unit, columns=columns)
     record = load(passphrase, where, columns)
     if due(record, chosen, now):
