@@ -25,6 +25,7 @@ dollar staked.
 from __future__ import annotations
 
 import math
+import os
 from datetime import datetime, timedelta
 
 import numpy as np
@@ -47,7 +48,11 @@ GRADE_AFTER = timedelta(hours=4)
 SETTLEMENT_READS = 40
 COLUMNS = ["formed_at", "threshold", "phase", "minutes_in", "sport", "game_id", "event_id", "event_slug", "game_start",
            "label", "market", "side", "long", "line", "market_id", "market_slug", "token_id", "ask", "bid", "spread",
-           "fee_rate", "fee", "cost", "payout", "won", "profit", "graded_at"]
+           "fee_rate", "fee", "cost", "payout", "won", "profit", "graded_at", "period", "clock", "late"]
+#: The regulation periods a sport plays: in that period or past it (overtime), a position is late.
+FINAL_PERIOD = {"nba": 4, "nfl": 4, "ncaaf": 4, "nhl": 3}
+#: The repository variable that confines the live step to late positions (``late``) or not (unset, ``any``).
+ORDER_PHASE = "LIVE_PHASE"
 TAB = "Poly Snipe"
 #: The one threshold whose crossings go to the live step (atlas/polymarket/orders.py): the user's "86%".
 ORDER_THRESHOLD = 0.85
@@ -77,13 +82,32 @@ def candidates(quotes: pd.DataFrame, now: datetime) -> pd.DataFrame:
     return q
 
 
-def take(record: pd.DataFrame, quotes: pd.DataFrame, now: datetime) -> tuple[pd.DataFrame, int]:
+def _state(games: pd.DataFrame | None) -> dict[str, tuple[float, str]]:
+    """Each game's (period, clock) as the scoreboard last had it, by game id."""
+    if games is None or games.empty or "period" not in games:
+        return {}
+    out = {}
+    for g, p, c in zip(games["game_id"], pd.to_numeric(games["period"], errors="coerce"), games["clock"], strict=True):
+        out[str(g)] = (float(p) if pd.notna(p) else float("nan"), str(c) if pd.notna(c) and c is not None else "")
+    return out
+
+
+def is_late(sport, period, phase: str) -> bool:
+    """In play, and in the sport's final regulation period or past it."""
+    final = FINAL_PERIOD.get(str(sport).lower())
+    return bool(phase == "in_play" and final and pd.notna(period) and float(period) >= final)
+
+
+def take(record: pd.DataFrame, quotes: pd.DataFrame, now: datetime,
+         games: pd.DataFrame | None = None) -> tuple[pd.DataFrame, int]:
     """The record with a position added for each contract at each threshold its ask reaches for the first
-    time, at that ask plus the fee. A position is never revised."""
+    time, at that ask plus the fee, and where the game stood (``games``: the scoreboard's rows, for the
+    period and the clock). A position is never revised."""
     record = record.reindex(columns=COLUMNS) if len(record) else pd.DataFrame(columns=COLUMNS)
     c = candidates(quotes, now)
     if c.empty:
         return record, 0
+    state = _state(games)
     have = set(zip(record["token_id"].astype(str), pd.to_numeric(record["threshold"], errors="coerce").round(2),
                    strict=True)) if len(record) else set()
     stamp = pd.Timestamp(now).tz_convert("UTC").replace(microsecond=0).isoformat() if pd.Timestamp(now).tzinfo \
@@ -93,10 +117,12 @@ def take(record: pd.DataFrame, quotes: pd.DataFrame, now: datetime) -> tuple[pd.
         ask = float(x.ask)
         fee_rate = source._num(x.fee_rate)
         fee = pricing.fee(ask, fee_rate)
+        period, clock = state.get(str(x.game_id), (float("nan"), ""))
         for t in THRESHOLDS:
             if ask < t or (str(x.token_id), round(t, 2)) in have:
                 continue
             rows.append({
+                "period": period, "clock": clock, "late": is_late(x.sport, period, x.phase),
                 "formed_at": stamp, "threshold": t, "phase": x.phase, "minutes_in": float(x.minutes_in),
                 "sport": x.sport, "game_id": x.game_id, "event_id": x.event_id, "event_slug": x.event_slug,
                 "game_start": x.game_start, "label": f"{x.away} @ {x.home}", "market": x.market, "side": x.side,
@@ -150,6 +176,14 @@ def grade(record: pd.DataFrame, now: datetime, fetch=None, limit: int = SETTLEME
     return out
 
 
+def stage(record: pd.DataFrame) -> pd.Series:
+    """pregame, in play early, or in play late, per position."""
+    late = record["late"].map(_truthy) if "late" in record else pd.Series(False, index=record.index)
+    phase = record["phase"].astype(str)
+    return pd.Series(np.where(phase == "pregame", "pregame", np.where(late, "in play late", "in play early")),
+                     index=record.index)
+
+
 def summary(record: pd.DataFrame, by=("phase", "threshold")) -> pd.DataFrame:
     """Per group: positions taken and graded, the win rate, the break-even rate (the mean cost), and the
     profit per dollar staked; the rate observed less the one needed, with its standard error."""
@@ -157,6 +191,8 @@ def summary(record: pd.DataFrame, by=("phase", "threshold")) -> pd.DataFrame:
     if record is None or record.empty:
         return pd.DataFrame(columns=cols)
     r = record.copy()
+    if "stage" in by:
+        r["stage"] = stage(r)
     r["won"] = pd.to_numeric(r["won"], errors="coerce")
     r["cost"] = pd.to_numeric(r["cost"], errors="coerce")
     r["profit"] = pd.to_numeric(r["profit"], errors="coerce")
@@ -208,8 +244,10 @@ def latest(record: pd.DataFrame, n: int = LATEST) -> dict | None:
             state = "lost"
         when = pd.to_datetime(x.formed_at, utc=True, errors="coerce")
         minutes = float(x.minutes_in) if pd.notna(x.minutes_in) else float("nan")
-        phase = (f"in play, {minutes:.0f}'" if minutes >= 0 else f"pregame, {-minutes / 60:.1f}h out") \
-            if math.isfinite(minutes) else str(x.phase).replace("_", " ")
+        period = pd.to_numeric(pd.Series([x.period]), errors="coerce").iloc[0] if hasattr(x, "period") else float("nan")
+        where = f"P{int(period)} {x.clock}".strip() if pd.notna(period) and period > 0 else ""
+        phase = ((f"in play, {where}" if where else f"in play, {minutes:.0f}'") if minutes >= 0
+                 else f"pregame, {-minutes / 60:.1f}h out") if math.isfinite(minutes) else str(x.phase).replace("_", " ")
         rows.append([[str(x.label), str(x.sport).upper()], str(x.side), f"{float(x.ask):.2f}", phase,
                      when.tz_convert("America/New_York").strftime("%a %H:%M") if pd.notna(when) else "", state])
     return {"title": f"Latest positions ({len(rows)} sides)", "head": ["Game", "Side", "Ask", "Phase", "Taken", "Result"],
@@ -224,6 +262,11 @@ def section(record: pd.DataFrame, now: datetime) -> dict:
     if len(tables):
         tables[0]["title"] = "By phase and threshold"
     if len(record):
+        by_stage = summary(record, by=("stage", "threshold"))
+        if len(by_stage):
+            t = _table(by_stage, ["stage", "threshold"])
+            t["title"] = "By stage of the game: before it, in play before the final period, in play in it or past it"
+            tables.append(t)
         low = record[pd.to_numeric(record["threshold"], errors="coerce").round(2) == round(THRESHOLDS[0], 2)]
         by_sport = summary(low, by=("sport", "phase"))
         if len(by_sport):
@@ -242,7 +285,10 @@ def section(record: pd.DataFrame, now: datetime) -> dict:
         "question is whether the venue's favorites win more often than they cost.",
         "Edge is the win rate less the break-even rate in points, with one standard error; profit per dollar "
         "is what a dollar staked across the positions returned. Positive and several errors wide, over "
-        "hundreds of positions, before it means anything."]}
+        "hundreds of positions, before it means anything.",
+        "Late is the sport's final regulation period or past it, as the scoreboard stood when the position was "
+        "taken (polls are a quarter hour apart, so the clock shown is up to that much old). The repository "
+        "variable LIVE_PHASE set to late confines the live step to those."]}
 
 
 def text(record: pd.DataFrame) -> str:
@@ -291,7 +337,7 @@ def refresh(store, quotes: pd.DataFrame, now: datetime, passphrase: str | None =
     try:
         record = store.read(TABLE)
         before = len(record)
-        record, added = take(record, quotes, now)
+        record, added = take(record, quotes, now, store.read("games"))
         record = grade(record, now)
         if added or len(record):
             store.write(TABLE, record)
@@ -302,6 +348,8 @@ def refresh(store, quotes: pd.DataFrame, now: datetime, passphrase: str | None =
 
                 new = record.iloc[before:]
                 new = new[pd.to_numeric(new["threshold"], errors="coerce").round(2) == round(ORDER_THRESHOLD, 2)]
+                if os.environ.get(ORDER_PHASE, "").strip().lower() == "late":
+                    new = new[new["late"].map(_truthy)]
                 if len(new) and orders.mode() != "off":
                     try:
                         orders.place(as_positions(new), passphrase, now, rule="favorites")

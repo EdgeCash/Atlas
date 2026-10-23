@@ -135,6 +135,8 @@ SCHEMA: dict[str, list[str]] = {
         "formed_at", "threshold", "phase", "minutes_in", "sport", "game_id", "event_id", "event_slug", "game_start",
         "label", "market", "side", "long", "line", "market_id", "market_slug", "token_id", "ask", "bid", "spread",
         "fee_rate", "fee", "cost", "payout", "won", "profit", "graded_at",
+        # Where the game stood when the position was taken, and whether that was its final period.
+        "period", "clock", "late",
     ],
     "prop_record": [
         "token_id", "game_id", "kickoff", "sport", "player", "stat", "line", "p_atlas", "p_close", "value", "played",
@@ -152,6 +154,8 @@ SCHEMA: dict[str, list[str]] = {
         # The scoreboard the game came from: ncaaf, nfl or nhl. Empty on rows
         # captured before the NHL was polled (30 September 2026), all football.
         "sport",
+        # Where the game stood at the last poll: the period and the clock (from 23 October 2026).
+        "period", "clock",
     ],
     "snapshots": [
         "captured_at", "game_id", "book", "market", "line", "price",
