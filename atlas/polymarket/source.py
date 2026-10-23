@@ -38,6 +38,7 @@ import re
 from dataclasses import dataclass
 from datetime import datetime
 
+import numpy as np
 import pandas as pd
 
 from atlas.util import get_logger, http_get, session
@@ -331,13 +332,32 @@ def _same(a, b) -> bool:
     return bool(pd.isna(a) and pd.isna(b)) or bool(a == b)
 
 
+#: Identifiers, kept as text: read back from the record a game id is a number, and a number's column
+#: cannot take the text the next capture brings.
+IDS = ("game_id", "event_id", "market_id", "condition_id", "token_id")
+
+
+def _text_ids(frame: pd.DataFrame) -> pd.DataFrame:
+    out = frame.copy()
+    for c in IDS:
+        if c in out:
+            v = out[c]
+            num = pd.to_numeric(v, errors="coerce")
+            whole = num.notna() & (num == np.floor(num.fillna(0)))
+            text = v.astype(object).where(v.notna(), None)
+            text = text.where(~whole, num.where(whole).map(lambda x: str(int(x)) if pd.notna(x) else None))
+            out[c] = text.astype(object)
+    return out
+
+
 def fold(existing: pd.DataFrame, incoming: pd.DataFrame) -> tuple[pd.DataFrame, int]:
     """Append each contract's quote only when it differs from the latest stored; a repeat sighting moves
     ``last_seen_at`` (and the depth, the acceptance flag and the matched game) on the stored row and
     nothing else. Returns (the record, rows appended)."""
     cols = QUOTE_COLUMNS
-    history_ = existing.reindex(columns=cols).reset_index(drop=True).copy() if len(existing) \
+    history_ = _text_ids(existing.reindex(columns=cols)).reset_index(drop=True) if len(existing) \
         else pd.DataFrame(columns=cols)
+    incoming = _text_ids(incoming) if len(incoming) else incoming
     if incoming.empty:
         return history_, 0
     latest: dict[str, int] = {}

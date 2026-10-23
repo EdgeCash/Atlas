@@ -327,7 +327,7 @@ def _edge_table(cal: pd.DataFrame, market: str) -> pd.DataFrame:
     rows = []
     for lo, hi in EDGE_BUCKETS:
         part = c[(c["abs_edge"] >= lo) & (c["abs_edge"] < hi)]
-        rows.append({"Atlas's disagreement": f"{lo}-{hi if hi < 99 else ''} points".replace("-  points", "+ points"),
+        rows.append({"Atlas's disagreement": f"{lo}-{hi} points" if hi < 99 else f"{lo}+ points",
                      "games": len(part), "claimed": f"{part['claimed'].mean():.1%}" if len(part) else "",
                      "won": f"{part['won'].mean():.1%}" if len(part) else ""})
     return pd.DataFrame(rows)
