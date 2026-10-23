@@ -479,8 +479,9 @@ def loglik(sk: pd.DataFrame, gk: pd.DataFrame, layers: dict, stats=(*SKATER, "sa
     return total / max(n, 1)
 
 
-GRID = {"k_rate": (2.0, 5.0, 10.0, 20.0), "h_rate": (25.0, 40.0, 80.0), "h_toi": (5.0, 8.0, 15.0),
-        "k_sh": (100.0, 200.0, 400.0), "h_team": (15.0, 25.0, 50.0), "k_sv": (750.0, 1500.0, 3000.0)}
+GRID = {"k_rate": (2.0, 5.0, 10.0, 20.0), "h_rate": (25.0, 40.0, 80.0), "h_toi": (2.0, 3.0, 5.0, 8.0, 15.0),
+        "k_sh": (25.0, 50.0, 100.0, 200.0, 400.0), "h_team": (15.0, 25.0, 50.0),
+        "k_sv": (750.0, 1500.0, 3000.0, 6000.0, 12000.0)}
 
 
 def tune(tables: dict, base: Spec | None = None) -> tuple[Spec, list[dict]]:

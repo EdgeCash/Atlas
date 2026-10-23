@@ -207,7 +207,9 @@ alerting.
 
 Not on the schedule. **Actions → retune → Run workflow** (`.github/workflows/retune.yml`)
 re-runs the model walk-forwards on the full warehouse: `ncaaf` (benchmarks,
-prior, state, total), `nfl` (benchmarks, state, total), or `both`.
+prior, state, total), `nfl` (benchmarks, state, total, the player props'
+half-lives), `nba` (state, the props' half-lives), `nhl` (the game model,
+the props), or `all`.
 
 * It restores the heavy run's warehouse cache and never saves it, so it
   cannot change what production builds from. The college half refuses to run

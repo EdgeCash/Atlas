@@ -61,8 +61,8 @@ TUNE = (2018, 2019, 2020)
 MIN_PRIOR = 5
 #: A player is carried into the games ahead when his latest game is this recent.
 ACTIVE_DAYS = 400
-GRID = {"h_min": (5.0, 8.0, 15.0), "h_rate": (15.0, 30.0, 60.0), "k_rate": (100.0, 400.0, 1000.0),
-        "h_team": (10.0, 20.0, 40.0)}
+GRID = {"h_min": (2.0, 3.0, 5.0, 8.0, 15.0), "h_rate": (15.0, 30.0, 60.0, 120.0, 240.0),
+        "k_rate": (25.0, 50.0, 100.0, 400.0, 1000.0), "h_team": (5.0, 10.0, 20.0, 40.0, 80.0)}
 
 
 @dataclass(frozen=True)

@@ -3,7 +3,9 @@ name: retune
 # Re-runs the model walk-forwards on the full warehouse and proposes what they
 # produce: the reports and the tuned hyperparameters the live projectors read
 # (reports/ncaaf_state_choices.json, reports/nfl_state_choices.json,
-# reports/nba_state_choices.json).
+# reports/nba_state_choices.json, reports/nhl_model.json) and the props
+# models' specs (reports/nba_props_spec.json, reports/nfl_props_spec.json,
+# reports/nhl_props.json).
 #
 # Run by hand from the Actions tab after a model change, never on a schedule:
 # a retune moves live numbers, so a person asks for it and a person reviews
@@ -22,7 +24,7 @@ on:
       sports:
         description: which models to retune
         type: choice
-        options: [all, ncaaf, nfl, nba]
+        options: [all, ncaaf, nfl, nba, nhl]
         default: all
 
 permissions:
@@ -92,6 +94,12 @@ jobs:
           make nba-ingest
           make nba-warehouse
 
+      - name: NHL data
+        if: env.SPORTS == 'all' || env.SPORTS == 'nhl'
+        run: |
+          make nhl-ingest
+          make nhl-warehouse
+
       # State before total: the total reads the state's saved choices.
       - name: Retune the college models
         if: env.SPORTS == 'all' || env.SPORTS == 'ncaaf'
@@ -114,6 +122,13 @@ jobs:
         run: |
           make nba-state
           make nba-props-tune
+
+      # The NHL game model tunes, walks and scores in one target; the props tune by default.
+      - name: Retune the NHL models
+        if: env.SPORTS == 'all' || env.SPORTS == 'nhl'
+        run: |
+          make nhl-model
+          make nhl-props
 
       - name: Keep the reports
         if: always()
