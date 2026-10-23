@@ -96,19 +96,22 @@ Runtime: about 10 seconds.
 
 | Window | Days | Hours ET |
 |---|---|---|
-| Monday night | Monday | 17:00 → 23:00 |
-| Thursday night | Thursday | 17:00 → 23:00 |
-| Friday night | Friday | 17:00 → 23:00 |
-| NCAAF Saturday | Saturday | 08:00 → midnight |
+| Monday night | Monday | 17:00 → 01:00 |
+| Thursday night | Thursday | 17:00 → 01:00 |
+| Friday night | Friday | 17:00 → 01:00 |
+| NCAAF Saturday | Saturday | 08:00 → 01:00 |
 | NFL Sunday | Sunday | 07:00 → 20:00 |
-| NHL Tuesday night | Tuesday, October → June | 18:00 → 23:00 |
-| NHL Wednesday night | Wednesday, October → June | 18:00 → 23:00 |
-| NBA nights | every night, October → June | 18:00 → 23:00 |
+| NHL Tuesday night | Tuesday, October → June | 18:00 → 01:00 |
+| NHL Wednesday night | Wednesday, October → June | 18:00 → 01:00 |
+| NBA nights | every night, October → June | 18:00 → 01:00 |
 
 The weeknight windows cover the NFL's 20:15 kickoffs and the Thursday and
-Friday college slates from 19:00, with two hours of pre-game movement before them and room
-for a West Coast kickoff at 22:30. A line stops moving at kickoff, so nothing
-later is needed.
+Friday college slates from 19:00, with two hours of pre-game movement before them. A line stops
+moving at kickoff, but the favorites rule (`docs/POLYMARKET.md`) buys into
+live games, mostly in their final stages, so every night window runs to
+01:00 ET: a 22:30 West Coast kickoff or a 22:00 tip is still read every
+fifteen minutes through its last quarter. The tail past midnight belongs to
+the night it started, so 00:30 on a Sunday is still Saturday's window.
 
 The NHL plays most nights, puck drop 19:00 to 22:30 ET. The football windows
 already cover Monday, Thursday, Friday, Saturday and most of Sunday; the two
@@ -138,20 +141,20 @@ costing **no provider request**. On a game day all four fire.
 This is deliberately in the code rather than in two crontab lines. Two
 schedules would eventually disagree with each other — one updated, one not —
 and the disagreement would be invisible. One schedule that the task owns can
-be tested, and it is: twenty-one parametrised cases pin the window boundaries,
-including the one past midnight that does *not* count as Saturday.
+be tested, and it is: twenty-nine parametrised cases pin the window boundaries,
+including the hour past midnight that still counts as the night before and
+the 01:00 tick that does not.
 
 ### API budget
 
 | | Requests per week |
 |---|---|
-| Hourly poller, Tuesday and Wednesday | 48 |
-| NHL Tuesday and Wednesday nights, 5 hours × 3 more, each (October → June) | 30 |
-| Monday, Thursday and Friday, 18 hours hourly + 6 hours × 4, each | 126 |
-| Game-day Saturday, 16 hours × 4 | 64 |
-| Game-day Sunday, 13 hours × 4 | 52 |
+| Tuesday and Wednesday, 17 hours hourly + 7 hours × 4, each (October → June) | 90 |
+| Monday, Thursday and Friday, 16 hours hourly + 8 hours × 4, each | 144 |
+| Game-day Saturday, 7 hours hourly + 17 hours × 4 | 75 |
+| Game-day Sunday, 7 hours hourly + 13 hours × 4, then the NBA night | 63 |
 | Heavy refresh | 7 |
-| **Total** | **~327 polls** |
+| **Total** | **~380 polls** |
 
 One ESPN scoreboard request per sport per poll, ESPN's NBA, NFL and NHL injury reports,
 and from Polymarket US's gateway a page or two of each league's listing, one

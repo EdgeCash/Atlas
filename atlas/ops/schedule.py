@@ -39,10 +39,9 @@ GAME_DAY_MINUTES = 15
 class Window:
     """A recurring weekday window in Eastern time.
 
-    ``end`` before ``start`` means the window crosses midnight. The NCAAF
-    window ends at midnight exactly, so nothing spills into Sunday; the branch
-    exists so that moving the end to 01:00 for a late West Coast slate is a
-    one-character change rather than a rewrite.
+    ``end`` before ``start`` means the window crosses midnight: the tail
+    belongs to the day the window is named for, so 00:30 on a Sunday is still
+    the NCAAF Saturday window and never the NFL Sunday one.
     """
 
     name: str
@@ -68,29 +67,32 @@ class Window:
 NHL_MONTHS = frozenset({10, 11, 12, 1, 2, 3, 4, 5, 6})
 NBA_MONTHS = NHL_MONTHS
 
-#: NCAAF Saturday 08:00 ET through midnight; NFL Sunday 07:00 to 20:00 ET;
-#: Monday, Thursday and Friday nights 17:00 to 23:00 ET. The weeknight windows
+#: NCAAF Saturday 08:00 ET through 01:00; NFL Sunday 07:00 to 20:00 ET;
+#: Monday, Thursday and Friday nights 17:00 to 01:00 ET. The weeknight windows
 #: cover the NFL's 20:15 kickoffs and the Thursday and Friday college slates
-#: from 19:00, with two hours of pre-game movement before them and room for a
-#: West Coast kickoff at 22:30. A line stops moving at kickoff, so nothing
-#: later is needed. The NHL plays most nights, puck drop 19:00 to 22:30 ET:
-#: the football windows cover five of them, and Tuesday and Wednesday nights
-#: are added in its months, so each NHL closing line is taken within fifteen
-#: minutes of puck drop (docs/MODEL_PLAN_NHL.md, step 0).
+#: from 19:00, with two hours of pre-game movement before them. A line stops
+#: moving at kickoff, but the favorites rule (atlas/polymarket/favorites.py)
+#: buys into live games, mostly in their final stages, so every night window
+#: runs to 01:00 ET: a 22:30 West Coast kickoff or a 22:00 tip is still read
+#: every fifteen minutes through its last quarter. The NHL plays most nights,
+#: puck drop 19:00 to 22:30 ET: the football windows cover five of them, and
+#: Tuesday and Wednesday nights are added in its months, so each NHL closing
+#: line is taken within fifteen minutes of puck drop (docs/MODEL_PLAN_NHL.md,
+#: step 0).
 
 GAME_DAYS = (
-    Window("Monday night", weekday=0, start=time(17, 0), end=time(23, 0)),
-    Window("Thursday night", weekday=3, start=time(17, 0), end=time(23, 0)),
-    Window("Friday night", weekday=4, start=time(17, 0), end=time(23, 0)),
-    Window("NCAAF Saturday", weekday=5, start=time(8, 0), end=time(0, 0)),
+    Window("Monday night", weekday=0, start=time(17, 0), end=time(1, 0)),
+    Window("Thursday night", weekday=3, start=time(17, 0), end=time(1, 0)),
+    Window("Friday night", weekday=4, start=time(17, 0), end=time(1, 0)),
+    Window("NCAAF Saturday", weekday=5, start=time(8, 0), end=time(1, 0)),
     Window("NFL Sunday", weekday=6, start=time(7, 0), end=time(20, 0)),
-    Window("NHL Tuesday night", weekday=1, start=time(18, 0), end=time(23, 0), months=NHL_MONTHS),
-    Window("NHL Wednesday night", weekday=2, start=time(18, 0), end=time(23, 0), months=NHL_MONTHS),
+    Window("NHL Tuesday night", weekday=1, start=time(18, 0), end=time(1, 0), months=NHL_MONTHS),
+    Window("NHL Wednesday night", weekday=2, start=time(18, 0), end=time(1, 0), months=NHL_MONTHS),
     # The NBA plays every night of the week, tip-off 19:00 to 22:30 ET, so it has a window every
     # night in its months. Most of them sit inside a football or hockey window already; they are
     # listed on their own so an NBA close is taken within fifteen minutes whatever the other
     # schedules do. The first matching window names the run, so these come last.
-    *(Window(f"NBA {name} night", weekday=weekday, start=time(18, 0), end=time(23, 0), months=NBA_MONTHS)
+    *(Window(f"NBA {name} night", weekday=weekday, start=time(18, 0), end=time(1, 0), months=NBA_MONTHS)
       for weekday, name in enumerate(("Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
                                       "Saturday", "Sunday"))),
 )

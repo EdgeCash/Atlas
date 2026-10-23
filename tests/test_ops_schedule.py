@@ -88,7 +88,8 @@ def test_a_corrupt_provenance_file_does_not_stop_a_build(tmp_path):
     (datetime(2026, 9, 26, 8, 0, tzinfo=ET), "NCAAF Saturday"),
     (datetime(2026, 9, 26, 23, 59, tzinfo=ET), "NCAAF Saturday"),
     (datetime(2026, 9, 26, 7, 59, tzinfo=ET), None),
-    (datetime(2026, 9, 27, 0, 30, tzinfo=ET), None),      # past midnight
+    (datetime(2026, 9, 27, 0, 59, tzinfo=ET), "NCAAF Saturday"),   # past midnight: still Saturday's
+    (datetime(2026, 9, 27, 1, 0, tzinfo=ET), None),
     (datetime(2026, 9, 27, 7, 0, tzinfo=ET), "NFL Sunday"),
     (datetime(2026, 9, 27, 19, 59, tzinfo=ET), "NFL Sunday"),
     (datetime(2026, 9, 27, 20, 0, tzinfo=ET), None),
@@ -97,14 +98,22 @@ def test_a_corrupt_provenance_file_does_not_stop_a_build(tmp_path):
     (datetime(2026, 9, 24, 16, 59, tzinfo=ET), None),
     (datetime(2026, 9, 24, 17, 0, tzinfo=ET), "Thursday night"),
     (datetime(2026, 9, 24, 22, 59, tzinfo=ET), "Thursday night"),
-    (datetime(2026, 9, 24, 23, 0, tzinfo=ET), None),
+    (datetime(2026, 9, 24, 23, 0, tzinfo=ET), "Thursday night"),
+    (datetime(2026, 9, 25, 0, 59, tzinfo=ET), "Thursday night"),  # a 22:30 kickoff's fourth quarter
+    (datetime(2026, 9, 25, 1, 0, tzinfo=ET), None),
     (datetime(2026, 9, 28, 17, 0, tzinfo=ET), "Monday night"),
     (datetime(2026, 9, 28, 22, 59, tzinfo=ET), "Monday night"),
     (datetime(2026, 9, 28, 12, 0, tzinfo=ET), None),      # Monday afternoon
     (datetime(2026, 9, 25, 17, 0, tzinfo=ET), "Friday night"),
     (datetime(2026, 9, 25, 22, 59, tzinfo=ET), "Friday night"),
-    (datetime(2026, 9, 25, 23, 0, tzinfo=ET), None),
-    (datetime(2026, 9, 23, 20, 0, tzinfo=ET), None),      # a Wednesday night
+    (datetime(2026, 9, 25, 23, 0, tzinfo=ET), "Friday night"),
+    (datetime(2026, 9, 26, 0, 30, tzinfo=ET), "Friday night"),
+    (datetime(2026, 9, 23, 20, 0, tzinfo=ET), None),      # a Wednesday night in September
+    (datetime(2026, 10, 21, 20, 0, tzinfo=ET), "NHL Wednesday night"),
+    (datetime(2026, 10, 22, 0, 30, tzinfo=ET), "NHL Wednesday night"),
+    (datetime(2026, 10, 22, 1, 0, tzinfo=ET), None),
+    (datetime(2026, 10, 25, 23, 30, tzinfo=ET), "NBA Sunday night"),   # after the NFL window
+    (datetime(2026, 10, 26, 0, 30, tzinfo=ET), "NBA Sunday night"),
 ])
 def test_game_day_windows_match_the_specification(moment, expected):
     window = schedule.game_day(moment)
