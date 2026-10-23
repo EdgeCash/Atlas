@@ -79,10 +79,15 @@ Every run, heavy or poll (`python -m atlas.polymarket refresh`):
    The day's set is logged once, at the first run from 10:00 ET, at the
    prices shown then, into `tracking/polymarket_positions/` (sealed, one
    file per ISO week), and never revised.
-4. **Grade.** On the final score (a push refunded) and against the venue's
-   close: the contract's last midpoint seen before the game started (the
-   exchange's own price history, `/v1/price-history`, stands in when the
-   record has none), less the ask bought at.
+4. **Grade.** On the exchange's own settlement where it has one
+   (`/v1/markets/{slug}/settlement`: one or zero, or the last fair price
+   where the market's rules settle so - a player who did not play, a game
+   moved more than two days - which pays that price), else on the final
+   score (a push refunded); and against the venue's close: the contract's
+   last midpoint seen before the game started (the exchange's price
+   history, `/v1/price-history`, stands in when the record has none), less
+   the ask bought at. The record the share is fitted on stays on the box
+   score, since it measures the model.
 5. **Publish.** The owner page's box (`atlas/owner/page.py`: Positions for
    the day, the board, the record; then the paper tracker and the readers)
    sealed under `ATLAS_OWNER_KEY` into `data/owner/page.enc.json`, which the

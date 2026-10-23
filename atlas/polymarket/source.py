@@ -382,8 +382,9 @@ def settlement(market_slug: str, sess=None) -> float:
         raw = _get(f"/v1/markets/{market_slug}/settlement", sess=sess)
     except Exception:  # noqa: BLE001 - not settled, or not found: the same answer
         return float("nan")
-    data = raw.get("marketData") or raw if isinstance(raw, dict) else {}
-    for key in ("settlementPx", "settlementPrice", "price"):
+    data = raw if isinstance(raw, dict) else {}
+    data = data.get("marketData") or data
+    for key in ("settlement", "settlementPx", "settlementPrice"):
         v = _num(data.get(key))
         if math.isfinite(v):
             return v

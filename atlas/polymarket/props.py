@@ -393,7 +393,7 @@ def price(q: pd.DataFrame, calibration: pd.DataFrame | None) -> pd.DataFrame:
 def grade_positions(record: pd.DataFrame, results: pd.DataFrame, quotes: pd.DataFrame, now: datetime) -> pd.DataFrame:
     """Each position with its outcome from the box score (a player who did not play is a push, as the venue
     settles him at the last fair price; so is a tie on a whole line), its return, and the venue's close for
-    the contract."""
+    the contract. The exchange's own settlement, where it has one, overrides the box score."""
     if record.empty:
         return record.assign(outcome=pd.Series(dtype=str), profit=pd.Series(dtype=float), pnl=pd.Series(dtype=float),
                              close=pd.Series(dtype=float), clv=pd.Series(dtype=float))
@@ -414,6 +414,7 @@ def grade_positions(record: pd.DataFrame, results: pd.DataFrame, quotes: pd.Data
     r["profit"] = np.select([r["outcome"] == "win", r["outcome"] == "loss"], [(1.0 - cost) / cost, -1.0], 0.0)
     r.loc[r["outcome"] == "open", "profit"] = np.nan
     r["pnl"] = pd.to_numeric(r["stake"], errors="coerce") * r["profit"]
+    r = positions.apply_settlement(r, positions.settled(r, now))
     started = kick <= pd.Timestamp(now)
     r["close"] = [positions.closing(quotes, tok, k) if s else float("nan")
                   for tok, k, s in zip(r["token_id"], kick, started, strict=True)]

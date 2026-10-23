@@ -125,8 +125,8 @@ def board_section(priced: pd.DataFrame, now: datetime) -> dict:
 def record_section(graded: pd.DataFrame) -> dict | None:
     if not len(graded):
         return None
-    done = graded[graded["outcome"].isin(["win", "loss", "push"])]
-    decided = done[done["outcome"] != "push"]
+    done = graded[graded["outcome"].isin(["win", "loss", "push", "settled"])]
+    decided = done[done["outcome"].isin(["win", "loss"])]
     staked = float(pd.to_numeric(done["stake"], errors="coerce").sum()) if len(done) else 0.0
     pnl = float(done["pnl"].sum()) if len(done) else 0.0
     clv = pd.to_numeric(graded["clv"], errors="coerce")
@@ -146,7 +146,8 @@ def record_section(graded: pd.DataFrame) -> dict | None:
                                   f"closed {_cents(x.close)}" if pd.notna(x.close) else ""]]
                                 for x in latest.itertuples()]})
     return {"title": "Polymarket US record (paper)", "tab": RECORD_TAB, "tables": tables, "notes": [
-        "Each position is graded on the final score (a push refunded) and against the venue's close: the "
+        "Each position is graded on the exchange's own settlement where it has one (a settle at the last fair "
+        "price pays that price), else on the final score (a push refunded), and against the venue's close: the "
         "contract's last midpoint seen before the game started, less the ask it was bought at. Returns are shares "
         f"of the bankroll at the stakes shown. Nothing is read from fewer than {pos.MIN_GRADED} graded."]}
 
