@@ -77,7 +77,7 @@ TUNE = (2014, 2015, 2016)
 FIRST_REPORT = 2017
 #: A player is carried into the games ahead when his latest game is this recent.
 ACTIVE_DAYS = 400
-GRID = {"h_share": (1.0, 2.0, 4.0, 8.0, 16.0), "k_share": (0.25, 0.5, 1.0, 2.0, 4.0), "h_rate": (5.0, 10.0, 20.0, 40.0),
+GRID = {"h_share": (1.0, 2.0, 4.0, 8.0, 16.0), "k_share": (0.1, 0.25, 0.5, 1.0, 2.0, 4.0), "h_rate": (5.0, 10.0, 20.0, 40.0),
         "k_rate": (5.0, 20.0, 50.0, 150.0), "h_team": (4.0, 8.0, 16.0, 32.0, 64.0), "k_td": (1.0, 5.0, 20.0, 50.0)}
 POSITIONS = ("QB", "RB", "WR", "TE")
 
