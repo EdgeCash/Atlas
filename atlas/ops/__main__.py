@@ -1,7 +1,7 @@
 """Atlas live operations.
 
     python -m atlas.ops heavy     # 04:00 ET - warehouse, model, every page
-    python -m atlas.ops poll      # hourly (15 min on game days) - market, and the owner's plays
+    python -m atlas.ops poll      # hourly (15 min on game days) - the market, and Polymarket
     python -m atlas.ops social    # 05:00 ET - the featured card assets
     python -m atlas.ops backup    # copy the live record, then read it back
     python -m atlas.ops analytics # traffic, from the web server's access log
@@ -67,33 +67,15 @@ def heavy(*, skip_warehouse: bool = False) -> int:
         ("nhl-warehouse", ["atlas.staging.nhl.build"]),
         ("model", ["atlas.live", "refresh", "--no-rebuild"]),
         ("market", ["atlas.live", "run"]),
-        # The NHL's closing lines for 2022-23 to 2025-26 from BettingPros, the
-        # owner's choice for the archive's gap (docs/MODEL_PLAN_NHL.md, §9):
-        # a few hundred calls a run until the seasons are in, sealed, then the
-        # market row for those seasons. Never fails the run.
-        ("nhl-history", ["atlas.owner.nhl_history"]),
-        # DraftKings' Classic salaries for the DFS model's record. It never
-        # fails the run: a missed capture is logged, the site still builds.
-        ("dfs-capture", ["atlas.sources.draftkings"]),
-        # College player box scores from ESPN for the college DFS model: the
-        # season in progress, then up to a budget of the history each run,
-        # newest seasons first, kept by the raw cache. Never fails the run.
-        ("cfb-players", ["atlas.sources.espn_cfb"]),
         # The SEC's and the ACC's availability reports, their quarterbacks,
-        # into tracking/availability.csv before the curated plays are logged
-        # (they read the starters' statuses from it). Never fails the run.
+        # into tracking/availability.csv. Never fails the run.
         ("availability", ["atlas.sources.availability"]),
-        # The owner's curated plays: logged at this run if a rule chooses now,
-        # graded, and sealed into their own box for the owner page. Never
-        # fails the run, and runs on every poll as well (atlas/owner/plays.py).
-        ("plays", ["atlas.owner.plays", "refresh", "--heavy"]),
-        # DFS: every upcoming Classic, Showdown and Tiers slate projected;
-        # the Main slate's projections recorded in tracking/dfs_projections.csv
-        # for the public DFS page until its first kickoff; and the owner's
-        # lineups for every slate, encrypted with the ATLAS_OWNER_KEY secret
-        # before anything the site publishes is written. Never fails the run
-        # (atlas/dfs/owner.py).
-        ("dfs", ["atlas.dfs.owner"]),
+        # Polymarket: every quote on the games ahead captured into the record,
+        # each contract priced by the model, the day's paper positions logged
+        # if due and graded, the owner page sealed, the public report written.
+        # Never fails the run, and runs on every poll as well
+        # (atlas/polymarket/__main__.py).
+        ("polymarket", ["atlas.polymarket", "refresh", "--heavy"]),
         # FPI, Elo and SP+ for each upcoming game, fetched fresh for the card's
         # "other models" panel (display only; the model never reads them).
         # Never fails the run (atlas/sources/other_models.py).
@@ -136,10 +118,10 @@ def poll(*, force: bool = False) -> int:
         freshness.record("poll", ok=False, detail=detail)
         return 1
 
-    # The curated plays choose at a fixed poll (rule v3: the first at or after
-    # 10:00 ET on Saturday), from the market this poll just captured, and are
-    # graded against every close it recorded. The step never fails the poll.
-    _run("plays", ["atlas.owner.plays", "refresh"])
+    # Polymarket, from the quotes this poll reads: the record, the pricing, the
+    # day's positions (logged at the first poll from 10:00 ET), the owner page.
+    # The step never fails the poll.
+    _run("polymarket", ["atlas.polymarket", "refresh"])
 
     # A poll refreshes the market on the pages without touching the warehouse
     # or the model. The projections on a card are from the heavy refresh; only

@@ -229,7 +229,7 @@ def history(frame: pd.DataFrame, *, choices: dict[int, state_mod.Choice] | None 
     scored, table, _ = total_mod.run(state_mod.every_game(frame), first_test_season=first_test_season,
                                      choices=choices)
     # Each game's kickoff rides along so a rule that chooses on one weekday
-    # can be replayed on the same days (`atlas/owner/plays.rule_history`).
+    # can be replayed on the same days.
     kickoffs = (pd.Series(pd.to_datetime(frame["kickoff"], utc=True, errors="coerce").to_numpy(),
                           index=frame["game_id"].to_numpy()) if "kickoff" in frame and "game_id" in frame
                 else pd.Series(dtype="datetime64[ns, UTC]"))

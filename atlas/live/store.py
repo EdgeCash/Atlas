@@ -101,22 +101,14 @@ SCHEMA: dict[str, list[str]] = {
     "other_models": [
         "sport", "game_id", "kickoff", "model", "home_margin", "home_win_prob", "as_of", "fetched_at", "detail",
     ],
-    # DraftKings NFL Classic slates and their salaries (`atlas/sources/draftkings.py`):
-    # DraftKings keeps no history, so this is the only record of the market
-    # the DFS model is measured against. Captured daily by the heavy refresh.
-    "dfs_slates": [
-        "draft_group_id", "sport", "label", "game_count", "starts_at", "captured_at", "game_type",
-    ],
-    "dfs_salaries": [
-        "draft_group_id", "player_id", "name", "position", "team", "salary", "game", "game_start",
-        "status", "disabled", "captured_at", "draftable_id", "cpt_salary", "cpt_draftable_id", "tier",
-    ],
-    # Atlas's public DFS projections, each slate's last before its first
-    # kickoff (atlas/dfs/record.py). Graded afterwards against what the
-    # players scored: the DFS model's live record.
-    "dfs_projections": [
-        "draft_group_id", "slate", "starts_at", "season", "week", "player_id_dk", "player_id", "name", "position",
-        "team", "opponent", "salary", "status", "projection", "low", "high", "p_play", "projected_at",
+    # Every Polymarket quote on the games Atlas projects (atlas/polymarket/source.py):
+    # one row per contract per observed price, in the clear, with when it was
+    # first and last seen. The point-in-time archive of the market, and the
+    # close every position is graded against.
+    "polymarket_quotes": [
+        "captured_at", "last_seen_at", "sport", "game_id", "event_id", "event_slug", "game_start", "away", "home",
+        "market_id", "condition_id", "token_id", "market", "side", "line", "bid", "ask", "mid", "last", "spread",
+        "liquidity", "fee_rate", "accepting", "min_size", "tick",
     ],
     # The conferences' availability reports, quarterbacks only (atlas/sources/availability.py).
     "availability": [
@@ -180,11 +172,8 @@ KEYS: dict[str, list[str]] = {
     "calibration": ["sport", "game_id", "market"],
     "card_grades": ["sport", "game_id"],
     "other_models": ["sport", "game_id", "model"],
-    "dfs_slates": ["draft_group_id"],
-    # Last capture wins: a player's status (questionable, out) is worth
-    # having as of the latest look before the slate locks.
-    "dfs_salaries": ["draft_group_id", "player_id"],
-    "dfs_projections": ["draft_group_id", "player_id_dk"],
+    # One row per observed price per contract, as the snapshots are.
+    "polymarket_quotes": ["token_id", "captured_at"],
     # One row per report and player: a report re-read keeps its first capture's rows current.
     "availability": ["conference", "report_id", "team", "player"],
     "games": ["game_id"],
@@ -204,9 +193,7 @@ SORT: dict[str, list[str]] = {
     "calibration": ["sport", "season", "week", "game_id", "market"],
     "card_grades": ["sport", "season", "week", "game_id"],
     "other_models": ["sport", "kickoff", "game_id", "model"],
-    "dfs_slates": ["starts_at", "draft_group_id"],
-    "dfs_salaries": ["draft_group_id", "position", "salary", "player_id"],
-    "dfs_projections": ["starts_at", "draft_group_id", "position", "player_id_dk"],
+    "polymarket_quotes": ["sport", "game_start", "event_id", "market", "line", "side", "captured_at"],
     "availability": ["publish_date", "conference", "report_id", "team", "player"],
     "games": ["kickoff", "game_id"],
     "snapshots": ["game_id", "market", "book", "captured_at"],

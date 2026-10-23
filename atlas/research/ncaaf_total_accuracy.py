@@ -6,7 +6,7 @@ The total (`atlas/models/ncaaf_total.py`) is the state model's implied total,
 recalibrated on the three training seasons' own state forecasts, plus the
 teams' combined adjusted pace and the effective wind. It trails the closing
 total by about 0.3 points of CRPS (9.13 against 8.85, 2021-25). The curated
-plays (`atlas/owner/plays.py`) are this number's disagreements with the
+owner's Polymarket positions (`atlas/polymarket/`) are this number's disagreements with the
 line, so every point of accuracy here is theirs.
 
 The protocol, fixed before any season was scored. Each candidate changes one

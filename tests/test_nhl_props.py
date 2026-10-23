@@ -1,5 +1,5 @@
 """Atlas's NHL player projections (docs/MODEL_PLAN_NHL.md, step 8): walk-forward, nothing from the game itself
-or after it; the snapshot the heavy refresh seals; Atlas's probability beside the market's in the pick'em.
+or after it.
 A synthetic league of four teams."""
 
 from __future__ import annotations
@@ -12,7 +12,6 @@ import pandas as pd
 import pytest
 
 from atlas.models import nhl_props
-from atlas.owner import pickem
 
 KEY = "correct horse battery staple"
 TEAMS = ("AAA", "BBB", "CCC", "DDD")
@@ -99,37 +98,16 @@ def test_a_count_and_the_empirical_shape_give_probabilities_that_add_up():
     assert nhl_props.prob(0.7, 0.5, "over", 1.0) == pytest.approx(1 - math.exp(-0.7))
 
 
-def test_the_snapshot_seals_opens_and_projects_a_player_against_an_opponent(league, tmp_path):
+def test_the_snapshot_projects_a_player_against_an_opponent(league):
     now = datetime(2023, 10, 1, tzinfo=UTC)
     snap = nhl_props.snapshot(league, now)
     assert snap["season"] == 2023 and len(snap["skaters"]) == 16 and len(snap["goalies"]) == 4
-    where = tmp_path / "state.enc.json"
-    nhl_props.seal(snap, KEY, where)
-    assert "Alpha Aaa" not in where.read_text()
-    back = nhl_props.load(KEY, where)
-    star = back["skaters"].set_index("name").loc["Alpha Aaa"]
-    depth = back["skaters"].set_index("name").loc["Bravo Aaa"]
-    home = nhl_props.expect(back, star, "AAA", "BBB", "AAA", "shots")
-    assert home > nhl_props.expect(back, depth, "AAA", "BBB", "AAA", "shots") > 0
-    assert math.isnan(nhl_props.expect(back, star, "AAA", "ZZZ", "AAA", "shots"))     # a team it does not know
-    goalie = back["goalies"].set_index("name").loc["Goalie AAA"]
-    assert 4 < nhl_props.expect(back, None, "AAA", "BBB", "AAA", "saves", goalie=goalie) < 20
-    assert nhl_props.load(KEY, tmp_path / "missing.enc.json") is None
+    star = snap["skaters"].set_index("name").loc["Alpha Aaa"]
+    depth = snap["skaters"].set_index("name").loc["Bravo Aaa"]
+    home = nhl_props.expect(snap, star, "AAA", "BBB", "AAA", "shots")
+    assert home > nhl_props.expect(snap, depth, "AAA", "BBB", "AAA", "shots") > 0
+    assert math.isnan(nhl_props.expect(snap, star, "AAA", "ZZZ", "AAA", "shots"))     # a team it does not know
+    goalie = snap["goalies"].set_index("name").loc["Goalie AAA"]
+    assert 4 < nhl_props.expect(snap, None, "AAA", "BBB", "AAA", "saves", goalie=goalie) < 20
 
 
-def test_the_pickem_shows_atlas_beside_the_fair_value_for_the_player_it_finds(league):
-    snap = nhl_props.snapshot(league, datetime(2023, 10, 1, tzinfo=UTC))
-    priced = pd.DataFrame([
-        {"sport": "nhl", "event_id": 7, "market": "shots", "player": "Alpha Aaa", "team": "AAA", "line": 2.5,
-         "side": "over", "p": 0.55, "p_atlas": np.nan},
-        {"sport": "nhl", "event_id": 7, "market": "saves", "player": "Goalie BBB", "team": "BBB", "line": 9.5,
-         "side": "under", "p": 0.55, "p_atlas": np.nan},
-        {"sport": "nhl", "event_id": 7, "market": "shots", "player": "Nobody Known", "team": "AAA", "line": 2.5,
-         "side": "over", "p": 0.55, "p_atlas": np.nan},
-        {"sport": "nfl", "event_id": 8, "market": "receptions", "player": "Alpha Aaa", "team": "AAA", "line": 3.5,
-         "side": "over", "p": 0.55, "p_atlas": np.nan}])
-    events = pd.DataFrame({"event_id": [7, 8], "home_abbr": ["AAA", "X"], "visitor_abbr": ["BBB", "Y"]})
-    out = pickem.atlas_beside(priced, snap, events)
-    assert 0.3 < out.loc[0, "p_atlas"] < 0.95 and 0 < out.loc[1, "p_atlas"] < 1
-    assert math.isnan(out.loc[2, "p_atlas"]) and math.isnan(out.loc[3, "p_atlas"])
-    assert pickem.atlas_beside(priced, None, events) is priced                        # no snapshot: as it was

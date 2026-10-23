@@ -29,8 +29,8 @@ so far, on regular-season player-games with five games of the season behind them
 half-lives and the prior weights tuned once on 2017-18 to 2019-20. Against the market only on the prop
 lines the owner capture has recorded since opening night, when there are enough of them.
 
-Shown beside the market's fair value in the pick'em (`atlas/owner/pickem.py`), never instead of it,
-until a walk-forward says it is better than the market.
+A research model: nothing on the site or the owner page reads it until a walk-forward says it is
+better than the market.
 """
 
 from __future__ import annotations
@@ -503,7 +503,7 @@ def tune(tables: dict, base: Spec | None = None) -> tuple[Spec, list[dict]]:
 # The games ahead
 # ---------------------------------------------------------------------------
 
-#: The pick'em's market slugs (`atlas/owner/pickem.py`), to the stat each projects.
+#: The props markets' slugs, as the books name them, to the stat each projects.
 MARKETS = {"shots": "shots", "shots-on-goal": "shots", "points": "points", "goals": "goals", "assists": "assists",
            "saves": "saves", "blocked-shots": "blocks", "hits": "hits"}
 #: A player is carried into the season ahead when his latest game is this recent.
@@ -605,50 +605,6 @@ def prob(mean_: float, line: float, side: str, dispersion: float, ratio=None) ->
         over = float(p_over([mean_], line, dispersion)[0])
         under = 1.0 - float(p_over([mean_], line - 1 if whole else line, dispersion)[0])
     return over if side == "over" else under
-
-
-def players_path() -> Path:
-    from atlas.live.store import tracking_dir
-
-    return tracking_dir() / "owner_nhl_players" / "state.enc.json"
-
-
-def _records(frame: pd.DataFrame) -> list[dict]:
-    return json.loads(frame.to_json(orient="records", date_format="iso"))
-
-
-def seal(snap: dict, passphrase: str, where: Path | None = None) -> Path:
-    """The snapshot, for the owner's pick'em only: sealed, one file, rewritten each heavy refresh."""
-    from atlas.owner import sealed
-
-    rows = [{"kind": kind, **r} for kind in ("skaters", "goalies", "teams", "arenas") for r in _records(snap[kind])]
-    rows.append({"kind": "meta", "season": snap["season"], "level": snap["level"], "league_sv": snap["league_sv"],
-                 "layer": snap["layer"], "spec": snap["spec"]})
-    return sealed.seal(rows, passphrase, where or players_path())
-
-
-def load(passphrase: str, where: Path | None = None) -> dict | None:
-    """The sealed snapshot, or None when there is none yet."""
-    from atlas.owner import sealed
-
-    where = where or players_path()
-    if not where.exists():
-        return None
-    rows = sealed.open_text(where.read_text(), passphrase)
-    meta = next((r for r in rows if r["kind"] == "meta"), None)
-    if meta is None:
-        return None
-    frames = {kind: pd.DataFrame([{k: v for k, v in r.items() if k != "kind"} for r in rows if r["kind"] == kind])
-              for kind in ("skaters", "goalies", "teams", "arenas")}
-    return {**frames, "season": meta["season"], "level": meta["level"], "league_sv": meta["league_sv"],
-            "layer": {k: v for k, v in meta["layer"].items()}, "spec": meta["spec"]}
-
-
-def publish(now, passphrase: str, *, tables: dict | None = None, where: Path | None = None) -> int:
-    """The heavy refresh's step: the snapshot sealed. Returns the players in it."""
-    snap = snapshot(tables or load_tables(), now)
-    seal(snap, passphrase, where)
-    return len(snap["skaters"]) + len(snap["goalies"])
 
 
 # ---------------------------------------------------------------------------
