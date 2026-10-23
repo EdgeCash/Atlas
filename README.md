@@ -1,7 +1,7 @@
 # Atlas - a sports research warehouse, priced against Polymarket
 
-A point-in-time-correct historical database for college football, the NFL
-and the NHL, the models fitted on it, and the research that answered one
+A point-in-time-correct historical database for college football, the NFL,
+the NHL and the NBA, the models fitted on it, and the research that answered one
 question: **which variables actually predict games?** Almost none that the
 market has not already priced - and the one place that finding is now put to
 work is **Polymarket**, the only venue Atlas prices against.
@@ -10,7 +10,7 @@ work is **Polymarket**, the only venue Atlas prices against.
 
 From 23 October 2026 the owner-side model is Polymarket only. Every run
 reads Polymarket's public game markets (a moneyline, a ladder of spreads and
-a ladder of totals on every NFL, NHL and college football game) without a
+a ladder of totals on every NFL, NBA, NHL and college football game) without a
 key, matches each game to the one Atlas projects, keeps every main-line
 quote timestamped in `tracking/polymarket_quotes.csv`, prices every
 contract by Atlas **anchored to Polymarket by what the walk-forward record
@@ -41,6 +41,7 @@ sealed records stay under `tracking/owner_*` and are not read.
 |---|---|
 | **Atlas on Polymarket**: how the venue is read, priced and traded on paper | [`docs/POLYMARKET.md`](docs/POLYMARKET.md) |
 | **The public page about the model** (rebuilt every run) | [`reports/polymarket_model.md`](reports/polymarket_model.md) |
+| **The NBA**: plan, model report | [`docs/MODEL_PLAN_NBA.md`](docs/MODEL_PLAN_NBA.md) · [`reports/nba_state.md`](reports/nba_state.md) |
 | Point-in-time warehouse (8 tables, parquet + DuckDB) | `data/warehouse/` |
 | Phase 1A research report | [`reports/atlas_research_report_v1.md`](reports/atlas_research_report_v1.md) |
 | Phase 1B opponent-adjustment report | [`reports/opponent_adjustment_report.md`](reports/opponent_adjustment_report.md) |
@@ -453,7 +454,7 @@ atlas/
   research/            dataset, models, benchmarks, importance, validation,
                        adjustment study, residual tools, QB features,
                        Phase 1C tracks, reports
-  models/              the NCAAF, NFL and NHL projection models and their reports
+  models/              the NCAAF, NFL, NHL and NBA projection models and their reports
   live/                the live tracker: numbers, snapshots, signals, grades, CLV
   polymarket/          Polymarket: source, match, pricing, positions, page, report
   owner/               the owner key, the sealed records, the owner page's box, the paper tracker
@@ -478,6 +479,8 @@ tests/                 offline suite, no network
 | sportsdataverse rosters | no | season rosters - transfer and first-year identification |
 | CollegeFootballData API | free key | SP+ (overall/offence/defence), recruiting, roster talent, returning production, coaching staffs, weekly polls |
 | Polymarket Gamma and CLOB APIs | no | every game market's contracts, prices, depth and fee schedule; the order book; price history |
+| hoopR NBA data (sportsdataverse) | no | ESPN's NBA schedules and team box scores, 2002 on |
+| SportsBookReviewsOnline odds archive | no | NHL and NBA closing lines, 2007-08 to 2022-23 (personal use; cached, never republished) |
 
 ## Testing and CI
 

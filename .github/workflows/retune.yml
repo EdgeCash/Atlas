@@ -2,7 +2,8 @@ name: retune
 
 # Re-runs the model walk-forwards on the full warehouse and proposes what they
 # produce: the reports and the tuned hyperparameters the live projectors read
-# (reports/ncaaf_state_choices.json, reports/nfl_state_choices.json).
+# (reports/ncaaf_state_choices.json, reports/nfl_state_choices.json,
+# reports/nba_state_choices.json).
 #
 # Run by hand from the Actions tab after a model change, never on a schedule:
 # a retune moves live numbers, so a person asks for it and a person reviews
@@ -21,8 +22,8 @@ on:
       sports:
         description: which models to retune
         type: choice
-        options: [both, ncaaf, nfl]
-        default: both
+        options: [all, ncaaf, nfl, nba]
+        default: all
 
 permissions:
   contents: write        # push the retune/<run> branch
@@ -68,7 +69,7 @@ jobs:
             atlas-data-
 
       - name: College data
-        if: env.SPORTS != 'nfl'
+        if: env.SPORTS == 'all' || env.SPORTS == 'ncaaf'
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
         run: |
@@ -80,14 +81,20 @@ jobs:
           python -m atlas.warehouse.build --include-scheduled
 
       - name: NFL data
-        if: env.SPORTS != 'ncaaf'
+        if: env.SPORTS == 'all' || env.SPORTS == 'nfl'
         run: |
           make nfl-ingest
           make nfl-warehouse
 
+      - name: NBA data
+        if: env.SPORTS == 'all' || env.SPORTS == 'nba'
+        run: |
+          make nba-ingest
+          make nba-warehouse
+
       # State before total: the total reads the state's saved choices.
       - name: Retune the college models
-        if: env.SPORTS != 'nfl'
+        if: env.SPORTS == 'all' || env.SPORTS == 'ncaaf'
         run: |
           make ncaaf-benchmarks
           make ncaaf-prior
@@ -95,11 +102,15 @@ jobs:
           make ncaaf-total
 
       - name: Retune the NFL models
-        if: env.SPORTS != 'ncaaf'
+        if: env.SPORTS == 'all' || env.SPORTS == 'nfl'
         run: |
           make nfl-benchmarks
           make nfl-state
           make nfl-total
+
+      - name: Retune the NBA model
+        if: env.SPORTS == 'all' || env.SPORTS == 'nba'
+        run: make nba-state
 
       - name: Keep the reports
         if: always()

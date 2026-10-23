@@ -32,7 +32,7 @@ def _md(frame: pd.DataFrame) -> str:
 
 def coverage(priced: pd.DataFrame, upcoming: pd.DataFrame) -> pd.DataFrame:
     rows = []
-    for sport in ("ncaaf", "nfl", "nhl"):
+    for sport in ("ncaaf", "nfl", "nba", "nhl"):
         ahead = upcoming[upcoming["sport"].astype(str) == sport] if len(upcoming) else upcoming
         mine = priced[priced["sport"].astype(str) == sport] if len(priced) else priced
         main = mine[pd.to_numeric(mine["p_market"], errors="coerce").between(0.3, 0.7)] if len(mine) else mine
@@ -82,7 +82,7 @@ def write(priced: pd.DataFrame, upcoming: pd.DataFrame, calibration: pd.DataFram
 *Rebuilt every run; this one at {stamp}.*
 
 Polymarket is the one venue Atlas is priced against. It lists a moneyline,
-a ladder of spreads and a ladder of totals on every NFL, NHL and college
+a ladder of spreads and a ladder of totals on every NFL, NBA, NHL and college
 football game as binary contracts, and its prices are public: every run
 reads them from Polymarket's own API, matches each game to the one Atlas
 projects, and keeps every quote, timestamped, in

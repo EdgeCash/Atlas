@@ -1,7 +1,7 @@
 """Atlas on Polymarket: the one venue the model is priced against.
 
 Polymarket lists a moneyline, a ladder of spreads and a ladder of totals on
-every NFL, NHL and college football game, as binary contracts that cost
+every NFL, NBA, NHL and college football game, as binary contracts that cost
 their price and pay one dollar. Its prices are public, read without a key
 from its Gamma and CLOB APIs (`source.py`), so unlike every sportsbook
 before it the market Atlas is measured against can be captured, timestamped

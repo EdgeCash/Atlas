@@ -51,6 +51,7 @@ CALIBRATION_MARKET = {
     ("ncaaf", "moneyline"): "margin", ("ncaaf", "spread"): "margin", ("ncaaf", "total"): "total",
     ("nfl", "moneyline"): "margin", ("nfl", "spread"): "margin", ("nfl", "total"): "total",
     ("nhl", "moneyline"): "moneyline", ("nhl", "spread"): "moneyline", ("nhl", "total"): "moneyline",
+    ("nba", "moneyline"): "margin", ("nba", "spread"): "margin", ("nba", "total"): "total",
 }
 #: The share of Atlas's disagreement taken as real when the record cannot say.
 DEFAULT_SHARE: dict = {}
@@ -319,7 +320,7 @@ def price(quotes: pd.DataFrame, projections: pd.DataFrame | None, nhl_projection
     return q.reset_index(drop=True)
 
 
-def shares_table(calibration: pd.DataFrame | None, sports=("ncaaf", "nfl", "nhl")) -> pd.DataFrame:
+def shares_table(calibration: pd.DataFrame | None, sports=("ncaaf", "nfl", "nba", "nhl")) -> pd.DataFrame:
     """The shares and the record sizes behind them, for the reports."""
     rows = []
     for s in sports:

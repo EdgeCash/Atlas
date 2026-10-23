@@ -63,6 +63,7 @@ LEAGUES = {
     "nfl": League("nfl", 12185, 450, "nfl"),
     "nhl": League("nhl", 10346, 899, "nhl"),
     "ncaaf": League("ncaaf", 12756, 100351, "cfb"),
+    "nba": League("nba", 10345, 745, "nba"),
 }
 #: Polymarket's ``sportsMarketType`` to Atlas's market.
 GAME_MARKETS = {"moneyline": "moneyline", "spreads": "spread", "totals": "total"}

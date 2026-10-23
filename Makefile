@@ -5,7 +5,7 @@ PYTHON ?= python3
 	site site-full site-serve site-audit site-shots launch-check \
 	ops-heavy ops-poll ops-social ops-health ops-status ops-crontab \
 	ops-backup ops-analytics perf seo ncaaf-benchmarks ncaaf-prior ncaaf-state ncaaf-total nfl-ingest nfl-warehouse nfl-benchmarks nfl-state nfl-total \
-	nhl-ingest nhl-warehouse nhl-xg nhl-benchmarks nhl-model nhl-props nhl-plays
+	nhl-ingest nhl-warehouse nhl-xg nhl-benchmarks nhl-model nhl-props nhl-plays nba-ingest nba-warehouse nba-state nba-project
 
 help:
 	@echo "Atlas Phase 1A - research warehouse"
@@ -50,6 +50,10 @@ help:
 	@echo "  make nhl-model         tune, walk forward and score the NHL game model (steps 3 to 5)"
 	@echo "  make nhl-props         tune, walk forward and score the NHL player projections (step 8)"
 	@echo "  make nhl-plays         score the pre-registered NHL curated-play rules (step 9)"
+	@echo "  make nba-ingest        fetch and cache the NBA's schedule, box scores and odds archive"
+	@echo "  make nba-warehouse     build data/warehouse/nba.duckdb"
+	@echo "  make nba-state         tune, walk forward and score the NBA state model; save its hyperparameters"
+	@echo "  make nba-project       project the NBA games ahead, to the terminal"
 	@echo "  make perf       measure load time and LCP at three viewports"
 	@echo "  make seo        validate canonicals, meta, OpenGraph and sitemap"
 	@echo "  make site-full  warehouse + numbers + market + site, from scratch"
@@ -231,6 +235,21 @@ nhl-props:
 # NHL plan, step 9: the rules docs/NHL_PLAYS_PREREGISTRATION.md fixed before any was scored.
 nhl-plays:
 	$(PYTHON) -m atlas.research.nhl_plays
+
+# NBA plan (docs/MODEL_PLAN_NBA.md): hoopR's schedule and box scores and the odds archive into the
+# raw cache, the warehouse, the state model walked forward (its hyperparameters saved for the live
+# projector), and the slate ahead.
+nba-ingest:
+	$(PYTHON) -m atlas.sources.nba
+
+nba-warehouse:
+	$(PYTHON) -m atlas.staging.nba.build
+
+nba-state:
+	$(PYTHON) -m atlas.models.nba_state
+
+nba-project:
+	$(PYTHON) -m atlas.models.nba_projection
 
 # College player box scores from ESPN (budgeted; newest first), for the college models' research tables.
 cfb-players:
