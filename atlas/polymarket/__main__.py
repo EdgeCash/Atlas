@@ -91,7 +91,7 @@ def refresh(*, now: datetime | None = None, heavy: bool = False, store: Store | 
         # is set (atlas/polymarket/props.py). Never fails the run.
         prop_sections, prop_summary = props.refresh(store, events, pairs, now, passphrase or None)
         # The favorites rule, on this run's quotes: no projection in it (atlas/polymarket/favorites.py).
-        fav_record, fav_section = favorites.refresh(store, quotes, now)
+        fav_record, fav_section = favorites.refresh(store, quotes, now, passphrase or None)
         report.write(priced, up, store.read("calibration"), now, props=prop_summary,
                      favorites_text=favorites.text(fav_record))
         if passphrase:

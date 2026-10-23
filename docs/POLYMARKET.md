@@ -231,10 +231,16 @@ cap; never a market order, never a resting one. Each is checked against
 the caps before it goes - $100 a day, $250 open across unsettled positions
 - against the stop (when the orders settled over the trailing three days
 have lost more than $50, nothing is placed until that window clears), and
-against the floor: before a live run places anything it reads the
-account's balance from the venue, cash plus the value of what it holds,
-and places nothing while that is below half the bankroll, or when the
-balance cannot be read at all. The caps, the stop and the floor are
+against the floor: before a run places anything (a dry run too) it reads
+the account's balance from the venue, cash plus the value of what it
+holds, and places nothing while that is below half the bankroll or of the
+highest balance it has read, whichever is more - the floor moves up with
+the account, never down - or when the balance cannot be read at all. Two
+rules feed the step, each order's row naming its rule: the model's
+positions as they are logged once a day, and the favorites rule's
+positions as they are taken every poll, at the 85-cent crossing only; the
+repository variable `LIVE_RULES` names which of the two the step takes
+(`favorites`, `model`, or both, the default). The caps, the stop and the floor are
 constants in the module, set for the owner as repository variables
 (`MAX_ORDER_DOLLARS`, `MAX_DAY_DOLLARS`, `MAX_OPEN_DOLLARS`,
 `LOSS_STOP_DOLLARS`, `BALANCE_FLOOR`), never widened by anything the venue

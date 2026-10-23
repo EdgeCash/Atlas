@@ -49,6 +49,8 @@ COLUMNS = ["formed_at", "threshold", "phase", "minutes_in", "sport", "game_id", 
            "label", "market", "side", "long", "line", "market_id", "market_slug", "token_id", "ask", "bid", "spread",
            "fee_rate", "fee", "cost", "payout", "won", "profit", "graded_at"]
 TAB = "Poly Snipe"
+#: The one threshold whose crossings go to the live step (atlas/polymarket/orders.py): the user's "86%".
+ORDER_THRESHOLD = 0.85
 #: The owner page lists this many of the latest positions, one row per side.
 LATEST = 30
 
@@ -262,17 +264,49 @@ def text(record: pd.DataFrame) -> str:
     return head + "\n" + body
 
 
-def refresh(store, quotes: pd.DataFrame, now: datetime) -> tuple[pd.DataFrame, dict]:
-    """The rule's step of every run: take, grade, write. Returns (the record, the owner page's section).
-    Never raises."""
+def as_positions(rows: pd.DataFrame) -> pd.DataFrame:
+    """The rule's positions in the shape the live step takes (the positions record's columns): one order's
+    worth each, the stake the whole bankroll so the per-order cap decides the size."""
+    from atlas.polymarket import positions
+
+    if rows is None or rows.empty:
+        return pd.DataFrame(columns=positions.COLUMNS)
+    out = pd.DataFrame({
+        "position_id": [f"fav:{t}:{float(th):.2f}" for t, th in zip(rows["token_id"], rows["threshold"], strict=True)],
+        "formed_at": rows["formed_at"], "day": [positions.day_of(t) for t in rows["formed_at"]],
+        "year": [positions.iso_week(t)[0] for t in rows["formed_at"]],
+        "week": [positions.iso_week(t)[1] for t in rows["formed_at"]],
+        "game_id": rows["game_id"], "sport": rows["sport"], "kickoff": rows["game_start"], "label": rows["label"],
+        "market": rows["market"], "side": rows["side"], "long": rows["long"], "line": rows["line"],
+        "token_id": rows["token_id"], "market_id": rows["market_id"], "market_slug": rows["market_slug"],
+        "event_slug": rows["event_slug"], "ask": rows["ask"], "fee_rate": rows["fee_rate"], "fee": rows["fee"],
+        "cost": rows["cost"], "stake": 1.0, "spread": rows["spread"]})
+    return out.reindex(columns=positions.COLUMNS)
+
+
+def refresh(store, quotes: pd.DataFrame, now: datetime, passphrase: str | None = None) -> tuple[pd.DataFrame, dict]:
+    """The rule's step of every run: take, grade, write; and, with the owner key, the new positions at
+    :data:`ORDER_THRESHOLD` to the live step, which does nothing unless its secrets say so. Returns (the
+    record, the owner page's section). Never raises."""
     try:
         record = store.read(TABLE)
+        before = len(record)
         record, added = take(record, quotes, now)
         record = grade(record, now)
         if added or len(record):
             store.write(TABLE, record)
         if added:
             LOG.info("favorites: %d positions taken (%d in all)", added, len(record))
+            if passphrase:
+                from atlas.polymarket import orders
+
+                new = record.iloc[before:]
+                new = new[pd.to_numeric(new["threshold"], errors="coerce").round(2) == round(ORDER_THRESHOLD, 2)]
+                if len(new) and orders.mode() != "off":
+                    try:
+                        orders.place(as_positions(new), passphrase, now, rule="favorites")
+                    except Exception as error:  # noqa: BLE001 - the type only
+                        LOG.error("favorites: live orders not placed: %s", type(error).__name__)
         return record, section(record, now)
     except Exception as error:  # noqa: BLE001 - the type only
         LOG.error("favorites not refreshed: %s", type(error).__name__)

@@ -233,6 +233,7 @@ jobs:
           MAX_OPEN_DOLLARS: ${{ vars.MAX_OPEN_DOLLARS }}
           LOSS_STOP_DOLLARS: ${{ vars.LOSS_STOP_DOLLARS }}
           BALANCE_FLOOR: ${{ vars.BALANCE_FLOOR }}
+          LIVE_RULES: ${{ vars.LIVE_RULES }}
         # --force because the gate above has already decided, in Eastern time
         # and tolerant of a late start. Letting the task re-apply the strict
         # should_poll() minute test here would undo exactly that.

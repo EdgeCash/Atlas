@@ -65,7 +65,8 @@ class _Response:
 
 @pytest.fixture
 def env(monkeypatch):
-    for name in (orders.MODE, orders.ARMED, orders.BANKROLL, account.KEY_ID, account.SECRET_KEY, "ATLAS_OFFLINE", *orders.CAPS):
+    for name in (orders.MODE, orders.ARMED, orders.BANKROLL, orders.RULES, account.KEY_ID, account.SECRET_KEY,
+                 "ATLAS_OFFLINE", *orders.CAPS):
         monkeypatch.delenv(name, raising=False)
     monkeypatch.setenv(account.KEY_ID, "key-1")
     monkeypatch.setenv(account.SECRET_KEY, SECRET)
@@ -88,6 +89,11 @@ def test_the_mode_and_the_arming_phrase(env):
     env.setenv("MAX_ORDER_DOLLARS", "10")
     env.setenv(orders.BANKROLL, "500")
     assert orders.caps()["MAX_ORDER_DOLLARS"] == 10.0 and orders.bankroll() == 500.0
+    assert orders.rules() == ("favorites", "model")
+    env.setenv(orders.RULES, "favorites")
+    assert orders.rules() == ("favorites",)
+    env.setenv(orders.RULES, "nonsense, Model")
+    assert orders.rules() == ("model",)
 
 
 def test_the_caps_and_the_stop():
@@ -107,6 +113,13 @@ def test_the_caps_and_the_stop():
     assert orders.check(30.0, ledger, "2026-10-24", NOW) is None                      # the order cap clips, not refuses
     assert orders.check(20.0, ledger, "2026-10-24", NOW) is None
     assert orders.floor(49.0, 100.0).startswith("floor:") and orders.floor(50.0, 100.0) is None and orders.floor(1.0, 0.0) is None
+    # The floor moves up with the highest balance read, never down.
+    assert orders.floor(60.0, 100.0, 150.0).startswith("floor: balance $60.00 below 50% of $150")
+    assert orders.floor(80.0, 100.0, 150.0) is None and orders.floor(49.0, 100.0, 80.0).startswith("floor:")
+    assert orders.floor(60.0, 100.0, float("nan")) is None
+    seen = pd.DataFrame([{**dict.fromkeys(orders.COLUMNS), "equity": 120.0}, {**dict.fromkeys(orders.COLUMNS), "equity": 150.0},
+                         {**dict.fromkeys(orders.COLUMNS)}], columns=orders.COLUMNS)
+    assert orders.peak(seen) == 150.0 and pd.isna(orders.peak(pd.DataFrame(columns=orders.COLUMNS)))
     assert orders.check(20.0, ledger, "2026-10-24", NOW + timedelta(days=0)) is None
     assert orders.check(10.0, pd.concat([ledger] * 3, ignore_index=True), "2026-10-24", NOW).startswith("cap:day")
     big = ledger.copy()
@@ -127,7 +140,8 @@ def test_off_does_nothing_and_dry_previews_without_sending(env, tmp_path):
     env.setenv(orders.MODE, "dry")
     env.setenv(orders.BANKROLL, "1000")
     ledger = orders.place(pos, KEY, NOW, where=where, sess=sess)
-    assert len(ledger) == 2 and all(c["url"].endswith(account.PREVIEW) for c in sess.calls) and len(sess.calls) == 2
+    # The balance is read once a run, in a dry run too; then one preview per position.
+    assert len(ledger) == 2 and [c["url"] for c in sess.calls] == [account.API + orders.BALANCES] + [account.API + account.PREVIEW] * 2
     by = ledger.set_index("position_id")
     assert by.loc["p1", "mode"] == "dry" and by.loc["p1", "state"] == "dry" and by.loc["p1", "note"] == "preview filled"
     assert by.loc["p1", "quantity"] == 50.0 and by.loc["p1", "cost"] == pytest.approx(20.0) and by.loc["p1", "price"] == 0.40
@@ -141,12 +155,17 @@ def test_off_does_nothing_and_dry_previews_without_sending(env, tmp_path):
     again = orders.place(_positions([{"position_id": "p3", "token_id": "t3"}]), KEY, NOW, where=where, sess=sess)
     assert len(again) == 3 and again.set_index("position_id").loc["p3", "state"] == "dry"
     assert again.set_index("position_id").loc["p3", "quantity"] == 2.5 and again.set_index("position_id").loc["p3", "cost"] == 1.0
-    assert len(sess.calls) == 3
+    assert len(sess.calls) == 5 and again.set_index("position_id").loc["p3", "equity"] == 1000.0
+    # A rule the variable leaves out writes nothing.
+    env.setenv(orders.RULES, "model")
+    assert orders.place(_positions([{"position_id": "p9", "token_id": "t9"}]), KEY, NOW, where=where, sess=sess,
+                        rule="favorites").empty and len(sess.calls) == 5
+    env.delenv(orders.RULES)
     # No bankroll: sized at nothing, refused, nothing called.
     env.delenv(orders.BANKROLL)
     env.setenv("MAX_ORDER_DOLLARS", "25")
     none = orders.place(_positions([{"position_id": "p4", "token_id": "t4"}]), KEY, NOW, where=where, sess=sess)
-    assert none.set_index("position_id").loc["p4", "note"] == "no bankroll" and len(sess.calls) == 3
+    assert none.set_index("position_id").loc["p4", "note"] == "no bankroll" and len(sess.calls) == 5
 
 
 def test_live_sends_only_when_armed_and_records_the_fill(env, tmp_path):
@@ -156,7 +175,8 @@ def test_live_sends_only_when_armed_and_records_the_fill(env, tmp_path):
     pos = _positions([{"position_id": "p1"}])
     sess = _Session(fill=30.0)
     unarmed = orders.place(pos, KEY, NOW, where=where, sess=sess)
-    assert unarmed.set_index("position_id").loc["p1", "note"] == "not armed" and not sess.calls
+    assert unarmed.set_index("position_id").loc["p1", "note"] == "not armed"
+    assert [c["url"] for c in sess.calls] == [account.API + orders.BALANCES]            # read, nothing sent
     signer = account.Signer("key-1", SECRET)
     with pytest.raises(RuntimeError):
         orders.post_order({}, signer, sess)
@@ -165,12 +185,13 @@ def test_live_sends_only_when_armed_and_records_the_fill(env, tmp_path):
     env.setenv(orders.ARMED, orders.PHRASE)
     ledger = orders.place(_positions([{"position_id": "p2", "token_id": "t2"}]), KEY, NOW, where=where, sess=sess)
     # The balance is read first, then the order placed.
-    assert [c["url"] for c in sess.calls] == [account.API + orders.BALANCES, account.API + orders.ORDERS]
-    body = sess.calls[1]["json"]
+    assert [c["url"] for c in sess.calls[-2:]] == [account.API + orders.BALANCES, account.API + orders.ORDERS]
+    body = sess.calls[-1]["json"]
     assert body["type"] == "ORDER_TYPE_LIMIT" and body["tif"] == "TIME_IN_FORCE_IMMEDIATE_OR_CANCEL"
     assert body["synchronousExecution"] is True and body["intent"] == "ORDER_INTENT_BUY_LONG" and body["quantity"] == 50.0
     row = ledger.set_index("position_id").loc["p2"]
     assert row["mode"] == "live" and row["order_id"] == "ord-1" and row["state"] == "partial" and row["equity"] == 1000.0
+    assert row["rule"] == "model"
     assert row["filled"] == 30.0 and row["avg_px"] == pytest.approx(0.41) and row["paid"] == pytest.approx(0.41 * 30 + row["fee"])
     assert json.dumps(json.loads(ledger.to_json(orient="records")))
     # A venue failure on the order marks the row; the day's cap counts what was sent at the ask.
@@ -215,7 +236,7 @@ def test_the_owner_page_section_states_the_mode_and_sums_the_ledger(env):
     assert sec["title"] == "Live orders (dry)" and sec["notes"][0].startswith("Dry run")
     assert sec["tables"][0]["rows"][1] == ["Settled, last 3 days ($)", "+9.80"] and sec["tables"][0]["rows"][2][1] == "1 / 2"
     assert "the floor holds while the account's balance is below 50%" in sec["notes"][1]
-    assert sec["tables"][1]["rows"][0][0] == ["A @ B", "NFL · moneyline home"] and sec["tables"][1]["rows"][1][4] == "+9.80"
+    assert sec["tables"][1]["rows"][0][0] == ["A @ B", "NFL · moneyline home · model"] and sec["tables"][1]["rows"][1][4] == "+9.80"
     env.setenv(orders.MODE, "live")
     env.setenv(orders.ARMED, orders.PHRASE)
     assert orders.section(ledger, NOW)["title"] == "Live orders (live, armed)"

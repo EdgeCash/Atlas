@@ -124,3 +124,32 @@ def test_refresh_keeps_the_record_in_the_store(tmp_path, monkeypatch):
     assert len(record) == 3
     empty, sec = favorites.refresh(store, pd.DataFrame(columns=source.QUOTE_COLUMNS), NOW)
     assert len(empty) == 3 and json.dumps(sec)
+
+
+def test_the_rules_positions_reach_the_live_step_at_the_order_threshold(tmp_path, monkeypatch):
+    from atlas.live.store import Store
+    from atlas.polymarket import orders, positions
+
+    monkeypatch.setenv("ATLAS_OFFLINE", "1")
+    monkeypatch.setenv(orders.MODE, "dry")
+    store = Store.open(tmp_path / "tracking")
+    placed = []
+    monkeypatch.setattr(orders, "place", lambda pos, passphrase, now, **kw: placed.append((pos, passphrase, kw)))
+    q = pd.DataFrame([_quote("t1", 0.86), _quote("t2", 0.81, slug="m2"), _quote("t3", 0.5, slug="m3")])
+    favorites.refresh(store, q, NOW)                                                   # no key: nothing placed
+    assert not placed
+    store2 = Store.open(tmp_path / "tracking2")
+    record, _ = favorites.refresh(store2, q, NOW, passphrase="key")
+    assert len(placed) == 1
+    pos, passphrase, kw = placed[0]
+    assert passphrase == "key" and kw == {"rule": "favorites"} and list(pos.columns) == positions.COLUMNS
+    assert list(pos["position_id"]) == ["fav:t1:0.85"] and pos["ask"].iloc[0] == 0.86 and pos["stake"].iloc[0] == 1.0
+    assert pos["day"].iloc[0] == "2026-10-23" and pos["kickoff"].iloc[0] == "2026-10-24T00:00:00Z" and pos["label"].iloc[0] == "LAL @ BOS"
+    assert bool(pos["long"].iloc[0]) and pos["market_slug"].iloc[0] == "m1" and pos["sport"].iloc[0] == "nba"
+    # Nothing new on the next poll, nothing placed; off, nothing placed either.
+    favorites.refresh(store2, q, NOW + timedelta(minutes=15), passphrase="key")
+    assert len(placed) == 1
+    monkeypatch.delenv(orders.MODE)
+    favorites.refresh(store2, pd.DataFrame([_quote("t9", 0.9, slug="m9")]), NOW + timedelta(minutes=30), passphrase="key")
+    assert len(placed) == 1
+    assert favorites.as_positions(pd.DataFrame(columns=favorites.COLUMNS)).empty

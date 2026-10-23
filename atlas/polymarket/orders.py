@@ -19,8 +19,12 @@ orders settled over the trailing :data:`LOSS_WINDOW_DAYS` days have lost
 more than the cap, nothing is placed until that window clears), and
 against the floor: before a live run places anything it reads the
 account's balance from the venue, cash plus the value of what it holds,
-and places nothing while that is below :data:`BALANCE_FLOOR` of the
-bankroll, or when the balance cannot be read at all. The caps, the stop
+and places nothing while that is below the floor's share of the bankroll
+or of the highest balance it has read, whichever is more (the floor moves
+up with the account, never down), or when the balance cannot be read at
+all. Two rules feed it: the model's positions as they are logged, and the
+favorites rule's positions as they are taken (`atlas/polymarket/favorites.py`);
+each order's row names its rule. The caps, the stop
 and the floor are constants here, overridable by environment for the
 owner, never widened by anything the venue or the market says.
 
@@ -56,6 +60,9 @@ ARMED = "POLYMARKET_US_ARMED"
 PHRASE = "place real orders on polymarket us"
 #: The bankroll the stakes are sized against, in dollars; none, and nothing is sized.
 BANKROLL = "ATLAS_LIVE_BANKROLL"
+#: Which rules' positions the step takes, comma-separated: ``favorites``, ``model``, or both.
+RULES = "LIVE_RULES"
+DEFAULT_RULES = ("favorites", "model")
 #: The only path this module may call to place an order, and the one it reads the balance from.
 ORDERS = "/v1/orders"
 BALANCES = "/v1/account/balances"
@@ -68,7 +75,7 @@ SETTLEMENT_READS = 20
 BLOCK_SECONDS = "10"
 COLUMNS = ["order_id", "placed_at", "mode", "day", "year", "week", "position_id", "sport", "game_id", "kickoff",
            "label", "market", "side", "long", "line", "market_slug", "token_id", "ask", "price", "quantity", "cost",
-           "state", "filled", "avg_px", "fee", "paid", "payout", "profit", "graded_at", "note", "equity"]
+           "state", "filled", "avg_px", "fee", "paid", "payout", "profit", "graded_at", "note", "equity", "rule"]
 TAB = "Live"
 
 
@@ -80,6 +87,11 @@ def mode() -> str:
 def armed() -> bool:
     """Live, and the arming secret carries the phrase exactly."""
     return mode() == "live" and os.environ.get(ARMED, "") == PHRASE
+
+
+def rules() -> tuple[str, ...]:
+    raw = [r.strip().lower() for r in os.environ.get(RULES, "").split(",") if r.strip()]
+    return tuple(r for r in raw if r in DEFAULT_RULES) or DEFAULT_RULES
 
 
 def caps() -> dict[str, float]:
@@ -197,11 +209,21 @@ def balances(signer: account.Signer, sess: requests.Session | None = None) -> di
     return {"cash": cash, "assets": assets, "equity": cash + assets}
 
 
-def floor(equity: float, roll: float) -> str | None:
-    """The floor, in force when the account's balance is below its share of the bankroll."""
+def peak(ledger: pd.DataFrame) -> float:
+    """The highest balance the ledger has read; nan before any."""
+    if ledger.empty or "equity" not in ledger:
+        return float("nan")
+    seen = _num(ledger["equity"]).dropna()
+    return float(seen.max()) if len(seen) else float("nan")
+
+
+def floor(equity: float, roll: float, high: float = float("nan")) -> str | None:
+    """The floor, in force when the account's balance is below its share of the bankroll or of the highest
+    balance read (``high``), whichever is more: it moves up with the account, never down."""
     share = caps()["BALANCE_FLOOR"]
-    if roll > 0 and equity < share * roll:
-        return f"floor: balance ${equity:.2f} below {share:.0%} of ${roll:.0f}"
+    reference = max(roll, high) if math.isfinite(high) else roll
+    if reference > 0 and equity < share * reference:
+        return f"floor: balance ${equity:.2f} below {share:.0%} of ${reference:.0f}"
     return None
 
 
@@ -255,24 +277,28 @@ def _stamp(now: datetime) -> str:
 
 
 def place(positions_: pd.DataFrame, passphrase: str, now: datetime, *, where: Path | None = None,
-          signer: account.Signer | None = None, sess: requests.Session | None = None) -> pd.DataFrame:
+          signer: account.Signer | None = None, sess: requests.Session | None = None,
+          rule: str = "model") -> pd.DataFrame:
     """The ledger with an order for each of ``positions_`` (rows of the positions record, just logged):
     sent when live and armed, previewed and written as ``dry`` when dry, nothing when off. Each row says
     what happened; a cap, the stop, or a failure marks it and the rest go on."""
     m = mode()
     if m == "off" or positions_ is None or positions_.empty or offline():
         return pd.DataFrame(columns=COLUMNS)
+    if rule not in rules():
+        LOG.info("live (%s): the %s rule is not on (%s)", m, rule, ",".join(rules()))
+        return pd.DataFrame(columns=COLUMNS)
     ledger = load(passphrase, where)
     signer = signer or account.Signer.from_env()
     sess = sess or requests.Session()
     roll = bankroll()
     stamp = _stamp(now)
-    # A live run reads the account first: no balance, or one below the floor, and nothing is placed.
+    # The account is read first, in a dry run too: no balance, or one below the floor, and nothing goes.
     equity, held = float("nan"), None
-    if m == "live" and armed() and signer is not None and roll > 0:
+    if signer is not None and roll > 0:
         try:
             equity = balances(signer, sess)["equity"]
-            held = floor(equity, roll)
+            held = floor(equity, roll, peak(ledger))
         except Exception as error:  # noqa: BLE001 - the type only
             held = f"no balance read ({type(error).__name__})"
     rows = []
@@ -286,9 +312,10 @@ def place(positions_: pd.DataFrame, passphrase: str, now: datetime, *, where: Pa
                "line": x.line, "market_slug": x.market_slug, "token_id": x.token_id, "ask": ask,
                "price": float(account.order(x, 1.0)["price"]["value"]), "quantity": qty, "cost": cost,
                "state": "", "filled": 0.0, "avg_px": float("nan"), "fee": float("nan"), "paid": 0.0,
-               "payout": float("nan"), "profit": float("nan"), "graded_at": None, "note": "", "equity": equity}
+               "payout": float("nan"), "profit": float("nan"), "graded_at": None, "note": "", "equity": equity,
+               "rule": rule}
         why = "no bankroll" if roll <= 0 else (None if signer else "no key")
-        why = why or (held if m == "live" and armed() else None)
+        why = why or held
         why = why or check(cost, pd.concat([ledger, pd.DataFrame(rows, columns=COLUMNS)], ignore_index=True)
                            if rows else ledger, str(x.day), now)
         if why:
@@ -313,7 +340,7 @@ def place(positions_: pd.DataFrame, passphrase: str, now: datetime, *, where: Pa
     weeks = {(int(y), int(w)) for y, w in new[["year", "week"]].drop_duplicates().itertuples(index=False)}
     seal(out, passphrase, weeks, where)
     sent = int(((new["mode"] == "live") & new["state"].isin(["filled", "partial", "canceled", "sent"])).sum())
-    LOG.info("live (%s): %d orders written, %d sent, %d refused", m, len(new), sent,
+    LOG.info("live (%s, %s): %d orders written, %d sent, %d refused", m, rule, len(new), sent,
              int((new["state"] == "refused").sum()))
     return out
 
@@ -375,13 +402,15 @@ def section(ledger: pd.DataFrame, now: datetime) -> dict:
               "live": "Live and armed: orders are sent." if armed() else
                       "Live but not armed: the arming secret does not carry the phrase; nothing is sent."}[m]
     equity = _num(ledger["equity"]).dropna() if len(ledger) and "equity" in ledger else pd.Series(dtype=float)
-    notes = [status,
+    notes = [status + f" Rules on: {', '.join(rules())}.",
              f"Caps: ${c['MAX_ORDER_DOLLARS']:.2f} an order (an order is sized down to it), "
              f"${c['MAX_DAY_DOLLARS']:.0f} a day, ${c['MAX_OPEN_DOLLARS']:.0f} open; the stop holds while the "
              f"orders settled over the last {LOSS_WINDOW_DAYS} days have lost more than "
              f"${c['LOSS_STOP_DOLLARS']:.0f}; the floor holds while the account's balance is below "
-             f"{c['BALANCE_FLOOR']:.0%} of the bankroll. Bankroll ${bankroll():,.0f}"
-             + (f"; the balance last read ${float(equity.iloc[-1]):,.2f}." if len(equity) else "."),
+             f"{c['BALANCE_FLOOR']:.0%} of the bankroll or of the highest balance read, whichever is more. "
+             f"Bankroll ${bankroll():,.0f}"
+             + (f"; the balance last read ${float(equity.iloc[-1]):,.2f}, the highest ${float(equity.max()):,.2f}."
+                if len(equity) else "."),
              "Every order is a limit at the ask the position was logged at, immediate-or-cancel, for the stake's "
              "worth of contracts; never a market order, never a resting one."]
     if stop:
@@ -400,7 +429,8 @@ def section(ledger: pd.DataFrame, now: datetime) -> dict:
             filled = float(x.filled) if pd.notna(x.filled) else 0.0
             px = float(x.avg_px) if pd.notna(x.avg_px) else float("nan")
             profit = float(x.profit) if pd.notna(x.profit) else float("nan")
-            rows.append([[str(x.label), f"{str(x.sport).upper()} · {x.market} {x.side}"], str(x.mode),
+            rows.append([[str(x.label), f"{str(x.sport).upper()} · {x.market} {x.side} · {x.rule or 'model'}"],
+                         str(x.mode),
                          f"{float(x.quantity):g} @ {float(x.ask):.2f}",
                          f"{filled:g} @ {px:.2f}" if filled > 0 and math.isfinite(px) else "none",
                          f"{profit:+.2f}" if math.isfinite(profit) else "", f"{x.state} {x.note or ''}".strip()])
