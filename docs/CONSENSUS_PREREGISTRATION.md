@@ -22,7 +22,7 @@ strongest spread disagreements more reliable?
 ## What this test can and cannot say
 
 - **Spreads only.** The only point-in-time consensus Atlas holds is on the
-  margin. Both frozen curated rules (`atlas/owner/plays.py`, v1 and v2) pick
+  margin. Both frozen curated rules (`atlas/owner/plays.py`, since retired, v1 and v2) picked
   **totals**, so this test says nothing about them. A totals consensus needs a
   source Atlas does not have (The Prediction Tracker, downloaded by hand) and
   gets its own pre-registration.

@@ -92,7 +92,7 @@ does not become a rule.
 
 ### What happens on each outcome
 
-- **A rule passes**: it is added to `atlas/owner/plays.py` as a new rule
+- **A rule passes**: it is added to the owner-side rules (then `atlas/owner/plays.py`, since retired) as a new rule
   with its own id, frozen the day the result is committed, choosing at a
   fixed pre-kickoff poll (the flags are the week's, so the choice can be
   made Saturday for Sunday's games; Thursday and Monday games are excluded

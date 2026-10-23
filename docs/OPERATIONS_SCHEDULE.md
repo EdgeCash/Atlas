@@ -40,15 +40,14 @@ Rebuilds everything, in this order:
 | 1 | `atlas.warehouse.build --include-scheduled` | the warehouse feeds everything |
 | 2 | `atlas.live refresh --no-rebuild` | the model reads the warehouse; projections first, with the kickoff wind forecast |
 | 3 | `atlas.live run` | capture the market before publishing |
-| 4 | `atlas.sources.availability` | the SEC's and ACC's quarterback reports, read by the plays' starter label |
-| 5 | `atlas.owner.plays refresh` | the owner's curated plays: logged if a rule chooses now, graded, sealed into their own box |
-| 6 | `atlas.dfs.owner` | the DFS slates and the owner's lineups, sealed |
+| 4 | `atlas.sources.availability` | the SEC's and ACC's quarterback reports |
+| 5 | `atlas.polymarket refresh --heavy` | Polymarket: the quotes into the record, every contract priced, the day's positions logged if due and graded, the owner page sealed, the public report written (`docs/POLYMARKET.md`) |
 | — | record `heavy` and `poll` | **stamps are written before the pages** |
-| 7 | `atlas.site.build` | board, 58 cards, 116 team pages, social, status |
+| 6 | `atlas.site.build` | board, 58 cards, 116 team pages, social, status |
 
-(The NFL ingest and warehouse, the DraftKings capture, the college box scores
-and the other-models panel run between these; `atlas/ops/__main__.py` is the
-full list. The plays step never fails the run and runs on every poll as well.)
+(The NFL and NHL ingests and warehouses and the other-models panel run
+between these; `atlas/ops/__main__.py` is the full list. The Polymarket step
+never fails the run and runs on every poll as well.)
 
 Two orderings matter and both are deliberate.
 
@@ -71,13 +70,12 @@ Runtime: about 7 seconds for the site, plus the warehouse rebuild. Use
 
 ## Track 2 — the light poller · hourly
 
-Market only, and the owner's curated plays. No warehouse, no model, no social
-assets.
+Market only, and Polymarket. No warehouse, no model, no social assets.
 
 | Step | Command |
 |---|---|
 | 1 | `atlas.live run` — capture the current market |
-| 2 | `atlas.owner.plays refresh` — log the plays a rule chooses at this poll (v3: the first at or after 10:00 ET Saturday), grade against every close captured, seal the plays box, and behind it the owner's board, parlays, exchange positions and pick'em (`docs/OWNER_BOARD.md`); never fails the poll |
+| 2 | `atlas.polymarket refresh` — read Polymarket's quotes into the record, price every contract, log the day's positions at the first poll from 10:00 ET, grade against every close, seal the owner page (`docs/POLYMARKET.md`); never fails the poll |
 | — | record `poll` |
 | 3 | `atlas.site.build --no-social` — republish with the new numbers |
 
@@ -150,9 +148,11 @@ including the one past midnight that does *not* count as Saturday.
 | Heavy refresh | 7 |
 | **Total** | **~327 polls** |
 
-One ESPN scoreboard request per sport per poll, unauthenticated, against a public endpoint —
-comfortably inside anything that could be called a rate limit. The skip logic
-is what keeps it there: without it the same crontab would make 672.
+One ESPN scoreboard request per sport per poll, and a handful of pages of
+Polymarket's event listing per sport (about ten a poll in all), unauthenticated,
+against public endpoints — comfortably inside anything that could be called a
+rate limit. The skip logic is what keeps it there: without it the same crontab
+would make 672.
 
 ---
 

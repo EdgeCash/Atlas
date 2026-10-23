@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "atlas"
 version = "0.1.0"
-description = "Atlas Phase 1A - NCAAF point-in-time research warehouse"
+description = "Atlas - sports research warehouse, priced against Polymarket"
 requires-python = ">=3.10"
 dependencies = [
     "pandas>=2.0",

@@ -1,16 +1,46 @@
-# Atlas - NCAAF Research Warehouse
+# Atlas - a sports research warehouse, priced against Polymarket
 
-A point-in-time-correct historical database for NCAAF (2018-present) and the
-research needed to answer one question: **which variables actually predict
-college football games?**
+A point-in-time-correct historical database for college football, the NFL
+and the NHL, the models fitted on it, and the research that answered one
+question: **which variables actually predict games?** Almost none that the
+market has not already priced - and the one place that finding is now put to
+work is **Polymarket**, the only venue Atlas prices against.
 
-Phase 1A deliberately produces no projections, no simulations, no wagers and
-no dashboard. It produces a warehouse, a measurement, and a recommendation.
+## Atlas on Polymarket
+
+From 23 October 2026 the owner-side model is Polymarket only. Every run
+reads Polymarket's public game markets (a moneyline, a ladder of spreads and
+a ladder of totals on every NFL, NHL and college football game) without a
+key, matches each game to the one Atlas projects, keeps every main-line
+quote timestamped in `tracking/polymarket_quotes.csv`, prices every
+contract by Atlas **anchored to Polymarket by what the walk-forward record
+says Atlas's disagreement has been worth**, and takes paper positions by a
+fixed rule, logged once and graded on the result and against Polymarket's
+close. Where the record says Atlas adds nothing to the market - football
+spreads, the NHL - Atlas is priced as the market and nothing clears the fee.
+Where it says the size of Atlas's disagreement has been worth something -
+college totals - the rule can take a contract.
+
+```bash
+python -m atlas.polymarket refresh   # every run: capture, price, log, grade, seal, report
+python -m atlas.polymarket show      # the board and the record (needs ATLAS_OWNER_KEY)
+```
+
+How it works, and what the record said on day one:
+[`docs/POLYMARKET.md`](docs/POLYMARKET.md). The public page about the model,
+rebuilt every run: [`reports/polymarket_model.md`](reports/polymarket_model.md).
+
+Retired the same day: the sportsbook board, the curated plays, the parlays,
+the pick'em, daily fantasy and the Kalshi exchange board. Their documents
+and pre-registrations below are kept as the record of what was tried; their
+sealed records stay under `tracking/owner_*` and are not read.
 
 ## What is here
 
 | Deliverable | Where |
 |---|---|
+| **Atlas on Polymarket**: how the venue is read, priced and traded on paper | [`docs/POLYMARKET.md`](docs/POLYMARKET.md) |
+| **The public page about the model** (rebuilt every run) | [`reports/polymarket_model.md`](reports/polymarket_model.md) |
 | Point-in-time warehouse (8 tables, parquet + DuckDB) | `data/warehouse/` |
 | Phase 1A research report | [`reports/atlas_research_report_v1.md`](reports/atlas_research_report_v1.md) |
 | Phase 1B opponent-adjustment report | [`reports/opponent_adjustment_report.md`](reports/opponent_adjustment_report.md) |
@@ -32,11 +62,9 @@ no dashboard. It produces a warehouse, a measurement, and a recommendation.
 | **Phase 4: gamma assessment (monetization)** | [`reports/atlas_gamma_assessment.md`](reports/atlas_gamma_assessment.md) |
 | **Phase 5: live CLV tracking (updated continuously)** | [`reports/live_clv_tracking.md`](reports/live_clv_tracking.md) |
 | Phase 5 operations manual | [`docs/LIVE_TRACKING.md`](docs/LIVE_TRACKING.md) |
-| **Curated plays: how they work** | [`docs/CURATED_PLAYS.md`](docs/CURATED_PLAYS.md) |
-| **The owner's board** (every book, priced) | [`docs/OWNER_BOARD.md`](docs/OWNER_BOARD.md) |
-| **NHL saves and shots against PrizePicks' lines**: pre-registrations | [`docs/NHL_SAVES_PREREGISTRATION.md`](docs/NHL_SAVES_PREREGISTRATION.md) · [`docs/NHL_SHOTS_PREREGISTRATION.md`](docs/NHL_SHOTS_PREREGISTRATION.md) |
-| **The daily plays** (rule daily-v1) · pre-registration · backtest | [`docs/DAILY_PLAYS.md`](docs/DAILY_PLAYS.md) · [`docs/DAILY_PLAYS_PREREGISTRATION.md`](docs/DAILY_PLAYS_PREREGISTRATION.md) · [`reports/highfive_backtest.md`](reports/highfive_backtest.md) |
-| Curated plays audit (26 Sep 2026) | [`docs/CURATED_PLAYS_AUDIT.md`](docs/CURATED_PLAYS_AUDIT.md) |
+| Curated plays (retired 23 Oct 2026): how they worked · audit | [`docs/CURATED_PLAYS.md`](docs/CURATED_PLAYS.md) · [`docs/CURATED_PLAYS_AUDIT.md`](docs/CURATED_PLAYS_AUDIT.md) |
+| NHL saves and shots against PrizePicks' lines (retired): pre-registrations | [`docs/NHL_SAVES_PREREGISTRATION.md`](docs/NHL_SAVES_PREREGISTRATION.md) · [`docs/NHL_SHOTS_PREREGISTRATION.md`](docs/NHL_SHOTS_PREREGISTRATION.md) |
+| The daily plays (retired) · pre-registration · backtest | [`docs/DAILY_PLAYS.md`](docs/DAILY_PLAYS.md) · [`docs/DAILY_PLAYS_PREREGISTRATION.md`](docs/DAILY_PLAYS_PREREGISTRATION.md) · [`reports/highfive_backtest.md`](reports/highfive_backtest.md) |
 | NFL quarterback rule: pre-registration and result (not shown) | [`docs/NFL_QB_RULE_PREREGISTRATION.md`](docs/NFL_QB_RULE_PREREGISTRATION.md) · [`reports/nfl_qb_rule_test.md`](reports/nfl_qb_rule_test.md) |
 | Phase 5 raw record (CSV, committed) | `tracking/` |
 | **Operations manual** | [`reports/atlas_operations_manual.md`](reports/atlas_operations_manual.md) |
@@ -372,6 +400,7 @@ python -m atlas.research.gamma_report      # stage 10: Phase 4 execution researc
 
 python -m atlas.live refresh               # Phase 5: publish Atlas's numbers (weekly)
 python -m atlas.live run                   # Phase 5: poll, grade, report (hourly)
+python -m atlas.polymarket refresh         # Polymarket: capture, price, log, grade, seal, report (every run)
 ```
 
 The quarterback-of-record extraction writes nothing into the warehouse, and
@@ -424,12 +453,18 @@ atlas/
   research/            dataset, models, benchmarks, importance, validation,
                        adjustment study, residual tools, QB features,
                        Phase 1C tracks, reports
+  models/              the NCAAF, NFL and NHL projection models and their reports
+  live/                the live tracker: numbers, snapshots, signals, grades, CLV
+  polymarket/          Polymarket: source, match, pricing, positions, page, report
+  owner/               the owner key, the sealed records, the owner page's box, the paper tracker
+  site/                the static site
+  ops/                 the schedule, freshness, health, the watchdog
   testing/             deterministic synthetic league used by the test suite
 scripts/
   check_reproducible.py       builds twice, asserts byte-identical output
   merge_tracking.py           merges a run's tracking store with the branch's when two runs overlapped
   research_qb_availability.py QB feasibility probe (research only)
-tests/                 offline suite: 124 tests, no network
+tests/                 offline suite, no network
 ```
 
 ## Data sources
@@ -442,6 +477,7 @@ tests/                 offline suite: 124 tests, no network
 | Meteostat bulk files | no | hourly station weather - kickoff temperature, wind, precipitation, humidity |
 | sportsdataverse rosters | no | season rosters - transfer and first-year identification |
 | CollegeFootballData API | free key | SP+ (overall/offence/defence), recruiting, roster talent, returning production, coaching staffs, weekly polls |
+| Polymarket Gamma and CLOB APIs | no | every game market's contracts, prices, depth and fee schedule; the order book; price history |
 
 ## Testing and CI
 
@@ -481,8 +517,10 @@ Phase 1C lacked the third and it cost the programme the next one.
 
 ## Scope boundary
 
-The programme stops here. No predictions, no simulations, no wagers, no
-dashboard, no Phase 2. The warehouse remains a clean, point-in-time-correct,
-reproducible research instrument for college football, and the negative
-results are reusable: anyone restarting this search can begin from "these
-forty variables are priced".
+The research programme stopped where the findings did: every variable Atlas
+can reach is priced, and the warehouse remains a clean, point-in-time-correct,
+reproducible research instrument whose negative results are reusable. What
+runs on top of it now is one thing: the model priced against Polymarket, on
+paper, by a fixed rule, with the record deciding how much of Atlas's
+disagreement counts (`docs/POLYMARKET.md`). Nothing on the public site names
+a side, and nothing anywhere buys anything.

@@ -29,26 +29,17 @@ on:
     secrets:
       CFBD_API_KEY:
         required: false
-      # The owner page's passphrase (docs/MODEL_PLAN_DFS.md, step 6). The
-      # Refresh step sees it, in both modes: the heavy run seals the lineups,
-      # and every run seals the curated plays (atlas/owner/plays.py), which
-      # choose at a fixed poll. The commit step sees it too, to merge the
-      # sealed records with another run's when two runs overlapped
+      # The owner page's passphrase (docs/POLYMARKET.md). The Refresh step
+      # sees it in both modes: every run logs the day's Polymarket positions
+      # if due and seals the owner page (atlas/polymarket/__main__.py,
+      # atlas/owner/page.py). The commit step sees it too, to merge the sealed
+      # record with another run's when two runs overlapped
       # (scripts/merge_tracking.py). Only ciphertext comes out.
       ATLAS_OWNER_KEY:
         required: false
       # Reads the reader counter (counter/worker.js) for the owner page's
       # Readers section; only the heavy run's Refresh step sees it.
       ATLAS_COUNTER_TOKEN:
-        required: false
-      # BettingPros partner API, for the owner's board (atlas/owner/board.py):
-      # every book's line on every game, sealed with the owner key, never
-      # published. The Refresh step sees these in both modes.
-      BP_API_KEY:
-        required: false
-      BP_USER_ID:
-        required: false
-      BP_USER_KEY:
         required: false
 
 permissions:
@@ -180,20 +171,6 @@ jobs:
           restore-keys: |
             atlas-data-
 
-      # The owner page's ciphertext, in its own cache entry (a new path in the
-      # warehouse entry would change its key and cost a cold rebuild). A poll
-      # does not build lineups, so without this it would republish the owner
-      # page empty. Only ciphertext: the readable lineups beside it in
-      # data/dfs/ are never cached, never committed and never published.
-      - name: Restore the owner page
-        if: steps.gate.outputs.go == 'true'
-        uses: actions/cache/restore@v4
-        with:
-          path: data/dfs/owner.enc.json
-          key: atlas-owner-
-          restore-keys: |
-            atlas-owner-
-
       # A poll renders the site from the warehouse it did not build. Without
       # one there is nothing to render, and publishing a site built from an
       # empty warehouse would replace a good board with an empty one.
@@ -225,9 +202,6 @@ jobs:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
           ATLAS_OWNER_KEY: ${{ secrets.ATLAS_OWNER_KEY }}
           ATLAS_COUNTER_TOKEN: ${{ inputs.mode == 'heavy' && secrets.ATLAS_COUNTER_TOKEN || '' }}
-          BP_API_KEY: ${{ secrets.BP_API_KEY }}
-          BP_USER_ID: ${{ secrets.BP_USER_ID }}
-          BP_USER_KEY: ${{ secrets.BP_USER_KEY }}
         # --force because the gate above has already decided, in Eastern time
         # and tolerant of a late start. Letting the task re-apply the strict
         # should_poll() minute test here would undo exactly that.
@@ -250,13 +224,6 @@ jobs:
             data/raw
             data/warehouse
           key: atlas-data-${{ github.run_id }}
-
-      - name: Save the owner page
-        if: steps.gate.outputs.go == 'true' && inputs.mode == 'heavy' && hashFiles('data/dfs/owner.enc.json') != ''
-        uses: actions/cache/save@v4
-        with:
-          path: data/dfs/owner.enc.json
-          key: atlas-owner-${{ github.run_id }}
 
       # scripts/audit_site.py directly, not `make site-audit`: that target
       # depends on `site` and would rebuild what we are trying to inspect.

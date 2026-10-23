@@ -1,11 +1,11 @@
-/* The owner page: decrypts the curated plays and this week's lineups in the browser.
+/* The owner page: decrypts the sealed sections in the browser.
  *
  * The page carries only ciphertext (AES-256-GCM under a PBKDF2-SHA256 key,
- * see atlas/dfs/owner.py and atlas/owner/plays.py): one box for the plays,
- * one for the lineups, both under the same passphrase. The passphrase is
- * typed here, the keys are derived here, and the plaintext exists only in
- * this tab's memory. Nothing is stored and nothing is sent anywhere. Opened,
- * the page is a row of tabs; each section names the one it belongs in.
+ * see atlas/owner/crypto.py and atlas/owner/page.py): one box, under one
+ * passphrase. The passphrase is typed here, the key is derived here, and the
+ * plaintext exists only in this tab's memory. Nothing is stored and nothing
+ * is sent anywhere. Opened, the page is a row of tabs; each section names
+ * the one it belongs in. The script holds the tabs' names, nothing else.
  */
 (function () {
   "use strict";
@@ -15,12 +15,11 @@
   if (!boxEl || !form) return;
   var record = JSON.parse(boxEl.textContent || "{}");
   var box = record.box;
-  var playsBox = record.plays;
   var status = document.getElementById("owner-status");
   var out = document.getElementById("owner-out");
   var gate = form.parentNode;          // the passphrase card: out of the way while the page is open
 
-  if (!box && !playsBox) { form.hidden = true; return; }
+  if (!box) { form.hidden = true; return; }
   if (!(window.crypto && window.crypto.subtle)) {
     status.textContent = "This browser cannot decrypt the page (no WebCrypto).";
     form.hidden = true;
@@ -34,7 +33,6 @@
   }
 
   function open(passphrase, sealed) {
-    if (!sealed) return Promise.resolve(null);
     var enc = new TextEncoder();
     return crypto.subtle.importKey("raw", enc.encode(passphrase.trim()), "PBKDF2", false, ["deriveKey"])
       .then(function (base) {
@@ -64,9 +62,6 @@
     }).format(d) + " ET";
   }
 
-  function money(n) { return "$" + Number(n).toLocaleString("en-US"); }
-  function pts(n) { return n === null || n === undefined || isNaN(n) ? "–" : Number(n).toFixed(1); }
-
   function table(head, rows, stack) {
     var wrap = el("div", { "class": "table-scroll" });
     // A stacked table becomes one small card a row on a phone; each cell carries its column's name for it.
@@ -78,13 +73,16 @@
     rows.forEach(function (r) {
       var row = el("tr");
       r.forEach(function (c, i) {
-        var label = stack && head[i] ? { "data-label": head[i] } : null;
-        // A cell is a value, or a main value and quieter lines under it.
-        if (!Array.isArray(c)) { row.appendChild(el("td", label, c)); return; }
-        var td = el("td", label, c[0]);
-        c.slice(1).forEach(function (sub) {
-          if (sub !== null && sub !== undefined && sub !== "") td.appendChild(el("span", { "class": "owner-sub" }, sub));
-        });
+        var td = el("td", { "data-col": head[i] || "" });
+        // A cell is a string, or a main value with its second lines beneath.
+        if (Array.isArray(c)) {
+          td.appendChild(el("b", null, c[0]));
+          c.slice(1).forEach(function (line) {
+            if (line) td.appendChild(el("span", { "class": "owner-sub" }, line));
+          });
+        } else {
+          td.textContent = c === null || c === undefined ? "" : String(c);
+        }
         row.appendChild(td);
       });
       tbody.appendChild(row);
@@ -94,112 +92,15 @@
     return wrap;
   }
 
-  function download(slate) {
-    var blob = new Blob([slate.upload_csv], { type: "text/csv" });
-    var name = "atlas-dk-" + (slate.sport || "nfl") + "-" + slate.draft_group_id + "-" +
-      (slate.game_type || "Classic").toLowerCase() + ".csv";
-    var a = el("a", { href: URL.createObjectURL(blob), download: name });
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-  }
+  var TABS = ["Polymarket", "Record", "More"];
 
-  function slateName(s) {
-    var kind = s.game_type || "Classic";
-    var sport = s.sport === "cfb" ? "College" : "NFL";
-    return sport + " " + kind + (s.label && s.label !== kind ? " · " + s.label : "") + " · " + eastern(s.starts_at);
-  }
-
-  function lineupCards(slate, holder) {
-    holder.textContent = "";
-    if (!slate.lineups.length) {
-      holder.appendChild(el("p", { "class": "note" }, "No lineup fits this slate's pool."));
-      return;
-    }
-    slate.lineups.forEach(function (lu, i) {
-      var card = el("div", { "class": "card card-pad top-gap" });
-      var cost = lu.salary === null || lu.salary === undefined ? "" : " · " + money(lu.salary);
-      card.appendChild(el("h3", null, "Lineup " + (i + 1) + " · " + pts(lu.projection) + " projected" + cost));
-      card.appendChild(table(["Slot", "Player", "Team", "Salary", "Proj", "Range"],
-        lu.slots.map(function (s) {
-          return [s.slot, s.name, s.team, s.salary === null || s.salary === undefined || isNaN(s.salary) ? "–" : money(s.salary),
-                  pts(s.projection), pts(s.low) + "–" + pts(s.high)];
-        })));
-      holder.appendChild(card);
-    });
-  }
-
-  function poolCard(title, players) {
-    var pool = el("div", { "class": "card card-pad top-gap" });
-    pool.appendChild(el("h3", null, title));
-    var pick = el("select", { "aria-label": "Position" });
-    var seen = {};
-    players.forEach(function (p) { seen[p.position] = true; });
-    ["All", "QB", "RB", "WR", "TE", "K", "DST"].filter(function (p) { return p === "All" || seen[p]; })
-      .forEach(function (p) { pick.appendChild(el("option", { value: p }, p)); });
-    pool.appendChild(pick);
-    var rowsHolder = el("div");
-    pool.appendChild(rowsHolder);
-    function fill() {
-      rowsHolder.textContent = "";
-      var rows = players.filter(function (p) { return pick.value === "All" || p.position === pick.value; })
-        .slice(0, 80)
-        .map(function (p) {
-          return [p.name + (p.status ? " (" + p.status + ")" : ""), p.position, p.team, money(p.salary),
-                  pts(p.projection), pts(p.low) + "–" + pts(p.high),
-                  p.p_play === null || p.p_play === undefined ? "–" : Math.round(p.p_play * 100) + "%"];
-        });
-      rowsHolder.appendChild(table(["Player", "Pos", "Team", "Salary", "Proj", "Range", "Plays"], rows));
-    }
-    pick.addEventListener("change", fill);
-    fill();
-    return pool;
-  }
-
-  function recordCard(r) {
-    var card = el("div", { "class": "card card-pad top-gap" });
-    card.appendChild(el("h3", null, "College record"));
-    if (!r.games) {
-      card.appendChild(el("p", { "class": "note" }, r.note ||
-        "No college game has been graded yet. Each player's projection is kept as it stood at his kickoff."));
-      return card;
-    }
-    card.appendChild(el("p", { "class": "note" }, r.games + " games over " + r.weeks +
-      (r.weeks === 1 ? " week" : " weeks") + ", each projection as it stood at kickoff. A player who recorded " +
-      "nothing counts as zero. The range is meant to hold 80%."));
-    function pct(n) { return n === null || n === undefined || isNaN(n) ? "–" : Math.round(n * 100) + "%"; }
-    function two(n) { return n === null || n === undefined || isNaN(n) ? "–" : Number(n).toFixed(2); }
-    card.appendChild(el("p", { "class": "note" }, "Regulars: each team's top projected QB, two RBs, three " +
-      "receivers and kicker. Miss: average points off. Rank: how well the order of projections matched the order of scores (1 is perfect)."));
-    card.appendChild(table(["", "Players", "Miss", "Range", "Rank"],
-      [["Regulars", r.regulars], ["All priced", r.all]].map(function (row) {
-        var n = row[1] || {};
-        return [row[0], String(n.players || 0), pts(n.mae), pct(n.coverage), two(n.rank)];
-      })));
-    return card;
-  }
-
-  // The page opens on tabs. Each section names its tab; one sealed before tabs
-  // existed is placed by its title. The script holds the tabs' names, nothing else.
-  var TABS = ["Plays", "Board", "Parlays", "Trading", "Pick'em", "DFS", "More"];
-
-  function tabOf(sec) {
-    if (sec.tab) return sec.tab;
-    var t = sec.title || "";
-    if (/^Curated plays/.test(t)) return "Plays";
-    if (/^The board/.test(t)) return "Board";
-    if (/parlays/i.test(t)) return "Parlays";
-    return "More";
-  }
+  function tabOf(sec) { return sec.tab || "More"; }
 
   function slug(name) { return name.toLowerCase().replace(/[^a-z]+/g, "-"); }
 
-  function shell(plays, data) {
+  function shell(data) {
     var head = el("div", { "class": "card card-pad owner-head" });
-    var built = [];
-    if (plays && plays.built_at) built.push("Plays, board and markets built " + eastern(plays.built_at));
-    if (data && data.built_at) built.push("lineups built " + eastern(data.built_at));
-    head.appendChild(el("p", { "class": "note" }, built.join(" · ")));
+    head.appendChild(el("p", { "class": "note" }, data && data.built_at ? "Built " + eastern(data.built_at) : ""));
     var close = el("button", { type: "button", "class": "button ghost" }, "Close");
     close.addEventListener("click", function () {
       out.textContent = ""; form.hidden = false; status.textContent = ""; gate.style.display = "";
@@ -208,55 +109,49 @@
     head.appendChild(close);
     out.appendChild(head);
     var bar = el("div", { "class": "owner-tabs", role: "tablist", "aria-label": "Owner sections" });
-    out.appendChild(bar);
-    var panels = {}, buttons = {}, order = [];
-
-    function panel(name) {
-      if (panels[name]) return panels[name];
-      var id = "owner-tab-" + slug(name);
-      var b = el("button", { type: "button", "class": "owner-tab", role: "tab", id: id + "-tab",
-                             "aria-controls": id, "aria-selected": "false", tabindex: "-1" }, name);
-      var p = el("div", { "class": "owner-panel", role: "tabpanel", id: id, "aria-labelledby": id + "-tab" });
-      p.hidden = true;
-      b.addEventListener("click", function () { select(name, true); });
-      b.addEventListener("keydown", function (ev) {
-        var i = order.indexOf(name);
-        if (ev.key === "ArrowRight" || ev.key === "ArrowLeft") {
-          ev.preventDefault();
-          var next = order[(i + (ev.key === "ArrowRight" ? 1 : order.length - 1)) % order.length];
-          select(next, true);
-          buttons[next].focus();
-        }
-      });
-      panels[name] = p; buttons[name] = b;
-      return p;
-    }
-
-    function select(name, remember) {
-      order.forEach(function (n) {
+    var panels = {};
+    var buttons = {};
+    var names = [];
+    function select(name) {
+      names.forEach(function (n) {
         var on = n === name;
         buttons[n].setAttribute("aria-selected", on ? "true" : "false");
         buttons[n].setAttribute("tabindex", on ? "0" : "-1");
         panels[n].hidden = !on;
       });
-      if (remember && history.replaceState) history.replaceState(null, "", "#" + slug(name));
     }
-
-    function finish() {
-      // Tabs in their fixed order, then any a section named that the script does not know.
-      var names = Object.keys(panels);
-      order = TABS.filter(function (n) { return names.indexOf(n) >= 0; })
-        .concat(names.filter(function (n) { return TABS.indexOf(n) < 0; }));
-      order.forEach(function (n) { bar.appendChild(buttons[n]); out.appendChild(panels[n]); });
-      var wanted = (location.hash || "").replace("#", "");
-      var start = order.filter(function (n) { return slug(n) === wanted; })[0] || order[0];
-      if (start) select(start, false);
+    function add(name) {
+      if (panels[name]) return;
+      var id = "owner-tab-" + slug(name);
+      var b = el("button", { type: "button", "class": "owner-tab", role: "tab", id: id + "-tab",
+                             "aria-controls": id, "aria-selected": "false", tabindex: "-1" }, name);
+      var p = el("div", { "class": "owner-panel", role: "tabpanel", id: id, "aria-labelledby": id + "-tab" });
+      p.hidden = true;
+      b.addEventListener("click", function () { select(name); });
+      bar.appendChild(b);
+      panels[name] = p;
+      buttons[name] = b;
+      names.push(name);
     }
-
-    return { panel: panel, finish: finish };
+    // Tabs in their fixed order, then any a section named that the script does not know.
+    TABS.forEach(add);
+    (data.sections || []).forEach(function (sec) { add(tabOf(sec)); });
+    out.appendChild(bar);
+    names.forEach(function (n) { out.appendChild(panels[n]); });
+    return {
+      panel: function (name) { add(name); return panels[name]; },
+      finish: function () {
+        // Empty tabs go; the first with something in it opens.
+        var kept = names.filter(function (n) {
+          if (panels[n].childNodes.length) return true;
+          bar.removeChild(buttons[n]); out.removeChild(panels[n]); return false;
+        });
+        names = kept;
+        if (kept.length) select(kept[0]);
+      }
+    };
   }
 
-  // A section brings its own words: the page's script holds none of them.
   function sectionCard(sec) {
     var card = el("div", { "class": "card card-pad top-gap" });
     card.appendChild(el("h3", null, sec.title || ""));
@@ -282,68 +177,25 @@
     return card;
   }
 
-  function renderPlays(plays, page) {
-    if (!plays) return;
-    (plays.sections || []).forEach(function (sec) { page.panel(tabOf(sec)).appendChild(sectionCard(sec)); });
-  }
-
-  function render(data, page) {
-    if (!data) return;
-    var into = page.panel("DFS");
-    var slates = data.slates || [];
-    var head = el("div", { "class": "card card-pad top-gap" });
-    head.appendChild(el("h3", null, slates.length ? slates.length + " slates this week" : "No slate this week"));
-    if (!slates.length && data.note) head.appendChild(el("p", { "class": "note" }, data.note));
-    var choose = el("select", { "aria-label": "Slate", "class": "owner-slate" });
-    slates.forEach(function (s, i) { choose.appendChild(el("option", { value: String(i) }, slateName(s))); });
-    var main = slates.findIndex(function (s) {
-      return s.game_type === "Classic" && s.label === "Main" && (s.sport || "nfl") === "nfl";
-    });
-    if (main >= 0) choose.value = String(main);
-    if (slates.length) {
-      head.appendChild(choose);
-      var dl = el("button", { type: "button", "class": "button" }, "Download this slate's DraftKings upload file");
-      dl.addEventListener("click", function () { download(slates[Number(choose.value)]); });
-      var actions = el("div", { "class": "lede-actions" });
-      actions.appendChild(dl);
-      head.appendChild(actions);
-    }
-    into.appendChild(head);
-    var holder = el("div");
-    into.appendChild(holder);
-    choose.addEventListener("change", function () { lineupCards(slates[Number(choose.value)], holder); });
-    if (slates.length) lineupCards(slates[Number(choose.value)], holder);
-
-    if ((data.players || []).length) into.appendChild(poolCard("Every player, by projection", data.players));
-    if (data.college_players) into.appendChild(poolCard("College: every player, by projection", data.college_players));
-    if (data.college_record) into.appendChild(recordCard(data.college_record));
+  function render(data) {
+    var page = shell(data);
     (data.sections || []).forEach(function (sec) { page.panel(tabOf(sec)).appendChild(sectionCard(sec)); });
+    page.finish();
   }
 
   form.addEventListener("submit", function (ev) {
     ev.preventDefault();
     var input = document.getElementById("owner-pass");
     status.textContent = "Opening…";
-    Promise.all([open(input.value, playsBox), open(input.value, box)]).then(function (opened) {
+    open(input.value, box).then(function (data) {
       input.value = "";
       form.hidden = true;
       status.textContent = "";
-      try {
-        out.textContent = "";
-        var page = shell(opened[0], opened[1]);
-        renderPlays(opened[0], page);
-        render(opened[1], page);
-        page.finish();
-        gate.style.display = "none";
-      } catch (e) {
-        // Opened, but not shown: say so rather than blame the passphrase.
-        form.hidden = false;
-        gate.style.display = "";
-        status.textContent = "The page opened but could not be shown (" + e.name + ").";
-        if (window.console) console.error(e);
-      }
-    }, function () {
-      status.textContent = "That passphrase does not open this page.";
+      gate.style.display = "none";
+      out.textContent = "";
+      render(data);
+    }).catch(function () {
+      status.textContent = "That passphrase did not open the page.";
     });
   });
 })();

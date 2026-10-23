@@ -13,7 +13,7 @@ Only the current reports are public (the archive of past seasons needs a
 login), so a report not captured on its day is gone: each heavy refresh
 takes the current ones - one request a conference, once a day - and keeps
 the quarterbacks in the tracking store, where they become a record that can
-be tested (`atlas/owner/plays.py` reads them for the starter flag). The data
+be tested. The data
 is the conferences' own, published to be public; the capture is kept to one
 call a conference a day and says who it is.
 

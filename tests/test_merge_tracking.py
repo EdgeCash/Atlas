@@ -47,24 +47,24 @@ def test_sealed_rows_merge_by_key_in_the_branchs_order_then_this_runs_new_rows()
 
 
 def test_sealed_weekly_files_both_runs_rewrote_are_merged_and_resealed(tmp_path):
-    where = tmp_path / "owner_plays"
-    ours = sealed.seal([{"play_id": "play-one", "grade": None}, {"play_id": "play-three", "grade": None}], KEY,
-                       where / "2026-04.enc.json")
-    sealed.seal([{"play_id": "play-zero"}], KEY, where / "2026-03.enc.json")          # only this run has this week
-    theirs = sealed.seal([{"play_id": "play-one", "grade": "win"}, {"play_id": "play-two", "grade": None}], KEY,
-                         tmp_path / "theirs.enc.json")
-    remote = {"tracking/owner_plays/2026-04.enc.json": theirs.read_text(),
-              "tracking/owner_plays/2026-02.enc.json": "only the branch has this week"}
+    where = tmp_path / "polymarket_positions"
+    ours = sealed.seal([{"position_id": "pos-one", "grade": None}, {"position_id": "pos-three", "grade": None}],
+                       KEY, where / "2026-04.enc.json")
+    sealed.seal([{"position_id": "pos-zero"}], KEY, where / "2026-03.enc.json")      # only this run has this week
+    theirs = sealed.seal([{"position_id": "pos-one", "grade": "win"}, {"position_id": "pos-two", "grade": None}],
+                         KEY, tmp_path / "theirs.enc.json")
+    remote = {"tracking/polymarket_positions/2026-04.enc.json": theirs.read_text(),
+              "tracking/polymarket_positions/2026-02.enc.json": "only the branch has this week"}
     listing = lambda d: [p for p in remote if p.startswith(d + "/")]  # noqa: E731
     merged = mt.merge_sealed("origin/main", KEY, tracking=tmp_path, remote=remote.get, listing=listing)
-    assert merged == ["tracking/owner_plays/2026-04.enc.json"]
+    assert merged == ["tracking/polymarket_positions/2026-04.enc.json"]
     rows = sealed.open_text(ours.read_text(), KEY)
-    assert [r["play_id"] for r in rows] == ["play-one", "play-two", "play-three"]
-    assert rows[0]["grade"] is None                                            # this run's row for a play both hold
-    assert sealed.open_text((where / "2026-03.enc.json").read_text(), KEY) == [{"play_id": "play-zero"}]
+    assert [r["position_id"] for r in rows] == ["pos-one", "pos-two", "pos-three"]
+    assert rows[0]["grade"] is None                                        # this run's row for a position both hold
+    assert sealed.open_text((where / "2026-03.enc.json").read_text(), KEY) == [{"position_id": "pos-zero"}]
     # Still sealed. The ids carry a hyphen, which base64 never does, so they cannot turn up in the ciphertext by
     # chance: "p1" did, one run in about twenty (PR #40's first CI run).
-    assert "play-one" not in ours.read_text() and "play-two" not in ours.read_text()
+    assert "pos-one" not in ours.read_text() and "pos-two" not in ours.read_text()
     # The wrong key opens nothing and writes nothing.
     before = ours.read_text()
     with pytest.raises(sealed.Unreadable):
@@ -73,12 +73,6 @@ def test_sealed_weekly_files_both_runs_rewrote_are_merged_and_resealed(tmp_path)
 
 
 def test_every_sealed_record_the_owner_page_keeps_is_merged_by_its_row_key():
-    assert set(mt.SEALED) == {"owner_plays", "owner_board", "owner_market", "owner_parlays", "owner_trading",
-                              "owner_pickem", "owner_slips", "owner_props", "owner_nhl", "owner_nhl_history",
-                              "owner_highfive", "owner_prop_ledger"}
-    assert mt.SEALED["owner_nhl"] == ["pick_id"]
-    assert mt.SEALED["owner_props"][-1] == "captured_at"
-    assert mt.SEALED["owner_trading"] == ["position_id"]
-    assert mt.SEALED["owner_pickem"] == ["pick_id"] and mt.SEALED["owner_slips"] == ["slip_id"]
-    assert mt.SEALED["owner_parlays"] == ["parlay_id"]
+    assert set(mt.SEALED) == {"polymarket_positions"}
+    assert mt.SEALED["polymarket_positions"] == ["position_id"]
 

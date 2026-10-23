@@ -196,7 +196,7 @@ def test_the_close_survives_being_seen_after_kickoff(store):
 def test_the_close_is_one_whole_snapshot():
     """groupby().last() fills each column from its own last non-null value;
     the close and its price must come from one row."""
-    from atlas.owner.plays import current_lines
+    from atlas.live.grade import current_lines
     snaps = pd.DataFrame({
         "captured_at": ["2026-09-26T10:00:00+00:00", "2026-09-26T11:00:00+00:00"],
         "game_id": 100, "book": "TestBook", "market": "total",

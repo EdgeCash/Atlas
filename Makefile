@@ -1,6 +1,6 @@
 PYTHON ?= python3
 
-.PHONY: help install ingest warehouse research all test lint clean-data dfs-capture dfs-history dfs-staging dfs-scoring dfs-benchmarks dfs-model dfs-lineups dfs-slate dfs-kickers cfb-players cfb-scoring cfb-baseline cfb-model cfb-participation cfb-slate cfb-record owner-paper owner-plays highfive-backtest ncaaf-qb availability \
+.PHONY: help install ingest warehouse research all test lint clean-data polymarket polymarket-capture polymarket-show owner-paper owner-page cfb-players ncaaf-qb availability \
 	live-refresh live-run live-report live-check live-reproduce \
 	site site-full site-serve site-audit site-shots launch-check \
 	ops-heavy ops-poll ops-social ops-health ops-status ops-crontab \
@@ -232,73 +232,22 @@ nhl-props:
 nhl-plays:
 	$(PYTHON) -m atlas.research.nhl_plays
 
-# DFS plan, step 0: DraftKings' Classic slates and salaries into the record
-# (daily in the heavy refresh), and RotoGuru's 2014-2021 DraftKings archive.
-dfs-capture:
-	$(PYTHON) -m atlas.sources.draftkings
-
-dfs-history:
-	$(PYTHON) -m atlas.sources.rotoguru
-
-# DFS plan, step 1: the player-game and defense-game tables, and Atlas's
-# DraftKings scoring reconciled against DraftKings' own record.
-dfs-staging:
-	$(PYTHON) -m atlas.dfs.players
-
-dfs-scoring:
-	$(PYTHON) -m atlas.dfs.reconcile
-
-# DFS plan, step 2: the baseline and salary benchmarks, walk-forward.
-dfs-benchmarks:
-	$(PYTHON) -m atlas.dfs.benchmarks
-
-# DFS plan, step 3: the game environment and the week's news per player,
-# then the player model, walk-forward, beside its Atlas-only version.
-dfs-model:
-	$(PYTHON) -m atlas.dfs.environment
-	$(PYTHON) -m atlas.dfs.context
-	$(PYTHON) -m atlas.dfs.model --atlas-only
-
-# DFS plan, step 5: the optimizer's lineups backtested on 2015-2021, and this
-# week's slate projected with lineups under data/dfs/ (never committed).
-dfs-lineups:
-	$(PYTHON) -m atlas.dfs.backtest
-
-dfs-slate:
-	$(PYTHON) -m atlas.dfs.slate --capture
-
-# DFS, the NFL formats: the kicker model Showdown needs, walk-forward, with
-# its scoring checked against DraftKings' live points-per-game.
-dfs-kickers:
-	$(PYTHON) -m atlas.dfs.kicker --reconcile
-
-# College DFS, step 1: ESPN's college box scores (budgeted; newest first) and
-# DraftKings' college scoring checked against its live points per game.
+# College player box scores from ESPN (budgeted; newest first), for the college models' research tables.
 cfb-players:
 	$(PYTHON) -m atlas.sources.espn_cfb
 
-cfb-scoring:
-	$(PYTHON) -m atlas.dfs.cfb --reconcile
+# Polymarket (docs/POLYMARKET.md): every quote on the games ahead into the record, each contract priced,
+# the day's paper positions logged if due and graded, the owner page sealed, the public report written.
+# Runs inside every heavy refresh and every poll; by hand it does the same.
+polymarket:
+	$(PYTHON) -m atlas.polymarket refresh
 
-# College DFS, step 2: the player-game table and the baseline, walk-forward.
-cfb-baseline:
-	$(PYTHON) -m atlas.dfs.cfb_players
+polymarket-capture:
+	$(PYTHON) -m atlas.polymarket capture
 
-# College DFS, step 3: the model and its ranges, walk-forward.
-cfb-model:
-	$(PYTHON) -m atlas.dfs.cfb_model
-
-# College DFS, step 5: who records a stat, walk-forward; then this week's
-# college slates projected and their lineups written under data/dfs/.
-cfb-participation:
-	$(PYTHON) -m atlas.dfs.cfb_participation
-
-cfb-slate:
-	$(PYTHON) -m atlas.dfs.cfb_slate
-
-# The private college record's summary (needs ATLAS_OWNER_KEY to open it).
-cfb-record:
-	$(PYTHON) -m atlas.dfs.cfb_record
+# The board and the record, to the terminal (needs ATLAS_OWNER_KEY).
+polymarket-show:
+	$(PYTHON) -m atlas.polymarket show
 
 # The owner's paper tracker: the live signals graded as flat paper wagers.
 # Shown only inside the owner page's ciphertext.
@@ -309,13 +258,9 @@ owner-paper:
 availability:
 	$(PYTHON) -m atlas.sources.availability
 
-# The owner's curated plays under the frozen rules, and their record (needs ATLAS_OWNER_KEY).
-owner-plays:
-	$(PYTHON) -m atlas.owner.plays
-
-# The daily-plays backtest: top-N-a-day rules on the walk-forward at the close (reports/highfive_backtest.md).
-highfive-backtest:
-	$(PYTHON) -m atlas.research.highfive_backtest
+# The owner page's one sealed box, rebuilt from what the run wrote (needs ATLAS_OWNER_KEY).
+owner-page:
+	$(PYTHON) -m atlas.owner.page
 
 # College plan, row 9: the quarterback state from ESPN box scores, measured (it fails; see the report).
 ncaaf-qb:

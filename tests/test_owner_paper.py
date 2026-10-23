@@ -8,8 +8,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from atlas.dfs import owner
-from atlas.owner import paper
+from atlas.owner import crypto, page, paper
 
 
 def _signal(sid, game, market, direction, line, *, price=-110.0, selection="primary", book="DraftKings",
@@ -64,35 +63,29 @@ def test_the_verdict_needs_the_full_sample_and_the_interval():
 
 def test_the_tracker_rides_only_inside_the_ciphertext(tmp_path, monkeypatch):
     """Every word of the tracker is in the sealed payload; the page's public script names none of it."""
-    from atlas.dfs import slate
     from atlas.live.store import Store
 
     store = Store.open(tmp_path)
     store.write("signals", pd.DataFrame([_signal("a", 1, "total", "under", 53.5)]))
-    monkeypatch.setenv(owner.SECRET, "horse battery")
+    monkeypatch.setenv(crypto.SECRET, "horse battery")
     monkeypatch.setenv("ATLAS_TRACKING_DIR", str(tmp_path))
-    monkeypatch.setattr(owner, "enc_path", lambda: tmp_path / "owner.enc.json")
-
-    def none():
-        raise slate.NoSlate("none")
-
-    monkeypatch.setattr(slate, "run_all", none)
+    monkeypatch.delenv("ATLAS_COUNTER_URL", raising=False)
     monkeypatch.setattr("atlas.research.dataset.load_research_frame", lambda: pd.DataFrame(
         {"game_id": [1], "actual_margin": [3.0], "actual_total": [41.0]}))
-    owner.refresh(rebuild=False)
-    sealed = owner.read(tmp_path / "owner.enc.json")
-    assert sealed["box"] is not None                                          # no slate, still opens
-    data = json.loads(owner.decrypt(sealed["box"], "horse battery"))
-    assert data["slates"] == [] and data["note"] == "No upcoming slate is posted yet."
-    # The curated plays are not here: they ride in their own box (atlas/owner/plays.py).
-    assert [s["title"] for s in data["sections"]] == ["Paper tracker"]
-    tracker = data["sections"][0]
-    assert "record" not in tracker
+    where = tmp_path / "page.enc.json"
+    page.refresh(polymarket=[{"title": "Polymarket board", "tab": "Polymarket", "tables": [], "notes": []}],
+                 where=where)
+    sealed = page.read(where)
+    assert sealed["box"] is not None
+    data = json.loads(crypto.decrypt(sealed["box"], "horse battery"))
+    assert [s["title"] for s in data["sections"]] == ["Polymarket board", "Paper tracker"]
+    tracker = data["sections"][1]
+    assert "record" not in tracker and tracker["tab"] == "More"
     rows = {r[0]: r[1] for r in tracker["tables"][0]["rows"]}
     assert rows["Won-lost-push"] == "1-0-0" and rows["Graded"] == "1"
     assert "Paper" not in json.dumps(sealed)
 
-    script = (Path(owner.__file__).resolve().parents[1] / "site" / "assets" / "owner.js").read_text().lower()
+    script = (Path(page.__file__).resolve().parents[1] / "site" / "assets" / "owner.js").read_text().lower()
     for word in ("paper", "wager", "units", "stake", "profit", "break-even", "roi"):
         assert word not in script, word
 

@@ -11,7 +11,7 @@ keyed (`atlas.live.store.KEYS`), so each is rewritten as the branch's rows
 with this run's upserted over them, the way `Store.upsert` writes. Both runs'
 captures survive.
 
-The sealed owner records (``tracking/owner_*``: one file per week, rewritten
+The sealed owner records (``tracking/polymarket_positions``: one file per week, rewritten
 whole) are merged the same way when the owner key is in the environment
 (``ATLAS_OWNER_KEY``): each week's file that both runs rewrote becomes the
 branch's rows with this run's laid over them by the record's key, resealed.
@@ -39,18 +39,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 #: The sealed records and what identifies a row in each.
 SEALED: dict[str, list[str]] = {
-    "owner_plays": ["play_id"],
-    "owner_board": ["pick_id"],
-    "owner_nhl": ["pick_id"],
-    "owner_nhl_history": ["kind", "season", "event_id", "market", "side", "book_id"],
-    "owner_parlays": ["parlay_id"],
-    "owner_highfive": ["pick_id"],
-    "owner_trading": ["position_id"],
-    "owner_pickem": ["pick_id"],
-    "owner_slips": ["slip_id"],
-    "owner_prop_ledger": ["ledger_id"],
-    "owner_market": ["sport", "event_id", "market", "selection", "book_id", "captured_at"],
-    "owner_props": ["sport", "event_id", "market", "player_key", "selection", "book_id", "captured_at"],
+    "polymarket_positions": ["position_id"],
 }
 
 
@@ -144,18 +133,18 @@ def merge_sealed(ref: str, passphrase: str, tracking: Path | None = None,
 
 
 def main() -> int:
-    from atlas.dfs import owner
+    from atlas.owner import crypto
 
     ref = sys.argv[1] if len(sys.argv) > 1 else "origin/main"
     try:
         tables = merge_store(ref)
         print(f"merge_tracking: {len(tables)} tables merged with {ref}: {', '.join(tables)}")
-        passphrase = os.environ.get(owner.SECRET, "").strip()
+        passphrase = os.environ.get(crypto.SECRET, "").strip()
         if passphrase:
             files = merge_sealed(ref, passphrase)
             print(f"merge_tracking: {len(files)} sealed files merged: {', '.join(files) or '-'}")
         else:
-            print(f"merge_tracking: {owner.SECRET} not set; this run's sealed records stand as written")
+            print(f"merge_tracking: {crypto.SECRET} not set; this run's sealed records stand as written")
     except Exception as error:  # noqa: BLE001 - the workflow reads the exit code
         print(f"merge_tracking: failed: {type(error).__name__}: {error}", file=sys.stderr)
         return 1

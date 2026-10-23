@@ -523,7 +523,7 @@ def espn_day(day: str, sess) -> list[dict]:
     return out
 
 
-#: ESPN's box-score keys, to the columns the pick'em settles on (`atlas/owner/pickem.py`).
+#: ESPN's box-score keys, to the columns a player prop settles on.
 BOX_KEYS = {"shotsTotal": "sog", "goals": "g", "assists": "a", "blockedShots": "blk", "hits": "hits", "saves": "sv"}
 BOX_COLUMNS = ["name", "team", "position", *BOX_KEYS.values(), "pts"]
 
