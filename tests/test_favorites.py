@@ -95,9 +95,12 @@ def test_the_summary_is_the_win_rate_against_the_break_even_rate():
     assert pre["graded"] == 1 and pre["win_rate"] == 0.0 and pd.isna(pre["se"])
     assert favorites.summary(pd.DataFrame(columns=favorites.COLUMNS)).empty
     sec = favorites.section(record, NOW)
-    assert sec["title"] == "Favorites rule (11 of 12 graded)" and sec["tab"] == "Favorites" and len(sec["tables"]) == 2
+    assert sec["title"] == "Poly Snipe: the favorites rule (11 of 12 positions graded)" and sec["tab"] == "Poly Snipe"
+    assert len(sec["tables"]) == 3 and sec["tables"][0]["title"] == "By phase and threshold"
     assert sec["tables"][0]["rows"][0][:3] == ["in play", "85%", "11 / 10"] and json.dumps(sec)
     assert sec["tables"][1]["title"].startswith("By sport, at the 80%")
+    assert sec["tables"][2]["title"] == "Latest positions (12 sides)" and len(sec["tables"][2]["rows"]) == 12
+    assert {r[5] for r in sec["tables"][2]["rows"]} == {"won", "lost", "pending"}
     text = favorites.text(record)
     assert "| in play | 85% | 11 | 10 | 90.0% | 87.0% | +3.0 ± 9.5 | " in text
     assert favorites.text(pd.DataFrame(columns=favorites.COLUMNS)) == "No favorites positions yet."
@@ -108,10 +111,16 @@ def test_refresh_keeps_the_record_in_the_store(tmp_path, monkeypatch):
 
     monkeypatch.setenv("ATLAS_OFFLINE", "1")
     store = Store.open(tmp_path / "tracking")
-    q = pd.DataFrame([_quote("t1", 0.86), _quote("t2", 0.5)])
+    q = pd.DataFrame([_quote("t1", 0.86), _quote("t2", 0.5), _quote("t7", 0.81, start="2026-10-25T00:00:00Z", slug="m7")])
     record, sec = favorites.refresh(store, q, NOW)
-    assert len(record) == 2 and len(store.read("favorites")) == 2 and sec["title"] == "Favorites rule (0 of 2 graded)"
+    assert len(record) == 3 and len(store.read("favorites")) == 3
+    assert sec["title"] == "Poly Snipe: the favorites rule (0 of 3 positions graded)"
+    rows = sec["tables"][-1]["rows"]
+    assert sec["tables"][-1]["title"] == "Latest positions (2 sides)" and {r[5] for r in rows} == {"pending"}
+    by = {r[0][0] + r[1] + r[2]: r for r in rows}
+    assert by["LAL @ BOS" + "home" + "0.86"][3] == "in play, 60'" and by["LAL @ BOS" + "home" + "0.81"][3] == "pregame, 23.0h out"
+    assert rows[0][4].startswith("Fri") and rows[0][0] == ["LAL @ BOS", "NBA"]
     record, sec = favorites.refresh(store, q, NOW + timedelta(minutes=15))
-    assert len(record) == 2
+    assert len(record) == 3
     empty, sec = favorites.refresh(store, pd.DataFrame(columns=source.QUOTE_COLUMNS), NOW)
-    assert len(empty) == 2 and json.dumps(sec)
+    assert len(empty) == 3 and json.dumps(sec)
