@@ -1,6 +1,6 @@
 # Atlas on Polymarket
 
-*Rebuilt every run; this one at 2026-10-23 02:52 UTC.*
+*Rebuilt every run; this one at 2026-10-23 03:52 UTC.*
 
 Polymarket is the one venue Atlas is priced against. It lists a moneyline,
 a ladder of spreads and a ladder of totals on every NFL, NBA, NHL and college
@@ -14,10 +14,10 @@ the market Atlas is measured against.
 
 | Sport | Games ahead | On Polymarket | Contracts | Median spread (main lines) | Median depth (main lines) | Fee rate |
 |---|---|---|---|---|---|---|
-| NCAAF | 50 | 50 | 5462 | 3.0¢ | $8,571 | 3% |
-| NFL | 15 | 15 | 1680 | 2.0¢ | $40,729 | 3% |
-| NBA | 12 | 12 | 678 | 2.0¢ | $35,231 | 0% |
-| NHL | 9 | 8 | 98 | 1.0¢ | $36,695 | 5% |
+| NCAAF | 50 | 50 | 5462 | 3.0¢ | $10,463 | 3% |
+| NFL | 15 | 14 | 1568 | 2.0¢ | $15,801 | 3% |
+| NBA | 12 | 12 | 678 | 2.0¢ | $31,501 | 0% |
+| NHL | 9 | 6 | 74 | 1.0¢ | $33,634 | 5% |
 
 Spread is the gap between the best bid and the best ask on the contracts
 priced near even; depth is the dollars resting in the market. The fee is
@@ -56,15 +56,19 @@ side at disagreements this large or larger, never below one half.
 
 | Sport | Market | Games | Atlas, median gap | Atlas, largest gap | Anchored, median gap |
 |---|---|---|---|---|---|
-| NCAAF | margin | 50 | 2.2 | 8.4 | 0.00 |
-| NCAAF | total | 50 | 2.2 | 9.6 | 0.65 |
-| NFL | margin | 15 | 1.5 | 3.2 | 0.01 |
-| NFL | total | 15 | 1.2 | 12.5 | 0.29 |
+| NCAAF | margin | 49 | 2.0 | 7.7 | 0.00 |
+| NCAAF | total | 49 | 2.2 | 5.9 | 0.63 |
+| NFL | margin | 14 | 1.3 | 3.3 | 0.01 |
+| NFL | total | 14 | 1.2 | 4.9 | 0.28 |
 
 In points of margin or total, per game: Atlas's own projection against
 Polymarket's centre, and the anchored number the contracts are priced from.
 On a market where the share is zero the anchored gap is zero by
 construction.
+
+## Player props
+
+NBA player props (points, rebounds, assists, threes) this run: 0 contracts on 0 games, 0 with an Atlas projection beside them (`atlas/models/nba_props.py`, `reports/nba_props.md`). Each player-stat's main line is kept in `tracking/polymarket_props.csv` with Atlas's probability as it stood, and graded against the box score and the close into `tracking/prop_record.csv`: 0 graded so far. Most prop books on Polymarket are thin; the record, not the depth, decides what Atlas's disagreement is worth there.
 
 ## The record
 
