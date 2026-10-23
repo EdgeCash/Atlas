@@ -159,6 +159,7 @@ class EspnScoreboard:
                 "sport": self.sport,
             }
 
+            before = len(out)
             for odds in comp.get("odds", []) or []:
                 # One name per book: the feed has spelled DraftKings two ways.
                 book = canonical((odds.get("provider") or {}).get("name") or "unknown")
@@ -201,6 +202,13 @@ class EspnScoreboard:
                         "line": None, "price": ml_home, "other_price": ml_away,
                         "open_line": None, "open_price": ml_home_open,
                     })
+            # ESPN takes a game's odds down at kickoff. Without this row a game that has started
+            # would never be read again: its status, score, period and clock would stay as they
+            # were when it was last quoted. A state row has no book and no market, and the poll
+            # keeps it out of the snapshots and the signals (atlas/live/__main__.py).
+            if len(out) == before:
+                out.append({**base, "book": None, "market": None, "line": None, "price": None,
+                            "other_price": None, "open_line": None, "open_price": None})
         return out
 
 
