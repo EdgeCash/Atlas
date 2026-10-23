@@ -68,3 +68,7 @@ jobs:
       # token from an ordinary poll.
       CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
       ATLAS_COUNTER_TOKEN: ${{ secrets.ATLAS_COUNTER_TOKEN }}
+      # The venue's key, for order previews of the day's positions as they are
+      # logged (atlas/polymarket/account.py): previews only, never an order.
+      POLYMARKET_US_KEY_ID: ${{ secrets.POLYMARKET_US_KEY_ID }}
+      POLYMARKET_US_SECRET: ${{ secrets.POLYMARKET_US_SECRET }}

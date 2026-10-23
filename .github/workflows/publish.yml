@@ -44,6 +44,13 @@ on:
       # Readers section; only the heavy run's Refresh step sees it.
       ATLAS_COUNTER_TOKEN:
         required: false
+      # Polymarket US's key id and secret key (polymarket.us/developer), for
+      # the order previews the positions log takes (atlas/polymarket/account.py).
+      # That module can reach the preview path only; nothing is entered.
+      POLYMARKET_US_KEY_ID:
+        required: false
+      POLYMARKET_US_SECRET:
+        required: false
 
 permissions:
   contents: write      # commit tracking/ and the freshness stamp
@@ -205,6 +212,8 @@ jobs:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
           ATLAS_OWNER_KEY: ${{ secrets.ATLAS_OWNER_KEY }}
           ATLAS_COUNTER_TOKEN: ${{ steps.gate.outputs.mode == 'heavy' && secrets.ATLAS_COUNTER_TOKEN || '' }}
+          POLYMARKET_US_KEY_ID: ${{ secrets.POLYMARKET_US_KEY_ID }}
+          POLYMARKET_US_SECRET: ${{ secrets.POLYMARKET_US_SECRET }}
         # --force because the gate above has already decided, in Eastern time
         # and tolerant of a late start. Letting the task re-apply the strict
         # should_poll() minute test here would undo exactly that.

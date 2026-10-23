@@ -103,7 +103,8 @@ No, a ladder of N for each stat - and the same run prices them
 (`atlas/polymarket/props.py`): points, rebounds, assists, threes, steals,
 blocks and the first three combined in the NBA; points, goals and assists
 in the NHL; receiving yards, receptions,
-rushing yards, passing yards, touchdowns and passing touchdowns in the NFL.
+rushing yards, passing yards, touchdowns, passing touchdowns, pass attempts,
+completions, carries and scrimmage yards in the NFL.
 "At least N" and "N+" are kept as the over at N − ½, so a record row reads
 as a sportsbook's would.
 
@@ -197,3 +198,17 @@ price, from `/v1/markets/{slug}/bbo`) fills at that price for the size
 meant; and that the settlement rules the pricing assumes (a player who does
 not play settled at the last fair price; a game moved more than two days
 settled the same way) are the ones on each market's page.
+
+The second of those is measured, where the venue key is set. As the day's
+positions are logged, each is put to Polymarket US's order preview
+(`atlas/polymarket/account.py`): a limit at the ask it was logged at for
+the stake's worth of contracts at a nominal bankroll (`ATLAS_PREVIEW_BANKROLL`,
+$1,000 by default), immediate-or-cancel, so the venue says what the book
+would fill at that price right then - the average price, the contracts
+filled and left, the commission - without entering anything. The answer
+goes into the sealed record beside the paper price, and the owner page
+sums the day: how many would fill in full at the ask, the mean fill
+against it, the fees. That module can reach the preview path only, and a
+test holds it to that. The key is two repository secrets, the key id and
+the secret key from polymarket.us/developer (`POLYMARKET_US_KEY_ID`,
+`POLYMARKET_US_SECRET`); without them the step does nothing.

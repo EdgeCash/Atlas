@@ -60,7 +60,9 @@ MIN_GRADED = 50
 
 COLUMNS = ["position_id", "formed_at", "day", "year", "week", "game_id", "sport", "kickoff", "label", "away", "home",
            "market", "side", "long", "line", "token_id", "market_id", "market_slug", "event_slug", "ask", "fee_rate", "fee",
-           "cost", "p_market", "p_raw", "p", "ev", "kelly", "stake", "liquidity", "spread"]
+           "cost", "p_market", "p_raw", "p", "ev", "kelly", "stake", "liquidity", "spread",
+           # What the venue's order preview said when the position was logged (atlas/polymarket/account.py).
+           "previewed_at", "preview_qty", "preview_px", "preview_filled", "preview_fee", "preview_state"]
 
 
 def path() -> Path:
@@ -346,8 +348,13 @@ def run(priced: pd.DataFrame, finals: pd.DataFrame, quotes: pd.DataFrame, passph
     chosen = positions(priced, now, unit=unit, columns=columns)
     record = load(passphrase, where, columns)
     if due(record, chosen, now):
+        before = set(record["position_id"]) if len(record) else set()
         record, weeks = log(record, chosen, columns)
         if weeks:
+            # The venue's own preview of each new position, at the ask it was logged at, where the key is set.
+            from atlas.polymarket import account
+
+            record = account.preview(record, set(record["position_id"]) - before, now).reindex(columns=columns)
             seal(record, passphrase, weeks, where, columns)
             LOG.info("polymarket: %d positions logged for %s", len(chosen), chosen["day"].iloc[0])
     return chosen, (grader or grade)(record, finals, quotes, now)

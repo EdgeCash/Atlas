@@ -41,7 +41,7 @@ Rebuilds everything, in this order:
 | 2 | `atlas.live refresh --no-rebuild` | the model reads the warehouse; projections first, with the kickoff wind forecast |
 | 3 | `atlas.live run` | capture the market before publishing |
 | 4 | `atlas.sources.availability` | the SEC's and ACC's quarterback reports |
-| 5 | `atlas.polymarket refresh --heavy` | Polymarket US: the quotes into the record, every contract priced, the day's positions logged if due and graded, the NBA, NHL and NFL player props priced off the snapshots the refresh wrote, ESPN's injury reports applied to each, the owner page sealed, the public report written (`docs/POLYMARKET.md`) |
+| 5 | `atlas.polymarket refresh --heavy` | Polymarket US: the quotes into the record, every contract priced, the day's positions logged if due and graded, the NBA, NHL and NFL player props priced off the snapshots the refresh wrote, ESPN's injury reports applied to each, the day's positions put to the venue's order preview as they are logged where the key is set, the owner page sealed, the public report written (`docs/POLYMARKET.md`) |
 | — | record `heavy` and `poll` | **stamps are written before the pages** |
 | 6 | `atlas.site.build` | board, 58 cards, 116 team pages, social, status |
 

@@ -69,9 +69,12 @@ def positions_section(chosen: pd.DataFrame, graded: pd.DataFrame, now: datetime)
     rows = [[[x.label, _eastern(x.kickoff)], [_contract(x), str(x.sport).upper()], _price(x), _edge(x),
              [f"{float(x.stake):.1%}", "logged" if x.position_id in logged else ""]]
             for x in chosen.itertuples()]
-    return {"title": f"Positions for {day} ({len(rows)})", "tab": TAB,
-            "tables": [{"title": "", "head": [*HEAD, "Stake"], "stack": True,
-                        "rows": rows or [[f"Nothing clears {pos.MIN_EV:+.0%} after the fee.", "", "", "", ""]]}],
+    tables = [{"title": "", "head": [*HEAD, "Stake"], "stack": True,
+               "rows": rows or [[f"Nothing clears {pos.MIN_EV:+.0%} after the fee.", "", "", "", ""]]}]
+    previews = preview_table(graded, chosen["day"].iloc[0] if len(chosen) else pos.day_of(now))
+    if previews:
+        tables.append(previews)
+    return {"title": f"Positions for {day} ({len(rows)})", "tab": TAB, "tables": tables,
             "notes": [
                 "Paper only: nothing is bought. A contract costs its ask plus Polymarket US's taker fee and pays $1 "
                 "if it wins.",
@@ -86,7 +89,35 @@ def positions_section(chosen: pd.DataFrame, graded: pd.DataFrame, now: datetime)
                 "Fair is Atlas anchored to the market by what the walk-forward record says Atlas's disagreement "
                 "has been worth; market is the venue's own probability. Depth is the dollars resting at the best "
                 "ask when the book was read, for the contracts that cleared the rest of the rule: confirm the "
-                "book before real money."]}
+                "book before real money.",
+                "Order previews, where the venue key is set: each logged position put to Polymarket US's order "
+                "preview as a limit at its ask for the stake's worth of contracts at a nominal bankroll, "
+                "immediate-or-cancel, and what it says would fill. Nothing is entered."]}
+
+
+def preview_table(graded: pd.DataFrame, day) -> dict | None:
+    """The venue's order previews of the day's logged positions (atlas/polymarket/account.py): what each
+    would have filled at against the ask it was logged at. None when none were taken."""
+    from atlas.polymarket import account
+
+    s = account.summary(graded, day)
+    if s is None:
+        return None
+    r = graded[(graded["day"].astype(str) == str(day)) & graded["previewed_at"].notna()]
+    rows = []
+    for x in r.itertuples():
+        qty, filled = float(x.preview_qty), float(x.preview_filled) if pd.notna(x.preview_filled) else float("nan")
+        px = float(x.preview_px) if pd.notna(x.preview_px) else float("nan")
+        state = str(x.preview_state)
+        fill = f"{px:.2f}" if math.isfinite(px) else ("none" if state and not state.startswith("error") else "")
+        rows.append([[x.label, _contract(x)], f"{float(x.ask):.2f}", fill,
+                     f"{filled:g} of {qty:g}" if math.isfinite(filled) else state.replace("error:", "failed: "),
+                     f"${float(x.preview_fee):.2f}" if pd.notna(x.preview_fee) else ""])
+    gap = f"{100 * s['gap']:+.1f}¢" if math.isfinite(s["gap"]) else "n/a"
+    return {"title": f"Order previews: {s['whole']} of {s['n']} would fill in full at the ask; mean fill {gap} "
+                     f"from it; fees ${s['fee']:.2f} on ${s['cost']:,.0f}"
+                     + (f"; {s['errors']} failed" if s["errors"] else ""),
+            "head": ["Contract", "Ask", "Fill", "Filled", "Fee"], "stack": True, "rows": rows}
 
 
 def board_section(priced: pd.DataFrame, now: datetime) -> dict:

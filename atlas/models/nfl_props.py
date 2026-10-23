@@ -22,7 +22,10 @@ A player's stat is his **opportunity** times his **rate** times the **game**:
 
 Each count is a negative binomial about Atlas's mean at the dispersion
 measured on the same three seasons (a Poisson where that is one or below),
-which is what prices "at least N": P(over N - 1/2).
+which is what prices "at least N": P(over N - 1/2). An opportunity the
+venue writes a market on (attempts, completions, carries) is a stat whose
+rate per opportunity is one; scrimmage yards (:data:`COMBINED`) is the sum
+of rushing and receiving, with its own dispersion fitted on the sum.
 
 **The test**: P(over) at the common lines against a Poisson on the player's
 season mean so far, on regular-season player-games with :data:`MIN_PRIOR`
@@ -49,17 +52,25 @@ from atlas.util import get_logger
 
 LOG = get_logger(__name__)
 
-VERSION = "nfl-props-v1"
-STATS = ("receiving_yards", "receptions", "rushing_yards", "passing_yards", "touchdowns", "passing_tds")
+VERSION = "nfl-props-v2"
+#: The counts a prop is written on. The last three are opportunities priced as stats: an attempt's rate per
+#: attempt is one, so the state carries them without a special case, and the layer fits the game on top.
+STATS = ("receiving_yards", "receptions", "rushing_yards", "passing_yards", "touchdowns", "passing_tds",
+         "completions", "attempts", "carries")
+#: Stats the venue writes on a sum of others: the expectation is the sum of the parts', the spread its own.
+COMBINED = {"scrimmage_yards": ("rushing_yards", "receiving_yards")}
 #: What each stat is a rate of.
 OPPORTUNITY = {"receiving_yards": "targets", "receptions": "targets", "rushing_yards": "carries",
-               "passing_yards": "attempts", "passing_tds": "attempts", "touchdowns": "touches"}
+               "passing_yards": "attempts", "passing_tds": "attempts", "touchdowns": "touches",
+               "completions": "attempts", "attempts": "attempts", "carries": "carries", "scrimmage_yards": "touches"}
 #: Each opportunity's share is of the team's pass or rush attempts.
 OF_TEAM = {"targets": "pass_attempts", "attempts": "pass_attempts", "carries": "rush_attempts"}
 TOUCHDOWNS = ("touchdowns", "passing_tds")
 OPPORTUNITIES = ("targets", "carries", "attempts", "touches")
 LINES = {"receiving_yards": (24.5, 49.5, 74.5), "receptions": (2.5, 4.5, 6.5), "rushing_yards": (24.5, 49.5, 74.5),
-         "passing_yards": (199.5, 249.5, 299.5), "touchdowns": (0.5, 1.5), "passing_tds": (0.5, 1.5, 2.5)}
+         "passing_yards": (199.5, 249.5, 299.5), "touchdowns": (0.5, 1.5), "passing_tds": (0.5, 1.5, 2.5),
+         "completions": (17.5, 22.5, 27.5), "attempts": (24.5, 29.5, 34.5), "carries": (9.5, 14.5, 19.5),
+         "scrimmage_yards": (49.5, 74.5, 99.5)}
 WINDOW = 3
 MIN_PRIOR = 3
 TUNE = (2014, 2015, 2016)
@@ -153,7 +164,8 @@ def _state(p: pd.DataFrame, spec: Spec, *, prior: bool) -> pd.DataFrame:
     opps = list(OF_TEAM)
     vol = _ew(played.assign(one=1.0), "player_id", ["one", *opps, "pass_attempts", "rush_attempts"], spec.h_share,
               prior=prior)
-    rate = _ew(played.assign(one=1.0), "player_id", ["one", *opps, "touches", *STATS], spec.h_rate, prior=prior)
+    rate = _ew(played.assign(one=1.0), "player_id", list(dict.fromkeys(["one", *opps, "touches", *STATS])),
+               spec.h_rate, prior=prior)
     pr = p[["season", "position"]].merge(position_priors(p), on=["season", "position"], how="left").set_index(p.index)
     st = pd.DataFrame(index=played.index)
     st["n"] = vol["one"]
@@ -208,8 +220,10 @@ def features(players: pd.DataFrame, teams: pd.DataFrame, spec: Spec) -> pd.DataF
         p[f"opp_{s}"] = p[f"opp_{s}"].fillna(1.0).clip(0.6, 1.6)
         p[f"base_{s}"] = p[f"{OPPORTUNITY[s]}_hat"] * p[f"{s}_rate"]
     p["home"] = p["home"].astype(float)
+    for name, parts in COMBINED.items():
+        p[name] = sum(p[s] for s in parts)
     played = p[p["played"]]
-    cols = [*STATS, *OPPORTUNITIES]
+    cols = list(dict.fromkeys([*STATS, *COMBINED, *OPPORTUNITIES]))
     cum = played.groupby(["player_id", "season"])[cols].cumsum() - played[cols]
     cnt = played.groupby(["player_id", "season"]).cumcount()
     for s in cols:
@@ -264,6 +278,13 @@ def fit_season(p: pd.DataFrame, season: int) -> dict:
         beta = poisson_fit(x, y, offset(rows, stat))
         mu = np.exp(np.clip(offset(rows, stat) + x @ beta, -30, 30))
         out[stat] = {"beta": beta.tolist(), "dispersion": float(max(1.0, ((y - mu) ** 2).sum() / mu.sum()))}
+    for name, parts in COMBINED.items():
+        rows = train[train[f"base_{parts[0]}"] + train[f"base_{parts[1]}"] > 0.05]
+        if len(rows) < 200:
+            rows = train
+        mu = sum(mean(rows, s, out) for s in parts)
+        y = sum(rows[s].to_numpy(float) for s in parts)
+        out[name] = {"dispersion": float(max(1.0, ((y - mu) ** 2).sum() / mu.sum()))}
     return out
 
 
@@ -282,6 +303,8 @@ def walk(players: pd.DataFrame, teams: pd.DataFrame, spec: Spec, seasons) -> tup
         rows = f[(f["season"] == season) & (f["season_type"] == "regular") & f["played"]].copy()
         for stat in STATS:
             rows[f"mu_{stat}"] = mean(rows, stat, layer)
+        for name, of in COMBINED.items():
+            rows[f"mu_{name}"] = sum(rows[f"mu_{s}"] for s in of)
         parts.append(rows)
     return (pd.concat(parts, ignore_index=True) if parts else f.iloc[0:0]), layers
 
@@ -436,7 +459,7 @@ def expect(snap: dict, player, team: str, opponent: str, home: bool, implied_tot
     nan when a team is not known."""
     teams = snap["teams"].set_index("team")
     if team not in teams.index or opponent not in teams.index:
-        return dict.fromkeys(STATS, float("nan"))
+        return _nothing()
     own, opp = teams.loc[team], teams.loc[opponent]
     level = float(snap["level"]["implied_total"]) or 22.0
     factor = float(np.clip((implied_total if implied_total is not None else level) / level, 0.5, 1.8))
@@ -444,10 +467,21 @@ def expect(snap: dict, player, team: str, opponent: str, home: bool, implied_tot
     attempts = float(player["share_attempts"]) * float(own["pass_attempts_hat"])
     carries = float(player["share_carries"]) * float(own["rush_attempts_hat"])
     opportunity = {"targets": targets, "attempts": attempts, "carries": carries, "touches": targets + carries}
+    layer = snap["layer"]
+    # A stat the snapshot does not carry yet (one written before the stat was added) is nan, not an error.
+    stats = [s for s in STATS if s in layer and f"f_allow_{s}" in opp.index and f"{s}_rate" in player]
     f = pd.DataFrame([{"home": 1.0 if home else 0.0, "total_factor": factor,
-                       **{f"opp_{s}": float(np.clip(opp[f"f_allow_{s}"], 0.6, 1.6)) for s in STATS},
-                       **{f"base_{s}": opportunity[OPPORTUNITY[s]] * float(player[f"{s}_rate"]) for s in STATS}}])
-    return {s: float(mean(f, s, snap["layer"])[0]) for s in STATS}
+                       **{f"opp_{s}": float(np.clip(opp[f"f_allow_{s}"], 0.6, 1.6)) for s in stats},
+                       **{f"base_{s}": opportunity[OPPORTUNITY[s]] * float(player[f"{s}_rate"]) for s in stats}}])
+    out = _nothing()
+    out.update({s: float(mean(f, s, layer)[0]) for s in stats})
+    for name, parts in COMBINED.items():
+        out[name] = float(sum(out[s] for s in parts))
+    return out
+
+
+def _nothing() -> dict[str, float]:
+    return dict.fromkeys([*STATS, *COMBINED], float("nan"))
 
 
 def prob(mean_: float, line: float, side: str, dispersion: float) -> float:
@@ -459,7 +493,8 @@ def prob(mean_: float, line: float, side: str, dispersion: float) -> float:
 
 
 def dispersion(snap: dict, stat: str) -> float:
-    return float(snap["layer"][stat]["dispersion"])
+    """The negative binomial's dispersion for ``stat``; nan where the snapshot has none for it."""
+    return float((snap["layer"].get(stat) or {}).get("dispersion", float("nan")))
 
 
 # ---------------------------------------------------------------------------

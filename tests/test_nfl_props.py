@@ -138,13 +138,14 @@ def test_the_model_walks_forward_and_scores_against_the_season_mean(tables):
             assert len(layers[season][stat]["beta"]) == 4 and layers[season][stat]["dispersion"] >= 1.0
     assert set(rows["season_type"]) == {"regular"} and (rows[[f"mu_{s}" for s in nfl_props.STATS]] >= 0).all().all()
     table = nfl_props.score(rows, layers)
-    assert set(table["stat"]) == set(nfl_props.STATS) and table["n"].min() > 50
+    assert set(table["stat"]) == {*nfl_props.STATS, *nfl_props.COMBINED} and table["n"].min() > 50
+    assert (rows["mu_scrimmage_yards"] == rows["mu_rushing_yards"] + rows["mu_receiving_yards"]).all()
     assert table["brier_atlas"].between(0, 1).all() and (table["mean_atlas"] - table["observed"]).abs().max() < 0.15
     assert table["brier_atlas"].mean() <= table["brier_naive"].mean() + 0.01
     assert np.isfinite(nfl_props.loglik(rows, layers)) and nfl_props.loglik(rows, layers) < 0
     # A season with nothing before it is fitted on itself, for want of better.
     first = nfl_props.fit_season(nfl_props.features(players, teams, nfl_props.Spec()), SEASONS[0])
-    assert set(first) == set(nfl_props.STATS)
+    assert set(first) == {*nfl_props.STATS, *nfl_props.COMBINED}
 
 
 def test_the_spec_is_read_from_the_report_directory(tmp_path):
@@ -162,10 +163,16 @@ def test_the_snapshot_projects_a_player_against_an_opponent(snap):
     wes, walt, qb = _row(snap, "Wes Kc"), _row(snap, "Walt Kc"), _row(snap, "Quinn Kc")
     assert wes["n_season"] == WEEKS - 1 and wes["share_targets"] > walt["share_targets"] > 0
     e = nfl_props.expect(snap, wes, "KC", "BUF", True, 24.0)
-    assert set(e) == set(nfl_props.STATS) and e["receiving_yards"] > nfl_props.expect(snap, walt, "KC", "BUF", True, 24.0)["receiving_yards"] > 0
+    assert set(e) == {*nfl_props.STATS, *nfl_props.COMBINED}
+    assert e["receiving_yards"] > nfl_props.expect(snap, walt, "KC", "BUF", True, 24.0)["receiving_yards"] > 0
+    assert e["scrimmage_yards"] == pytest.approx(e["rushing_yards"] + e["receiving_yards"])
     assert 20 < e["receiving_yards"] < 120 and 1 < e["receptions"] < 10 and e["passing_yards"] < 5
     passer = nfl_props.expect(snap, qb, "KC", "BUF", True, 24.0)
     assert 150 < passer["passing_yards"] < 400 and 0.5 < passer["passing_tds"] < 4 and passer["receiving_yards"] < 2
+    # The opportunities priced as stats: a starter's attempts are his team's, his completions fewer.
+    assert 25 < passer["attempts"] < 45 and 0.5 * passer["attempts"] < passer["completions"] < passer["attempts"]
+    rex = _row(snap, "Rex Kc")
+    assert 8 < nfl_props.expect(snap, rex, "KC", "BUF", True, 24.0)["carries"] < 25 and passer["carries"] < 5
     # A bigger game is more of everything; the league's total when none is known; nan for a team unknown.
     assert nfl_props.expect(snap, wes, "KC", "BUF", True, 30.0)["receiving_yards"] > e["receiving_yards"]
     assert nfl_props.expect(snap, wes, "KC", "BUF", True, None)["receiving_yards"] > 0
@@ -324,3 +331,40 @@ def test_refresh_prices_the_nfl_and_counts_it_in_the_summary(snap, tables, tmp_p
     kept = store.read("polymarket_props")
     assert set(kept["sport"]) == {"nfl"} and len(kept) == 12                            # the main lines, both sides
     assert json.dumps(sections)
+
+
+def test_the_opportunity_props_are_read_priced_and_graded(snap, tables):
+    from atlas.polymarket import match, props, source
+
+    players, _ = tables
+    now = datetime(2024, 11, 1, tzinfo=UTC)
+    ev = us.event("8001", "nfl-kc-buf-2024-11-03", KC, BUF, [
+        _nfl_prop(1, "passing_attempts", "Quinn Buf", 30, 0.49, 0.51, BUF),
+        _nfl_prop(2, "passing_completions", "Quinn Buf", 20, 0.49, 0.51, BUF),
+        _nfl_prop(3, "rushing_attempts", "Rex Kc", 12, 0.49, 0.51, KC),
+        _nfl_prop(4, "scrimmage_yards", "Rex Kc", 75, 0.39, 0.41, KC)], start=START)
+    q = props.prop_quotes([ev], source.LEAGUES["nfl"], now)
+    assert set(q["stat"]) == {"attempts", "completions", "carries", "scrimmage_yards"} and len(q) == 8
+    e = props.expectations(match.attach(q, _pairs()), {"nba": None, "nhl": None, "nfl": snap}).set_index(["player", "stat", "line", "side"])
+    qb = nfl_props.expect(snap, _row(snap, "Quinn Buf"), "BUF", "KC", True, None)
+    assert e.loc[("Quinn Buf", "attempts", 29.5, "over"), "atlas_mean"] == pytest.approx(qb["attempts"])
+    assert e.loc[("Quinn Buf", "completions", 19.5, "over"), "atlas_mean"] == pytest.approx(qb["completions"])
+    rex = nfl_props.expect(snap, _row(snap, "Rex Kc"), "KC", "BUF", False, None)
+    assert e.loc[("Rex Kc", "scrimmage_yards", 74.5, "over"), "atlas_mean"] == pytest.approx(rex["rushing_yards"] + rex["receiving_yards"])
+    for key in (("Quinn Buf", "attempts", 29.5), ("Quinn Buf", "completions", 19.5), ("Rex Kc", "carries", 11.5),
+                ("Rex Kc", "scrimmage_yards", 74.5)):
+        assert 0 < e.loc[(*key, "over"), "p_atlas"] < 1
+        assert e.loc[(*key, "over"), "p_atlas"] + e.loc[(*key, "under"), "p_atlas"] == pytest.approx(1.0)
+    # Graded from the player weeks: scrimmage yards the sum of the two.
+    results = props.results_frame("nfl", players)
+    game = players[players["player"] == "Rex Kc"].iloc[-1]
+    value, played = props._value(results, "nfl", str(int(game["espn_id"])), "Rex Kc", "scrimmage_yards")
+    assert played and value == game["rushing_yards"] + game["receiving_yards"]
+    assert props._value(results, "nfl", str(int(game["espn_id"])), "Rex Kc", "carries") == (game["carries"], True)
+    # A snapshot written before the stats were added prices what it has, and nan for the rest.
+    old = {**snap, "layer": {s: snap["layer"][s] for s in snap["layer"] if s not in ("attempts", "completions", "carries", "scrimmage_yards")},
+           "players": snap["players"].drop(columns=["attempts_rate", "completions_rate", "carries_rate"]),
+           "teams": snap["teams"].drop(columns=["f_allow_attempts", "f_allow_completions", "f_allow_carries"])}
+    e_old = props.expectations(match.attach(q, _pairs()), {"nba": None, "nhl": None, "nfl": old}).set_index(["player", "stat", "line", "side"])
+    assert math.isnan(e_old.loc[("Quinn Buf", "attempts", 29.5, "over"), "p_atlas"])
+    assert e_old.loc[("Rex Kc", "scrimmage_yards", 74.5, "over"), "atlas_mean"] == pytest.approx(rex["rushing_yards"] + rex["receiving_yards"])
