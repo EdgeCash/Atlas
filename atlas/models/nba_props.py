@@ -1,4 +1,5 @@
-"""Atlas's NBA player projections: points, rebounds, assists and threes, walk-forward (docs/MODEL_PLAN_NBA.md, step 7).
+"""Atlas's NBA player projections: points, rebounds, assists, threes, steals and blocks, and the first three
+combined, walk-forward (docs/MODEL_PLAN_NBA.md, step 7).
 
     python -m atlas.models.nba_props              # walk forward with the saved spec -> reports/nba_props.md
     python -m atlas.models.nba_props --tune       # tune the half-lives first, and save them
@@ -18,7 +19,10 @@ as **minutes times a rate times the game**:
 
 The distribution around the expectation is a negative binomial whose
 dispersion is fitted beside the layer (`atlas/models/nhl_props.py` holds
-the shapes; they are the NHL's, reused). Scored walk-forward against a
+the shapes; they are the NHL's, reused). A combined stat (points, rebounds
+and assists, :data:`COMBINED`) is the sum of its parts' expectations, with
+its own dispersion fitted on the sum: the parts move together through the
+minutes, and the sum's spread says by how much. Scored walk-forward against a
 Poisson on the player's season mean so far, at the common lines, by Brier
 and log loss; the half-lives tuned once, on 2018-19 to 2020-21, by the
 log-likelihood of the counts.
@@ -45,10 +49,12 @@ from atlas.util import get_logger
 
 LOG = get_logger(__name__)
 
-VERSION = "nba-props-v1"
-STATS = ("points", "rebounds", "assists", "threes")
+VERSION = "nba-props-v2"
+STATS = ("points", "rebounds", "assists", "threes", "steals", "blocks")
+#: Stats the venue writes on a sum of others: the expectation is the sum of the parts', the spread its own.
+COMBINED = {"pra": ("points", "rebounds", "assists")}
 LINES = {"points": (9.5, 14.5, 19.5, 24.5), "rebounds": (3.5, 5.5, 7.5), "assists": (1.5, 3.5, 5.5),
-         "threes": (0.5, 1.5, 2.5)}
+         "threes": (0.5, 1.5, 2.5), "steals": (0.5, 1.5), "blocks": (0.5, 1.5), "pra": (14.5, 24.5, 34.5)}
 WINDOW = 3
 FIRST_REPORT = 2021
 TUNE = (2018, 2019, 2020)
@@ -180,11 +186,14 @@ def features(players: pd.DataFrame, team_games: pd.DataFrame, spec: Spec) -> pd.
         p[f"opp_{s}"] = p[f"opp_{s}"].fillna(1.0).clip(0.6, 1.6)
         p[f"base_{s}"] = p["min_hat"] * p[f"{s}_rate"]
     p["home"] = p["is_home"].astype(float)
+    for name, parts in COMBINED.items():
+        p[name] = sum(p[s] for s in parts)
     # The season mean so far, played games only, for the naive baseline; and how many there were.
     played = p[p["played"]]
-    cum = played.groupby(["player_id", "season"])[list(STATS)].cumsum() - played[list(STATS)]
+    cols = [*STATS, *COMBINED]
+    cum = played.groupby(["player_id", "season"])[cols].cumsum() - played[cols]
     cnt = played.groupby(["player_id", "season"]).cumcount()
-    for s in STATS:
+    for s in cols:
         p.loc[played.index, f"naive_{s}"] = cum[s] / cnt.replace(0, np.nan)
     p.loc[played.index, "n_season"] = cnt.to_numpy(dtype=float)
     p["n_season"] = p["n_season"].fillna(0.0)
@@ -218,11 +227,16 @@ def fit_season(p: pd.DataFrame, season: int) -> dict:
         seasons = [season]
     train = p[p["season"].isin(list(seasons)) & (p["season_type"] == "regular") & p["played"] & (p["n"] >= 1)]
     out: dict = {}
+    mus: dict[str, np.ndarray] = {}
     for stat in STATS:
         x, y = design(train, stat), train[stat].to_numpy(float)
         beta = poisson_fit(x, y, offset(train, stat))
-        mu = np.exp(np.clip(offset(train, stat) + x @ beta, -30, 30))
-        out[stat] = {"beta": beta.tolist(), "dispersion": float(max(1.0, ((y - mu) ** 2).sum() / mu.sum()))}
+        mus[stat] = np.exp(np.clip(offset(train, stat) + x @ beta, -30, 30))
+        out[stat] = {"beta": beta.tolist(), "dispersion": float(max(1.0, ((y - mus[stat]) ** 2).sum() / mus[stat].sum()))}
+    for name, parts in COMBINED.items():
+        mu = sum(mus[s] for s in parts)
+        y = sum(train[s].to_numpy(float) for s in parts)
+        out[name] = {"dispersion": float(max(1.0, ((y - mu) ** 2).sum() / mu.sum()))}
     return out
 
 
@@ -241,6 +255,8 @@ def walk(players: pd.DataFrame, team_games: pd.DataFrame, spec: Spec, seasons) -
         rows = f[(f["season"] == season) & (f["season_type"] == "regular") & f["played"]].copy()
         for stat in STATS:
             rows[f"mu_{stat}"] = mean(rows, stat, layer)
+        for name, of in COMBINED.items():
+            rows[f"mu_{name}"] = sum(rows[f"mu_{s}"] for s in of)
         parts.append(rows)
     return (pd.concat(parts, ignore_index=True) if parts else f.iloc[0:0]), layers
 
@@ -426,10 +442,17 @@ def expect(snap: dict, player, team_id, opponent_id, home: bool) -> dict[str, fl
     except (KeyError, TypeError, ValueError):
         return dict.fromkeys(STATS, float("nan"))
     pace = float(np.clip((own["f_possessions"] + opp["f_possessions"]) / 2.0, 0.7, 1.4))
+    layer = snap["layer"]
+    # A stat the snapshot does not carry yet (one written before the stat was added) is nan, not an error.
+    stats = [s for s in STATS if s in layer and f"f_allow_{s}" in opp.index and f"{s}_rate" in player]
     f = pd.DataFrame([{"home": 1.0 if home else 0.0, "pace": pace,
-                       **{f"opp_{s}": float(np.clip(opp[f"f_allow_{s}"], 0.6, 1.6)) for s in STATS},
-                       **{f"base_{s}": float(player["min_hat"]) * float(player[f"{s}_rate"]) for s in STATS}}])
-    return {s: float(mean(f, s, snap["layer"])[0]) for s in STATS}
+                       **{f"opp_{s}": float(np.clip(opp[f"f_allow_{s}"], 0.6, 1.6)) for s in stats},
+                       **{f"base_{s}": float(player["min_hat"]) * float(player[f"{s}_rate"]) for s in stats}}])
+    out = dict.fromkeys(STATS, float("nan"))
+    out.update({s: float(mean(f, s, layer)[0]) for s in stats})
+    for name, parts in COMBINED.items():
+        out[name] = float(sum(out[s] for s in parts))
+    return out
 
 
 def prob(mean_: float, line: float, side: str, dispersion: float) -> float:
@@ -455,7 +478,8 @@ def prob_available(mean_: float, line: float, side: str, dispersion: float, p_pl
 
 
 def dispersion(snap: dict, stat: str) -> float:
-    return float(snap["layer"][stat]["dispersion"])
+    """The negative binomial's dispersion for ``stat``; nan where the snapshot has none for it."""
+    return float((snap["layer"].get(stat) or {}).get("dispersion", float("nan")))
 
 
 # ---------------------------------------------------------------------------
