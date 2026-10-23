@@ -103,7 +103,7 @@ Runtime: about 10 seconds.
 | NFL Sunday | Sunday | 07:00 → 20:00 |
 | NHL Tuesday night | Tuesday, October → June | 18:00 → 23:00 |
 | NHL Wednesday night | Wednesday, October → June | 18:00 → 23:00 |
-| NBA Sunday night | Sunday, October → June | 18:00 → 23:00 |
+| NBA nights | every night, October → June | 18:00 → 23:00 |
 
 The weeknight windows cover the NFL's 20:15 kickoffs and the Thursday and
 Friday college slates from 19:00, with two hours of pre-game movement before them and room
@@ -114,10 +114,12 @@ The NHL plays most nights, puck drop 19:00 to 22:30 ET. The football windows
 already cover Monday, Thursday, Friday, Saturday and most of Sunday; the two
 NHL windows add Tuesday and Wednesday nights in the months it plays, so every
 NHL closing line is taken within fifteen minutes of puck drop
-(`docs/MODEL_PLAN_NHL.md`, step 0). The NBA plays every night; Sunday
-evening is the one the football and hockey windows leave uncovered, so it
-is added in the NBA's months. Each poll reads four ESPN scoreboards:
-college, the NFL, the NHL and the NBA.
+(`docs/MODEL_PLAN_NHL.md`, step 0). The NBA plays every night, tip-off
+19:00 to 22:30 ET, so it has a window every night in its months: most sit
+inside a football or hockey window already, but they stand on their own, so
+every NBA close - the games and the player props - is taken within fifteen
+minutes whatever the other schedules do. Each poll reads four ESPN
+scoreboards: college, the NFL, the NHL and the NBA.
 
 Inside a window the poller runs every 15 minutes. Outside, hourly.
 

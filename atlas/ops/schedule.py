@@ -86,9 +86,13 @@ GAME_DAYS = (
     Window("NFL Sunday", weekday=6, start=time(7, 0), end=time(20, 0)),
     Window("NHL Tuesday night", weekday=1, start=time(18, 0), end=time(23, 0), months=NHL_MONTHS),
     Window("NHL Wednesday night", weekday=2, start=time(18, 0), end=time(23, 0), months=NHL_MONTHS),
-    # The NBA plays every night of the week; Sunday evening is the one the football and hockey
-    # windows leave uncovered, so each NBA close on a Sunday is taken within fifteen minutes too.
-    Window("NBA Sunday night", weekday=6, start=time(18, 0), end=time(23, 0), months=NBA_MONTHS),
+    # The NBA plays every night of the week, tip-off 19:00 to 22:30 ET, so it has a window every
+    # night in its months. Most of them sit inside a football or hockey window already; they are
+    # listed on their own so an NBA close is taken within fifteen minutes whatever the other
+    # schedules do. The first matching window names the run, so these come last.
+    *(Window(f"NBA {name} night", weekday=weekday, start=time(18, 0), end=time(23, 0), months=NBA_MONTHS)
+      for weekday, name in enumerate(("Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
+                                      "Saturday", "Sunday"))),
 )
 
 
