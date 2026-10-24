@@ -45,6 +45,10 @@ def test_a_closed_event_is_read_as_a_game_with_its_sides_and_settled_price():
     assert g["long_side"] == "home" and g["result_long"] == 0.5
     assert backtest.game({"id": "1", "slug": "nba-x", "teams": [], "markets": []}) is None
     assert backtest.league_of({"slug": "aec-cfb-osu-mich-2025-11-29"}) == "cfb"
+    # The cache keeps the event cut down to what is read, and the game read from it is the same.
+    thin = backtest.slim(_closed_event())
+    assert set(thin) <= {*backtest.EVENT_FIELDS, "markets"} and len(thin["markets"]) == 1
+    assert backtest.game(thin) == backtest.game(_closed_event())
     frame = backtest.games([_closed_event(), _closed_event(eid="2", slug="cbb-duke-unc-2026-02-01")], ("nba",))
     assert list(frame["league"]) == ["nba"]
 

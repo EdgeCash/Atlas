@@ -96,10 +96,26 @@ OVERLAP = 2_000
 WORKERS = 8
 
 
+#: What the cache keeps of an event and of its moneyline: the listing in full is gigabytes, most of it markets
+#: on tennis matches.
+EVENT_FIELDS = ("id", "slug", "title", "startTime", "startDate", "finishedTimestamp", "closedTime", "teams")
+TEAM_FIELDS = ("id", "name", "safeName", "alias", "abbreviation", "ordering")
+MARKET_FIELDS = ("id", "slug", "sportsMarketType", "feeCoefficient", "gameStartTime", "marketSides")
+
+
+def slim(event: dict) -> dict:
+    """The event cut down to what :func:`game` reads: its identity, teams and times, and its moneyline."""
+    out = {k: event.get(k) for k in EVENT_FIELDS if k in event}
+    out["teams"] = [{k: t.get(k) for k in TEAM_FIELDS if k in t} for t in event.get("teams") or []]
+    market = moneyline_of(event)
+    out["markets"] = [{k: market.get(k) for k in MARKET_FIELDS if k in market}] if market else []
+    return out
+
+
 def _page(offset: int) -> list[dict]:
     page = source._get("/v1/events", {"closed": "true", "limit": PAGE, "offset": offset}, session(), timeout=120)
     events = page.get("events") if isinstance(page, dict) else None
-    return list(events or [])
+    return [slim(e) for e in events or []]
 
 
 def closed_events(sess=None, *, cache: Path | None = None, refresh: bool = False, fetch=None) -> list[dict]:
@@ -137,7 +153,8 @@ def closed_events(sess=None, *, cache: Path | None = None, refresh: bool = False
                 break
             time.sleep(source.PAUSE)
     cache.parent.mkdir(parents=True, exist_ok=True)
-    cache.write_text(json.dumps({"fetched_at": datetime.now(UTC).isoformat(), "events": list(out.values())}))
+    cache.write_text(json.dumps({"fetched_at": datetime.now(UTC).isoformat(),
+                                 "events": [slim(e) for e in out.values()]}))
     LOG.info("backtest: %d closed events read", len(out))
     return list(out.values())
 
