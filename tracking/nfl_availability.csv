@@ -728,6 +728,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T08:13:01+00:00,2026-10-24T00:18Z,20,New York Jets,NYJ,4685247,Braelon Allen,RB,Active,,,,"Allen's workload and role Sunday against Miami is unclear given that Breece Hall (quadriceps) is officially questionable to play, per Amanda Vogt of the Jets' o"
 2026-10-24T08:13:01+00:00,2026-10-24T00:19Z,34,Houston Texans,HOU,4243956,Reed Blankenship,S,Out,OUT,Concussion Concussion,2026-11-01,"Blankenship (concussion/hand) has been ruled out ahead of Sunday's game against the Giants, Adam Caplan of SiriusXM NFL Radio reports."
 2026-10-24T08:13:01+00:00,2026-10-24T00:22Z,19,New York Giants,NYG,4373809,Jevon Holland,S,Questionable,QUESTIONABLE,Concussion Concussion,2026-10-25,Holland (concussion) is questionable for Sunday's game against the Texans.
+2026-10-24T17:22:56+00:00,2026-10-24T00:22Z,19,New York Giants,NYG,4373809,Jevon Holland,S,Out,OUT,Concussion Concussion,2026-11-08,Holland (concussion) is questionable for Sunday's game against the Texans.
 2026-10-24T08:13:01+00:00,2026-10-24T00:23Z,34,Houston Texans,HOU,4241223,Jalen Pitre,S,Out,OUT,Left Shoulder - AC Joint Sprain,2026-11-01,"Pitre (shoulder) has been ruled out ahead of Sunday's game against the Giants, Adam Caplan of SiriusXM NFL Radio reports."
 2026-10-24T08:13:01+00:00,2026-10-24T00:25Z,19,New York Giants,NYG,4361266,Greg Newsome II,CB,Out,OUT,Concussion Concussion,2026-11-08,Newsome (concussion) has been ruled out for Sunday's game against the Texans.
 2026-10-24T08:13:01+00:00,2026-10-24T00:29Z,12,Kansas City Chiefs,KC,5093923,Andrew Armstrong,WR,Active,,,,"The Chiefs signed Armstrong from the practice squad to the active roster Friday, Aaron Wilson of KPRC 2 Houston reports."
@@ -842,3 +843,10 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T17:07:50+00:00,2026-10-24T16:52Z,5,Cleveland Browns,CLE,5081397,Dylan Sampson,RB,Active,,,,Sampson (knee) was activated from injured reserve Saturday.
 2026-10-24T17:07:50+00:00,2026-10-24T16:55Z,5,Cleveland Browns,CLE,4242208,Grant Delpit,S,Active,,,,
 2026-10-24T17:07:50+00:00,2026-10-24T17:01Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-24T17:22:56+00:00,2026-10-24T17:03Z,23,Pittsburgh Steelers,PIT,3929846,DeShon Elliott,S,Active,,,,The Steelers activated Elliott (knee) from IR on Saturday ahead of Sunday's game against the Saints.
+2026-10-24T17:22:56+00:00,2026-10-24T17:05Z,23,Pittsburgh Steelers,PIT,4240577,Brandon Smith,WR,Active,,,,The Steelers elevated Smith from the practice squad Saturday ahead of Sunday's game against the Saints.
+2026-10-24T17:22:56+00:00,2026-10-24T17:08Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-24T17:22:56+00:00,2026-10-24T17:08Z,12,Kansas City Chiefs,KC,4567826,Cooper McDonald,LB,Active,,,,
+2026-10-24T17:22:56+00:00,2026-10-24T17:08Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-10-25,questionable
+2026-10-24T17:22:56+00:00,2026-10-24T17:09Z,23,Pittsburgh Steelers,PIT,4035198,Brandon Johnson,WR,Active,,,,The Steelers elevated Johnson from the practice squad Saturday ahead of Sunday's game against the Saints.
+2026-10-24T17:22:56+00:00,2026-10-24T17:17Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
