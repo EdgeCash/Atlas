@@ -231,15 +231,29 @@ to the live step (late ones only unless `LIVE_PHASE` is `any`), grades the
 live ledger, and commits and pushes what changed. The late flag comes from
 the venue's clock, read seconds before the order rather than a poll before.
 
-It runs on any machine that stays up, from a clone it may push to:
-`deploy/favorites-worker.service` is the systemd unit and
-`deploy/favorites-worker.env.example` the environment, which is the
-scheduled run's less the ingest keys. Set the repository variable
+It runs on any machine that stays up, from a clone it may push to. On a
+fresh Ubuntu server (a five-dollar virtual machine in a US region does),
+`deploy/setup-worker.sh` does the whole setup: it installs git and Python,
+makes an `atlas` user and a deploy key and waits while the key is added on
+GitHub with write access, clones `main` into `/srv/atlas`, installs the
+package, and puts the systemd unit (`deploy/favorites-worker.service`) and
+the environment file (`deploy/favorites-worker.env.example`, which is the
+scheduled run's secrets less the ingest keys) in place; `start` runs one
+tick from that file and starts the service, and `update` pulls new code and
+restarts it:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/EdgeCash/Atlas/main/deploy/setup-worker.sh | sudo bash
+sudo nano /etc/atlas/favorites-worker.env
+sudo bash /srv/atlas/deploy/setup-worker.sh start
+```
+ Set the repository variable
 `FAVORITES_TAKER` to `worker` once it is up: the scheduled run then reads
 the record the worker pushed and takes, grades and orders nothing for this
 rule itself, so the two never write it at once. The scheduled run still
 logs the model's positions and places their orders; the worker's
-`LIVE_RULES` is `favorites`. Restart the service after pulling new code.
+`LIVE_RULES` is `favorites`. Run exactly one worker: two would take every
+position twice.
 
 ### The rule on the venue's own tape
 
