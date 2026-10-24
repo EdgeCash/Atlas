@@ -1,6 +1,6 @@
 # Atlas on Polymarket US
 
-*Rebuilt every run; this one at 2026-10-24 16:22 UTC.*
+*Rebuilt every run; this one at 2026-10-24 16:37 UTC.*
 
 Polymarket US, the CFTC-regulated exchange, is the one venue Atlas is priced
 against. It lists a moneyline, a ladder of spreads and a ladder of totals on
@@ -57,10 +57,10 @@ side at disagreements this large or larger, never below one half.
 
 | Sport | Market | Games | Atlas, median gap | Atlas, largest gap | Anchored, median gap |
 |---|---|---|---|---|---|
-| NBA | margin | 22 | 2.5 | 13.6 | 0.09 |
-| NBA | total | 8 | 3.0 | 6.6 | 0.14 |
-| NCAAF | margin | 42 | 1.9 | 8.7 | 0.00 |
-| NCAAF | total | 42 | 3.0 | 6.4 | 0.75 |
+| NBA | margin | 22 | 2.4 | 13.3 | 0.09 |
+| NBA | total | 8 | 3.1 | 6.8 | 0.08 |
+| NCAAF | margin | 42 | 2.4 | 15.3 | 0.00 |
+| NCAAF | total | 42 | 3.0 | 8.9 | 0.79 |
 | NFL | margin | 13 | 0.9 | 3.8 | 0.01 |
 | NFL | total | 13 | 1.5 | 5.0 | 0.25 |
 
@@ -71,7 +71,7 @@ construction.
 
 ## Player props
 
-Player props this run: NBA (points, rebounds, assists, threes, steals, blocks, the three combined): 1991 contracts on 8 games, 1991 with an Atlas projection beside them, 0 graded so far; NHL (points, goals, assists): 1495 contracts on 12 games, 1495 with an Atlas projection beside them, 0 graded so far; NFL (yards, receptions, touchdowns, attempts, completions, carries): 2873 contracts on 13 games, 2856 with an Atlas projection beside them, 0 graded so far. Atlas's numbers are `atlas/models/nba_props.py` (`reports/nba_props.md`) and `atlas/models/nhl_props.py` (`reports/nhl_props.md`). Each player-stat's main line is kept in `tracking/polymarket_props.csv` with Atlas's probability as it stood, and graded against the box score and the close into `tracking/prop_record.csv`, the record that decides, a sport at a time, what Atlas's disagreement is worth there.
+Player props this run: NBA (points, rebounds, assists, threes, steals, blocks, the three combined): 1992 contracts on 8 games, 1992 with an Atlas projection beside them, 0 graded so far; NHL (points, goals, assists): 1495 contracts on 12 games, 1495 with an Atlas projection beside them, 0 graded so far; NFL (yards, receptions, touchdowns, attempts, completions, carries): 2873 contracts on 13 games, 2856 with an Atlas projection beside them, 0 graded so far. Atlas's numbers are `atlas/models/nba_props.py` (`reports/nba_props.md`) and `atlas/models/nhl_props.py` (`reports/nhl_props.md`). Each player-stat's main line is kept in `tracking/polymarket_props.csv` with Atlas's probability as it stood, and graded against the box score and the close into `tracking/prop_record.csv`, the record that decides, a sport at a time, what Atlas's disagreement is worth there.
 
 ## The favorites rule
 
@@ -85,10 +85,10 @@ rate, in points, with one standard error.
 
 | Phase | Threshold | Taken | Graded | Win rate | Break-even | Edge (pts) | Profit per $ |
 |---|---|---|---|---|---|---|---|
-| in play | 80% | 16 | 15 | 86.7% | 86.9% | -0.2 ± 8.8 | -0.2% |
-| in play | 85% | 17 | 16 | 93.8% | 92.0% | +1.8 ± 6.1 | 1.9% |
+| in play | 80% | 18 | 15 | 86.7% | 86.9% | -0.2 ± 8.8 | -0.2% |
+| in play | 85% | 18 | 16 | 93.8% | 92.0% | +1.8 ± 6.1 | 1.9% |
 | in play | 90% | 16 | 15 | 93.3% | 94.5% | -1.1 ± 6.4 | -1.2% |
-| in play | 95% | 11 | 11 | 90.9% | 96.5% | -5.6 ± 8.7 | -5.8% |
+| in play | 95% | 12 | 11 | 90.9% | 96.5% | -5.6 ± 8.7 | -5.8% |
 | pregame | 80% | 40 | 2 | 100.0% | 82.5% | +17.5 | 21.1% |
 | pregame | 85% | 18 | 0 |  |  |  |  |
 | pregame | 90% | 10 | 0 |  |  |  |  |
