@@ -201,7 +201,10 @@ often than they cost, in play or before the game, in any sport, at any
 threshold. Every run takes a paper position on each moneyline (the
 favorite side of a game; a deep spread or total at 90 cents is the ladder's
 edge, not a favorite) the first time its ask reaches 80, 85, 90 and 95
-cents, at that ask plus the fee,
+cents, at that ask plus the fee, and - from 24 October 2026 - only on a
+book quoted inside 4¢ bid to ask, the model rule's own bar, since the
+venue's tape showed a wider ask to be an empty book rather than a price
+and the source of most of the rule's losses (the backtest below);
 noting the phase and the minutes since kickoff; once the game is four hours
 gone the venue's settlement grades it (at most forty reads a run). The
 record is `tracking/favorites.csv`, in the clear, since it is a rule on

@@ -13,7 +13,12 @@ Every run takes a paper position on each moneyline the first time its ask
 is at or above each of :data:`THRESHOLDS`, at that ask plus the taker fee,
 and notes the phase (in play or pregame) and the minutes since kickoff. The
 moneyline only: a deep spread or total at 90 cents is the ladder's edge,
-not a favorite, and there are two thousand of them a day.
+not a favorite, and there are two thousand of them a day. And only a quoted
+one: from 24 October 2026 the book must be inside :data:`MAX_SPREAD`, the
+model rule's own bar, because the venue's tape showed that one crossing in
+five was an ask with nothing near it on the other side - an empty book,
+not a price - and that those carried most of the rule's losses
+(`atlas/polymarket/backtest.py`, ``reports/favorites_backtest.md``).
 Once the game is a few hours gone the venue's settlement grades it: paid in
 full, paid nothing, or the last fair price where the rules settle so. The
 record is kept in the clear (``tracking/favorites.csv``): it is a rule on
@@ -31,7 +36,7 @@ from datetime import datetime, timedelta
 import numpy as np
 import pandas as pd
 
-from atlas.polymarket import pricing, source
+from atlas.polymarket import positions, pricing, source
 from atlas.util import get_logger, offline
 
 LOG = get_logger(__name__)
@@ -43,6 +48,8 @@ MARKETS = ("moneyline",)
 THRESHOLDS = (0.80, 0.85, 0.90, 0.95)
 #: Above this the venue's own price limit is near and the fee is nothing; nothing to learn.
 CEILING = 0.98
+#: The widest book a crossing is taken on, bid to ask: the model rule's bar. A wider ask has nothing behind it.
+MAX_SPREAD = positions.MAX_SPREAD
 #: Settlement is read once the game is this far gone, and at most this many markets a run.
 GRADE_AFTER = timedelta(hours=4)
 SETTLEMENT_READS = 40
@@ -66,14 +73,15 @@ def _truthy(value) -> bool:
 
 def candidates(quotes: pd.DataFrame, now: datetime) -> pd.DataFrame:
     """The contracts a position could be taken on this run: accepting orders, with an ask on them below the
-    ceiling; each with its phase and the minutes since kickoff."""
+    ceiling and a bid within :data:`MAX_SPREAD` of it; each with its phase and the minutes since kickoff."""
     if quotes is None or quotes.empty:
         return pd.DataFrame(columns=[*source.QUOTE_COLUMNS, "phase", "minutes_in"])
     q = quotes.copy()
     ask = pd.to_numeric(q["ask"], errors="coerce")
+    spread = pd.to_numeric(q["spread"], errors="coerce")
     start = pd.to_datetime(q["game_start"], utc=True, errors="coerce")
     keep = q["accepting"].map(_truthy) & q["market"].astype(str).isin(MARKETS) & ask.notna() & (ask > 0) \
-        & (ask <= CEILING) & start.notna()
+        & (ask <= CEILING) & (spread <= MAX_SPREAD) & start.notna()
     q = q[keep].copy()
     start = start[keep]
     minutes = (pd.Timestamp(now) - start).dt.total_seconds() / 60.0
@@ -283,6 +291,10 @@ def section(record: pd.DataFrame, now: datetime) -> dict:
         "A paper position on every moneyline the first time its ask reaches each threshold, at that ask plus "
         "the fee, in play or before the game; graded by the venue's settlement. No projection is in it: the "
         "question is whether the venue's favorites win more often than they cost.",
+        f"From 24 October 2026 a crossing is taken only on a book quoted inside {MAX_SPREAD * 100:.0f}¢, bid to "
+        "ask: on the venue's own tape (reports/favorites_backtest.md) one crossing in five was an ask with "
+        "nothing near it, and those carried most of the losses. Earlier positions carry their spread, so the "
+        "record can be read either way.",
         "Edge is the win rate less the break-even rate in points, with one standard error; profit per dollar "
         "is what a dollar staked across the positions returned. Positive and several errors wide, over "
         "hundreds of positions, before it means anything.",

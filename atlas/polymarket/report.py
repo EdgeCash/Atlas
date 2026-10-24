@@ -151,10 +151,13 @@ construction.
 A second paper rule beside Atlas's, with no projection in it
 (`atlas/polymarket/favorites.py`): a position on every moneyline the first
 time its ask reaches 80, 85, 90 and 95 cents, in play or before the game,
-at that ask plus the fee, graded by the venue's settlement and kept in
-`tracking/favorites.csv`. The question is whether the venue's favorites
-win more often than they cost. Edge is the win rate less the break-even
-rate, in points, with one standard error.
+at that ask plus the fee - and, from 24 October 2026, only on a book quoted
+inside 4¢ bid to ask, since the venue's own tape showed a wider ask to be
+an empty book rather than a price ([`favorites_backtest.md`](favorites_backtest.md)) -
+graded by the venue's settlement and kept in `tracking/favorites.csv`. The
+question is whether the venue's favorites win more often than they cost.
+Edge is the win rate less the break-even rate, in points, with one standard
+error.
 
 {favorites_text or "No favorites positions yet."}
 

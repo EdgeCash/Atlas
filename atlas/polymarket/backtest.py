@@ -571,8 +571,8 @@ def report(gs: pd.DataFrame, positions: pd.DataFrame, now: datetime | None = Non
               "- The tape is sampled once a minute and carries the top of the book only: the two asks, whose sum "
               "over one is the spread, and nothing of what rests behind them. A fill at the ask is assumed for "
               "the size meant; the live rule reads the depth it does not have here.",
-              f"- The live favorites rule takes a crossing at any spread. On this tape, a bar of {TIGHT * 100:.0f}¢ "
-              "removes the empty books and most of the loss, and is the one change the backtest argues for.",
+              f"- The live favorites rule took a crossing at any spread until 24 October 2026; on this tape, a bar "
+              f"of {TIGHT * 100:.0f}¢ removes the empty books and most of the loss, and the rule carries it since.",
               "- The fee is the market's own coefficient times price times one less the price; the break-even "
               "rate is the mean cost, fee included.",
               "- The time left is to the venue's recorded finish (or the last minute the tape priced the game), "
