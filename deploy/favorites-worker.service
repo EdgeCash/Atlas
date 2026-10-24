@@ -1,0 +1,28 @@
+# The favorites rule as an always-on loop (atlas/polymarket/worker.py), as a
+# systemd service. deploy/setup-worker.sh installs it; by hand:
+#
+#   sudo cp deploy/favorites-worker.service /etc/systemd/system/
+#   sudo install -m 640 -g atlas deploy/favorites-worker.env.example /etc/atlas/favorites-worker.env   # then fill it in
+#   sudo systemctl daemon-reload && sudo systemctl enable --now favorites-worker
+#   journalctl -u favorites-worker -f
+#
+# The checkout at /srv/atlas is a clone of main the worker may push to (a
+# deploy key with write access). Restart the service after pulling new code:
+# a running worker does not reload it.
+
+[Unit]
+Description=Atlas favorites rule on Polymarket US
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=atlas
+WorkingDirectory=/srv/atlas
+EnvironmentFile=/etc/atlas/favorites-worker.env
+ExecStart=/srv/atlas/.venv/bin/python -m atlas.polymarket.worker --every 45
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

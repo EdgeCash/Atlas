@@ -201,7 +201,10 @@ often than they cost, in play or before the game, in any sport, at any
 threshold. Every run takes a paper position on each moneyline (the
 favorite side of a game; a deep spread or total at 90 cents is the ladder's
 edge, not a favorite) the first time its ask reaches 80, 85, 90 and 95
-cents, at that ask plus the fee,
+cents, at that ask plus the fee, and - from 24 October 2026 - only on a
+book quoted inside 4¢ bid to ask, the model rule's own bar, since the
+venue's tape showed a wider ask to be an empty book rather than a price
+and the source of most of the rule's losses (the backtest below);
 noting the phase and the minutes since kickoff; once the game is four hours
 gone the venue's settlement grades it (at most forty reads a run). The
 record is `tracking/favorites.csv`, in the clear, since it is a rule on
@@ -212,6 +215,67 @@ owner page sum it by phase and threshold, and by sport: the win rate
 against the break-even rate (the mean cost), with a standard error, and the
 profit per dollar staked. Positive and several errors wide, over hundreds
 of positions, before it means anything.
+
+### The loop off the scheduled runs
+
+The scheduled run reads the venue every fifteen minutes and takes three to
+five minutes to start, and the tape says a favorite is worth buying only in
+the last minutes of its game, when a limit sent that late fills nothing. So
+from 24 October 2026 the rule can run as an always-on loop instead
+(`atlas/polymarket/worker.py`, `make polymarket-worker`): every 45 seconds
+while a game is in play (every three minutes while none is) it reads the
+four leagues' listings - four requests, each game with its moneyline's top
+of book and the venue's own period and clock - takes the crossings, grades
+the settled ones, writes `tracking/favorites.csv`, hands the new positions
+to the live step (late ones only unless `LIVE_PHASE` is `any`), grades the
+live ledger, and commits and pushes what changed. The late flag comes from
+the venue's clock, read seconds before the order rather than a poll before.
+
+It runs on any machine that stays up, from a clone it may push to. On a
+fresh Ubuntu server (a five-dollar virtual machine in a US region does),
+`deploy/setup-worker.sh` does the whole setup: it installs git and Python,
+makes an `atlas` user and a deploy key and waits while the key is added on
+GitHub with write access, clones `main` into `/srv/atlas`, installs the
+package, and puts the systemd unit (`deploy/favorites-worker.service`) and
+the environment file (`deploy/favorites-worker.env.example`, which is the
+scheduled run's secrets less the ingest keys) in place; `start` runs one
+tick from that file and starts the service, and `update` pulls new code and
+restarts it:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/EdgeCash/Atlas/main/deploy/setup-worker.sh | sudo bash
+sudo nano /etc/atlas/favorites-worker.env
+sudo bash /srv/atlas/deploy/setup-worker.sh start
+```
+ Set the repository variable
+`FAVORITES_TAKER` to `worker` once it is up: the scheduled run then reads
+the record the worker pushed and takes, grades and orders nothing for this
+rule itself, so the two never write it at once. The scheduled run still
+logs the model's positions and places their orders; the worker's
+`LIVE_RULES` is `favorites`. Run exactly one worker: two would take every
+position twice.
+
+### The rule on the venue's own tape
+
+The same question can be asked of every game the venue has already settled
+(`atlas/polymarket/backtest.py`, `make polymarket-backtest`). The gateway
+lists its closed events back to November 2025 - the NBA, the NHL, the NFL,
+college football and college basketball among them - each with its teams,
+its start, when it finished and the moneyline's settled price per side; and
+its price history at a one-minute fidelity carries each side's ask for
+every minute the market was open, which is the price the rule buys at. The
+backtest replays the rule on that tape: for each side of each game, before
+the start and in play, a position at the first minute its ask reached each
+threshold, at that ask plus the fee, graded by the settled price, and
+summed the way the live record is - by league, by threshold, and by how
+many minutes of the game were left. It also fills each position as a slow
+poller would, a limit at the ask it saw sent one, five or fifteen minutes
+late, which fills only when the ask has not risen since: the adverse
+selection of a scheduled loop, measured. The report is
+[`reports/favorites_backtest.md`](../reports/favorites_backtest.md), its
+tables `reports/tables/favorites_backtest_*.csv`; the tape is cached under
+`data/raw/polymarket_us/` so a rerun costs only the new games. The live
+record is the out-of-sample continuation of it.
 
 ## Going live, armed off
 
@@ -242,9 +306,10 @@ rules feed the step, each order's row naming its rule: the model's
 positions as they are logged once a day, and the favorites rule's
 positions as they are taken every poll, at the 85-cent crossing only; the
 repository variable `LIVE_RULES` names which of the two the step takes
-(`favorites`, `model`, or both, the default), and `LIVE_PHASE` set to
-`late` confines the favorites' orders to games in their final regulation
-period or past it, as the scoreboard stood at the poll. The caps, the stop and the floor are
+(`favorites`, `model`, or both, the default), and the favorites' orders go
+only on games in their final regulation period or past it - as the venue's
+clock stood when the worker took the position, or the scoreboard's at the
+poll - unless `LIVE_PHASE` is set to `any`. The caps, the stop and the floor are
 constants in the module, set for the owner as repository variables
 (`MAX_ORDER_DOLLARS`, `MAX_DAY_DOLLARS`, `MAX_OPEN_DOLLARS`,
 `LOSS_STOP_DOLLARS`, `BALANCE_FLOOR`), never widened by anything the venue

@@ -1,0 +1,236 @@
+"""The favorites rule as an always-on loop, off the scheduled runs.
+
+    python -m atlas.polymarket.worker                 # every 45 seconds while a game is on, pushing the record
+    python -m atlas.polymarket.worker --once          # one tick, to the terminal
+    python -m atlas.polymarket.worker --no-push       # keep the record locally
+
+The scheduled run reads the venue every fifteen minutes and takes three to
+five minutes to start; on the venue's own tape a favorite is worth buying
+only in the last minutes of its game, and a limit sent that late fills
+nothing (``reports/favorites_backtest.md``). So the rule runs here, on a
+machine that stays up: each tick reads the four leagues' listings - four
+requests, each game with its moneyline's top of book and the venue's own
+period and clock - takes the crossings (`favorites.take`), grades the
+settled ones, writes ``tracking/favorites.csv``, hands the new positions to
+the live step (`favorites.order`: nothing is sent unless its secrets say
+so, and late ones only by default), grades the live ledger, and commits
+and pushes what changed. The scheduled run keeps rendering the owner page
+from the record it finds; set the repository variable ``FAVORITES_TAKER``
+to ``worker`` so it stops taking positions itself, and the two never write
+the record at once.
+
+Everything the worker needs is in the environment the scheduled run has
+(docs/POLYMARKET.md): the owner key, the venue's key, the live step's
+secrets and caps, and a git remote it may push to. A tick that fails is
+logged and the next one runs; the loop never stops on its own.
+"""
+
+from __future__ import annotations
+
+import argparse
+import math
+import os
+import re
+import subprocess
+import time
+from datetime import UTC, datetime
+from pathlib import Path
+
+import pandas as pd
+
+from atlas import config
+from atlas.live.store import Store
+from atlas.owner import crypto
+from atlas.polymarket import favorites, match, source
+from atlas.util import get_logger, offline, session
+
+LOG = get_logger(__name__)
+
+#: Seconds between ticks while a game is in play, and while none is.
+EVERY = 45
+IDLE = 180
+#: Settlements (the rule's and the ledger's) are read every this many ticks, not every tick.
+GRADE_EVERY = 8
+#: The branch the record is pushed to; the checkout's own when unset.
+BRANCH = "ATLAS_WORKER_BRANCH"
+#: What the worker commits: the rule's record and the live ledger, and nothing else.
+FILES = ("tracking/favorites.csv", "tracking/polymarket_live")
+#: The venue's period strings: a quarter or period by its number, overtime past the last, the half between.
+_NUMBER = re.compile(r"(\d+)")
+
+
+def venue_period(text, sport) -> float:
+    """The period a venue's event stub says the game is in, as the scoreboard counts them: "Q4" and "End Q3"
+    by their number, "OT" and "SO" one past the sport's last, "HT" the second of four; nan before the
+    start, after the end, or unread."""
+    s = str(text or "").strip().upper()
+    final = favorites.FINAL_PERIOD.get(str(sport).lower())
+    if not s or s in ("NS", "FT", "VFT", "FINAL", "ENDED", "CANCELLED", "POSTPONED"):
+        return float("nan")
+    if "OT" in s or s.startswith("SO") or "SHOOTOUT" in s.replace(" ", ""):
+        return float(final + 1) if final else float("nan")
+    if s in ("HT", "HALF", "HALFTIME"):
+        return 2.0
+    m = _NUMBER.search(s)
+    return float(m.group(1)) if m else float("nan")
+
+
+def venue_state(events: dict[str, list[dict]]) -> dict[str, tuple[float, str]]:
+    """(period, clock) by the venue's event id, from its own feed, for the events it says are in play."""
+    out: dict[str, tuple[float, str]] = {}
+    for sport, stubs in (events or {}).items():
+        for e in stubs or []:
+            if not e.get("live") or e.get("ended"):
+                continue
+            period = venue_period(e.get("period"), sport)
+            if math.isfinite(period):
+                out[str(e.get("id"))] = (period, str(e.get("elapsed") or ""))
+    return out
+
+
+def listings(sess=None, leagues=None) -> dict[str, list[dict]]:
+    """Each league's games as the gateway lists them: a stub per event with its headline market, which is
+    the moneyline with its top of book. A league that fails is skipped."""
+    sess = sess or session()
+    out: dict[str, list[dict]] = {}
+    for league in (leagues or source.LEAGUES.values()):
+        try:
+            out[league.sport] = source.fetch_listing(league, sess)
+        except Exception as error:  # noqa: BLE001 - one league's outage is not the tick's
+            LOG.warning("worker: %s not read (%s)", league.sport, type(error).__name__)
+    return out
+
+
+def tick(store: Store, now: datetime, passphrase: str | None, *, events: dict[str, list[dict]] | None = None,
+         sess=None, grade: bool = True) -> dict:
+    """One pass: the listings read (or ``events`` given), the crossings taken, the settled positions graded
+    when ``grade``, the record written, the new positions to the live step, and the ledger graded. Returns
+    what happened, for the log."""
+    events = events if events is not None else (listings(sess) if not offline() else {})
+    live = sum(1 for stubs in events.values() for e in stubs if e.get("live") and not e.get("ended"))
+    quotes = source.capture(now, events=events) if events else pd.DataFrame(columns=source.QUOTE_COLUMNS)
+    games = store.read("games")
+    if len(quotes):
+        up = match.upcoming(games, now, store.read("projections"), store.read("nhl_projections"))
+        quotes = match.attach(quotes, match.match(quotes, up))
+    record = store.read(favorites.TABLE)
+    before = len(record)
+    record, added = favorites.take(record, quotes, now, games, venue=venue_state(events))
+    graded = 0
+    if grade and len(record):
+        pending = pd.to_numeric(record["won"], errors="coerce").isna().sum()
+        record = favorites.grade(record, now)
+        graded = int(pending - pd.to_numeric(record["won"], errors="coerce").isna().sum())
+    if added or graded:
+        store.write(favorites.TABLE, record)
+    if added and passphrase:
+        favorites.order(record.iloc[before:], passphrase, now)
+    if grade and passphrase:
+        from atlas.polymarket import orders
+
+        if orders.mode() != "off" and not offline():
+            try:
+                orders.grade(orders.load(passphrase), passphrase, now)
+            except Exception as error:  # noqa: BLE001 - the type only
+                LOG.error("worker: ledger not graded: %s", type(error).__name__)
+    return {"events": sum(len(v) for v in events.values()), "live": live, "quotes": int(len(quotes)),
+            "added": int(added), "graded": graded, "positions": int(len(record))}
+
+
+# ---------------------------------------------------------------------------
+# The record to the branch
+# ---------------------------------------------------------------------------
+
+
+def _git(root: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess:
+    return subprocess.run(["git", *args], cwd=root, capture_output=True, text=True, check=check)
+
+
+def branch(root: Path) -> str:
+    name = os.environ.get(BRANCH, "").strip()
+    if name:
+        return name
+    return _git(root, "rev-parse", "--abbrev-ref", "HEAD").stdout.strip()
+
+
+def publish(root: Path, now: datetime, files=FILES) -> bool:
+    """Commit the record's files when they changed and push them, rebasing onto the branch first. False when
+    nothing changed or the push could not be made this time (the commit stays for the next tick)."""
+    _git(root, "add", "-A", "--", *[f for f in files if (root / f).exists()])
+    if _git(root, "diff", "--cached", "--quiet", check=False).returncode == 0:
+        return False
+    stamp = pd.Timestamp(now).tz_convert("America/New_York").strftime("%Y-%m-%d %H:%M ET")
+    _git(root, "-c", "user.name=atlas-worker", "-c", "user.email=noreply@anthropic.com", "commit", "-q", "-m",
+         f"worker: {stamp}")
+    target = branch(root)
+    pulled = _git(root, "pull", "-q", "--rebase", "--autostash", "origin", target, check=False)
+    if pulled.returncode != 0:
+        _git(root, "rebase", "--abort", check=False)
+        LOG.error("worker: could not rebase onto %s; the commit waits for the next tick", target)
+        return False
+    pushed = _git(root, "push", "-q", "origin", f"HEAD:{target}", check=False)
+    if pushed.returncode != 0:
+        LOG.error("worker: push to %s failed; the commit waits for the next tick", target)
+        return False
+    LOG.info("worker: record pushed to %s", target)
+    return True
+
+
+def pull(root: Path) -> None:
+    """The branch's latest (the scoreboard, the projections, the ledger a run graded), when the tree is
+    clean enough to take it."""
+    target = branch(root)
+    if _git(root, "pull", "-q", "--rebase", "--autostash", "origin", target, check=False).returncode != 0:
+        _git(root, "rebase", "--abort", check=False)
+        LOG.warning("worker: could not pull %s this tick", target)
+
+
+# ---------------------------------------------------------------------------
+# The loop
+# ---------------------------------------------------------------------------
+
+
+def run(*, every: int = EVERY, idle: int = IDLE, once: bool = False, push: bool = True,
+        store: Store | None = None, root: Path | None = None) -> None:
+    root = root or config.paths().root
+    store = store or Store.open()
+    passphrase = os.environ.get(crypto.SECRET, "").strip() or None
+    if not passphrase:
+        LOG.warning("worker: %s is not set; positions are taken and nothing is ordered", crypto.SECRET)
+    sess = session()
+    n = 0
+    failures = 0
+    while True:
+        n += 1
+        now = datetime.now(UTC)
+        try:
+            if push and n % GRADE_EVERY == 1 and not offline():
+                pull(root)
+            summary = tick(store, now, passphrase, sess=sess, grade=(n % GRADE_EVERY == 1))
+            failures = 0
+            LOG.info("worker: %(events)d events, %(live)d in play, %(quotes)d quotes, %(added)d taken, "
+                     "%(graded)d graded, %(positions)d in all", summary)
+            if push and (summary["added"] or summary["graded"]) and not offline():
+                publish(root, now)
+        except Exception as error:  # noqa: BLE001 - the loop outlives any one tick
+            failures += 1
+            summary = {"live": 0}
+            LOG.error("worker: tick failed (%s), %d in a row", type(error).__name__, failures)
+        if once:
+            return
+        wait = every if summary.get("live") else idle
+        time.sleep(min(wait * (2 ** min(failures, 4)), 1800))
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser(description="The favorites rule, as an always-on loop")
+    ap.add_argument("--every", type=int, default=EVERY, help="seconds between ticks while a game is on")
+    ap.add_argument("--idle", type=int, default=IDLE, help="seconds between ticks while none is")
+    ap.add_argument("--once", action="store_true", help="one tick and exit")
+    ap.add_argument("--no-push", action="store_true", help="keep the record locally; do not commit or push")
+    args = ap.parse_args()
+    run(every=args.every, idle=args.idle, once=args.once, push=not args.no_push)
+
+
+if __name__ == "__main__":
+    main()

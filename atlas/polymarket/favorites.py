@@ -13,7 +13,12 @@ Every run takes a paper position on each moneyline the first time its ask
 is at or above each of :data:`THRESHOLDS`, at that ask plus the taker fee,
 and notes the phase (in play or pregame) and the minutes since kickoff. The
 moneyline only: a deep spread or total at 90 cents is the ladder's edge,
-not a favorite, and there are two thousand of them a day.
+not a favorite, and there are two thousand of them a day. And only a quoted
+one: from 24 October 2026 the book must be inside :data:`MAX_SPREAD`, the
+model rule's own bar, because the venue's tape showed that one crossing in
+five was an ask with nothing near it on the other side - an empty book,
+not a price - and that those carried most of the rule's losses
+(`atlas/polymarket/backtest.py`, ``reports/favorites_backtest.md``).
 Once the game is a few hours gone the venue's settlement grades it: paid in
 full, paid nothing, or the last fair price where the rules settle so. The
 record is kept in the clear (``tracking/favorites.csv``): it is a rule on
@@ -31,7 +36,7 @@ from datetime import datetime, timedelta
 import numpy as np
 import pandas as pd
 
-from atlas.polymarket import pricing, source
+from atlas.polymarket import positions, pricing, source
 from atlas.util import get_logger, offline
 
 LOG = get_logger(__name__)
@@ -43,6 +48,8 @@ MARKETS = ("moneyline",)
 THRESHOLDS = (0.80, 0.85, 0.90, 0.95)
 #: Above this the venue's own price limit is near and the fee is nothing; nothing to learn.
 CEILING = 0.98
+#: The widest book a crossing is taken on, bid to ask: the model rule's bar. A wider ask has nothing behind it.
+MAX_SPREAD = positions.MAX_SPREAD
 #: Settlement is read once the game is this far gone, and at most this many markets a run.
 GRADE_AFTER = timedelta(hours=4)
 SETTLEMENT_READS = 40
@@ -51,8 +58,13 @@ COLUMNS = ["formed_at", "threshold", "phase", "minutes_in", "sport", "game_id", 
            "fee_rate", "fee", "cost", "payout", "won", "profit", "graded_at", "period", "clock", "late"]
 #: The regulation periods a sport plays: in that period or past it (overtime), a position is late.
 FINAL_PERIOD = {"nba": 4, "nfl": 4, "ncaaf": 4, "nhl": 3}
-#: The repository variable that confines the live step to late positions (``late``) or not (unset, ``any``).
+#: The variable that widens the live step from late positions (unset, ``late``) to every crossing (``any``).
+#: Late is the default since 24 October 2026: on the venue's own tape (``reports/favorites_backtest.md``) a
+#: favorite bought with more than fifteen minutes left loses, and one bought in the final minutes does not.
 ORDER_PHASE = "LIVE_PHASE"
+#: The variable that hands the rule to the always-on worker (``worker``; `atlas/polymarket/worker.py`): the
+#: scheduled run then reads the record and takes, grades and orders nothing, so the two never write it at once.
+TAKER = "FAVORITES_TAKER"
 TAB = "Poly Snipe"
 #: The one threshold whose crossings go to the live step (atlas/polymarket/orders.py): the user's "86%".
 ORDER_THRESHOLD = 0.85
@@ -64,16 +76,27 @@ def _truthy(value) -> bool:
     return str(value).strip().lower() in ("true", "1", "1.0", "yes")
 
 
+def phase() -> str:
+    """Which crossings the live step takes: ``late`` (the default) or ``any``."""
+    return "any" if os.environ.get(ORDER_PHASE, "").strip().lower() == "any" else "late"
+
+
+def worker_owns() -> bool:
+    """Whether the always-on worker takes the positions, and the scheduled run only reads them."""
+    return os.environ.get(TAKER, "").strip().lower() == "worker"
+
+
 def candidates(quotes: pd.DataFrame, now: datetime) -> pd.DataFrame:
     """The contracts a position could be taken on this run: accepting orders, with an ask on them below the
-    ceiling; each with its phase and the minutes since kickoff."""
+    ceiling and a bid within :data:`MAX_SPREAD` of it; each with its phase and the minutes since kickoff."""
     if quotes is None or quotes.empty:
         return pd.DataFrame(columns=[*source.QUOTE_COLUMNS, "phase", "minutes_in"])
     q = quotes.copy()
     ask = pd.to_numeric(q["ask"], errors="coerce")
+    spread = pd.to_numeric(q["spread"], errors="coerce")
     start = pd.to_datetime(q["game_start"], utc=True, errors="coerce")
     keep = q["accepting"].map(_truthy) & q["market"].astype(str).isin(MARKETS) & ask.notna() & (ask > 0) \
-        & (ask <= CEILING) & start.notna()
+        & (ask <= CEILING) & (spread <= MAX_SPREAD) & start.notna()
     q = q[keep].copy()
     start = start[keep]
     minutes = (pd.Timestamp(now) - start).dt.total_seconds() / 60.0
@@ -98,16 +121,19 @@ def is_late(sport, period, phase: str) -> bool:
     return bool(phase == "in_play" and final and pd.notna(period) and float(period) >= final)
 
 
-def take(record: pd.DataFrame, quotes: pd.DataFrame, now: datetime,
-         games: pd.DataFrame | None = None) -> tuple[pd.DataFrame, int]:
+def take(record: pd.DataFrame, quotes: pd.DataFrame, now: datetime, games: pd.DataFrame | None = None,
+         venue: dict[str, tuple[float, str]] | None = None) -> tuple[pd.DataFrame, int]:
     """The record with a position added for each contract at each threshold its ask reaches for the first
-    time, at that ask plus the fee, and where the game stood (``games``: the scoreboard's rows, for the
-    period and the clock). A position is never revised."""
+    time, at that ask plus the fee, and where the game stood: ``venue`` is (period, clock) by the venue's
+    event id as its own feed has it (the worker's, read seconds ago), ``games`` the scoreboard's rows by
+    Atlas's game id (the scheduled run's, up to a poll old); the venue's is preferred where both have the
+    game. A position is never revised."""
     record = record.reindex(columns=COLUMNS) if len(record) else pd.DataFrame(columns=COLUMNS)
     c = candidates(quotes, now)
     if c.empty:
         return record, 0
     state = _state(games)
+    venue = venue or {}
     have = set(zip(record["token_id"].astype(str), pd.to_numeric(record["threshold"], errors="coerce").round(2),
                    strict=True)) if len(record) else set()
     stamp = pd.Timestamp(now).tz_convert("UTC").replace(microsecond=0).isoformat() if pd.Timestamp(now).tzinfo \
@@ -117,7 +143,7 @@ def take(record: pd.DataFrame, quotes: pd.DataFrame, now: datetime,
         ask = float(x.ask)
         fee_rate = source._num(x.fee_rate)
         fee = pricing.fee(ask, fee_rate)
-        period, clock = state.get(str(x.game_id), (float("nan"), ""))
+        period, clock = venue.get(str(x.event_id)) or state.get(str(x.game_id), (float("nan"), ""))
         for t in THRESHOLDS:
             if ask < t or (str(x.token_id), round(t, 2)) in have:
                 continue
@@ -283,12 +309,17 @@ def section(record: pd.DataFrame, now: datetime) -> dict:
         "A paper position on every moneyline the first time its ask reaches each threshold, at that ask plus "
         "the fee, in play or before the game; graded by the venue's settlement. No projection is in it: the "
         "question is whether the venue's favorites win more often than they cost.",
+        f"From 24 October 2026 a crossing is taken only on a book quoted inside {MAX_SPREAD * 100:.0f}¢, bid to "
+        "ask: on the venue's own tape (reports/favorites_backtest.md) one crossing in five was an ask with "
+        "nothing near it, and those carried most of the losses. Earlier positions carry their spread, so the "
+        "record can be read either way.",
         "Edge is the win rate less the break-even rate in points, with one standard error; profit per dollar "
         "is what a dollar staked across the positions returned. Positive and several errors wide, over "
         "hundreds of positions, before it means anything.",
-        "Late is the sport's final regulation period or past it, as the scoreboard stood when the position was "
-        "taken (polls are a quarter hour apart, so the clock shown is up to that much old). The repository "
-        "variable LIVE_PHASE set to late confines the live step to those."]}
+        "Late is the sport's final regulation period or past it, as the game stood when the position was taken "
+        "(the venue's own clock from the worker, the scoreboard's up to a quarter hour old from a scheduled "
+        f"run). The live step takes {'late positions only' if phase() == 'late' else 'every crossing'}"
+        f"{'' if phase() == 'late' else ' (LIVE_PHASE=any)'}."]}
 
 
 def text(record: pd.DataFrame) -> str:
@@ -330,12 +361,35 @@ def as_positions(rows: pd.DataFrame) -> pd.DataFrame:
     return out.reindex(columns=positions.COLUMNS)
 
 
+def order(new: pd.DataFrame, passphrase: str, now: datetime) -> None:
+    """The positions just taken to the live step (`atlas/polymarket/orders.py`), which does nothing unless
+    its secrets say so: those at :data:`ORDER_THRESHOLD`, and late ones only unless :func:`phase` is any."""
+    from atlas.polymarket import orders
+
+    if new is None or new.empty or orders.mode() == "off":
+        return
+    new = new[pd.to_numeric(new["threshold"], errors="coerce").round(2) == round(ORDER_THRESHOLD, 2)]
+    if phase() == "late":
+        new = new[new["late"].map(_truthy)]
+    if new.empty:
+        return
+    try:
+        orders.place(as_positions(new), passphrase, now, rule="favorites")
+    except Exception as error:  # noqa: BLE001 - the type only
+        LOG.error("favorites: live orders not placed: %s", type(error).__name__)
+
+
 def refresh(store, quotes: pd.DataFrame, now: datetime, passphrase: str | None = None) -> tuple[pd.DataFrame, dict]:
-    """The rule's step of every run: take, grade, write; and, with the owner key, the new positions at
-    :data:`ORDER_THRESHOLD` to the live step, which does nothing unless its secrets say so. Returns (the
-    record, the owner page's section). Never raises."""
+    """The rule's step of every scheduled run: take, grade, write; and, with the owner key, the new positions
+    to the live step. When the worker owns the rule (:func:`worker_owns`) the run reads the record and
+    writes nothing. Returns (the record, the owner page's section). Never raises."""
     try:
         record = store.read(TABLE)
+        if worker_owns():
+            out = section(record, now)
+            out["notes"].insert(0, "The always-on worker takes, grades and orders the positions "
+                                   "(atlas/polymarket/worker.py); this run reads the record it pushed.")
+            return record, out
         before = len(record)
         record, added = take(record, quotes, now, store.read("games"))
         record = grade(record, now)
@@ -344,17 +398,7 @@ def refresh(store, quotes: pd.DataFrame, now: datetime, passphrase: str | None =
         if added:
             LOG.info("favorites: %d positions taken (%d in all)", added, len(record))
             if passphrase:
-                from atlas.polymarket import orders
-
-                new = record.iloc[before:]
-                new = new[pd.to_numeric(new["threshold"], errors="coerce").round(2) == round(ORDER_THRESHOLD, 2)]
-                if os.environ.get(ORDER_PHASE, "").strip().lower() == "late":
-                    new = new[new["late"].map(_truthy)]
-                if len(new) and orders.mode() != "off":
-                    try:
-                        orders.place(as_positions(new), passphrase, now, rule="favorites")
-                    except Exception as error:  # noqa: BLE001 - the type only
-                        LOG.error("favorites: live orders not placed: %s", type(error).__name__)
+                order(record.iloc[before:], passphrase, now)
         return record, section(record, now)
     except Exception as error:  # noqa: BLE001 - the type only
         LOG.error("favorites not refreshed: %s", type(error).__name__)

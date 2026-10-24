@@ -15,22 +15,29 @@ NOW = datetime(2026, 10, 24, 1, 0, tzinfo=UTC)
 
 
 def _quote(token, ask, *, start="2026-10-24T00:00:00Z", long=True, accepting=True, sport="nba", market="moneyline",
-           slug="m1", side="home", event="e1"):
+           slug="m1", side="home", event="e1", spread=0.02):
     return {**dict.fromkeys(source.QUOTE_COLUMNS), "captured_at": NOW.isoformat(), "sport": sport, "game_id": "901",
             "event_id": event, "event_slug": f"nba-{event}", "game_start": start, "away": "LAL", "home": "BOS",
             "market_id": slug, "market_slug": slug, "token_id": token, "market": market, "side": side, "long": long,
-            "line": float("nan"), "bid": ask - 0.02, "ask": ask, "mid": ask - 0.01, "spread": 0.02, "liquidity": 500.0,
+            "line": float("nan"), "bid": ask - spread, "ask": ask, "mid": ask - spread / 2, "spread": spread, "liquidity": 500.0,
             "fee_rate": 0.0695, "accepting": accepting}
 
 
 def test_a_position_is_taken_at_each_thresholds_first_crossing_and_never_revised():
     q = pd.DataFrame([_quote("t1", 0.86), _quote("t2", 0.14, long=False, side="away"), _quote("t3", 0.91, accepting=False),
                       _quote("t4", 0.99), _quote("t5", 0.82, start="2026-10-25T00:00:00Z", event="e2", slug="m2"),
-                      _quote("t6", 0.95, market="spread", slug="m3")])
+                      _quote("t6", 0.95, market="spread", slug="m3"),
+                      # An ask with nothing near it on the other side is an empty book, not a price: declined,
+                      # as is a quote with no spread to read.
+                      _quote("t7", 0.90, slug="m4", spread=0.05), _quote("t8", 0.90, slug="m5", spread=float("nan"))])
     record, added = favorites.take(pd.DataFrame(columns=favorites.COLUMNS), q, NOW)
     assert added == 3 and list(record.columns) == favorites.COLUMNS
     by = record.set_index(["token_id", "threshold"])
-    assert set(by.index) == {("t1", 0.80), ("t1", 0.85), ("t5", 0.80)}   # 0.14 no, not accepting no, 0.99 no, a spread no
+    assert set(by.index) == {("t1", 0.80), ("t1", 0.85), ("t5", 0.80)}   # 0.14 no, not accepting no, 0.99 no, a spread no, wide no
+    assert favorites.MAX_SPREAD == 0.04
+    # At the bar exactly, the crossing is taken.
+    at_bar = pd.DataFrame([_quote("t9", 0.90, slug="m6", spread=0.04)])
+    assert favorites.take(record, at_bar, NOW)[1] == 3
     one = by.loc[("t1", 0.85)]
     assert one["phase"] == "in_play" and one["minutes_in"] == 60.0 and one["ask"] == 0.86 and one["long"]
     assert one["fee"] == pytest.approx(0.0695 * 0.86 * 0.14) and one["cost"] == pytest.approx(0.86 + one["fee"])
@@ -133,6 +140,7 @@ def test_the_rules_positions_reach_the_live_step_at_the_order_threshold(tmp_path
 
     monkeypatch.setenv("ATLAS_OFFLINE", "1")
     monkeypatch.setenv(orders.MODE, "dry")
+    monkeypatch.setenv(favorites.ORDER_PHASE, "any")        # the mechanics, whatever the phase; late is the default
     store = Store.open(tmp_path / "tracking")
     placed = []
     monkeypatch.setattr(orders, "place", lambda pos, passphrase, now, **kw: placed.append((pos, passphrase, kw)))
@@ -191,7 +199,7 @@ def test_the_late_switch_confines_the_live_step(tmp_path, monkeypatch):
 
     monkeypatch.setenv("ATLAS_OFFLINE", "1")
     monkeypatch.setenv(orders.MODE, "dry")
-    monkeypatch.setenv(favorites.ORDER_PHASE, "late")
+    monkeypatch.delenv(favorites.ORDER_PHASE, raising=False)                         # late is the default
     placed = []
     monkeypatch.setattr(orders, "place", lambda pos, passphrase, now, **kw: placed.append(pos))
     store = Store.open(tmp_path / "tracking")
@@ -203,7 +211,7 @@ def test_the_late_switch_confines_the_live_step(tmp_path, monkeypatch):
                                         "clock": "1:00", "kickoff": "2026-10-24T00:00:00Z"}]))
     favorites.refresh(store, pd.DataFrame([_quote("t2", 0.88, slug="m2")]), NOW + timedelta(minutes=15), passphrase="key")
     assert len(placed) == 1 and list(placed[0]["position_id"]) == ["fav:t2:0.85"]
-    monkeypatch.delenv(favorites.ORDER_PHASE)
+    monkeypatch.setenv(favorites.ORDER_PHASE, "any")
     favorites.refresh(store, pd.DataFrame([_quote("t3", 0.87, slug="m3", start="2026-10-25T00:00:00Z")]),
                       NOW + timedelta(minutes=30), passphrase="key")
     assert len(placed) == 2                                                          # any phase: pregame goes too
