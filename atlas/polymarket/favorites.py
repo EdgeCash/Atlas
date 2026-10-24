@@ -60,8 +60,9 @@ COLUMNS = ["formed_at", "threshold", "phase", "minutes_in", "sport", "game_id", 
 #: The regulation periods a sport plays: in that period or past it (overtime), a position is late.
 FINAL_PERIOD = {"nba": 4, "nfl": 4, "ncaaf": 4, "nhl": 3}
 #: The variable that widens the live step from late positions (unset, ``late``) to every crossing (``any``).
-#: Late is the default since 24 October 2026: on the venue's own tape (``reports/favorites_backtest.md``) a
-#: favorite bought with more than fifteen minutes left loses, and one bought in the final minutes does not.
+#: Late is the default since 24 October 2026: on the venue's own tape (``reports/favorites_backtest.md``, with
+#: late defined as it can be known during the game) a late favorite on a tight book has lost about a point
+#: against its cost, and an earlier one more. Neither is an edge; late is the less costly of the two.
 ORDER_PHASE = "LIVE_PHASE"
 #: The variable that hands the rule to the always-on worker (``worker``; `atlas/polymarket/worker.py`): the
 #: scheduled run then reads the record and takes, grades and orders nothing, so the two never write it at once.

@@ -219,12 +219,12 @@ of positions, before it means anything.
 ### The loop off the scheduled runs
 
 The scheduled run reads the venue every fifteen minutes and takes three to
-five minutes to start, and the tape says a favorite is worth buying only in
-the last minutes of its game, when a limit sent that late fills nothing. So
-from 24 October 2026 the rule can run as an always-on loop instead
+five minutes to start, and the rule's live orders go late in games, when a
+limit sent that late fills nothing. So from 24 October 2026 the rule can run
+as an always-on loop instead
 (`atlas/polymarket/worker.py`, `make polymarket-worker`): every 45 seconds
 while a game is in play (every three minutes while none is) it reads the
-four leagues' listings - four requests, each game with its moneyline's top
+four leagues' listings - about ten requests, fifty games a page, each game with its moneyline's top
 of book and the venue's own period and clock - takes the crossings, grades
 the settled ones, writes `tracking/favorites.csv`, hands the new positions
 to the live step (late ones only unless `LIVE_PHASE` is `any`), grades the
@@ -276,6 +276,31 @@ selection of a scheduled loop, measured. The report is
 tables `reports/tables/favorites_backtest_*.csv`; the tape is cached under
 `data/raw/polymarket_us/` so a rerun costs only the new games. The live
 record is the out-of-sample continuation of it.
+
+**A correction, 24 October 2026.** The first version of that report put
+"late" at fewer than fifteen minutes to the game's recorded finish, which
+is not known while the game is on. Games that run long are
+disproportionately the close ones the favorite loses, and that measure
+moved their final minutes out of the late buckets: it showed a late edge
+of one to four points that, with late defined as it can be known during
+the game (elapsed time against the league's median length), is not there.
+A late favorite on a tight book has lost about a point against its cost,
+or broken even; an earlier one has lost more. No threshold shows an edge. The report now leads with the knowable
+definition.
+
+### Standing orders late in games
+
+The exchange lets a bid rest in the book instead of taking the ask, so the
+other way to buy a late favorite is a bid a few cents under the market,
+filled only if the price dips. That was tested on the same tape
+(`atlas/polymarket/standing.py`, `make polymarket-standing`), with the rule
+and its pass criteria fixed first in
+[`STANDING_ORDER_PREREGISTRATION.md`](STANDING_ORDER_PREREGISTRATION.md).
+It failed: every one of the 72 variants lost money, by four to ten points,
+in both halves of the season. A late favorite's price dips when its
+chance has fallen, and by more than the dip; a resting bid fills on
+exactly those minutes. The report is
+[`reports/standing_order_backtest.md`](../reports/standing_order_backtest.md).
 
 ## Going live, armed off
 

@@ -56,12 +56,7 @@ ORDER_COLUMNS = ["league", "event_id", "label", "side", "long", "threshold", "tr
 def late_starts(games: pd.DataFrame) -> dict[str, float]:
     """Minutes after the start from which a game of each league counts as late: its median length less
     :data:`LATE_BEFORE`. A league constant, the same for every game in it."""
-    if games.empty:
-        return {}
-    length = (pd.to_datetime(games["finished"], utc=True, errors="coerce")
-              - pd.to_datetime(games["start"], utc=True, errors="coerce")).dt.total_seconds() / 60.0
-    med = length.groupby(games["league"]).median().dropna()
-    return {str(k): float(v) - LATE_BEFORE for k, v in med.items()}
+    return backtest.late_starts(games, LATE_BEFORE)
 
 
 def _tape(h: pd.DataFrame) -> pd.DataFrame:
