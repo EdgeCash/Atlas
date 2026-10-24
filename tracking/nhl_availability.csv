@@ -1,0 +1,139 @@
+captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,fantasy,injury,return_date,note
+2026-10-24T08:13:01+00:00,2026-09-17T19:39Z,8,Los Angeles Kings,LA,3114743,Kevin Fiala,LW,Injured Reserve,IR,Left Lower Leg Surgery,2026-10-31,"Fiala (lower leg fracture) is at least three weeks away from being ready to play, Zach Dooley of the Kings' official site reports Thursday."
+2026-10-24T08:13:01+00:00,2026-09-17T20:53Z,26,Florida Panthers,FLA,4233890,Jonah Gadjovich,LW,Injured Reserve,IR-LT,Upper Body Surgery,2026-11-28,"Gadjovich (upper body) is out indefinitely, the team announced Thursday."
+2026-10-24T08:13:01+00:00,2026-09-24T19:45Z,8,Los Angeles Kings,LA,4587568,Jan Jenik,C,Injured Reserve,IR-NR,Undisclosed,2026-10-24,"Jenik (undisclosed) was placed on non-roster injured reserve by Los Angeles on Thursday, per Zach Dooley of LA Kings Insider."
+2026-10-24T08:13:01+00:00,2026-09-24T19:49Z,8,Los Angeles Kings,LA,5149241,Jakub Dvorak,D,Injured Reserve,IR-NR,Upper Body,2026-10-31,ir-nr
+2026-10-24T08:13:01+00:00,2026-09-27T15:21Z,16,Pittsburgh Penguins,PIT,3042122,Ryan Graves,D,Injured Reserve,IR,Knee,2026-10-24,Graves (lower body) is out indefinitely and was placed on injured reserve Sunday.
+2026-10-24T08:13:01+00:00,2026-09-27T15:26Z,16,Pittsburgh Penguins,PIT,4063605,Justin Brazeau,RW,Injured Reserve,IR,Lower Body,2026-10-29,Brazeau (lower body) was placed on injured reserve by the Penguins on Sunday.
+2026-10-24T08:13:01+00:00,2026-09-28T15:40Z,19,St. Louis Blues,STL,4874748,Logan Mailloux,D,Injured Reserve,IR,Hand Surgery,2026-11-25,ir
+2026-10-24T08:13:01+00:00,2026-09-28T17:58Z,22,Vancouver Canucks,VAN,3096217,Thatcher Demko,G,Injured Reserve,IR,Hip Surgery,2026-12-21,"Co-president of hockey operations Henrik Sedin said Monday that he hopes Demko (hip) will be ready to return before Christmas, Kevin Woodley of NHL.com reports."
+2026-10-24T08:13:01+00:00,2026-09-28T19:18Z,20,Tampa Bay Lightning,TB,3094261,Yanni Gourde,C,Injured Reserve,IR-NR,Hip Surgery,2026-12-02,Gourde (hip) was placed on the injured non-roster list Monday.
+2026-10-24T08:13:01+00:00,2026-09-28T20:52Z,2,Buffalo Sabres,BUF,4419767,Jack Rathbone,D,Injured Reserve,IR-NR,Undisclosed,2026-10-24,ir-nr
+2026-10-24T08:13:01+00:00,2026-09-28T21:02Z,129764,Utah Mammoth,UTA,5080177,Maveric Lamoureux,D,Injured Reserve,IR,Shoulder,2027-02-12,ir
+2026-10-24T08:13:01+00:00,2026-09-28T21:15Z,3,Calgary Flames,CGY,2562606,Jonathan Huberdeau,LW,Injured Reserve,IR,Hip Surgery,2026-11-02,"Huberdeau (hip) was placed on injured reserve Monday, per Pat Steinberg of QR Calgary 770 AM."
+2026-10-24T08:13:01+00:00,2026-09-28T22:02Z,14,Ottawa Senators,OTT,2992930,Kurtis MacDermid,LW,Injured Reserve,IR-NR,Upper Body,2026-10-31,MacDermid (upper body) was moved to the injured non-roster list Monday.
+2026-10-24T08:13:01+00:00,2026-09-28T22:10Z,18,San Jose Sharks,SJ,4329962,Kyle Keyser,G,Injured Reserve,IR-NR,Upper Body,2026-12-01,"Keyser (upper body) was placed on non-roster injured reserve by the Sharks on Monday, Curtis Pashelka of The San Jose Mercury News reports."
+2026-10-24T08:13:01+00:00,2026-09-28T22:20Z,18,San Jose Sharks,SJ,5149209,Quentin Musty,LW,Injured Reserve,IR-NR,Upper Body,2026-12-01,"Musty (upper body) was put on non-roster injured reserve Monday, according to Curtis Pashelka of The San Jose Mercury News."
+2026-10-24T08:13:01+00:00,2026-09-28T22:41Z,17,Colorado Avalanche,COL,5103687,Georgii Merkulov,C,Injured Reserve,IR-NR,Undisclosed,2026-10-28,Merkulov (undisclosed) was put on non-roster injured reserve Monday.
+2026-10-24T08:13:01+00:00,2026-09-29T01:35Z,13,New York Rangers,NYR,5080232,Adam Sykora,LW,Injured Reserve,IR,Lower Body,2027-01-25,ir
+2026-10-24T08:13:01+00:00,2026-09-29T04:30Z,21,Toronto Maple Leafs,TOR,4697767,William Villeneuve,D,Injured Reserve,IR-NR,Knee Surgery,2026-10-31,ir-nr
+2026-10-24T08:13:01+00:00,2026-09-29T14:24Z,21,Toronto Maple Leafs,TOR,3151038,Elvis Merzlikins,G,Injured Reserve,IR-LT,Shoulder Surgery,2027-03-30,"Merzlikins is expected to miss 4-6 months to begin the 2026-27 regular season while recovering from a shoulder injury, per Luke Fox of Sportsnet."
+2026-10-24T08:13:01+00:00,2026-09-29T14:55Z,21,Toronto Maple Leafs,TOR,4781709,Cade Webber,D,Injured Reserve,IR-NR,Elbow,2026-10-31,ir-nr
+2026-10-24T08:13:01+00:00,2026-09-29T15:55Z,28,Winnipeg Jets,WPG,5104207,Garrett Brown,C,Injured Reserve,IR-NR,Lower Body,2026-10-30,ir-nr
+2026-10-24T08:13:01+00:00,2026-09-29T16:16Z,9,Dallas Stars,DAL,3942461,Cameron Hughes,C,Injured Reserve,IR-NR,Upper Body,2026-10-25,ir-nr
+2026-10-24T08:13:01+00:00,2026-09-29T16:18Z,9,Dallas Stars,DAL,5207357,Luke Krys,D,Injured Reserve,IR-NR,Undisclosed,2026-10-25,ir-nr
+2026-10-24T08:13:01+00:00,2026-09-29T16:21Z,30,Minnesota Wild,MIN,4697449,Brock Faber,D,Injured Reserve,IR,Skull Surgery,2026-11-03,"Faber underwent a procedure to repair his fractured skull and is without a timetable to return, per Michael Russo of The Athletic."
+2026-10-24T08:13:01+00:00,2026-09-29T16:22Z,6,Edmonton Oilers,EDM,5278661,Atro Leppanen,D,Injured Reserve,IR-NR,Undisclosed,2026-10-31,ir-nr
+2026-10-24T08:13:01+00:00,2026-09-29T16:38Z,10,Montreal Canadiens,MTL,4997129,Lucas Condotta,LW,Injured Reserve,IR-NR,Undisclosed,2026-10-31,ir-nr
+2026-10-24T08:13:01+00:00,2026-09-29T16:39Z,10,Montreal Canadiens,MTL,5329651,Bryce Pickford,D,Injured Reserve,IR-NR,Undisclosed,2026-10-31,ir-nr
+2026-10-24T08:13:01+00:00,2026-09-29T16:39Z,13,New York Rangers,NYR,5136624,Aidan Thompson,C,Injured Reserve,IR-NR,Undisclosed,2026-10-26,ir-nr
+2026-10-24T08:13:01+00:00,2026-09-29T17:03Z,22,Vancouver Canucks,VAN,3069342,Mackenzie MacEachern,LW,Injured Reserve,IR-NR,Undisclosed,2026-10-25,ir-nr
+2026-10-24T08:13:01+00:00,2026-09-29T17:05Z,22,Vancouver Canucks,VAN,4378682,Akil Thomas,C,Injured Reserve,IR-NR,Undisclosed,2026-11-09,ir-nr
+2026-10-24T08:13:01+00:00,2026-09-29T17:06Z,22,Vancouver Canucks,VAN,4697776,Jack Thompson,D,Injured Reserve,IR-NR,Undisclosed,2026-10-31,ir-nr
+2026-10-24T08:13:01+00:00,2026-09-29T17:07Z,23,Washington Capitals,WSH,5188548,Patrick Thomas,C,Injured Reserve,IR-NR,Upper Body,2026-10-24,ir-nr
+2026-10-24T08:13:01+00:00,2026-09-29T17:28Z,2,Buffalo Sabres,BUF,4233868,Conor Timmins,D,Injured Reserve,IR,Lower Body,2026-10-24,"Timmins (lower body) doesn't have a timeline for his return yet, according to Heather Engel of NHL.com on Tuesday."
+2026-10-24T08:13:01+00:00,2026-09-29T17:52Z,6,Edmonton Oilers,EDM,3042085,Mattias Janmark,C,Injured Reserve,IR,Undisclosed Surgery,2026-10-26,Janmark (undisclosed) does not have a timetable for his return from injury.
+2026-10-24T08:13:01+00:00,2026-09-29T17:53Z,6,Edmonton Oilers,EDM,2517899,Frederik Andersen,G,Injured Reserve,IR-NR,Knee,2026-12-30,"Andersen (knee) isn't expected back until ""maybe"" December, head coach Mike Babcock told NHL.com on Tuesday."
+2026-10-24T08:13:01+00:00,2026-09-30T14:53Z,25,Anaheim Ducks,ANA,3942905,Troy Terry,RW,Injured Reserve,IR-LT,Hip Surgery,2026-11-21,"Terry (hip) was moved from the non-roster list to long-term injured reserve Wednesday, Zach Cavanagh of The Sporting Tribune reports."
+2026-10-24T08:13:01+00:00,2026-09-30T18:51Z,21,Toronto Maple Leafs,TOR,3042014,Max Domi,C,Injured Reserve,IR-LT,Back Surgery,2026-11-21,"Domi (back) was transferred from the non-roster list to long-term injured reserve Wednesday, per PuckPedia."
+2026-10-24T08:13:01+00:00,2026-09-30T19:39Z,19,St. Louis Blues,STL,4587904,Tyler Tucker,D,Injured Reserve,IR,Left Knee Surgery,2026-11-12,"Tucker had arthroscopic knee surgery and will be re-assessed in six weeks, the team announced Wednesday."
+2026-10-24T08:13:01+00:00,2026-10-01T00:06Z,124292,Seattle Kraken,SEA,5291944,Jake O'Brien,C,Injured Reserve,IR-NR,Lower Body,2026-10-24,O'Brien (lower body) was placed on non-roster injured reserve Wednesday.
+2026-10-24T08:13:01+00:00,2026-10-01T14:05Z,6,Edmonton Oilers,EDM,5080153,Matt Savoie,C,Injured Reserve,IR-LT,Lower Body,2026-11-24,Savoie (lower body) was shifted to long-term injured reserve Thursday.
+2026-10-24T08:13:01+00:00,2026-10-01T14:11Z,6,Edmonton Oilers,EDM,4331611,Alec Regula,D,Injured Reserve,IR-LT,Undisclosed,2026-10-24,Regula (undisclosed) was designated for long-term injured reserve Thursday.
+2026-10-24T08:13:01+00:00,2026-10-02T17:31Z,11,New Jersey Devils,NJ,5080212,Seamus Casey,D,Injured Reserve,IR-NR,Knee,2026-11-21,"Casey will be out of action for 6-8 weeks after undergoing a knee procedure, Kristy Flannery of The Hockey News reports Friday."
+2026-10-24T08:13:01+00:00,2026-10-05T21:20Z,19,St. Louis Blues,STL,4392454,Alexey Toropchenko,RW,Injured Reserve,IR,Upper Body,2026-11-14,ir
+2026-10-24T08:13:01+00:00,2026-10-06T15:39Z,5,Detroit Red Wings,DET,5080152,Marco Kasper,C,Injured Reserve,IR,Upper Body,2026-10-29,Kasper (upper body) has been given a week-to-week timetable for return.
+2026-10-24T08:13:01+00:00,2026-10-06T18:38Z,26,Florida Panthers,FLA,3041970,Aleksander Barkov,C,Injured Reserve,IR-LT,Left Lower Body,2026-11-27,"Barkov (lower body) will be out for approximately 6-8 weeks, Jameson Olive of the Panthers' official site reports Tuesday."
+2026-10-24T08:13:01+00:00,2026-10-06T21:08Z,5,Detroit Red Wings,DET,3942043,Mason Appleton,C,Injured Reserve,IR,Undisclosed,2026-10-29,ir
+2026-10-24T08:13:01+00:00,2026-10-06T21:16Z,10,Montreal Canadiens,MTL,5216860,Ivan Demidov,RW,Injured Reserve,IR,Lower Body,2026-10-31,"Demidov (lower body) was placed on injured reserve by the Canadiens on Tuesday, per the NHL media site."
+2026-10-24T08:13:01+00:00,2026-10-08T16:38Z,124292,Seattle Kraken,SEA,4271998,Ryan Lindgren,D,Injured Reserve,IR,Upper Body,2026-11-19,Lindgren (upper body) was placed on injured reserve by the Kraken on Thursday and is expected to miss four to six weeks.
+2026-10-24T08:13:01+00:00,2026-10-09T15:50Z,30,Minnesota Wild,MIN,3535,Nick Foligno,LW,Injured Reserve,IR,Upper Body,2026-10-29,ir
+2026-10-24T08:13:01+00:00,2026-10-10T16:58Z,15,Philadelphia Flyers,PHI,5188490,Nikita Grebenkin,RW,Injured Reserve,IR,Back,2027-02-13,Grebenkin (back) underwent successful surgery and is expected to miss at least four months.
+2026-10-24T08:13:01+00:00,2026-10-10T17:11Z,13,New York Rangers,NYR,3069266,Joonas Korpisalo,G,Injured Reserve,IR,Lower Body,2026-11-09,"Korpisalo (lower body) will miss at least four more weeks, per Elliotte Friedman of Sportsnet on Saturday."
+2026-10-24T08:13:01+00:00,2026-10-10T17:18Z,13,New York Rangers,NYR,4352804,Joe Veleno,C,Injured Reserve,IR-LT,Right Lower Body,2027-01-03,"Veleno (lower body) was placed on long-term injured reserve Saturday, Vince Z. Mercogliano of The Athletic reports."
+2026-10-24T08:13:01+00:00,2026-10-10T18:09Z,8,Los Angeles Kings,LA,4565226,Alex Turcotte,C,Injured Reserve,IR,Undisclosed,2026-10-26,ir
+2026-10-24T08:13:01+00:00,2026-10-10T19:49Z,124292,Seattle Kraken,SEA,4894747,Jacob Melanson,RW,Injured Reserve,IR,Chest,2026-12-01,Melanson's upper-body injury was diagnosed Saturday as an anterior mediastinum hematoma with vascular pseudo aneurysm. He will continue to be evaluated and is o
+2026-10-24T08:13:01+00:00,2026-10-10T21:13Z,19,St. Louis Blues,STL,4063268,Dillon Dube,C,Injured Reserve,IR,Neck,2026-12-04,ir
+2026-10-24T08:13:01+00:00,2026-10-10T21:20Z,10,Montreal Canadiens,MTL,3942714,Sam Montembeault,G,Injured Reserve,IR,Lower Body,2026-10-25,ir
+2026-10-24T08:13:01+00:00,2026-10-11T18:01Z,15,Philadelphia Flyers,PHI,3900169,Travis Konecny,RW,Injured Reserve,IR,Lower Body,2026-10-27,"Konecny (lower body) was placed on injured reserve Sunday, according to the NHL media site."
+2026-10-24T08:13:01+00:00,2026-10-11T21:06Z,13,New York Rangers,NYR,3151297,Igor Shesterkin,G,Injured Reserve,IR-LT,Right Knee Surgery,2027-09-15,"Shesterkin will require surgery and a lengthy rehab process to address his season-ending right knee injury, Vince Z. Mercogliano of The Athletic reports Sunday."
+2026-10-24T08:13:01+00:00,2026-10-12T14:27Z,23,Washington Capitals,WSH,4352803,Rasmus Sandin,D,Injured Reserve,IR-LT,Right Knee Surgery,2026-12-26,Sandin (knee) was placed on long-term injured reserve Monday.
+2026-10-24T08:13:01+00:00,2026-10-12T16:46Z,9,Dallas Stars,DAL,5161,Matt Duchene,C,Injured Reserve,IR-LT,Abdomen,2027-01-12,"Duchene will be out for approximately three months after undergoing surgery to repair a core injury, the team announced Monday."
+2026-10-24T08:13:01+00:00,2026-10-12T17:51Z,16,Pittsburgh Penguins,PIT,3025524,Trevor van Riemsdyk,D,Injured Reserve,IR,Lower Body,2026-10-29,ir
+2026-10-24T08:13:01+00:00,2026-10-12T21:11Z,26,Florida Panthers,FLA,3852,Brad Marchand,LW,Injured Reserve,IR,Left Leg,2026-11-21,ir
+2026-10-24T08:13:01+00:00,2026-10-12T22:12Z,30,Minnesota Wild,MIN,5172,Marcus Foligno,LW,Injured Reserve,IR,Lower Body,2026-10-29,ir
+2026-10-24T08:13:01+00:00,2026-10-13T01:42Z,19,St. Louis Blues,STL,2952729,Torey Krug,D,Injured Reserve,IR-LT,Left Ankle,2027-07-01,"Krug (ankle) was placed on long-term injured reserve by the Blues on Monday, per PuckPedia."
+2026-10-24T08:13:01+00:00,2026-10-13T17:19Z,25,Anaheim Ducks,ANA,4233668,Ryan Poehling,C,Injured Reserve,IR,Lower Body,2026-11-25,Poehling (knee) is expected to miss 6-8 weeks with an MCL sprain.
+2026-10-24T08:13:01+00:00,2026-10-13T20:51Z,2,Buffalo Sabres,BUF,3069448,Matt Grzelcyk,D,Injured Reserve,IR,Lower Body,2026-10-24,"Grzelcyk (lower body) suffered a ""flare-up"" and could be out for at least ""a few days,"" head coach Lindy Ruff told Rachel Lenzi of The Buffalo News on Tuesday."
+2026-10-24T08:13:01+00:00,2026-10-14T15:15Z,5,Detroit Red Wings,DET,4874720,Simon Edvinsson,D,Injured Reserve,IR-NR,Contract Dispute,2026-10-31,"Edvinsson (contract dispute) is on the Red Wings' injured, non-roster list, per the NHL media site Wednesday."
+2026-10-24T08:13:01+00:00,2026-10-14T15:18Z,7,Carolina Hurricanes,CAR,4915850,Alexander Nikishin,D,Injured Reserve,IR-NR,Contract Dispute,2026-11-01,"Nikishin (contract dispute) is on the Hurricanes' injured, non-roster list, per the NHL media site Wednesday."
+2026-10-24T08:13:01+00:00,2026-10-15T14:30Z,21,Toronto Maple Leafs,TOR,5592,Chris Tanev,D,Injured Reserve,IR,Upper Body,2026-10-31,"The Maple Leafs announced Thursday that Tanev (lower body) is considered week-to-week, Mark Masters of TSN reports."
+2026-10-24T08:13:01+00:00,2026-10-15T15:24Z,14,Ottawa Senators,OTT,4874721,William Eklund,LW,Injured Reserve,IR,Ankle,2027-01-05,"Eklund had surgery to repair a torn ankle tendon and will be out 10-12 weeks, Bruce Garrioch of Postmedia reports Thursday."
+2026-10-24T08:13:01+00:00,2026-10-15T16:57Z,12,New York Islanders,NYI,3899946,Mathew Barzal,C,Injured Reserve,IR-NR,Knee,2026-11-07,"Barzal (knee) will not join the Islanders for their two-game road trip, Andrew Gross of Newsday reports Thursday."
+2026-10-24T08:13:01+00:00,2026-10-15T17:59Z,2,Buffalo Sabres,BUF,3654006,Alex Lyon,G,Injured Reserve,IR,Upper Body,2026-10-31,"Lyon (upper body) had a setback in his recovery and is without a timeline to return, the team announced Thursday."
+2026-10-24T08:13:01+00:00,2026-10-15T21:54Z,7,Carolina Hurricanes,CAR,3541,Jordan Staal,C,Injured Reserve,IR,Calf,2026-12-03,ir
+2026-10-24T08:13:01+00:00,2026-10-15T22:35Z,21,Toronto Maple Leafs,TOR,3042110,Miles Wood,LW,Injured Reserve,IR,Undisclosed,2026-10-26,ir
+2026-10-24T08:13:01+00:00,2026-10-16T18:17Z,25,Anaheim Ducks,ANA,5188523,Ian Moore,D,Injured Reserve,IR,Lower Body,2026-11-08,"Head coach Joel Quenneville said Friday that Moore (lower body) is still ""a ways from skating,"" Patrick Present of The Hockey News reports."
+2026-10-24T08:13:01+00:00,2026-10-16T19:32Z,9,Dallas Stars,DAL,4894398,Oskar Back,C,Injured Reserve,IR,Finger Fracture,2026-11-14,"Head coach Glen Gulutzan said Friday that Back broke his finger and will miss 4-6 weeks, Robert Tiffin of NHL.com reports."
+2026-10-24T08:13:01+00:00,2026-10-17T14:02Z,21,Toronto Maple Leafs,TOR,4588638,Dakota Joshua,C,Injured Reserve,IR-LT,Abdomen,2026-10-24,Joshua (abdomen) was sent to AHL Toronto on Friday for a conditioning stint.
+2026-10-24T08:13:01+00:00,2026-10-17T17:08Z,10,Montreal Canadiens,MTL,5188457,Florian Xhekaj,LW,Injured Reserve,IR,Lower Body,2026-10-31,"Xhekaj (lower body) was placed on injured reserve Saturday, per the NHL media site."
+2026-10-24T08:13:01+00:00,2026-10-17T20:19Z,21,Toronto Maple Leafs,TOR,5160,John Tavares,C,Injured Reserve,IR,Lower Body,2026-11-27,ir
+2026-10-24T08:13:01+00:00,2026-10-18T21:23Z,30,Minnesota Wild,MIN,4272674,Filip Gustavsson,G,Injured Reserve,IR-LT,Hip Surgery,2026-11-19,"Head coach John Hynes said Sunday that Gustavsson (hip) is slated to miss at least another month, Dylan Loucks of The Hockey News reports."
+2026-10-24T08:13:01+00:00,2026-10-19T02:33Z,19,St. Louis Blues,STL,3067822,Ross Johnston,LW,Injured Reserve,IR,Lower Body,2026-10-24,ir
+2026-10-24T08:13:01+00:00,2026-10-19T13:56Z,12,New York Islanders,NYI,4587854,Alexander Romanov,D,Injured Reserve,IR,Right Knee Surgery,2027-04-08,ir
+2026-10-24T08:13:01+00:00,2026-10-19T15:15Z,7,Carolina Hurricanes,CAR,5428,Taylor Hall,LW,Injured Reserve,IR,Upper Body,2026-11-07,ir
+2026-10-24T08:13:01+00:00,2026-10-19T15:39Z,28,Winnipeg Jets,WPG,3042016,Josh Morrissey,D,Injured Reserve,IR,Right Wrist,2026-11-01,Morrissey (wrist) was placed on injured reserve Monday.
+2026-10-24T08:13:01+00:00,2026-10-19T17:14Z,14,Ottawa Senators,OTT,3900219,Thomas Chabot,D,Out,OUT,Upper Body,2026-10-27,out
+2026-10-24T08:13:01+00:00,2026-10-19T17:54Z,15,Philadelphia Flyers,PHI,4392072,Owen Tippett,RW,Injured Reserve,IR,Upper Body,2026-10-27,"Tippett (upper body) was placed on injured reserve Monday, per the NHL media site."
+2026-10-24T08:13:01+00:00,2026-10-19T20:26Z,12,New York Islanders,NYI,4587580,Matias Maccelli,LW,Out,OUT,Left Lower Body,2026-11-17,"Maccelli (lower body) will miss the next 2-4 weeks, the team announced Monday."
+2026-10-24T08:13:01+00:00,2026-10-19T20:29Z,12,New York Islanders,NYI,5149210,Calum Ritchie,C,Out,OUT,Lower Body,2026-12-01,"Ritchie (lower body) will be out of action for 4-6 weeks, the team announced Monday."
+2026-10-24T08:13:01+00:00,2026-10-20T03:51Z,3,Calgary Flames,CGY,5149191,Samuel Honzek,LW,Injured Reserve,IR,Lower Body,2026-10-28,ir
+2026-10-24T08:13:01+00:00,2026-10-20T15:58Z,9,Dallas Stars,DAL,3069352,Esa Lindell,D,Out,OUT,Lower Body,2026-10-27,out
+2026-10-24T08:13:01+00:00,2026-10-20T21:18Z,129764,Utah Mammoth,UTA,4031645,Michael Carcone,LW,Injured Reserve,IR,Upper Body,2026-11-01,Carcone (upper body) was placed on injured reserve by the Mammoth on Tuesday.
+2026-10-24T08:13:01+00:00,2026-10-20T21:23Z,26,Florida Panthers,FLA,5452,Jacob Markstrom,G,Injured Reserve,IR,Upper Body,2026-11-04,ir
+2026-10-24T08:13:01+00:00,2026-10-21T14:07Z,23,Washington Capitals,WSH,4697783,Justin Sourdif,RW,Day-To-Day,Day-To-Day,Illness,2026-10-24,day-to-day
+2026-10-24T08:13:01+00:00,2026-10-21T14:45Z,23,Washington Capitals,WSH,4272888,Logan Thompson,G,Day-To-Day,Day-To-Day,Lower Body,2026-10-24,"Thompson won't practice Wednesday and is considered day-to-day with a lower-body injury ahead of Saturday's clash with the Sabres, Sammi Silber of The Hockey Ne"
+2026-10-24T08:13:01+00:00,2026-10-21T14:55Z,23,Washington Capitals,WSH,4024833,Pierre-Luc Dubois,LW,Injured Reserve,IR,Illness,2026-10-24,"Dubois (illness) skated Wednesday in a regular jersey and appears to be on track to return to game action Saturday against the Sabres, Sammi Silber of The Hocke"
+2026-10-24T08:13:01+00:00,2026-10-21T19:24Z,37,Vegas Golden Knights,VGK,3942638,Parker Wotherspoon,D,Injured Reserve,IR,Upper Body,2026-11-08,ir
+2026-10-24T08:13:01+00:00,2026-10-21T20:09Z,2,Buffalo Sabres,BUF,5474,Sam Carrick,C,Injured Reserve,IR,Upper Body,2026-10-24,ir
+2026-10-24T08:13:01+00:00,2026-10-22T13:15Z,2,Buffalo Sabres,BUF,4894355,Justin Danforth,RW,Day-To-Day,Day-To-Day,Upper Body,2026-10-24,day-to-day
+2026-10-24T08:13:01+00:00,2026-10-22T13:59Z,16,Pittsburgh Penguins,PIT,5291947,Ben Kindel,C,Injured Reserve,IR,Undisclosed,2026-10-29,Kindel (undisclosed) was placed on injured reserve Thursday.
+2026-10-24T08:13:01+00:00,2026-10-22T15:30Z,10,Montreal Canadiens,MTL,4233594,Nick Suzuki,C,Out,OUT,Upper Body,2026-11-18,out
+2026-10-24T08:13:01+00:00,2026-10-22T15:54Z,16,Pittsburgh Penguins,PIT,2591155,Bryan Rust,RW,Injured Reserve,IR,Lower Body,2026-12-05,"Rust (lower body) will be re-evaluated in six weeks, Michelle Crechiolo of the Penguins' official site reports Thursday."
+2026-10-24T08:13:01+00:00,2026-10-22T16:26Z,18,San Jose Sharks,SJ,3042017,Alexander Wennberg,C,Out,OUT,Upper Body,2026-11-09,out
+2026-10-24T08:13:01+00:00,2026-10-22T18:44Z,17,Colorado Avalanche,COL,3943996,Nicolas Roy,C,Out,OUT,Lower Body,2026-10-25,"Roy (lower body) is expected to miss Friday's game against Tampa Bay, per Aarif Deen of Colorado Hockey Now."
+2026-10-24T08:13:01+00:00,2026-10-22T21:03Z,14,Ottawa Senators,OTT,3069285,Linus Ullmark,G,Injured Reserve,IR,Lower Body Strain,2026-10-29,"Ullmark (lower body) is expected to miss the next 1-2 weeks, Claire Hanna of TSN reports Thursday."
+2026-10-24T08:13:01+00:00,2026-10-22T21:06Z,6,Edmonton Oilers,EDM,3042062,Jason Dickinson,C,Injured Reserve,IR,Undisclosed,2026-10-28,ir
+2026-10-24T08:13:01+00:00,2026-10-22T22:47Z,25,Anaheim Ducks,ANA,4755684,Judd Caulfield,RW,Injured Reserve,IR-NR,Personal,2026-10-24,"Caulfield (personal) remains in Southern California and won't play Thursday versus the Devils, Zach Cavanagh of The Sporting Tribune reports. Per the NHL media "
+2026-10-24T08:13:01+00:00,2026-10-23T02:03Z,18,San Jose Sharks,SJ,5216907,Igor Chernyshov,LW,Out,OUT,Upper Body,2026-10-27,out
+2026-10-24T08:13:01+00:00,2026-10-23T02:22Z,21,Toronto Maple Leafs,TOR,4419778,Marshall Rifai,D,Injured Reserve,IR,Lower Body,2026-10-31,ir
+2026-10-24T08:13:01+00:00,2026-10-23T02:28Z,26,Florida Panthers,FLA,3151784,Gustav Forsling,D,Day-To-Day,Day-To-Day,Upper Body,2026-10-25,day-to-day
+2026-10-24T08:13:01+00:00,2026-10-23T03:15Z,9,Dallas Stars,DAL,2976842,Radek Faksa,C,Day-To-Day,Day-To-Day,Undisclosed,2026-10-25,day-to-day
+2026-10-24T08:13:01+00:00,2026-10-23T03:40Z,28,Winnipeg Jets,WPG,5511,Nino Niederreiter,RW,Day-To-Day,Day-To-Day,Upper Body,2026-10-25,"Niederreiter left Thursday's game versus the Stars after taking a stick up high, and there was no update on his status after the contest, Robert Tiffin of NHL.c"
+2026-10-24T08:13:01+00:00,2026-10-23T04:02Z,5,Detroit Red Wings,DET,2590824,John Gibson,G,Day-To-Day,Day-To-Day,Upper Body,2026-10-24,Gibson sustained an upper-body injury versus the Canucks on Thursday and is questionable to return to the game.
+2026-10-24T08:13:01+00:00,2026-10-23T04:29Z,6,Edmonton Oilers,EDM,2558631,Mattias Ekholm,D,Out,OUT,Undisclosed,2026-10-31,"Ekholm (undisclosed) will miss at least a week after getting injured versus the Hurricanes on Thursday, Jason Gregor of Sports 1440 Edmonton reports."
+2026-10-24T08:13:01+00:00,2026-10-23T15:29Z,21,Toronto Maple Leafs,TOR,4781550,Nick Blankenburg,D,Injured Reserve,IR,Upper Body,2026-10-31,"Blankenburg (undisclosed) was placed on injured reserve by the Maple Leafs on Friday, David Alter of The Hockey News reports."
+2026-10-24T08:13:01+00:00,2026-10-23T15:50Z,25,Anaheim Ducks,ANA,4895214,Jeff Malott,LW,Day-To-Day,Day-To-Day,Illness,2026-10-24,day-to-day
+2026-10-24T08:13:01+00:00,2026-10-23T15:50Z,3,Calgary Flames,CGY,3797,Mikael Backlund,C,Day-To-Day,Day-To-Day,Upper Body,2026-10-24,day-to-day
+2026-10-24T08:13:01+00:00,2026-10-23T15:50Z,7,Carolina Hurricanes,CAR,2976849,Mark Jankowski,C,Day-To-Day,Day-To-Day,Lower Body,2026-10-27,day-to-day
+2026-10-24T08:13:01+00:00,2026-10-23T15:50Z,5,Detroit Red Wings,DET,4587994,Daniil Tarasov,G,Day-To-Day,Day-To-Day,Undisclosed,2026-10-24,day-to-day
+2026-10-24T08:13:01+00:00,2026-10-23T15:50Z,8,Los Angeles Kings,LA,4697383,Quinton Byfield,RW,Day-To-Day,Day-To-Day,Upper Body,2026-10-24,day-to-day
+2026-10-24T08:13:01+00:00,2026-10-23T15:50Z,30,Minnesota Wild,MIN,5302535,Maxim Shabanov,RW,Day-To-Day,Day-To-Day,Upper Body,2026-10-24,day-to-day
+2026-10-24T08:13:01+00:00,2026-10-23T15:50Z,16,Pittsburgh Penguins,PIT,4697404,Egor Chinakhov,RW,Day-To-Day,Day-To-Day,Lower Body,2026-10-24,day-to-day
+2026-10-24T08:13:01+00:00,2026-10-23T15:50Z,16,Pittsburgh Penguins,PIT,4063401,Samuel Girard,D,Day-To-Day,Day-To-Day,Undisclosed,2026-10-24,day-to-day
+2026-10-24T08:13:01+00:00,2026-10-23T15:50Z,129764,Utah Mammoth,UTA,3941974,John Marino,D,Day-To-Day,Day-To-Day,Upper Body,2026-10-24,day-to-day
+2026-10-24T08:13:01+00:00,2026-10-23T15:50Z,37,Vegas Golden Knights,VGK,3899937,Mitch Marner,RW,Day-To-Day,Day-To-Day,Personal,2026-10-24,day-to-day
+2026-10-24T08:13:01+00:00,2026-10-23T15:55Z,16,Pittsburgh Penguins,PIT,3124,Evgeni Malkin,C,Day-To-Day,Day-To-Day,Illness,2026-10-24,Malkin didn't participate in Friday's practice session due to an illness.
+2026-10-24T08:13:01+00:00,2026-10-23T16:07Z,11,New Jersey Devils,NJ,3020225,Connor Hellebuyck,G,Day-To-Day,Day-To-Day,Not Injury Related,2026-10-24,"Hellebuyck was traded to the Devils from the Jets on Friday, Darren Dreger of TSN reports."
+2026-10-24T08:13:01+00:00,2026-10-23T16:48Z,28,Winnipeg Jets,WPG,5828,Nick Bjugstad,C,Injured Reserve,IR-LT,Left Pectoral Surgery,2027-03-11,"Bjugstad (pectoral), Dawson Mercer, Nico Daws, Alexander Command and a pair of draft picks were traded to the Jets from the Devils on Friday in exchange for Con"
+2026-10-24T08:13:01+00:00,2026-10-23T17:11Z,15,Philadelphia Flyers,PHI,3041999,Rasmus Ristolainen,D,Injured Reserve,IR,Upper Body,2026-10-24,"Head coach Rick Tocchet said Friday that Ristolainen (upper body) is a possibility for Saturday's game against the Ducks, Jordan Hall of NBC Sports Philadelphia"
+2026-10-24T08:13:01+00:00,2026-10-23T17:24Z,15,Philadelphia Flyers,PHI,4565235,Cam York,D,Injured Reserve,IR,Upper Body,2026-10-24,"Head coach Rick Tocchet said Friday that he isn't sure whether York (upper body) will be able to suit up Saturday against the Ducks, Jordan Hall of NBC Sports P"
+2026-10-24T08:13:01+00:00,2026-10-23T17:27Z,13,New York Rangers,NYR,4233720,Eeli Tolvanen,RW,Day-To-Day,Day-To-Day,Personal,2026-10-24,"Tolvanen didn't participate in Friday's practice session due to personal reasons, Mollie Walker of the New York Post reports."
+2026-10-24T08:13:01+00:00,2026-10-23T17:30Z,2,Buffalo Sabres,BUF,5080176,Jiri Kulich,C,Day-To-Day,Day-To-Day,Face,2026-10-24,day-to-day
+2026-10-24T08:13:01+00:00,2026-10-23T18:11Z,28,Winnipeg Jets,WPG,2562622,Vladislav Namestnikov,C,Injured Reserve,IR,Undisclosed,2026-10-30,ir
+2026-10-24T08:13:01+00:00,2026-10-23T20:39Z,23,Washington Capitals,WSH,4392260,Vincent Desharnais,D,Injured Reserve,IR,Abdomen Surgery,2026-12-05,ir
+2026-10-24T08:13:01+00:00,2026-10-23T21:08Z,25,Anaheim Ducks,ANA,5080154,Pavel Mintyukov,D,Injured Reserve,IR,Lower Body,2026-10-29,Mintyukov (lower body) was put on injured reserve Thursday.
+2026-10-24T08:13:01+00:00,2026-10-23T21:39Z,17,Colorado Avalanche,COL,4874744,Zachary L'Heureux,LW,Injured Reserve,IR-LT,Upper Body,2026-11-07,ir-lt
+2026-10-24T08:13:01+00:00,2026-10-23T22:37Z,6,Edmonton Oilers,EDM,4894487,Devon Levi,G,Injured Reserve,IR,Undisclosed,2026-10-31,Levi (undisclosed) was placed on injured reserve Friday.
+2026-10-24T08:13:01+00:00,2026-10-23T23:40Z,4,Chicago Blackhawks,CHI,4565225,Bowen Byram,D,Out,OUT,Upper Body,2026-10-25,out
+2026-10-24T08:13:01+00:00,2026-10-24T04:55Z,20,Tampa Bay Lightning,TB,5157,Victor Hedman,D,Day-To-Day,Day-To-Day,Undisclosed,2026-10-24,day-to-day
