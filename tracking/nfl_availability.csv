@@ -723,6 +723,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T08:13:01+00:00,2026-10-24T00:10Z,34,Houston Texans,HOU,3919117,Azeez Al-Shaair,LB,Active,,,,"Al-Shaair (knee) does not have any injury designation for Sunday's game against the Giants, Adam Caplan of SiriusXM NFL Radio reports."
 2026-10-24T08:13:01+00:00,2026-10-24T00:15Z,34,Houston Texans,HOU,4362504,Brevin Jordan,TE,Active,,,,"Jordan (foot) does not have any injury designation ahead of Sunday's game against the Giants, Adam Caplan of SiriusXM NFL Radio reports."
 2026-10-24T08:13:01+00:00,2026-10-24T00:16Z,19,New York Giants,NYG,4429148,Theo Johnson,TE,Doubtful,DOUBTFUL,Neck,2026-10-25,Johnson (neck) is listed as doubtful for Sunday's game against the Texans.
+2026-10-24T17:07:50+00:00,2026-10-24T00:16Z,19,New York Giants,NYG,4429148,Theo Johnson,TE,Out,OUT,Neck,2026-11-08,Johnson (neck) is listed as doubtful for Sunday's game against the Texans.
 2026-10-24T08:13:01+00:00,2026-10-24T00:18Z,19,New York Giants,NYG,4242547,Paulson Adebo,CB,Injured Reserve,IR-R,Knee,2026-10-25,Adebo (knee) is questionable for Sunday's game against the Texans.
 2026-10-24T08:13:01+00:00,2026-10-24T00:18Z,20,New York Jets,NYJ,4685247,Braelon Allen,RB,Active,,,,"Allen's workload and role Sunday against Miami is unclear given that Breece Hall (quadriceps) is officially questionable to play, per Amanda Vogt of the Jets' o"
 2026-10-24T08:13:01+00:00,2026-10-24T00:19Z,34,Houston Texans,HOU,4243956,Reed Blankenship,S,Out,OUT,Concussion Concussion,2026-11-01,"Blankenship (concussion/hand) has been ruled out ahead of Sunday's game against the Giants, Adam Caplan of SiriusXM NFL Radio reports."
@@ -768,6 +769,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T08:13:01+00:00,2026-10-24T01:37Z,6,Dallas Cowboys,DAL,3929850,P.J. Locke,S,Injured Reserve,IR-R,Right Foot Plantar Fasciitis,2026-10-26,"The Cowboys opened Locke's (foot) 21-day practice window Friday, Tommy Yarrish of the team's official site reports."
 2026-10-24T08:13:01+00:00,2026-10-24T01:40Z,27,Tampa Bay Buccaneers,TB,4380507,Luke Goedeke,OT,Out,OUT,Calf,2026-11-01,Goedeke (calf) has been ruled out for Sunday's game against the Panthers.
 2026-10-24T08:13:01+00:00,2026-10-24T01:42Z,5,Cleveland Browns,CLE,4038457,Teven Jenkins,G,Out,OUT,Back,2026-11-01,"Jenkins (back) has been ruled out for Sunday's game against the Titans, Zac Jackson of The Athletic reports."
+2026-10-24T17:07:50+00:00,2026-10-24T01:42Z,5,Cleveland Browns,CLE,4038457,Teven Jenkins,G,Injured Reserve,IR,Back,2026-11-29,"Jenkins (back) has been ruled out for Sunday's game against the Titans, Zac Jackson of The Athletic reports."
 2026-10-24T08:13:01+00:00,2026-10-24T01:43Z,22,Arizona Cardinals,ARI,4367199,Jon Gaines II,G,Out,OUT,Knee,2026-11-01,"Gaines (knee) has been ruled out ahead of Sunday's game against the Broncos, Darren Urban of the Cardinals' official site reports."
 2026-10-24T08:13:01+00:00,2026-10-24T01:44Z,2,Buffalo Bills,BUF,4044133,Sam Franklin Jr.,S,Active,,,,"The NFL reduced Franklin's discipline from a one-game suspension to a fine of $14,926, Adam Schefter of ESPN reports."
 2026-10-24T08:13:01+00:00,2026-10-24T01:46Z,10,Tennessee Titans,TEN,4240532,Tony Adams,S,Questionable,QUESTIONABLE,Ankle,2026-10-25,"Adams (ankle) is questionable for Sunday's game against the Browns, Jim Wyatt of the Titans' official site reports."
@@ -837,3 +839,6 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T16:52:55+00:00,2026-10-24T16:35Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-24T16:52:55+00:00,2026-10-24T16:35Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-24T16:52:55+00:00,2026-10-24T16:35Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-10-25,questionable
+2026-10-24T17:07:50+00:00,2026-10-24T16:52Z,5,Cleveland Browns,CLE,5081397,Dylan Sampson,RB,Active,,,,Sampson (knee) was activated from injured reserve Saturday.
+2026-10-24T17:07:50+00:00,2026-10-24T16:55Z,5,Cleveland Browns,CLE,4242208,Grant Delpit,S,Active,,,,
+2026-10-24T17:07:50+00:00,2026-10-24T17:01Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
