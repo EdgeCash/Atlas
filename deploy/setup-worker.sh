@@ -125,13 +125,20 @@ EOF
 
 update() {
   [ -d "$DIR/.git" ] || die "install first."
+  say "Stopping the worker"
+  systemctl stop "$SERVICE" 2>/dev/null || true
   say "New code"
-  as_atlas git -C "$DIR" pull -q --rebase --autostash origin "$BRANCH"
+  as_atlas git -C "$DIR" fetch -q origin "$BRANCH"
+  # The code only. The record and the ledger stay as this server holds them: the worker lays them over the
+  # branch's copies row by row on its first tick, which git's own merge cannot be trusted to do.
+  as_atlas git -C "$DIR" checkout -q "origin/$BRANCH" -- . ':(exclude)tracking'
   as_atlas "$DIR/.venv/bin/pip" install -q -e "$DIR"
   cp "$DIR/deploy/favorites-worker.service" "$UNIT"
   systemctl daemon-reload
-  systemctl restart "$SERVICE"
-  say "Restarted: $(as_atlas git -C "$DIR" log --oneline -1)"
+  systemctl start "$SERVICE"
+  sleep 3
+  systemctl is-active --quiet "$SERVICE" || die "the service did not stay up: journalctl -u $SERVICE -n 50"
+  say "Running: $(as_atlas git -C "$DIR" log --oneline -1 "origin/$BRANCH")"
 }
 
 case "${1:-install}" in

@@ -31,6 +31,7 @@ from __future__ import annotations
 
 import math
 import os
+import re
 from datetime import datetime, timedelta
 
 import numpy as np
@@ -74,6 +75,58 @@ LATEST = 30
 
 def _truthy(value) -> bool:
     return str(value).strip().lower() in ("true", "1", "1.0", "yes")
+
+
+#: What a graded position carries, taken from whichever copy of it was graded when two copies meet.
+GRADED = ("payout", "won", "profit", "graded_at")
+IDS = ("token_id", "market_id", "game_id", "event_id")
+_WHOLE = re.compile(r"^([+-]?\d+)\.0*$")
+
+
+def ident(value) -> str | None:
+    """An id as text, however the record was read: "2611050" for 2611050, 2611050.0 or "2611050.0"; None for
+    a missing one. A column holding a single blank reads back as decimals, and an id that changes spelling
+    is a contract the rule no longer recognises as one it holds."""
+    if value is None or (isinstance(value, float) and math.isnan(value)):
+        return None
+    text = str(value).strip()
+    if not text or text.lower() in ("nan", "none", "<na>"):
+        return None
+    whole = _WHOLE.match(text)
+    return whole.group(1) if whole else text
+
+
+def clean(record: pd.DataFrame | None) -> pd.DataFrame:
+    """The record as positions and nothing else: a line that is not one (what a failed merge leaves) dropped,
+    the ids as text, and one row per position (contract and threshold) - the first taken, carrying the grade
+    of whichever copy was graded. Every reader of the record goes through here."""
+    if record is None or record.empty:
+        return pd.DataFrame(columns=COLUMNS)
+    r = record.reindex(columns=COLUMNS).copy()
+    for c in IDS:
+        r[c] = r[c].map(ident).astype(object)
+    when = pd.to_datetime(r["formed_at"], utc=True, errors="coerce", format="ISO8601")
+    threshold = pd.to_numeric(r["threshold"], errors="coerce")
+    keep = when.notna() & threshold.notna() & r["token_id"].notna()
+    if not keep.all():
+        LOG.warning("favorites: %d lines in the record are not positions; dropped", int((~keep).sum()))
+    r = r[keep].assign(threshold=threshold[keep].round(2), _t=when[keep]).sort_values("_t", kind="stable")
+    key = ["token_id", "threshold"]
+    if r.duplicated(key).any():
+        LOG.warning("favorites: %d positions held twice; one kept", int(r.duplicated(key).sum()))
+        first = r.drop_duplicates(key, keep="first").set_index(key)
+        graded = r[pd.to_numeric(r["won"], errors="coerce").notna()].drop_duplicates(key, keep="first").set_index(key)
+        for c in GRADED:
+            first[c] = first[c].astype(object)
+            first.loc[graded.index, c] = graded[c].astype(object)
+        r = first.reset_index()
+    return r.drop(columns="_t", errors="ignore").reindex(columns=COLUMNS).reset_index(drop=True)
+
+
+def merge(*records: pd.DataFrame) -> pd.DataFrame:
+    """Several copies of the record as one: every position any of them holds, once (:func:`clean`)."""
+    parts = [r for r in records if r is not None and len(r)]
+    return clean(pd.concat([r.reindex(columns=COLUMNS) for r in parts], ignore_index=True) if parts else None)
 
 
 def phase() -> str:
@@ -127,15 +180,15 @@ def take(record: pd.DataFrame, quotes: pd.DataFrame, now: datetime, games: pd.Da
     time, at that ask plus the fee, and where the game stood: ``venue`` is (period, clock) by the venue's
     event id as its own feed has it (the worker's, read seconds ago), ``games`` the scoreboard's rows by
     Atlas's game id (the scheduled run's, up to a poll old); the venue's is preferred where both have the
-    game. A position is never revised."""
-    record = record.reindex(columns=COLUMNS) if len(record) else pd.DataFrame(columns=COLUMNS)
+    game. A position is never revised. The record comes back clean (:func:`clean`) with the new positions,
+    ``added`` of them, at its end."""
+    record = clean(record)
     c = candidates(quotes, now)
     if c.empty:
         return record, 0
     state = _state(games)
     venue = venue or {}
-    have = set(zip(record["token_id"].astype(str), pd.to_numeric(record["threshold"], errors="coerce").round(2),
-                   strict=True)) if len(record) else set()
+    have = set(zip(record["token_id"], record["threshold"], strict=True)) if len(record) else set()
     stamp = pd.Timestamp(now).tz_convert("UTC").replace(microsecond=0).isoformat() if pd.Timestamp(now).tzinfo \
         else pd.Timestamp(now).tz_localize("UTC").isoformat()
     rows = []
@@ -145,7 +198,7 @@ def take(record: pd.DataFrame, quotes: pd.DataFrame, now: datetime, games: pd.Da
         fee = pricing.fee(ask, fee_rate)
         period, clock = venue.get(str(x.event_id)) or state.get(str(x.game_id), (float("nan"), ""))
         for t in THRESHOLDS:
-            if ask < t or (str(x.token_id), round(t, 2)) in have:
+            if ask < t or (ident(x.token_id), round(t, 2)) in have:
                 continue
             rows.append({
                 "period": period, "clock": clock, "late": is_late(x.sport, period, x.phase),
@@ -153,7 +206,7 @@ def take(record: pd.DataFrame, quotes: pd.DataFrame, now: datetime, games: pd.Da
                 "sport": x.sport, "game_id": x.game_id, "event_id": x.event_id, "event_slug": x.event_slug,
                 "game_start": x.game_start, "label": f"{x.away} @ {x.home}", "market": x.market, "side": x.side,
                 "long": bool(_truthy(x.long)), "line": x.line, "market_id": x.market_id, "market_slug": x.market_slug,
-                "token_id": x.token_id, "ask": ask, "bid": source._num(x.bid), "spread": source._num(x.spread),
+                "token_id": ident(x.token_id), "ask": ask, "bid": source._num(x.bid), "spread": source._num(x.spread),
                 "fee_rate": fee_rate, "fee": fee, "cost": ask + (fee if math.isfinite(fee) else 0.0),
                 "payout": float("nan"), "won": float("nan"), "profit": float("nan"), "graded_at": None})
     if not rows:
@@ -349,7 +402,7 @@ def as_positions(rows: pd.DataFrame) -> pd.DataFrame:
     if rows is None or rows.empty:
         return pd.DataFrame(columns=positions.COLUMNS)
     out = pd.DataFrame({
-        "position_id": [f"fav:{t}:{float(th):.2f}" for t, th in zip(rows["token_id"], rows["threshold"], strict=True)],
+        "position_id": [f"fav:{ident(t)}:{float(th):.2f}" for t, th in zip(rows["token_id"], rows["threshold"], strict=True)],
         "formed_at": rows["formed_at"], "day": [positions.day_of(t) for t in rows["formed_at"]],
         "year": [positions.iso_week(t)[0] for t in rows["formed_at"]],
         "week": [positions.iso_week(t)[1] for t in rows["formed_at"]],
@@ -384,21 +437,21 @@ def refresh(store, quotes: pd.DataFrame, now: datetime, passphrase: str | None =
     to the live step. When the worker owns the rule (:func:`worker_owns`) the run reads the record and
     writes nothing. Returns (the record, the owner page's section). Never raises."""
     try:
-        record = store.read(TABLE)
+        record = clean(store.read(TABLE))
         if worker_owns():
             out = section(record, now)
             out["notes"].insert(0, "The always-on worker takes, grades and orders the positions "
                                    "(atlas/polymarket/worker.py); this run reads the record it pushed.")
             return record, out
-        before = len(record)
         record, added = take(record, quotes, now, store.read("games"))
+        new = record.tail(added) if added else record.iloc[0:0]
         record = grade(record, now)
         if added or len(record):
             store.write(TABLE, record)
         if added:
             LOG.info("favorites: %d positions taken (%d in all)", added, len(record))
             if passphrase:
-                order(record.iloc[before:], passphrase, now)
+                order(new, passphrase, now)
         return record, section(record, now)
     except Exception as error:  # noqa: BLE001 - the type only
         LOG.error("favorites not refreshed: %s", type(error).__name__)

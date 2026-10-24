@@ -14,7 +14,10 @@ period and clock - takes the crossings (`favorites.take`), grades the
 settled ones, writes ``tracking/favorites.csv``, hands the new positions to
 the live step (`favorites.order`: nothing is sent unless its secrets say
 so, and late ones only by default), grades the live ledger, and commits
-and pushes what changed. The scheduled run keeps rendering the owner page
+and pushes what changed. It never lets git merge the record line by line:
+it reads what it holds, resets to the branch, and lays its rows back over
+the branch's (`sync`), so a run that wrote the same file meanwhile costs
+nothing and leaves no conflict in it. The scheduled run keeps rendering the owner page
 from the record it finds; set the repository variable ``FAVORITES_TAKER``
 to ``worker`` so it stops taking positions itself, and the two never write
 the record at once.
@@ -54,7 +57,8 @@ GRADE_EVERY = 8
 #: The branch the record is pushed to; the checkout's own when unset.
 BRANCH = "ATLAS_WORKER_BRANCH"
 #: What the worker commits: the rule's record and the live ledger, and nothing else.
-FILES = ("tracking/favorites.csv", "tracking/polymarket_live")
+LEDGER = "tracking/polymarket_live"
+FILES = ("tracking/favorites.csv", LEDGER)
 #: The venue's period strings: a quarter or period by its number, overtime past the last, the half between.
 _NUMBER = re.compile(r"(\d+)")
 
@@ -113,18 +117,19 @@ def tick(store: Store, now: datetime, passphrase: str | None, *, events: dict[st
     if len(quotes):
         up = match.upcoming(games, now, store.read("projections"), store.read("nhl_projections"))
         quotes = match.attach(quotes, match.match(quotes, up))
-    record = store.read(favorites.TABLE)
-    before = len(record)
-    record, added = favorites.take(record, quotes, now, games, venue=venue_state(events))
+    held = store.read(favorites.TABLE)
+    record, added = favorites.take(held, quotes, now, games, venue=venue_state(events))
+    repaired = len(record) - added != len(held)          # lines that were not positions, or a position held twice
+    new = record.tail(added) if added else record.iloc[0:0]
     graded = 0
     if grade and len(record):
         pending = pd.to_numeric(record["won"], errors="coerce").isna().sum()
         record = favorites.grade(record, now)
         graded = int(pending - pd.to_numeric(record["won"], errors="coerce").isna().sum())
-    if added or graded:
+    if added or graded or repaired:
         store.write(favorites.TABLE, record)
     if added and passphrase:
-        favorites.order(record.iloc[before:], passphrase, now)
+        favorites.order(new, passphrase, now)
     if grade and passphrase:
         from atlas.polymarket import orders
 
@@ -134,7 +139,7 @@ def tick(store: Store, now: datetime, passphrase: str | None, *, events: dict[st
             except Exception as error:  # noqa: BLE001 - the type only
                 LOG.error("worker: ledger not graded: %s", type(error).__name__)
     return {"events": sum(len(v) for v in events.values()), "live": live, "quotes": int(len(quotes)),
-            "added": int(added), "graded": graded, "positions": int(len(record))}
+            "added": int(added), "graded": graded or int(repaired), "positions": int(len(record))}
 
 
 # ---------------------------------------------------------------------------
@@ -153,36 +158,72 @@ def branch(root: Path) -> str:
     return _git(root, "rev-parse", "--abbrev-ref", "HEAD").stdout.strip()
 
 
-def publish(root: Path, now: datetime, files=FILES) -> bool:
-    """Commit the record's files when they changed and push them, rebasing onto the branch first. False when
-    nothing changed or the push could not be made this time (the commit stays for the next tick)."""
-    _git(root, "add", "-A", "--", *[f for f in files if (root / f).exists()])
-    if _git(root, "diff", "--cached", "--quiet", check=False).returncode == 0:
+def _ledger(root: Path, passphrase: str | None) -> dict[str, list[dict]]:
+    """The live ledger's weekly files as this checkout holds them, opened; nothing without the key."""
+    from atlas.owner import sealed
+
+    where = root / LEDGER
+    if not passphrase or not where.exists():
+        return {}
+    out = {}
+    for f in sorted(where.glob("*.enc.json")):
+        try:
+            out[f.name] = sealed.open_text(f.read_text(), passphrase)
+        except Exception as error:  # noqa: BLE001 - a file this key cannot open is the branch's to keep
+            LOG.warning("worker: %s not opened (%s); the branch's copy stands", f.name, type(error).__name__)
+    return out
+
+
+def sync(root: Path, passphrase: str | None = None) -> bool:
+    """This checkout brought level with the branch without losing anything it holds: the record and the
+    ledger read as they stand here (pushed or not), the checkout reset to the branch, and both laid back
+    over the branch's copies by their rows - the record by position (`favorites.merge`), the ledger by
+    order (`scripts/merge_tracking.py`'s key). Git never merges these files line by line, so no merge can
+    leave its marks in them. True when what this checkout holds is not all on the branch yet."""
+    from atlas.owner import sealed
+
+    target = branch(root)
+    store = Store.open(root / "tracking")
+    ours = favorites.clean(store.read(favorites.TABLE))
+    ledger = _ledger(root, passphrase)
+    for args in (("rebase", "--abort"), ("merge", "--abort")):
+        _git(root, *args, check=False)
+    if _git(root, "fetch", "-q", "origin", target, check=False).returncode != 0:
+        LOG.warning("worker: could not fetch %s this tick", target)
         return False
+    _git(root, "reset", "-q", "--hard", f"origin/{target}")
+    store.write(favorites.TABLE, favorites.merge(store.read(favorites.TABLE), ours))
+    if ledger:
+        keys = ["position_id", "placed_at", "rule"]
+        ident = lambda row: tuple(row.get(k) for k in keys)  # noqa: E731
+        for name, rows in ledger.items():
+            f = root / LEDGER / name
+            theirs = sealed.open_text(f.read_text(), passphrase) if f.exists() else []
+            have = {ident(r) for r in theirs}
+            missing = [r for r in rows if ident(r) not in have]
+            if missing:
+                sealed.seal([*theirs, *missing], passphrase, f)
+    return bool(_git(root, "status", "--porcelain", "--", *FILES).stdout.strip())
+
+
+def publish(root: Path, now: datetime, passphrase: str | None = None, *, attempts: int = 3) -> bool:
+    """What this checkout holds and the branch does not, committed and pushed: brought level first
+    (:func:`sync`), and again if the branch moved before the push landed. False when there is nothing to
+    push or it could not be pushed this time (it is kept for the next tick)."""
     stamp = pd.Timestamp(now).tz_convert("America/New_York").strftime("%Y-%m-%d %H:%M ET")
-    _git(root, "-c", "user.name=atlas-worker", "-c", "user.email=noreply@anthropic.com", "commit", "-q", "-m",
-         f"worker: {stamp}")
     target = branch(root)
-    pulled = _git(root, "pull", "-q", "--rebase", "--autostash", "origin", target, check=False)
-    if pulled.returncode != 0:
-        _git(root, "rebase", "--abort", check=False)
-        LOG.error("worker: could not rebase onto %s; the commit waits for the next tick", target)
-        return False
-    pushed = _git(root, "push", "-q", "origin", f"HEAD:{target}", check=False)
-    if pushed.returncode != 0:
-        LOG.error("worker: push to %s failed; the commit waits for the next tick", target)
-        return False
-    LOG.info("worker: record pushed to %s", target)
-    return True
-
-
-def pull(root: Path) -> None:
-    """The branch's latest (the scoreboard, the projections, the ledger a run graded), when the tree is
-    clean enough to take it."""
-    target = branch(root)
-    if _git(root, "pull", "-q", "--rebase", "--autostash", "origin", target, check=False).returncode != 0:
-        _git(root, "rebase", "--abort", check=False)
-        LOG.warning("worker: could not pull %s this tick", target)
+    for _ in range(attempts):
+        if not sync(root, passphrase):
+            return False
+        _git(root, "add", "-A", "--", *[f for f in FILES if (root / f).exists()])
+        _git(root, "-c", "user.name=atlas-worker", "-c", "user.email=noreply@anthropic.com", "commit", "-q", "-m",
+             f"worker: {stamp}")
+        if _git(root, "push", "-q", "origin", f"HEAD:{target}", check=False).returncode == 0:
+            LOG.info("worker: record pushed to %s", target)
+            return True
+        LOG.warning("worker: %s moved before the push landed; bringing it level again", target)
+    LOG.error("worker: could not push to %s; what is held here waits for the next tick", target)
+    return False
 
 
 # ---------------------------------------------------------------------------
@@ -204,14 +245,15 @@ def run(*, every: int = EVERY, idle: int = IDLE, once: bool = False, push: bool 
         n += 1
         now = datetime.now(UTC)
         try:
-            if push and n % GRADE_EVERY == 1 and not offline():
-                pull(root)
-            summary = tick(store, now, passphrase, sess=sess, grade=(n % GRADE_EVERY == 1))
+            level = n % GRADE_EVERY == 1
+            if push and level and not offline():
+                sync(root, passphrase)          # the branch's scoreboard and projections, and anything unpushed
+            summary = tick(store, now, passphrase, sess=sess, grade=level)
             failures = 0
             LOG.info("worker: %(events)d events, %(live)d in play, %(quotes)d quotes, %(added)d taken, "
                      "%(graded)d graded, %(positions)d in all", summary)
-            if push and (summary["added"] or summary["graded"]) and not offline():
-                publish(root, now)
+            if push and (summary["added"] or summary["graded"] or level) and not offline():
+                publish(root, now, passphrase)
         except Exception as error:  # noqa: BLE001 - the loop outlives any one tick
             failures += 1
             summary = {"live": 0}
