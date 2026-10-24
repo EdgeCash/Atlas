@@ -73,6 +73,8 @@ def test_sealed_weekly_files_both_runs_rewrote_are_merged_and_resealed(tmp_path)
 
 
 def test_every_sealed_record_the_owner_page_keeps_is_merged_by_its_row_key():
-    assert set(mt.SEALED) == {"polymarket_positions"}
+    assert set(mt.SEALED) == {"polymarket_positions", "polymarket_live"}
     assert mt.SEALED["polymarket_positions"] == ["position_id"]
+    # The live ledger: one row per order written, so an order is its position at the moment it was placed, by rule.
+    assert mt.SEALED["polymarket_live"] == ["position_id", "placed_at", "rule"]
 
