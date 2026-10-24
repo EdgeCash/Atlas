@@ -23,7 +23,9 @@ SELF="$DIR/deploy/setup-worker.sh"
 
 say() { printf '\n==> %s\n' "$*"; }
 die() { printf '\nSTOPPED: %s\n' "$*" >&2; exit 1; }
-as_atlas() { sudo -u "$NAME" -H "$@"; }
+# As the worker's user, from a folder it can read: pip looks up names relative to the current folder, and
+# from one the user is locked out of (root's home, where the console starts) it fails instead of moving on.
+as_atlas() { (cd / && sudo -u "$NAME" -H "$@"); }
 
 [ "$(id -u)" -eq 0 ] || die "run it as root: sudo bash $0 ${1:-}"
 
