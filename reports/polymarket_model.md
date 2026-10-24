@@ -1,6 +1,6 @@
 # Atlas on Polymarket US
 
-*Rebuilt every run; this one at 2026-10-24 03:22 UTC.*
+*Rebuilt every run; this one at 2026-10-24 03:37 UTC.*
 
 Polymarket US, the CFTC-regulated exchange, is the one venue Atlas is priced
 against. It lists a moneyline, a ladder of spreads and a ladder of totals on
@@ -57,10 +57,10 @@ side at disagreements this large or larger, never below one half.
 
 | Sport | Market | Games | Atlas, median gap | Atlas, largest gap | Anchored, median gap |
 |---|---|---|---|---|---|
-| NBA | margin | 26 | 2.6 | 12.2 | 0.10 |
-| NBA | total | 12 | 3.6 | 11.7 | 0.22 |
-| NCAAF | margin | 45 | 2.2 | 8.6 | 0.00 |
-| NCAAF | total | 45 | 2.7 | 22.2 | 0.55 |
+| NBA | margin | 26 | 2.8 | 12.4 | 0.10 |
+| NBA | total | 12 | 2.9 | 7.4 | 0.38 |
+| NCAAF | margin | 45 | 2.2 | 10.2 | 0.00 |
+| NCAAF | total | 45 | 2.6 | 22.0 | 0.55 |
 | NFL | margin | 13 | 0.9 | 3.5 | 0.01 |
 | NFL | total | 13 | 1.5 | 4.9 | 0.15 |
 
@@ -71,7 +71,7 @@ construction.
 
 ## Player props
 
-Player props this run: NBA (points, rebounds, assists, threes, steals, blocks, the three combined): 1409 contracts on 4 games, 1042 with an Atlas projection beside them, 0 graded so far. Atlas's numbers are `atlas/models/nba_props.py` (`reports/nba_props.md`) and `atlas/models/nhl_props.py` (`reports/nhl_props.md`). Each player-stat's main line is kept in `tracking/polymarket_props.csv` with Atlas's probability as it stood, and graded against the box score and the close into `tracking/prop_record.csv`, the record that decides, a sport at a time, what Atlas's disagreement is worth there.
+Player props this run: NBA (points, rebounds, assists, threes, steals, blocks, the three combined): 1410 contracts on 4 games, 1043 with an Atlas projection beside them, 0 graded so far. Atlas's numbers are `atlas/models/nba_props.py` (`reports/nba_props.md`) and `atlas/models/nhl_props.py` (`reports/nhl_props.md`). Each player-stat's main line is kept in `tracking/polymarket_props.csv` with Atlas's probability as it stood, and graded against the box score and the close into `tracking/prop_record.csv`, the record that decides, a sport at a time, what Atlas's disagreement is worth there.
 
 ## The favorites rule
 
