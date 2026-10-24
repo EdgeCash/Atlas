@@ -732,6 +732,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T08:13:01+00:00,2026-10-24T00:16Z,19,New York Giants,NYG,4429148,Theo Johnson,TE,Doubtful,DOUBTFUL,Neck,2026-10-25,Johnson (neck) is listed as doubtful for Sunday's game against the Texans.
 2026-10-24T17:07:50+00:00,2026-10-24T00:16Z,19,New York Giants,NYG,4429148,Theo Johnson,TE,Out,OUT,Neck,2026-11-08,Johnson (neck) is listed as doubtful for Sunday's game against the Texans.
 2026-10-24T08:13:01+00:00,2026-10-24T00:18Z,19,New York Giants,NYG,4242547,Paulson Adebo,CB,Injured Reserve,IR-R,Knee,2026-10-25,Adebo (knee) is questionable for Sunday's game against the Texans.
+2026-10-24T21:22:49+00:00,2026-10-24T00:18Z,19,New York Giants,NYG,4242547,Paulson Adebo,CB,Questionable,QUESTIONABLE,Knee,2026-10-25,Adebo (knee) is questionable for Sunday's game against the Texans.
 2026-10-24T08:13:01+00:00,2026-10-24T00:18Z,20,New York Jets,NYJ,4685247,Braelon Allen,RB,Active,,,,"Allen's workload and role Sunday against Miami is unclear given that Breece Hall (quadriceps) is officially questionable to play, per Amanda Vogt of the Jets' o"
 2026-10-24T08:13:01+00:00,2026-10-24T00:19Z,34,Houston Texans,HOU,4243956,Reed Blankenship,S,Out,OUT,Concussion Concussion,2026-11-01,"Blankenship (concussion/hand) has been ruled out ahead of Sunday's game against the Giants, Adam Caplan of SiriusXM NFL Radio reports."
 2026-10-24T08:13:01+00:00,2026-10-24T00:22Z,19,New York Giants,NYG,4373809,Jevon Holland,S,Questionable,QUESTIONABLE,Concussion Concussion,2026-10-25,Holland (concussion) is questionable for Sunday's game against the Texans.
@@ -755,6 +756,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T08:13:01+00:00,2026-10-24T00:55Z,26,Seattle Seahawks,SEA,4869523,Nick Emmanwori,S,Questionable,QUESTIONABLE,Hip,2026-10-25,"Emmanwori (hip) is listed as questionable for Sunday's game against the Chiefs, John Boyle of the Seahawks' official site reports."
 2026-10-24T08:13:01+00:00,2026-10-24T00:57Z,22,Arizona Cardinals,ARI,3918331,Andrew Wingard,S,Out,OUT,Knee Bruise,2026-11-01,"Wingard (knee) has been ruled out for Sunday's game against the Broncos, Darren Urban of the Cardinals' official site reports."
 2026-10-24T08:13:01+00:00,2026-10-24T01:03Z,19,New York Giants,NYG,3929950,Tremaine Edmunds,LB,Out,OUT,Left Chest,2027-02-15,"Edmunds will miss the rest of the 2026 season due to a torn chest muscle, Jordan Raanan of ESPN.com reports."
+2026-10-24T21:22:49+00:00,2026-10-24T01:03Z,19,New York Giants,NYG,3929950,Tremaine Edmunds,LB,Injured Reserve,IR,Left Chest,2027-02-15,"Edmunds will miss the rest of the 2026 season due to a torn chest muscle, Jordan Raanan of ESPN.com reports."
 2026-10-24T08:13:01+00:00,2026-10-24T01:03Z,25,San Francisco 49ers,SF,4040605,Nick Bosa,DE,Out,OUT,Left Knee Strain,2026-11-08,Bosa (knee) has been ruled out ahead of Sunday's game against the Falcons.
 2026-10-24T08:13:01+00:00,2026-10-24T01:05Z,25,San Francisco 49ers,SF,5086161,Jaden Dugger,LB,Active,,,,Dugger (knee) does not have any injury designation ahead of Sunday's game against the Falcons.
 2026-10-24T08:13:01+00:00,2026-10-24T01:05Z,25,San Francisco 49ers,SF,4431466,Jordan Watkins,WR,Active,,,,"Watkins could take on a significant role Sunday against Atlanta with Mike Evans (Achilles) and Deebo Samuel (hamstring) both sidelined, Brooke Evans of the 49er"
@@ -858,6 +860,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T17:07:50+00:00,2026-10-24T16:55Z,5,Cleveland Browns,CLE,4242208,Grant Delpit,S,Active,,,,
 2026-10-24T17:07:50+00:00,2026-10-24T17:01Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-24T17:22:56+00:00,2026-10-24T17:03Z,23,Pittsburgh Steelers,PIT,3929846,DeShon Elliott,S,Active,,,,The Steelers activated Elliott (knee) from IR on Saturday ahead of Sunday's game against the Saints.
+2026-10-24T21:22:49+00:00,2026-10-24T17:03Z,23,Pittsburgh Steelers,PIT,3929846,DeShon Elliott,S,Questionable,QUESTIONABLE,Knee,2026-10-25,The Steelers activated Elliott (knee) from IR on Saturday ahead of Sunday's game against the Saints.
 2026-10-24T17:22:56+00:00,2026-10-24T17:05Z,23,Pittsburgh Steelers,PIT,4240577,Brandon Smith,WR,Active,,,,The Steelers elevated Smith from the practice squad Saturday ahead of Sunday's game against the Saints.
 2026-10-24T17:22:56+00:00,2026-10-24T17:08Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-24T17:22:56+00:00,2026-10-24T17:08Z,12,Kansas City Chiefs,KC,4567826,Cooper McDonald,LB,Active,,,,
@@ -949,3 +952,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T21:07:57+00:00,2026-10-24T20:48Z,7,Denver Broncos,DEN,4702555,Jonah Coleman,RB,Questionable,QUESTIONABLE,Ankle Sprain,2026-10-25,"The Broncos activated Coleman (ankle) from injured reserve Saturday, Jeremy Fowler of ESPN.com reports."
 2026-10-24T21:07:57+00:00,2026-10-24T20:50Z,33,Baltimore Ravens,BAL,4690179,Tavius Robinson,LB,Injured Reserve,IR,Pectoral,2027-02-15,The Ravens placed Robinson (pectoral) on injured reserve Saturday.
 2026-10-24T21:07:57+00:00,2026-10-24T21:05Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-24T21:22:49+00:00,2026-10-24T21:05Z,26,Seattle Seahawks,SEA,4429211,Anthony Bradford,G,Active,,,,
+2026-10-24T21:22:49+00:00,2026-10-24T21:06Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-24T21:22:49+00:00,2026-10-24T21:06Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-24T21:22:49+00:00,2026-10-24T21:06Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-10-25,questionable
