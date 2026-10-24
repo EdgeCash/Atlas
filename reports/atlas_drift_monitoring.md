@@ -1,6 +1,6 @@
 # Atlas Drift Monitoring
 
-*Generated 2026-10-24 16:08 UTC by `python -m atlas.live check`. Every alarm compares
+*Generated 2026-10-24 16:22 UTC by `python -m atlas.live check`. Every alarm compares
 the most recent week of the record against its own history.*
 
 ---
@@ -14,7 +14,7 @@ worse problem than the drift it was watching for.
 | Alarm | Severity | Observed | Threshold | Detail |
 |---|---|---|---|---|
 | signal volume | alarm | -0.7600 | 0.5 | week 9: 24 signals against 100 the week before (-76%) |
-| silence | ok | 0.5004 | 7 | last signal 0.5 days ago (2026-10-24) |
+| silence | ok | 0.5104 | 7 | last signal 0.5 days ago (2026-10-24) |
 | single book | alarm | 1.0000 | 1 | 100% of signals from book 'DraftKings' (1 distinct) |
 | single market | ok | 0.5000 | 1 | 50% of signals from market 'margin' (2 distinct) |
 | model output (margin) | ok | n/a | 3 | 12 recent / 222 prior rows; too few to compare |
@@ -68,9 +68,9 @@ newest week never finds.
 | 2026-w06 | signals | 116 | 116 | 0 | 0 | yes | exact match |
 | 2026-w06 | grades | 116 | 116 | 0 | 0 | yes | exact match |
 | 2026-w06 | statistics | 16 | 16 | 0 | 0 | yes | recomputed from the replayed grades |
-| 2026-w08 | signals | 100 | 100 | 0 | 0 | yes | exact match |
-| 2026-w08 | grades | 30 | 30 | 0 | 0 | yes | exact match |
-| 2026-w08 | statistics | 8 | 8 | 0 | 0 | yes | recomputed from the replayed grades |
+| 2026-w09 | signals | 24 | 24 | 0 | 0 | yes | exact match |
+| 2026-w09 | grades | 0 | 0 | 0 | 0 | yes | no grades in this period |
+| 2026-w09 | statistics | 0 | 0 | 0 | 0 | yes | no graded signals in period |
 
 A **signals** mismatch means the record is not reproducible. A **grades**
 mismatch means the grading logic changed under a published number. A
