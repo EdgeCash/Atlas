@@ -64,8 +64,16 @@ def _games_frame(quotes: pd.DataFrame, now: str) -> pd.DataFrame:
     return games
 
 
+def _odds(quotes: pd.DataFrame) -> pd.DataFrame:
+    """The rows that carry a quote. A game ESPN no longer prices (in play, or over) comes back as one
+    row with no market, for the games table only."""
+    if quotes.empty or "market" not in quotes:
+        return quotes
+    return quotes[quotes["market"].notna()]
+
+
 def _snapshot_frame(quotes: pd.DataFrame, now: str) -> pd.DataFrame:
-    block = quotes.reindex(columns=[
+    block = _odds(quotes).reindex(columns=[
         "captured_at", "game_id", "book", "market", "line", "price",
         "open_line", "open_price", "status", "other_price",
     ]).copy()
@@ -129,20 +137,22 @@ def poll(horizon: int = DEFAULT_HORIZON_DAYS, *, provider: str = "espn",
         books.reconcile(store)
         now = datetime.now(UTC).replace(microsecond=0).isoformat()
         quotes = _fetch_quotes(provider, _days(horizon))
-        run.quotes = len(quotes)
+        odds = _odds(quotes)
+        run.quotes = len(odds)
         if quotes.empty:
             run.finish(store, "empty", "provider returned no quotes")
             LOG.warning("no quotes returned")
             return {"quotes": 0, "signals": 0, "graded": 0, "run_id": run.run_id}
 
+        # Every game the board showed, quoted or not: the status, score, period and clock move here.
         store.upsert("games", _games_frame(quotes, now))
         # Append-on-change: a quote that has not moved does not earn a new row,
         # which keeps the committed history readable and its diffs meaningful.
         run.snapshots_added = store.append_on_change("snapshots", _snapshot_frame(quotes, now))
 
-        if sign:
+        if sign and not odds.empty:
             numbers = load_numbers(store)
-            formed = signalling.form_signals(numbers, quotes, run_id=run.run_id)
+            formed = signalling.form_signals(numbers, odds, run_id=run.run_id)
             if not formed.empty:
                 run.signals_added = store.append_new_only("signals", formed)
 

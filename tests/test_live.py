@@ -72,6 +72,54 @@ def _numbers(n: int = 4) -> pd.DataFrame:
 # ---------------------------------------------------------------------------
 
 
+def _event(game_id, *, status, period=0, clock="0:00", odds=True, home_score="0", away_score="0"):
+    comp = {"competitors": [
+        {"homeAway": "home", "team": {"id": "1", "displayName": "Home"}, "score": home_score},
+        {"homeAway": "away", "team": {"id": "2", "displayName": "Away"}, "score": away_score}],
+        "status": {"type": {"name": status, "completed": status == "STATUS_FINAL"}, "period": period,
+                   "displayClock": clock},
+        "odds": [{"provider": {"name": "DraftKings"},
+                  "pointSpread": {"home": {"close": {"line": "-3.5", "odds": "-110"}, "open": {"line": "-3", "odds": "-110"}},
+                                  "away": {"close": {"line": "+3.5", "odds": "-110"}}},
+                  "total": {"over": {"close": {"line": "o48.5", "odds": "-110"}, "open": {"line": "o47.5", "odds": "-110"}},
+                            "under": {"close": {"line": "u48.5", "odds": "-110"}}}}] if odds else []}
+    return {"id": str(game_id), "date": "2026-10-23T23:00Z", "season": {"year": 2026}, "week": {"number": 9},
+            "competitions": [comp]}
+
+
+def test_a_game_espn_no_longer_prices_still_reaches_the_games_table_and_nothing_else():
+    """ESPN takes a game's odds down at kickoff. The board's state for that game - status, score,
+    period, clock - must still be read, or the games table would hold every game as it stood when it
+    was last quoted; and that state-only row must not become a snapshot or a signal."""
+    from atlas.live import __main__ as live_main
+    from atlas.live.provider import EspnScoreboard
+
+    payload = {"events": [_event(1, status="STATUS_SCHEDULED"),
+                          _event(2, status="STATUS_IN_PROGRESS", period=4, clock="5:12", odds=False,
+                                 home_score="98", away_score="81"),
+                          _event(3, status="STATUS_FINAL", period=4, clock="0:00", odds=False,
+                                 home_score="110", away_score="90")]}
+    rows = pd.DataFrame(EspnScoreboard(sport="nba")._events(payload, "2026-10-24T01:00:00+00:00"))
+    assert sorted(rows["game_id"].unique()) == [1, 2, 3]
+    quoted = rows[rows["game_id"] == 1]
+    assert set(quoted["market"]) == {"margin", "total"} and quoted["period"].isna().all()
+    state = rows[rows["game_id"] == 2]
+    assert len(state) == 1 and pd.isna(state.iloc[0]["market"]) and pd.isna(state.iloc[0]["book"])
+    assert state.iloc[0]["period"] == 4 and state.iloc[0]["clock"] == "5:12" and state.iloc[0]["home_score"] == 98.0
+    assert state.iloc[0]["status"] == "STATUS_IN_PROGRESS" and not state.iloc[0]["completed"]
+    final = rows[rows["game_id"] == 3].iloc[0]
+    assert final["completed"] and final["status"] == "STATUS_FINAL"
+
+    games = live_main._games_frame(rows, "now").set_index("game_id")
+    assert games.loc[2, "period"] == 4 and games.loc[2, "clock"] == "5:12" and games.loc[1, "status"] == "STATUS_SCHEDULED"
+    snaps = live_main._snapshot_frame(rows, "now")
+    assert set(snaps["game_id"]) == {1} and snaps["market"].notna().all()
+    assert set(live_main._odds(rows)["game_id"]) == {1}
+    # A board with every game in play still updates the games table and quotes nothing.
+    only_state = rows[rows["game_id"] != 1]
+    assert live_main._odds(only_state).empty and len(live_main._games_frame(only_state, "now")) == 2
+
+
 def test_the_tracker_never_computes_a_stake():
     """Phase 5's constraint, enforced rather than promised.
 
