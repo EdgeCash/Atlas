@@ -619,6 +619,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T08:13:01+00:00,2026-10-23T17:22Z,1,Atlanta Falcons,ATL,4361510,Cameron Thomas,DE,Active,,,,
 2026-10-24T08:13:01+00:00,2026-10-23T17:23Z,1,Atlanta Falcons,ATL,4035886,Khalil Herbert,RB,Active,,,,"After Brian Robinson (hamstring) was ruled out, Falcons coach Kevin Stefanski said Friday that Herbert will be Bijan Robinson's backup against the 49ers on Sund"
 2026-10-24T08:13:01+00:00,2026-10-23T17:40Z,5,Cleveland Browns,CLE,5081397,Dylan Sampson,RB,Injured Reserve,IR-R,Left Knee,2026-10-25,"Sampson (knee) is listed as questionable for Sunday's game against the Titans, Scott Petrak of the Elyria Chronicle-Telegram reports."
+2026-10-24T16:52:55+00:00,2026-10-23T17:40Z,5,Cleveland Browns,CLE,5081397,Dylan Sampson,RB,Active,,,,"Sampson (knee) is listed as questionable for Sunday's game against the Titans, Scott Petrak of the Elyria Chronicle-Telegram reports."
 2026-10-24T08:13:01+00:00,2026-10-23T17:41Z,22,Arizona Cardinals,ARI,4870808,Jeremiyah Love,RB,Out,OUT,Ankle,2026-11-01,"Head coach Mike LaFleur said Friday that Love (ankle) won't play Sunday against the Broncos, Darren Urban of the Cardinals' official site reports."
 2026-10-24T08:13:01+00:00,2026-10-23T17:48Z,5,Cleveland Browns,CLE,3115336,Derek Barnett,DE,Active,,,,
 2026-10-24T08:13:01+00:00,2026-10-23T17:48Z,5,Cleveland Browns,CLE,3115485,Elgton Jenkins,C,Active,,,,
@@ -832,3 +833,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T16:37:48+00:00,2026-10-24T16:17Z,21,Philadelphia Eagles,PHI,3121023,Dallas Goedert,TE,Questionable,QUESTIONABLE,Knee,2026-10-26,"Goedert (knee) is on the field for the start of Saturday's practice, Dave Zangaro of NBC Sports Philadelphia reports."
 2026-10-24T16:37:48+00:00,2026-10-24T16:21Z,21,Philadelphia Eagles,PHI,4241478,DeVonta Smith,WR,Questionable,QUESTIONABLE,Hamstring,2026-10-26,"Smith (hamstring) was not seen at the Eagles' practice Saturday, EJ Smith of The Philadelphia Inquirer reports."
 2026-10-24T16:37:48+00:00,2026-10-24T16:24Z,21,Philadelphia Eagles,PHI,4428850,Dontayvion Wicks,WR,Questionable,QUESTIONABLE,Ankle,2026-10-26,"Wicks (ankle) was not on the field for the start of Saturday's practice, Andrew DiCecco of Inside the Birds reports."
+2026-10-24T16:52:55+00:00,2026-10-24T16:32Z,21,Philadelphia Eagles,PHI,3929630,Saquon Barkley,RB,Questionable,QUESTIONABLE,Right Hamstring,2026-10-26,"Barkley (hamstring) was on the field for the start of Saturday's practice, Dave Zangaro of NBC Sports Philadelphia reports."
+2026-10-24T16:52:55+00:00,2026-10-24T16:35Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-24T16:52:55+00:00,2026-10-24T16:35Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-24T16:52:55+00:00,2026-10-24T16:35Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-10-25,questionable
