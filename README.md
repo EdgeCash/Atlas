@@ -44,6 +44,7 @@ sealed records stay under `tracking/owner_*` and are not read.
 | **Atlas on Polymarket**: how the venue is read, priced and traded on paper | [`docs/POLYMARKET.md`](docs/POLYMARKET.md) |
 | **The public page about the model** (rebuilt every run) | [`reports/polymarket_model.md`](reports/polymarket_model.md) |
 | **The favorites rule on the venue's own tape** (backtest) | [`reports/favorites_backtest.md`](reports/favorites_backtest.md) |
+| Standing orders late in games: pre-registration and backtest (failed) | [`docs/STANDING_ORDER_PREREGISTRATION.md`](docs/STANDING_ORDER_PREREGISTRATION.md) · [`reports/standing_order_backtest.md`](reports/standing_order_backtest.md) |
 | **The NBA**: plan, model report, player props report | [`docs/MODEL_PLAN_NBA.md`](docs/MODEL_PLAN_NBA.md) · [`reports/nba_state.md`](reports/nba_state.md) · [`reports/nba_props.md`](reports/nba_props.md) |
 | **The NFL's player props**: plan step and walk-forward report | [`docs/MODEL_PLAN_NFL.md`](docs/MODEL_PLAN_NFL.md) · [`reports/nfl_props.md`](reports/nfl_props.md) |
 | Point-in-time warehouse (8 tables, parquet + DuckDB) | `data/warehouse/` |

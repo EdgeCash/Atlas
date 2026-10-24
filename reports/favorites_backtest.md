@@ -1,6 +1,6 @@
 # The favorites rule on Polymarket US's own tape
 
-*Built 2026-10-24 04:28 UTC by `python -m atlas.polymarket.backtest`.*
+*Built 2026-10-24 22:58 UTC by `python -m atlas.polymarket.backtest`.*
 
 The favorites rule (`atlas/polymarket/favorites.py`) replayed on every settled game the venue lists: for each side of each moneyline, in each phase, a paper position at the first minute its ask sat at or over each threshold, at that ask plus the venue's fee, graded by the settled price. The tape is the exchange's own minute-by-minute price history, which carries each side's ask. Edge is the win rate less the break-even rate (the mean cost) in points, with a standard error clustered by game; profit per dollar is what a dollar staked across the positions returned.
 
@@ -14,9 +14,57 @@ The favorites rule (`atlas/polymarket/favorites.py`) replayed on every settled g
 | NFL | 298 | 297 | 2025-10-31 | 2026-10-23 |
 | NHL | 1183 | 1127 | 2025-12-06 | 2026-10-24 |
 
-## In play, all leagues, by how much of the game was left
+## Correction: late, as it can be known during the game
 
-The question asked of the tape: once a side's ask reaches the threshold during the game, does it win more often than it costs, and does that depend on how late it is. Every crossing, at the trigger minute's ask, however wide the book was.
+The tables further down that bucket by minutes left measure them to the venue's recorded finish, which is not known while the game is on. Games that run long are disproportionately the close ones the favorite loses, and that measure moves their final minutes out of the late buckets, so it flattered the late result. Here late is elapsed time at or beyond the league's median game length less 15 minutes, a league constant, on a tight book. This is the late result to read; the live record (`tracking/favorites.csv`) marks late by the venue's own period.
+
+| League | Late from (minutes after the start) |
+|---|---|
+| CBB | 113 |
+| CFB | 193 |
+| NBA | 136 |
+| NFL | 173 |
+| NHL | 150 |
+
+| Threshold | Taken | Win rate | Break-even | Edge (pts) | Profit per $ |
+|---|---|---|---|---|---|
+| 80% | 738 | 88.5% | 88.0% | +0.4 ± 1.1 | 0.7% |
+| 85% | 966 | 90.3% | 91.1% | -0.8 ± 0.9 | -0.8% |
+| 90% | 1276 | 92.8% | 94.0% | -1.2 ± 0.7 | -1.3% |
+| 95% | 1597 | 95.7% | 96.7% | -1.1 ± 0.5 | -1.1% |
+| 97% | 1617 | 96.8% | 97.7% | -0.9 ± 0.4 | -0.9% |
+
+| League | Threshold | Taken | Win rate | Break-even | Edge (pts) | Profit per $ |
+|---|---|---|---|---|---|---|
+| CBB | 80% | 361 | 87.5% | 87.5% | +0.0 ± 1.7 | 0.0% |
+| CBB | 85% | 480 | 88.8% | 90.9% | -2.2 ± 1.4 | -2.3% |
+| CBB | 90% | 646 | 92.1% | 93.9% | -1.8 ± 1.0 | -2.0% |
+| CBB | 95% | 833 | 95.7% | 96.7% | -1.1 ± 0.7 | -1.1% |
+| CBB | 97% | 865 | 96.5% | 97.7% | -1.2 ± 0.6 | -1.2% |
+| CFB | 80% | 61 | 85.2% | 86.9% | -1.7 ± 4.5 | -1.9% |
+| CFB | 85% | 72 | 87.5% | 90.0% | -2.5 ± 3.7 | -2.7% |
+| CFB | 90% | 90 | 91.1% | 93.8% | -2.7 ± 2.9 | -2.8% |
+| CFB | 95% | 124 | 94.4% | 96.5% | -2.2 ± 2.0 | -2.3% |
+| CFB | 97% | 117 | 95.7% | 97.6% | -1.9 ± 1.9 | -2.0% |
+| NBA | 80% | 145 | 88.3% | 87.4% | +0.8 ± 2.7 | 1.0% |
+| NBA | 85% | 193 | 90.7% | 91.3% | -0.6 ± 2.0 | -0.6% |
+| NBA | 90% | 248 | 94.0% | 94.2% | -0.2 ± 1.5 | -0.2% |
+| NBA | 95% | 304 | 95.1% | 96.7% | -1.7 ± 1.2 | -1.7% |
+| NBA | 97% | 319 | 96.9% | 97.7% | -0.9 ± 1.0 | -0.9% |
+| NFL | 80% | 43 | 86.0% | 87.4% | -1.3 ± 4.8 | 1.1% |
+| NFL | 85% | 47 | 95.7% | 91.3% | +4.4 ± 2.7 | 6.0% |
+| NFL | 90% | 51 | 98.0% | 94.5% | +3.6 ± 1.8 | 3.8% |
+| NFL | 95% | 61 | 100.0% | 96.9% | +3.1 ± 0.1 | 3.2% |
+| NFL | 97% | 65 | 100.0% | 97.7% | +2.3 ± 0.1 | 2.3% |
+| NHL | 80% | 128 | 93.8% | 91.1% | +2.7 ± 2.1 | 3.3% |
+| NHL | 85% | 174 | 93.7% | 91.9% | +1.8 ± 1.8 | 2.3% |
+| NHL | 90% | 241 | 92.9% | 93.9% | -0.9 ± 1.6 | -1.0% |
+| NHL | 95% | 275 | 96.0% | 96.8% | -0.8 ± 1.2 | -0.8% |
+| NHL | 97% | 251 | 97.6% | 97.7% | -0.1 ± 1.0 | -0.1% |
+
+## In play, all leagues, by minutes to the recorded finish
+
+Once a side's ask reaches the threshold during the game, does it win more often than it costs? Every crossing, at the trigger minute's ask, however wide the book was. The time left is to the recorded finish, which is not knowable during the game (see the correction above).
 
 | Bucket | Threshold | Taken | Win rate | Break-even | Edge (pts) | Profit per $ |
 |---|---|---|---|---|---|---|
@@ -78,7 +126,7 @@ An ask over the threshold with nothing near it on the other side is an empty boo
 | under 5 | 95% | 454 | 99.3% | 97.0% | +2.3 ± 0.4 | 2.4% |
 | under 5 | 97% | 498 | 99.6% | 97.8% | +1.8 ± 0.3 | 1.9% |
 
-### Under 15 minutes of tape left, tight book, by league
+### Under 15 minutes to the recorded finish, tight book, by league (not knowable live)
 
 | League | Threshold | Taken | Win rate | Break-even | Edge (pts) | Profit per $ |
 |---|---|---|---|---|---|---|
@@ -162,7 +210,7 @@ Every in-play crossing:
 | 15 min | 95% | 2590 / 7425 | 87.5% | 87.7% | -0.2 ± 0.5 | -0.0% |
 | 15 min | 97% | 2390 / 6531 | 91.3% | 91.1% | +0.1 ± 0.5 | 0.3% |
 
-Under 15 minutes left with a tight book:
+Under 15 minutes to the recorded finish with a tight book (not knowable live; `reports/standing_order_backtest.md` repeats the test with a knowable late):
 
 | Latency | Threshold | Filled / taken | Win rate | Break-even | Edge (pts) | Profit per $ |
 |---|---|---|---|---|---|---|
@@ -217,6 +265,7 @@ The first minute before the start at which the ask reached the threshold, which 
 - A position is one side of one game at one threshold in one phase; a side that climbs through several thresholds appears at each, so the standard errors are clustered by game.
 - The tape is sampled once a minute and carries the top of the book only: the two asks, whose sum over one is the spread, and nothing of what rests behind them. A fill at the ask is assumed for the size meant; the live rule reads the depth it does not have here.
 - The live favorites rule took a crossing at any spread until 24 October 2026; on this tape, a bar of 4¢ removes the empty books and most of the loss, and the rule carries it since.
+- With late defined as it can be known during the game, a late favorite on a tight book has lost about a point against its cost, or broken even; no threshold shows an edge. Earlier in the game it has lost more.
 - The fee is the market's own coefficient times price times one less the price; the break-even rate is the mean cost, fee included.
 - The time left is to the venue's recorded finish (or the last minute the tape priced the game), not the game clock: an NFL game's last five minutes of play are more than five minutes of tape.
 - Positive and several errors wide, over hundreds of positions, before it means anything. The live record (`tracking/favorites.csv`) is the out-of-sample continuation of this table.

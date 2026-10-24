@@ -5,11 +5,13 @@
     python -m atlas.polymarket.worker --no-push       # keep the record locally
 
 The scheduled run reads the venue every fifteen minutes and takes three to
-five minutes to start; on the venue's own tape a favorite is worth buying
-only in the last minutes of its game, and a limit sent that late fills
-nothing (``reports/favorites_backtest.md``). So the rule runs here, on a
-machine that stays up: each tick reads the four leagues' listings - four
-requests, each game with its moneyline's top of book and the venue's own
+five minutes to start, and the rule's live orders go late in games, when a
+limit sent that late fills nothing (``reports/favorites_backtest.md``). On
+the venue's own tape a late favorite has lost about a point against its
+cost, and an earlier one more; the live record is the test of the late rule. So the
+rule runs here, on a machine that stays up: each tick reads the four
+leagues' listings - about ten requests, fifty games a page, each game with
+its moneyline's top of book and the venue's own
 period and clock - takes the crossings (`favorites.take`), grades the
 settled ones, writes ``tracking/favorites.csv``, hands the new positions to
 the live step (`favorites.order`: nothing is sent unless its secrets say

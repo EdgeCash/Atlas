@@ -1,6 +1,6 @@
 PYTHON ?= python3
 
-.PHONY: help install ingest warehouse research all test lint clean-data polymarket polymarket-capture polymarket-show polymarket-backtest polymarket-worker owner-paper owner-page cfb-players ncaaf-qb availability \
+.PHONY: help install ingest warehouse research all test lint clean-data polymarket polymarket-capture polymarket-show polymarket-backtest polymarket-standing polymarket-worker owner-paper owner-page cfb-players ncaaf-qb availability \
 	live-refresh live-run live-report live-check live-reproduce \
 	site site-full site-serve site-audit site-shots launch-check \
 	ops-heavy ops-poll ops-social ops-health ops-status ops-crontab \
@@ -282,6 +282,10 @@ polymarket-show:
 # own minute-by-minute price history (cached under data/raw/polymarket_us/).
 polymarket-backtest:
 	$(PYTHON) -m atlas.polymarket.backtest
+
+# Standing orders late in games, on the same tape (docs/STANDING_ORDER_PREREGISTRATION.md).
+polymarket-standing:
+	$(PYTHON) -m atlas.polymarket.standing
 
 # The favorites rule as an always-on loop, off the scheduled runs (docs/POLYMARKET.md).
 polymarket-worker:

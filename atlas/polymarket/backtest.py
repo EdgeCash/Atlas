@@ -52,7 +52,7 @@ import pandas as pd
 
 from atlas import config
 from atlas.polymarket import favorites, positions, pricing, source
-from atlas.util import get_logger, session
+from atlas.util import get_logger, offline, session
 
 LOG = get_logger(__name__)
 
@@ -131,6 +131,7 @@ def closed_events(sess=None, *, cache: Path | None = None, refresh: bool = False
     from concurrent.futures import ThreadPoolExecutor
 
     cache = cache or raw_dir() / "closed_events.json"
+    network = fetch is None
     fetch = fetch or _page
     out: dict[str, dict] = {}
     offset = 0
@@ -138,6 +139,8 @@ def closed_events(sess=None, *, cache: Path | None = None, refresh: bool = False
         for e in json.loads(cache.read_text()).get("events", []):
             out[str(e.get("id"))] = e
         offset = max(0, len(out) - OVERLAP)
+        if offline() and network:
+            return list(out.values())             # offline, the cached listing is the listing
     with ThreadPoolExecutor(max_workers=WORKERS) as pool:
         while True:
             offsets = [offset + i * PAGE for i in range(WORKERS)]
@@ -276,6 +279,17 @@ def game_end(h: pd.DataFrame, start, finished) -> pd.Timestamp:
         return start
     live = h[(h["at"] >= start) & ~terminal(pd.to_numeric(h["long"], errors="coerce"))]
     return live["at"].max() + timedelta(minutes=1) if len(live) else start
+
+
+def late_starts(gs: pd.DataFrame, before: float = LATE_MINUTES) -> dict[str, float]:
+    """Minutes after the start from which a game of each league counts as late, knowably: the league's median
+    game length (start to recorded finish, over the games given) less ``before``."""
+    if gs is None or gs.empty or "finished" not in gs:
+        return {}
+    length = (pd.to_datetime(gs["finished"], utc=True, errors="coerce")
+              - pd.to_datetime(gs["start"], utc=True, errors="coerce")).dt.total_seconds() / 60.0
+    med = length.groupby(gs["league"]).median().dropna()
+    return {str(k): float(v) - before for k, v in med.items()}
 
 
 def bucket(phase: str, minutes_left: float) -> str:
@@ -509,11 +523,30 @@ def report(gs: pd.DataFrame, positions: pd.DataFrame, now: datetime | None = Non
     spread = pd.to_numeric(inplay["spread"], errors="coerce")
     tight = inplay[spread <= TIGHT]
     late = tight[tight["bucket"].isin([name for floor, name in BUCKETS if floor < LATE_MINUTES])]
+    # Late as it can be known during the game: elapsed time against the league's median game length.
+    starts = late_starts(gs)
+    knowable = tight[pd.to_numeric(tight["minutes_in"], errors="coerce")
+                     >= tight["league"].map(starts).astype(float)]
+    lines += ["## Correction: late, as it can be known during the game", "",
+              f"The tables further down that bucket by minutes left measure them to the venue's recorded finish, "
+              "which is not known while the game is on. Games that run long are disproportionately the close ones "
+              "the favorite loses, and that measure moves their final minutes out of the late buckets, so it "
+              "flattered the late result. Here late is elapsed time at or beyond the league's median game length "
+              f"less {LATE_MINUTES:.0f} minutes, a league constant, on a tight book. This is the late result to "
+              "read; the live record (`tracking/favorites.csv`) marks late by the venue's own period.", "",
+              "| League | Late from (minutes after the start) |", "|---|---|"]
+    lines += [f"| {k.upper()} | {v:.0f} |" for k, v in sorted(starts.items())] + [""]
+    s = summary(knowable, by=("threshold",))
+    tables["late_knowable"] = s
+    lines += [_table(s, ["threshold"]), ""]
+    s = summary(knowable, by=("league", "threshold")).assign(league=lambda d: d["league"].str.upper())
+    tables["late_knowable_by_league"] = s
+    lines += [_table(s, ["league", "threshold"]), ""]
     # Headline
-    lines += ["## In play, all leagues, by how much of the game was left", "",
-              "The question asked of the tape: once a side's ask reaches the threshold during the game, does it "
-              "win more often than it costs, and does that depend on how late it is. Every crossing, at the "
-              "trigger minute's ask, however wide the book was.", ""]
+    lines += ["## In play, all leagues, by minutes to the recorded finish", "",
+              "Once a side's ask reaches the threshold during the game, does it win more often than it costs? "
+              "Every crossing, at the trigger minute's ask, however wide the book was. The time left is to the "
+              "recorded finish, which is not knowable during the game (see the correction above).", ""]
     s = _ordered(summary(inplay, by=("bucket", "threshold")))
     tables["in_play_by_time_left"] = s
     lines += [_table(s, ["bucket", "threshold"]), ""]
@@ -526,7 +559,8 @@ def report(gs: pd.DataFrame, positions: pd.DataFrame, now: datetime | None = Non
     tables["in_play_tight_by_time_left"] = s
     lines += [_table(s, ["bucket", "threshold"]), ""]
     if len(late):
-        lines += [f"### Under {LATE_MINUTES:.0f} minutes of tape left, tight book, by league", ""]
+        lines += [f"### Under {LATE_MINUTES:.0f} minutes to the recorded finish, tight book, by league (not knowable live)",
+                  ""]
         s = summary(late, by=("league", "threshold")).assign(league=lambda d: d["league"].str.upper())
         tables["late_tight_by_league"] = s
         lines += [_table(s, ["league", "threshold"]), ""]
@@ -551,7 +585,8 @@ def report(gs: pd.DataFrame, positions: pd.DataFrame, now: datetime | None = Non
     tables["in_play_by_latency"] = s
     lines += [_table(s, ["latency", "threshold"], filled=True), ""]
     if len(late):
-        lines += [f"Under {LATE_MINUTES:.0f} minutes left with a tight book:", ""]
+        lines += [f"Under {LATE_MINUTES:.0f} minutes to the recorded finish with a tight book (not knowable live; "
+                  "`reports/standing_order_backtest.md` repeats the test with a knowable late):", ""]
         parts = [summary(late, by=("threshold",), latency=L).assign(latency=L) for L in latencies]
         s = pd.concat(parts, ignore_index=True)[cols]
         tables["late_tight_by_latency"] = s
@@ -573,6 +608,9 @@ def report(gs: pd.DataFrame, positions: pd.DataFrame, now: datetime | None = Non
               "the size meant; the live rule reads the depth it does not have here.",
               f"- The live favorites rule took a crossing at any spread until 24 October 2026; on this tape, a bar "
               f"of {TIGHT * 100:.0f}¢ removes the empty books and most of the loss, and the rule carries it since.",
+              "- With late defined as it can be known during the game, a late favorite on a tight book has lost "
+              "about a point against its cost, or broken even; no threshold shows an edge. Earlier in the game it "
+              "has lost more.",
               "- The fee is the market's own coefficient times price times one less the price; the break-even "
               "rate is the mean cost, fee included.",
               "- The time left is to the venue's recorded finish (or the last minute the tape priced the game), "
