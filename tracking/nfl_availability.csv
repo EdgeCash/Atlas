@@ -136,6 +136,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T08:13:01+00:00,2026-10-18T17:43Z,30,Jacksonville Jaguars,JAX,3916433,Jakobi Meyers,WR,Active,,,,Meyers caught five of 10 targets for 83 yards in Sunday's 34-31 loss to the Texans.
 2026-10-24T08:13:01+00:00,2026-10-18T17:53Z,30,Jacksonville Jaguars,JAX,4432773,Brian Thomas Jr.,WR,Active,,,,Thomas didn't haul in either of his two targets during Sunday's 34-31 loss to the Texans in London.
 2026-10-24T08:13:01+00:00,2026-10-18T17:56Z,30,Jacksonville Jaguars,JAX,4685415,Travis Hunter,WR,Active,,,,Hunter caught all four of his targets for 59 yards and a touchdown in Sunday's 34-31 loss to the Texans in London. He also recorded three tackles and an interce
+2026-10-24T20:37:55+00:00,2026-10-18T18:37Z,22,Arizona Cardinals,ARI,4045180,Blake Gillikin,P,Active,,,,
 2026-10-24T08:13:01+00:00,2026-10-18T18:43Z,22,Arizona Cardinals,ARI,4244606,Zaven Collins,LB,Active,,,,Collins (hip) is active for Sunday's game against the Rams.
 2026-10-24T08:13:01+00:00,2026-10-18T18:44Z,22,Arizona Cardinals,ARI,4430821,Kitan Crawford,S,Active,,,,Crawford (ankle) is active for Sunday's game against the Rams.
 2026-10-24T08:13:01+00:00,2026-10-18T18:52Z,14,Los Angeles Rams,LAR,4360797,Tutu Atwell,WR,Active,,,,Atwell (coach's decision) is inactive for Sunday's game against the Cardinals.
@@ -724,6 +725,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T08:13:01+00:00,2026-10-24T00:03Z,13,Las Vegas Raiders,LV,4429109,Tonka Hemingway,DT,Active,,,,Hemingway (concussion) does not have an injury designation for Sunday's game against the Rams.
 2026-10-24T08:13:01+00:00,2026-10-24T00:04Z,13,Las Vegas Raiders,LV,4379416,Quay Walker,LB,Active,,,,Walker (chest) does not have an injury designation ahead of Sunday's game against the Rams.
 2026-10-24T08:13:01+00:00,2026-10-24T00:08Z,8,Detroit Lions,DET,4692025,Brian Branch,S,Out,PUP-R,Achilles Surgery,2026-10-25,Branch (Achilles) is listed as questionable for Sunday's game against the Packers.
+2026-10-24T20:37:55+00:00,2026-10-24T00:08Z,8,Detroit Lions,DET,4692025,Brian Branch,S,Active,,,,Branch (Achilles) is listed as questionable for Sunday's game against the Packers.
 2026-10-24T08:13:01+00:00,2026-10-24T00:10Z,34,Houston Texans,HOU,3919117,Azeez Al-Shaair,LB,Active,,,,"Al-Shaair (knee) does not have any injury designation for Sunday's game against the Giants, Adam Caplan of SiriusXM NFL Radio reports."
 2026-10-24T08:13:01+00:00,2026-10-24T00:15Z,34,Houston Texans,HOU,4362504,Brevin Jordan,TE,Active,,,,"Jordan (foot) does not have any injury designation ahead of Sunday's game against the Giants, Adam Caplan of SiriusXM NFL Radio reports."
 2026-10-24T08:13:01+00:00,2026-10-24T00:16Z,19,New York Giants,NYG,4429148,Theo Johnson,TE,Doubtful,DOUBTFUL,Neck,2026-10-25,Johnson (neck) is listed as doubtful for Sunday's game against the Texans.
@@ -770,6 +772,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T08:13:01+00:00,2026-10-24T01:29Z,18,New Orleans Saints,NO,4258199,Cesar Ruiz,G,Questionable,QUESTIONABLE,Knee,2026-10-25,Ruiz (knee) is listed as questionable for Sunday's game against the Steelers.
 2026-10-24T08:13:01+00:00,2026-10-24T01:31Z,20,New York Jets,NYJ,4700136,Kiko Mauigoa,LB,Out,OUT,Quadriceps,2026-11-01,"Mauigoa (quadriceps) has been ruled out for Sunday's game against the Dolphins, Rich Cimini of ESPN.com reports."
 2026-10-24T08:13:01+00:00,2026-10-24T01:35Z,29,Carolina Panthers,CAR,4714157,Thomas Incoom,LB,Out,OUT,Calf,2026-11-01,Incoom (calf) has been ruled out for Sunday's game against the Buccaneers.
+2026-10-24T20:37:55+00:00,2026-10-24T01:35Z,29,Carolina Panthers,CAR,4714157,Thomas Incoom,LB,Injured Reserve,IR,Calf,2026-11-22,Incoom (calf) has been ruled out for Sunday's game against the Buccaneers.
 2026-10-24T08:13:01+00:00,2026-10-24T01:37Z,1,Atlanta Falcons,ATL,5209093,Michael Jerrell,OT,Out,OUT,Biceps,2026-11-01,"Jerrell (biceps) has been ruled out for Sunday's game against the 49ers, Will McFadden of the Falcons' official site reports."
 2026-10-24T08:13:01+00:00,2026-10-24T01:37Z,6,Dallas Cowboys,DAL,3929850,P.J. Locke,S,Injured Reserve,IR-R,Right Foot Plantar Fasciitis,2026-10-26,"The Cowboys opened Locke's (foot) 21-day practice window Friday, Tommy Yarrish of the team's official site reports."
 2026-10-24T08:13:01+00:00,2026-10-24T01:40Z,27,Tampa Bay Buccaneers,TB,4380507,Luke Goedeke,OT,Out,OUT,Calf,2026-11-01,Goedeke (calf) has been ruled out for Sunday's game against the Panthers.
@@ -787,14 +790,18 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T08:13:01+00:00,2026-10-24T02:04Z,19,New York Giants,NYG,4259566,Andrew Thomas,OT,Active,,,,Thomas (groin) does not have an injury designation against the Texans on Sunday.
 2026-10-24T08:13:01+00:00,2026-10-24T02:06Z,6,Dallas Cowboys,DAL,4384549,Cobie Durant,CB,Questionable,QUESTIONABLE,Hamstring,2026-10-26,"Durant (hamstring) was a full participant in Friday's practice, Todd Archer of ESPN.com reports."
 2026-10-24T08:13:01+00:00,2026-10-24T02:07Z,8,Detroit Lions,DET,4361788,Cade Mays,C,Injured Reserve,IR-R,Wrist Fracture,2026-10-25,Mays (wrist) is questionable against the Packers on Sunday.
+2026-10-24T20:37:55+00:00,2026-10-24T02:07Z,8,Detroit Lions,DET,4361788,Cade Mays,C,Active,,,,Mays (wrist) is questionable against the Packers on Sunday.
 2026-10-24T08:13:01+00:00,2026-10-24T02:10Z,9,Green Bay Packers,GB,4242390,Aaron Banks,G,Questionable,QUESTIONABLE,Knee,2026-10-25,"Banks (knee/toe) is listed as questionable for Sunday's game against the Lions, Wes Hodkiewicz of the Packers' official site reports."
 2026-10-24T08:13:01+00:00,2026-10-24T02:13Z,26,Seattle Seahawks,SEA,4037521,Chazz Surratt,LB,Out,OUT,Calf,2026-11-02,"Surratt (calf) has been ruled out ahead of Sunday's game against the Chiefs, John Boyle of the Seahawks' official site reports."
 2026-10-24T08:13:01+00:00,2026-10-24T02:14Z,22,Arizona Cardinals,ARI,5099542,Wydett Williams Jr.,S,Active,,,,"Williams (concussion) does not have an injury designation against the Broncos on Sunday, Zach Gershman of the Cardinals' official site reports."
 2026-10-24T08:13:01+00:00,2026-10-24T02:14Z,26,Seattle Seahawks,SEA,4429211,Anthony Bradford,G,Injured Reserve,IR-R,Knee,2026-10-25,"Bradford (knee) does not have any injury designation ahead of Sunday's game against the Chiefs, John Boyle of the Seahawks' official site reports."
+2026-10-24T20:37:55+00:00,2026-10-24T02:14Z,26,Seattle Seahawks,SEA,4429211,Anthony Bradford,G,Questionable,QUESTIONABLE,Knee,2026-10-25,"Bradford (knee) does not have any injury designation ahead of Sunday's game against the Chiefs, John Boyle of the Seahawks' official site reports."
 2026-10-24T08:13:01+00:00,2026-10-24T02:17Z,21,Philadelphia Eagles,PHI,4035624,Landon Dickerson,G,Injured Reserve,IR-R,Knee,2026-10-26,Dickerson (knee) was a limited participant in Friday's practice.
 2026-10-24T08:13:01+00:00,2026-10-24T02:19Z,21,Philadelphia Eagles,PHI,4362805,Tyler Steen,G,Questionable,QUESTIONABLE,Shoulder,2026-10-26,Steen (shoulder) was a limited participant in Friday's practice.
+2026-10-24T20:37:55+00:00,2026-10-24T02:19Z,21,Philadelphia Eagles,PHI,4362805,Tyler Steen,G,Active,,,,Steen (shoulder) was a limited participant in Friday's practice.
 2026-10-24T08:13:01+00:00,2026-10-24T02:20Z,25,San Francisco 49ers,SF,3116097,Luke Gifford,LB,Out,OUT,Groin,2026-11-08,Gifford (groin) has been ruled out for Sunday's game against the Falcons.
 2026-10-24T08:13:01+00:00,2026-10-24T02:22Z,21,Philadelphia Eagles,PHI,4582836,Willie Lampkin,C,Questionable,QUESTIONABLE,Illness,2026-10-26,Lampkin (illness) was a limited participant in Friday's practice.
+2026-10-24T20:37:55+00:00,2026-10-24T02:22Z,21,Philadelphia Eagles,PHI,4582836,Willie Lampkin,C,Active,,,,Lampkin (illness) was a limited participant in Friday's practice.
 2026-10-24T08:13:01+00:00,2026-10-24T02:26Z,17,New England Patriots,NE,4427095,DeMario Douglas,WR,Active,,,,Douglas caught three of his four targets for 23 yards in the Patriots' 30-24 loss to the Bears on Thursday.
 2026-10-24T08:13:01+00:00,2026-10-24T02:27Z,25,San Francisco 49ers,SF,4241807,Garret Wallow,LB,Out,OUT,Hamstring Strain,2026-11-08,Wallow (hamstring) has been ruled out for Sunday's game against Atlanta.
 2026-10-24T08:13:01+00:00,2026-10-24T02:30Z,3,Chicago Bears,CHI,4426386,Roschon Johnson,RB,Active,,,,Johnson rushed twice for 13 yards in the Bears' 30-24 victory over the Patriots on Thursday.
@@ -908,6 +915,15 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T20:22:59+00:00,2026-10-24T20:07Z,9,Green Bay Packers,GB,4578436,Coleman Owen,WR,Active,,,,The Packers signed Owen from the practice squad to the active roster Saturday.
 2026-10-24T20:22:59+00:00,2026-10-24T20:09Z,9,Green Bay Packers,GB,4047365,Josh Jacobs,RB,Active,,,,"Jacobs had his roster exemption removed by the Packers and is expected to play Sunday at Detroit, Adam Schefter of ESPN reports."
 2026-10-24T20:22:59+00:00,2026-10-24T20:10Z,9,Green Bay Packers,GB,4240677,Jordon Riley,DT,Questionable,QUESTIONABLE,Achilles,2026-10-25,The Packers activated Riley (Achilles) from the active/PUP list Saturday.
+2026-10-24T20:37:55+00:00,2026-10-24T20:13Z,29,Carolina Panthers,CAR,4880613,Bam Martin-Scott,LB,Active,,,,
+2026-10-24T20:37:55+00:00,2026-10-24T20:15Z,1,Atlanta Falcons,ATL,4239995,A.J. Terrell Jr.,CB,Active,,,,"The Falcons activated Terrell (groin) off injured reserve Saturday, Tori McElhaney of the team's official site reports."
+2026-10-24T20:37:55+00:00,2026-10-24T20:16Z,34,Houston Texans,HOU,4366031,Tank Dell,WR,Questionable,QUESTIONABLE,Left Knee - ACL + MCL Surgery,2026-10-25,"Dell (knee) was activated from injured reserve Saturday, but he remains questionable for Sunday's game against the Giants."
 2026-10-24T20:22:59+00:00,2026-10-24T20:20Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-24T20:22:59+00:00,2026-10-24T20:20Z,21,Philadelphia Eagles,PHI,4240456,Michael Carter II,CB,Out,OUT,Abdomen,2026-11-01,out
 2026-10-24T20:22:59+00:00,2026-10-24T20:20Z,21,Philadelphia Eagles,PHI,4426331,Nolan Smith Jr.,LB,Out,OUT,Concussion Concussion,2026-11-01,out
+2026-10-24T20:37:55+00:00,2026-10-24T20:21Z,21,Philadelphia Eagles,PHI,4240585,AJ Epenesa,DE,Active,,,,
+2026-10-24T20:37:55+00:00,2026-10-24T20:23Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-24T20:37:55+00:00,2026-10-24T20:23Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-10-25,questionable
+2026-10-24T20:37:55+00:00,2026-10-24T20:23Z,21,Philadelphia Eagles,PHI,3915106,Fred Johnson,OT,Active,,,,
+2026-10-24T20:37:55+00:00,2026-10-24T20:23Z,21,Philadelphia Eagles,PHI,4362116,Moro Ojomo,DT,Active,,,,
+2026-10-24T20:37:55+00:00,2026-10-24T20:32Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
