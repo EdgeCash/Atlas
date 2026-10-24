@@ -21,7 +21,8 @@ CELTICS = us.team(2, "Boston Celtics", "Boston", "bos")
 
 def _stub(eid, slug, away, home, bid, ask, *, period="Q4", elapsed="03:12", live=True, ended=False, start=START):
     """A league listing's stub: the event with its headline market and the venue's own clock."""
-    e = us.event(eid, slug, away, home, [us.moneyline(int(eid) * 10, "basketball", away, home, bid, ask, start=start)],
+    e = us.event(eid, slug, away, home, [us.moneyline(int(eid) * 10, "basketball", away, home, bid, ask, start=start,
+                                                      side_ids=(f"26110{eid}0", f"26110{eid}1"))],
                  start=start)
     return {**e, "live": live, "ended": ended, "period": period, "elapsed": elapsed}
 
@@ -119,23 +120,117 @@ def test_the_scheduled_run_stands_down_when_the_worker_owns_the_rule(tmp_path, m
     assert len(record) == 4                                # the run takes the crossing itself again
 
 
-def test_the_record_is_committed_and_pushed_to_the_branch(tmp_path):
+def _position(token, threshold=0.85, *, at="2026-10-24T01:00:00+00:00", won=None, **kw):
+    return {**dict.fromkeys(favorites.COLUMNS), "token_id": token, "threshold": threshold, "formed_at": at,
+            "phase": "in_play", "sport": "nba", "game_start": START, "label": "Chicago Bulls @ Boston Celtics",
+            "market": "moneyline", "side": "home", "long": True, "ask": threshold + 0.01, "cost": threshold + 0.02,
+            "market_slug": f"m{token}", "event_id": "1", "won": won, "payout": won, "profit": None, **kw}
+
+
+def _repo(tmp_path):
+    """A bare remote, the worker's clone of it, and a second clone standing in for the scheduled runs."""
     remote = tmp_path / "remote.git"
-    subprocess.run(["git", "init", "-q", "--bare", str(remote)], check=True)
-    root = tmp_path / "clone"
-    subprocess.run(["git", "clone", "-q", str(remote), str(root)], check=True)
+    subprocess.run(["git", "init", "-q", "--bare", "-b", "main", str(remote)], check=True)
+    clones = []
+    for name in ("worker", "runs"):
+        root = tmp_path / name
+        subprocess.run(["git", "clone", "-q", str(remote), str(root)], check=True, capture_output=True)
+        subprocess.run(["git", "checkout", "-q", "-B", "main"], cwd=root, check=True)
+        clones.append(root)
+    return clones
+
+
+def _commit(root, message):
     env = ["-c", "user.name=t", "-c", "user.email=t@example.com"]
-    (root / "tracking").mkdir()
-    (root / "tracking" / "favorites.csv").write_text("a\n1\n")
     subprocess.run(["git", *env, "add", "-A"], cwd=root, check=True)
-    subprocess.run(["git", *env, "commit", "-q", "-m", "first"], cwd=root, check=True)
-    subprocess.run(["git", "push", "-q", "-u", "origin", "HEAD"], cwd=root, check=True)
-    assert worker.publish(root, NOW) is False                           # nothing changed
-    (root / "tracking" / "favorites.csv").write_text("a\n1\n2\n")
-    (root / "README.md").write_text("not the worker's to commit")
-    assert worker.publish(root, NOW) is True
-    log = subprocess.run(["git", "log", "--oneline", "origin/" + worker.branch(root)], cwd=root,
-                         capture_output=True, text=True, check=True).stdout
-    assert log.startswith(("worker: 2026-10-23 22:30 ET",)) or "worker: 2026-10-23 22:30 ET" in log
-    status = subprocess.run(["git", "status", "--porcelain"], cwd=root, capture_output=True, text=True, check=True).stdout
-    assert "README.md" in status                                        # left alone
+    subprocess.run(["git", *env, "commit", "-q", "-m", message], cwd=root, check=True)
+    subprocess.run(["git", "pull", "-q", "--rebase", "origin", "main"], cwd=root, check=False, capture_output=True)
+    subprocess.run(["git", "push", "-q", "origin", "HEAD:main"], cwd=root, check=True, capture_output=True)
+
+
+def _record(root) -> pd.DataFrame:
+    return Store.open(root / "tracking").read(favorites.TABLE)
+
+
+def test_the_record_is_cleaned_of_what_a_merge_leaves_and_held_once_per_position():
+    rows = pd.DataFrame([_position("2611050"), _position("2611050", at="2026-10-24T01:05:00+00:00", won=1.0),
+                         _position("2611050", 0.90), _position("777", at="2026-10-24T00:59:00+00:00")])
+    marks = pd.DataFrame([{**dict.fromkeys(favorites.COLUMNS), "formed_at": m}
+                          for m in ("<<<<<<< Updated upstream", "=======", ">>>>>>> Stashed changes")])
+    dirty = pd.concat([rows, marks], ignore_index=True)
+    dirty["token_id"] = pd.to_numeric(dirty["token_id"])            # what a blank line does to the column: decimals
+    clean = favorites.clean(dirty)
+    assert len(clean) == 3 and set(clean["token_id"]) == {"2611050", "777"}
+    held = clean.set_index(["token_id", "threshold"]).loc[("2611050", 0.85)]
+    assert held["formed_at"] == "2026-10-24T01:00:00+00:00" and held["won"] == 1.0   # the first taken, graded
+    assert favorites.ident(2611050.0) == "2611050" and favorites.ident("2611050.0") == "2611050"
+    assert favorites.ident(None) is None and favorites.ident(float("nan")) is None and favorites.ident("abc") == "abc"
+    assert len(favorites.merge(clean, rows)) == 3 and favorites.clean(None).empty
+
+
+def test_a_record_read_back_as_decimals_does_not_take_its_positions_again(tmp_path, monkeypatch):
+    monkeypatch.setenv("ATLAS_OFFLINE", "1")
+    store = Store.open(tmp_path / "tracking")
+    events = {"nba": [_stub("1", "nba-chi-bos-2026-10-23", BULLS, CELTICS, 0.85, 0.86)]}
+    first = worker.tick(store, NOW, None, events=events)
+    assert first["added"] == 2
+    record = store.read(favorites.TABLE)
+    record.loc[len(record)] = {**dict.fromkeys(favorites.COLUMNS), "formed_at": "======="}   # the incident's line
+    record["token_id"] = pd.to_numeric(record["token_id"], errors="coerce")
+    record.to_csv(store.path(favorites.TABLE), index=False)
+    again = worker.tick(store, NOW + timedelta(minutes=1), None, events=events)
+    assert again["added"] == 0 and again["positions"] == 2
+    assert len(store.read(favorites.TABLE)) == 2                      # and the line is gone from the file
+
+
+def test_a_position_already_in_the_ledger_is_not_ordered_again(tmp_path, monkeypatch):
+    from atlas.polymarket import orders, positions
+
+    monkeypatch.delenv("ATLAS_OFFLINE", raising=False)
+    monkeypatch.setenv(orders.MODE, "dry")
+    monkeypatch.setenv(orders.BANKROLL, "")                           # no bankroll: refused, but written, and offline-safe
+    pos = favorites.as_positions(pd.DataFrame([_position("2611050", late=True)]))
+    assert list(pos["position_id"]) == ["fav:2611050:0.85"] and list(pos.columns) == positions.COLUMNS
+    where = tmp_path / "live"
+    first = orders.place(pos, "key", NOW, where=where, rule="favorites", signer=None)
+    assert len(first) == 1
+    # The same position from a record whose ids read back as decimals: the same order, not a second one.
+    pos2 = favorites.as_positions(pd.DataFrame([_position(2611050.0, late=True)]))
+    second = orders.place(pos2, "key", NOW + timedelta(seconds=45), where=where, rule="favorites", signer=None)
+    assert len(second) == 1 and len(orders.load("key", where)) == 1
+
+
+def test_the_worker_and_a_run_writing_the_record_at_once_leave_it_whole(tmp_path, monkeypatch):
+    monkeypatch.delenv("ATLAS_OFFLINE", raising=False)
+    mine, runs = _repo(tmp_path)
+    base = pd.DataFrame([_position("100")])
+    Store.open(runs / "tracking").write(favorites.TABLE, base)
+    (runs / "README.md").write_text("atlas\n")
+    _commit(runs, "first")
+    subprocess.run(["git", "pull", "-q", "origin", "main"], cwd=mine, check=True, capture_output=True)
+    # The scheduled run grades the position and takes another; the worker, meanwhile, takes one more and
+    # holds it uncommitted - the state the setup script's test tick left on the server.
+    Store.open(runs / "tracking").write(favorites.TABLE, pd.DataFrame([_position("100", won=1.0), _position("200")]))
+    _commit(runs, "poll")
+    Store.open(mine / "tracking").write(favorites.TABLE, pd.DataFrame([_position("100"), _position("300")]))
+    (mine / "local.txt").write_text("untracked, not the worker's")
+    assert worker.publish(mine, NOW) is True
+    subprocess.run(["git", "pull", "-q", "origin", "main"], cwd=runs, check=True, capture_output=True)
+    text = (runs / "tracking" / "favorites.csv").read_text()
+    assert "<<<<<<<" not in text and "=======" not in text and ">>>>>>>" not in text
+    merged = _record(runs).assign(token_id=lambda d: d["token_id"].astype(str)).set_index("token_id")
+    assert set(merged.index) == {"100", "200", "300"} and merged.loc["100", "won"] == 1.0
+    log = subprocess.run(["git", "log", "--format=%s", "-1", "origin/main"], cwd=mine, capture_output=True,
+                         text=True, check=True).stdout
+    assert log.startswith("worker: 2026-10-23 22:30 ET") and (mine / "local.txt").exists()
+    # Level with the branch, there is nothing to push.
+    assert worker.publish(mine, NOW + timedelta(minutes=1)) is False
+    # A worker whose own copy carries the incident's lines repairs the branch's on its next push.
+    Store.open(runs / "tracking").write(favorites.TABLE, pd.concat(
+        [_record(runs), pd.DataFrame([{**dict.fromkeys(favorites.COLUMNS), "formed_at": "<<<<<<< Updated upstream"}])]))
+    _commit(runs, "the bad commit")
+    Store.open(mine / "tracking").write(favorites.TABLE, pd.concat([_record(mine), pd.DataFrame([_position("400")])]))
+    assert worker.publish(mine, NOW + timedelta(minutes=2)) is True
+    subprocess.run(["git", "pull", "-q", "origin", "main"], cwd=runs, check=True, capture_output=True)
+    assert "<<<<<<<" not in (runs / "tracking" / "favorites.csv").read_text()
+    assert set(_record(runs)["token_id"].astype(str)) == {"100", "200", "300", "400"}

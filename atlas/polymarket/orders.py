@@ -289,6 +289,17 @@ def place(positions_: pd.DataFrame, passphrase: str, now: datetime, *, where: Pa
         LOG.info("live (%s): the %s rule is not on (%s)", m, rule, ",".join(rules()))
         return pd.DataFrame(columns=COLUMNS)
     ledger = load(passphrase, where)
+    # A position is ordered once. One the ledger already holds in this mode - a run repeated, a record
+    # read twice - is not ordered again, whatever else has gone wrong upstream.
+    if len(ledger):
+        held_ids = set(ledger.loc[ledger["mode"].astype(str) == m, "position_id"].astype(str))
+        again = positions_["position_id"].astype(str).isin(held_ids)
+        if again.any():
+            LOG.warning("live (%s, %s): %d positions already in the ledger; not ordered again", m, rule,
+                        int(again.sum()))
+            positions_ = positions_[~again]
+            if positions_.empty:
+                return ledger
     signer = signer or account.Signer.from_env()
     sess = sess or requests.Session()
     roll = bankroll()
