@@ -1,6 +1,6 @@
 # The favorites rule on Polymarket US's own tape
 
-*Built 2026-10-24 04:13 UTC by `python -m atlas.polymarket.backtest`.*
+*Built 2026-10-24 04:28 UTC by `python -m atlas.polymarket.backtest`.*
 
 The favorites rule (`atlas/polymarket/favorites.py`) replayed on every settled game the venue lists: for each side of each moneyline, in each phase, a paper position at the first minute its ask sat at or over each threshold, at that ask plus the venue's fee, graded by the settled price. The tape is the exchange's own minute-by-minute price history, which carries each side's ask. Edge is the win rate less the break-even rate (the mean cost) in points, with a standard error clustered by game; profit per dollar is what a dollar staked across the positions returned.
 
@@ -16,7 +16,7 @@ The favorites rule (`atlas/polymarket/favorites.py`) replayed on every settled g
 
 ## In play, all leagues, by how much of the game was left
 
-The question asked of the tape: once a side's ask reaches the threshold during the game, does it win more often than it costs, and does that depend on how late it is. The ideal fill, at the trigger minute's ask.
+The question asked of the tape: once a side's ask reaches the threshold during the game, does it win more often than it costs, and does that depend on how late it is. Every crossing, at the trigger minute's ask, however wide the book was.
 
 | Bucket | Threshold | Taken | Win rate | Break-even | Edge (pts) | Profit per $ |
 |---|---|---|---|---|---|---|
@@ -46,7 +46,69 @@ The question asked of the tape: once a side's ask reaches the threshold during t
 | under 5 | 95% | 534 | 98.3% | 97.0% | +1.3 ± 0.6 | 1.4% |
 | under 5 | 97% | 567 | 98.9% | 97.7% | +1.2 ± 0.4 | 1.2% |
 
-## In play, by league
+## The same, with a tight book (4¢ or less between the two asks)
+
+An ask over the threshold with nothing near it on the other side is an empty book, not a price: one crossing in five is at a spread over 4¢, and those are where the worst of the table above comes from. The model rule declines such a quote; this is the favorites rule with the same bar.
+
+| Bucket | Threshold | Taken | Win rate | Break-even | Edge (pts) | Profit per $ |
+|---|---|---|---|---|---|---|
+| over 60 min left | 80% | 5289 | 82.1% | 85.4% | -3.3 ± 0.5 | -3.8% |
+| over 60 min left | 85% | 4398 | 86.1% | 88.8% | -2.8 ± 0.5 | -3.0% |
+| over 60 min left | 90% | 3447 | 90.2% | 92.4% | -2.3 ± 0.5 | -2.4% |
+| over 60 min left | 95% | 2396 | 95.2% | 96.1% | -0.9 ± 0.4 | -0.9% |
+| over 60 min left | 97% | 1839 | 96.6% | 97.5% | -1.0 ± 0.4 | -1.0% |
+| 30 to 60 | 80% | 1076 | 81.0% | 83.9% | -2.9 ± 1.2 | -3.5% |
+| 30 to 60 | 85% | 1178 | 83.8% | 88.1% | -4.3 ± 1.1 | -4.9% |
+| 30 to 60 | 90% | 1250 | 88.2% | 92.3% | -4.0 ± 0.9 | -4.4% |
+| 30 to 60 | 95% | 1316 | 93.2% | 96.1% | -2.9 ± 0.7 | -3.0% |
+| 30 to 60 | 97% | 1256 | 95.9% | 97.6% | -1.6 ± 0.6 | -1.7% |
+| 15 to 30 | 80% | 662 | 87.5% | 84.9% | +2.5 ± 1.3 | 3.0% |
+| 15 to 30 | 85% | 784 | 88.3% | 88.9% | -0.7 ± 1.1 | -0.8% |
+| 15 to 30 | 90% | 889 | 92.2% | 92.9% | -0.6 ± 0.9 | -0.7% |
+| 15 to 30 | 95% | 1054 | 95.4% | 96.3% | -1.0 ± 0.6 | -1.0% |
+| 15 to 30 | 97% | 1065 | 97.1% | 97.6% | -0.5 ± 0.5 | -0.5% |
+| 5 to 15 | 80% | 371 | 92.7% | 88.0% | +4.7 ± 1.3 | 5.6% |
+| 5 to 15 | 85% | 536 | 94.8% | 91.0% | +3.8 ± 1.0 | 4.3% |
+| 5 to 15 | 90% | 783 | 96.9% | 93.7% | +3.3 ± 0.6 | 3.5% |
+| 5 to 15 | 95% | 964 | 97.7% | 96.7% | +1.1 ± 0.5 | 1.1% |
+| 5 to 15 | 97% | 992 | 98.6% | 97.7% | +0.9 ± 0.4 | 0.9% |
+| under 5 | 80% | 147 | 96.6% | 93.1% | +3.5 ± 1.5 | 3.7% |
+| under 5 | 85% | 202 | 96.5% | 94.4% | +2.1 ± 1.3 | 2.3% |
+| under 5 | 90% | 308 | 98.1% | 95.3% | +2.7 ± 0.8 | 2.9% |
+| under 5 | 95% | 454 | 99.3% | 97.0% | +2.3 ± 0.4 | 2.4% |
+| under 5 | 97% | 498 | 99.6% | 97.8% | +1.8 ± 0.3 | 1.9% |
+
+### Under 15 minutes of tape left, tight book, by league
+
+| League | Threshold | Taken | Win rate | Break-even | Edge (pts) | Profit per $ |
+|---|---|---|---|---|---|---|
+| CBB | 80% | 244 | 93.4% | 89.2% | +4.2 ± 1.6 | 4.7% |
+| CBB | 85% | 351 | 94.0% | 91.9% | +2.1 ± 1.2 | 2.3% |
+| CBB | 90% | 529 | 96.2% | 94.2% | +2.0 ± 0.8 | 2.2% |
+| CBB | 95% | 746 | 98.4% | 96.8% | +1.6 ± 0.5 | 1.7% |
+| CBB | 97% | 803 | 99.0% | 97.7% | +1.3 ± 0.3 | 1.3% |
+| CFB | 80% | 48 | 91.7% | 88.3% | +3.4 ± 4.0 | 3.9% |
+| CFB | 85% | 64 | 93.8% | 90.9% | +2.9 ± 3.0 | 3.1% |
+| CFB | 90% | 86 | 97.7% | 93.9% | +3.7 ± 1.6 | 4.0% |
+| CFB | 95% | 95 | 96.8% | 96.6% | +0.2 ± 1.8 | 0.2% |
+| CFB | 97% | 91 | 98.9% | 97.7% | +1.2 ± 1.1 | 1.2% |
+| NBA | 80% | 97 | 91.8% | 88.7% | +3.0 ± 2.8 | 3.4% |
+| NBA | 85% | 145 | 94.5% | 92.0% | +2.5 ± 1.9 | 2.7% |
+| NBA | 90% | 207 | 98.6% | 94.4% | +4.1 ± 0.8 | 4.4% |
+| NBA | 95% | 271 | 97.8% | 96.8% | +1.0 ± 0.9 | 1.1% |
+| NBA | 97% | 305 | 98.7% | 97.8% | +0.9 ± 0.7 | 1.0% |
+| NFL | 80% | 33 | 87.9% | 87.6% | +0.3 ± 5.3 | 3.8% |
+| NFL | 85% | 40 | 97.5% | 91.4% | +6.1 ± 2.5 | 8.1% |
+| NFL | 90% | 42 | 97.6% | 94.9% | +2.7 ± 2.2 | 2.8% |
+| NFL | 95% | 52 | 100.0% | 96.9% | +3.1 ± 0.1 | 3.2% |
+| NFL | 97% | 51 | 100.0% | 97.7% | +2.3 ± 0.1 | 2.4% |
+| NHL | 80% | 96 | 100.0% | 92.1% | +7.9 ± 0.6 | 8.5% |
+| NHL | 85% | 138 | 99.3% | 92.5% | +6.8 ± 0.9 | 7.3% |
+| NHL | 90% | 227 | 98.2% | 93.7% | +4.6 ± 0.9 | 4.9% |
+| NHL | 95% | 254 | 98.4% | 96.8% | +1.6 ± 0.8 | 1.6% |
+| NHL | 97% | 240 | 98.8% | 97.7% | +1.0 ± 0.7 | 1.0% |
+
+## In play, by league, every crossing
 
 | League | Threshold | Taken | Win rate | Break-even | Edge (pts) | Profit per $ |
 |---|---|---|---|---|---|---|
@@ -76,39 +138,11 @@ The question asked of the tape: once a side's ask reaches the threshold during t
 | NHL | 95% | 1009 | 93.5% | 96.4% | -2.9 ± 0.7 | -3.0% |
 | NHL | 97% | 871 | 94.6% | 97.6% | -3.0 ± 0.7 | -3.0% |
 
-### In play with under 15 minutes left, by league
-
-| League | Threshold | Taken | Win rate | Break-even | Edge (pts) | Profit per $ |
-|---|---|---|---|---|---|---|
-| CBB | 80% | 394 | 90.4% | 89.1% | +1.3 ± 1.5 | 1.4% |
-| CBB | 85% | 528 | 91.7% | 91.7% | -0.0 ± 1.2 | -0.0% |
-| CBB | 90% | 717 | 94.7% | 94.2% | +0.5 ± 0.8 | 0.5% |
-| CBB | 95% | 945 | 97.4% | 96.8% | +0.6 ± 0.5 | 0.6% |
-| CBB | 97% | 956 | 98.5% | 97.7% | +0.8 ± 0.4 | 0.8% |
-| CFB | 80% | 57 | 89.5% | 88.6% | +0.8 ± 4.2 | 1.0% |
-| CFB | 85% | 75 | 90.7% | 91.1% | -0.4 ± 3.4 | -0.4% |
-| CFB | 90% | 100 | 95.0% | 93.9% | +1.1 ± 2.2 | 1.1% |
-| CFB | 95% | 106 | 94.3% | 96.6% | -2.3 ± 2.2 | -2.3% |
-| CFB | 97% | 97 | 96.9% | 97.7% | -0.8 ± 1.8 | -0.8% |
-| NBA | 80% | 134 | 88.8% | 88.7% | +0.1 ± 2.6 | 0.1% |
-| NBA | 85% | 177 | 92.7% | 91.8% | +0.8 ± 1.9 | 0.9% |
-| NBA | 90% | 240 | 97.1% | 94.4% | +2.7 ± 1.1 | 2.8% |
-| NBA | 95% | 296 | 97.6% | 96.8% | +0.9 ± 0.9 | 0.9% |
-| NBA | 97% | 320 | 98.4% | 97.8% | +0.7 ± 0.7 | 0.7% |
-| NFL | 80% | 43 | 86.0% | 88.2% | -2.1 ± 4.9 | 0.2% |
-| NFL | 85% | 50 | 96.0% | 91.7% | +4.3 ± 2.8 | 6.8% |
-| NFL | 90% | 53 | 96.2% | 94.9% | +1.4 ± 2.5 | 2.4% |
-| NFL | 95% | 58 | 100.0% | 96.9% | +3.1 ± 0.1 | 3.2% |
-| NFL | 97% | 54 | 100.0% | 97.7% | +2.3 ± 0.1 | 2.4% |
-| NHL | 80% | 139 | 97.1% | 91.3% | +5.8 ± 1.4 | 6.3% |
-| NHL | 85% | 185 | 97.3% | 92.0% | +5.3 ± 1.2 | 5.7% |
-| NHL | 90% | 283 | 97.9% | 93.7% | +4.2 ± 0.9 | 4.5% |
-| NHL | 95% | 306 | 98.4% | 96.8% | +1.6 ± 0.7 | 1.6% |
-| NHL | 97% | 284 | 98.2% | 97.7% | +0.5 ± 0.8 | 0.5% |
-
 ## What a slow loop would actually get
 
-The same in-play positions, filled as a poller would fill them: it sees the crossing some minutes late and sends a limit at the ask it saw. The order fills only when the ask has not risen since (the lead has not grown) and misses when it has. A fifteen-minute latency is what a quarter-hourly scheduled job delivers.
+The same positions, filled as a poller would fill them: it sees the crossing some minutes late and sends a limit at the ask it saw. The order fills only when the ask has not risen since (the lead has not grown) and misses when it has, so the fills are a selected set and their break-even is lower than the trigger price. A fifteen-minute latency is what a quarter-hourly scheduled job delivers; on a late position it cannot fill at all, because the game is over.
+
+Every in-play crossing:
 
 | Latency | Threshold | Filled / taken | Win rate | Break-even | Edge (pts) | Profit per $ |
 |---|---|---|---|---|---|---|
@@ -128,6 +162,26 @@ The same in-play positions, filled as a poller would fill them: it sees the cros
 | 15 min | 95% | 2590 / 7425 | 87.5% | 87.7% | -0.2 ± 0.5 | -0.0% |
 | 15 min | 97% | 2390 / 6531 | 91.3% | 91.1% | +0.1 ± 0.5 | 0.3% |
 
+Under 15 minutes left with a tight book:
+
+| Latency | Threshold | Filled / taken | Win rate | Break-even | Edge (pts) | Profit per $ |
+|---|---|---|---|---|---|---|
+| 1 min | 80% | 207 / 518 | 91.3% | 85.1% | +6.2 ± 1.7 | 7.6% |
+| 1 min | 85% | 320 / 738 | 92.8% | 88.4% | +4.4 ± 1.3 | 5.2% |
+| 1 min | 90% | 482 / 1091 | 96.3% | 91.2% | +5.0 ± 0.8 | 5.5% |
+| 1 min | 95% | 691 / 1418 | 97.1% | 94.5% | +2.6 ± 0.6 | 2.7% |
+| 1 min | 97% | 815 / 1490 | 98.5% | 96.2% | +2.3 ± 0.4 | 2.4% |
+| 5 min | 80% | 97 / 518 | 78.4% | 65.2% | +13.2 ± 3.1 | 21.0% |
+| 5 min | 85% | 129 / 738 | 82.9% | 74.1% | +8.8 ± 2.3 | 12.4% |
+| 5 min | 90% | 187 / 1091 | 89.8% | 82.4% | +7.4 ± 1.8 | 9.0% |
+| 5 min | 95% | 306 / 1418 | 93.5% | 89.3% | +4.1 ± 1.2 | 4.6% |
+| 5 min | 97% | 414 / 1490 | 96.6% | 93.0% | +3.6 ± 0.8 | 3.9% |
+| 15 min | 80% | 0 / 518 |  |  |  |  |
+| 15 min | 85% | 0 / 738 |  |  |  |  |
+| 15 min | 90% | 0 / 1091 |  |  |  |  |
+| 15 min | 95% | 0 / 1418 |  |  |  |  |
+| 15 min | 97% | 0 / 1490 |  |  |  |  |
+
 ## Before the game
 
 The first minute before the start at which the ask reached the threshold, which can be days out.
@@ -145,7 +199,7 @@ The first minute before the start at which the ask reached the threshold, which 
 | CFB | 95% | 110 | 92.7% | 96.8% | -4.1 ± 2.4 | -4.2% |
 | CFB | 97% | 53 | 98.1% | 97.8% | +0.3 ± 1.9 | 0.3% |
 | NBA | 80% | 350 | 83.7% | 87.3% | -3.6 ± 2.0 | -3.3% |
-| NBA | 85% | 223 | 88.3% | 90.1% | -1.8 ± 2.3 | -0.7% |
+| NBA | 85% | 223 | 88.3% | 90.1% | -1.8 ± 2.3 | -0.8% |
 | NBA | 90% | 114 | 90.4% | 92.9% | -2.5 ± 3.2 | -0.3% |
 | NBA | 95% | 26 | 80.8% | 96.0% | -15.2 ± 9.9 | -7.8% |
 | NBA | 97% | 6 | 100.0% | 97.4% | +2.6 ± 0.1 | 2.7% |
@@ -161,7 +215,8 @@ The first minute before the start at which the ask reached the threshold, which 
 ## Reading it
 
 - A position is one side of one game at one threshold in one phase; a side that climbs through several thresholds appears at each, so the standard errors are clustered by game.
-- The tape is sampled once a minute and carries the top of the book only. A fill at the ask is assumed for the size meant; the live rule reads the depth it does not have here.
+- The tape is sampled once a minute and carries the top of the book only: the two asks, whose sum over one is the spread, and nothing of what rests behind them. A fill at the ask is assumed for the size meant; the live rule reads the depth it does not have here.
+- The live favorites rule took a crossing at any spread until 24 October 2026; on this tape, a bar of 4¢ removes the empty books and most of the loss, and the rule carries it since.
 - The fee is the market's own coefficient times price times one less the price; the break-even rate is the mean cost, fee included.
 - The time left is to the venue's recorded finish (or the last minute the tape priced the game), not the game clock: an NFL game's last five minutes of play are more than five minutes of tape.
 - Positive and several errors wide, over hundreds of positions, before it means anything. The live record (`tracking/favorites.csv`) is the out-of-sample continuation of this table.
