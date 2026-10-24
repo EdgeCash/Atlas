@@ -289,7 +289,11 @@ def place(positions_: pd.DataFrame, passphrase: str, now: datetime, *, where: Pa
         LOG.info("live (%s): the %s rule is not on (%s)", m, rule, ",".join(rules()))
         return pd.DataFrame(columns=COLUMNS)
     ledger = load(passphrase, where)
-    signer = signer or account.Signer.from_env()
+    bad_key = None
+    if signer is None:
+        signer, bad_key = account.Signer.try_env()
+        if bad_key:
+            LOG.error("live (%s): %s; every order refused", m, bad_key)
     sess = sess or requests.Session()
     roll = bankroll()
     stamp = _stamp(now)
@@ -314,7 +318,7 @@ def place(positions_: pd.DataFrame, passphrase: str, now: datetime, *, where: Pa
                "state": "", "filled": 0.0, "avg_px": float("nan"), "fee": float("nan"), "paid": 0.0,
                "payout": float("nan"), "profit": float("nan"), "graded_at": None, "note": "", "equity": equity,
                "rule": rule}
-        why = "no bankroll" if roll <= 0 else (None if signer else "no key")
+        why = "no bankroll" if roll <= 0 else (None if signer else bad_key or "no key")
         why = why or held
         why = why or check(cost, pd.concat([ledger, pd.DataFrame(rows, columns=COLUMNS)], ignore_index=True)
                            if rows else ledger, str(x.day), now)

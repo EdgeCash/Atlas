@@ -71,6 +71,60 @@ def test_the_signature_is_the_venues_over_timestamp_method_and_path():
     assert account.Signer("k", SECRET).headers("GET", "/x")["X-PM-Timestamp"].isdigit()
 
 
+def test_the_secret_is_read_as_the_portal_shows_it_and_a_bad_one_says_so_without_quoting_it():
+    seed = bytes(range(32))
+    pem = ("-----BEGIN PRIVATE KEY-----\n"
+           + base64.b64encode(bytes.fromhex("302e020100300506032b657004220420") + seed).decode()
+           + "\n-----END PRIVATE KEY-----\n")
+    for form in (base64.b64encode(seed).decode(),                          # the venue's sample
+                 base64.b64encode(seed + bytes(32)).decode(),              # seed and public key
+                 base64.b64encode(seed).decode().rstrip("="),              # pasted without its padding
+                 base64.urlsafe_b64encode(seed).decode(),                  # the URL-safe alphabet
+                 seed.hex(), seed.hex().upper(),                            # hex
+                 f'"{base64.b64encode(seed).decode()}"\n',                   # quoted, with a newline
+                 base64.b64encode(bytes.fromhex("302e020100300506032b657004220420") + seed).decode(),  # DER
+                 pem):
+        assert account.decode_secret(form) == seed, form[:12]
+        assert account.Signer("k", form).public_key() == account.Signer("k", SECRET).public_key()
+    for bad in ("", "zqxjwvkp-is-no-key", base64.b64encode(b"short").decode(), "zz" * 16, "12345678-1234-1234-1234-123456789abc"):
+        with pytest.raises(ValueError) as caught:
+            account.decode_secret(bad)
+        assert "does not decode" in str(caught.value)
+        assert not bad or bad[:4] not in str(caught.value).replace("characters", "")
+
+
+def test_a_bad_secret_stops_the_previews_and_is_written_as_the_refusal_not_raised(monkeypatch, tmp_path):
+    from atlas.polymarket import orders
+
+    monkeypatch.delenv("ATLAS_OFFLINE", raising=False)
+    monkeypatch.setenv(account.KEY_ID, "key-1")
+    monkeypatch.setenv(account.SECRET_KEY, "12345678-1234-1234-1234-123456789abc")   # the key id, pasted twice
+    signer, why = account.Signer.try_env()
+    assert signer is None and why.startswith("bad key: the secret key does not decode")
+    record = _record([{"position_id": "p1", "market_slug": "m1", "long": True, "ask": 0.40}])
+    out = account.preview(record, {"p1"}, NOW)                                    # no raise, nothing previewed
+    assert pd.isna(out.set_index("position_id").loc["p1", "previewed_at"])
+    monkeypatch.setenv(orders.MODE, "live")
+    monkeypatch.setenv(orders.BANKROLL, "124")
+    ledger = orders.place(record, "pass", NOW, where=tmp_path / "live", rule="model")
+    assert list(ledger["state"]) == ["refused"] and ledger.iloc[0]["note"].startswith("bad key: the secret key")
+    assert "1234" not in ledger.iloc[0]["note"].replace("characters", "")
+
+
+def test_the_key_check_says_what_is_set_and_what_decodes(monkeypatch, capsys):
+    monkeypatch.setenv("ATLAS_OFFLINE", "1")
+    monkeypatch.delenv(account.KEY_ID, raising=False)
+    monkeypatch.delenv(account.SECRET_KEY, raising=False)
+    assert account.check() == 1 and "not set" in capsys.readouterr().out
+    monkeypatch.setenv(account.KEY_ID, "key-1")
+    monkeypatch.setenv(account.SECRET_KEY, "nope")
+    assert account.check() == 1 and "bad key" in capsys.readouterr().out
+    monkeypatch.setenv(account.SECRET_KEY, SECRET)
+    assert account.check() == 0
+    out = capsys.readouterr().out
+    assert "decodes to an Ed25519 key" in out and "offline" in out and SECRET[:8] not in out
+
+
 def test_the_key_comes_from_the_environment_and_without_it_nothing_is_signed(monkeypatch):
     monkeypatch.delenv(account.KEY_ID, raising=False)
     monkeypatch.delenv(account.SECRET_KEY, raising=False)
