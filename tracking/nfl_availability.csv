@@ -789,6 +789,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T08:13:01+00:00,2026-10-24T02:01Z,34,Houston Texans,HOU,4432699,Blake Fisher,OT,Out,OUT,Thumb,2026-11-01,"Fisher (thumb) has been ruled out against the Giants on Sunday, Adam Caplan of SiriusXM NFL Radio reports."
 2026-10-24T08:13:01+00:00,2026-10-24T02:04Z,19,New York Giants,NYG,4259566,Andrew Thomas,OT,Active,,,,Thomas (groin) does not have an injury designation against the Texans on Sunday.
 2026-10-24T08:13:01+00:00,2026-10-24T02:06Z,6,Dallas Cowboys,DAL,4384549,Cobie Durant,CB,Questionable,QUESTIONABLE,Hamstring,2026-10-26,"Durant (hamstring) was a full participant in Friday's practice, Todd Archer of ESPN.com reports."
+2026-10-24T20:52:58+00:00,2026-10-24T02:06Z,6,Dallas Cowboys,DAL,4384549,Cobie Durant,CB,Active,,,,"Durant (hamstring) was a full participant in Friday's practice, Todd Archer of ESPN.com reports."
 2026-10-24T08:13:01+00:00,2026-10-24T02:07Z,8,Detroit Lions,DET,4361788,Cade Mays,C,Injured Reserve,IR-R,Wrist Fracture,2026-10-25,Mays (wrist) is questionable against the Packers on Sunday.
 2026-10-24T20:37:55+00:00,2026-10-24T02:07Z,8,Detroit Lions,DET,4361788,Cade Mays,C,Active,,,,Mays (wrist) is questionable against the Packers on Sunday.
 2026-10-24T08:13:01+00:00,2026-10-24T02:10Z,9,Green Bay Packers,GB,4242390,Aaron Banks,G,Questionable,QUESTIONABLE,Knee,2026-10-25,"Banks (knee/toe) is listed as questionable for Sunday's game against the Lions, Wes Hodkiewicz of the Packers' official site reports."
@@ -926,4 +927,16 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T20:37:55+00:00,2026-10-24T20:23Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-10-25,questionable
 2026-10-24T20:37:55+00:00,2026-10-24T20:23Z,21,Philadelphia Eagles,PHI,3915106,Fred Johnson,OT,Active,,,,
 2026-10-24T20:37:55+00:00,2026-10-24T20:23Z,21,Philadelphia Eagles,PHI,4362116,Moro Ojomo,DT,Active,,,,
+2026-10-24T20:52:58+00:00,2026-10-24T20:26Z,1,Atlanta Falcons,ATL,4431210,Beaux Collins,WR,Injured Reserve,IR-R,Hip,2026-11-01,"Collins (hip) has been ruled out ahead of Sunday's game against the 49ers, Tori McElhaney of the Falcons' official site reports."
+2026-10-24T20:52:58+00:00,2026-10-24T20:30Z,1,Atlanta Falcons,ATL,4035886,Khalil Herbert,RB,Active,,,,"The Falcons elevated Herbert from the practice squad to the active roster Saturday, Tori McElhaney of the team's official site reports."
 2026-10-24T20:37:55+00:00,2026-10-24T20:32Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-24T20:52:58+00:00,2026-10-24T20:34Z,16,Minnesota Vikings,MIN,4360569,Jordan Mason,RB,Active,,,,"The Vikings activated Mason (thumb) from injured reserve Saturday, and he does not carry an injury designation into Sunday's game against the Colts."
+2026-10-24T20:52:58+00:00,2026-10-24T20:36Z,6,Dallas Cowboys,DAL,4428914,Dee Winters,LB,Out,OUT,Calf Strain,2026-11-01,out
+2026-10-24T20:52:58+00:00,2026-10-24T20:36Z,6,Dallas Cowboys,DAL,4685554,Drew Shelton,OT,Out,OUT,Hamstring,2026-11-01,out
+2026-10-24T20:52:58+00:00,2026-10-24T20:36Z,6,Dallas Cowboys,DAL,3676833,KaVontae Turpin,WR,Out,OUT,Ribs,2026-11-01,out
+2026-10-24T20:52:58+00:00,2026-10-24T20:37Z,22,Arizona Cardinals,ARI,4569609,Evan Hull,RB,Active,,,,"The Cardinals signed Hull from the practice squad to the active roster Saturday, Tyler Drake of ArizonaSports.com reports."
+2026-10-24T20:52:58+00:00,2026-10-24T20:37Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-24T20:52:58+00:00,2026-10-24T20:37Z,6,Dallas Cowboys,DAL,4428990,Broderick Jones,OT,Active,,,,
+2026-10-24T20:52:58+00:00,2026-10-24T20:37Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-10-25,questionable
+2026-10-24T20:52:58+00:00,2026-10-24T20:45Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-24T20:52:58+00:00,2026-10-24T20:46Z,25,San Francisco 49ers,SF,3895856,Christian Kirk,WR,Active,,,,The 49ers activated Kirk (calf) from injured reserve and removed his questionable designation for Sunday's game in Atlanta.
