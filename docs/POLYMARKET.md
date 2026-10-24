@@ -216,6 +216,31 @@ against the break-even rate (the mean cost), with a standard error, and the
 profit per dollar staked. Positive and several errors wide, over hundreds
 of positions, before it means anything.
 
+### The loop off the scheduled runs
+
+The scheduled run reads the venue every fifteen minutes and takes three to
+five minutes to start, and the tape says a favorite is worth buying only in
+the last minutes of its game, when a limit sent that late fills nothing. So
+from 24 October 2026 the rule can run as an always-on loop instead
+(`atlas/polymarket/worker.py`, `make polymarket-worker`): every 45 seconds
+while a game is in play (every three minutes while none is) it reads the
+four leagues' listings - four requests, each game with its moneyline's top
+of book and the venue's own period and clock - takes the crossings, grades
+the settled ones, writes `tracking/favorites.csv`, hands the new positions
+to the live step (late ones only unless `LIVE_PHASE` is `any`), grades the
+live ledger, and commits and pushes what changed. The late flag comes from
+the venue's clock, read seconds before the order rather than a poll before.
+
+It runs on any machine that stays up, from a clone it may push to:
+`deploy/favorites-worker.service` is the systemd unit and
+`deploy/favorites-worker.env.example` the environment, which is the
+scheduled run's less the ingest keys. Set the repository variable
+`FAVORITES_TAKER` to `worker` once it is up: the scheduled run then reads
+the record the worker pushed and takes, grades and orders nothing for this
+rule itself, so the two never write it at once. The scheduled run still
+logs the model's positions and places their orders; the worker's
+`LIVE_RULES` is `favorites`. Restart the service after pulling new code.
+
 ### The rule on the venue's own tape
 
 The same question can be asked of every game the venue has already settled
@@ -267,9 +292,10 @@ rules feed the step, each order's row naming its rule: the model's
 positions as they are logged once a day, and the favorites rule's
 positions as they are taken every poll, at the 85-cent crossing only; the
 repository variable `LIVE_RULES` names which of the two the step takes
-(`favorites`, `model`, or both, the default), and `LIVE_PHASE` set to
-`late` confines the favorites' orders to games in their final regulation
-period or past it, as the scoreboard stood at the poll. The caps, the stop and the floor are
+(`favorites`, `model`, or both, the default), and the favorites' orders go
+only on games in their final regulation period or past it - as the venue's
+clock stood when the worker took the position, or the scoreboard's at the
+poll - unless `LIVE_PHASE` is set to `any`. The caps, the stop and the floor are
 constants in the module, set for the owner as repository variables
 (`MAX_ORDER_DOLLARS`, `MAX_DAY_DOLLARS`, `MAX_OPEN_DOLLARS`,
 `LOSS_STOP_DOLLARS`, `BALANCE_FLOOR`), never widened by anything the venue

@@ -140,6 +140,7 @@ def test_the_rules_positions_reach_the_live_step_at_the_order_threshold(tmp_path
 
     monkeypatch.setenv("ATLAS_OFFLINE", "1")
     monkeypatch.setenv(orders.MODE, "dry")
+    monkeypatch.setenv(favorites.ORDER_PHASE, "any")        # the mechanics, whatever the phase; late is the default
     store = Store.open(tmp_path / "tracking")
     placed = []
     monkeypatch.setattr(orders, "place", lambda pos, passphrase, now, **kw: placed.append((pos, passphrase, kw)))
@@ -198,7 +199,7 @@ def test_the_late_switch_confines_the_live_step(tmp_path, monkeypatch):
 
     monkeypatch.setenv("ATLAS_OFFLINE", "1")
     monkeypatch.setenv(orders.MODE, "dry")
-    monkeypatch.setenv(favorites.ORDER_PHASE, "late")
+    monkeypatch.delenv(favorites.ORDER_PHASE, raising=False)                         # late is the default
     placed = []
     monkeypatch.setattr(orders, "place", lambda pos, passphrase, now, **kw: placed.append(pos))
     store = Store.open(tmp_path / "tracking")
@@ -210,7 +211,7 @@ def test_the_late_switch_confines_the_live_step(tmp_path, monkeypatch):
                                         "clock": "1:00", "kickoff": "2026-10-24T00:00:00Z"}]))
     favorites.refresh(store, pd.DataFrame([_quote("t2", 0.88, slug="m2")]), NOW + timedelta(minutes=15), passphrase="key")
     assert len(placed) == 1 and list(placed[0]["position_id"]) == ["fav:t2:0.85"]
-    monkeypatch.delenv(favorites.ORDER_PHASE)
+    monkeypatch.setenv(favorites.ORDER_PHASE, "any")
     favorites.refresh(store, pd.DataFrame([_quote("t3", 0.87, slug="m3", start="2026-10-25T00:00:00Z")]),
                       NOW + timedelta(minutes=30), passphrase="key")
     assert len(placed) == 2                                                          # any phase: pregame goes too

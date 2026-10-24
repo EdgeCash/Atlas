@@ -40,6 +40,8 @@ ROOT = Path(__file__).resolve().parents[1]
 #: The sealed records and what identifies a row in each.
 SEALED: dict[str, list[str]] = {
     "polymarket_positions": ["position_id"],
+    # The live ledger (atlas/polymarket/orders.py): a row per order written, the worker's and a run's alike.
+    "polymarket_live": ["position_id", "placed_at", "rule"],
 }
 
 

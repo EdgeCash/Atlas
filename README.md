@@ -25,6 +25,7 @@ college totals - the rule can take a contract.
 ```bash
 python -m atlas.polymarket refresh   # every run: capture, price, log, grade, seal, report
 python -m atlas.polymarket show      # the board and the record (needs ATLAS_OWNER_KEY)
+python -m atlas.polymarket.worker    # the favorites rule as an always-on loop, off the scheduled runs
 ```
 
 How it works, and what the record said on day one:
