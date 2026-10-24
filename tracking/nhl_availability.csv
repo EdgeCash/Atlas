@@ -160,3 +160,5 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T19:22:58+00:00,2026-10-24T19:17Z,8,Los Angeles Kings,LA,4697383,Quinton Byfield,RW,Out,OUT,Upper Body,2026-10-26,out
 2026-10-24T19:38:00+00:00,2026-10-24T19:23Z,4,Chicago Blackhawks,CHI,4565225,Bowen Byram,D,Out,OUT,Upper Body,2026-10-27,out
 2026-10-24T20:22:59+00:00,2026-10-24T20:08Z,17,Colorado Avalanche,COL,3943996,Nicolas Roy,C,Out,OUT,Lower Body,2026-10-28,out
+2026-10-24T21:38:00+00:00,2026-10-24T21:25Z,23,Washington Capitals,WSH,4272888,Logan Thompson,G,Injured Reserve,IR,Lower Body,2026-10-28,ir
+2026-10-24T21:38:00+00:00,2026-10-24T21:32Z,124292,Seattle Kraken,SEA,3114777,Jared McCann,LW,Injured Reserve,IR,Lower Body,2026-10-30,ir

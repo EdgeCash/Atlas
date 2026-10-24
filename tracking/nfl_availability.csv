@@ -923,6 +923,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T20:37:55+00:00,2026-10-24T20:13Z,29,Carolina Panthers,CAR,4880613,Bam Martin-Scott,LB,Active,,,,
 2026-10-24T20:37:55+00:00,2026-10-24T20:15Z,1,Atlanta Falcons,ATL,4239995,A.J. Terrell Jr.,CB,Active,,,,"The Falcons activated Terrell (groin) off injured reserve Saturday, Tori McElhaney of the team's official site reports."
 2026-10-24T20:37:55+00:00,2026-10-24T20:16Z,34,Houston Texans,HOU,4366031,Tank Dell,WR,Questionable,QUESTIONABLE,Left Knee - ACL + MCL Surgery,2026-10-25,"Dell (knee) was activated from injured reserve Saturday, but he remains questionable for Sunday's game against the Giants."
+2026-10-24T21:38:00+00:00,2026-10-24T20:16Z,34,Houston Texans,HOU,4366031,Tank Dell,WR,Active,,,,"Dell (knee) was activated from injured reserve Saturday, and his questionable designation has been removed for Sunday's game against the Giants."
 2026-10-24T20:22:59+00:00,2026-10-24T20:20Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-24T20:22:59+00:00,2026-10-24T20:20Z,21,Philadelphia Eagles,PHI,4240456,Michael Carter II,CB,Out,OUT,Abdomen,2026-11-01,out
 2026-10-24T20:22:59+00:00,2026-10-24T20:20Z,21,Philadelphia Eagles,PHI,4426331,Nolan Smith Jr.,LB,Out,OUT,Concussion Concussion,2026-11-01,out
@@ -956,3 +957,6 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T21:22:49+00:00,2026-10-24T21:06Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-24T21:22:49+00:00,2026-10-24T21:06Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-24T21:22:49+00:00,2026-10-24T21:06Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-10-25,questionable
+2026-10-24T21:38:00+00:00,2026-10-24T21:22Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-24T21:38:00+00:00,2026-10-24T21:22Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-24T21:38:00+00:00,2026-10-24T21:22Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-10-25,questionable
