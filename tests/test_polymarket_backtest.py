@@ -137,7 +137,9 @@ def test_the_report_says_what_it_holds(tmp_path):
                              columns=backtest.POSITION_COLUMNS)
     text, tables = backtest.report(gs, positions, now=datetime(2026, 10, 24, tzinfo=UTC))
     assert "| NBA | 1 | 1 |" in text and "## In play, all leagues" in text and "## Before the game" in text
-    assert {"in_play_by_time_left", "in_play_by_league", "in_play_by_latency", "pregame_by_league"} <= set(tables)
+    assert {"in_play_by_time_left", "in_play_tight_by_time_left", "in_play_by_league", "in_play_by_latency",
+            "pregame_by_league"} <= set(tables)
+    assert "tight book" in text and tables["in_play_tight_by_time_left"]["taken"].sum() <= tables["in_play_by_time_left"]["taken"].sum()
     assert set(tables["in_play_by_latency"]["latency"]) == set(backtest.LATENCIES)
     out = backtest.write(gs, positions, reports=tmp_path, raw=tmp_path / "raw")
     assert out.read_text().splitlines()[4:] == text.splitlines()[4:]          # the same but for the build time

@@ -51,7 +51,7 @@ from pathlib import Path
 import pandas as pd
 
 from atlas import config
-from atlas.polymarket import favorites, pricing, source
+from atlas.polymarket import favorites, positions, pricing, source
 from atlas.util import get_logger, session
 
 LOG = get_logger(__name__)
@@ -63,6 +63,11 @@ THRESHOLDS = (*favorites.THRESHOLDS, 0.97)
 CEILING = favorites.CEILING
 #: Minutes between the crossing and the order, for the stale-limit fills.
 LATENCIES = (1, 5, 15)
+#: A tight book: the long and the short ask summing to no more than this over one, the model rule's own
+#: bar (`atlas/polymarket/positions.py`). A wider one is an ask with nothing behind it, not a price.
+TIGHT = positions.MAX_SPREAD
+#: In play with this much tape or less to the finish: late.
+LATE_MINUTES = 15.0
 #: The history read for a game: this long before the start, to this long after the finish (or after the
 #: start, when the finish is not recorded).
 BEFORE = timedelta(hours=2)
@@ -501,38 +506,56 @@ def report(gs: pd.DataFrame, positions: pd.DataFrame, now: datetime | None = Non
         lines += ["No positions: no game's tape crossed a threshold.", ""]
         return "\n".join(lines), tables
     inplay = positions[positions["phase"] == "in_play"]
+    spread = pd.to_numeric(inplay["spread"], errors="coerce")
+    tight = inplay[spread <= TIGHT]
+    late = tight[tight["bucket"].isin([name for floor, name in BUCKETS if floor < LATE_MINUTES])]
     # Headline
     lines += ["## In play, all leagues, by how much of the game was left", "",
               "The question asked of the tape: once a side's ask reaches the threshold during the game, does it "
-              "win more often than it costs, and does that depend on how late it is. The ideal fill, at the "
-              "trigger minute's ask.", ""]
+              "win more often than it costs, and does that depend on how late it is. Every crossing, at the "
+              "trigger minute's ask, however wide the book was.", ""]
     s = _ordered(summary(inplay, by=("bucket", "threshold")))
     tables["in_play_by_time_left"] = s
     lines += [_table(s, ["bucket", "threshold"]), ""]
+    lines += [f"## The same, with a tight book ({TIGHT * 100:.0f}¢ or less between the two asks)", "",
+              "An ask over the threshold with nothing near it on the other side is an empty book, not a price: "
+              f"one crossing in five is at a spread over {TIGHT * 100:.0f}¢, and those are where the worst "
+              "of the table above comes from. The model rule declines such a quote; this is the favorites rule "
+              "with the same bar.", ""]
+    s = _ordered(summary(tight, by=("bucket", "threshold")))
+    tables["in_play_tight_by_time_left"] = s
+    lines += [_table(s, ["bucket", "threshold"]), ""]
+    if len(late):
+        lines += [f"### Under {LATE_MINUTES:.0f} minutes of tape left, tight book, by league", ""]
+        s = summary(late, by=("league", "threshold")).assign(league=lambda d: d["league"].str.upper())
+        tables["late_tight_by_league"] = s
+        lines += [_table(s, ["league", "threshold"]), ""]
     # By league
-    lines += ["## In play, by league", ""]
+    lines += ["## In play, by league, every crossing", ""]
     s = summary(inplay, by=("league", "threshold")).assign(league=lambda d: d["league"].str.upper())
     tables["in_play_by_league"] = s
     lines += [_table(s, ["league", "threshold"]), ""]
-    late = inplay[inplay["bucket"].isin([name for floor, name in BUCKETS if floor < 15.0])]
-    if len(late):
-        lines += ["### In play with under 15 minutes left, by league", ""]
-        s = summary(late, by=("league", "threshold")).assign(league=lambda d: d["league"].str.upper())
-        tables["late_by_league"] = s
-        lines += [_table(s, ["league", "threshold"]), ""]
     # Execution
     lines += ["## What a slow loop would actually get", "",
-              "The same in-play positions, filled as a poller would fill them: it sees the crossing some minutes "
-              "late and sends a limit at the ask it saw. The order fills only when the ask has not risen since "
-              "(the lead has not grown) and misses when it has. A fifteen-minute latency is what a quarter-hourly "
-              "scheduled job delivers.", ""]
+              "The same positions, filled as a poller would fill them: it sees the crossing some minutes late "
+              "and sends a limit at the ask it saw. The order fills only when the ask has not risen since (the "
+              "lead has not grown) and misses when it has, so the fills are a selected set and their break-even "
+              "is lower than the trigger price. A fifteen-minute latency is what a quarter-hourly scheduled "
+              "job delivers; on a late position it cannot fill at all, because the game is over.", "",
+              "Every in-play crossing:", ""]
     parts = []
     for L in latencies:
         parts.append(summary(inplay, by=("threshold",), latency=L).assign(latency=L))
-    s = pd.concat(parts, ignore_index=True)[["latency", "threshold", "taken", "filled", "win_rate", "break_even",
-                                             "edge", "se", "profit_per_dollar"]]
+    cols = ["latency", "threshold", "taken", "filled", "win_rate", "break_even", "edge", "se", "profit_per_dollar"]
+    s = pd.concat(parts, ignore_index=True)[cols]
     tables["in_play_by_latency"] = s
     lines += [_table(s, ["latency", "threshold"], filled=True), ""]
+    if len(late):
+        lines += [f"Under {LATE_MINUTES:.0f} minutes left with a tight book:", ""]
+        parts = [summary(late, by=("threshold",), latency=L).assign(latency=L) for L in latencies]
+        s = pd.concat(parts, ignore_index=True)[cols]
+        tables["late_tight_by_latency"] = s
+        lines += [_table(s, ["latency", "threshold"], filled=True), ""]
     # Pregame
     pre = positions[positions["phase"] == "pregame"]
     if len(pre):
@@ -545,8 +568,11 @@ def report(gs: pd.DataFrame, positions: pd.DataFrame, now: datetime | None = Non
     lines += ["## Reading it", "",
               "- A position is one side of one game at one threshold in one phase; a side that climbs through "
               "several thresholds appears at each, so the standard errors are clustered by game.",
-              "- The tape is sampled once a minute and carries the top of the book only. A fill at the ask is "
-              "assumed for the size meant; the live rule reads the depth it does not have here.",
+              "- The tape is sampled once a minute and carries the top of the book only: the two asks, whose sum "
+              "over one is the spread, and nothing of what rests behind them. A fill at the ask is assumed for "
+              "the size meant; the live rule reads the depth it does not have here.",
+              f"- The live favorites rule takes a crossing at any spread. On this tape, a bar of {TIGHT * 100:.0f}¢ "
+              "removes the empty books and most of the loss, and is the one change the backtest argues for.",
               "- The fee is the market's own coefficient times price times one less the price; the break-even "
               "rate is the mean cost, fee included.",
               "- The time left is to the venue's recorded finish (or the last minute the tape priced the game), "
