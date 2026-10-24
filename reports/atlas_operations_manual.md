@@ -1,6 +1,6 @@
 # Atlas Operations Manual
 
-*Generated 2026-10-24 19:07 UTC by `python -m atlas.live check`. Atlas research is
+*Generated 2026-10-24 19:22 UTC by `python -m atlas.live check`. Atlas research is
 complete; this document is about keeping the live tracker alive and honest for
 two seasons.*
 
@@ -17,8 +17,8 @@ two seasons.*
 |---|---|
 | Signals recorded | 468 |
 | Grades recorded | 382 |
-| Line snapshots | 5,520 |
-| Tracker runs logged | 617 |
+| Line snapshots | 5,540 |
+| Tracker runs logged | 618 |
 | Blocking data-quality exceptions | 0 |
 | Monitor alerts firing | 2 |
 | Replays clean | 9 of 9 |
@@ -100,23 +100,23 @@ trace(Store.open(), "<signal_id>")   # signal, grade, full line history, run
 
 | Table | Rows | Columns | Primary key |
 |---|---|---|---|
-| runs | 617 | 14 | run_id |
+| runs | 618 | 14 | run_id |
 | numbers | 2,792 | 8 | game_id, market, model_version, refreshed_at |
 | projections | 6,232 | 49 | sport, game_id, model_version |
 | nhl_projections | 146 | 42 | game_id, model_version |
 | calibration | 49,734 | 10 | sport, game_id, market |
 | card_grades | 289 | 17 | sport, game_id |
 | other_models | 878 | 9 | sport, game_id, model |
-| polymarket_quotes | 6,396 | 26 | token_id, captured_at |
-| polymarket_props | 49,996 | 29 | token_id, captured_at |
-| nba_availability | 230 | 13 | player_id, reported_at, status |
-| nfl_availability | 876 | 13 | player_id, reported_at, status |
+| polymarket_quotes | 6,526 | 26 | token_id, captured_at |
+| polymarket_props | 50,612 | 29 | token_id, captured_at |
+| nba_availability | 231 | 13 | player_id, reported_at, status |
+| nfl_availability | 879 | 13 | player_id, reported_at, status |
 | nhl_availability | 158 | 13 | player_id, reported_at, status |
-| favorites | 187 | 30 | token_id, threshold |
+| favorites | 190 | 30 | token_id, threshold |
 | prop_record | 0 | 13 | token_id |
 | availability | 1,161 | 13 | conference, report_id, team, player |
 | games | 570 | 17 | game_id |
-| snapshots | 5,520 | 11 | game_id, book, market, captured_at |
+| snapshots | 5,540 | 11 | game_id, book, market, captured_at |
 | signals | 468 | 17 | signal_id |
 | grades | 382 | 14 | signal_id |
 | market_shape | 486 | 5 | sport, market, point |
