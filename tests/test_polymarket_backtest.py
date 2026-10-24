@@ -141,3 +141,27 @@ def test_the_report_says_what_it_holds(tmp_path):
     assert (tmp_path / "raw" / "favorites_backtest_positions.csv").exists()
     text, _ = backtest.report(gs, pd.DataFrame(columns=backtest.POSITION_COLUMNS))
     assert "No positions" in text
+
+
+def test_the_closed_listing_is_read_to_its_end_in_pages_and_resumed_from_the_cache(tmp_path):
+    # Forty-one hundred events, in pages that are not all full (the listing filters after it paginates), so
+    # the walk advances by what each page held and dedupes by id; an empty page is the end.
+    total = 4_100
+    seen: list[int] = []
+
+    def fetch(offset):
+        seen.append(offset)
+        n = backtest.PAGE - (1 if offset % 1500 == 0 else 0)
+        return [{"id": str(i), "slug": f"nba-x-y-{i}"} for i in range(offset, min(offset + n, total))]
+
+    cache = tmp_path / "closed.json"
+    events = backtest.closed_events(cache=cache, fetch=fetch)
+    assert len(events) == total and cache.exists()
+    assert min(seen) == 0 and max(seen) >= total
+    # A rerun starts near the end of the cache, not at the beginning, and keeps everything it had.
+    seen.clear()
+    again = backtest.closed_events(cache=cache, fetch=fetch)
+    assert len(again) == total and min(seen) == total - backtest.OVERLAP
+    seen.clear()
+    backtest.closed_events(cache=cache, fetch=fetch, refresh=True)
+    assert min(seen) == 0

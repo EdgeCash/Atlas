@@ -91,30 +91,51 @@ def raw_dir() -> Path:
 #: How far back from the end of the cached listing a rerun starts reading, since the listing is oldest first
 #: and new events arrive at its end.
 OVERLAP = 2_000
+#: Pages of the listing read at once: the gateway allows twenty-five requests a second, and the listing is
+#: hundreds of pages long.
+WORKERS = 8
 
 
-def closed_events(sess=None, *, cache: Path | None = None, refresh: bool = False) -> list[dict]:
-    """Every closed event the gateway lists - well over a hundred thousand, most of them tennis - read in
-    full once and cached; a rerun reads on from near the end of the cache, where the new ones are, and
-    ``refresh`` reads the whole listing again. The listing's pages are not all full, so it is read until
-    an empty one."""
+def _page(offset: int) -> list[dict]:
+    page = source._get("/v1/events", {"closed": "true", "limit": PAGE, "offset": offset}, session(), timeout=120)
+    events = page.get("events") if isinstance(page, dict) else None
+    return list(events or [])
+
+
+def closed_events(sess=None, *, cache: Path | None = None, refresh: bool = False, fetch=None) -> list[dict]:
+    """Every closed event the gateway lists - hundreds of thousands, most of them tennis - read in full once
+    and cached; a rerun reads on from near the end of the cache, where the new ones are, and ``refresh``
+    reads the whole listing again. Pages are read several at a time, in order, until an empty one; they
+    are not all full, so an empty page is the end and a short one is not. ``fetch(offset)`` is the page."""
+    from concurrent.futures import ThreadPoolExecutor
+
     cache = cache or raw_dir() / "closed_events.json"
-    sess = sess or session()
+    fetch = fetch or _page
     out: dict[str, dict] = {}
     offset = 0
     if cache.exists() and not refresh:
         for e in json.loads(cache.read_text()).get("events", []):
             out[str(e.get("id"))] = e
         offset = max(0, len(out) - OVERLAP)
-    while True:
-        page = source._get("/v1/events", {"closed": "true", "limit": PAGE, "offset": offset}, sess, timeout=120)
-        events = page.get("events") if isinstance(page, dict) else None
-        if not events:
-            break
-        for e in events:
-            out[str(e.get("id"))] = e
-        offset += len(events)
-        time.sleep(source.PAUSE)
+    with ThreadPoolExecutor(max_workers=WORKERS) as pool:
+        while True:
+            offsets = [offset + i * PAGE for i in range(WORKERS)]
+            pages = list(pool.map(fetch, offsets))
+            ended = False
+            for at, page in zip(offsets, pages, strict=True):
+                if not page:
+                    ended = True
+                    break
+                for e in page:
+                    out[str(e.get("id"))] = e
+                offset = at + len(page)
+                if len(page) < PAGE:
+                    # A short page: the pages read after it may have skipped some, so the next batch
+                    # starts where it ended (a repeat is deduped by id; a gap is not recoverable).
+                    break
+            if ended:
+                break
+            time.sleep(source.PAUSE)
     cache.parent.mkdir(parents=True, exist_ok=True)
     cache.write_text(json.dumps({"fetched_at": datetime.now(UTC).isoformat(), "events": list(out.values())}))
     LOG.info("backtest: %d closed events read", len(out))
