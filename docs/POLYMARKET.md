@@ -213,6 +213,28 @@ against the break-even rate (the mean cost), with a standard error, and the
 profit per dollar staked. Positive and several errors wide, over hundreds
 of positions, before it means anything.
 
+### The rule on the venue's own tape
+
+The same question can be asked of every game the venue has already settled
+(`atlas/polymarket/backtest.py`, `make polymarket-backtest`). The gateway
+lists its closed events back to November 2025 - the NBA, the NHL, the NFL,
+college football and college basketball among them - each with its teams,
+its start, when it finished and the moneyline's settled price per side; and
+its price history at a one-minute fidelity carries each side's ask for
+every minute the market was open, which is the price the rule buys at. The
+backtest replays the rule on that tape: for each side of each game, before
+the start and in play, a position at the first minute its ask reached each
+threshold, at that ask plus the fee, graded by the settled price, and
+summed the way the live record is - by league, by threshold, and by how
+many minutes of the game were left. It also fills each position as a slow
+poller would, a limit at the ask it saw sent one, five or fifteen minutes
+late, which fills only when the ask has not risen since: the adverse
+selection of a scheduled loop, measured. The report is
+[`reports/favorites_backtest.md`](../reports/favorites_backtest.md), its
+tables `reports/tables/favorites_backtest_*.csv`; the tape is cached under
+`data/raw/polymarket_us/` so a rerun costs only the new games. The live
+record is the out-of-sample continuation of it.
+
 ## Going live, armed off
 
 The step that would place real orders exists and ships off
