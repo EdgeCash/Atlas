@@ -710,6 +710,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T08:13:01+00:00,2026-10-23T23:43Z,13,Las Vegas Raiders,LV,4432775,Dont'e Thornton Jr.,WR,Injured Reserve,IR-R,Hamstring,2026-11-01,"Thornton (hamstring) has been ruled out for Sunday's game against the Rams, Sam Warren of The Athletic reports."
 2026-10-24T08:13:01+00:00,2026-10-23T23:45Z,5,Cleveland Browns,CLE,4427238,Dillon Gabriel,QB,Injured Reserve,IR-R,Back,2026-11-01,"Gabriel (back) has been ruled out ahead of Sunday's game against the Titans, Zac Jackson of The Athletic reports."
 2026-10-24T08:13:01+00:00,2026-10-23T23:47Z,12,Kansas City Chiefs,KC,4596602,Brashard Smith,RB,Out,OUT,Hamstring,2026-11-01,Smith (hamstring) has been ruled out for Sunday's game against the Seahawks.
+2026-10-24T17:52:48+00:00,2026-10-23T23:47Z,12,Kansas City Chiefs,KC,4596602,Brashard Smith,RB,Injured Reserve,IR,Hamstring,2026-11-22,Smith (hamstring) has been ruled out for Sunday's game against the Seahawks.
 2026-10-24T08:13:01+00:00,2026-10-23T23:50Z,12,Kansas City Chiefs,KC,4040432,L'Jarius Sneed,CB,Questionable,QUESTIONABLE,Knee,2026-10-25,Sneed (knee) is questionable for Sunday's game against the Seahawks.
 2026-10-24T08:13:01+00:00,2026-10-23T23:50Z,14,Los Angeles Rams,LAR,4710855,Konata Mumpfield,WR,Active,,,,Mumpfield could get a significant bump in opportunity Sunday in Week 7 against Las Vegas since Davante Adams (hamstring) is on IR and Puka Nacua (calf) is quest
 2026-10-24T08:13:01+00:00,2026-10-23T23:51Z,33,Baltimore Ravens,BAL,3915837,Broderick Washington Jr.,DT,Questionable,QUESTIONABLE,Ankle,2026-10-25,Washington (ankle) is listed as questionable for Sunday's game against the Bengals.
@@ -857,3 +858,4 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T17:38:02+00:00,2026-10-24T17:22Z,12,Kansas City Chiefs,KC,4596602,Brashard Smith,RB,Injured Reserve,IR,Hamstring,2026-11-22,ir
 2026-10-24T17:38:02+00:00,2026-10-24T17:22Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-10-25,questionable
 2026-10-24T17:38:02+00:00,2026-10-24T17:26Z,5,Cleveland Browns,CLE,4242208,Grant Delpit,S,Active,,,,Delpit (concussion) does not have any injury designation ahead of Sunday's game against the Titans.
+2026-10-24T17:52:48+00:00,2026-10-24T17:31Z,19,New York Giants,NYG,4373809,Jevon Holland,S,Out,OUT,Concussion Concussion,2026-11-08,"Holland (concussion) has been ruled out ahead of Sunday's game against the Texans, Mike Garafolo of NFL Network reports."
