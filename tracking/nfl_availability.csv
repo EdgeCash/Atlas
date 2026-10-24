@@ -96,6 +96,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T08:13:01+00:00,2026-10-16T20:38Z,10,Tennessee Titans,TEN,4570469,Marcus Harris,CB,Active,,,,
 2026-10-24T08:13:01+00:00,2026-10-16T20:48Z,12,Kansas City Chiefs,KC,4871063,Peter Woods,DT,Active,,,,
 2026-10-24T08:13:01+00:00,2026-10-17T00:22Z,20,New York Jets,NYJ,4569371,Isaiah Williams,WR,Active,,,,Williams should continue to serve as the No. 3 wide receiver behind Garrett Wilson and Tim Patrick for Sunday's game against the Patriots due to the absence of 
+2026-10-24T21:07:57+00:00,2026-10-17T00:34Z,26,Seattle Seahawks,SEA,4576297,AJ Barner,TE,Active,,,,Barner caught three of four passes for 16 yards during the Seahawks' 17-14 overtime loss to the Broncos on Thursday.
 2026-10-24T08:13:01+00:00,2026-10-17T00:41Z,26,Seattle Seahawks,SEA,2977187,Cooper Kupp,WR,Active,,,,Kupp caught five of 10 targets for 50 yards during the Seahawks' 17-14 overtime loss to the Broncos on Thursday.
 2026-10-24T08:13:01+00:00,2026-10-17T00:43Z,7,Denver Broncos,DEN,3051876,Evan Engram,TE,Active,,,,Engram caught both targets for 13 yards in Denver's 17-14 overtime win over the Seahawks on Thursday night.
 2026-10-24T08:13:01+00:00,2026-10-17T00:55Z,30,Jacksonville Jaguars,JAX,2970716,Eric Murray,S,Active,,,,Murray (concussion) does not have an injury designation ahead of Sunday's game against the Texans.
@@ -938,5 +939,13 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T20:52:58+00:00,2026-10-24T20:37Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-24T20:52:58+00:00,2026-10-24T20:37Z,6,Dallas Cowboys,DAL,4428990,Broderick Jones,OT,Active,,,,
 2026-10-24T20:52:58+00:00,2026-10-24T20:37Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-10-25,questionable
+2026-10-24T21:07:57+00:00,2026-10-24T20:40Z,7,Denver Broncos,DEN,4362748,Tyler Badie,RB,Injured Reserve,IR,Thumb,2026-11-27,ir
+2026-10-24T21:07:57+00:00,2026-10-24T20:41Z,7,Denver Broncos,DEN,4687592,Jonah Elliss,LB,Injured Reserve,IR,Ankle,2026-11-27,ir
+2026-10-24T21:07:57+00:00,2026-10-24T20:45Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-24T20:52:58+00:00,2026-10-24T20:45Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-24T21:07:57+00:00,2026-10-24T20:45Z,8,Detroit Lions,DET,4692025,Brian Branch,S,Active,,,,The Lions activated Branch (Achilles) from injured reserve Saturday.
+2026-10-24T21:07:57+00:00,2026-10-24T20:45Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-10-25,questionable
 2026-10-24T20:52:58+00:00,2026-10-24T20:46Z,25,San Francisco 49ers,SF,3895856,Christian Kirk,WR,Active,,,,The 49ers activated Kirk (calf) from injured reserve and removed his questionable designation for Sunday's game in Atlanta.
+2026-10-24T21:07:57+00:00,2026-10-24T20:48Z,7,Denver Broncos,DEN,4702555,Jonah Coleman,RB,Questionable,QUESTIONABLE,Ankle Sprain,2026-10-25,"The Broncos activated Coleman (ankle) from injured reserve Saturday, Jeremy Fowler of ESPN.com reports."
+2026-10-24T21:07:57+00:00,2026-10-24T20:50Z,33,Baltimore Ravens,BAL,4690179,Tavius Robinson,LB,Injured Reserve,IR,Pectoral,2027-02-15,The Ravens placed Robinson (pectoral) on injured reserve Saturday.
+2026-10-24T21:07:57+00:00,2026-10-24T21:05Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
