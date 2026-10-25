@@ -1468,4 +1468,21 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-25T23:07:47+00:00,2026-10-25T22:53Z,20,New York Jets,NYJ,3124679,Jason Sanders,PK,Active,,,,Sanders went 1-for-2 on field-goal tries and made both of his extra-point attempts during Sunday's 28-25 loss to Miami.
 2026-10-25T23:07:47+00:00,2026-10-25T22:55Z,25,San Francisco 49ers,SF,3040151,George Kittle,TE,Active,,,,Kittle brought in eight of 10 targets for 88 yards and lost a fumble in the 49ers' 29-20 loss to the Falcons on Sunday.
 2026-10-25T23:07:47+00:00,2026-10-25T22:56Z,14,Los Angeles Rams,LAR,4697639,Jaylen Watson,CB,Questionable,QUESTIONABLE,Undisclosed Cramps,2026-10-25,questionable
+2026-10-25T23:22:59+00:00,2026-10-25T23:00Z,14,Los Angeles Rams,LAR,4697639,Jaylen Watson,CB,Active,,,,
+2026-10-25T23:22:59+00:00,2026-10-25T23:00Z,26,Seattle Seahawks,SEA,3924327,Drew Lock,QB,Out,INACTIVE,Right Elbow,2026-11-02,"Lock (elbow) is inactive but serving as the Seahawks' emergency third quarterback for Sunday night's contest against the Chiefs, Curtis Crabtree of Fox 13 Seatt"
+2026-10-25T23:22:59+00:00,2026-10-25T23:03Z,1,Atlanta Falcons,ATL,4360423,Michael Penix Jr.,QB,Active,,,,Penix completed 25 of 34 passes for 213 yards with three touchdowns and no interceptions and added five carries for minus-1 yard in the Falcons' 29-20 win over 
+2026-10-25T23:22:59+00:00,2026-10-25T23:04Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-25T23:07:47+00:00,2026-10-25T23:04Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-25T23:22:59+00:00,2026-10-25T23:04Z,12,Kansas City Chiefs,KC,4372070,Ben VanSumeren,FB,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T23:22:59+00:00,2026-10-25T23:04Z,12,Kansas City Chiefs,KC,4567747,Garrett Nussmeier,QB,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T23:22:59+00:00,2026-10-25T23:04Z,12,Kansas City Chiefs,KC,4837252,Jack Pyburn,LB,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T23:22:59+00:00,2026-10-25T23:04Z,12,Kansas City Chiefs,KC,4710706,Jadon Canady,CB,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T23:22:59+00:00,2026-10-25T23:04Z,12,Kansas City Chiefs,KC,4040432,L'Jarius Sneed,CB,Active,,,,
+2026-10-25T23:22:59+00:00,2026-10-25T23:04Z,12,Kansas City Chiefs,KC,4428331,Rashee Rice,WR,Out,INACTIVE,Hamstring,2026-11-01,inactive
+2026-10-25T23:22:59+00:00,2026-10-25T23:05Z,26,Seattle Seahawks,SEA,4605491,Connor O'Toole,LB,Out,INACTIVE,Hamstring,2026-11-02,O'Toole (hamstring) is inactive for Sunday night's game against the Chiefs.
+2026-10-25T23:22:59+00:00,2026-10-25T23:05Z,26,Seattle Seahawks,SEA,4432734,Jalen Milroe,QB,Active,,,,Milroe is active and operating as the Seahawks' primary backup quarterback for Sunday night's matchup with Kansas City.
+2026-10-25T23:22:59+00:00,2026-10-25T23:07Z,8,Detroit Lions,DET,4566092,Ennis Rakestraw Jr.,CB,Questionable,QUESTIONABLE,Ankle,2026-10-25,Rakestraw exited Sunday's game against the Packers with an ankle injury and is questionable to return.
+2026-10-25T23:22:59+00:00,2026-10-25T23:08Z,26,Seattle Seahawks,SEA,4869523,Nick Emmanwori,S,Active,,,,Emmanwori (hip) is active for Sunday night's contest against the Chiefs.
+2026-10-25T23:22:59+00:00,2026-10-25T23:10Z,5,Cleveland Browns,CLE,5081397,Dylan Sampson,RB,Active,,,,Sampson carried the ball six times for 45 yards and caught all three of his targets for 32 yards in Sunday's 27-24 win over the Titans.
+2026-10-25T23:22:59+00:00,2026-10-25T23:18Z,5,Cleveland Browns,CLE,5083076,Harold Fannin Jr.,TE,Active,,,,Fannin caught six of nine targets for 91 yards in Sunday's 27-24 win over the Titans.
+2026-10-25T23:22:59+00:00,2026-10-25T23:20Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
