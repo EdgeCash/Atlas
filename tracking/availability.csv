@@ -1018,27 +1018,27 @@ captured_at,conference,report_id,publish_date,posted_time,time_zone,report_type,
 2026-10-23T12:43:52+00:00,SEC,3383,2026-10-22,19:10:00,CT,Update 1,Vanderbilt,Kentucky,11,Jack Elliott,Available,NonExempt
 2026-10-23T12:43:52+00:00,SEC,3383,2026-10-22,19:10:00,CT,Update 1,Vanderbilt,Kentucky,2,Jared Curtis,Available,NonExempt
 2026-10-23T12:43:52+00:00,SEC,3383,2026-10-22,19:10:00,CT,Update 1,Vanderbilt,Kentucky,10,Whit Muschamp,Available,NonExempt
-2026-10-24T08:12:58+00:00,ACC,3287,2026-10-23,17:00:00,ET,Game Day,Duke,Virginia,11,Ari Patu,Available,NonExempt
-2026-10-24T08:12:58+00:00,ACC,3287,2026-10-23,17:00:00,ET,Game Day,Duke,Virginia,12,Blaine Hipa,Available,NonExempt
-2026-10-24T08:12:58+00:00,ACC,3287,2026-10-23,17:00:00,ET,Game Day,Duke,Virginia,10,Dan Mahan,Available,NonExempt
-2026-10-24T08:12:58+00:00,ACC,3287,2026-10-23,17:00:00,ET,Game Day,Duke,Virginia,16,Lawrence Gardner,Out,NonExempt
-2026-10-24T08:12:58+00:00,ACC,3287,2026-10-23,17:00:00,ET,Game Day,Duke,Virginia,13,Terry Walker III,Available,NonExempt
-2026-10-24T08:12:58+00:00,ACC,3287,2026-10-23,17:00:00,ET,Game Day,Duke,Virginia,2,Walker Eget,Available,NonExempt
-2026-10-24T08:12:58+00:00,ACC,3287,2026-10-23,17:00:00,ET,Game Day,Virginia,Duke,7,Beau Pribula,Available,NonExempt
-2026-10-24T08:12:58+00:00,ACC,3287,2026-10-23,17:00:00,ET,Game Day,Virginia,Duke,14,Boone Lourd,Available,NonExempt
-2026-10-24T08:12:58+00:00,ACC,3287,2026-10-23,17:00:00,ET,Game Day,Virginia,Duke,6,Cole Geer,Available,NonExempt
-2026-10-24T08:12:58+00:00,ACC,3287,2026-10-23,17:00:00,ET,Game Day,Virginia,Duke,10,Eli Holstein,Available,NonExempt
-2026-10-24T08:12:58+00:00,ACC,3287,2026-10-23,17:00:00,ET,Game Day,Virginia,Duke,16,Ely Hamrick,Available,NonExempt
-2026-10-24T08:12:58+00:00,ACC,3293,2026-10-23,20:30:00,ET,Game Day,NC State,Stanford,11,CJ Bailey,Available,NonExempt
-2026-10-24T08:12:58+00:00,ACC,3293,2026-10-23,20:30:00,ET,Game Day,NC State,Stanford,15,Hudson Wilharm,Available,NonExempt
-2026-10-24T08:12:58+00:00,ACC,3293,2026-10-23,20:30:00,ET,Game Day,NC State,Stanford,16,Parker Thompson,Available,NonExempt
-2026-10-24T08:12:58+00:00,ACC,3293,2026-10-23,20:30:00,ET,Game Day,NC State,Stanford,12,Tad Hudson,Available,NonExempt
-2026-10-24T08:12:58+00:00,ACC,3293,2026-10-23,20:30:00,ET,Game Day,NC State,Stanford,10,Will Wilson,Available,NonExempt
-2026-10-24T08:12:58+00:00,ACC,3293,2026-10-23,20:30:00,ET,Game Day,Stanford,NC State,17,Charlie Mirer,Available,NonExempt
-2026-10-24T08:12:58+00:00,ACC,3293,2026-10-23,20:30:00,ET,Game Day,Stanford,NC State,8,Davis Warren,Available,NonExempt
-2026-10-24T08:12:58+00:00,ACC,3293,2026-10-23,20:30:00,ET,Game Day,Stanford,NC State,27,Devin Mignery,Available,NonExempt
-2026-10-24T08:12:58+00:00,ACC,3293,2026-10-23,20:30:00,ET,Game Day,Stanford,NC State,10,Dylan Rizk,Available,NonExempt
-2026-10-24T08:12:58+00:00,ACC,3293,2026-10-23,20:30:00,ET,Game Day,Stanford,NC State,9,Michael Mitchell Jr.,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3287,2026-10-23,17:00:00,ET,Game Day,Duke,Virginia,11,Ari Patu,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3287,2026-10-23,17:00:00,ET,Game Day,Duke,Virginia,12,Blaine Hipa,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3287,2026-10-23,17:00:00,ET,Game Day,Duke,Virginia,10,Dan Mahan,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3287,2026-10-23,17:00:00,ET,Game Day,Duke,Virginia,16,Lawrence Gardner,Out,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3287,2026-10-23,17:00:00,ET,Game Day,Duke,Virginia,13,Terry Walker III,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3287,2026-10-23,17:00:00,ET,Game Day,Duke,Virginia,2,Walker Eget,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3287,2026-10-23,17:00:00,ET,Game Day,Virginia,Duke,7,Beau Pribula,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3287,2026-10-23,17:00:00,ET,Game Day,Virginia,Duke,14,Boone Lourd,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3287,2026-10-23,17:00:00,ET,Game Day,Virginia,Duke,6,Cole Geer,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3287,2026-10-23,17:00:00,ET,Game Day,Virginia,Duke,10,Eli Holstein,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3287,2026-10-23,17:00:00,ET,Game Day,Virginia,Duke,16,Ely Hamrick,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3293,2026-10-23,20:30:00,ET,Game Day,NC State,Stanford,11,CJ Bailey,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3293,2026-10-23,20:30:00,ET,Game Day,NC State,Stanford,15,Hudson Wilharm,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3293,2026-10-23,20:30:00,ET,Game Day,NC State,Stanford,16,Parker Thompson,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3293,2026-10-23,20:30:00,ET,Game Day,NC State,Stanford,12,Tad Hudson,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3293,2026-10-23,20:30:00,ET,Game Day,NC State,Stanford,10,Will Wilson,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3293,2026-10-23,20:30:00,ET,Game Day,Stanford,NC State,17,Charlie Mirer,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3293,2026-10-23,20:30:00,ET,Game Day,Stanford,NC State,8,Davis Warren,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3293,2026-10-23,20:30:00,ET,Game Day,Stanford,NC State,27,Devin Mignery,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3293,2026-10-23,20:30:00,ET,Game Day,Stanford,NC State,10,Dylan Rizk,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3293,2026-10-23,20:30:00,ET,Game Day,Stanford,NC State,9,Michael Mitchell Jr.,Available,NonExempt
 2026-10-24T08:12:58+00:00,ACC,3296,2026-10-23,20:00:00,ET,Update 2,Miami,Pittsburgh,10,Darian Mensah,Available,NonExempt
 2026-10-24T08:12:58+00:00,ACC,3296,2026-10-23,20:00:00,ET,Update 2,Miami,Pittsburgh,11,Dereon Coleman,Available,NonExempt
 2026-10-24T08:12:58+00:00,ACC,3296,2026-10-23,20:00:00,ET,Update 2,Miami,Pittsburgh,18,Joe Borchers,Available,NonExempt
@@ -1160,3 +1160,124 @@ captured_at,conference,report_id,publish_date,posted_time,time_zone,report_type,
 2026-10-24T08:12:58+00:00,SEC,3384,2026-10-23,19:10:00,CT,Update 2,Vanderbilt,Kentucky,11,Jack Elliott,Available,NonExempt
 2026-10-24T08:12:58+00:00,SEC,3384,2026-10-23,19:10:00,CT,Update 2,Vanderbilt,Kentucky,2,Jared Curtis,Available,NonExempt
 2026-10-24T08:12:58+00:00,SEC,3384,2026-10-23,19:10:00,CT,Update 2,Vanderbilt,Kentucky,10,Whit Muschamp,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3297,2026-10-24,10:00:00,ET,Game Day,Miami,Pittsburgh,10,Darian Mensah,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3297,2026-10-24,10:00:00,ET,Game Day,Miami,Pittsburgh,11,Dereon Coleman,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3297,2026-10-24,10:00:00,ET,Game Day,Miami,Pittsburgh,18,Joe Borchers,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3297,2026-10-24,10:00:00,ET,Game Day,Miami,Pittsburgh,15,Judd Anderson,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3297,2026-10-24,10:00:00,ET,Game Day,Miami,Pittsburgh,5,Luke Nickel,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3297,2026-10-24,10:00:00,ET,Game Day,Miami,Pittsburgh,18,Vinny Gonzalez,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3297,2026-10-24,10:00:00,ET,Game Day,Pittsburgh,Miami,8,Angelo Renda,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3297,2026-10-24,10:00:00,ET,Game Day,Pittsburgh,Miami,12,Beau Jackson,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3297,2026-10-24,10:00:00,ET,Game Day,Pittsburgh,Miami,16,Corey Dailey,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3297,2026-10-24,10:00:00,ET,Game Day,Pittsburgh,Miami,19,Davin Friedman,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3297,2026-10-24,10:00:00,ET,Game Day,Pittsburgh,Miami,15,Holden Geriner,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3297,2026-10-24,10:00:00,ET,Game Day,Pittsburgh,Miami,6,Mason Heintschel,Out,Out
+2026-10-25T08:13:40+00:00,ACC,3313,2026-10-24,10:00:00,ET,Game Day,California,SMU,17,Alonzo Esparza,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3313,2026-10-24,10:00:00,ET,Game Day,California,SMU,14,Dominic Ingrassia,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3313,2026-10-24,10:00:00,ET,Game Day,California,SMU,2,EJ Caminong,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3313,2026-10-24,10:00:00,ET,Game Day,California,SMU,11,Jackson Brousseau,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3313,2026-10-24,10:00:00,ET,Game Day,California,SMU,3,Jaron-Keawe Sagapolutele,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3313,2026-10-24,10:00:00,ET,Game Day,California,SMU,18,Nainoa Lopes,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3313,2026-10-24,10:00:00,ET,Game Day,SMU,California,14,Charlie Fiser,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3313,2026-10-24,10:00:00,ET,Game Day,SMU,California,12,Cole Leinart,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3313,2026-10-24,10:00:00,ET,Game Day,SMU,California,7,Kevin Jennings,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3313,2026-10-24,10:00:00,ET,Game Day,SMU,California,28,Mabrey Mettauer,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3313,2026-10-24,10:00:00,ET,Game Day,SMU,California,1,Ty Hawkins,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3357,2026-10-24,13:30:00,ET,Game Day,Boston College,Georgia Tech,18,Anthony Coellner,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3357,2026-10-24,13:30:00,ET,Game Day,Boston College,Georgia Tech,13,Enzo Arjona,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3357,2026-10-24,13:30:00,ET,Game Day,Boston College,Georgia Tech,11,Femi Babalola,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3357,2026-10-24,13:30:00,ET,Game Day,Boston College,Georgia Tech,15,Grayson Wilson,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3357,2026-10-24,13:30:00,ET,Game Day,Boston College,Georgia Tech,7,Jake Coniglio,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3357,2026-10-24,13:30:00,ET,Game Day,Boston College,Georgia Tech,10,Mason McKenzie,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3357,2026-10-24,13:30:00,ET,Game Day,Georgia Tech,Boston College,15,Alberto Mendoza,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3357,2026-10-24,13:30:00,ET,Game Day,Georgia Tech,Boston College,18,Ben Guthrie,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3357,2026-10-24,13:30:00,ET,Game Day,Georgia Tech,Boston College,12,Cole Bergeron,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3357,2026-10-24,13:30:00,ET,Game Day,Georgia Tech,Boston College,9,Grady Adamson,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3357,2026-10-24,13:30:00,ET,Game Day,Georgia Tech,Boston College,14,Graham Knowles,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3377,2026-10-24,17:00:00,ET,Game Day,Clemson,Virginia Tech,5,Brock Bradley,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3377,2026-10-24,17:00:00,ET,Game Day,Clemson,Virginia Tech,17,Christopher Vizzina,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3377,2026-10-24,17:00:00,ET,Game Day,Clemson,Virginia Tech,9,Colson Brown,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3377,2026-10-24,17:00:00,ET,Game Day,Clemson,Virginia Tech,2,Tait Reynolds,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3377,2026-10-24,17:00:00,ET,Game Day,Clemson,Virginia Tech,14,Trent Pearman,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3377,2026-10-24,17:00:00,ET,Game Day,Virginia Tech,Clemson,22,Bryce Baker,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3377,2026-10-24,17:00:00,ET,Game Day,Virginia Tech,Clemson,17,Ethan Grunkemeyer,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3377,2026-10-24,17:00:00,ET,Game Day,Virginia Tech,Clemson,12,Kelden Ryan,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3377,2026-10-24,17:00:00,ET,Game Day,Virginia Tech,Clemson,14,Troy Huhn,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3397,2026-10-24,17:30:00,ET,Game Day,North Carolina,Syracuse,18,Andres Miyares Jr.,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3397,2026-10-24,17:30:00,ET,Game Day,North Carolina,Syracuse,10,Au'Tori Newkirk,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3397,2026-10-24,17:30:00,ET,Game Day,North Carolina,Syracuse,9,Billy Edwards Jr.,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3397,2026-10-24,17:30:00,ET,Game Day,North Carolina,Syracuse,15,DJ Mazzone,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3397,2026-10-24,17:30:00,ET,Game Day,North Carolina,Syracuse,8,Miles O'Neill,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3397,2026-10-24,17:30:00,ET,Game Day,North Carolina,Syracuse,3,Travis Burgess,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3397,2026-10-24,17:30:00,ET,Game Day,Syracuse,North Carolina,12,Amari Odom,Out,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3397,2026-10-24,17:30:00,ET,Game Day,Syracuse,North Carolina,21,Danny Lauter,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3397,2026-10-24,17:30:00,ET,Game Day,Syracuse,North Carolina,13,Joseph Filardi,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3397,2026-10-24,17:30:00,ET,Game Day,Syracuse,North Carolina,16,Malachi Nelson,Out,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3397,2026-10-24,17:30:00,ET,Game Day,Syracuse,North Carolina,17,Rich Belin,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3397,2026-10-24,17:30:00,ET,Game Day,Syracuse,North Carolina,9,Steve Angeli,Available,NonExempt
+2026-10-25T08:13:40+00:00,ACC,3397,2026-10-24,17:30:00,ET,Game Day,Syracuse,North Carolina,10,Zaid Lott,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3309,2026-10-24,9:30:00,CT,Game Day,Auburn,LSU,17,Byrum Brown,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3309,2026-10-24,9:30:00,CT,Game Day,Auburn,LSU,16,John Colvin,Exempt,Exempt
+2026-10-25T08:13:40+00:00,SEC,3309,2026-10-24,9:30:00,CT,Game Day,Auburn,LSU,3,Locklan Hewlett,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3309,2026-10-24,9:30:00,CT,Game Day,Auburn,LSU,19,Rhys Brush,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3309,2026-10-24,9:30:00,CT,Game Day,Auburn,LSU,10,Tristan Ti'a,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3309,2026-10-24,9:30:00,CT,Game Day,Auburn,LSU,11,Will Myers,Exempt,Exempt
+2026-10-25T08:13:40+00:00,SEC,3309,2026-10-24,9:30:00,CT,Game Day,LSU,Auburn,21,Cayden Jones,Exempt,Exempt
+2026-10-25T08:13:40+00:00,SEC,3309,2026-10-24,9:30:00,CT,Game Day,LSU,Auburn,8,Husan Longstreet,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3309,2026-10-24,9:30:00,CT,Game Day,LSU,Auburn,19,Kaden Martin,Exempt,Exempt
+2026-10-25T08:13:40+00:00,SEC,3309,2026-10-24,9:30:00,CT,Game Day,LSU,Auburn,11,Landen Clark,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3309,2026-10-24,9:30:00,CT,Game Day,LSU,Auburn,10,Sam Leavitt,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3345,2026-10-24,13:00:00,CT,Game Day,Alabama,Texas A&M,10,Austin Mack,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3345,2026-10-24,13:00:00,CT,Game Day,Alabama,Texas A&M,15,Jett Thomalla,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3345,2026-10-24,13:00:00,CT,Game Day,Alabama,Texas A&M,19,John Cooper,Exempt,Exempt
+2026-10-25T08:13:40+00:00,SEC,3345,2026-10-24,13:00:00,CT,Game Day,Alabama,Texas A&M,13,John Gazzaniga,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3345,2026-10-24,13:00:00,CT,Game Day,Alabama,Texas A&M,12,Keelon Russell,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3345,2026-10-24,13:00:00,CT,Game Day,Alabama,Texas A&M,11,Tayden-Evan Kaawa,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3345,2026-10-24,13:00:00,CT,Game Day,Texas A&M,Alabama,13,Brady Hart,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3345,2026-10-24,13:00:00,CT,Game Day,Texas A&M,Alabama,14,Eli Morcos,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3345,2026-10-24,13:00:00,CT,Game Day,Texas A&M,Alabama,16,Helaman Casuga,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3345,2026-10-24,13:00:00,CT,Game Day,Texas A&M,Alabama,10,Marcel Reed,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3345,2026-10-24,13:00:00,CT,Game Day,Texas A&M,Alabama,19,Paxton Land,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3353,2026-10-24,13:00:00,CT,Game Day,South Carolina,Tennessee,19,Brandon Cunningham,Exempt,Exempt
+2026-10-25T08:13:40+00:00,SEC,3353,2026-10-24,13:00:00,CT,Game Day,South Carolina,Tennessee,12,Cutter Woods,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3353,2026-10-24,13:00:00,CT,Game Day,South Carolina,Tennessee,25,Jimmy Francis,Exempt,Exempt
+2026-10-25T08:13:40+00:00,SEC,3353,2026-10-24,13:00:00,CT,Game Day,South Carolina,Tennessee,16,LaNorris Sellers,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3353,2026-10-24,13:00:00,CT,Game Day,South Carolina,Tennessee,11,Landon Duckworth,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3353,2026-10-24,13:00:00,CT,Game Day,South Carolina,Tennessee,15,Lucian Anderson III,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3353,2026-10-24,13:00:00,CT,Game Day,Tennessee,South Carolina,11,Faizon Brandon,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3353,2026-10-24,13:00:00,CT,Game Day,Tennessee,South Carolina,12,George MacIntyre,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3353,2026-10-24,13:00:00,CT,Game Day,Tennessee,South Carolina,13,Mason Phillips,Exempt,Exempt
+2026-10-25T08:13:40+00:00,SEC,3353,2026-10-24,13:00:00,CT,Game Day,Tennessee,South Carolina,8,Ryan Staub,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3364,2026-10-24,13:00:00,CT,Game Day,Mississippi State,Oklahoma,17,AJ Swann,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3364,2026-10-24,13:00:00,CT,Game Day,Mississippi State,Oklahoma,14,Brodie McWhorter,Exempt,Exempt
+2026-10-25T08:13:40+00:00,SEC,3364,2026-10-24,13:00:00,CT,Game Day,Mississippi State,Oklahoma,8,Jaden Rashada,Exempt,Exempt
+2026-10-25T08:13:40+00:00,SEC,3364,2026-10-24,13:00:00,CT,Game Day,Mississippi State,Oklahoma,1,Kamario Taylor,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3364,2026-10-24,13:00:00,CT,Game Day,Mississippi State,Oklahoma,15,"Parker ""Billy"" Puckett",Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3364,2026-10-24,13:00:00,CT,Game Day,Oklahoma,Mississippi State,8,Bowe Bentley,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3364,2026-10-24,13:00:00,CT,Game Day,Oklahoma,Mississippi State,15,Jett Niu,Exempt,Exempt
+2026-10-25T08:13:40+00:00,SEC,3364,2026-10-24,13:00:00,CT,Game Day,Oklahoma,Mississippi State,10,John Mateer,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3364,2026-10-24,13:00:00,CT,Game Day,Oklahoma,Mississippi State,16,Whitt Newbauer,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3381,2026-10-24,17:00:00,CT,Game Day,Ole Miss,Texas,8,AJ Maddox,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3381,2026-10-24,17:00:00,CT,Game Day,Ole Miss,Texas,2,Deuce Knight,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3381,2026-10-24,17:00:00,CT,Game Day,Ole Miss,Texas,16,George Hamsley,Exempt,Exempt
+2026-10-25T08:13:40+00:00,SEC,3381,2026-10-24,17:00:00,CT,Game Day,Ole Miss,Texas,13,Jack Patterson,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3381,2026-10-24,17:00:00,CT,Game Day,Ole Miss,Texas,19,Rees Wise,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3381,2026-10-24,17:00:00,CT,Game Day,Ole Miss,Texas,6,Trinidad Chambliss,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3381,2026-10-24,17:00:00,CT,Game Day,Ole Miss,Texas,14,Walker Howard,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3381,2026-10-24,17:00:00,CT,Game Day,Texas,Ole Miss,16,Arch Manning,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3381,2026-10-24,17:00:00,CT,Game Day,Texas,Ole Miss,6,Dia Bell,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3381,2026-10-24,17:00:00,CT,Game Day,Texas,Ole Miss,9,"Karle ""KJ"" Lacey Jr.",Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3381,2026-10-24,17:00:00,CT,Game Day,Texas,Ole Miss,25,Luke Dunham,Exempt,Exempt
+2026-10-25T08:13:40+00:00,SEC,3381,2026-10-24,17:00:00,CT,Game Day,Texas,Ole Miss,19,MJ Morris,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3385,2026-10-24,17:00:00,CT,Game Day,Kentucky,Vanderbilt,14,Brennen Ward,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3385,2026-10-24,17:00:00,CT,Game Day,Kentucky,Vanderbilt,10,Callum Wither,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3385,2026-10-24,17:00:00,CT,Game Day,Kentucky,Vanderbilt,15,Carson Cruver,Exempt,Exempt
+2026-10-25T08:13:40+00:00,SEC,3385,2026-10-24,17:00:00,CT,Game Day,Kentucky,Vanderbilt,16,JacQai Long,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3385,2026-10-24,17:00:00,CT,Game Day,Kentucky,Vanderbilt,3,Kenny Minchey,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3385,2026-10-24,17:00:00,CT,Game Day,Kentucky,Vanderbilt,9,Matt Ponatoski,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3385,2026-10-24,17:00:00,CT,Game Day,Kentucky,Vanderbilt,17,William Drakeford Jr.,Exempt,Exempt
+2026-10-25T08:13:40+00:00,SEC,3385,2026-10-24,17:00:00,CT,Game Day,Vanderbilt,Kentucky,1,Blaze Berlowitz,Out,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3385,2026-10-24,17:00:00,CT,Game Day,Vanderbilt,Kentucky,14,Drew Cowart,Exempt,Exempt
+2026-10-25T08:13:40+00:00,SEC,3385,2026-10-24,17:00:00,CT,Game Day,Vanderbilt,Kentucky,11,Jack Elliott,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3385,2026-10-24,17:00:00,CT,Game Day,Vanderbilt,Kentucky,2,Jared Curtis,Available,NonExempt
+2026-10-25T08:13:40+00:00,SEC,3385,2026-10-24,17:00:00,CT,Game Day,Vanderbilt,Kentucky,10,Whit Muschamp,Available,NonExempt
