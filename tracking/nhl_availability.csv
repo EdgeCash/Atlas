@@ -168,3 +168,12 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-25T01:52:54+00:00,2026-10-25T01:37Z,5,Detroit Red Wings,DET,4587994,Daniil Tarasov,G,Out,OUT,Undisclosed,2026-10-26,out
 2026-10-25T02:07:45+00:00,2026-10-25T01:38Z,5,Detroit Red Wings,DET,4587994,Daniil Tarasov,G,Out,OUT,Undisclosed,2026-10-26,Tarasov (undisclosed) won't suit up versus the Flames on Saturday.
 2026-10-25T05:53:03+00:00,2026-10-25T05:10Z,20,Tampa Bay Lightning,TB,2968829,Zemgus Girgensons,C,Day-To-Day,Day-To-Day,Undisclosed,2026-10-29,day-to-day
+2026-10-25T13:22:48+00:00,2026-10-25T13:09Z,2,Buffalo Sabres,BUF,4894355,Justin Danforth,RW,Day-To-Day,Day-To-Day,Upper Body,2026-10-27,day-to-day
+2026-10-25T13:22:48+00:00,2026-10-25T13:09Z,3,Calgary Flames,CGY,3797,Mikael Backlund,C,Day-To-Day,Day-To-Day,Upper Body,2026-10-26,day-to-day
+2026-10-25T13:22:48+00:00,2026-10-25T13:09Z,7,Carolina Hurricanes,CAR,2976849,Mark Jankowski,C,Day-To-Day,Day-To-Day,Lower Body,2026-10-27,day-to-day
+2026-10-25T13:22:48+00:00,2026-10-25T13:09Z,5,Detroit Red Wings,DET,4587994,Daniil Tarasov,G,Day-To-Day,Day-To-Day,Undisclosed,2026-10-26,day-to-day
+2026-10-25T13:22:48+00:00,2026-10-25T13:09Z,8,Los Angeles Kings,LA,4697383,Quinton Byfield,RW,Day-To-Day,Day-To-Day,Upper Body,2026-10-26,day-to-day
+2026-10-25T13:22:48+00:00,2026-10-25T13:09Z,16,Pittsburgh Penguins,PIT,4697404,Egor Chinakhov,RW,Day-To-Day,Day-To-Day,Lower Body,2026-10-29,day-to-day
+2026-10-25T13:22:48+00:00,2026-10-25T13:09Z,16,Pittsburgh Penguins,PIT,3124,Evgeni Malkin,C,Day-To-Day,Day-To-Day,Illness,2026-10-29,day-to-day
+2026-10-25T13:22:48+00:00,2026-10-25T13:09Z,20,Tampa Bay Lightning,TB,5157,Victor Hedman,D,Day-To-Day,Day-To-Day,Lower Body,2026-10-29,day-to-day
+2026-10-25T13:22:48+00:00,2026-10-25T13:09Z,37,Vegas Golden Knights,VGK,3899937,Mitch Marner,RW,Day-To-Day,Day-To-Day,Personal,2026-10-27,day-to-day
