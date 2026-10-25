@@ -1,0 +1,382 @@
+kind,edge_per_set,edge_pct,payoff,cost,touch_depth_min,legs,note
+excl_buy_all_yes:usgubclose,0.4813,92.79,1,0.5187,0.1,Y:cmovcusg-usgubclose-ny-pa-2026-11-03-pa@0.48 Y:cmovcusg-usgubclose-ny-pa-2026-11-03-ny@0.02,needs exhaustive set (3rd party/independent risk)
+x:ushrmov buy buckets vs winner rep,0.1057,11.81,1,0.8943,1.0,Y:vmc-ushrmov-pa-10-2026-11-03-r0-3@0.02 Y:vmc-ushrmov-pa-10-2026-11-03-r3-6@0.02 Y:vmc-ushrmov-pa-10-2026-11-03-rgte6@0.02 N:ushrewc-ushr-pa-10-2026-11-03-rep@0.82,buckets must cover all wins of party
+x:D>=55 <= R<=45,0.0991,11.0,1,0.9009,123.89,Y:scc-senate-gop-2026-11-03-lte45@0.13 N:scc-senate-demst-2026-11-03-gte55@0.75,
+x:ushrmov dwin vs ushr dem,0.0724,7.8,1,0.9276,1.0,Y:vmc-ushrmov-ga-07-2026-11-03-dwin@0.02 N:ushrewc-ushr-ga-07-2026-11-03-dem@0.9,most-votes vs winner: runoff/RCV risk
+x:D>=53 <= R<=47,0.041,4.27,1,0.959,11.36,Y:scc-senate-gop-2026-11-03-47@0.14 Y:scc-senate-gop-2026-11-03-lte45@0.13 Y:scc-senate-gop-2026-11-03-46@0.09 N:scc-senate-demst-2026-11-03-gte53@0.56,
+x:SenCtrlD>=D51,0.0177,1.8,1,0.9823,1.88,Y:paccc-usse-midterms-2026-11-03-dem@0.631 N:scc-senate-demst-2026-11-03-gte51@0.32,D>=51 implies D control
+x:ussegubc-me SenD leg vs combos (always pays 2),0.0166,0.84,2,1.9834,11.32,Y:ewc-usse-me-2026-11-03-dem@0.6 N:cpoc-ussegubc-me-2026-11-03-dsweep@0.36 N:cpoc-ussegubc-me-2026-11-03-rgov-dsen@0.99,
+x:ushrmov dwin vs ushr dem,0.016,1.62,1,0.984,1.0,Y:vmc-ushrmov-tn-06-2026-11-03-dwin@0.02 N:ushrewc-ushr-tn-06-2026-11-03-dem@0.96,most-votes vs winner: runoff/RCV risk
+excl_buy_all_yes:usgub,0.0147,1.49,1,0.9853,8.32,Y:pvwc-usgub-ny-nas-2026-11-03-brubla@0.74 Y:pvwc-usgub-ny-nas-2026-11-03-kathoc@0.22,needs exhaustive set (3rd party/independent risk)
+x:ussegubc-ga GovR leg vs combos (always pays 2),0.0135,0.68,2,1.9865,130.69,Y:ewc-usgub-ga-2026-11-03-rep@0.38 N:cpoc-ussegubc-ga-2026-11-03-rsweep@0.94 N:cpoc-ussegubc-ga-2026-11-03-rgov-dsen@0.63,
+excl_buy_all_yes:ushr,0.0122,1.23,1,0.9878,26.49,Y:ushrewc-ushr-al-05-2026-11-03-rep@0.93 Y:ushrewc-ushr-al-05-2026-11-03-dem@0.05,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:usmayor,0.0096,0.97,1,0.9904,70.69,Y:usmayewc-usmayor-oaklan-2026-11-03-barlee@0.91 Y:usmayewc-usmayor-oaklan-2026-11-03-bregri@0.04 Y:usmayewc-usmayor-oaklan-2026-11-03-minpec@0.03,needs exhaustive set (3rd party/independent risk)
+x:ussegubc-mn SenD leg vs combos (always pays 2),0.0084,0.42,2,1.9916,10.18,Y:ewc-usse-mn-2026-11-03-dem@0.83 N:cpoc-ussegubc-mn-2026-11-03-dsweep@0.17 N:cpoc-ussegubc-mn-2026-11-03-rgov-dsen@0.97,
+x:R>=51 <= SenCtrlR,0.0083,0.84,1,0.9917,994.0,Y:scc-senate-gop-2026-11-03-51@0.1 Y:scc-senate-gop-2026-11-03-52@0.08 Y:scc-senate-gop-2026-11-03-53@0.06 Y:scc-senate-gop-2026-11-03-54@0.03 Y:scc-senate-gop-2026-11-03-55@0.02 Y:scc-senate-gop-2026-11-03-56@0.02 Y:scc-senate-gop-2026-11-03-gte57@0.02 N:paccc-usse-midterms-2026-11-03-rep@0.624,
+excl_buy_all_yes:ushr,0.0066,0.67,1,0.9934,98.9,Y:ushrewc-ushr-co-07-2026-11-03-dem@0.97 Y:ushrewc-ushr-co-07-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,0.0066,0.67,1,0.9934,204.82,Y:ushrewc-ushr-ny-20-2026-11-03-dem@0.97 Y:ushrewc-ushr-ny-20-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,0.0066,0.67,1,0.9934,5.41,Y:ushrewc-ushr-ca-26-2026-11-03-dem@0.97 Y:ushrewc-ushr-ca-26-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+x:ushrmov dwin vs ushr dem,0.0066,0.67,1,0.9934,41.0,Y:vmc-ushrmov-ok-01-2026-11-03-dwin@0.02 N:ushrewc-ushr-ok-01-2026-11-03-dem@0.97,most-votes vs winner: runoff/RCV risk
+x:ushrmov dwin vs ushr dem,0.0066,0.67,1,0.9934,1.0,Y:vmc-ushrmov-tx-04-2026-11-03-dwin@0.02 N:ushrewc-ushr-tx-04-2026-11-03-dem@0.97,most-votes vs winner: runoff/RCV risk
+x:ushrmov dwin vs ushr dem,0.0066,0.67,1,0.9934,24.21,Y:vmc-ushrmov-tx-11-2026-11-03-dwin@0.02 N:ushrewc-ushr-tx-11-2026-11-03-dem@0.97,most-votes vs winner: runoff/RCV risk
+x:ushrmov dwin vs ushr dem,0.0066,0.67,1,0.9934,28.25,Y:vmc-ushrmov-tn-04-2026-11-03-dwin@0.02 N:ushrewc-ushr-tn-04-2026-11-03-dem@0.97,most-votes vs winner: runoff/RCV risk
+excl_buy_all_yes:usse,0.0053,0.53,1,0.9947,1854.03,Y:ussewc-usse-nm-2026-11-03-dem@0.96 Y:ussewc-usse-nm-2026-11-03-rep@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,0.0053,0.53,1,0.9947,24.0,Y:ushrewc-ushr-mi-08-2026-11-03-dem@0.96 Y:ushrewc-ushr-mi-08-2026-11-03-rep@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,0.0053,0.53,1,0.9947,2.5,Y:ushrewc-ushr-or-05-2026-11-03-dem@0.96 Y:ushrewc-ushr-or-05-2026-11-03-rep@0.03,needs exhaustive set (3rd party/independent risk)
+x:ussegubc-mn GovR leg vs combos (always pays 2),0.0014,0.07,2,1.9986,6652.59,Y:usgubewc-usgub-mn-2026-11-03-rep@0.06 N:cpoc-ussegubc-mn-2026-11-03-rsweep@0.96 N:cpoc-ussegubc-mn-2026-11-03-rgov-dsen@0.97,
+excl_buy_all_yes:ushr,-0.0014,-0.14,1,1.0014,1.0,Y:ushrewc-ushr-in-07-2026-11-03-dem@0.99 Y:ushrewc-ushr-in-07-2026-11-03-rep@0.01,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ussegubc,-0.0018,-0.06,3,3.0018,10.18,N:cpoc-ussegubc-mn-2026-11-03-dsweep@0.17 N:cpoc-ussegubc-mn-2026-11-03-dgov-rsen@0.88 N:cpoc-ussegubc-mn-2026-11-03-rsweep@0.96 N:cpoc-ussegubc-mn-2026-11-03-rgov-dsen@0.97,
+excl_buy_all_no:usse,-0.0018,-0.18,1,1.0018,12.73,N:pvwc-usse-tx-col-2026-11-03-dem@0.34 N:pvwc-usse-tx-col-2026-11-03-rep@0.63,
+excl_buy_all_yes:ushr,-0.0019,-0.19,1,1.0019,20.37,Y:ushrewc-ushr-wa-04-2026-11-03-rep@0.9 Y:ushrewc-ushr-wa-04-2026-11-03-dem@0.09,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0022,-0.22,1,1.0022,10.24,N:ushrewc-ushr-az-01-2026-11-03-dem@0.19 N:ushrewc-ushr-az-01-2026-11-03-rep@0.79,
+x:ussegubc-ia GovD leg vs combos (always pays 2),-0.0026,-0.13,2,2.0026,3.61,Y:ewc-usgub-ia-2026-11-03-dem@0.85 N:cpoc-ussegubc-ia-2026-11-03-dsweep@0.62 N:cpoc-ussegubc-ia-2026-11-03-dgov-rsen@0.49,
+excl_buy_all_no:usse,-0.0027,-0.27,1,1.0027,867.17,N:ussewc-usse-al-2026-11-03-rep@0.02 N:ussewc-usse-al-2026-11-03-dem@0.98,
+excl_buy_all_yes:usse,-0.0027,-0.27,1,1.0027,6.56,Y:ussewc-usse-or-2026-11-03-dem@0.98 Y:ussewc-usse-or-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usse,-0.0027,-0.27,1,1.0027,5772.65,N:ussewc-usse-ri-2026-11-03-dem@0.02 N:ussewc-usse-ri-2026-11-03-rep@0.98,
+excl_buy_all_no:usse,-0.0027,-0.27,1,1.0027,1033.41,N:ussewc-usse-wy-2026-11-03-rep@0.02 N:ussewc-usse-wy-2026-11-03-dem@0.98,
+excl_buy_all_no:usgub,-0.0027,-0.27,1,1.0027,2183.28,N:usgubewc-usgub-md-2026-11-03-dem@0.02 N:usgubewc-usgub-md-2026-11-03-rep@0.98,
+excl_buy_all_no:usse,-0.0027,-0.27,1,1.0027,59.77,N:ussewc-usse-de-2026-11-03-dem@0.02 N:ussewc-usse-de-2026-11-03-rep@0.98,
+excl_buy_all_yes:ushr,-0.0027,-0.27,1,1.0027,1.0,Y:ushrewc-ushr-co-06-2026-11-03-dem@0.98 Y:ushrewc-ushr-co-06-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0027,-0.27,1,1.0027,0.5,Y:ushrewc-ushr-ct-02-2026-11-03-dem@0.98 Y:ushrewc-ushr-ct-02-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0027,-0.27,1,1.0027,428.53,Y:ushrewc-ushr-il-02-2026-11-03-dem@0.98 Y:ushrewc-ushr-il-02-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0027,-0.27,1,1.0027,1.0,Y:ushrewc-ushr-il-07-2026-11-03-dem@0.98 Y:ushrewc-ushr-il-07-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0027,-0.27,1,1.0027,2.0,N:ushrewc-ushr-il-11-2026-11-03-dem@0.02 N:ushrewc-ushr-il-11-2026-11-03-rep@0.98,
+excl_buy_all_yes:ushr,-0.0027,-0.27,1,1.0027,5.0,Y:ushrewc-ushr-mi-02-2026-11-03-rep@0.98 Y:ushrewc-ushr-mi-02-2026-11-03-dem@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0027,-0.27,1,1.0027,5.0,Y:ushrewc-ushr-ok-03-2026-11-03-rep@0.98 Y:ushrewc-ushr-ok-03-2026-11-03-dem@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0027,-0.27,1,1.0027,55.0,Y:ushrewc-ushr-pa-02-2026-11-03-dem@0.98 Y:ushrewc-ushr-pa-02-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0027,-0.27,1,1.0027,0.05,Y:ushrewc-ushr-tn-03-2026-11-03-rep@0.98 Y:ushrewc-ushr-tn-03-2026-11-03-dem@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0027,-0.27,1,1.0027,2.83,Y:ushrewc-ushr-tx-18-2026-11-03-dem@0.98 Y:ushrewc-ushr-tx-18-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0027,-0.27,1,1.0027,1.0,Y:ushrewc-ushr-va-03-2026-11-03-dem@0.98 Y:ushrewc-ushr-va-03-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0027,-0.27,1,1.0027,13.09,Y:ushrewc-ushr-va-09-2026-11-03-rep@0.98 Y:ushrewc-ushr-va-09-2026-11-03-dem@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0027,-0.27,1,1.0027,5.0,Y:ushrewc-ushr-ca-38-2026-11-03-dem@0.98 Y:ushrewc-ushr-ca-38-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0027,-0.27,1,1.0027,0.26,Y:ushrewc-ushr-ca-44-2026-11-03-dem@0.98 Y:ushrewc-ushr-ca-44-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0027,-0.27,1,1.0027,5.0,Y:ushrewc-ushr-ca-46-2026-11-03-dem@0.98 Y:ushrewc-ushr-ca-46-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0027,-0.27,1,1.0027,46.69,Y:ushrewc-ushr-wa-02-2026-11-03-dem@0.98 Y:ushrewc-ushr-wa-02-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+x:ushrmov dwin vs ushr dem,-0.0027,-0.27,1,1.0027,43.5,Y:vmc-ushrmov-al-06-2026-11-03-dwin@0.02 N:ushrewc-ushr-al-06-2026-11-03-dem@0.98,most-votes vs winner: runoff/RCV risk
+x:ushrmov dwin vs ushr dem,-0.0027,-0.27,1,1.0027,19.1,Y:vmc-ushrmov-ga-10-2026-11-03-dwin@0.02 N:ushrewc-ushr-ga-10-2026-11-03-dem@0.98,most-votes vs winner: runoff/RCV risk
+x:ushrmov dwin vs ushr dem,-0.0027,-0.27,1,1.0027,30.54,Y:vmc-ushrmov-id-01-2026-11-03-dwin@0.02 N:ushrewc-ushr-id-01-2026-11-03-dem@0.98,most-votes vs winner: runoff/RCV risk
+x:ushrmov dwin vs ushr dem,-0.0027,-0.27,1,1.0027,1.0,Y:vmc-ushrmov-id-02-2026-11-03-dwin@0.02 N:ushrewc-ushr-id-02-2026-11-03-dem@0.98,most-votes vs winner: runoff/RCV risk
+x:ushrmov dwin vs ushr dem,-0.0027,-0.27,1,1.0027,1.0,Y:vmc-ushrmov-mi-09-2026-11-03-dwin@0.02 N:ushrewc-ushr-mi-09-2026-11-03-dem@0.98,most-votes vs winner: runoff/RCV risk
+x:ushrmov dem vs dwin,-0.0027,-0.27,1,1.0027,8.39,Y:ushrewc-ushr-mo-03-2026-11-03-dem@0.02 N:vmc-ushrmov-mo-03-2026-11-03-dwin@0.98,most-votes vs winner: runoff/RCV risk
+x:ushrmov dwin vs ushr dem,-0.0027,-0.27,1,1.0027,1.0,Y:vmc-ushrmov-wv-01-2026-11-03-dwin@0.02 N:ushrewc-ushr-wv-01-2026-11-03-dem@0.98,most-votes vs winner: runoff/RCV risk
+excl_buy_all_no:usse,-0.004,-0.4,1,1.004,3153.59,N:ussewc-usse-ok-2026-11-03-rep@0.03 N:ussewc-usse-ok-2026-11-03-dem@0.97,
+excl_buy_all_yes:usgub,-0.004,-0.4,1,1.004,7508.49,Y:usgubewc-usgub-pa-2026-11-03-dem@0.97 Y:usgubewc-usgub-pa-2026-11-03-rep@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.004,-0.4,1,1.004,37.11,Y:ushrewc-ushr-ar-03-2026-11-03-rep@0.97 Y:ushrewc-ushr-ar-03-2026-11-03-dem@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.004,-0.4,1,1.004,40.9,Y:ushrewc-ushr-in-09-2026-11-03-rep@0.97 Y:ushrewc-ushr-in-09-2026-11-03-dem@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.004,-0.4,1,1.004,238.14,Y:ushrewc-ushr-ky-01-2026-11-03-rep@0.97 Y:ushrewc-ushr-ky-01-2026-11-03-dem@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.004,-0.4,1,1.004,2.16,Y:ushrewc-ushr-mn-07-2026-11-03-rep@0.97 Y:ushrewc-ushr-mn-07-2026-11-03-dem@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.004,-0.4,1,1.004,28.1,Y:ushrewc-ushr-nc-08-2026-11-03-rep@0.97 Y:ushrewc-ushr-nc-08-2026-11-03-dem@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.004,-0.4,1,1.004,6.92,Y:ushrewc-ushr-oh-13-2026-11-03-dem@0.97 Y:ushrewc-ushr-oh-13-2026-11-03-rep@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.004,-0.4,1,1.004,7.17,N:ushrewc-ushr-ok-04-2026-11-03-rep@0.03 N:ushrewc-ushr-ok-04-2026-11-03-dem@0.97,
+excl_buy_all_no:ushr,-0.004,-0.4,1,1.004,55.67,N:ushrewc-ushr-tx-26-2026-11-03-rep@0.03 N:ushrewc-ushr-tx-26-2026-11-03-dem@0.97,
+excl_buy_all_yes:ushr,-0.004,-0.4,1,1.004,276.58,Y:ushrewc-ushr-ca-10-2026-11-03-dem@0.97 Y:ushrewc-ushr-ca-10-2026-11-03-rep@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.004,-0.4,1,1.004,62.68,N:ushrewc-ushr-ca-30-2026-11-03-dem@0.03 N:ushrewc-ushr-ca-30-2026-11-03-rep@0.97,
+excl_buy_all_yes:usgub,-0.0041,-0.41,1,1.0041,4220.26,Y:usgubewc-usgub-ok-2026-11-03-rep@0.88 Y:usgubewc-usgub-ok-2026-11-03-dem@0.11,needs exhaustive set (3rd party/independent risk)
+x:ussegubc-me GovD leg vs combos (always pays 2),-0.0045,-0.22,2,2.0045,11.32,Y:usgubewc-usgub-me-2026-11-03-dem@0.96 N:cpoc-ussegubc-me-2026-11-03-dsweep@0.36 N:cpoc-ussegubc-me-2026-11-03-dgov-rsen@0.65,
+excl_buy_all_yes:ushr,-0.0052,-0.52,1,1.0052,151.0,Y:ushrewc-ushr-oh-07-2026-11-03-dem@0.87 Y:ushrewc-ushr-oh-07-2026-11-03-rep@0.12,needs exhaustive set (3rd party/independent risk)
+x:ussegubc-ks GovD combos vs leg,-0.0052,-0.51,1,1.0052,11.79,N:ewc-usgub-ks-2026-11-03-dem@0.76 Y:cpoc-ussegubc-ks-2026-11-03-dsweep@0.2 Y:cpoc-ussegubc-ks-2026-11-03-dgov-rsen@0.02,3rd-party risk on other office
+excl_buy_all_yes:usgub,-0.0053,-0.53,1,1.0053,3066.12,Y:ewc-usgub-ca-2026-11-03-xavbec@0.96 Y:ewc-usgub-ca-2026-11-03-stehil@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usse,-0.0053,-0.53,1,1.0053,118.88,N:ussewc-usse-id-2026-11-03-rep@0.04 N:ussewc-usse-id-2026-11-03-todach@0.96,
+excl_buy_all_no:usse,-0.0053,-0.53,1,1.0053,512.79,N:ussewc-usse-tn-2026-11-03-rep@0.04 N:ussewc-usse-tn-2026-11-03-dem@0.96,
+excl_buy_all_no:usgub,-0.0053,-0.53,1,1.0053,1483.91,N:usgubewc-usgub-co-2026-11-03-dem@0.04 N:usgubewc-usgub-co-2026-11-03-rep@0.96,
+excl_buy_all_yes:ushr,-0.0053,-0.53,1,1.0053,1.0,Y:ushrewc-ushr-il-13-2026-11-03-dem@0.96 Y:ushrewc-ushr-il-13-2026-11-03-rep@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0053,-0.53,1,1.0053,0.01,Y:ushrewc-ushr-ks-01-2026-11-03-rep@0.96 Y:ushrewc-ushr-ks-01-2026-11-03-dem@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0053,-0.53,1,1.0053,0.86,Y:ushrewc-ushr-ks-04-2026-11-03-rep@0.96 Y:ushrewc-ushr-ks-04-2026-11-03-dem@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0053,-0.53,1,1.0053,10.25,Y:ushrewc-ushr-ny-19-2026-11-03-dem@0.96 Y:ushrewc-ushr-ny-19-2026-11-03-rep@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0053,-0.53,1,1.0053,0.95,Y:ushrewc-ushr-tx-17-2026-11-03-rep@0.96 Y:ushrewc-ushr-tx-17-2026-11-03-dem@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:usse,-0.0053,-0.53,1,1.0053,4.25,Y:pvwc-usse-fl-bro-2026-11-03-angnix@0.96 Y:pvwc-usse-fl-bro-2026-11-03-ashmoo@0.04,needs exhaustive set (3rd party/independent risk)
+x:ussegubc-me GovR combos vs leg,-0.0054,-0.54,1,1.0054,246.3,N:usgubewc-usgub-me-2026-11-03-rep@0.96 Y:cpoc-ussegubc-me-2026-11-03-rsweep@0.02 Y:cpoc-ussegubc-me-2026-11-03-rgov-dsen@0.02,3rd-party risk on other office
+x:ussec-mi-mn-nh-2026-11-03 Dmi leg vs combos,-0.0062,-0.15,4,4.0062,208.62,Y:ewc-usse-mi-2026-11-03-dem@0.69 N:cpoc-ussec-mi-mn-nh-2026-11-03-dsweep@0.36 N:cpoc-ussec-mi-mn-nh-2026-11-03-dmi-rmn-dnh@0.94 N:cpoc-ussec-mi-mn-nh-2026-11-03-dmi-dmn-rnh@0.99 N:cpoc-ussec-mi-mn-nh-2026-11-03-dmi-rmn-rnh@0.99,
+x:ussegubc-tx SenD leg vs combos (always pays 2),-0.0063,-0.31,2,2.0063,0.7,Y:ewc-usse-tx-2026-11-03-dem@0.64 N:cpoc-ussegubc-tx-2026-11-03-dsweep@0.74 N:cpoc-ussegubc-tx-2026-11-03-rgov-dsen@0.58,
+excl_buy_all_no:ushr,-0.0066,-0.66,1,1.0066,60.35,N:ushrewc-ushr-oh-12-2026-11-03-rep@0.05 N:ushrewc-ushr-oh-12-2026-11-03-dem@0.95,
+excl_buy_all_yes:ushr,-0.0066,-0.66,1,1.0066,23.5,Y:ushrewc-ushr-tx-22-2026-11-03-rep@0.95 Y:ushrewc-ushr-tx-22-2026-11-03-dem@0.05,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:usgub,-0.0066,-0.66,1,1.0066,134.58,Y:pvwc-usgub-nv-cla-2026-11-03-dem@0.95 Y:pvwc-usgub-nv-cla-2026-11-03-rep@0.05,needs exhaustive set (3rd party/independent risk)
+x:ussegubc-tx GovR leg vs combos (always pays 2),-0.0066,-0.33,2,2.0066,0.7,Y:usgubewc-usgub-tx-2026-11-03-rep@0.71 N:cpoc-ussegubc-tx-2026-11-03-rsweep@0.67 N:cpoc-ussegubc-tx-2026-11-03-rgov-dsen@0.58,
+x:ussegubc-nh GovD leg vs combos (always pays 2),-0.0067,-0.33,2,2.0067,2107.75,Y:usgubewc-usgub-nh-2026-11-03-dem@0.05 N:cpoc-ussegubc-nh-2026-11-03-dsweep@0.96 N:cpoc-ussegubc-nh-2026-11-03-dgov-rsen@0.99,
+excl_buy_all_no:usse,-0.0078,-0.78,1,1.0078,3587.0,N:ewc-usse-ga-2026-11-03-dem@0.06 N:ewc-usse-ga-2026-11-03-rep@0.94,
+excl_buy_all_yes:housepopw,-0.0078,-0.78,1,1.0078,252.43,Y:pvwc-housepopw-2026-11-03-dem@0.94 Y:pvwc-housepopw-2026-11-03-rep@0.06,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:usgub,-0.0078,-0.78,1,1.0078,187.37,Y:usgubewc-usgub-nm-2026-11-03-dem@0.94 Y:usgubewc-usgub-nm-2026-11-03-rep@0.06,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usgub,-0.0078,-0.78,1,1.0078,16560.59,N:usgubewc-usgub-ny-2026-11-03-dem@0.06 N:usgubewc-usgub-ny-2026-11-03-rep@0.94,
+excl_buy_all_no:usgub,-0.0078,-0.78,1,1.0078,13579.34,N:usgubewc-usgub-tn-2026-11-03-rep@0.06 N:usgubewc-usgub-tn-2026-11-03-dem@0.94,
+excl_buy_all_yes:ushr,-0.0078,-0.78,1,1.0078,24.0,Y:ushrewc-ushr-oh-08-2026-11-03-rep@0.94 Y:ushrewc-ushr-oh-08-2026-11-03-dem@0.06,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0078,-0.78,1,1.0078,20.74,Y:ushrewc-ushr-pa-17-2026-11-03-dem@0.94 Y:ushrewc-ushr-pa-17-2026-11-03-rep@0.06,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0078,-0.78,1,1.0078,5.35,Y:ushrewc-ushr-tx-31-2026-11-03-rep@0.94 Y:ushrewc-ushr-tx-31-2026-11-03-dem@0.06,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:usse,-0.0078,-0.78,1,1.0078,12.02,Y:pvwc-usse-tx-ftb-2026-11-03-dem@0.94 Y:pvwc-usse-tx-ftb-2026-11-03-rep@0.06,needs exhaustive set (3rd party/independent risk)
+x:ussec-tx-me-2026-11-03 Rtx leg vs combos,-0.0078,-0.39,2,2.0078,844.28,Y:ewc-usse-tx-2026-11-03-rep@0.38 N:cpoc-ussec-tx-me-2026-11-03-rsweep@0.7 N:cpoc-ussec-tx-me-2026-11-03-rtx-dme@0.89,
+excl_buy_all_no:usse,-0.0082,-0.81,1,1.0082,13.01,N:pvwc-usse-oh-mah-2026-11-03-dem@0.15 N:pvwc-usse-oh-mah-2026-11-03-rep@0.84,
+x:ussec-mi-mn-nh-2026-11-03 Dmn leg vs combos,-0.0083,-0.21,4,4.0083,5.47,Y:ewc-usse-mn-2026-11-03-dem@0.83 N:cpoc-ussec-mi-mn-nh-2026-11-03-dsweep@0.36 N:cpoc-ussec-mi-mn-nh-2026-11-03-rmi-dmn-dnh@0.8 N:cpoc-ussec-mi-mn-nh-2026-11-03-dmi-dmn-rnh@0.99 N:cpoc-ussec-mi-mn-nh-2026-11-03-rmi-dmn-rnh@0.99,
+x:ussec-tx-mi-me-2026-11-03 Dmi leg vs combos,-0.0087,-0.22,4,4.0087,2.0,Y:ewc-usse-mi-2026-11-03-dem@0.69 N:cpoc-ussec-tx-mi-me-2026-11-03-dsweep@0.53 N:cpoc-ussec-tx-mi-me-2026-11-03-dtx-dmi-rme@0.9 N:cpoc-ussec-tx-mi-me-2026-11-03-rtx-dmi-rme@0.91 N:cpoc-ussec-tx-mi-me-2026-11-03-rtx-dmi-dme@0.93,
+excl_buy_all_no:ushr,-0.009,-0.9,1,1.009,184.76,N:ushrewc-ushr-ca-45-2026-11-03-dem@0.07 N:ushrewc-ushr-ca-45-2026-11-03-rep@0.93,
+excl_buy_all_yes:usmayor,-0.009,-0.9,1,1.009,387.18,Y:usmayewc-usmayor-stpete-2026-11-03-chacri@0.93 Y:usmayewc-usmayor-stpete-2026-11-03-kenwel@0.07,needs exhaustive set (3rd party/independent risk)
+x:ussegubc-tx GovD combos vs leg,-0.009,-0.89,1,1.009,22.33,N:usgubewc-usgub-tx-2026-11-03-dem@0.7 Y:cpoc-ussegubc-tx-2026-11-03-dsweep@0.27 Y:cpoc-ussegubc-tx-2026-11-03-dgov-rsen@0.01,3rd-party risk on other office
+x:ussegubc-ga SenR leg vs combos (always pays 2),-0.0091,-0.45,2,2.0091,147.23,Y:ewc-usse-ga-2026-11-03-rep@0.07 N:cpoc-ussegubc-ga-2026-11-03-rsweep@0.94 N:cpoc-ussegubc-ga-2026-11-03-dgov-rsen@0.99,
+x:ussec-tx-ks-ne-2026-11-03 Dne leg vs combos,-0.0107,-100.0,0,0.0107,7888.0,Y:ewc-usse-ne-2026-11-03-dem@0.01,
+x:ussegubc-ia SenR leg vs combos (always pays 2),-0.011,-0.55,2,2.011,3.61,Y:ewc-usse-ia-2026-11-03-rep@0.59 N:cpoc-ussegubc-ia-2026-11-03-rsweep@0.89 N:cpoc-ussegubc-ia-2026-11-03-dgov-rsen@0.49,
+excl_buy_all_no:ushr,-0.0112,-1.11,1,1.0112,,N:ushrewc-ushr-az-02-2026-11-03-rep@0.33 N:ushrewc-ushr-az-02-2026-11-03-dem@0.65,
+excl_buy_all_yes:ushr,-0.0114,-1.13,1,1.0114,,Y:ushrewc-ushr-va-02-2026-11-03-dem@0.91 Y:ushrewc-ushr-va-02-2026-11-03-rep@0.09,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0114,-1.13,1,1.0114,,N:ushrewc-ushr-wa-03-2026-11-03-dem@0.09 N:ushrewc-ushr-wa-03-2026-11-03-rep@0.91,
+excl_buy_all_yes:usgub,-0.0116,-1.15,1,1.0116,143.08,Y:pvwc-usgub-ca-fre-2026-11-03-stehil@0.64 Y:pvwc-usgub-ca-fre-2026-11-03-xavbec@0.34,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-al-01-2026-11-03-rep@0.99 Y:ushrewc-ushr-al-01-2026-11-03-dem@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:usse,-0.0121,-1.19,1,1.0121,469.99,Y:ussewc-usse-co-2026-11-03-dem@0.99 Y:ussewc-usse-co-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usse,-0.0121,-1.19,1,1.0121,352.74,N:ussewc-usse-co-2026-11-03-dem@0.02 N:ussewc-usse-co-2026-11-03-rep@0.99,
+excl_buy_all_yes:usse,-0.0121,-1.19,1,1.0121,31.38,Y:ussewc-usse-ma-2026-11-03-dem@0.99 Y:ussewc-usse-ma-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usse,-0.0121,-1.19,1,1.0121,1507.14,N:ussewc-usse-ma-2026-11-03-dem@0.02 N:ussewc-usse-ma-2026-11-03-rep@0.99,
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-al-04-2026-11-03-rep@0.99 Y:ushrewc-ushr-al-04-2026-11-03-dem@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0121,-1.19,1,1.0121,,N:ushrewc-ushr-al-04-2026-11-03-rep@0.02 N:ushrewc-ushr-al-04-2026-11-03-dem@0.99,
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-ga-04-2026-11-03-dem@0.99 Y:ushrewc-ushr-ga-04-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0121,-1.19,1,1.0121,,N:ushrewc-ushr-ga-04-2026-11-03-dem@0.02 N:ushrewc-ushr-ga-04-2026-11-03-rep@0.99,
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-ga-05-2026-11-03-dem@0.99 Y:ushrewc-ushr-ga-05-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0121,-1.19,1,1.0121,,N:ushrewc-ushr-ga-05-2026-11-03-dem@0.02 N:ushrewc-ushr-ga-05-2026-11-03-rep@0.99,
+excl_buy_all_no:ushr,-0.0121,-1.19,1,1.0121,,N:ushrewc-ushr-il-04-2026-11-03-dem@0.02 N:ushrewc-ushr-il-04-2026-11-03-rep@0.99,
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-il-05-2026-11-03-dem@0.99 Y:ushrewc-ushr-il-05-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0121,-1.19,1,1.0121,,N:ushrewc-ushr-il-05-2026-11-03-dem@0.02 N:ushrewc-ushr-il-05-2026-11-03-rep@0.99,
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,1.0,Y:ushrewc-ushr-ky-05-2026-11-03-rep@0.99 Y:ushrewc-ushr-ky-05-2026-11-03-dem@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0121,-1.19,1,1.0121,,N:ushrewc-ushr-md-07-2026-11-03-dem@0.02 N:ushrewc-ushr-md-07-2026-11-03-rep@0.99,
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-mi-12-2026-11-03-dem@0.99 Y:ushrewc-ushr-mi-12-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-mo-01-2026-11-03-dem@0.99 Y:ushrewc-ushr-mo-01-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-mo-03-2026-11-03-rep@0.99 Y:ushrewc-ushr-mo-03-2026-11-03-dem@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0121,-1.19,1,1.0121,,N:ushrewc-ushr-mo-03-2026-11-03-rep@0.02 N:ushrewc-ushr-mo-03-2026-11-03-dem@0.99,
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-mo-06-2026-11-03-rep@0.99 Y:ushrewc-ushr-mo-06-2026-11-03-dem@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-ms-03-2026-11-03-rep@0.99 Y:ushrewc-ushr-ms-03-2026-11-03-dem@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-nc-02-2026-11-03-dem@0.99 Y:ushrewc-ushr-nc-02-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0121,-1.19,1,1.0121,0.33,N:ushrewc-ushr-ne-03-2026-11-03-rep@0.02 N:ushrewc-ushr-ne-03-2026-11-03-dem@0.99,
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-nj-03-2026-11-03-dem@0.99 Y:ushrewc-ushr-nj-03-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0121,-1.19,1,1.0121,,N:ushrewc-ushr-nj-03-2026-11-03-dem@0.02 N:ushrewc-ushr-nj-03-2026-11-03-rep@0.99,
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-nj-04-2026-11-03-rep@0.99 Y:ushrewc-ushr-nj-04-2026-11-03-dem@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-nj-06-2026-11-03-dem@0.99 Y:ushrewc-ushr-nj-06-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-nj-10-2026-11-03-dem@0.99 Y:ushrewc-ushr-nj-10-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0121,-1.19,1,1.0121,,N:ushrewc-ushr-nj-10-2026-11-03-dem@0.02 N:ushrewc-ushr-nj-10-2026-11-03-rep@0.99,
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-ny-05-2026-11-03-dem@0.99 Y:ushrewc-ushr-ny-05-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-ny-10-2026-11-03-dem@0.99 Y:ushrewc-ushr-ny-10-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-ny-14-2026-11-03-dem@0.99 Y:ushrewc-ushr-ny-14-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-oh-03-2026-11-03-dem@0.99 Y:ushrewc-ushr-oh-03-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-oh-11-2026-11-03-dem@0.99 Y:ushrewc-ushr-oh-11-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0121,-1.19,1,1.0121,,N:ushrewc-ushr-oh-11-2026-11-03-dem@0.02 N:ushrewc-ushr-oh-11-2026-11-03-rep@0.99,
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-pa-04-2026-11-03-dem@0.99 Y:ushrewc-ushr-pa-04-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0121,-1.19,1,1.0121,,N:ushrewc-ushr-pa-05-2026-11-03-dem@0.02 N:ushrewc-ushr-pa-05-2026-11-03-rep@0.99,
+excl_buy_all_no:ushr,-0.0121,-1.19,1,1.0121,,N:ushrewc-ushr-pa-06-2026-11-03-dem@0.02 N:ushrewc-ushr-pa-06-2026-11-03-rep@0.99,
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-pa-12-2026-11-03-dem@0.99 Y:ushrewc-ushr-pa-12-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-tx-19-2026-11-03-rep@0.99 Y:ushrewc-ushr-tx-19-2026-11-03-dem@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0121,-1.19,1,1.0121,,N:ushrewc-ushr-tx-19-2026-11-03-rep@0.02 N:ushrewc-ushr-tx-19-2026-11-03-dem@0.99,
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-tx-29-2026-11-03-dem@0.99 Y:ushrewc-ushr-tx-29-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0121,-1.19,1,1.0121,,N:ushrewc-ushr-tx-29-2026-11-03-dem@0.02 N:ushrewc-ushr-tx-29-2026-11-03-rep@0.99,
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-tx-37-2026-11-03-dem@0.99 Y:ushrewc-ushr-tx-37-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-hi-01-2026-11-03-dem@0.99 Y:ushrewc-ushr-hi-01-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-ca-02-2026-11-03-dem@0.99 Y:ushrewc-ushr-ca-02-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-ca-09-2026-11-03-dem@0.99 Y:ushrewc-ushr-ca-09-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0121,-1.19,1,1.0121,,N:ushrewc-ushr-ca-18-2026-11-03-dem@0.02 N:ushrewc-ushr-ca-18-2026-11-03-rep@0.99,
+excl_buy_all_no:ushr,-0.0121,-1.19,1,1.0121,,N:ushrewc-ushr-ca-19-2026-11-03-dem@0.02 N:ushrewc-ushr-ca-19-2026-11-03-rep@0.99,
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-ca-24-2026-11-03-dem@0.99 Y:ushrewc-ushr-ca-24-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0121,-1.19,1,1.0121,,N:ushrewc-ushr-ca-35-2026-11-03-dem@0.02 N:ushrewc-ushr-ca-35-2026-11-03-rep@0.99,
+excl_buy_all_no:ushr,-0.0121,-1.19,1,1.0121,,N:ushrewc-ushr-ca-36-2026-11-03-dem@0.02 N:ushrewc-ushr-ca-36-2026-11-03-rep@0.99,
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-ca-42-2026-11-03-dem@0.99 Y:ushrewc-ushr-ca-42-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-wa-10-2026-11-03-dem@0.99 Y:ushrewc-ushr-wa-10-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0121,-1.19,1,1.0121,,N:ushrewc-ushr-va-08-2026-11-03-dem@0.02 N:ushrewc-ushr-va-08-2026-11-03-rep@0.99,
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-fl-10-2026-11-03-dem@0.99 Y:ushrewc-ushr-fl-10-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-la-02-2026-11-03-dem@0.99 Y:ushrewc-ushr-la-02-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,1363.19,Y:ushrewc-ushr-ma-05-2026-11-03-dem@0.99 Y:ushrewc-ushr-ma-05-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-wi-02-2026-11-03-dem@0.99 Y:ushrewc-ushr-wi-02-2026-11-03-rep@0.02,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0121,-1.19,1,1.0121,,N:ushrewc-ushr-wi-02-2026-11-03-dem@0.02 N:ushrewc-ushr-wi-02-2026-11-03-rep@0.99,
+ladder:usseto,-0.0121,-1.19,1,1.0121,1.0,Y:vtc-usseto-mn-2026-11-03-gt2m@0.99 N:vtc-usseto-mn-2026-11-03-gt2pt15m@0.02,>2e+06 vs >2.15e+06
+x:ussegubc-ks GovR leg vs combos (always pays 2),-0.0121,-0.6,2,2.0121,0.01,Y:ewc-usgub-ks-2026-11-03-rep@0.76 N:cpoc-ussegubc-ks-2026-11-03-rsweep@0.44 N:cpoc-ussegubc-ks-2026-11-03-rgov-dsen@0.77,
+x:ushrmov dem vs dwin,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-al-01-2026-11-03-dem@0.02 N:vmc-ushrmov-al-01-2026-11-03-dwin@0.99,most-votes vs winner: runoff/RCV risk
+x:ushrmov dwin vs ushr dem,-0.0121,-1.19,1,1.0121,,Y:vmc-ushrmov-ar-04-2026-11-03-dwin@0.02 N:ushrewc-ushr-ar-04-2026-11-03-dem@0.99,most-votes vs winner: runoff/RCV risk
+x:ushrmov dwin vs ushr dem,-0.0121,-1.19,1,1.0121,,Y:vmc-ushrmov-ky-05-2026-11-03-dwin@0.02 N:ushrewc-ushr-ky-05-2026-11-03-dem@0.99,most-votes vs winner: runoff/RCV risk
+x:ushrmov dem vs dwin,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-ky-05-2026-11-03-dem@0.02 N:vmc-ushrmov-ky-05-2026-11-03-dwin@0.99,most-votes vs winner: runoff/RCV risk
+x:ushrmov dwin vs ushr dem,-0.0121,-1.19,1,1.0121,,Y:vmc-ushrmov-mi-02-2026-11-03-dwin@0.02 N:ushrewc-ushr-mi-02-2026-11-03-dem@0.99,most-votes vs winner: runoff/RCV risk
+x:ushrmov dem vs dwin,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-mi-02-2026-11-03-dem@0.02 N:vmc-ushrmov-mi-02-2026-11-03-dwin@0.99,most-votes vs winner: runoff/RCV risk
+x:ushrmov dwin vs ushr dem,-0.0121,-1.19,1,1.0121,,Y:vmc-ushrmov-mo-07-2026-11-03-dwin@0.02 N:ushrewc-ushr-mo-07-2026-11-03-dem@0.99,most-votes vs winner: runoff/RCV risk
+x:ushrmov dwin vs ushr dem,-0.0121,-1.19,1,1.0121,,Y:vmc-ushrmov-mo-08-2026-11-03-dwin@0.02 N:ushrewc-ushr-mo-08-2026-11-03-dem@0.99,most-votes vs winner: runoff/RCV risk
+x:ushrmov dwin vs ushr dem,-0.0121,-1.19,1,1.0121,,Y:vmc-ushrmov-ne-03-2026-11-03-dwin@0.02 N:ushrewc-ushr-ne-03-2026-11-03-dem@0.99,most-votes vs winner: runoff/RCV risk
+x:ushrmov dwin vs ushr dem,-0.0121,-1.19,1,1.0121,,Y:vmc-ushrmov-oh-02-2026-11-03-dwin@0.02 N:ushrewc-ushr-oh-02-2026-11-03-dem@0.99,most-votes vs winner: runoff/RCV risk
+x:ushrmov dwin vs ushr dem,-0.0121,-1.19,1,1.0121,,Y:vmc-ushrmov-tx-19-2026-11-03-dwin@0.02 N:ushrewc-ushr-tx-19-2026-11-03-dem@0.99,most-votes vs winner: runoff/RCV risk
+x:ushrmov dem vs dwin,-0.0121,-1.19,1,1.0121,,Y:ushrewc-ushr-tx-19-2026-11-03-dem@0.02 N:vmc-ushrmov-tx-19-2026-11-03-dwin@0.99,most-votes vs winner: runoff/RCV risk
+excl_buy_all_no:usse,-0.0125,-1.24,1,1.0125,500.84,N:ussewc-usse-fl-2026-11-03-rep@0.1 N:ussewc-usse-fl-2026-11-03-dem@0.9,
+excl_buy_all_no:ushr,-0.0125,-1.24,1,1.0125,,N:ushrewc-ushr-az-06-2026-11-03-dem@0.1 N:ushrewc-ushr-az-06-2026-11-03-rep@0.9,
+x:ussegubc-tx SenR combos vs leg,-0.0125,-1.23,1,1.0125,325.14,N:ewc-usse-tx-2026-11-03-rep@0.63 Y:cpoc-ussegubc-tx-2026-11-03-rsweep@0.34 Y:cpoc-ussegubc-tx-2026-11-03-dgov-rsen@0.01,3rd-party risk on other office
+excl_buy_all_yes:usse,-0.0134,-1.32,1,1.0134,5187.31,Y:ussewc-usse-nj-2026-11-03-dem@0.98 Y:ussewc-usse-nj-2026-11-03-rep@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usse,-0.0134,-1.32,1,1.0134,2388.6,N:ussewc-usse-nj-2026-11-03-dem@0.03 N:ussewc-usse-nj-2026-11-03-rep@0.98,
+excl_buy_all_yes:usse,-0.0134,-1.32,1,1.0134,13245.89,Y:ussewc-usse-va-2026-11-03-dem@0.98 Y:ussewc-usse-va-2026-11-03-rep@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usse,-0.0134,-1.32,1,1.0134,14335.92,N:ussewc-usse-va-2026-11-03-dem@0.03 N:ussewc-usse-va-2026-11-03-rep@0.98,
+excl_buy_all_yes:usse,-0.0134,-1.32,1,1.0134,7561.4,Y:ussewc-usse-wv-2026-11-03-rep@0.98 Y:ussewc-usse-wv-2026-11-03-dem@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usse,-0.0134,-1.32,1,1.0134,8107.57,N:ussewc-usse-wv-2026-11-03-rep@0.03 N:ussewc-usse-wv-2026-11-03-dem@0.98,
+excl_buy_all_yes:usgub,-0.0134,-1.32,1,1.0134,4334.35,Y:usgubewc-usgub-ar-2026-11-03-rep@0.98 Y:usgubewc-usgub-ar-2026-11-03-dem@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usgub,-0.0134,-1.32,1,1.0134,431.0,N:usgubewc-usgub-ar-2026-11-03-rep@0.03 N:usgubewc-usgub-ar-2026-11-03-dem@0.98,
+excl_buy_all_yes:usgub,-0.0134,-1.32,1,1.0134,4147.65,Y:usgubewc-usgub-hi-2026-11-03-dem@0.98 Y:usgubewc-usgub-hi-2026-11-03-rep@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usgub,-0.0134,-1.32,1,1.0134,1296.76,N:usgubewc-usgub-hi-2026-11-03-dem@0.03 N:usgubewc-usgub-hi-2026-11-03-rep@0.98,
+excl_buy_all_yes:usgub,-0.0134,-1.32,1,1.0134,4729.85,Y:usgubewc-usgub-id-2026-11-03-rep@0.98 Y:usgubewc-usgub-id-2026-11-03-dem@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usgub,-0.0134,-1.32,1,1.0134,1661.58,N:usgubewc-usgub-id-2026-11-03-rep@0.03 N:usgubewc-usgub-id-2026-11-03-dem@0.98,
+excl_buy_all_yes:usgub,-0.0134,-1.32,1,1.0134,6287.61,Y:usgubewc-usgub-wy-2026-11-03-rep@0.98 Y:usgubewc-usgub-wy-2026-11-03-dem@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usgub,-0.0134,-1.32,1,1.0134,542.34,N:usgubewc-usgub-wy-2026-11-03-rep@0.03 N:usgubewc-usgub-wy-2026-11-03-dem@0.98,
+excl_buy_all_yes:usse,-0.0134,-1.32,1,1.0134,97.95,Y:ussewc-usse-il-2026-11-03-dem@0.98 Y:ussewc-usse-il-2026-11-03-rep@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usse,-0.0134,-1.32,1,1.0134,681.43,N:ussewc-usse-il-2026-11-03-dem@0.03 N:ussewc-usse-il-2026-11-03-rep@0.98,
+excl_buy_all_yes:ushr,-0.0134,-1.32,1,1.0134,,Y:ushrewc-ushr-ar-04-2026-11-03-rep@0.98 Y:ushrewc-ushr-ar-04-2026-11-03-dem@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0134,-1.32,1,1.0134,,N:ushrewc-ushr-de-al-2026-11-03-dem@0.03 N:ushrewc-ushr-de-al-2026-11-03-rep@0.98,
+excl_buy_all_yes:ushr,-0.0134,-1.32,1,1.0134,,Y:ushrewc-ushr-ga-09-2026-11-03-rep@0.98 Y:ushrewc-ushr-ga-09-2026-11-03-dem@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0134,-1.32,1,1.0134,,N:ushrewc-ushr-ga-09-2026-11-03-rep@0.03 N:ushrewc-ushr-ga-09-2026-11-03-dem@0.98,
+excl_buy_all_yes:ushr,-0.0134,-1.32,1,1.0134,,Y:ushrewc-ushr-ga-14-2026-11-03-rep@0.98 Y:ushrewc-ushr-ga-14-2026-11-03-dem@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0134,-1.32,1,1.0134,,N:ushrewc-ushr-ga-14-2026-11-03-rep@0.03 N:ushrewc-ushr-ga-14-2026-11-03-dem@0.98,
+excl_buy_all_no:ushr,-0.0134,-1.32,1,1.0134,,N:ushrewc-ushr-id-01-2026-11-03-rep@0.03 N:ushrewc-ushr-id-01-2026-11-03-dem@0.98,
+excl_buy_all_yes:ushr,-0.0134,-1.32,1,1.0134,,Y:ushrewc-ushr-ky-02-2026-11-03-rep@0.98 Y:ushrewc-ushr-ky-02-2026-11-03-dem@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0134,-1.32,1,1.0134,,Y:ushrewc-ushr-ky-03-2026-11-03-dem@0.98 Y:ushrewc-ushr-ky-03-2026-11-03-rep@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0134,-1.32,1,1.0134,,Y:ushrewc-ushr-me-01-2026-11-03-dem@0.98 Y:ushrewc-ushr-me-01-2026-11-03-rep@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0134,-1.32,1,1.0134,,N:ushrewc-ushr-me-01-2026-11-03-dem@0.03 N:ushrewc-ushr-me-01-2026-11-03-rep@0.98,
+excl_buy_all_yes:ushr,-0.0134,-1.32,1,1.0134,,Y:ushrewc-ushr-mi-11-2026-11-03-dem@0.98 Y:ushrewc-ushr-mi-11-2026-11-03-rep@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0134,-1.32,1,1.0134,,Y:ushrewc-ushr-ms-04-2026-11-03-rep@0.98 Y:ushrewc-ushr-ms-04-2026-11-03-dem@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0134,-1.32,1,1.0134,,N:ushrewc-ushr-ms-04-2026-11-03-rep@0.03 N:ushrewc-ushr-ms-04-2026-11-03-dem@0.98,
+excl_buy_all_yes:ushr,-0.0134,-1.32,1,1.0134,,Y:ushrewc-ushr-nh-02-2026-11-03-dem@0.98 Y:ushrewc-ushr-nh-02-2026-11-03-rep@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0134,-1.32,1,1.0134,,Y:ushrewc-ushr-nj-11-2026-11-03-dem@0.98 Y:ushrewc-ushr-nj-11-2026-11-03-rep@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0134,-1.32,1,1.0134,,Y:ushrewc-ushr-oh-02-2026-11-03-rep@0.98 Y:ushrewc-ushr-oh-02-2026-11-03-dem@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0134,-1.32,1,1.0134,,N:ushrewc-ushr-ok-02-2026-11-03-rep@0.03 N:ushrewc-ushr-ok-02-2026-11-03-dem@0.98,
+excl_buy_all_yes:ushr,-0.0134,-1.32,1,1.0134,,Y:ushrewc-ushr-sc-03-2026-11-03-rep@0.98 Y:ushrewc-ushr-sc-03-2026-11-03-dem@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0134,-1.32,1,1.0134,,N:ushrewc-ushr-sc-03-2026-11-03-rep@0.03 N:ushrewc-ushr-sc-03-2026-11-03-dem@0.98,
+excl_buy_all_yes:ushr,-0.0134,-1.32,1,1.0134,,Y:ushrewc-ushr-tx-07-2026-11-03-dem@0.98 Y:ushrewc-ushr-tx-07-2026-11-03-rep@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0134,-1.32,1,1.0134,,N:ushrewc-ushr-tx-20-2026-11-03-dem@0.03 N:ushrewc-ushr-tx-20-2026-11-03-rep@0.98,
+excl_buy_all_yes:ushr,-0.0134,-1.32,1,1.0134,,Y:ushrewc-ushr-wv-01-2026-11-03-rep@0.98 Y:ushrewc-ushr-wv-01-2026-11-03-dem@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0134,-1.32,1,1.0134,17.0,Y:ushrewc-ushr-az-07-2026-11-03-dem@0.98 Y:ushrewc-ushr-az-07-2026-11-03-rep@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0134,-1.32,1,1.0134,,Y:ushrewc-ushr-ca-32-2026-11-03-dem@0.98 Y:ushrewc-ushr-ca-32-2026-11-03-rep@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0134,-1.32,1,1.0134,,Y:ushrewc-ushr-wa-09-2026-11-03-dem@0.98 Y:ushrewc-ushr-wa-09-2026-11-03-rep@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0134,-1.32,1,1.0134,,Y:ushrewc-ushr-va-11-2026-11-03-dem@0.98 Y:ushrewc-ushr-va-11-2026-11-03-rep@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0134,-1.32,1,1.0134,,Y:ushrewc-ushr-ma-02-2026-11-03-dem@0.98 Y:ushrewc-ushr-ma-02-2026-11-03-rep@0.03,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0134,-1.32,1,1.0134,,N:ushrewc-ushr-ma-02-2026-11-03-dem@0.03 N:ushrewc-ushr-ma-02-2026-11-03-rep@0.98,
+excl_buy_all_yes:ushr,-0.0134,-1.32,1,1.0134,,Y:ushrewc-ushr-nj-08-2026-11-03-dem@0.98 Y:ushrewc-ushr-nj-08-2026-11-03-rep@0.03,needs exhaustive set (3rd party/independent risk)
+ladder:rep,-0.0134,-1.32,1,1.0134,1408.9,Y:scc-hrep-rep-2026-11-03-gte230@0.03 N:scc-hrep-rep-2026-11-03-gte235@0.98,P(>=230)>=P(>=235)
+x:ushrmov dem vs dwin,-0.0134,-1.32,1,1.0134,,Y:ushrewc-ushr-ky-01-2026-11-03-dem@0.03 N:vmc-ushrmov-ky-01-2026-11-03-dwin@0.98,most-votes vs winner: runoff/RCV risk
+x:ushrmov dwin vs ushr dem,-0.0134,-1.32,1,1.0134,,Y:vmc-ushrmov-ok-02-2026-11-03-dwin@0.03 N:ushrewc-ushr-ok-02-2026-11-03-dem@0.98,most-votes vs winner: runoff/RCV risk
+excl_buy_all_no:usgub,-0.0135,-1.33,1,1.0135,1983.0,N:ewc-usgub-wi-2026-11-03-dem@0.21 N:ewc-usgub-wi-2026-11-03-rep@0.78,
+excl_buy_all_no:ushr,-0.0135,-1.33,1,1.0135,,N:ushrewc-ushr-wi-03-2026-11-03-dem@0.21 N:ushrewc-ushr-wi-03-2026-11-03-rep@0.78,
+excl_buy_all_yes:usse,-0.0136,-1.34,1,1.0136,12.75,Y:pvwc-usse-fl-mia-2026-11-03-rep@0.58 Y:pvwc-usse-fl-mia-2026-11-03-dem@0.4,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usse,-0.0136,-1.34,1,1.0136,30.69,N:pvwc-usse-mi-oak-2026-11-03-dem@0.11 N:pvwc-usse-mi-oak-2026-11-03-rep@0.89,
+x:ussegubc-me SenR combos vs leg,-0.0141,-1.39,1,1.0141,246.3,N:ewc-usse-me-2026-11-03-rep@0.6 Y:cpoc-ussegubc-me-2026-11-03-rsweep@0.02 Y:cpoc-ussegubc-me-2026-11-03-dgov-rsen@0.36,3rd-party risk on other office
+ladder:demst,-0.0142,-1.4,1,1.0142,3.9,Y:scc-hrep-demst-2026-11-03-gte235@0.55 N:scc-hrep-demst-2026-11-03-gte240@0.43,P(>=235)>=P(>=240)
+x:ussegubc-oh GovR leg vs combos (always pays 2),-0.0142,-0.71,2,2.0142,4.21,Y:ewc-usgub-oh-2026-11-03-rep@0.21 N:cpoc-ussegubc-oh-2026-11-03-rsweep@0.81 N:cpoc-ussegubc-oh-2026-11-03-rgov-dsen@0.97,
+excl_buy_all_no:usse,-0.0145,-1.43,1,1.0145,7.0,N:pvwc-usse-tx-den-2026-11-03-rep@0.45 N:pvwc-usse-tx-den-2026-11-03-dem@0.53,
+excl_buy_all_no:usse,-0.0145,-1.43,1,1.0145,13.13,N:pvwc-usse-mi-sag-2026-11-03-rep@0.45 N:pvwc-usse-mi-sag-2026-11-03-dem@0.53,
+excl_buy_all_yes:usse,-0.0147,-1.45,1,1.0147,6871.04,Y:ussewc-usse-ky-2026-11-03-rep@0.97 Y:ussewc-usse-ky-2026-11-03-dem@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usse,-0.0147,-1.45,1,1.0147,7167.13,N:ussewc-usse-ky-2026-11-03-rep@0.04 N:ussewc-usse-ky-2026-11-03-dem@0.97,
+excl_buy_all_yes:usgub,-0.0147,-1.45,1,1.0147,1748.06,Y:usgubewc-usgub-ct-2026-11-03-dem@0.97 Y:usgubewc-usgub-ct-2026-11-03-rep@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usgub,-0.0147,-1.45,1,1.0147,7362.55,N:usgubewc-usgub-ct-2026-11-03-dem@0.04 N:usgubewc-usgub-ct-2026-11-03-rep@0.97,
+excl_buy_all_yes:usgub,-0.0147,-1.45,1,1.0147,3992.55,Y:usgubewc-usgub-il-2026-11-03-dem@0.97 Y:usgubewc-usgub-il-2026-11-03-rep@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usgub,-0.0147,-1.45,1,1.0147,24200.22,N:usgubewc-usgub-il-2026-11-03-dem@0.04 N:usgubewc-usgub-il-2026-11-03-rep@0.97,
+excl_buy_all_yes:usgub,-0.0147,-1.45,1,1.0147,1567.83,Y:usgubewc-usgub-sd-2026-11-03-rep@0.97 Y:usgubewc-usgub-sd-2026-11-03-dem@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usgub,-0.0147,-1.45,1,1.0147,3752.02,N:usgubewc-usgub-sd-2026-11-03-rep@0.04 N:usgubewc-usgub-sd-2026-11-03-dem@0.97,
+excl_buy_all_yes:ushr,-0.0147,-1.45,1,1.0147,,Y:ushrewc-ushr-az-09-2026-11-03-rep@0.97 Y:ushrewc-ushr-az-09-2026-11-03-dem@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0147,-1.45,1,1.0147,,N:ushrewc-ushr-ct-05-2026-11-03-dem@0.04 N:ushrewc-ushr-ct-05-2026-11-03-rep@0.97,
+excl_buy_all_yes:ushr,-0.0147,-1.45,1,1.0147,,Y:ushrewc-ushr-fl-01-2026-11-03-rep@0.97 Y:ushrewc-ushr-fl-01-2026-11-03-dem@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0147,-1.45,1,1.0147,,Y:ushrewc-ushr-fl-24-2026-11-03-dem@0.97 Y:ushrewc-ushr-fl-24-2026-11-03-rep@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0147,-1.45,1,1.0147,,N:ushrewc-ushr-ga-08-2026-11-03-rep@0.04 N:ushrewc-ushr-ga-08-2026-11-03-dem@0.97,
+excl_buy_all_no:ushr,-0.0147,-1.45,1,1.0147,,N:ushrewc-ushr-hi-02-2026-11-03-dem@0.04 N:ushrewc-ushr-hi-02-2026-11-03-rep@0.97,
+excl_buy_all_yes:ushr,-0.0147,-1.45,1,1.0147,,Y:ushrewc-ushr-il-03-2026-11-03-dem@0.97 Y:ushrewc-ushr-il-03-2026-11-03-rep@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0147,-1.45,1,1.0147,,Y:ushrewc-ushr-il-06-2026-11-03-dem@0.97 Y:ushrewc-ushr-il-06-2026-11-03-rep@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0147,-1.45,1,1.0147,,Y:ushrewc-ushr-nj-01-2026-11-03-dem@0.97 Y:ushrewc-ushr-nj-01-2026-11-03-rep@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0147,-1.45,1,1.0147,,N:ushrewc-ushr-nj-01-2026-11-03-dem@0.04 N:ushrewc-ushr-nj-01-2026-11-03-rep@0.97,
+excl_buy_all_yes:ushr,-0.0147,-1.45,1,1.0147,,Y:ushrewc-ushr-nm-01-2026-11-03-dem@0.97 Y:ushrewc-ushr-nm-01-2026-11-03-rep@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0147,-1.45,1,1.0147,,N:ushrewc-ushr-nm-01-2026-11-03-dem@0.04 N:ushrewc-ushr-nm-01-2026-11-03-rep@0.97,
+excl_buy_all_yes:ushr,-0.0147,-1.45,1,1.0147,,Y:ushrewc-ushr-ny-08-2026-11-03-dem@0.97 Y:ushrewc-ushr-ny-08-2026-11-03-rep@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0147,-1.45,1,1.0147,,N:ushrewc-ushr-ny-08-2026-11-03-dem@0.04 N:ushrewc-ushr-ny-08-2026-11-03-rep@0.97,
+excl_buy_all_yes:ushr,-0.0147,-1.45,1,1.0147,,Y:ushrewc-ushr-ny-18-2026-11-03-dem@0.97 Y:ushrewc-ushr-ny-18-2026-11-03-rep@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0147,-1.45,1,1.0147,,Y:ushrewc-ushr-ny-23-2026-11-03-rep@0.97 Y:ushrewc-ushr-ny-23-2026-11-03-dem@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0147,-1.45,1,1.0147,,Y:ushrewc-ushr-ny-24-2026-11-03-rep@0.97 Y:ushrewc-ushr-ny-24-2026-11-03-dem@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0147,-1.45,1,1.0147,,N:ushrewc-ushr-ok-01-2026-11-03-rep@0.04 N:ushrewc-ushr-ok-01-2026-11-03-dem@0.97,
+excl_buy_all_no:ushr,-0.0147,-1.45,1,1.0147,,N:ushrewc-ushr-pa-09-2026-11-03-rep@0.04 N:ushrewc-ushr-pa-09-2026-11-03-dem@0.97,
+excl_buy_all_yes:ushr,-0.0147,-1.45,1,1.0147,,Y:ushrewc-ushr-pa-14-2026-11-03-rep@0.97 Y:ushrewc-ushr-pa-14-2026-11-03-dem@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0147,-1.45,1,1.0147,,N:ushrewc-ushr-tx-14-2026-11-03-rep@0.04 N:ushrewc-ushr-tx-14-2026-11-03-dem@0.97,
+excl_buy_all_yes:ushr,-0.0147,-1.45,1,1.0147,,Y:ushrewc-ushr-tx-38-2026-11-03-rep@0.97 Y:ushrewc-ushr-tx-38-2026-11-03-dem@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0147,-1.45,1,1.0147,,N:ushrewc-ushr-wi-05-2026-11-03-rep@0.04 N:ushrewc-ushr-wi-05-2026-11-03-dem@0.97,
+excl_buy_all_yes:ushr,-0.0147,-1.45,1,1.0147,,Y:ushrewc-ushr-ca-03-2026-11-03-dem@0.97 Y:ushrewc-ushr-ca-03-2026-11-03-rep@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0147,-1.45,1,1.0147,,Y:ushrewc-ushr-ca-08-2026-11-03-dem@0.97 Y:ushrewc-ushr-ca-08-2026-11-03-rep@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0147,-1.45,1,1.0147,,N:ushrewc-ushr-ca-25-2026-11-03-dem@0.04 N:ushrewc-ushr-ca-25-2026-11-03-rep@0.97,
+excl_buy_all_yes:ushr,-0.0147,-1.45,1,1.0147,,Y:ushrewc-ushr-ca-33-2026-11-03-dem@0.97 Y:ushrewc-ushr-ca-33-2026-11-03-rep@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0147,-1.45,1,1.0147,,Y:ushrewc-ushr-ca-52-2026-11-03-dem@0.97 Y:ushrewc-ushr-ca-52-2026-11-03-rep@0.04,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0147,-1.45,1,1.0147,,N:ushrewc-ushr-ca-52-2026-11-03-dem@0.04 N:ushrewc-ushr-ca-52-2026-11-03-rep@0.97,
+excl_buy_all_no:ushr,-0.0147,-1.45,1,1.0147,,N:ushrewc-ushr-tn-04-2026-11-03-rep@0.04 N:ushrewc-ushr-tn-04-2026-11-03-dem@0.97,
+x:ussegubc-ga GovD combos vs leg,-0.0147,-1.45,1,1.0147,66.69,N:ewc-usgub-ga-2026-11-03-dem@0.38 Y:cpoc-ussegubc-ga-2026-11-03-dsweep@0.58 Y:cpoc-ussegubc-ga-2026-11-03-dgov-rsen@0.02,3rd-party risk on other office
+excl_buy_all_no:ushr,-0.0157,-1.55,1,1.0157,,N:ushrewc-ushr-tx-32-2026-11-03-rep@0.13 N:ushrewc-ushr-tx-32-2026-11-03-dem@0.87,
+excl_buy_all_no:usse,-0.0157,-1.55,1,1.0157,100.02,N:pvwc-usse-ks-lea-2026-11-03-rep@0.13 N:pvwc-usse-ks-lea-2026-11-03-dem@0.87,
+excl_buy_all_yes:usse,-0.016,-1.57,1,1.016,6559.0,Y:ewc-usse-nc-2026-11-03-dem@0.96 Y:ewc-usse-nc-2026-11-03-rep@0.05,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usse,-0.016,-1.57,1,1.016,13588.0,N:ewc-usse-nc-2026-11-03-dem@0.05 N:ewc-usse-nc-2026-11-03-rep@0.96,
+excl_buy_all_yes:usse,-0.016,-1.57,1,1.016,6555.41,Y:ussewc-usse-sd-2026-11-03-rep@0.96 Y:ussewc-usse-sd-2026-11-03-briben@0.05,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usse,-0.016,-1.57,1,1.016,5042.09,N:ussewc-usse-sd-2026-11-03-rep@0.05 N:ussewc-usse-sd-2026-11-03-briben@0.96,
+excl_buy_all_yes:usgub,-0.016,-1.57,1,1.016,875.85,Y:usgubewc-usgub-me-2026-11-03-dem@0.96 Y:usgubewc-usgub-me-2026-11-03-rep@0.05,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usgub,-0.016,-1.57,1,1.016,1487.7,N:usgubewc-usgub-me-2026-11-03-dem@0.05 N:usgubewc-usgub-me-2026-11-03-rep@0.96,
+excl_buy_all_yes:usgub,-0.016,-1.57,1,1.016,2107.75,Y:usgubewc-usgub-nh-2026-11-03-rep@0.96 Y:usgubewc-usgub-nh-2026-11-03-dem@0.05,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usgub,-0.016,-1.57,1,1.016,117.7,N:usgubewc-usgub-nh-2026-11-03-rep@0.05 N:usgubewc-usgub-nh-2026-11-03-dem@0.96,
+excl_buy_all_no:usgub,-0.016,-0.79,2,2.016,136.26,N:usgubewc-usgub-ri-2026-11-03-dem@0.05 N:usgubewc-usgub-ri-2026-11-03-kenblo@0.97 N:usgubewc-usgub-ri-2026-11-03-rep@0.99,
+excl_buy_all_yes:ushr,-0.016,-1.57,1,1.016,1.25,Y:ushrewc-ushr-in-06-2026-11-03-rep@0.96 Y:ushrewc-ushr-in-06-2026-11-03-dem@0.05,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.016,-1.57,1,1.016,,N:ushrewc-ushr-ks-03-2026-11-03-dem@0.05 N:ushrewc-ushr-ks-03-2026-11-03-rep@0.96,
+excl_buy_all_yes:ushr,-0.016,-1.57,1,1.016,,Y:ushrewc-ushr-ma-06-2026-11-03-dem@0.96 Y:ushrewc-ushr-ma-06-2026-11-03-rep@0.05,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.016,-1.57,1,1.016,,Y:ushrewc-ushr-md-06-2026-11-03-dem@0.96 Y:ushrewc-ushr-md-06-2026-11-03-rep@0.05,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.016,-1.57,1,1.016,,N:ushrewc-ushr-md-06-2026-11-03-dem@0.05 N:ushrewc-ushr-md-06-2026-11-03-rep@0.96,
+excl_buy_all_yes:ushr,-0.016,-1.57,1,1.016,,Y:ushrewc-ushr-mi-03-2026-11-03-dem@0.96 Y:ushrewc-ushr-mi-03-2026-11-03-rep@0.05,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.016,-1.57,1,1.016,,Y:ushrewc-ushr-nh-01-2026-11-03-dem@0.96 Y:ushrewc-ushr-nh-01-2026-11-03-rep@0.05,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.016,-1.57,1,1.016,,N:ushrewc-ushr-nh-01-2026-11-03-dem@0.05 N:ushrewc-ushr-nh-01-2026-11-03-rep@0.96,
+excl_buy_all_yes:ushr,-0.016,-1.57,1,1.016,,Y:ushrewc-ushr-oh-01-2026-11-03-dem@0.96 Y:ushrewc-ushr-oh-01-2026-11-03-rep@0.05,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.016,-1.57,1,1.016,,N:ushrewc-ushr-oh-01-2026-11-03-dem@0.05 N:ushrewc-ushr-oh-01-2026-11-03-rep@0.96,
+excl_buy_all_no:ushr,-0.016,-1.57,1,1.016,,N:ushrewc-ushr-or-02-2026-11-03-rep@0.05 N:ushrewc-ushr-or-02-2026-11-03-dem@0.96,
+excl_buy_all_yes:ushr,-0.016,-1.57,1,1.016,,Y:ushrewc-ushr-pa-16-2026-11-03-rep@0.96 Y:ushrewc-ushr-pa-16-2026-11-03-dem@0.05,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.016,-1.57,1,1.016,,N:ushrewc-ushr-tn-07-2026-11-03-rep@0.05 N:ushrewc-ushr-tn-07-2026-11-03-dem@0.96,
+excl_buy_all_yes:ushr,-0.016,-1.57,1,1.016,,Y:ushrewc-ushr-tx-08-2026-11-03-rep@0.96 Y:ushrewc-ushr-tx-08-2026-11-03-dem@0.05,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.016,-1.57,1,1.016,,N:ushrewc-ushr-tx-12-2026-11-03-rep@0.05 N:ushrewc-ushr-tx-12-2026-11-03-dem@0.96,
+excl_buy_all_no:ushr,-0.016,-1.57,1,1.016,,N:ushrewc-ushr-fl-19-2026-11-03-rep@0.05 N:ushrewc-ushr-fl-19-2026-11-03-dem@0.96,
+excl_buy_all_yes:ushr,-0.016,-1.57,1,1.016,,Y:ushrewc-ushr-tx-03-2026-11-03-rep@0.96 Y:ushrewc-ushr-tx-03-2026-11-03-dem@0.05,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.016,-1.57,1,1.016,,N:ushrewc-ushr-tx-03-2026-11-03-rep@0.05 N:ushrewc-ushr-tx-03-2026-11-03-dem@0.96,
+excl_buy_all_yes:ushr,-0.016,-1.57,1,1.016,,Y:ushrewc-ushr-ca-01-2026-11-03-dem@0.96 Y:ushrewc-ushr-ca-01-2026-11-03-rep@0.05,needs exhaustive set (3rd party/independent risk)
+x:ushrmov dwin vs ushr dem,-0.016,-1.57,1,1.016,,Y:vmc-ushrmov-tn-07-2026-11-03-dwin@0.05 N:ushrewc-ushr-tn-07-2026-11-03-dem@0.96,most-votes vs winner: runoff/RCV risk
+x:ushrmov dwin vs ushr dem,-0.016,-1.57,1,1.016,,Y:vmc-ushrmov-tx-12-2026-11-03-dwin@0.05 N:ushrewc-ushr-tx-12-2026-11-03-dem@0.96,most-votes vs winner: runoff/RCV risk
+excl_buy_all_no:ussec,-0.0166,-0.55,3,3.0166,297.28,N:cpoc-ussec-tx-me-2026-11-03-dsweep@0.51 N:cpoc-ussec-tx-me-2026-11-03-rsweep@0.7 N:cpoc-ussec-tx-me-2026-11-03-dtx-rme@0.87 N:cpoc-ussec-tx-me-2026-11-03-rtx-dme@0.89,
+excl_buy_all_yes:usag,-0.0171,-1.68,1,1.0171,,Y:ewc-usag-tx-2026-11-03-rep@0.73 Y:ewc-usag-tx-2026-11-03-dem@0.26,needs exhaustive set (3rd party/independent risk)
+x:ussegubc-ia GovR combos vs leg,-0.0171,-1.68,1,1.0171,40.12,N:ewc-usgub-ia-2026-11-03-rep@0.86 Y:cpoc-ussegubc-ia-2026-11-03-rsweep@0.12 Y:cpoc-ussegubc-ia-2026-11-03-rgov-dsen@0.02,3rd-party risk on other office
+excl_buy_all_yes:usgub,-0.0172,-1.69,1,1.0172,1941.81,Y:usgubewc-usgub-al-2026-11-03-rep@0.95 Y:usgubewc-usgub-al-2026-11-03-dem@0.06,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usgub,-0.0172,-1.69,1,1.0172,1601.73,N:usgubewc-usgub-al-2026-11-03-rep@0.06 N:usgubewc-usgub-al-2026-11-03-dem@0.95,
+excl_buy_all_yes:usse,-0.0172,-1.69,1,1.0172,10891.64,Y:ussewc-usse-ar-2026-11-03-rep@0.95 Y:ussewc-usse-ar-2026-11-03-dem@0.06,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usse,-0.0172,-1.69,1,1.0172,12368.32,N:ussewc-usse-ar-2026-11-03-rep@0.06 N:ussewc-usse-ar-2026-11-03-dem@0.95,
+excl_buy_all_yes:usgub,-0.0172,-1.69,1,1.0172,14253.7,Y:usgubewc-usgub-ma-2026-11-03-dem@0.95 Y:usgubewc-usgub-ma-2026-11-03-rep@0.06,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usgub,-0.0172,-1.69,1,1.0172,9397.33,N:usgubewc-usgub-ma-2026-11-03-dem@0.06 N:usgubewc-usgub-ma-2026-11-03-rep@0.95,
+excl_buy_all_yes:usgub,-0.0172,-1.69,1,1.0172,573.06,Y:usgubewc-usgub-mn-2026-11-03-dem@0.95 Y:usgubewc-usgub-mn-2026-11-03-rep@0.06,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usgub,-0.0172,-1.69,1,1.0172,510.0,N:usgubewc-usgub-mn-2026-11-03-dem@0.06 N:usgubewc-usgub-mn-2026-11-03-rep@0.95,
+excl_buy_all_no:ushr,-0.0172,-1.69,1,1.0172,,N:ushrewc-ushr-fl-03-2026-11-03-rep@0.06 N:ushrewc-ushr-fl-03-2026-11-03-dem@0.95,
+excl_buy_all_yes:ushr,-0.0172,-1.69,1,1.0172,,Y:ushrewc-ushr-fl-05-2026-11-03-rep@0.95 Y:ushrewc-ushr-fl-05-2026-11-03-dem@0.06,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0172,-1.69,1,1.0172,,Y:ushrewc-ushr-fl-08-2026-11-03-rep@0.95 Y:ushrewc-ushr-fl-08-2026-11-03-dem@0.06,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0172,-1.69,1,1.0172,,Y:ushrewc-ushr-in-04-2026-11-03-rep@0.95 Y:ushrewc-ushr-in-04-2026-11-03-dem@0.06,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0172,-1.69,1,1.0172,,N:ushrewc-ushr-mn-05-2026-11-03-dem@0.06 N:ushrewc-ushr-mn-05-2026-11-03-rep@0.95,
+excl_buy_all_yes:ushr,-0.0172,-1.69,1,1.0172,,Y:ushrewc-ushr-mn-06-2026-11-03-rep@0.95 Y:ushrewc-ushr-mn-06-2026-11-03-dem@0.06,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0172,-1.69,1,1.0172,,N:ushrewc-ushr-sc-07-2026-11-03-rep@0.06 N:ushrewc-ushr-sc-07-2026-11-03-dem@0.95,
+excl_buy_all_yes:ushr,-0.0172,-1.69,1,1.0172,,Y:ushrewc-ushr-ut-02-2026-11-03-rep@0.95 Y:ushrewc-ushr-ut-02-2026-11-03-dem@0.06,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0172,-1.69,1,1.0172,,Y:ushrewc-ushr-ca-13-2026-11-03-dem@0.95 Y:ushrewc-ushr-ca-13-2026-11-03-rep@0.06,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0172,-1.69,1,1.0172,,N:ushrewc-ushr-ca-13-2026-11-03-dem@0.06 N:ushrewc-ushr-ca-13-2026-11-03-rep@0.95,
+ladder:usseto,-0.0172,-1.69,1,1.0172,3.3,Y:vtc-usseto-tx-2026-11-03-gt8pt4m@0.95 N:vtc-usseto-tx-2026-11-03-gt8pt8m@0.06,>8.4e+06 vs >8.8e+06
+excl_buy_all_yes:usgub,-0.0177,-1.74,1,1.0177,3899.0,Y:ewc-usgub-ia-2026-11-03-dem@0.85 Y:ewc-usgub-ia-2026-11-03-rep@0.15,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0183,-1.8,1,1.0183,3.0,N:ushrewc-ushr-co-04-2026-11-03-rep@0.28 N:ushrewc-ushr-co-04-2026-11-03-dem@0.71,
+excl_buy_all_yes:usgub,-0.0184,-1.81,1,1.0184,412.61,Y:usgubewc-usgub-sc-2026-11-03-rep@0.94 Y:usgubewc-usgub-sc-2026-11-03-dem@0.07,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usgub,-0.0184,-1.81,1,1.0184,6563.33,N:usgubewc-usgub-sc-2026-11-03-rep@0.07 N:usgubewc-usgub-sc-2026-11-03-dem@0.94,
+excl_buy_all_yes:ushr,-0.0184,-1.81,1,1.0184,,Y:ushrewc-ushr-fl-15-2026-11-03-rep@0.94 Y:ushrewc-ushr-fl-15-2026-11-03-dem@0.07,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0184,-1.81,1,1.0184,,N:ushrewc-ushr-fl-15-2026-11-03-rep@0.07 N:ushrewc-ushr-fl-15-2026-11-03-dem@0.94,
+excl_buy_all_yes:ushr,-0.0184,-1.81,1,1.0184,,Y:ushrewc-ushr-nj-07-2026-11-03-dem@0.94 Y:ushrewc-ushr-nj-07-2026-11-03-rep@0.07,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0184,-1.81,1,1.0184,,N:ushrewc-ushr-nj-07-2026-11-03-dem@0.07 N:ushrewc-ushr-nj-07-2026-11-03-rep@0.94,
+excl_buy_all_yes:ushr,-0.0184,-1.81,1,1.0184,,Y:ushrewc-ushr-ri-02-2026-11-03-dem@0.94 Y:ushrewc-ushr-ri-02-2026-11-03-rep@0.07,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0184,-1.81,1,1.0184,,N:ushrewc-ushr-ri-02-2026-11-03-dem@0.07 N:ushrewc-ushr-ri-02-2026-11-03-rep@0.94,
+excl_buy_all_yes:ushr,-0.0184,-1.81,1,1.0184,,Y:ushrewc-ushr-tx-24-2026-11-03-rep@0.94 Y:ushrewc-ushr-tx-24-2026-11-03-dem@0.07,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0184,-1.81,1,1.0184,,N:ushrewc-ushr-tx-24-2026-11-03-rep@0.07 N:ushrewc-ushr-tx-24-2026-11-03-dem@0.94,
+excl_buy_all_no:ushr,-0.0184,-1.81,1,1.0184,,N:ushrewc-ushr-wi-07-2026-11-03-rep@0.07 N:ushrewc-ushr-wi-07-2026-11-03-dem@0.94,
+excl_buy_all_yes:ushr,-0.0184,-1.81,1,1.0184,,Y:ushrewc-ushr-ca-21-2026-11-03-dem@0.94 Y:ushrewc-ushr-ca-21-2026-11-03-rep@0.07,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0184,-1.81,1,1.0184,,Y:ushrewc-ushr-ca-48-2026-11-03-dem@0.94 Y:ushrewc-ushr-ca-48-2026-11-03-rep@0.07,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0184,-1.81,1,1.0184,,N:ushrewc-ushr-va-06-2026-11-03-rep@0.07 N:ushrewc-ushr-va-06-2026-11-03-dem@0.94,
+excl_buy_all_yes:ushr,-0.0184,-1.81,1,1.0184,,Y:ushrewc-ushr-la-06-2026-11-03-rep@0.94 Y:ushrewc-ushr-la-06-2026-11-03-dem@0.07,needs exhaustive set (3rd party/independent risk)
+x:ussegubc-nh GovR combos vs leg,-0.0184,-1.81,1,1.0184,42.19,N:usgubewc-usgub-nh-2026-11-03-rep@0.05 Y:cpoc-ussegubc-nh-2026-11-03-rsweep@0.1 Y:cpoc-ussegubc-nh-2026-11-03-rgov-dsen@0.85,3rd-party risk on other office
+excl_buy_all_yes:ushr,-0.0187,-1.83,1,1.0187,,Y:ushrewc-ushr-ia-03-2026-11-03-dem@0.84 Y:ushrewc-ushr-ia-03-2026-11-03-rep@0.16,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usse,-0.0187,-1.83,1,1.0187,154.56,N:pvwc-usse-tx-tar-2026-11-03-dem@0.16 N:pvwc-usse-tx-tar-2026-11-03-rep@0.84,
+x:ussec-mi-mn-nh-2026-11-03 Dnh leg vs combos,-0.0187,-0.46,4,4.0187,5.47,Y:ewc-usse-nh-2026-11-03-dem@0.9 N:cpoc-ussec-mi-mn-nh-2026-11-03-dsweep@0.36 N:cpoc-ussec-mi-mn-nh-2026-11-03-rmi-dmn-dnh@0.8 N:cpoc-ussec-mi-mn-nh-2026-11-03-dmi-rmn-dnh@0.94 N:cpoc-ussec-mi-mn-nh-2026-11-03-rmi-rmn-dnh@0.98,
+x:ussec-tx-me-2026-11-03 Rme leg vs combos,-0.0193,-0.95,2,2.0193,3218.11,Y:ewc-usse-me-2026-11-03-rep@0.41 N:cpoc-ussec-tx-me-2026-11-03-rsweep@0.7 N:cpoc-ussec-tx-me-2026-11-03-dtx-rme@0.87,
+excl_buy_all_yes:usse,-0.0196,-1.93,1,1.0196,2272.97,Y:ussewc-usse-la-2026-11-03-rep@0.93 Y:ussewc-usse-la-2026-11-03-dem@0.08,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:usse,-0.0196,-1.93,1,1.0196,2492.25,N:ussewc-usse-la-2026-11-03-rep@0.08 N:ussewc-usse-la-2026-11-03-dem@0.93,
+excl_buy_all_no:ushr,-0.0196,-1.92,1,1.0196,,N:ushrewc-ushr-fl-04-2026-11-03-rep@0.17 N:ushrewc-ushr-fl-04-2026-11-03-dem@0.83,
+excl_buy_all_yes:ushr,-0.0196,-1.93,1,1.0196,,Y:ushrewc-ushr-fl-28-2026-11-03-rep@0.93 Y:ushrewc-ushr-fl-28-2026-11-03-dem@0.08,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0196,-1.93,1,1.0196,,N:ushrewc-ushr-fl-28-2026-11-03-rep@0.08 N:ushrewc-ushr-fl-28-2026-11-03-dem@0.93,
+excl_buy_all_yes:ushr,-0.0196,-1.92,1,1.0196,,Y:ushrewc-ushr-nc-01-2026-11-03-dem@0.83 Y:ushrewc-ushr-nc-01-2026-11-03-rep@0.17,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_yes:ushr,-0.0196,-1.93,1,1.0196,,Y:ushrewc-ushr-ne-02-2026-11-03-dem@0.93 Y:ushrewc-ushr-ne-02-2026-11-03-rep@0.08,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0196,-1.93,1,1.0196,,N:ushrewc-ushr-ne-02-2026-11-03-dem@0.08 N:ushrewc-ushr-ne-02-2026-11-03-rep@0.93,
+excl_buy_all_yes:ushr,-0.0196,-1.93,1,1.0196,,Y:ushrewc-ushr-ny-04-2026-11-03-dem@0.93 Y:ushrewc-ushr-ny-04-2026-11-03-rep@0.08,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0196,-1.93,1,1.0196,,N:ushrewc-ushr-ny-04-2026-11-03-dem@0.08 N:ushrewc-ushr-ny-04-2026-11-03-rep@0.93,
+excl_buy_all_yes:ushr,-0.0196,-1.93,1,1.0196,,Y:ushrewc-ushr-ny-11-2026-11-03-rep@0.93 Y:ushrewc-ushr-ny-11-2026-11-03-dem@0.08,needs exhaustive set (3rd party/independent risk)
+excl_buy_all_no:ushr,-0.0196,-1.93,1,1.0196,,N:ushrewc-ushr-ny-11-2026-11-03-rep@0.08 N:ushrewc-ushr-ny-11-2026-11-03-dem@0.93,
+x:ushrmov dwin vs ushr dem,-0.0196,-1.93,1,1.0196,,Y:vmc-ushrmov-ny-11-2026-11-03-dwin@0.08 N:ushrewc-ushr-ny-11-2026-11-03-dem@0.93,most-votes vs winner: runoff/RCV risk
