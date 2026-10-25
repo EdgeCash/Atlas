@@ -1411,3 +1411,11 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-25T21:37:44+00:00,2026-10-25T21:25Z,34,Houston Texans,HOU,4432708,Marvin Harrison Jr.,WR,Active,,,,Harrison caught one of four targets for a six-yard touchdown in Sunday's 27-21 overtime loss to the Giants.
 2026-10-25T21:37:44+00:00,2026-10-25T21:27Z,20,New York Jets,NYJ,4808766,Mason Taylor,TE,Active,,,,Taylor caught all five of his targets for 62 yards and two touchdowns while adding a two-point conversion in Sunday's 28-25 loss to the Dolphins.
 2026-10-25T21:37:44+00:00,2026-10-25T21:29Z,15,Miami Dolphins,MIA,4367209,Greg Dulcich,TE,Active,,,,Dulcich caught all five of his targets for 86 yards in Sunday's 28-25 win over the Jets.
+2026-10-25T21:52:56+00:00,2026-10-25T21:30Z,4,Cincinnati Bengals,CIN,4239993,Tee Higgins,WR,Active,,,,Higgins secured six of seven targets for 148 yards and a touchdown in the Bengals' 35-13 win over the Ravens on Sunday.
+2026-10-25T21:52:56+00:00,2026-10-25T21:31Z,11,Indianapolis Colts,IND,4688813,Josh Downs,WR,Active,,,,Downs caught two of four targets for 18 yards in Sunday's 16-10 loss to the Vikings.
+2026-10-25T21:52:56+00:00,2026-10-25T21:38Z,13,Las Vegas Raiders,LV,4045305,Ian Thomas,TE,Active,,,,"Thomas (shoulder) has returned to Sunday's contest against the Rams, Sam Warren of The Athletic reports."
+2026-10-25T21:52:56+00:00,2026-10-25T21:39Z,33,Baltimore Ravens,BAL,4429615,Zay Flowers,WR,Active,,,,Flowers brought in eight of 11 targets for 137 yards and a touchdown in the Ravens' 35-13 loss to the Bengals on Sunday.
+2026-10-25T21:52:56+00:00,2026-10-25T21:42Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-25T21:52:56+00:00,2026-10-25T21:42Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-25T21:52:56+00:00,2026-10-25T21:42Z,9,Green Bay Packers,GB,4361791,Devonte Wyatt,DT,Questionable,QUESTIONABLE,Ankle,2026-10-25,questionable
+2026-10-25T21:52:56+00:00,2026-10-25T21:44Z,16,Minnesota Vikings,MIN,4567104,Will Reichard,PK,Active,,,,Reichard went 3-for-4 on field-goal attempts and made his only PAT during Sunday's 16-10 win over the Colts.
