@@ -302,6 +302,36 @@ chance has fallen, and by more than the dip; a resting bid fills on
 exactly those minutes. The report is
 [`reports/standing_order_backtest.md`](../reports/standing_order_backtest.md).
 
+## The finish-line rule
+
+The one trade the edge survey (`reports/Polymarket US worker edge
+survey.md`) measured as positive on this venue: when a game is over, its
+winner's contract will pay a dollar, but the venue settles some minutes
+later, and until then some holders sell it for 98 or 99 cents. The tape
+showed such an ask after the recorded finish in 43% of 8,016 settled games,
+and the loser priced as the winner after the finish in 4 of 9,273. At those
+prices the taker fee is a tenth of a cent, so the cent or two left is a
+real, small edge, and one loss erases fifty to a hundred wins.
+
+The worker runs it every tick (`atlas/polymarket/finish.py`). A game is
+over when the venue says so: the event's `ended` flag or a full-time
+period (`FT`); end of regulation (`End P3`, `End Q4`) is not, since a tied
+game goes on. The rule takes a paper position on the side whose ask sits
+between 90 and 99 cents, once per contract, at that ask plus the fee, with
+the shares resting at the ask read from the book and the minutes since the
+venue's recorded finish. Every tick reads the settlement of the open
+positions, so the record (`tracking/finish.csv`, in the clear) carries the
+payout, the profit and the minutes from position to settlement - the
+capital lock the research could not measure. The worker keeps its
+45-second pace while any game is over but unsettled. The owner page's
+Finish line tab sums the record by sport and by price band.
+
+Only a position the market calls decided - the ask at or under 99 cents
+and the bid at or over 98 - goes to the live step, as rule `finish`, and
+only when `LIVE_RULES` names it (`favorites,finish`); it is never on by
+default. With the live mode at `dry` that writes a previewed order to the
+ledger and sends nothing.
+
 ## Going live, armed off
 
 The step that would place real orders exists and ships off

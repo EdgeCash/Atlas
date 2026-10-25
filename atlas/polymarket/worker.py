@@ -15,8 +15,9 @@ its moneyline's top of book and the venue's own
 period and clock - takes the crossings (`favorites.take`), grades the
 settled ones, writes ``tracking/favorites.csv``, hands the new positions to
 the live step (`favorites.order`: nothing is sent unless its secrets say
-so, and late ones only by default), grades the live ledger, and commits
-and pushes what changed. It never lets git merge the record line by line:
+so, and late ones only by default), runs the finish-line rule on games the
+venue says are over (`atlas/polymarket/finish.py`), grades the live ledger,
+and commits and pushes what changed. It never lets git merge the record line by line:
 it reads what it holds, resets to the branch, and lays its rows back over
 the branch's (`sync`), so a run that wrote the same file meanwhile costs
 nothing and leaves no conflict in it. The scheduled run keeps rendering the owner page
@@ -46,7 +47,7 @@ import pandas as pd
 from atlas import config
 from atlas.live.store import Store
 from atlas.owner import crypto
-from atlas.polymarket import favorites, match, source
+from atlas.polymarket import favorites, finish, match, source
 from atlas.util import get_logger, offline, session
 
 LOG = get_logger(__name__)
@@ -60,7 +61,7 @@ GRADE_EVERY = 8
 BRANCH = "ATLAS_WORKER_BRANCH"
 #: What the worker commits: the rule's record and the live ledger, and nothing else.
 LEDGER = "tracking/polymarket_live"
-FILES = ("tracking/favorites.csv", LEDGER)
+FILES = ("tracking/favorites.csv", "tracking/finish.csv", LEDGER)
 #: The venue's period strings: a quarter or period by its number, overtime past the last, the half between.
 _NUMBER = re.compile(r"(\d+)")
 
@@ -132,6 +133,8 @@ def tick(store: Store, now: datetime, passphrase: str | None, *, events: dict[st
         store.write(favorites.TABLE, record)
     if added and passphrase:
         favorites.order(new, passphrase, now)
+    # The finish-line rule: the decided side of a game the venue says is over, before it settles.
+    fin = finish.step(store, quotes, events, now, passphrase)
     if grade and passphrase:
         from atlas.polymarket import orders
 
@@ -140,8 +143,11 @@ def tick(store: Store, now: datetime, passphrase: str | None, *, events: dict[st
                 orders.grade(orders.load(passphrase), passphrase, now)
             except Exception as error:  # noqa: BLE001 - the type only
                 LOG.error("worker: ledger not graded: %s", type(error).__name__)
+    # Games over but not yet settled keep the quick pace: the finish-line rule lives in those minutes.
+    live += finish.pending(events)
     return {"events": sum(len(v) for v in events.values()), "live": live, "quotes": int(len(quotes)),
-            "added": int(added), "graded": graded or int(repaired), "positions": int(len(record))}
+            "added": int(added) + fin["added"], "graded": (graded or int(repaired)) + fin["graded"],
+            "positions": int(len(record)), "finish_open": fin["open"]}
 
 
 # ---------------------------------------------------------------------------
@@ -179,7 +185,7 @@ def _ledger(root: Path, passphrase: str | None) -> dict[str, list[dict]]:
 def sync(root: Path, passphrase: str | None = None) -> bool:
     """This checkout brought level with the branch without losing anything it holds: the record and the
     ledger read as they stand here (pushed or not), the checkout reset to the branch, and both laid back
-    over the branch's copies by their rows - the record by position (`favorites.merge`), the ledger by
+    over the branch's copies by their rows - the records by position (`favorites.merge`, `finish.merge`), the ledger by
     order (`scripts/merge_tracking.py`'s key). Git never merges these files line by line, so no merge can
     leave its marks in them. True when what this checkout holds is not all on the branch yet."""
     from atlas.owner import sealed
@@ -187,6 +193,7 @@ def sync(root: Path, passphrase: str | None = None) -> bool:
     target = branch(root)
     store = Store.open(root / "tracking")
     ours = favorites.clean(store.read(favorites.TABLE))
+    ours_finish = finish.clean(store.read(finish.TABLE))
     ledger = _ledger(root, passphrase)
     for args in (("rebase", "--abort"), ("merge", "--abort")):
         _git(root, *args, check=False)
@@ -195,6 +202,7 @@ def sync(root: Path, passphrase: str | None = None) -> bool:
         return False
     _git(root, "reset", "-q", "--hard", f"origin/{target}")
     store.write(favorites.TABLE, favorites.merge(store.read(favorites.TABLE), ours))
+    store.write(finish.TABLE, finish.merge(store.read(finish.TABLE), ours_finish))
     if ledger:
         keys = ["position_id", "placed_at", "rule"]
         ident = lambda row: tuple(row.get(k) for k in keys)  # noqa: E731

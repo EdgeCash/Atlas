@@ -22,6 +22,7 @@ from atlas.live.store import Store
 from atlas.owner import crypto
 from atlas.polymarket import (
     favorites,
+    finish,
     match,
     orders,
     page,
@@ -102,7 +103,7 @@ def refresh(*, now: datetime | None = None, heavy: bool = False, store: Store | 
             chosen, graded = positions.run(priced, finals, record, passphrase, now)
             ledger = orders.grade(orders.load(passphrase), passphrase, now) if orders.mode() != "off" else orders.load(passphrase)
             sections = [*page.sections(priced, chosen, graded, now), *prop_sections, fav_section,
-                        orders.section(ledger, now)]
+                        finish.section(store.read(finish.TABLE), now), orders.section(ledger, now)]
         else:
             reason = "The owner key is not configured."
     except Exception as error:  # noqa: BLE001 - the type only: a message could quote a price

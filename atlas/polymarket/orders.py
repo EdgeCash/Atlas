@@ -60,9 +60,11 @@ ARMED = "POLYMARKET_US_ARMED"
 PHRASE = "place real orders on polymarket us"
 #: The bankroll the stakes are sized against, in dollars; none, and nothing is sized.
 BANKROLL = "ATLAS_LIVE_BANKROLL"
-#: Which rules' positions the step takes, comma-separated: ``favorites``, ``model``, or both.
+#: Which rules' positions the step takes, comma-separated: ``favorites``, ``model``, ``finish``. Unset, the first
+#: two; the finish-line rule (atlas/polymarket/finish.py) is taken only when named.
 RULES = "LIVE_RULES"
 DEFAULT_RULES = ("favorites", "model")
+KNOWN_RULES = ("favorites", "model", "finish")
 #: The only path this module may call to place an order, and the one it reads the balance from.
 ORDERS = "/v1/orders"
 BALANCES = "/v1/account/balances"
@@ -91,7 +93,7 @@ def armed() -> bool:
 
 def rules() -> tuple[str, ...]:
     raw = [r.strip().lower() for r in os.environ.get(RULES, "").split(",") if r.strip()]
-    return tuple(r for r in raw if r in DEFAULT_RULES) or DEFAULT_RULES
+    return tuple(r for r in raw if r in KNOWN_RULES) or DEFAULT_RULES
 
 
 def caps() -> dict[str, float]:
