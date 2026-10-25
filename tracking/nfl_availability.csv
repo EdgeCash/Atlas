@@ -920,6 +920,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T20:22:59+00:00,2026-10-24T20:07Z,9,Green Bay Packers,GB,4578436,Coleman Owen,WR,Active,,,,The Packers signed Owen from the practice squad to the active roster Saturday.
 2026-10-24T20:22:59+00:00,2026-10-24T20:09Z,9,Green Bay Packers,GB,4047365,Josh Jacobs,RB,Active,,,,"Jacobs had his roster exemption removed by the Packers and is expected to play Sunday at Detroit, Adam Schefter of ESPN reports."
 2026-10-24T20:22:59+00:00,2026-10-24T20:10Z,9,Green Bay Packers,GB,4240677,Jordon Riley,DT,Questionable,QUESTIONABLE,Achilles,2026-10-25,The Packers activated Riley (Achilles) from the active/PUP list Saturday.
+2026-10-25T19:07:59+00:00,2026-10-24T20:10Z,9,Green Bay Packers,GB,4240677,Jordon Riley,DT,Active,,,,The Packers activated Riley (Achilles) from the active/PUP list Saturday.
 2026-10-24T20:37:55+00:00,2026-10-24T20:13Z,29,Carolina Panthers,CAR,4880613,Bam Martin-Scott,LB,Active,,,,
 2026-10-24T20:37:55+00:00,2026-10-24T20:15Z,1,Atlanta Falcons,ATL,4239995,A.J. Terrell Jr.,CB,Active,,,,"The Falcons activated Terrell (groin) off injured reserve Saturday, Tori McElhaney of the team's official site reports."
 2026-10-24T20:37:55+00:00,2026-10-24T20:16Z,34,Houston Texans,HOU,4366031,Tank Dell,WR,Questionable,QUESTIONABLE,Left Knee - ACL + MCL Surgery,2026-10-25,"Dell (knee) was activated from injured reserve Saturday, but he remains questionable for Sunday's game against the Giants."
@@ -1290,5 +1291,25 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-25T18:53:00+00:00,2026-10-25T18:44Z,7,Denver Broncos,DEN,4241820,Sam Ehlinger,QB,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
 2026-10-25T18:53:00+00:00,2026-10-25T18:44Z,7,Denver Broncos,DEN,4360853,Talanoa Hufanga,S,Out,INACTIVE,Ankle,2026-11-01,inactive
 2026-10-25T18:53:00+00:00,2026-10-25T18:44Z,7,Denver Broncos,DEN,4683535,Tyler Onyedim,DT,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T19:07:59+00:00,2026-10-25T18:45Z,33,Baltimore Ravens,BAL,4832793,Olaivavega Ioane,G,Questionable,QUESTIONABLE,Knee,2026-11-01,Ioane (knee) has been ruled out for the remainder of Sunday's game against the Bengals.
 2026-10-25T18:53:00+00:00,2026-10-25T18:45Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-25T18:53:00+00:00,2026-10-25T18:45Z,20,New York Jets,NYJ,4428617,T'Vondre Sweat,DT,Questionable,QUESTIONABLE,Knee,2026-11-01,questionable
+2026-10-25T19:07:59+00:00,2026-10-25T18:46Z,22,Arizona Cardinals,ARI,3127287,Budda Baker,S,Active,,,,"Baker (groin) is active against the Broncos on Sunday, Darren Urban of the Cardinals' official site reports."
+2026-10-25T19:07:59+00:00,2026-10-25T18:48Z,22,Arizona Cardinals,ARI,4698113,Max Melton,CB,Out,INACTIVE,Knee,2026-11-01,"Melton (knee) is inactive for Sunday's game against the Broncos, Darren Urban of the Cardinals' official site reports."
+2026-10-25T19:07:59+00:00,2026-10-25T18:48Z,10,Tennessee Titans,TEN,3915398,Tommy Townsend,P,Questionable,QUESTIONABLE,Knee,2026-10-25,questionable
+2026-10-25T19:07:59+00:00,2026-10-25T18:49Z,20,New York Jets,NYJ,4428617,T'Vondre Sweat,DT,Questionable,QUESTIONABLE,Knee,2026-11-01,Sweat (knee) has been ruled out for the remainder of Sunday's game against the Dolphins.
+2026-10-25T19:07:59+00:00,2026-10-25T18:50Z,25,San Francisco 49ers,SF,3117251,Christian McCaffrey,RB,Active,,,,"McCaffrey (thigh) returned to Sunday's contest in Atlanta, Nick Wagoner of ESPN.com reports."
+2026-10-25T19:07:59+00:00,2026-10-25T18:50Z,27,Tampa Bay Buccaneers,TB,4371733,Kenny Gainwell,RB,Questionable,QUESTIONABLE,Hip,2026-10-25,"Gainwell exited Sunday's game against the Panthers in the third quarter with a hip injury and is questionable to return, Scott Smith of the Buccaneers' official"
+2026-10-25T19:07:59+00:00,2026-10-25T18:52Z,29,Carolina Panthers,CAR,2973051,Taylor Moton,OT,Questionable,QUESTIONABLE,Ankle,2026-10-25,questionable
+2026-10-25T19:07:59+00:00,2026-10-25T18:54Z,7,Denver Broncos,DEN,4372012,Pat Surtain II,CB,Out,INACTIVE,Ankle Sprain,2026-11-01,"Surtain (ankle) is inactive for Sunday's game against the Cardinals, Aric DiLalla of the Broncos' official site reports."
+2026-10-25T19:07:59+00:00,2026-10-25T18:55Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-25T19:07:59+00:00,2026-10-25T18:57Z,7,Denver Broncos,DEN,4241820,Sam Ehlinger,QB,Out,INACTIVE,Coach's Decision,2026-11-01,"Ehlinger (coach's decision) is inactive but will serve as the emergency third quarterback in Sunday's game against the Cardinals, Aric DiLalla of the Broncos' o"
+2026-10-25T19:07:59+00:00,2026-10-25T18:59Z,8,Detroit Lions,DET,4710422,Ahmed Hassanein,DE,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T19:07:59+00:00,2026-10-25T18:59Z,8,Detroit Lions,DET,5151810,Bishop Fitzgerald,S,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T19:07:59+00:00,2026-10-25T18:59Z,8,Detroit Lions,DET,4602788,Jackson Meeks,WR,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T19:07:59+00:00,2026-10-25T18:59Z,8,Detroit Lions,DET,4586333,Mekhi Wingo,DT,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T19:07:59+00:00,2026-10-25T18:59Z,8,Detroit Lions,DET,4429187,Seth McLaughlin,C,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T19:07:59+00:00,2026-10-25T18:59Z,15,Miami Dolphins,MIA,4431664,Dante Trader Jr.,S,Questionable,QUESTIONABLE,Shoulder,2026-10-25,Trader (shoulder) is questionable to return to Sunday's contest against the Jets.
+2026-10-25T19:07:59+00:00,2026-10-25T19:00Z,14,Los Angeles Rams,LAR,4426515,Puka Nacua,WR,Active,,,,
+2026-10-25T19:07:59+00:00,2026-10-25T19:01Z,1,Atlanta Falcons,ATL,4426502,Drake London,WR,Active,,,,
+2026-10-25T19:07:59+00:00,2026-10-25T19:01Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
