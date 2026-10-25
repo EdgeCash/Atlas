@@ -1,0 +1,447 @@
+{
+ "method": "gateway /v1/price-history fidelity 1 for markets created 3-72h before 2026-10-25T23:16Z",
+ "summary": {
+  "usgas": [
+   {
+    "first_after_create_min": 208.8,
+    "first_sum": 1.54,
+    "min_to_tight": 244.8,
+    "drift3h": 0.09,
+    "wide_first_hour": 0.6
+   },
+   {
+    "first_after_create_min": 207.8,
+    "first_sum": 1.63,
+    "min_to_tight": 543.8,
+    "drift3h": 0.255,
+    "wide_first_hour": 1.0
+   },
+   {
+    "first_after_create_min": 204.8,
+    "first_sum": 1.56,
+    "min_to_tight": 245.8,
+    "drift3h": 0.185,
+    "wide_first_hour": 0.68
+   },
+   {
+    "first_after_create_min": 244.7,
+    "first_sum": 1.01,
+    "min_to_tight": 244.7,
+    "drift3h": 0.095,
+    "wide_first_hour": 0.0
+   },
+   {
+    "first_after_create_min": 245.9,
+    "first_sum": 1.01,
+    "min_to_tight": 245.9,
+    "drift3h": 0.095,
+    "wide_first_hour": 0.0
+   },
+   {
+    "first_after_create_min": 202.7,
+    "first_sum": 1.54,
+    "min_to_tight": 244.7,
+    "drift3h": 0.095,
+    "wide_first_hour": 0.7
+   },
+   {
+    "first_after_create_min": 213.9,
+    "first_sum": 1.44,
+    "min_to_tight": 244.9,
+    "drift3h": 0.0,
+    "wide_first_hour": 0.52
+   },
+   {
+    "first_after_create_min": 245.8,
+    "first_sum": 1.01,
+    "min_to_tight": 245.8,
+    "drift3h": 0.19,
+    "wide_first_hour": 0.0
+   },
+   {
+    "first_after_create_min": 245.9,
+    "first_sum": 1.01,
+    "min_to_tight": 245.9,
+    "drift3h": 0.19,
+    "wide_first_hour": 0.0
+   },
+   {
+    "first_after_create_min": 213.9,
+    "first_sum": 1.44,
+    "min_to_tight": 244.9,
+    "drift3h": 0.0,
+    "wide_first_hour": 0.52
+   },
+   {
+    "first_after_create_min": 352.8,
+    "first_sum": 1.65,
+    "min_to_tight": null,
+    "drift3h": null,
+    "wide_first_hour": 1.0
+   },
+   {
+    "first_after_create_min": 244.9,
+    "first_sum": 0.81,
+    "min_to_tight": 244.9,
+    "drift3h": 0.0,
+    "wide_first_hour": 0.0
+   },
+   {
+    "first_after_create_min": 202.7,
+    "first_sum": 1.54,
+    "min_to_tight": 244.7,
+    "drift3h": 0.095,
+    "wide_first_hour": 0.7
+   },
+   {
+    "first_after_create_min": 244.9,
+    "first_sum": 0.81,
+    "min_to_tight": 244.9,
+    "drift3h": 0.0,
+    "wide_first_hour": 0.0
+   }
+  ],
+  "weather": [
+   {
+    "first_after_create_min": 254.1,
+    "first_sum": 1.54,
+    "min_to_tight": 317.1,
+    "drift3h": 0.15,
+    "wide_first_hour": 0.8
+   },
+   {
+    "first_after_create_min": 254.7,
+    "first_sum": 1.07,
+    "min_to_tight": null,
+    "drift3h": null,
+    "wide_first_hour": 0.0
+   },
+   {
+    "first_after_create_min": 254.6,
+    "first_sum": 1.16,
+    "min_to_tight": 266.6,
+    "drift3h": 0.005,
+    "wide_first_hour": 0.02
+   },
+   null,
+   {
+    "first_after_create_min": 254.5,
+    "first_sum": 1.54,
+    "min_to_tight": 256.5,
+    "drift3h": 0.02,
+    "wide_first_hour": 0.03
+   },
+   null,
+   {
+    "first_after_create_min": 254.3,
+    "first_sum": 1.07,
+    "min_to_tight": 675.3,
+    "drift3h": null,
+    "wide_first_hour": 0.0
+   },
+   {
+    "first_after_create_min": 254.5,
+    "first_sum": 1.56,
+    "min_to_tight": 303.5,
+    "drift3h": 0.1,
+    "wide_first_hour": 0.48
+   },
+   {
+    "first_after_create_min": 258.3,
+    "first_sum": 1.07,
+    "min_to_tight": 1273.3,
+    "drift3h": 0.22,
+    "wide_first_hour": 0.0
+   },
+   {
+    "first_after_create_min": 120.6,
+    "first_sum": 1.5,
+    "min_to_tight": 264.6,
+    "drift3h": 0.09,
+    "wide_first_hour": 1.0
+   },
+   {
+    "first_after_create_min": 3.7,
+    "first_sum": 1.07,
+    "min_to_tight": null,
+    "drift3h": null,
+    "wide_first_hour": 0.0
+   },
+   {
+    "first_after_create_min": 254.2,
+    "first_sum": 1.18,
+    "min_to_tight": 278.1,
+    "drift3h": 0.005,
+    "wide_first_hour": 0.1
+   },
+   {
+    "first_after_create_min": 255.8,
+    "first_sum": 1.1,
+    "min_to_tight": 260.8,
+    "drift3h": 0.005,
+    "wide_first_hour": 0.03
+   },
+   {
+    "first_after_create_min": 91.2,
+    "first_sum": 1.5,
+    "min_to_tight": 257.2,
+    "drift3h": 0.075,
+    "wide_first_hour": 1.0
+   }
+  ],
+  "politics_new": [
+   {
+    "first_after_create_min": 81.5,
+    "first_sum": 1.968,
+    "min_to_tight": 508.5,
+    "drift3h": 0.032,
+    "wide_first_hour": 1.0
+   },
+   {
+    "first_after_create_min": 148.6,
+    "first_sum": 1.0,
+    "min_to_tight": 1447.6,
+    "drift3h": 0.23,
+    "wide_first_hour": 0.73
+   },
+   null,
+   {
+    "first_after_create_min": 1594.6,
+    "first_sum": 1.22,
+    "min_to_tight": 2320.6,
+    "drift3h": 0.075,
+    "wide_first_hour": 0.97
+   },
+   {
+    "first_after_create_min": 81.9,
+    "first_sum": 1.968,
+    "min_to_tight": 564.9,
+    "drift3h": 0.016,
+    "wide_first_hour": 1.0
+   },
+   {
+    "first_after_create_min": 1670.6,
+    "first_sum": 1.84,
+    "min_to_tight": null,
+    "drift3h": null,
+    "wide_first_hour": 1.0
+   },
+   null,
+   {
+    "first_after_create_min": 53.7,
+    "first_sum": 1.29,
+    "min_to_tight": 2850.7,
+    "drift3h": null,
+    "wide_first_hour": 1.0
+   },
+   {
+    "first_after_create_min": 2130.6,
+    "first_sum": 1.17,
+    "min_to_tight": 2340.6,
+    "drift3h": 0.01,
+    "wide_first_hour": 1.0
+   },
+   {
+    "first_after_create_min": 2125.6,
+    "first_sum": 1.24,
+    "min_to_tight": 2360.6,
+    "drift3h": 0.0,
+    "wide_first_hour": 1.0
+   },
+   {
+    "first_after_create_min": 264.9,
+    "first_sum": 1.0,
+    "min_to_tight": 264.9,
+    "drift3h": 0.0,
+    "wide_first_hour": 0.0
+   },
+   {
+    "first_after_create_min": 1594.6,
+    "first_sum": 1.84,
+    "min_to_tight": null,
+    "drift3h": null,
+    "wide_first_hour": 0.98
+   },
+   {
+    "first_after_create_min": 2126.6,
+    "first_sum": 1.84,
+    "min_to_tight": null,
+    "drift3h": null,
+    "wide_first_hour": 1.0
+   },
+   null
+  ],
+  "crypto_daily": [
+   null,
+   {
+    "first_after_create_min": 1370.4,
+    "first_sum": 1.15,
+    "min_to_tight": null,
+    "drift3h": null,
+    "wide_first_hour": 1.0
+   },
+   {
+    "first_after_create_min": 112.2,
+    "first_sum": 1.04,
+    "min_to_tight": null,
+    "drift3h": null,
+    "wide_first_hour": 0.0
+   },
+   {
+    "first_after_create_min": 3.9,
+    "first_sum": 1.05,
+    "min_to_tight": 8.8,
+    "drift3h": 0.405,
+    "wide_first_hour": 0.0
+   },
+   null,
+   {
+    "first_after_create_min": 1369.2,
+    "first_sum": 1.11,
+    "min_to_tight": null,
+    "drift3h": null,
+    "wide_first_hour": 1.0
+   },
+   {
+    "first_after_create_min": 1372.2,
+    "first_sum": 1.06,
+    "min_to_tight": null,
+    "drift3h": null,
+    "wide_first_hour": 0.0
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  "sports_new": [
+   {
+    "first_after_create_min": -0.3,
+    "first_sum": 1.7,
+    "min_to_tight": 919.6,
+    "drift3h": 0.045,
+    "wide_first_hour": 1.0
+   },
+   {
+    "first_after_create_min": 85.9,
+    "first_sum": 1.46,
+    "min_to_tight": null,
+    "drift3h": null,
+    "wide_first_hour": 1.0
+   },
+   null,
+   {
+    "first_after_create_min": -0.2,
+    "first_sum": 1.8,
+    "min_to_tight": null,
+    "drift3h": null,
+    "wide_first_hour": 1.0
+   },
+   {
+    "first_after_create_min": -0.3,
+    "first_sum": 1.92,
+    "min_to_tight": null,
+    "drift3h": null,
+    "wide_first_hour": 1.0
+   },
+   {
+    "first_after_create_min": -0.4,
+    "first_sum": 1.94,
+    "min_to_tight": 914.6,
+    "drift3h": 0.02,
+    "wide_first_hour": 1.0
+   },
+   {
+    "first_after_create_min": 1.3,
+    "first_sum": 1.96,
+    "min_to_tight": 836.3,
+    "drift3h": 0.295,
+    "wide_first_hour": 1.0
+   },
+   {
+    "first_after_create_min": 8.5,
+    "first_sum": 1.96,
+    "min_to_tight": 166.5,
+    "drift3h": 0.0,
+    "wide_first_hour": 0.33
+   },
+   {
+    "first_after_create_min": 1.3,
+    "first_sum": 1.96,
+    "min_to_tight": 782.3,
+    "drift3h": 0.005,
+    "wide_first_hour": 1.0
+   },
+   {
+    "first_after_create_min": -0.5,
+    "first_sum": 1.94,
+    "min_to_tight": null,
+    "drift3h": null,
+    "wide_first_hour": 1.0
+   },
+   {
+    "first_after_create_min": 14.6,
+    "first_sum": 1.95,
+    "min_to_tight": null,
+    "drift3h": null,
+    "wide_first_hour": 1.0
+   },
+   {
+    "first_after_create_min": 70.7,
+    "first_sum": 1.92,
+    "min_to_tight": 556.7,
+    "drift3h": null,
+    "wide_first_hour": 1.0
+   },
+   {
+    "first_after_create_min": 5.6,
+    "first_sum": 1.96,
+    "min_to_tight": 3518.6,
+    "drift3h": null,
+    "wide_first_hour": 1.0
+   },
+   {
+    "first_after_create_min": -0.3,
+    "first_sum": 1.94,
+    "min_to_tight": null,
+    "drift3h": null,
+    "wide_first_hour": 1.0
+   }
+  ],
+  "metals": [
+   null,
+   null,
+   {
+    "first_after_create_min": 1405.9,
+    "first_sum": 1.7,
+    "min_to_tight": null,
+    "drift3h": null,
+    "wide_first_hour": 1.0
+   },
+   {
+    "first_after_create_min": 1405.9,
+    "first_sum": 1.7,
+    "min_to_tight": null,
+    "drift3h": null,
+    "wide_first_hour": 1.0
+   },
+   {
+    "first_after_create_min": 675.0,
+    "first_sum": 1.07,
+    "min_to_tight": 677.0,
+    "drift3h": null,
+    "wide_first_hour": 0.0
+   },
+   {
+    "first_after_create_min": 675.0,
+    "first_sum": 1.07,
+    "min_to_tight": 677.0,
+    "drift3h": null,
+    "wide_first_hour": 0.0
+   }
+  ]
+ }
+}

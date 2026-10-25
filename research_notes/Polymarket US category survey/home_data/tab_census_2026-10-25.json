@@ -1,0 +1,193 @@
+{
+ "source": "gateway /v1/events?closed=false (listing fetched 2026-10-25T23:16Z)",
+ "tabs": [
+  {
+   "tab": "Home (all)",
+   "tag": null,
+   "events": 4861,
+   "primary_open_markets": 25400,
+   "all_markets_numMarkets": 72690,
+   "live_events": 78,
+   "two_sided": 12850,
+   "two_sided_pct": 50.6,
+   "median_spread_c": 1.0,
+   "pct_le1c": 59.3,
+   "fee": {
+    "0.0695": 24992,
+    "0.1": 408
+   },
+   "ticks": {
+    "0.01": 24262,
+    "0.001": 902,
+    "0.005": 203
+   }
+  },
+  {
+   "tab": "Midterms",
+   "tag": "midterms",
+   "events": 1198,
+   "primary_open_markets": 6449,
+   "all_markets_numMarkets": 6449,
+   "live_events": 0,
+   "two_sided": 2048,
+   "two_sided_pct": 31.8,
+   "median_spread_c": 2.0,
+   "pct_le1c": 47.7,
+   "fee": {
+    "0.0695": 6449
+   },
+   "ticks": {
+    "0.01": 6313,
+    "0.001": 136
+   }
+  },
+  {
+   "tab": "Sports",
+   "tag": "sports",
+   "events": 3317,
+   "primary_open_markets": 14894,
+   "all_markets_numMarkets": 62184,
+   "live_events": 40,
+   "two_sided": 9315,
+   "two_sided_pct": 62.5,
+   "median_spread_c": 1.0,
+   "pct_le1c": 63.9,
+   "fee": {
+    "0.0695": 14486,
+    "0.1": 408
+   },
+   "ticks": {
+    "0.01": 13892,
+    "0.001": 766,
+    "0.005": 203
+   }
+  },
+  {
+   "tab": "Crypto",
+   "tag": "crypto",
+   "events": 58,
+   "primary_open_markets": 1540,
+   "all_markets_numMarkets": 1540,
+   "live_events": 32,
+   "two_sided": 437,
+   "two_sided_pct": 28.4,
+   "median_spread_c": 5.0,
+   "pct_le1c": 10.3,
+   "fee": {
+    "0.0695": 1540
+   },
+   "ticks": {
+    "0.01": 1540
+   }
+  },
+  {
+   "tab": "Commodities",
+   "tag": "commodities",
+   "events": 11,
+   "primary_open_markets": 45,
+   "all_markets_numMarkets": 45,
+   "live_events": 6,
+   "two_sided": 27,
+   "two_sided_pct": 60.0,
+   "median_spread_c": 1.0,
+   "pct_le1c": 77.8,
+   "fee": {
+    "0.0695": 45
+   },
+   "ticks": {
+    "0.01": 45
+   }
+  },
+  {
+   "tab": "Politics",
+   "tag": "politics",
+   "events": 1250,
+   "primary_open_markets": 6815,
+   "all_markets_numMarkets": 6815,
+   "live_events": 0,
+   "two_sided": 2313,
+   "two_sided_pct": 33.9,
+   "median_spread_c": 1.0,
+   "pct_le1c": 51.8,
+   "fee": {
+    "0.0695": 6815
+   },
+   "ticks": {
+    "0.01": 6679,
+    "0.001": 136
+   }
+  },
+  {
+   "tab": "Weather",
+   "tag": "weather",
+   "events": 21,
+   "primary_open_markets": 119,
+   "all_markets_numMarkets": 119,
+   "live_events": 0,
+   "two_sided": 55,
+   "two_sided_pct": 46.2,
+   "median_spread_c": 2.0,
+   "pct_le1c": 43.6,
+   "fee": {
+    "0.0695": 119
+   },
+   "ticks": {
+    "0.01": 119
+   }
+  },
+  {
+   "tab": "Tech",
+   "tag": "tech",
+   "events": 16,
+   "primary_open_markets": 103,
+   "all_markets_numMarkets": 103,
+   "live_events": 0,
+   "two_sided": 69,
+   "two_sided_pct": 67.0,
+   "median_spread_c": 1.0,
+   "pct_le1c": 98.6,
+   "fee": {
+    "0.0695": 103
+   },
+   "ticks": {
+    "0.01": 103
+   }
+  },
+  {
+   "tab": "Culture",
+   "tag": "culture",
+   "events": 155,
+   "primary_open_markets": 1699,
+   "all_markets_numMarkets": 1699,
+   "live_events": 0,
+   "two_sided": 500,
+   "two_sided_pct": 29.4,
+   "median_spread_c": 4.5,
+   "pct_le1c": 43.6,
+   "fee": {
+    "0.0695": 1699
+   },
+   "ticks": {
+    "0.01": 1699
+   }
+  },
+  {
+   "tab": "Econ",
+   "tag": "economics",
+   "events": 50,
+   "primary_open_markets": 278,
+   "all_markets_numMarkets": 278,
+   "live_events": 0,
+   "two_sided": 197,
+   "two_sided_pct": 70.9,
+   "median_spread_c": 1.0,
+   "pct_le1c": 81.7,
+   "fee": {
+    "0.0695": 278
+   },
+   "ticks": {
+    "0.01": 278
+   }
+  }
+ ]
+}
