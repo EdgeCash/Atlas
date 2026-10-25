@@ -122,7 +122,7 @@ Every resting PMUS quote is mispriced by 10–40¢ against these values, but the
 
 | Minutes before 11:00 ET | T−180 | T−60 | T−30 | T−10 | T−2 |
 |---|---|---|---|---|---|
-| Median across 10 weeks | 0.47/0.50 | 0.75/0.78 | 0.92/0.95 | 0.96/0.98 | 0.97/1.00 |
+| Median across 10 weeks | 0.52/0.53 | 0.74/0.78 | 0.92/0.95 | 0.96/0.98 | 0.97/1.00 |
 | Worst week (Sep 18) | 0.42/0.46 | 0.16/0.22 | 0.26/0.33 | 0.75/0.82 | 0.87/0.96 |
 
 On Oct 16 the winning bucket ("Above 38.7") was still bid 0.36 / ask 0.90 at T−2. RCP keeps adding polls through the morning, so the outcome is genuinely uncertain until minutes before the snapshot. By the time it is effectively decided (T−10), Kalshi's winner is already 0.96–0.99.
@@ -186,7 +186,7 @@ PMUS prices these at 0.11/0.12 and 0.17/0.18, identical to global (gap 0.0¢ ove
 
 ### 2e. Government shutdown
 
-**[M]** The only market (`gsc-usfedgvmt-by-2026-10-01`) sat at 0.00–0.01 for its final 24 hours and settled No about 28 hours after the deadline. No shutdown market is open now.
+**[M]** The only market (`gsc-usfedgvmt-by-2026-10-01`) sat at 0.00–0.01 for its final 24 hours. It closed No at 04:07Z on Oct 2, minutes after the 03:59Z deadline. No shutdown market is open now.
 
 ---
 
@@ -246,10 +246,10 @@ Edge after fee and lockup. Fair values come from global, or the global/Kalshi mi
 - On Intrade, the favourite edge disappears at a 15–25% discount rate ([Page & Clemen 2013](https://people.duke.edu/~clemen/bio/Published%20Papers/45.PredictionMarkets-Page&Clemen-EJ-2013.pdf)).
 
 **[M]** Evidence from this venue (`politics_data/resolved_legs_summary.json`):
-- **All 21 dated "by date" longshot legs that reached their deadline resolved No.** Their Yes ask seven days before the deadline was 0.01–0.18 (median about 0.04).
+- **All 24 dated "by date" legs that reached their deadline resolved No.** This excludes the Senate-timing legs and the shutdown leg. Their stored Yes ask seven days before the deadline had a median of about 0.04 and ranged from 0.00 to 0.18. Three empty-book prints of 0.44–0.72 are left out of that range.
 - In the final 24 hours these books often showed 0.5–0.99 placeholder asks, because offers were pulled.
 - The sample is too small to calibrate, and the stored price is the ask, not a trade.
-- Deadline legs settle **10–18 hours** after an "announced out" deadline, **7–9 days** after a PortWatch month-end, and **16–60 hours** after an event-driven Yes.
+- Deadline legs settle **13–20 hours** after an "announced out" deadline, **7–9 days** after a PortWatch month-end, and **16–60 hours** after an event-driven Yes.
 - Listed `endDate`s for Dec-31 legs are Jan 15, which is the worst case for how long capital stays tied up.
 
 **[M]** The void risk can wipe out a cheap-NO book. The 56 `uspres-vpnom` markets were closed on 20–22 October while trading at 0.02–0.25, and the settlement endpoint returns 0.50 for each. If that is a real $0.50 cancel, a NO bought at 0.98 lost 48¢, the profit from about 16 winning 3¢ trades. The contract rules allow last-fair-price or Exchange-determined settlement in edge cases (PARC "No Data by Expiration"; Rulebook 10.4). **[I]** At least one void in 56 markets happened in the venue's first six months of politics, so a cheap-NO strategy should treat about 1–2% per position per year as void risk and avoid markets the venue might delist: brand-new long-dated families and markets with ill-defined terms.
