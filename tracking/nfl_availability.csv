@@ -1038,6 +1038,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-25T11:07:55+00:00,2026-10-25T11:01Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-25T11:07:55+00:00,2026-10-25T11:01Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-10-25,questionable
 2026-10-25T11:37:58+00:00,2026-10-25T11:18Z,19,New York Giants,NYG,4696981,Cam Skattebo,RB,Active,,,,"Skattebo is expected to resume his role as the Giants' lead running back in Sunday's game at Houston, Ian Rapoport of NFL Network reports."
+2026-10-25T21:23:00+00:00,2026-10-25T11:18Z,19,New York Giants,NYG,4696981,Cam Skattebo,RB,Questionable,QUESTIONABLE,Hamstring,2026-11-08,"Skattebo is expected to resume his role as the Giants' lead running back in Sunday's game at Houston, Ian Rapoport of NFL Network reports."
 2026-10-25T12:05:15+00:00,2026-10-25T11:43Z,20,New York Jets,NYJ,4427366,Breece Hall,RB,Questionable,QUESTIONABLE,Right Quadriceps,2026-10-25,"Hall (quadriceps) is unlikely to suit up for Sunday's game against the Dolphins, Ian Rapoport of NFL Network reports."
 2026-10-25T12:05:15+00:00,2026-10-25T11:49Z,13,Las Vegas Raiders,LV,4686658,Mike Washington Jr.,RB,Questionable,QUESTIONABLE,Foot,2026-10-25,"Washington (foot/back) is considered a game-time decision for Sunday's contest against the Rams, Jeremy Fowler of ESPN reports."
 2026-10-25T12:23:02+00:00,2026-10-25T11:56Z,7,Denver Broncos,DEN,4372012,Pat Surtain II,CB,Questionable,QUESTIONABLE,Ankle Sprain,2026-10-25,"Surtain (ankle) isn't likely to play Sunday at Arizona, Ian Rapoport of NFL Network reports."
@@ -1390,4 +1391,12 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-25T20:53:04+00:00,2026-10-25T20:49Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-25T20:53:04+00:00,2026-10-25T20:49Z,9,Green Bay Packers,GB,4428037,Jacob Monk,C,Questionable,QUESTIONABLE,Quadriceps,2026-10-25,questionable
 2026-10-25T21:07:46+00:00,2026-10-25T20:50Z,9,Green Bay Packers,GB,4428037,Jacob Monk,C,Questionable,QUESTIONABLE,Quadriceps,2026-10-25,Monk (quadriceps) is questionable to return to Sunday's game against the Lions.
+2026-10-25T21:23:00+00:00,2026-10-25T20:58Z,20,New York Jets,NYJ,15864,Geno Smith,QB,Active,,,,"Smith completed 23 of 30 passes for 287 yards, three touchdowns and one interception in Sunday's 28-25 loss to the Dolphins. He also rushed twice for no gain an"
+2026-10-25T21:23:00+00:00,2026-10-25T20:59Z,15,Miami Dolphins,MIA,4242512,Malik Willis,QB,Active,,,,Willis completed 14 of 21 passes for 208 yards and two touchdowns while rushing six times for 39 yards and a touchdown in Sunday's 28-25 win over the Jets.
 2026-10-25T21:07:46+00:00,2026-10-25T21:01Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-25T21:23:00+00:00,2026-10-25T21:01Z,34,Houston Texans,HOU,4586312,Jaylin Noel,WR,Questionable,QUESTIONABLE,Toe,2026-11-08,"Noel (toe) was seen in a walking boot after Sunday's 27-21 overtime loss to the Giants, DJ Bien-Aime of ESPN.com reports."
+2026-10-25T21:23:00+00:00,2026-10-25T21:01Z,15,Miami Dolphins,MIA,4869645,Caleb Douglas,WR,Active,,,,Douglas (ankle) caught two of three targets for 70 yards and two touchdowns in Sunday's 28-25 win over the Jets.
+2026-10-25T21:23:00+00:00,2026-10-25T21:07Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-25T21:23:00+00:00,2026-10-25T21:11Z,11,Indianapolis Colts,IND,4242335,Jonathan Taylor,RB,Active,,,,Taylor carried the ball 18 times for 95 yards and a touchdown and caught two of three targets for 15 yards in Sunday's 16-10 loss to the Vikings.
+2026-10-25T21:23:00+00:00,2026-10-25T21:13Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-25T21:23:00+00:00,2026-10-25T21:13Z,13,Las Vegas Raiders,LV,4045305,Ian Thomas,TE,Questionable,QUESTIONABLE,Shoulder,2026-10-25,questionable
