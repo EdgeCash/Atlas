@@ -1040,6 +1040,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-25T12:05:15+00:00,2026-10-25T11:43Z,20,New York Jets,NYJ,4427366,Breece Hall,RB,Questionable,QUESTIONABLE,Right Quadriceps,2026-10-25,"Hall (quadriceps) is unlikely to suit up for Sunday's game against the Dolphins, Ian Rapoport of NFL Network reports."
 2026-10-25T12:05:15+00:00,2026-10-25T11:49Z,13,Las Vegas Raiders,LV,4686658,Mike Washington Jr.,RB,Questionable,QUESTIONABLE,Foot,2026-10-25,"Washington (foot/back) is considered a game-time decision for Sunday's contest against the Rams, Jeremy Fowler of ESPN reports."
 2026-10-25T12:23:02+00:00,2026-10-25T11:56Z,7,Denver Broncos,DEN,4372012,Pat Surtain II,CB,Questionable,QUESTIONABLE,Ankle Sprain,2026-10-25,"Surtain (ankle) isn't likely to play Sunday at Arizona, Ian Rapoport of NFL Network reports."
+2026-10-25T18:53:00+00:00,2026-10-25T11:56Z,7,Denver Broncos,DEN,4372012,Pat Surtain II,CB,Out,INACTIVE,Ankle Sprain,2026-11-01,"Surtain (ankle) isn't likely to play Sunday at Arizona, Ian Rapoport of NFL Network reports."
 2026-10-25T12:05:15+00:00,2026-10-25T12:01Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-25T12:05:15+00:00,2026-10-25T12:01Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-25T12:05:15+00:00,2026-10-25T12:01Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-10-25,questionable
@@ -1090,6 +1091,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-25T14:23:06+00:00,2026-10-25T14:07Z,1,Atlanta Falcons,ATL,3917914,Olamide Zaccheaus,WR,Questionable,QUESTIONABLE,Shoulder,2026-10-25,"Zaccheaus (shoulder) is trending toward not being available for Sunday's game against the 49ers, Ian Rapoport of NFL Network reports."
 2026-10-25T14:23:06+00:00,2026-10-25T14:09Z,18,New Orleans Saints,NO,5081999,CJ Donaldson,RB,Questionable,QUESTIONABLE,Shoulder,2026-10-25,Donaldson (shoulder) is questionable to return to Sunday's game against the Steelers in Paris.
 2026-10-25T14:23:06+00:00,2026-10-25T14:16Z,22,Arizona Cardinals,ARI,3127287,Budda Baker,S,Questionable,QUESTIONABLE,Groin,2026-10-25,"Baker (groin) is listed as questionable but expected to play against the Broncos on Sunday, Ian Rapoport of NFL Network reports."
+2026-10-25T18:53:00+00:00,2026-10-25T14:16Z,22,Arizona Cardinals,ARI,3127287,Budda Baker,S,Active,,,,"Baker (groin) is listed as questionable but expected to play against the Broncos on Sunday, Ian Rapoport of NFL Network reports."
 2026-10-25T14:37:55+00:00,2026-10-25T14:20Z,26,Seattle Seahawks,SEA,3120358,Uchenna Nwosu,LB,Questionable,QUESTIONABLE,Hip,2026-10-25,Ian Rapoport of NFL Network reports that Nwosu (hip) is expected to be cleared to play against the Chiefs on Sunday.
 2026-10-25T14:37:55+00:00,2026-10-25T14:21Z,26,Seattle Seahawks,SEA,4869523,Nick Emmanwori,S,Questionable,QUESTIONABLE,Hip,2026-10-25,"The Seahawks expect that Emmanwori (hip) will play against the Chiefs on Sunday, Ian Rapoport of NFL Network reports."
 2026-10-25T14:53:03+00:00,2026-10-25T14:24Z,12,Kansas City Chiefs,KC,4043041,Jaylon Moore,OT,Out,OUT,Concussion Concussion,2026-11-01,Moore (concussion) has been ruled out for Sunday's game against the Seahawks.
@@ -1268,3 +1270,25 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-25T18:37:48+00:00,2026-10-25T18:23Z,18,New Orleans Saints,NO,3054850,Alvin Kamara,RB,Active,,,,Kamara carried the ball six times for five yards and caught all seven of his targets for 57 yards in Sunday's 16-10 loss to the Steelers.
 2026-10-25T18:37:48+00:00,2026-10-25T18:25Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-25T18:37:48+00:00,2026-10-25T18:25Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-25T18:53:00+00:00,2026-10-25T18:26Z,23,Pittsburgh Steelers,PIT,17372,Chris Boswell,PK,Active,,,,Boswell made each of his three field-goal attempts and his lone extra-point try in a 16-10 victory over the Saints on Sunday in Paris.
+2026-10-25T18:53:00+00:00,2026-10-25T18:28Z,18,New Orleans Saints,NO,4569559,Devaughn Vele,WR,Active,,,,Vele caught all five of his targets for 54 yards and a touchdown in Sunday's 16-10 loss to the Steelers.
+2026-10-25T18:53:00+00:00,2026-10-25T18:30Z,6,Dallas Cowboys,DAL,4427816,Marist Liufau,LB,Injured Reserve,IR-R,Left Forearm Fracture,2026-11-01,Liufau (forearm) has been downgraded from questionable to out ahead of Monday night's game against the Eagles.
+2026-10-25T18:53:00+00:00,2026-10-25T18:33Z,6,Dallas Cowboys,DAL,3929850,P.J. Locke,S,Injured Reserve,IR-R,Right Foot Plantar Fasciitis,2026-11-01,Locke (foot) has been downgraded from questionable to out for Monday's game against the Eagles.
+2026-10-25T18:53:00+00:00,2026-10-25T18:38Z,7,Denver Broncos,DEN,4702555,Jonah Coleman,RB,Active,,,,"Coleman (ankle) is listed as active Sunday at Arizona, Aric DiLalla of the Broncos' official site reports."
+2026-10-25T18:53:00+00:00,2026-10-25T18:39Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-25T18:53:00+00:00,2026-10-25T18:42Z,22,Arizona Cardinals,ARI,4683506,Albert Reese IV,OT,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T18:53:00+00:00,2026-10-25T18:42Z,22,Arizona Cardinals,ARI,3918331,Andrew Wingard,S,Out,INACTIVE,Knee Bruise,2026-11-01,inactive
+2026-10-25T18:53:00+00:00,2026-10-25T18:42Z,22,Arizona Cardinals,ARI,4569480,Darius Robinson,DE,Active,,,,
+2026-10-25T18:53:00+00:00,2026-10-25T18:42Z,22,Arizona Cardinals,ARI,4870808,Jeremiyah Love,RB,Out,INACTIVE,Ankle,2026-11-01,inactive
+2026-10-25T18:53:00+00:00,2026-10-25T18:42Z,22,Arizona Cardinals,ARI,4367199,Jon Gaines II,G,Out,INACTIVE,Knee,2026-11-01,inactive
+2026-10-25T18:53:00+00:00,2026-10-25T18:42Z,22,Arizona Cardinals,ARI,4698113,Max Melton,CB,Out,INACTIVE,Knee,2026-11-01,inactive
+2026-10-25T18:53:00+00:00,2026-10-25T18:42Z,22,Arizona Cardinals,ARI,4685503,Walter Nolen III,DT,Out,INACTIVE,Ankle,2026-11-01,inactive
+2026-10-25T18:53:00+00:00,2026-10-25T18:44Z,22,Arizona Cardinals,ARI,4430841,Carson Beck,QB,Out,INACTIVE,Back,2026-11-01,"Beck (back) is inactive but will serve as the emergency third quarterback against the Broncos on Sunday, Darren Urban of the Cardinals' official site reports."
+2026-10-25T18:53:00+00:00,2026-10-25T18:44Z,7,Denver Broncos,DEN,5159802,Dallen Bentley,TE,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T18:53:00+00:00,2026-10-25T18:44Z,7,Denver Broncos,DEN,4261090,Jordan Jackson,DT,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T18:53:00+00:00,2026-10-25T18:44Z,7,Denver Broncos,DEN,4868598,Kage Casey,OT,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T18:53:00+00:00,2026-10-25T18:44Z,7,Denver Broncos,DEN,4241820,Sam Ehlinger,QB,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T18:53:00+00:00,2026-10-25T18:44Z,7,Denver Broncos,DEN,4360853,Talanoa Hufanga,S,Out,INACTIVE,Ankle,2026-11-01,inactive
+2026-10-25T18:53:00+00:00,2026-10-25T18:44Z,7,Denver Broncos,DEN,4683535,Tyler Onyedim,DT,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T18:53:00+00:00,2026-10-25T18:45Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-25T18:53:00+00:00,2026-10-25T18:45Z,20,New York Jets,NYJ,4428617,T'Vondre Sweat,DT,Questionable,QUESTIONABLE,Knee,2026-11-01,questionable
