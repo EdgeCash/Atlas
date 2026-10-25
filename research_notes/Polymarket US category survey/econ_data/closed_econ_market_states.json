@@ -1,0 +1,2262 @@
+{
+"rdc-usfed-fomc-2026-06-17-cut25bps": {
+"event": "usfed-fomc-2026-06-17",
+"T": "2026-06-17T18:00",
+"title": "Cut exactly 25bps",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-usfed-fomc-2026-06-17-cutgt25bps": {
+"event": "usfed-fomc-2026-06-17",
+"T": "2026-06-17T18:00",
+"title": "Cut > 25bps",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-usfed-fomc-2026-06-17-hike25bps": {
+"event": "usfed-fomc-2026-06-17",
+"T": "2026-06-17T18:00",
+"title": "Hike 25bps",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-usfed-fomc-2026-06-17-hikegt25bps": {
+"event": "usfed-fomc-2026-06-17",
+"T": "2026-06-17T18:00",
+"title": "Hike > 25bps",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-usfed-fomc-2026-06-17-maintains": {
+"event": "usfed-fomc-2026-06-17",
+"T": "2026-06-17T18:00",
+"title": "Maintains rate",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-may2026yoy-2026-06-10-3pt8pct": {
+"event": "uscpi-may2026yoy-2026-06-10",
+"T": "2026-06-10T12:30",
+"title": "Exactly 3.8%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-may2026yoy-2026-06-10-3pt9pct": {
+"event": "uscpi-may2026yoy-2026-06-10",
+"T": "2026-06-10T12:30",
+"title": "Exactly 3.9%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-may2026yoy-2026-06-10-4pct": {
+"event": "uscpi-may2026yoy-2026-06-10",
+"T": "2026-06-10T12:30",
+"title": "Exactly 4%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-may2026yoy-2026-06-10-4pt1pct": {
+"event": "uscpi-may2026yoy-2026-06-10",
+"T": "2026-06-10T12:30",
+"title": "Exactly 4.1%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-may2026yoy-2026-06-10-4pt2pct": {
+"event": "uscpi-may2026yoy-2026-06-10",
+"T": "2026-06-10T12:30",
+"title": "Exactly 4.2%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-may2026yoy-2026-06-10-4pt3pct": {
+"event": "uscpi-may2026yoy-2026-06-10",
+"T": "2026-06-10T12:30",
+"title": "Exactly 4.3%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-may2026yoy-2026-06-10-4pt4pct": {
+"event": "uscpi-may2026yoy-2026-06-10",
+"T": "2026-06-10T12:30",
+"title": "Exactly 4.4%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-may2026yoy-2026-06-10-4pt5pct": {
+"event": "uscpi-may2026yoy-2026-06-10",
+"T": "2026-06-10T12:30",
+"title": "Exactly 4.5%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-may2026yoy-2026-06-10-gte4pt6pct": {
+"event": "uscpi-may2026yoy-2026-06-10",
+"T": "2026-06-10T12:30",
+"title": "Greater than or equal to 4.6%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-may2026yoy-2026-06-10-lte3pt7pct": {
+"event": "uscpi-may2026yoy-2026-06-10",
+"T": "2026-06-10T12:30",
+"title": "Less than or equal to 3.7%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"gdpc-us-saa-q2-2026-07-30-atl1pt0": {
+"event": "us-saa-q2-2026-07-30",
+"T": "2026-07-30T12:30",
+"title": "At least 1.0%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-07-30T16:12:05.035390711Z",
+"lastPx": "0.9900",
+"traded": "57945.0000",
+"settle": "[\"1\",\"0\"]"
+},
+"gdpc-us-saa-q2-2026-07-30-atl1pt5": {
+"event": "us-saa-q2-2026-07-30",
+"T": "2026-07-30T12:30",
+"title": "At least 1.5%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-07-30T13:39:14.248283459Z",
+"lastPx": "0.9900",
+"traded": "37656.0000",
+"settle": "[\"1\",\"0\"]"
+},
+"gdpc-us-saa-q2-2026-07-30-atl2pt0": {
+"event": "us-saa-q2-2026-07-30",
+"T": "2026-07-30T12:30",
+"title": "At least 2.0%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-07-30T16:20:33.282660277Z",
+"lastPx": "0.0100",
+"traded": "34453.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"gdpc-us-saa-q2-2026-07-30-atl2pt5": {
+"event": "us-saa-q2-2026-07-30",
+"T": "2026-07-30T12:30",
+"title": "At least 2.5%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-07-30T13:49:39.486517208Z",
+"lastPx": "0.0100",
+"traded": "44088.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"gdpc-us-saa-q2-2026-07-30-atl3pt0": {
+"event": "us-saa-q2-2026-07-30",
+"T": "2026-07-30T12:30",
+"title": "At least 3.0%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-07-30T12:34:03.766850350Z",
+"lastPx": "0.0100",
+"traded": "41581.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"gdpc-us-saa-q2-2026-07-30-atl3pt5": {
+"event": "us-saa-q2-2026-07-30",
+"T": "2026-07-30T12:30",
+"title": "At least 3.5%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-07-30T13:39:41.397576380Z",
+"lastPx": "0.0100",
+"traded": "35086.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"nfpc-uschange-gte-june-2026-07-02-atl0": {
+"event": "uschange-gte-june-2026-07-02",
+"T": "2026-07-02T12:30",
+"title": "At least 0",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"1\",\"0\"]"
+},
+"nfpc-uschange-gte-june-2026-07-02-atl100k": {
+"event": "uschange-gte-june-2026-07-02",
+"T": "2026-07-02T12:30",
+"title": "At least 100,000",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"nfpc-uschange-gte-june-2026-07-02-atl150k": {
+"event": "uschange-gte-june-2026-07-02",
+"T": "2026-07-02T12:30",
+"title": "At least 150,000",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"nfpc-uschange-gte-june-2026-07-02-atl200k": {
+"event": "uschange-gte-june-2026-07-02",
+"T": "2026-07-02T12:30",
+"title": "At least 200,000",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"nfpc-uschange-gte-june-2026-07-02-atl250k": {
+"event": "uschange-gte-june-2026-07-02",
+"T": "2026-07-02T12:30",
+"title": "At least 250,000",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"nfpc-uschange-gte-june-2026-07-02-atl50k": {
+"event": "uschange-gte-june-2026-07-02",
+"T": "2026-07-02T12:30",
+"title": "At least 50,000",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"1\",\"0\"]"
+},
+"urc-us-seasonadj-gte-june-2026-07-02-atl3pt9": {
+"event": "us-seasonadj-gte-june-2026-07-02",
+"T": "2026-07-02T12:30",
+"title": "At least 3.9%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"1\",\"0\"]"
+},
+"urc-us-seasonadj-gte-june-2026-07-02-atl4pt0": {
+"event": "us-seasonadj-gte-june-2026-07-02",
+"T": "2026-07-02T12:30",
+"title": "At least 4.0%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"1\",\"0\"]"
+},
+"urc-us-seasonadj-gte-june-2026-07-02-atl4pt1": {
+"event": "us-seasonadj-gte-june-2026-07-02",
+"T": "2026-07-02T12:30",
+"title": "At least 4.1%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"1\",\"0\"]"
+},
+"urc-us-seasonadj-gte-june-2026-07-02-atl4pt2": {
+"event": "us-seasonadj-gte-june-2026-07-02",
+"T": "2026-07-02T12:30",
+"title": "At least 4.2%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"1\",\"0\"]"
+},
+"urc-us-seasonadj-gte-june-2026-07-02-atl4pt3": {
+"event": "us-seasonadj-gte-june-2026-07-02",
+"T": "2026-07-02T12:30",
+"title": "At least 4.3%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"urc-us-seasonadj-gte-june-2026-07-02-atl4pt4": {
+"event": "us-seasonadj-gte-june-2026-07-02",
+"T": "2026-07-02T12:30",
+"title": "At least 4.4%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"urc-us-seasonadj-gte-june-2026-07-02-atl4pt5": {
+"event": "us-seasonadj-gte-june-2026-07-02",
+"T": "2026-07-02T12:30",
+"title": "At least 4.5%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"urc-us-seasonadj-gte-june-2026-07-02-atl4pt6": {
+"event": "us-seasonadj-gte-june-2026-07-02",
+"T": "2026-07-02T12:30",
+"title": "At least 4.6%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"urc-us-seasonadj-gte-june-2026-07-02-atl4pt7": {
+"event": "us-seasonadj-gte-june-2026-07-02",
+"T": "2026-07-02T12:30",
+"title": "At least 4.7%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-june-yoy-2026-07-14-gt3pt6pct": {
+"event": "uscpi-june-yoy-2026-07-14",
+"T": "2026-07-14T12:30",
+"title": "Above 3.6%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-june-yoy-2026-07-14-gt3pt7pct": {
+"event": "uscpi-june-yoy-2026-07-14",
+"T": "2026-07-14T12:30",
+"title": "Above 3.7%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-june-yoy-2026-07-14-gt3pt8pct": {
+"event": "uscpi-june-yoy-2026-07-14",
+"T": "2026-07-14T12:30",
+"title": "Above 3.8%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-june-yoy-2026-07-14-gt3pt9pct": {
+"event": "uscpi-june-yoy-2026-07-14",
+"T": "2026-07-14T12:30",
+"title": "Above 3.9%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-june-yoy-2026-07-14-gt4pt0pct": {
+"event": "uscpi-june-yoy-2026-07-14",
+"T": "2026-07-14T12:30",
+"title": "Above 4.0%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-june-yoy-2026-07-14-gt4pt1pct": {
+"event": "uscpi-june-yoy-2026-07-14",
+"T": "2026-07-14T12:30",
+"title": "Above 4.1%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-june-yoy-2026-07-14-gt4pt2pct": {
+"event": "uscpi-june-yoy-2026-07-14",
+"T": "2026-07-14T12:30",
+"title": "Above 4.2%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-june-yoy-2026-07-14-gt4pt3pct": {
+"event": "uscpi-june-yoy-2026-07-14",
+"T": "2026-07-14T12:30",
+"title": "Above 4.3%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-june-yoy-2026-07-14-gt4pt4pct": {
+"event": "uscpi-june-yoy-2026-07-14",
+"T": "2026-07-14T12:30",
+"title": "Above 4.4%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-june-yoy-2026-07-14-gt4pt5pct": {
+"event": "uscpi-june-yoy-2026-07-14",
+"T": "2026-07-14T12:30",
+"title": "Above 4.5%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-june-yoy-2026-07-14-gt4pt6pct": {
+"event": "uscpi-june-yoy-2026-07-14",
+"T": "2026-07-14T12:30",
+"title": "Above 4.6%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-usfed-fomc-2026-07-29-cut25": {
+"event": "usfed-fomc-2026-07-29",
+"T": "2026-07-29T18:00",
+"title": "25 bps Decrease",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-07-29T18:10:49.676144176Z",
+"lastPx": "0.0100",
+"traded": "1235754.5300",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-usfed-fomc-2026-07-29-cut50": {
+"event": "usfed-fomc-2026-07-29",
+"T": "2026-07-29T18:00",
+"title": "50+ bps Decrease",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-07-29T18:22:28.167932886Z",
+"lastPx": "0.0100",
+"traded": "132406.6000",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-usfed-fomc-2026-07-29-hike25": {
+"event": "usfed-fomc-2026-07-29",
+"T": "2026-07-29T18:00",
+"title": "25 bps Increase",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-07-29T18:27:21.094689488Z",
+"lastPx": "0.0100",
+"traded": "1041728.2000",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-usfed-fomc-2026-07-29-hike50": {
+"event": "usfed-fomc-2026-07-29",
+"T": "2026-07-29T18:00",
+"title": "50+ bps Increase",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-07-29T18:22:20.804116029Z",
+"lastPx": "0.0100",
+"traded": "162640.3700",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-usfed-fomc-2026-07-29-nochng": {
+"event": "usfed-fomc-2026-07-29",
+"T": "2026-07-29T18:00",
+"title": "No Change",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-07-29T18:26:57.889524429Z",
+"lastPx": "0.9900",
+"traded": "859350.5200",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-july-yoy-2026-08-12-gt2pt9pct": {
+"event": "uscpi-july-yoy-2026-08-12",
+"T": "2026-08-12T12:30",
+"title": "Above 2.9%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-12T13:56:18.804386066Z",
+"lastPx": "0.9900",
+"traded": "56004.7500",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-july-yoy-2026-08-12-gt3pt0pct": {
+"event": "uscpi-july-yoy-2026-08-12",
+"T": "2026-08-12T12:30",
+"title": "Above 3.0%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-12T11:55:19.236357665Z",
+"lastPx": "0.9900",
+"traded": "69409.4000",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-july-yoy-2026-08-12-gt3pt1pct": {
+"event": "uscpi-july-yoy-2026-08-12",
+"T": "2026-08-12T12:30",
+"title": "Above 3.1%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-12T12:57:49.263977804Z",
+"lastPx": "0.9900",
+"traded": "38280.6400",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-july-yoy-2026-08-12-gt3pt2pct": {
+"event": "uscpi-july-yoy-2026-08-12",
+"T": "2026-08-12T12:30",
+"title": "Above 3.2%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-12T12:33:55.873074865Z",
+"lastPx": "0.9900",
+"traded": "29700.4600",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-july-yoy-2026-08-12-gt3pt3pct": {
+"event": "uscpi-july-yoy-2026-08-12",
+"T": "2026-08-12T12:30",
+"title": "Above 3.3%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-12T14:13:05.258798256Z",
+"lastPx": "0.9900",
+"traded": "39711.9100",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-july-yoy-2026-08-12-gt3pt4pct": {
+"event": "uscpi-july-yoy-2026-08-12",
+"T": "2026-08-12T12:30",
+"title": "Above 3.4%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-12T13:30:41.760200100Z",
+"lastPx": "0.0100",
+"traded": "4664.3800",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-july-yoy-2026-08-12-gt3pt5pct": {
+"event": "uscpi-july-yoy-2026-08-12",
+"T": "2026-08-12T12:30",
+"title": "Above 3.5%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-12T14:21:12.310891255Z",
+"lastPx": "0.0100",
+"traded": "23560.8000",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-july-yoy-2026-08-12-gt3pt6pct": {
+"event": "uscpi-july-yoy-2026-08-12",
+"T": "2026-08-12T12:30",
+"title": "Above 3.6%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-12T11:49:40.693682938Z",
+"lastPx": "0.0300",
+"traded": "45038.4700",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-july-yoy-2026-08-12-gt3pt7pct": {
+"event": "uscpi-july-yoy-2026-08-12",
+"T": "2026-08-12T12:30",
+"title": "Above 3.7%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-12T04:51:57.184807803Z",
+"lastPx": "0.0200",
+"traded": "28870.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-july-yoy-2026-08-12-gt3pt8pct": {
+"event": "uscpi-july-yoy-2026-08-12",
+"T": "2026-08-12T12:30",
+"title": "Above 3.8%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-10T06:28:39.017595217Z",
+"lastPx": null,
+"traded": "19936.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-july-yoy-2026-08-12-gt3pt9pct": {
+"event": "uscpi-july-yoy-2026-08-12",
+"T": "2026-08-12T12:30",
+"title": "Above 3.9%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-11T18:05:20.099044779Z",
+"lastPx": null,
+"traded": "3476.8900",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-july-yoy-2026-08-12-gt4pt2pct": {
+"event": "uscpi-july-yoy-2026-08-12",
+"T": "2026-08-12T12:30",
+"title": "Above 3.4%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": null,
+"settle": "[\"0.5\",\"0.5\"]"
+},
+"rdc-boe-2026-07-30-cut25": {
+"event": "boe-2026-07-30",
+"T": "2026-07-30T11:00",
+"title": "25 bps Decrease",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-07-30T08:04:26.215040158Z",
+"lastPx": "0.0100",
+"traded": "25346.0100",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-boe-2026-07-30-cut50": {
+"event": "boe-2026-07-30",
+"T": "2026-07-30T11:00",
+"title": "50+ bps Decrease",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-07-27T09:00:19.923899005Z",
+"lastPx": null,
+"traded": "33366.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-boe-2026-07-30-hike25": {
+"event": "boe-2026-07-30",
+"T": "2026-07-30T11:00",
+"title": "25 bps Increase",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-07-30T08:19:25.857107725Z",
+"lastPx": "0.0100",
+"traded": "69284.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-boe-2026-07-30-hike50": {
+"event": "boe-2026-07-30",
+"T": "2026-07-30T11:00",
+"title": "50+ bps Increase",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-07-28T02:43:28.666657308Z",
+"lastPx": null,
+"traded": "38349.8900",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-boe-2026-07-30-nochng": {
+"event": "boe-2026-07-30",
+"T": "2026-07-30T11:00",
+"title": "No Change",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-07-30T03:37:16.815762937Z",
+"lastPx": "0.9900",
+"traded": "81066.9900",
+"settle": "[\"1\",\"0\"]"
+},
+"rdc-boc-2026-09-02-cut25": {
+"event": "boc-2026-09-02",
+"T": "2026-09-02T13:45",
+"title": "25 bps Decrease",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-02T09:40:01.090373641Z",
+"lastPx": "0.0600",
+"traded": "10454.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-boc-2026-09-02-cut50": {
+"event": "boc-2026-09-02",
+"T": "2026-09-02T13:45",
+"title": "50+ bps Decrease",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-27T17:55:44.234000507Z",
+"lastPx": null,
+"traded": "18313.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-boc-2026-09-02-hike25": {
+"event": "boc-2026-09-02",
+"T": "2026-09-02T13:45",
+"title": "25 bps Increase",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-02T00:01:14.993098514Z",
+"lastPx": "0.0100",
+"traded": "8354.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-boc-2026-09-02-hike50": {
+"event": "boc-2026-09-02",
+"T": "2026-09-02T13:45",
+"title": "50+ bps Increase",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-25T23:44:16.987710438Z",
+"lastPx": null,
+"traded": "8638.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-boc-2026-09-02-nochng": {
+"event": "boc-2026-09-02",
+"T": "2026-09-02T13:45",
+"title": "No Change",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-01T16:52:16.343007538Z",
+"lastPx": null,
+"traded": "26439.0000",
+"settle": "[\"1\",\"0\"]"
+},
+"rdc-bcb-2026-08-05-cut25": {
+"event": "bcb-2026-08-05",
+"T": "2026-08-05T21:30",
+"title": "25 bps Decrease",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-05T22:40:39.786441755Z",
+"lastPx": "0.9900",
+"traded": "22554.1700",
+"settle": "[\"1\",\"0\"]"
+},
+"rdc-bcb-2026-08-05-cut50": {
+"event": "bcb-2026-08-05",
+"T": "2026-08-05T21:30",
+"title": "50+ bps Decrease",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-05T21:26:32.442436777Z",
+"lastPx": "0.0100",
+"traded": "2934.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-bcb-2026-08-05-hike25": {
+"event": "bcb-2026-08-05",
+"T": "2026-08-05T21:30",
+"title": "25 bps Increase",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-05T22:41:56.971475380Z",
+"lastPx": "0.0100",
+"traded": "7419.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-bcb-2026-08-05-hike50": {
+"event": "bcb-2026-08-05",
+"T": "2026-08-05T21:30",
+"title": "50+ bps Increase",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-07-30T16:49:14.991828150Z",
+"lastPx": null,
+"traded": "12646.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-bcb-2026-08-05-nochng": {
+"event": "bcb-2026-08-05",
+"T": "2026-08-05T21:30",
+"title": "No Change",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-05T22:02:21.546833833Z",
+"lastPx": "0.0100",
+"traded": "12987.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-usfed-fomc-2026-09-16-cut25": {
+"event": "usfed-fomc-2026-09-16",
+"T": "2026-09-16T18:00",
+"title": "25 bps Decrease",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-16T18:11:20.212703896Z",
+"lastPx": "0.0100",
+"traded": "2566583.8400",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-usfed-fomc-2026-09-16-cut50": {
+"event": "usfed-fomc-2026-09-16",
+"T": "2026-09-16T18:00",
+"title": "50+ bps Decrease",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-16T18:11:13.526277559Z",
+"lastPx": "0.0100",
+"traded": "268906.6100",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-usfed-fomc-2026-09-16-hike25": {
+"event": "usfed-fomc-2026-09-16",
+"T": "2026-09-16T18:00",
+"title": "25 bps Increase",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-16T18:10:06.778667097Z",
+"lastPx": "0.9900",
+"traded": "1578308.3800",
+"settle": "[\"1\",\"0\"]"
+},
+"rdc-usfed-fomc-2026-09-16-hike50": {
+"event": "usfed-fomc-2026-09-16",
+"T": "2026-09-16T18:00",
+"title": "50+ bps Increase",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-16T18:11:26.868006366Z",
+"lastPx": "0.0100",
+"traded": "1910414.3300",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-usfed-fomc-2026-09-16-nochng": {
+"event": "usfed-fomc-2026-09-16",
+"T": "2026-09-16T18:00",
+"title": "No Change",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-16T18:10:57.946669695Z",
+"lastPx": "0.0100",
+"traded": "5813125.5200",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-ecb-2026-09-10-cut25": {
+"event": "ecb-2026-09-10",
+"T": "2026-09-10T12:15",
+"title": "25 bps Decrease",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-10T01:00:34.597297290Z",
+"lastPx": "0.0200",
+"traded": "28855.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-ecb-2026-09-10-cut50": {
+"event": "ecb-2026-09-10",
+"T": "2026-09-10T12:15",
+"title": "50+ bps Decrease",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-09T11:46:10.879035653Z",
+"lastPx": null,
+"traded": "26681.8700",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-ecb-2026-09-10-hike25": {
+"event": "ecb-2026-09-10",
+"T": "2026-09-10T12:15",
+"title": "25 bps Increase",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-10T02:42:51.747198241Z",
+"lastPx": "0.9900",
+"traded": "15718.8400",
+"settle": "[\"1\",\"0\"]"
+},
+"rdc-ecb-2026-09-10-hike50": {
+"event": "ecb-2026-09-10",
+"T": "2026-09-10T12:15",
+"title": "50+ bps Increase",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-10T14:22:41.134172003Z",
+"lastPx": "0.0100",
+"traded": "59540.9800",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-ecb-2026-09-10-nochng": {
+"event": "ecb-2026-09-10",
+"T": "2026-09-10T12:15",
+"title": "No Change",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-10T13:11:20.123211274Z",
+"lastPx": "0.0100",
+"traded": "57512.0900",
+"settle": "[\"0\",\"1\"]"
+},
+"nfpc-usnfp-sa-july-2026-08-07-gt0": {
+"event": "usnfp-sa-july-2026-08-07",
+"T": "2026-08-07T12:30",
+"title": "Above 0",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-07T13:09:48.046898467Z",
+"lastPx": "0.0100",
+"traded": "7003.7700",
+"settle": "[\"0\",\"1\"]"
+},
+"nfpc-usnfp-sa-july-2026-08-07-gt100k": {
+"event": "usnfp-sa-july-2026-08-07",
+"T": "2026-08-07T12:30",
+"title": "Above 100,000",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-07T12:31:09.263335422Z",
+"lastPx": "0.1500",
+"traded": "2921.9400",
+"settle": "[\"0\",\"1\"]"
+},
+"nfpc-usnfp-sa-july-2026-08-07-gt150k": {
+"event": "usnfp-sa-july-2026-08-07",
+"T": "2026-08-07T12:30",
+"title": "Above 150,000",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-05T01:19:34.230213963Z",
+"lastPx": null,
+"traded": "203.2200",
+"settle": "[\"0\",\"1\"]"
+},
+"nfpc-usnfp-sa-july-2026-08-07-gt200k": {
+"event": "usnfp-sa-july-2026-08-07",
+"T": "2026-08-07T12:30",
+"title": "Above 200,000",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-07T04:20:30.598178206Z",
+"lastPx": "0.5100",
+"traded": "17.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"nfpc-usnfp-sa-july-2026-08-07-gt250k": {
+"event": "usnfp-sa-july-2026-08-07",
+"T": "2026-08-07T12:30",
+"title": "Above 250,000",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-07T03:54:11.925163365Z",
+"lastPx": "0.0100",
+"traded": "128.3000",
+"settle": "[\"0\",\"1\"]"
+},
+"nfpc-usnfp-sa-july-2026-08-07-gt50k": {
+"event": "usnfp-sa-july-2026-08-07",
+"T": "2026-08-07T12:30",
+"title": "Above 50,000",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-07T13:10:18.659162116Z",
+"lastPx": "0.0100",
+"traded": "5271.2300",
+"settle": "[\"0\",\"1\"]"
+},
+"urc-usunemp-sa-july-2026-08-07-gt3pt9pct": {
+"event": "usunemp-sa-july-2026-08-07",
+"T": "2026-08-07T12:30",
+"title": "Above 3.9%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-07T04:09:43.141743695Z",
+"lastPx": "0.9900",
+"traded": "3164.7500",
+"settle": "[\"1\",\"0\"]"
+},
+"urc-usunemp-sa-july-2026-08-07-gt4pt0pct": {
+"event": "usunemp-sa-july-2026-08-07",
+"T": "2026-08-07T12:30",
+"title": "Above 4.0%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-07T12:38:20.432517562Z",
+"lastPx": "0.9900",
+"traded": "2780.2400",
+"settle": "[\"1\",\"0\"]"
+},
+"urc-usunemp-sa-july-2026-08-07-gt4pt1pct": {
+"event": "usunemp-sa-july-2026-08-07",
+"T": "2026-08-07T12:30",
+"title": "Above 4.1%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-07T12:38:27.734170236Z",
+"lastPx": "0.0300",
+"traded": "2777.9100",
+"settle": "[\"0\",\"1\"]"
+},
+"urc-usunemp-sa-july-2026-08-07-gt4pt2pct": {
+"event": "usunemp-sa-july-2026-08-07",
+"T": "2026-08-07T12:30",
+"title": "Above 4.2%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-07T13:57:23.874727335Z",
+"lastPx": "0.0100",
+"traded": "2292.2900",
+"settle": "[\"0\",\"1\"]"
+},
+"urc-usunemp-sa-july-2026-08-07-gt4pt3pct": {
+"event": "usunemp-sa-july-2026-08-07",
+"T": "2026-08-07T12:30",
+"title": "Above 4.3%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-07T12:32:18.938439312Z",
+"lastPx": "0.0100",
+"traded": "4050.4800",
+"settle": "[\"0\",\"1\"]"
+},
+"urc-usunemp-sa-july-2026-08-07-gt4pt4pct": {
+"event": "usunemp-sa-july-2026-08-07",
+"T": "2026-08-07T12:30",
+"title": "Above 4.4%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-07T12:28:52.038238159Z",
+"lastPx": "0.0300",
+"traded": "1738.7500",
+"settle": "[\"0\",\"1\"]"
+},
+"urc-usunemp-sa-july-2026-08-07-gt4pt5pct": {
+"event": "usunemp-sa-july-2026-08-07",
+"T": "2026-08-07T12:30",
+"title": "Above 4.5%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-07T12:32:21.187026862Z",
+"lastPx": "0.0100",
+"traded": "133.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"urc-usunemp-sa-july-2026-08-07-gt4pt6pct": {
+"event": "usunemp-sa-july-2026-08-07",
+"T": "2026-08-07T12:30",
+"title": "Above 4.6%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-07T12:32:23.382412758Z",
+"lastPx": "0.0100",
+"traded": "531.9200",
+"settle": "[\"0\",\"1\"]"
+},
+"urc-usunemp-sa-july-2026-08-07-gt4pt7pct": {
+"event": "usunemp-sa-july-2026-08-07",
+"T": "2026-08-07T12:30",
+"title": "Above 4.7%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-08-07T12:32:25.511467524Z",
+"lastPx": "0.0100",
+"traded": "159.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-boe-2026-09-17-cut25": {
+"event": "boe-2026-09-17",
+"T": "2026-09-17T11:00",
+"title": "25 bps Decrease",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-16T11:53:55.104629431Z",
+"lastPx": "0.0200",
+"traded": "2541.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-boe-2026-09-17-cut50": {
+"event": "boe-2026-09-17",
+"T": "2026-09-17T11:00",
+"title": "50+ bps Decrease",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-10T03:28:40.022641096Z",
+"lastPx": null,
+"traded": "2932.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-boe-2026-09-17-hike25": {
+"event": "boe-2026-09-17",
+"T": "2026-09-17T11:00",
+"title": "25 bps Increase",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-17T13:19:19.504147137Z",
+"lastPx": "0.0500",
+"traded": "4016.3800",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-boe-2026-09-17-hike50": {
+"event": "boe-2026-09-17",
+"T": "2026-09-17T11:00",
+"title": "50+ bps Increase",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-16T16:08:27.858641887Z",
+"lastPx": "0.0200",
+"traded": "724.6600",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-boe-2026-09-17-nochng": {
+"event": "boe-2026-09-17",
+"T": "2026-09-17T11:00",
+"title": "No Change",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-16T08:25:14.681835834Z",
+"lastPx": "0.9600",
+"traded": "3904.2200",
+"settle": "[\"1\",\"0\"]"
+},
+"rdc-boj-2026-09-18-cut25": {
+"event": "boj-2026-09-18",
+"T": "2026-09-18T03:00",
+"title": "25 bps Decrease",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-18T06:13:55.385339500Z",
+"lastPx": "0.0100",
+"traded": "9739.3100",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-boj-2026-09-18-cut50": {
+"event": "boj-2026-09-18",
+"T": "2026-09-18T03:00",
+"title": "50+ bps Decrease",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-18T03:24:36.095615155Z",
+"lastPx": "0.0100",
+"traded": "2712.1800",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-boj-2026-09-18-hike25": {
+"event": "boj-2026-09-18",
+"T": "2026-09-18T03:00",
+"title": "25 bps Increase",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-17T21:57:12.396212187Z",
+"lastPx": "0.9900",
+"traded": "7759.7800",
+"settle": "[\"1\",\"0\"]"
+},
+"rdc-boj-2026-09-18-hike50": {
+"event": "boj-2026-09-18",
+"T": "2026-09-18T03:00",
+"title": "50+ bps Increase",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-18T12:14:13.535984170Z",
+"lastPx": "0.0100",
+"traded": "25027.1400",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-boj-2026-09-18-nochng": {
+"event": "boj-2026-09-18",
+"T": "2026-09-18T03:00",
+"title": "No Change",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-18T12:14:02.077966681Z",
+"lastPx": "0.0100",
+"traded": "44231.8100",
+"settle": "[\"0\",\"1\"]"
+},
+"urc-usunemp-sa-august-2026-09-04-gt3pt7pct": {
+"event": "usunemp-sa-august-2026-09-04",
+"T": "2026-09-04T12:30",
+"title": "Above 3.7%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-04T11:28:37.504237063Z",
+"lastPx": "0.9900",
+"traded": "1201.5100",
+"settle": "[\"1\",\"0\"]"
+},
+"urc-usunemp-sa-august-2026-09-04-gt3pt8pct": {
+"event": "usunemp-sa-august-2026-09-04",
+"T": "2026-09-04T12:30",
+"title": "Above 3.8%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-03T13:00:57.953479566Z",
+"lastPx": null,
+"traded": "2202.4000",
+"settle": "[\"1\",\"0\"]"
+},
+"urc-usunemp-sa-august-2026-09-04-gt3pt9pct": {
+"event": "usunemp-sa-august-2026-09-04",
+"T": "2026-09-04T12:30",
+"title": "Above 3.9%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-04T12:30:06.473977917Z",
+"lastPx": "0.9900",
+"traded": "10255.7900",
+"settle": "[\"1\",\"0\"]"
+},
+"urc-usunemp-sa-august-2026-09-04-gt4pt0pct": {
+"event": "usunemp-sa-august-2026-09-04",
+"T": "2026-09-04T12:30",
+"title": "Above 4.0%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-04T12:38:31.424622150Z",
+"lastPx": "0.8600",
+"traded": "20704.4300",
+"settle": "[\"1\",\"0\"]"
+},
+"urc-usunemp-sa-august-2026-09-04-gt4pt1pct": {
+"event": "usunemp-sa-august-2026-09-04",
+"T": "2026-09-04T12:30",
+"title": "Above 4.1%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-04T15:25:44.087459627Z",
+"lastPx": "0.6500",
+"traded": "3603.6800",
+"settle": "[\"0\",\"1\"]"
+},
+"urc-usunemp-sa-august-2026-09-04-gt4pt2pct": {
+"event": "usunemp-sa-august-2026-09-04",
+"T": "2026-09-04T12:30",
+"title": "Above 4.2%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-04T17:45:52.186123438Z",
+"lastPx": "0.0900",
+"traded": "39858.8400",
+"settle": "[\"0\",\"1\"]"
+},
+"urc-usunemp-sa-august-2026-09-04-gt4pt3pct": {
+"event": "usunemp-sa-august-2026-09-04",
+"T": "2026-09-04T12:30",
+"title": "Above 4.3%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-04T15:25:00.635769069Z",
+"lastPx": "0.0100",
+"traded": "37699.3800",
+"settle": "[\"0\",\"1\"]"
+},
+"urc-usunemp-sa-august-2026-09-04-gt4pt4pct": {
+"event": "usunemp-sa-august-2026-09-04",
+"T": "2026-09-04T12:30",
+"title": "Above 4.4%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-04T13:25:54.980403549Z",
+"lastPx": "0.0100",
+"traded": "14372.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"urc-usunemp-sa-august-2026-09-04-gt4pt5pct": {
+"event": "usunemp-sa-august-2026-09-04",
+"T": "2026-09-04T12:30",
+"title": "Above 4.5%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-04T03:08:54.414988184Z",
+"lastPx": "0.0100",
+"traded": "8331.9800",
+"settle": "[\"0\",\"1\"]"
+},
+"nfpc-usnfp-sa-august-2026-09-04-gt0": {
+"event": "usnfp-sa-august-2026-09-04",
+"T": "2026-09-04T12:30",
+"title": "Above 0",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-04T12:33:13.912075239Z",
+"lastPx": "0.9900",
+"traded": "8969.3100",
+"settle": "[\"1\",\"0\"]"
+},
+"nfpc-usnfp-sa-august-2026-09-04-gt100k": {
+"event": "usnfp-sa-august-2026-09-04",
+"T": "2026-09-04T12:30",
+"title": "Above 100,000",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-04T13:19:40.220922882Z",
+"lastPx": "0.8100",
+"traded": "7172.4800",
+"settle": "[\"1\",\"0\"]"
+},
+"nfpc-usnfp-sa-august-2026-09-04-gt150k": {
+"event": "usnfp-sa-august-2026-09-04",
+"T": "2026-09-04T12:30",
+"title": "Above 150,000",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-04T12:35:31.778090005Z",
+"lastPx": "0.9900",
+"traded": "5951.9300",
+"settle": "[\"1\",\"0\"]"
+},
+"nfpc-usnfp-sa-august-2026-09-04-gt50k": {
+"event": "usnfp-sa-august-2026-09-04",
+"T": "2026-09-04T12:30",
+"title": "Above 50,000",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-04T15:04:42.706800350Z",
+"lastPx": "0.9600",
+"traded": "3907.0000",
+"settle": "[\"1\",\"0\"]"
+},
+"nfpc-usnfp-sa-august-2026-09-04-gtneg100k": {
+"event": "usnfp-sa-august-2026-09-04",
+"T": "2026-09-04T12:30",
+"title": "Above -100,000",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-04T12:34:16.291563854Z",
+"lastPx": "0.9900",
+"traded": "9935.1700",
+"settle": "[\"1\",\"0\"]"
+},
+"nfpc-usnfp-sa-august-2026-09-04-gtneg50k": {
+"event": "usnfp-sa-august-2026-09-04",
+"T": "2026-09-04T12:30",
+"title": "Above -50,000",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-04T16:32:50.003019113Z",
+"lastPx": "0.9900",
+"traded": "22593.2500",
+"settle": "[\"1\",\"0\"]"
+},
+"rdc-banxico-2026-09-24-cut25": {
+"event": "banxico-2026-09-24",
+"T": "2026-09-24T19:00",
+"title": "25 bps Decrease",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-24T13:32:24.148985833Z",
+"lastPx": "0.0100",
+"traded": "12153.7500",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-banxico-2026-09-24-cut50": {
+"event": "banxico-2026-09-24",
+"T": "2026-09-24T19:00",
+"title": "50+ bps Decrease",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-24T16:38:00.594124599Z",
+"lastPx": "0.0100",
+"traded": "15787.7900",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-banxico-2026-09-24-hike25": {
+"event": "banxico-2026-09-24",
+"T": "2026-09-24T19:00",
+"title": "25 bps Increase",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-24T15:42:00.323135364Z",
+"lastPx": "0.0200",
+"traded": "20620.7900",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-banxico-2026-09-24-hike50": {
+"event": "banxico-2026-09-24",
+"T": "2026-09-24T19:00",
+"title": "50+ bps Increase",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-24T18:02:18.751805950Z",
+"lastPx": "0.0100",
+"traded": "12069.4700",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-banxico-2026-09-24-nochng": {
+"event": "banxico-2026-09-24",
+"T": "2026-09-24T19:00",
+"title": "No Change",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-24T06:33:03.857992783Z",
+"lastPx": "0.9800",
+"traded": "16951.0800",
+"settle": "[\"1\",\"0\"]"
+},
+"rdc-bcb-2026-09-16-cut25": {
+"event": "bcb-2026-09-16",
+"T": "2026-09-16T21:30",
+"title": "25 bps Decrease",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-16T18:44:40.318300266Z",
+"lastPx": "0.9700",
+"traded": "15659.1100",
+"settle": "[\"1\",\"0\"]"
+},
+"rdc-bcb-2026-09-16-cut50": {
+"event": "bcb-2026-09-16",
+"T": "2026-09-16T21:30",
+"title": "50+ bps Decrease",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-16T20:45:25.733923298Z",
+"lastPx": "0.0700",
+"traded": "5198.4200",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-bcb-2026-09-16-hike25": {
+"event": "bcb-2026-09-16",
+"T": "2026-09-16T21:30",
+"title": "25 bps Increase",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-16T02:49:04.449112415Z",
+"lastPx": "0.0100",
+"traded": "3891.9600",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-bcb-2026-09-16-hike50": {
+"event": "bcb-2026-09-16",
+"T": "2026-09-16T21:30",
+"title": "50+ bps Increase",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-16T19:18:36.286645508Z",
+"lastPx": "0.0200",
+"traded": "5090.4700",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-bcb-2026-09-16-nochng": {
+"event": "bcb-2026-09-16",
+"T": "2026-09-16T21:30",
+"title": "No Change",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-16T19:33:07.245213959Z",
+"lastPx": "0.0100",
+"traded": "10470.1000",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-august-yoy-2026-09-11-gt2pt9pct": {
+"event": "uscpi-august-yoy-2026-09-11",
+"T": "2026-09-11T12:30",
+"title": "Above 2.9%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-11T12:30:07.890994589Z",
+"lastPx": "0.9900",
+"traded": "3122.3300",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-august-yoy-2026-09-11-gt3pt0pct": {
+"event": "uscpi-august-yoy-2026-09-11",
+"T": "2026-09-11T12:30",
+"title": "Above 3.0%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-11T12:30:07.892540396Z",
+"lastPx": "0.9900",
+"traded": "12597.0600",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-august-yoy-2026-09-11-gt3pt1pct": {
+"event": "uscpi-august-yoy-2026-09-11",
+"T": "2026-09-11T12:30",
+"title": "Above 3.1%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-11T12:30:06.426703165Z",
+"lastPx": "0.9800",
+"traded": "11080.1100",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-august-yoy-2026-09-11-gt3pt2pct": {
+"event": "uscpi-august-yoy-2026-09-11",
+"T": "2026-09-11T12:30",
+"title": "Above 3.2%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-11T12:58:57.219231148Z",
+"lastPx": "0.9900",
+"traded": "24147.0800",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-august-yoy-2026-09-11-gt3pt3pct": {
+"event": "uscpi-august-yoy-2026-09-11",
+"T": "2026-09-11T12:30",
+"title": "Above 3.3%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-11T15:14:36.311482528Z",
+"lastPx": "0.9900",
+"traded": "22883.6100",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-august-yoy-2026-09-11-gt3pt4pct": {
+"event": "uscpi-august-yoy-2026-09-11",
+"T": "2026-09-11T12:30",
+"title": "Above 3.4%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-11T13:10:07.953724929Z",
+"lastPx": "0.0100",
+"traded": "28675.8800",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-august-yoy-2026-09-11-gt3pt5pct": {
+"event": "uscpi-august-yoy-2026-09-11",
+"T": "2026-09-11T12:30",
+"title": "Above 3.5%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-11T13:10:17.460315919Z",
+"lastPx": "0.0100",
+"traded": "28820.8100",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-august-yoy-2026-09-11-gt3pt6pct": {
+"event": "uscpi-august-yoy-2026-09-11",
+"T": "2026-09-11T12:30",
+"title": "Above 3.6%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-11T13:11:57.760043720Z",
+"lastPx": "0.0100",
+"traded": "2891.0600",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-august-yoy-2026-09-11-gt3pt7pct": {
+"event": "uscpi-august-yoy-2026-09-11",
+"T": "2026-09-11T12:30",
+"title": "Above 3.7%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-11T13:10:36.466325799Z",
+"lastPx": "0.0100",
+"traded": "569.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-august-yoy-2026-09-11-gt3pt8pct": {
+"event": "uscpi-august-yoy-2026-09-11",
+"T": "2026-09-11T12:30",
+"title": "Above 3.8%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-11T13:10:42.924151006Z",
+"lastPx": "0.0100",
+"traded": "53907.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-august-yoy-2026-09-11-gt3pt9pct": {
+"event": "uscpi-august-yoy-2026-09-11",
+"T": "2026-09-11T12:30",
+"title": "Above 3.9%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-11T13:10:50.268193547Z",
+"lastPx": "0.0100",
+"traded": "2943.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-august-yoy-2026-09-11-gt4pt0pct": {
+"event": "uscpi-august-yoy-2026-09-11",
+"T": "2026-09-11T12:30",
+"title": "Above 4.0%",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-11T12:27:28.240969918Z",
+"lastPx": "0.0100",
+"traded": "1160.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"nfpc-usnfp-sa-september-2026-10-02-gt0": {
+"event": "usnfp-sa-september-2026-10-02",
+"T": "2026-10-02T12:30",
+"title": "Above 0",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-02T12:05:23.026363447Z",
+"lastPx": "0.9000",
+"traded": "59021.8500",
+"settle": "[\"1\",\"0\"]"
+},
+"nfpc-usnfp-sa-september-2026-10-02-gt100k": {
+"event": "usnfp-sa-september-2026-10-02",
+"T": "2026-10-02T12:30",
+"title": "Above 100,000",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-02T11:57:19.014900829Z",
+"lastPx": "0.4700",
+"traded": "41776.6500",
+"settle": "[\"0\",\"1\"]"
+},
+"nfpc-usnfp-sa-september-2026-10-02-gt150k": {
+"event": "usnfp-sa-september-2026-10-02",
+"T": "2026-10-02T12:30",
+"title": "Above 150,000",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-01T21:44:14.920872393Z",
+"lastPx": "0.1300",
+"traded": "31809.7500",
+"settle": "[\"0\",\"1\"]"
+},
+"nfpc-usnfp-sa-september-2026-10-02-gt200k": {
+"event": "usnfp-sa-september-2026-10-02",
+"T": "2026-10-02T12:30",
+"title": "Above 200,000",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-02T11:09:05.084136078Z",
+"lastPx": "0.0100",
+"traded": "5726.3100",
+"settle": "[\"0\",\"1\"]"
+},
+"nfpc-usnfp-sa-september-2026-10-02-gt250k": {
+"event": "usnfp-sa-september-2026-10-02",
+"T": "2026-10-02T12:30",
+"title": "Above 250,000",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-02T11:09:06.190015621Z",
+"lastPx": "0.0300",
+"traded": "22760.8800",
+"settle": "[\"0\",\"1\"]"
+},
+"nfpc-usnfp-sa-september-2026-10-02-gt50k": {
+"event": "usnfp-sa-september-2026-10-02",
+"T": "2026-10-02T12:30",
+"title": "Above 50,000",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-02T12:05:01.235288519Z",
+"lastPx": "0.9900",
+"traded": "34142.2900",
+"settle": "[\"0\",\"1\"]"
+},
+"urc-usunemp-sa-september-2026-10-02-gt3pt7pct": {
+"event": "usunemp-sa-september-2026-10-02",
+"T": "2026-10-02T12:30",
+"title": "Above 3.7%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-09-23T23:41:27.025862447Z",
+"lastPx": "0.9900",
+"traded": "15377.9500",
+"settle": "[\"1\",\"0\"]"
+},
+"urc-usunemp-sa-september-2026-10-02-gt3pt8pct": {
+"event": "usunemp-sa-september-2026-10-02",
+"T": "2026-10-02T12:30",
+"title": "Above 3.8%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-02T06:41:55.941296126Z",
+"lastPx": "0.9900",
+"traded": "48867.3500",
+"settle": "[\"1\",\"0\"]"
+},
+"urc-usunemp-sa-september-2026-10-02-gt3pt9pct": {
+"event": "usunemp-sa-september-2026-10-02",
+"T": "2026-10-02T12:30",
+"title": "Above 3.9%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-02T11:11:12.692966292Z",
+"lastPx": "0.9400",
+"traded": "50251.7700",
+"settle": "[\"1\",\"0\"]"
+},
+"urc-usunemp-sa-september-2026-10-02-gt4pt0pct": {
+"event": "usunemp-sa-september-2026-10-02",
+"T": "2026-10-02T12:30",
+"title": "Above 4.0%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-02T11:35:48.505278630Z",
+"lastPx": "0.7000",
+"traded": "47806.7900",
+"settle": "[\"1\",\"0\"]"
+},
+"urc-usunemp-sa-september-2026-10-02-gt4pt1pct": {
+"event": "usunemp-sa-september-2026-10-02",
+"T": "2026-10-02T12:30",
+"title": "Above 4.1%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-02T10:19:22.473587340Z",
+"lastPx": "0.3700",
+"traded": "24787.9000",
+"settle": "[\"1\",\"0\"]"
+},
+"urc-usunemp-sa-september-2026-10-02-gt4pt2pct": {
+"event": "usunemp-sa-september-2026-10-02",
+"T": "2026-10-02T12:30",
+"title": "Above 4.2%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-02T05:40:58.564331814Z",
+"lastPx": "0.0500",
+"traded": "132505.6000",
+"settle": "[\"0\",\"1\"]"
+},
+"urc-usunemp-sa-september-2026-10-02-gt4pt3pct": {
+"event": "usunemp-sa-september-2026-10-02",
+"T": "2026-10-02T12:30",
+"title": "Above 4.3%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-02T03:07:55.209383472Z",
+"lastPx": "0.0200",
+"traded": "31864.0500",
+"settle": "[\"0\",\"1\"]"
+},
+"urc-usunemp-sa-september-2026-10-02-gt4pt4pct": {
+"event": "usunemp-sa-september-2026-10-02",
+"T": "2026-10-02T12:30",
+"title": "Above 4.4%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-09-30T21:02:46.325315260Z",
+"lastPx": "0.0100",
+"traded": "16490.1800",
+"settle": "[\"0\",\"1\"]"
+},
+"urc-usunemp-sa-september-2026-10-02-gt4pt5pct": {
+"event": "usunemp-sa-september-2026-10-02",
+"T": "2026-10-02T12:30",
+"title": "Above 4.5%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-02T01:43:04.346975553Z",
+"lastPx": "0.0100",
+"traded": "9752.4700",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-boi-2026-10-21-cut25": {
+"event": "boi-2026-10-21",
+"T": "2026-10-21T13:00",
+"title": "25 bps Decrease",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-10-21T13:05:33.577448260Z",
+"lastPx": "0.0100",
+"traded": "29250.9200",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-boi-2026-10-21-cut50": {
+"event": "boi-2026-10-21",
+"T": "2026-10-21T13:00",
+"title": "50+ bps Decrease",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-10-13T01:27:20.130561667Z",
+"lastPx": "0.0100",
+"traded": "26330.9800",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-boi-2026-10-21-hike25": {
+"event": "boi-2026-10-21",
+"T": "2026-10-21T13:00",
+"title": "25 bps Increase",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-10-21T12:34:53.233137917Z",
+"lastPx": "0.0100",
+"traded": "15309.8500",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-boi-2026-10-21-hike50": {
+"event": "boi-2026-10-21",
+"T": "2026-10-21T13:00",
+"title": "50+ bps Increase",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-10-20T22:37:53.161244639Z",
+"lastPx": "0.0100",
+"traded": "48198.4600",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-boi-2026-10-21-nochng": {
+"event": "boi-2026-10-21",
+"T": "2026-10-21T13:00",
+"title": "No Change",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-10-21T13:03:08.574735222Z",
+"lastPx": "0.9900",
+"traded": "94664.9400",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-september-mom-2026-10-14-gt0pt0pct": {
+"event": "uscpi-september-mom-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 0.0%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-10T23:08:13.635503626Z",
+"lastPx": "0.9900",
+"traded": "29309.7900",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-september-mom-2026-10-14-gt0pt1pct": {
+"event": "uscpi-september-mom-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 0.1%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T11:00:24.911091788Z",
+"lastPx": "0.9800",
+"traded": "60053.5900",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-september-mom-2026-10-14-gt0pt2pct": {
+"event": "uscpi-september-mom-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 0.2%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T10:25:16.772629405Z",
+"lastPx": "0.9700",
+"traded": "63300.0300",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-september-mom-2026-10-14-gt0pt3pct": {
+"event": "uscpi-september-mom-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 0.3%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T11:00:02.815245111Z",
+"lastPx": "0.9800",
+"traded": "152801.7300",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-september-mom-2026-10-14-gt0pt4pct": {
+"event": "uscpi-september-mom-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 0.4%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T10:29:43.759407411Z",
+"lastPx": "0.9100",
+"traded": "221833.0400",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-september-mom-2026-10-14-gt0pt5pct": {
+"event": "uscpi-september-mom-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 0.5%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T12:23:27.730642759Z",
+"lastPx": "0.6600",
+"traded": "354358.0800",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-september-mom-2026-10-14-gt0pt6pct": {
+"event": "uscpi-september-mom-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 0.6%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T11:20:54.726379543Z",
+"lastPx": "0.1500",
+"traded": "335162.1600",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-september-mom-2026-10-14-gtneg0pt1pct": {
+"event": "uscpi-september-mom-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above -0.1%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-09-24T04:49:00.486683807Z",
+"lastPx": "0.9900",
+"traded": "11567.7300",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-september-mom-2026-10-14-gtneg0pt2pct": {
+"event": "uscpi-september-mom-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above -0.2%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T10:39:35.035170771Z",
+"lastPx": "0.9900",
+"traded": "152013.1300",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-september-yoy-2026-10-14-gt2pt9pct": {
+"event": "uscpi-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 2.9%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T10:24:32.171485625Z",
+"lastPx": "0.9700",
+"traded": "256117.0800",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-september-yoy-2026-10-14-gt3pt0pct": {
+"event": "uscpi-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 3.0%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-04T23:56:17.811044502Z",
+"lastPx": "0.9800",
+"traded": "299093.8100",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-september-yoy-2026-10-14-gt3pt1pct": {
+"event": "uscpi-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 3.1%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-11T02:34:50.313492517Z",
+"lastPx": "0.9900",
+"traded": "71570.5300",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-september-yoy-2026-10-14-gt3pt2pct": {
+"event": "uscpi-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 3.2%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-10T12:28:02.281054547Z",
+"lastPx": "0.9900",
+"traded": "91990.6000",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-september-yoy-2026-10-14-gt3pt3pct": {
+"event": "uscpi-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 3.3%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-13T23:55:33.650425767Z",
+"lastPx": "0.9800",
+"traded": "83378.7300",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-september-yoy-2026-10-14-gt3pt4pct": {
+"event": "uscpi-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 3.4%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T12:24:21.154208267Z",
+"lastPx": "0.9600",
+"traded": "237742.3900",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-september-yoy-2026-10-14-gt3pt5pct": {
+"event": "uscpi-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 3.5%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T12:29:19.458909795Z",
+"lastPx": "0.8300",
+"traded": "336093.1900",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-september-yoy-2026-10-14-gt3pt6pct": {
+"event": "uscpi-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 3.6%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T12:27:13.575794709Z",
+"lastPx": "0.4700",
+"traded": "372660.5200",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpi-september-yoy-2026-10-14-gt3pt7pct": {
+"event": "uscpi-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 3.7%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T11:25:22.276873725Z",
+"lastPx": "0.1100",
+"traded": "135458.9200",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-september-yoy-2026-10-14-gt3pt8pct": {
+"event": "uscpi-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 3.8%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T11:32:06.290190205Z",
+"lastPx": "0.0100",
+"traded": "176137.0800",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-september-yoy-2026-10-14-gt3pt9pct": {
+"event": "uscpi-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 3.9%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-13T17:35:42.602527367Z",
+"lastPx": "0.0100",
+"traded": "25680.0800",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpi-september-yoy-2026-10-14-gt4pt0pct": {
+"event": "uscpi-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 4.0%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T00:23:05.288646170Z",
+"lastPx": "0.0100",
+"traded": "80354.7500",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpicore-september-yoy-2026-10-14-gt2pt1pct": {
+"event": "uscpicore-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 2.1%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T07:10:23.329084861Z",
+"lastPx": "0.9900",
+"traded": "81669.0700",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpicore-september-yoy-2026-10-14-gt2pt2pct": {
+"event": "uscpicore-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 2.2%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T11:01:36.622621741Z",
+"lastPx": "0.9800",
+"traded": "9581.6800",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpicore-september-yoy-2026-10-14-gt2pt3pct": {
+"event": "uscpicore-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 2.3%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T11:01:56.182116909Z",
+"lastPx": "0.8600",
+"traded": "28610.4300",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpicore-september-yoy-2026-10-14-gt2pt4pct": {
+"event": "uscpicore-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 2.4%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T12:03:57.968623416Z",
+"lastPx": "0.4300",
+"traded": "38260.8600",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpicore-september-yoy-2026-10-14-gt2pt5pct": {
+"event": "uscpicore-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 2.5%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T10:16:43.163101489Z",
+"lastPx": "0.0500",
+"traded": "37352.3400",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpicore-september-yoy-2026-10-14-gt2pt6pct": {
+"event": "uscpicore-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 2.6%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T11:57:26.542874083Z",
+"lastPx": "0.0800",
+"traded": "4902.0800",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpicore-september-yoy-2026-10-14-gt2pt7pct": {
+"event": "uscpicore-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 2.7%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-08T12:10:26.593487160Z",
+"lastPx": "0.4900",
+"traded": "4250.3100",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpicore-september-yoy-2026-10-14-gt2pt8pct": {
+"event": "uscpicore-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 2.8%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T12:17:41.565466356Z",
+"lastPx": "0.0200",
+"traded": "1495.8900",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpicore-september-yoy-2026-10-14-gt2pt9pct": {
+"event": "uscpicore-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 2.9%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T02:28:49.270636952Z",
+"lastPx": "0.0100",
+"traded": "87.3700",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpicore-september-yoy-2026-10-14-gt3pt0pct": {
+"event": "uscpicore-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 3.0%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-09-27T21:32:36.763427891Z",
+"lastPx": "0.0100",
+"traded": "1770.1200",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpicore-september-yoy-2026-10-14-gt3pt1pct": {
+"event": "uscpicore-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 3.1%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-09-25T22:48:23.121950156Z",
+"lastPx": "0.0100",
+"traded": "56.4000",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpicore-september-yoy-2026-10-14-gt3pt2pct": {
+"event": "uscpicore-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 3.2%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T11:19:12.218806075Z",
+"lastPx": "0.0100",
+"traded": "7141.2300",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpicore-september-yoy-2026-10-14-gt3pt3pct": {
+"event": "uscpicore-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 3.3%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-09-25T21:25:16.631425139Z",
+"lastPx": "0.0200",
+"traded": "8180.6900",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpicore-september-yoy-2026-10-14-gt3pt4pct": {
+"event": "uscpicore-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 3.4%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-09T17:54:46.358649054Z",
+"lastPx": "0.0100",
+"traded": "22900.4900",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpicore-september-yoy-2026-10-14-gt3pt5pct": {
+"event": "uscpicore-september-yoy-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 3.5%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-01T19:41:45.445443700Z",
+"lastPx": "0.0100",
+"traded": "55519.7300",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpicore-september-mom-2026-10-14-gt0pt0pct": {
+"event": "uscpicore-september-mom-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 0.0%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T11:03:26.555718386Z",
+"lastPx": "0.9500",
+"traded": "19498.6400",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpicore-september-mom-2026-10-14-gt0pt1pct": {
+"event": "uscpicore-september-mom-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 0.1%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T08:43:41.635987712Z",
+"lastPx": "0.8200",
+"traded": "143850.0600",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpicore-september-mom-2026-10-14-gt0pt2pct": {
+"event": "uscpicore-september-mom-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 0.2%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T12:21:51.296416165Z",
+"lastPx": "0.4000",
+"traded": "17393.1900",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpicore-september-mom-2026-10-14-gt0pt3pct": {
+"event": "uscpicore-september-mom-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 0.3%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T06:46:56.915246842Z",
+"lastPx": "0.0700",
+"traded": "15275.5900",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpicore-september-mom-2026-10-14-gt0pt4pct": {
+"event": "uscpicore-september-mom-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 0.4%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-14T11:55:54.984542238Z",
+"lastPx": "0.1000",
+"traded": "4298.3200",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpicore-september-mom-2026-10-14-gt0pt5pct": {
+"event": "uscpicore-september-mom-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above 0.5%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-09-30T03:53:45.299518274Z",
+"lastPx": "0.0100",
+"traded": "8653.6900",
+"settle": "[\"0\",\"1\"]"
+},
+"cpic-uscpicore-september-mom-2026-10-14-gtn0pt1pct": {
+"event": "uscpicore-september-mom-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above -0.1%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-13T19:55:39.972860823Z",
+"lastPx": "0.9900",
+"traded": "1658.6300",
+"settle": "[\"1\",\"0\"]"
+},
+"cpic-uscpicore-september-mom-2026-10-14-gtn0pt2p": {
+"event": "uscpicore-september-mom-2026-10-14",
+"T": "2026-10-14T12:30",
+"title": "Above -0.2%",
+"state": "MARKET_STATE_CLOSED",
+"lastTrade": "2026-10-13T19:47:29.048501133Z",
+"lastPx": "0.9800",
+"traded": "4195.4300",
+"settle": "[\"1\",\"0\"]"
+},
+"csentc-umcsent-2026-09-25-gt46": {
+"event": "umcsent-2026-09-25",
+"T": "2026-09-25T14:00",
+"title": "Above 46",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-24T02:56:51.512561624Z",
+"lastPx": "0.8700",
+"traded": "241.1100",
+"settle": "[\"1\",\"0\"]"
+},
+"csentc-umcsent-2026-09-25-gt48": {
+"event": "umcsent-2026-09-25",
+"T": "2026-09-25T14:00",
+"title": "Above 48",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-26T05:04:10.449074698Z",
+"lastPx": "0.6900",
+"traded": "573.4100",
+"settle": "[\"1\",\"0\"]"
+},
+"csentc-umcsent-2026-09-25-gt50": {
+"event": "umcsent-2026-09-25",
+"T": "2026-09-25T14:00",
+"title": "Above 50",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-26T04:05:21.612409999Z",
+"lastPx": "0.1000",
+"traded": "334.3900",
+"settle": "[\"0\",\"1\"]"
+},
+"csentc-umcsent-2026-09-25-gt52": {
+"event": "umcsent-2026-09-25",
+"T": "2026-09-25T14:00",
+"title": "Above 52",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-25T23:28:50.772340927Z",
+"lastPx": "0.1300",
+"traded": "456.1800",
+"settle": "[\"0\",\"1\"]"
+},
+"csentc-umcsent-2026-09-25-gt54": {
+"event": "umcsent-2026-09-25",
+"T": "2026-09-25T14:00",
+"title": "Above 54",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-09-26T05:04:11.725448140Z",
+"lastPx": "0.0200",
+"traded": "419.8200",
+"settle": "[\"0\",\"1\"]"
+},
+"csentc-umcsent-2026-09-25-gt56": {
+"event": "umcsent-2026-09-25",
+"T": "2026-09-25T14:00",
+"title": "Above 56",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": null,
+"lastPx": null,
+"traded": "0.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-cbr-2026-10-23-cut25": {
+"event": "cbr-2026-10-23",
+"T": "2026-10-23T10:30",
+"title": "25 bps Decrease",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-10-23T11:20:46.197205921Z",
+"lastPx": "0.0800",
+"traded": "319.2100",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-cbr-2026-10-23-cut50": {
+"event": "cbr-2026-10-23",
+"T": "2026-10-23T10:30",
+"title": "50+ bps Decrease",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-10-23T11:20:46.197478155Z",
+"lastPx": "0.0100",
+"traded": "8.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-cbr-2026-10-23-hike25": {
+"event": "cbr-2026-10-23",
+"T": "2026-10-23T10:30",
+"title": "25 bps Increase",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-10-23T11:20:46.198344959Z",
+"lastPx": "0.0100",
+"traded": "8.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-cbr-2026-10-23-hike50": {
+"event": "cbr-2026-10-23",
+"T": "2026-10-23T10:30",
+"title": "50+ bps Increase",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-10-23T11:20:46.197534976Z",
+"lastPx": "0.0100",
+"traded": "8.0000",
+"settle": "[\"0\",\"1\"]"
+},
+"rdc-cbr-2026-10-23-nochng": {
+"event": "cbr-2026-10-23",
+"T": "2026-10-23T10:30",
+"title": "No Change",
+"state": "MARKET_STATE_EXPIRED",
+"lastTrade": "2026-10-23T11:20:46.168286185Z",
+"lastPx": "0.9600",
+"traded": "733.6100",
+"settle": "[\"1\",\"0\"]"
+}
+}

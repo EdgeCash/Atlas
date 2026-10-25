@@ -1,0 +1,18 @@
+BUCKET usfed-fomc-2026-10-28 sum asks 1.04 sum bids 0.98 n bids 2 [('No Change', (0.94, 8982.41)), ('25 bps Increase', (0.07, 5074.19)), ('25 bps Decrease', (0.01, 94731.09)), ('50+ bps Decrease', (0.01, 18973.82)), ('50+ bps Increase', (0.01, 115004.09))]
+BUCKET ecb-2026-10-29 sum asks 1.04 sum bids 0.99 n bids 2 [('No Change', (0.99, 308.79)), ('25 bps Increase', (0.02, 4370.46)), ('25 bps Decrease', (0.01, 5011.81)), ('50+ bps Decrease', (0.01, 1480.25)), ('50+ bps Increase', (0.01, 1654.67))]
+BUCKET boc-2026-10-28 sum asks 1.03 sum bids 0.98 n bids 2 [('25 bps Increase', (0.82, 5331.06)), ('No Change', (0.18, 18.2)), ('25 bps Decrease', (0.01, 2181.35)), ('50+ bps Decrease', (0.01, 7855.69)), ('50+ bps Increase', (0.01, 2597.28))]
+BUCKET boe-2026-11-05 sum asks 1.13 sum bids 0.97 n bids 2 [('25 bps Increase', (0.98, 92.0)), ('No Change', (0.06, 106.0)), ('50+ bps Decrease', (0.04, 100.0)), ('50+ bps Increase', (0.03, 77.0)), ('25 bps Decrease', (0.02, 147.0))]
+BUCKET bcb-2026-11-04 sum asks None sum bids 0.58 n bids 2 [('25 bps Decrease', (0.95, 250.0)), ('No Change', (0.49, 1.0)), ('50+ bps Increase', None), ('25 bps Increase', (0.8, 920.0)), ('50+ bps Decrease', None)]
+BUCKET usfed-fomc-2026-12-09 sum asks 1.05 sum bids 1.0 n bids 4 [('25 bps Increase', (0.74, 3925.81)), ('No Change', (0.24, 17417.31)), ('50+ bps Increase', (0.04, 1300.92)), ('25 bps Decrease', (0.02, 1439.13)), ('50+ bps Decrease', (0.01, 7285.7))]
+BUCKET boj-2026-10-30 sum asks 1.07 sum bids 0.97 n bids 2 [('No Change', (0.97, 18.0)), ('25 bps Increase', (0.04, 50.0)), ('25 bps Decrease', (0.02, 260.0)), ('50+ bps Decrease', (0.02, 260.0)), ('50+ bps Increase', (0.02, 50.0))]
+VIOL ('ustariff-fy2027', '$200B', (0.59, 0.01), '$250B', (0.64, 83.78), 0.01, 0.0, 0.05)
+VIOL ('uscpi-october-yoy-2026-11-10', 'Above 3.2%', (0.64, 0.01), 'Above 3.3%', (0.7, 0.01), 0.01, 0.0, 0.06)
+VIOL ('uscpi-october-yoy-2026-11-10', 'Above 3.2%', (0.64, 0.01), 'Above 3.5%', (0.87, 0.01), 0.01, 0.0, 0.23)
+VIOL ('uscpi-october-yoy-2026-11-10', 'Above 3.8%', (0.17, 0.01), 'Above 3.9%', (0.24, 0.6), 0.02, 0.0, 0.07)
+VIOL ('uscpi-october-yoy-2026-11-10', 'Above 4.1%', (0.09, 2.79), 'Above 4.3%', (0.14, 0.01), 0.02, 0.0, 0.05)
+VIOL ('uscpi-october-yoy-2026-11-10', 'Above 4.2%', (0.1, 5.59), 'Above 4.3%', (0.14, 0.01), 0.02, 0.0, 0.04)
+VIOL ('uscpicore-october-mom-2026-11-10', 'Above -0.2%', (0.88, 0.01), 'Above 0.0%', (0.94, 15.24), 0.02, 0.0, 0.06)
+VIOL ('uscpicore-october-mom-2026-11-10', 'Above -0.1%', (0.88, 0.01), 'Above 0.0%', (0.94, 15.24), 0.03, 0.0, 0.06)
+VIOL ('uscpicore-october-yoy-2026-11-10', 'Above 2.1%', (0.89, 0.01), 'Above 2.3%', (0.96, 4.73), 0.02, 0.0, 0.07)
+VIOL ('uscpicore-october-yoy-2026-11-10', 'Above 3.0%', (0.06, 0.01), 'Above 3.1%', (0.11, 0.01), 0.01, 0.0, 0.05)
+VIOL ('uscpicore-october-yoy-2026-11-10', 'Above 3.0%', (0.06, 0.01), 'Above 3.3%', (0.1, 0.01), 0.01, 0.0, 0.04)
