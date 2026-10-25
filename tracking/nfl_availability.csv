@@ -1356,8 +1356,18 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-25T19:38:02+00:00,2026-10-25T19:25Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-25T19:38:02+00:00,2026-10-25T19:25Z,11,Indianapolis Colts,IND,4682909,Justin Walley,CB,Questionable,QUESTIONABLE,Undisclosed,2026-10-25,Walley (undisclosed) is questionable to return to Sunday's game against the Vikings.
 2026-10-25T19:38:02+00:00,2026-10-25T19:25Z,16,Minnesota Vikings,MIN,3042519,Aaron Jones Sr.,RB,Questionable,QUESTIONABLE,Knee,2026-11-01,"Jones (undisclosed) exited Sunday's game against the Colts, Kevin Seifert of ESPN.com reports."
+2026-10-25T19:52:51+00:00,2026-10-25T19:26Z,5,Cleveland Browns,CLE,4695783,Myles Harden,CB,Questionable,QUESTIONABLE,Hamstring,2026-10-25,"Harden (hamstring) is questionable to return to Sunday's game against the Titans, Daniel Oyefusi of ESPN.com reports."
 2026-10-25T19:38:02+00:00,2026-10-25T19:27Z,34,Houston Texans,HOU,4429059,Woody Marks,RB,Questionable,QUESTIONABLE,Left Leg,2026-10-25,questionable
 2026-10-25T19:38:02+00:00,2026-10-25T19:27Z,14,Los Angeles Rams,LAR,4685522,Ty Simpson,QB,Out,INACTIVE,Coach's Decision,2026-11-01,"Simpson (coach's decision) is inactive but will serve as the Rams' emergency third quarterback against the Raiders on Sunday, Sarah Barshop of ESPN.com reports."
 2026-10-25T19:38:02+00:00,2026-10-25T19:28Z,27,Tampa Bay Buccaneers,TB,4371733,Kenny Gainwell,RB,Active,,,,"Gainwell (hip) reentered Sunday's game at Carolina, Greg Auman of Fox Sports reports."
 2026-10-25T19:38:02+00:00,2026-10-25T19:29Z,15,Miami Dolphins,MIA,4360488,JuJu Brents,CB,Active,,,,
+2026-10-25T19:52:51+00:00,2026-10-25T19:30Z,14,Los Angeles Rams,LAR,4426405,Trent McDuffie,CB,Out,INACTIVE,Groin,2026-11-01,"McDuffie (groin) is inactive for Sunday's game against the Raiders, Sarah Barshop of ESPN.com reports."
 2026-10-25T19:38:02+00:00,2026-10-25T19:31Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-25T19:52:51+00:00,2026-10-25T19:32Z,16,Minnesota Vikings,MIN,3042519,Aaron Jones Sr.,RB,Questionable,QUESTIONABLE,Knee,2026-11-01,Jones (knee) is questionable to return to Sunday's game against the Colts.
+2026-10-25T19:52:51+00:00,2026-10-25T19:33Z,29,Carolina Panthers,CAR,2973051,Taylor Moton,OT,Questionable,QUESTIONABLE,Left Ankle,2026-10-25,"Moton (ankle) has been ruled out for the remainder of Sunday's game against the Buccaneers, Scott Smith of the Buccaneers' official site reports."
+2026-10-25T19:52:51+00:00,2026-10-25T19:34Z,33,Baltimore Ravens,BAL,3915189,Roquan Smith,LB,Active,,,,
+2026-10-25T19:52:51+00:00,2026-10-25T19:36Z,5,Cleveland Browns,CLE,3131498,Tytus Howard,OT,Questionable,QUESTIONABLE,Head,2026-10-25,Howard is being evaluated for a possible concussion and is questionable to return to Sunday's game against the Titans.
+2026-10-25T19:52:51+00:00,2026-10-25T19:37Z,4,Cincinnati Bengals,CIN,4401811,Kyle Dugger,S,Questionable,QUESTIONABLE,Left Quadriceps,2026-11-01,Dugger (quadriceps) has been ruled out for the remainder of Sunday's game against the Ravens.
+2026-10-25T19:52:51+00:00,2026-10-25T19:49Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-25T19:52:51+00:00,2026-10-25T19:49Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-25T19:52:51+00:00,2026-10-25T19:49Z,34,Houston Texans,HOU,4429059,Woody Marks,RB,Active,,,,"Marks (leg) returned to Sunday's contest against the Giants, Aaron Wilson of KPRC 2 Houston reports."
