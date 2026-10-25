@@ -1093,3 +1093,33 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-25T15:22:57+00:00,2026-10-25T15:01Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-25T15:22:57+00:00,2026-10-25T15:01Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-25T15:22:57+00:00,2026-10-25T15:01Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-10-25,questionable
+2026-10-25T15:38:00+00:00,2026-10-25T15:19Z,18,New Orleans Saints,NO,5081999,CJ Donaldson,RB,Out,OUT,Shoulder,2026-11-08,"Donaldson (shoulder) has been ruled out for the rest of Sunday's game against the Steelers in Paris, Jeff Nowak of The Big 870 New Orleans reports."
+2026-10-25T15:38:00+00:00,2026-10-25T15:24Z,9,Green Bay Packers,GB,4047365,Josh Jacobs,RB,Active,,,,"Jacobs is expected to start in his season debut Sunday against the Lions, but the extent of his role is likely to be decided upon as the game unfolds, according"
+2026-10-25T15:38:00+00:00,2026-10-25T15:28Z,18,New Orleans Saints,NO,3931399,Justin Reid,S,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-08,Reid (concussion) has been ruled out for the remainder of Sunday's game against the Steelers in Paris.
+2026-10-25T15:38:00+00:00,2026-10-25T15:31Z,33,Baltimore Ravens,BAL,4243220,Andrew Vorhees,G,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T15:38:00+00:00,2026-10-25T15:31Z,33,Baltimore Ravens,BAL,3915837,Broderick Washington Jr.,DT,Out,INACTIVE,Ankle,2026-11-01,inactive
+2026-10-25T15:38:00+00:00,2026-10-25T15:31Z,33,Baltimore Ravens,BAL,5088338,Elijah Sarratt,WR,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T15:38:00+00:00,2026-10-25T15:31Z,33,Baltimore Ravens,BAL,3858276,Jaylinn Hawkins,S,Out,INACTIVE,Knee,2026-11-01,inactive
+2026-10-25T15:38:00+00:00,2026-10-25T15:31Z,34,Houston Texans,HOU,4432699,Blake Fisher,OT,Out,INACTIVE,Thumb,2026-11-01,inactive
+2026-10-25T15:38:00+00:00,2026-10-25T15:31Z,34,Houston Texans,HOU,4035538,David Montgomery,RB,Out,INACTIVE,Groin,2026-11-01,inactive
+2026-10-25T15:38:00+00:00,2026-10-25T15:31Z,34,Houston Texans,HOU,4880873,Febechi Nwaiwu,G,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:38:00+00:00,2026-10-25T15:31Z,34,Houston Texans,HOU,4241223,Jalen Pitre,S,Out,INACTIVE,Left Shoulder - AC Joint Sprain,2026-11-01,inactive
+2026-10-25T15:38:00+00:00,2026-10-25T15:31Z,34,Houston Texans,HOU,4695705,Marlin Klein,TE,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:38:00+00:00,2026-10-25T15:31Z,34,Houston Texans,HOU,4428656,Nate Thomas,OT,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:38:00+00:00,2026-10-25T15:31Z,34,Houston Texans,HOU,4243956,Reed Blankenship,S,Out,INACTIVE,Concussion Concussion,2026-11-01,inactive
+2026-10-25T15:38:00+00:00,2026-10-25T15:32Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-25T15:38:00+00:00,2026-10-25T15:32Z,5,Cleveland Browns,CLE,4569682,Audric Estime,RB,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:38:00+00:00,2026-10-25T15:32Z,5,Cleveland Browns,CLE,3915535,Denzel Ward,CB,Active,,,,
+2026-10-25T15:38:00+00:00,2026-10-25T15:32Z,5,Cleveland Browns,CLE,5150249,Justin Jefferson,LB,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:38:00+00:00,2026-10-25T15:32Z,5,Cleveland Browns,CLE,4600415,Mike Hall Jr.,DT,Out,INACTIVE,Ankle,2026-11-01,inactive
+2026-10-25T15:38:00+00:00,2026-10-25T15:32Z,5,Cleveland Browns,CLE,4242516,Noah Igbinoghene,CB,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:38:00+00:00,2026-10-25T15:32Z,5,Cleveland Browns,CLE,4816090,Parker Brailsford,C,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:38:00+00:00,2026-10-25T15:32Z,5,Cleveland Browns,CLE,3110565,Quincy Williams,LB,Active,,,,
+2026-10-25T15:38:00+00:00,2026-10-25T15:32Z,5,Cleveland Browns,CLE,4431325,Taylen Green,QB,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:38:00+00:00,2026-10-25T15:34Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-25T15:38:00+00:00,2026-10-25T15:34Z,19,New York Giants,NYG,4361266,Greg Newsome II,CB,Out,INACTIVE,Concussion Concussion,2026-11-08,inactive
+2026-10-25T15:38:00+00:00,2026-10-25T15:34Z,19,New York Giants,NYG,4243322,Jake Haener,QB,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:38:00+00:00,2026-10-25T15:34Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-10-25,questionable
+2026-10-25T15:38:00+00:00,2026-10-25T15:34Z,19,New York Giants,NYG,4039243,Josh Sills,G,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:38:00+00:00,2026-10-25T15:34Z,19,New York Giants,NYG,4686362,Marcus Mbow,OT,Out,INACTIVE,Knee,2026-10-25,inactive
+2026-10-25T15:38:00+00:00,2026-10-25T15:34Z,19,New York Giants,NYG,4691043,Nikko Reed,CB,Out,INACTIVE,Coach's Decision,,inactive
