@@ -1,6 +1,6 @@
 # Atlas Drift Monitoring
 
-*Generated 2026-10-25 04:53 UTC by `python -m atlas.live check`. Every alarm compares
+*Generated 2026-10-25 05:53 UTC by `python -m atlas.live check`. Every alarm compares
 the most recent week of the record against its own history.*
 
 ---
@@ -13,14 +13,14 @@ worse problem than the drift it was watching for.
 
 | Alarm | Severity | Observed | Threshold | Detail |
 |---|---|---|---|---|
-| signal volume | ok | -0.5000 | 0.5 | week 9: 50 signals against 100 the week before (-50%) |
+| signal volume | ok | -0.4200 | 0.5 | week 9: 58 signals against 100 the week before (-42%) |
 | silence | ok | 0.0000 | 7 | last signal 0.0 days ago (2026-10-25) |
 | single book | alarm | 1.0000 | 1 | 100% of signals from book 'DraftKings' (1 distinct) |
 | single market | ok | 0.5000 | 1 | 50% of signals from market 'margin' (2 distinct) |
-| model output (margin) | ok | n/a | 3 | 25 recent / 222 prior rows; too few to compare |
-| model output (total) | ok | n/a | 3 | 25 recent / 222 prior rows; too few to compare |
-| disagreement shape (margin) | ok | n/a | 0.01 | 25 recent / 222 prior rows; too few to compare |
-| disagreement shape (total) | ok | n/a | 0.01 | 25 recent / 222 prior rows; too few to compare |
+| model output (margin) | ok | n/a | 3 | 29 recent / 222 prior rows; too few to compare |
+| model output (total) | ok | n/a | 3 | 29 recent / 222 prior rows; too few to compare |
+| disagreement shape (margin) | ok | n/a | 0.01 | 29 recent / 222 prior rows; too few to compare |
+| disagreement shape (total) | ok | n/a | 0.01 | 29 recent / 222 prior rows; too few to compare |
 | primary rate | watch | -1.0000 | 0.5 | 0.0% of signals primary against 1.1% before (-100%) |
 | college state | ok | n/a | 36 | not due until Mon 16:00 UTC |
 
@@ -68,9 +68,9 @@ newest week never finds.
 | 2026-w06 | signals | 116 | 116 | 0 | 0 | yes | exact match |
 | 2026-w06 | grades | 116 | 116 | 0 | 0 | yes | exact match |
 | 2026-w06 | statistics | 16 | 16 | 0 | 0 | yes | recomputed from the replayed grades |
-| 2026-w08 | signals | 100 | 100 | 0 | 0 | yes | exact match |
-| 2026-w08 | grades | 100 | 100 | 0 | 0 | yes | exact match |
-| 2026-w08 | statistics | 12 | 12 | 0 | 0 | yes | recomputed from the replayed grades |
+| 2026-w09 | signals | 58 | 58 | 0 | 0 | yes | exact match |
+| 2026-w09 | grades | 0 | 0 | 0 | 0 | yes | no grades in this period |
+| 2026-w09 | statistics | 0 | 0 | 0 | 0 | yes | no graded signals in period |
 
 A **signals** mismatch means the record is not reproducible. A **grades**
 mismatch means the grading logic changed under a published number. A
