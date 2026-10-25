@@ -1165,6 +1165,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-25T15:53:01+00:00,2026-10-25T15:34Z,27,Tampa Bay Buccaneers,TB,4380507,Luke Goedeke,OT,Out,INACTIVE,Calf,2026-11-01,inactive
 2026-10-25T15:53:01+00:00,2026-10-25T15:35Z,33,Baltimore Ravens,BAL,5088338,Elijah Sarratt,WR,Out,INACTIVE,Coach's Decision,2026-11-01,Sarratt (coach's decision) is inactive for Sunday's game against the Bengals.
 2026-10-25T15:53:01+00:00,2026-10-25T15:36Z,27,Tampa Bay Buccaneers,TB,3052587,Baker Mayfield,QB,Active,,,,Mayfield (thumb) is active for Sunday's game against the Panthers.
+2026-10-25T16:07:59+00:00,2026-10-25T15:36Z,10,Tennessee Titans,TEN,4428557,Tyjae Spears,RB,Out,INACTIVE,Knee,2026-11-01,Spears (knee) is listed as inactive Sunday against the Browns.
 2026-10-25T15:53:01+00:00,2026-10-25T15:37Z,33,Baltimore Ravens,BAL,3915837,Broderick Washington Jr.,DT,Out,INACTIVE,Ankle,2026-11-01,Washington (ankle) is inactive for Sunday's game against the Bengals.
 2026-10-25T15:53:01+00:00,2026-10-25T15:37Z,29,Carolina Panthers,CAR,4428993,Haynes King,QB,Out,INACTIVE,Coach's Decision,,inactive
 2026-10-25T15:53:01+00:00,2026-10-25T15:37Z,29,Carolina Panthers,CAR,4431588,Ja'Tavion Sanders,TE,Out,INACTIVE,Coach's Decision,2026-10-29,inactive
@@ -1181,6 +1182,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-25T15:53:01+00:00,2026-10-25T15:38Z,11,Indianapolis Colts,IND,4682909,Justin Walley,CB,Active,,,,
 2026-10-25T15:53:01+00:00,2026-10-25T15:38Z,11,Indianapolis Colts,IND,4431459,Tyler Warren,TE,Out,INACTIVE,Groin,2026-11-01,inactive
 2026-10-25T15:53:01+00:00,2026-10-25T15:38Z,16,Minnesota Vikings,MIN,4573398,Max Brosmer,QB,Out,INACTIVE,Coach's Decision,2026-11-01,Brosmer (coach's decision) is listed as inactive but will serve as the Vikings' third quarterback for Sunday's games versus the Colts.
+2026-10-25T16:07:59+00:00,2026-10-25T15:38Z,10,Tennessee Titans,TEN,3925357,Calvin Ridley,WR,Out,INACTIVE,Hip,2026-11-01,Ridley (hip) is inactive for Sunday's game against the Browns.
 2026-10-25T15:53:01+00:00,2026-10-25T15:40Z,11,Indianapolis Colts,IND,4427250,Sauce Gardner,CB,Out,INACTIVE,Left Calf Strain,2026-11-01,Gardner (calf) is inactive for Sunday's game against the Vikings.
 2026-10-25T15:53:01+00:00,2026-10-25T15:40Z,19,New York Giants,NYG,4430261,Tyler Nubin,S,Active,,,,"Nubin (neck) is active Week 7 against the Texans, Dan Salomone of the Giants' official site reports."
 2026-10-25T15:53:01+00:00,2026-10-25T15:41Z,1,Atlanta Falcons,ATL,14012,Andy Dalton,QB,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
@@ -1192,9 +1194,12 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-25T15:53:01+00:00,2026-10-25T15:41Z,1,Atlanta Falcons,ATL,4595343,Kendal Daniels,LB,Active,,,,
 2026-10-25T15:53:01+00:00,2026-10-25T15:41Z,1,Atlanta Falcons,ATL,3045527,Samson Ebukam,DE,Active,,,,
 2026-10-25T15:53:01+00:00,2026-10-25T15:41Z,11,Indianapolis Colts,IND,4683423,Riley Leonard,QB,Out,INACTIVE,Coach's Decision,2026-11-01,Leonard (coach's decision) is inactive but will serve as the Colts' emergency third quarterback against the Vikings on Sunday.
+2026-10-25T16:07:59+00:00,2026-10-25T15:42Z,4,Cincinnati Bengals,CIN,4685562,Shemar Stewart,DE,Out,INACTIVE,Coach's Decision,2026-11-01,Stewart (coach's decision) is inactive for Sunday's game against the Ravens.
 2026-10-25T15:53:01+00:00,2026-10-25T15:42Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Active,,,,"Eluemunor (calf) is active Week 7 against the Texans, Dan Salomone of the Giants' official site reports."
 2026-10-25T15:53:01+00:00,2026-10-25T15:43Z,11,Indianapolis Colts,IND,5088571,Bryce Boettcher,LB,Out,INACTIVE,Groin,2026-11-01,Boettcher (groin) is inactive against the Vikings on Sunday.
+2026-10-25T16:07:59+00:00,2026-10-25T15:44Z,20,New York Jets,NYJ,4685247,Braelon Allen,RB,Active,,,,"Allen will remain the Jets' No. 1 back for Sunday's Week 7 matchup against the Dolphins, as Breece Hall has been declared inactive for the contest."
 2026-10-25T15:53:01+00:00,2026-10-25T15:45Z,19,New York Giants,NYG,4243322,Jake Haener,QB,Out,INACTIVE,Coach's Decision,2026-11-08,"Haener is inactive Week 7 against the Texans but is listed as the Giants' emergency quarterback, Dan Salomone of the Giants' official site reports."
+2026-10-25T16:07:59+00:00,2026-10-25T15:45Z,20,New York Jets,NYJ,4035537,Kene Nwangwu,RB,Out,INACTIVE,Knee,2026-11-01,Nwangwu (knee) is inactive against the Dolphins on Sunday.
 2026-10-25T15:53:01+00:00,2026-10-25T15:45Z,25,San Francisco 49ers,SF,3126486,Deebo Samuel Sr.,WR,Out,INACTIVE,Right Hamstring,2026-11-08,inactive
 2026-10-25T15:53:01+00:00,2026-10-25T15:45Z,25,San Francisco 49ers,SF,4241807,Garret Wallow,LB,Out,INACTIVE,Hamstring Strain,2026-11-08,inactive
 2026-10-25T15:53:01+00:00,2026-10-25T15:45Z,25,San Francisco 49ers,SF,4430431,Kurtis Rourke,QB,Out,INACTIVE,Coach's Decision,2026-11-08,inactive
@@ -1204,6 +1209,18 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-25T15:53:01+00:00,2026-10-25T15:45Z,25,San Francisco 49ers,SF,4040605,Nick Bosa,DE,Out,INACTIVE,Left Knee Strain,2026-11-08,inactive
 2026-10-25T15:53:01+00:00,2026-10-25T15:46Z,25,San Francisco 49ers,SF,3057524,Siran Neal,S,Active,,,,
 2026-10-25T15:53:01+00:00,2026-10-25T15:46Z,25,San Francisco 49ers,SF,4565200,Upton Stout,CB,Active,,,,
+2026-10-25T16:07:59+00:00,2026-10-25T15:46Z,10,Tennessee Titans,TEN,4685617,Kevin Winston Jr.,S,Active,,,,Winston (quadriceps) is active for Sunday's game against the Browns.
 2026-10-25T15:53:01+00:00,2026-10-25T15:47Z,29,Carolina Panthers,CAR,4239934,AJ Dillon,RB,Out,INACTIVE,Coach's Decision,2026-10-29,"Dillon (coach's decision) is inactive for Sunday's game against the Buccaneers, Darin Gantt of the team's official site reports."
+2026-10-25T16:07:59+00:00,2026-10-25T15:47Z,10,Tennessee Titans,TEN,4240532,Tony Adams,S,Active,,,,Adams (ankle) is active for Sunday's game against the Browns.
 2026-10-25T15:53:01+00:00,2026-10-25T15:48Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-25T15:53:01+00:00,2026-10-25T15:48Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-25T16:07:59+00:00,2026-10-25T15:48Z,5,Cleveland Browns,CLE,3915535,Denzel Ward,CB,Active,,,,Ward (hand) is active for Sunday's game against the Titans.
+2026-10-25T16:07:59+00:00,2026-10-25T15:50Z,5,Cleveland Browns,CLE,3110565,Quincy Williams,LB,Active,,,,Williams (neck) is active for Sunday's game against Tennessee.
+2026-10-25T16:07:59+00:00,2026-10-25T15:52Z,1,Atlanta Falcons,ATL,3917914,Olamide Zaccheaus,WR,Out,INACTIVE,Shoulder,2026-11-01,"Zaccheaus (shoulder) is inactive for Sunday's game against the 49ers, Tori McElhaney of the Falcons' official site reports."
+2026-10-25T16:07:59+00:00,2026-10-25T15:52Z,5,Cleveland Browns,CLE,4569682,Audric Estime,RB,Out,INACTIVE,Coach's Decision,2026-11-01,Estime (coach's decision) is inactive for Sunday's game against the Titans.
+2026-10-25T16:07:59+00:00,2026-10-25T15:52Z,15,Miami Dolphins,MIA,4259804,Willie Gay Jr.,LB,Out,INACTIVE,Illness,2026-11-01,Gay (illness) is inactive for Sunday's game against the Jets.
+2026-10-25T16:07:59+00:00,2026-10-25T15:54Z,1,Atlanta Falcons,ATL,14012,Andy Dalton,QB,Out,INACTIVE,Coach's Decision,2026-11-01,"Dalton (coach's decision) is inactive for Sunday's game against the 49ers, Tori McElhaney of the Falcons' official site reports."
+2026-10-25T16:07:59+00:00,2026-10-25T15:55Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-25T16:07:59+00:00,2026-10-25T15:56Z,1,Atlanta Falcons,ATL,5344782,Jack Strand,QB,Out,INACTIVE,Coach's Decision,2026-11-01,"Strand (coach's decision) is inactive as the emergency third quarterback for Sunday's game against the 49ers, Tori McElhaney of the Falcons' official site repor"
+2026-10-25T16:07:59+00:00,2026-10-25T15:58Z,10,Tennessee Titans,TEN,4685555,Nicholas Singleton,RB,Out,INACTIVE,Coach's Decision,2026-11-01,Singleton (coach's decision) is inactive for Sunday's game against the Browns.
+2026-10-25T16:07:59+00:00,2026-10-25T16:00Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
