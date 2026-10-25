@@ -1097,6 +1097,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-25T15:22:57+00:00,2026-10-25T15:01Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-25T15:22:57+00:00,2026-10-25T15:01Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-10-25,questionable
 2026-10-25T15:38:00+00:00,2026-10-25T15:19Z,18,New Orleans Saints,NO,5081999,CJ Donaldson,RB,Out,OUT,Shoulder,2026-11-08,"Donaldson (shoulder) has been ruled out for the rest of Sunday's game against the Steelers in Paris, Jeff Nowak of The Big 870 New Orleans reports."
+2026-10-25T16:52:44+00:00,2026-10-25T15:19Z,18,New Orleans Saints,NO,5081999,CJ Donaldson,RB,Questionable,QUESTIONABLE,Shoulder,2026-11-08,"Donaldson (shoulder) has been ruled out for the rest of Sunday's game against the Steelers in Paris, Jeff Nowak of The Big 870 New Orleans reports."
 2026-10-25T15:38:00+00:00,2026-10-25T15:24Z,9,Green Bay Packers,GB,4047365,Josh Jacobs,RB,Active,,,,"Jacobs is expected to start in his season debut Sunday against the Lions, but the extent of his role is likely to be decided upon as the game unfolds, according"
 2026-10-25T15:38:00+00:00,2026-10-25T15:28Z,18,New Orleans Saints,NO,3931399,Justin Reid,S,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-08,Reid (concussion) has been ruled out for the remainder of Sunday's game against the Steelers in Paris.
 2026-10-25T15:38:00+00:00,2026-10-25T15:31Z,33,Baltimore Ravens,BAL,4243220,Andrew Vorhees,G,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
@@ -1240,3 +1241,5 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-25T16:22:56+00:00,2026-10-25T16:12Z,15,Miami Dolphins,MIA,4259558,Robert Beal Jr.,DE,Out,INACTIVE,Hamstring,2026-11-01,Beal (hamstring) is inactive for Sunday's game against the Jets.
 2026-10-25T16:37:53+00:00,2026-10-25T16:13Z,5,Cleveland Browns,CLE,4431325,Taylen Green,QB,Out,INACTIVE,Coach's Decision,2026-11-01,"Green (coach's decision) is inactive but will serve as the emergency third quarterback Sunday against the Titans, Kelsey Russo of the Browns' official site repo"
 2026-10-25T16:37:53+00:00,2026-10-25T16:16Z,29,Carolina Panthers,CAR,4870694,Monroe Freeling,OT,Active,,,,"Freeling (knee) is listed as active for Sunday's game against Tampa Bay, Darin Gantt of the Panthers' official site reports."
+2026-10-25T16:52:44+00:00,2026-10-25T16:43Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-25T16:52:44+00:00,2026-10-25T16:43Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
