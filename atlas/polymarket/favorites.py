@@ -97,10 +97,11 @@ def ident(value) -> str | None:
     return whole.group(1) if whole else text
 
 
-def clean(record: pd.DataFrame | None) -> pd.DataFrame:
+def clean(record: pd.DataFrame | None, *, quiet: bool = False) -> pd.DataFrame:
     """The record as positions and nothing else: a line that is not one (what a failed merge leaves) dropped,
     the ids as text, and one row per position (contract and threshold) - the first taken, carrying the grade
-    of whichever copy was graded. Every reader of the record goes through here."""
+    of whichever copy was graded. Every reader of the record goes through here. ``quiet`` when the input is
+    several copies laid together (:func:`merge`), where a position held twice is the point, not a fault."""
     if record is None or record.empty:
         return pd.DataFrame(columns=COLUMNS)
     r = record.reindex(columns=COLUMNS).copy()
@@ -114,7 +115,8 @@ def clean(record: pd.DataFrame | None) -> pd.DataFrame:
     r = r[keep].assign(threshold=threshold[keep].round(2), _t=when[keep]).sort_values("_t", kind="stable")
     key = ["token_id", "threshold"]
     if r.duplicated(key).any():
-        LOG.warning("favorites: %d positions held twice; one kept", int(r.duplicated(key).sum()))
+        if not quiet:
+            LOG.warning("favorites: %d positions held twice; one kept", int(r.duplicated(key).sum()))
         first = r.drop_duplicates(key, keep="first").set_index(key)
         graded = r[pd.to_numeric(r["won"], errors="coerce").notna()].drop_duplicates(key, keep="first").set_index(key)
         for c in GRADED:
@@ -127,7 +129,8 @@ def clean(record: pd.DataFrame | None) -> pd.DataFrame:
 def merge(*records: pd.DataFrame) -> pd.DataFrame:
     """Several copies of the record as one: every position any of them holds, once (:func:`clean`)."""
     parts = [r for r in records if r is not None and len(r)]
-    return clean(pd.concat([r.reindex(columns=COLUMNS) for r in parts], ignore_index=True) if parts else None)
+    return clean(pd.concat([r.reindex(columns=COLUMNS) for r in parts], ignore_index=True) if parts else None,
+                 quiet=True)
 
 
 def phase() -> str:

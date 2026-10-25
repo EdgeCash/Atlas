@@ -234,3 +234,15 @@ def test_the_worker_and_a_run_writing_the_record_at_once_leave_it_whole(tmp_path
     subprocess.run(["git", "pull", "-q", "origin", "main"], cwd=runs, check=True, capture_output=True)
     assert "<<<<<<<" not in (runs / "tracking" / "favorites.csv").read_text()
     assert set(_record(runs)["token_id"].astype(str)) == {"100", "200", "300", "400"}
+
+
+def test_merging_two_copies_does_not_cry_duplicate_but_a_single_copy_holding_one_twice_does(caplog):
+    import logging
+
+    rows = pd.DataFrame([_position("100"), _position("200")])
+    with caplog.at_level(logging.WARNING, logger="atlas.polymarket.favorites"):
+        merged = favorites.merge(rows, rows)
+    assert len(merged) == 2 and "held twice" not in caplog.text
+    with caplog.at_level(logging.WARNING, logger="atlas.polymarket.favorites"):
+        favorites.clean(pd.concat([rows, rows.iloc[:1]], ignore_index=True))
+    assert "1 positions held twice" in caplog.text

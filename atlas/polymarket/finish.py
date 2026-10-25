@@ -98,9 +98,9 @@ def decided(ask, bid) -> bool:
     return math.isfinite(a) and math.isfinite(b) and a <= DECIDED_ASK + 1e-9 and b >= DECIDED_BID - 1e-9
 
 
-def clean(record: pd.DataFrame | None) -> pd.DataFrame:
+def clean(record: pd.DataFrame | None, *, quiet: bool = False) -> pd.DataFrame:
     """The record as positions: lines that are not one dropped, ids as text, one row per contract - the
-    first taken, with whichever copy's grade."""
+    first taken, with whichever copy's grade. ``quiet`` when the input is several copies laid together."""
     if record is None or record.empty:
         return pd.DataFrame(columns=COLUMNS)
     r = record.reindex(columns=COLUMNS).copy()
@@ -110,6 +110,8 @@ def clean(record: pd.DataFrame | None) -> pd.DataFrame:
     keep = when.notna() & r["token_id"].notna()
     r = r[keep].assign(_t=when[keep]).sort_values("_t", kind="stable")
     if r.duplicated("token_id").any():
+        if not quiet:
+            LOG.warning("finish: %d positions held twice; one kept", int(r.duplicated("token_id").sum()))
         first = r.drop_duplicates("token_id", keep="first").set_index("token_id")
         graded = r[pd.to_numeric(r["payout"], errors="coerce").notna()].drop_duplicates("token_id").set_index("token_id")
         for c in GRADED:
@@ -122,7 +124,7 @@ def clean(record: pd.DataFrame | None) -> pd.DataFrame:
 def merge(*records: pd.DataFrame) -> pd.DataFrame:
     """Several copies of the record as one: every position any of them holds, once."""
     parts = [r.reindex(columns=COLUMNS) for r in records if r is not None and len(r)]
-    return clean(pd.concat(parts, ignore_index=True) if parts else None)
+    return clean(pd.concat(parts, ignore_index=True) if parts else None, quiet=True)
 
 
 def take(record: pd.DataFrame, quotes: pd.DataFrame, events: dict[str, list[dict]], now: datetime,
