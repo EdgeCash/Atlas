@@ -984,6 +984,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-24T23:52:59+00:00,2026-10-24T23:41Z,14,Los Angeles Rams,LAR,2510863,Eric Kendricks,LB,Active,,,,The Rams elevated Kendricks from the practice squad to the active roster Saturday.
 2026-10-25T00:08:02+00:00,2026-10-24T23:44Z,1,Atlanta Falcons,ATL,5209093,Michael Jerrell,OT,Injured Reserve,IR,Biceps,2026-11-29,"The Falcons placed Jerrell (biceps) on injured reserve Saturday, Tori McElhaney of the team's official site reports."
 2026-10-25T00:08:02+00:00,2026-10-24T23:46Z,1,Atlanta Falcons,ATL,4870988,Avieon Terrell,CB,Questionable,QUESTIONABLE,Back,2026-10-25,"Terrell (back) is now recovering from an illness ahead of Sunday's game against the 49ers, Tori McElhaney of the Falcons' official site reports."
+2026-10-25T15:53:01+00:00,2026-10-24T23:46Z,1,Atlanta Falcons,ATL,4870988,Avieon Terrell,CB,Out,INACTIVE,Back,2026-11-01,"Terrell (back) is now recovering from an illness ahead of Sunday's game against the 49ers, Tori McElhaney of the Falcons' official site reports."
 2026-10-25T00:08:02+00:00,2026-10-24T23:53Z,29,Carolina Panthers,CAR,4714157,Thomas Incoom,LB,Injured Reserve,IR,Calf,2026-11-22,"The Panthers placed Incoom (calf) on injured reserve Saturday, Darin Gantt of the team's official site reports."
 2026-10-25T00:23:09+00:00,2026-10-24T23:55Z,29,Carolina Panthers,CAR,4880613,Bam Martin-Scott,LB,Active,,,,"The Panthers activated Martin-Scott (hamstring) from injured reserve Saturday, and he no longer carries an injury designation into Sunday's game against the Buc"
 2026-10-25T00:23:09+00:00,2026-10-25T00:01Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
@@ -1080,7 +1081,9 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-25T13:52:49+00:00,2026-10-25T13:45Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-10-25,questionable
 2026-10-25T13:52:49+00:00,2026-10-25T13:49Z,13,Las Vegas Raiders,LV,5155825,Carter Runyon,TE,Injured Reserve,IR-R,Foot,2026-11-01,The Raiders have ruled out Runyon (foot) for Sunday's game against the Rams.
 2026-10-25T14:23:06+00:00,2026-10-25T14:02Z,1,Atlanta Falcons,ATL,3043168,Za'Darius Smith,DE,Questionable,QUESTIONABLE,Neck,2026-10-25,"Smith (neck) is questionable but expected to play against the 49ers on Sunday, Ian Rapoport of NFL Network reports."
+2026-10-25T15:53:01+00:00,2026-10-25T14:02Z,1,Atlanta Falcons,ATL,3043168,Za'Darius Smith,DE,Active,,,,"Smith (neck) is questionable but expected to play against the 49ers on Sunday, Ian Rapoport of NFL Network reports."
 2026-10-25T14:23:06+00:00,2026-10-25T14:04Z,1,Atlanta Falcons,ATL,4429014,Gervon Dexter Sr.,DT,Questionable,QUESTIONABLE,Hamstring,2026-10-25,"Dexter (hamstring) is listed as questionable for Sunday's game against the 49ers but is expected to be cleared to play, Ian Rapoport of NFL Network reports."
+2026-10-25T15:53:01+00:00,2026-10-25T14:04Z,1,Atlanta Falcons,ATL,4429014,Gervon Dexter Sr.,DT,Active,,,,"Dexter (hamstring) is listed as questionable for Sunday's game against the 49ers but is expected to be cleared to play, Ian Rapoport of NFL Network reports."
 2026-10-25T14:23:06+00:00,2026-10-25T14:06Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-25T14:23:06+00:00,2026-10-25T14:06Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-25T14:23:06+00:00,2026-10-25T14:06Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-10-25,questionable
@@ -1116,10 +1119,91 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-25T15:38:00+00:00,2026-10-25T15:32Z,5,Cleveland Browns,CLE,4816090,Parker Brailsford,C,Out,INACTIVE,Coach's Decision,,inactive
 2026-10-25T15:38:00+00:00,2026-10-25T15:32Z,5,Cleveland Browns,CLE,3110565,Quincy Williams,LB,Active,,,,
 2026-10-25T15:38:00+00:00,2026-10-25T15:32Z,5,Cleveland Browns,CLE,4431325,Taylen Green,QB,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:32Z,10,Tennessee Titans,TEN,4426987,Brandon Crenshaw-Dickson,OT,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:32Z,10,Tennessee Titans,TEN,3925357,Calvin Ridley,WR,Out,INACTIVE,Hip,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:32Z,10,Tennessee Titans,TEN,5081785,Jackie Marshall,DT,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:32Z,10,Tennessee Titans,TEN,4685145,Jaylon Jones,CB,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:32Z,10,Tennessee Titans,TEN,4685617,Kevin Winston Jr.,S,Active,,,,
+2026-10-25T15:53:01+00:00,2026-10-25T15:32Z,10,Tennessee Titans,TEN,4039160,Kylen Granson,TE,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:32Z,10,Tennessee Titans,TEN,4685555,Nicholas Singleton,RB,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:32Z,10,Tennessee Titans,TEN,4240532,Tony Adams,S,Active,,,,
+2026-10-25T15:53:01+00:00,2026-10-25T15:32Z,10,Tennessee Titans,TEN,4428557,Tyjae Spears,RB,Out,INACTIVE,Knee,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:33Z,20,New York Jets,NYJ,4243375,Dylan Parham,G,Out,INACTIVE,Knee,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:33Z,20,New York Jets,NYJ,4039485,Jack Heflin,DT,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:33Z,20,New York Jets,NYJ,4426817,Jarvis Brownlee Jr.,CB,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:33Z,20,New York Jets,NYJ,4362094,Joseph Ossai,DE,Out,INACTIVE,Ankle,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:33Z,20,New York Jets,NYJ,4035537,Kene Nwangwu,RB,Out,INACTIVE,Knee,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:33Z,20,New York Jets,NYJ,4373656,Max Mitchell,OT,Out,INACTIVE,Concussion Concussion,2026-11-01,inactive
 2026-10-25T15:38:00+00:00,2026-10-25T15:34Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-25T15:53:01+00:00,2026-10-25T15:34Z,4,Cincinnati Bengals,CIN,4870866,Connor Lew,C,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:34Z,4,Cincinnati Bengals,CIN,5081542,Landon Robinson,DT,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:34Z,4,Cincinnati Bengals,CIN,4429000,Myles Hinton,OT,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:34Z,4,Cincinnati Bengals,CIN,4240071,Russ Yeast,S,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:34Z,4,Cincinnati Bengals,CIN,4685562,Shemar Stewart,DE,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:34Z,15,Miami Dolphins,MIA,5144457,Chukwuebuka Godrick,OT,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:34Z,15,Miami Dolphins,MIA,5081977,DJ Campbell,G,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:34Z,15,Miami Dolphins,MIA,4249417,Jalen Tolbert,WR,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:34Z,15,Miami Dolphins,MIA,4875079,Marcellas Dial Jr.,CB,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:34Z,15,Miami Dolphins,MIA,4371946,Reese Taylor,CB,Out,INACTIVE,Quadriceps,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:34Z,15,Miami Dolphins,MIA,4259558,Robert Beal Jr.,DE,Out,INACTIVE,Hamstring,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:34Z,15,Miami Dolphins,MIA,4259804,Willie Gay Jr.,LB,Out,INACTIVE,Illness,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:34Z,16,Minnesota Vikings,MIN,4592836,Caleb Tiernan,OT,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:34Z,16,Minnesota Vikings,MIN,5091793,Charles Demmings,CB,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:34Z,16,Minnesota Vikings,MIN,4696782,Elijah Williams,DE,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:34Z,16,Minnesota Vikings,MIN,4710865,Jakobe Thomas,S,Out,INACTIVE,Coach's Decision,,inactive
 2026-10-25T15:38:00+00:00,2026-10-25T15:34Z,19,New York Giants,NYG,4361266,Greg Newsome II,CB,Out,INACTIVE,Concussion Concussion,2026-11-08,inactive
 2026-10-25T15:38:00+00:00,2026-10-25T15:34Z,19,New York Giants,NYG,4243322,Jake Haener,QB,Out,INACTIVE,Coach's Decision,,inactive
 2026-10-25T15:38:00+00:00,2026-10-25T15:34Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-10-25,questionable
 2026-10-25T15:38:00+00:00,2026-10-25T15:34Z,19,New York Giants,NYG,4039243,Josh Sills,G,Out,INACTIVE,Coach's Decision,,inactive
 2026-10-25T15:38:00+00:00,2026-10-25T15:34Z,19,New York Giants,NYG,4686362,Marcus Mbow,OT,Out,INACTIVE,Knee,2026-10-25,inactive
 2026-10-25T15:38:00+00:00,2026-10-25T15:34Z,19,New York Giants,NYG,4691043,Nikko Reed,CB,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:34Z,27,Tampa Bay Buccaneers,TB,4034790,Antoine Winfield Jr.,S,Out,INACTIVE,Ribs Fracture,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:34Z,27,Tampa Bay Buccaneers,TB,4890885,Ayden Garnes,CB,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:34Z,27,Tampa Bay Buccaneers,TB,4685549,Billy Schrauth,G,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:34Z,27,Tampa Bay Buccaneers,TB,4429007,DeMonte Capehart,DT,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:34Z,27,Tampa Bay Buccaneers,TB,4567750,Emeka Egbuka,WR,Out,INACTIVE,Concussion Concussion,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:34Z,27,Tampa Bay Buccaneers,TB,4380507,Luke Goedeke,OT,Out,INACTIVE,Calf,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:35Z,33,Baltimore Ravens,BAL,5088338,Elijah Sarratt,WR,Out,INACTIVE,Coach's Decision,2026-11-01,Sarratt (coach's decision) is inactive for Sunday's game against the Bengals.
+2026-10-25T15:53:01+00:00,2026-10-25T15:36Z,27,Tampa Bay Buccaneers,TB,3052587,Baker Mayfield,QB,Active,,,,Mayfield (thumb) is active for Sunday's game against the Panthers.
+2026-10-25T15:53:01+00:00,2026-10-25T15:37Z,33,Baltimore Ravens,BAL,3915837,Broderick Washington Jr.,DT,Out,INACTIVE,Ankle,2026-11-01,Washington (ankle) is inactive for Sunday's game against the Bengals.
+2026-10-25T15:53:01+00:00,2026-10-25T15:37Z,29,Carolina Panthers,CAR,4428993,Haynes King,QB,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:37Z,29,Carolina Panthers,CAR,4431588,Ja'Tavion Sanders,TE,Out,INACTIVE,Coach's Decision,2026-10-29,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:37Z,29,Carolina Panthers,CAR,4242975,Jaelan Phillips,LB,Out,INACTIVE,Hamstring,2026-10-29,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:37Z,29,Carolina Panthers,CAR,4874515,Sam Hecht,C,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:37Z,29,Carolina Panthers,CAR,4034962,Stone Forsythe,OT,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:37Z,29,Carolina Panthers,CAR,4431077,TeRah Edwards,DT,Out,INACTIVE,Coach's Decision,2026-10-29,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:37Z,16,Minnesota Vikings,MIN,4832846,Demond Claiborne,RB,Out,INACTIVE,Coach's Decision,2026-11-01,Claiborne (coach's decision) is inactive for Sunday's game against the Colts.
+2026-10-25T15:53:01+00:00,2026-10-25T15:37Z,19,New York Giants,NYG,4242547,Paulson Adebo,CB,Active,,,,"Adebo (knee) is active Week 7 against the Texans, Dan Salomone of the Giants' official site reports."
+2026-10-25T15:53:01+00:00,2026-10-25T15:37Z,20,New York Jets,NYJ,4427366,Breece Hall,RB,Out,INACTIVE,Right Quadriceps,2026-11-01,Hall (quadriceps) is inactive for Sunday's Week 7 matchup against the Dolphins.
+2026-10-25T15:53:01+00:00,2026-10-25T15:38Z,29,Carolina Panthers,CAR,4870694,Monroe Freeling,OT,Active,,,,
+2026-10-25T15:53:01+00:00,2026-10-25T15:38Z,11,Indianapolis Colts,IND,4429684,Anthony Gould,WR,Out,INACTIVE,Concussion Concussion,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:38Z,11,Indianapolis Colts,IND,4370363,Dalton Tucker,G,Out,INACTIVE,Coach's Decision,,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:38Z,11,Indianapolis Colts,IND,4682909,Justin Walley,CB,Active,,,,
+2026-10-25T15:53:01+00:00,2026-10-25T15:38Z,11,Indianapolis Colts,IND,4431459,Tyler Warren,TE,Out,INACTIVE,Groin,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:38Z,16,Minnesota Vikings,MIN,4573398,Max Brosmer,QB,Out,INACTIVE,Coach's Decision,2026-11-01,Brosmer (coach's decision) is listed as inactive but will serve as the Vikings' third quarterback for Sunday's games versus the Colts.
+2026-10-25T15:53:01+00:00,2026-10-25T15:40Z,11,Indianapolis Colts,IND,4427250,Sauce Gardner,CB,Out,INACTIVE,Left Calf Strain,2026-11-01,Gardner (calf) is inactive for Sunday's game against the Vikings.
+2026-10-25T15:53:01+00:00,2026-10-25T15:40Z,19,New York Giants,NYG,4430261,Tyler Nubin,S,Active,,,,"Nubin (neck) is active Week 7 against the Texans, Dan Salomone of the Giants' official site reports."
+2026-10-25T15:53:01+00:00,2026-10-25T15:41Z,1,Atlanta Falcons,ATL,14012,Andy Dalton,QB,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:41Z,1,Atlanta Falcons,ATL,4431194,Billy Bowman Jr.,CB,Out,INACTIVE,Hamstring,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:41Z,1,Atlanta Falcons,ATL,4241474,Brian Robinson Jr.,RB,Out,INACTIVE,Hamstring,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:41Z,1,Atlanta Falcons,ATL,4240596,C.J. Henderson,CB,Active,,,,
+2026-10-25T15:53:01+00:00,2026-10-25T15:41Z,1,Atlanta Falcons,ATL,4037626,Divine Deablo,LB,Out,INACTIVE,Forearm,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:41Z,1,Atlanta Falcons,ATL,5344782,Jack Strand,QB,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:41Z,1,Atlanta Falcons,ATL,4595343,Kendal Daniels,LB,Active,,,,
+2026-10-25T15:53:01+00:00,2026-10-25T15:41Z,1,Atlanta Falcons,ATL,3045527,Samson Ebukam,DE,Active,,,,
+2026-10-25T15:53:01+00:00,2026-10-25T15:41Z,11,Indianapolis Colts,IND,4683423,Riley Leonard,QB,Out,INACTIVE,Coach's Decision,2026-11-01,Leonard (coach's decision) is inactive but will serve as the Colts' emergency third quarterback against the Vikings on Sunday.
+2026-10-25T15:53:01+00:00,2026-10-25T15:42Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Active,,,,"Eluemunor (calf) is active Week 7 against the Texans, Dan Salomone of the Giants' official site reports."
+2026-10-25T15:53:01+00:00,2026-10-25T15:43Z,11,Indianapolis Colts,IND,5088571,Bryce Boettcher,LB,Out,INACTIVE,Groin,2026-11-01,Boettcher (groin) is inactive against the Vikings on Sunday.
+2026-10-25T15:53:01+00:00,2026-10-25T15:45Z,19,New York Giants,NYG,4243322,Jake Haener,QB,Out,INACTIVE,Coach's Decision,2026-11-08,"Haener is inactive Week 7 against the Texans but is listed as the Giants' emergency quarterback, Dan Salomone of the Giants' official site reports."
+2026-10-25T15:53:01+00:00,2026-10-25T15:45Z,25,San Francisco 49ers,SF,3126486,Deebo Samuel Sr.,WR,Out,INACTIVE,Right Hamstring,2026-11-08,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:45Z,25,San Francisco 49ers,SF,4241807,Garret Wallow,LB,Out,INACTIVE,Hamstring Strain,2026-11-08,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:45Z,25,San Francisco 49ers,SF,4430431,Kurtis Rourke,QB,Out,INACTIVE,Coach's Decision,2026-11-08,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:45Z,25,San Francisco 49ers,SF,3116097,Luke Gifford,LB,Out,INACTIVE,Groin,2026-11-08,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:45Z,25,San Francisco 49ers,SF,4693337,Marques Sigle,S,Out,INACTIVE,Ankle,2026-11-08,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:45Z,25,San Francisco 49ers,SF,16737,Mike Evans,WR,Out,INACTIVE,Right Achilles Tendinitis,2026-11-08,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:45Z,25,San Francisco 49ers,SF,4040605,Nick Bosa,DE,Out,INACTIVE,Left Knee Strain,2026-11-08,inactive
+2026-10-25T15:53:01+00:00,2026-10-25T15:46Z,25,San Francisco 49ers,SF,3057524,Siran Neal,S,Active,,,,
+2026-10-25T15:53:01+00:00,2026-10-25T15:46Z,25,San Francisco 49ers,SF,4565200,Upton Stout,CB,Active,,,,
+2026-10-25T15:53:01+00:00,2026-10-25T15:47Z,29,Carolina Panthers,CAR,4239934,AJ Dillon,RB,Out,INACTIVE,Coach's Decision,2026-10-29,"Dillon (coach's decision) is inactive for Sunday's game against the Buccaneers, Darin Gantt of the team's official site reports."
+2026-10-25T15:53:01+00:00,2026-10-25T15:48Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-25T15:53:01+00:00,2026-10-25T15:48Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
