@@ -1344,6 +1344,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-25T19:22:52+00:00,2026-10-25T19:05Z,14,Los Angeles Rams,LAR,4685522,Ty Simpson,QB,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
 2026-10-25T19:22:52+00:00,2026-10-25T19:06Z,9,Green Bay Packers,GB,4258206,Benjamin St-Juste,CB,Out,INACTIVE,Hamstring,2026-10-25,St-Juste (hamstring) is inactive for Sunday's game against the Lions.
 2026-10-25T19:38:02+00:00,2026-10-25T19:10Z,9,Green Bay Packers,GB,4819231,Kaleb Johnson,RB,Out,INACTIVE,Coach's Decision,2026-10-29,Johnson (coach's decision) is inactive for Sunday's game against the Lions.
+2026-10-26T19:08:14+00:00,2026-10-25T19:10Z,9,Green Bay Packers,GB,4819231,Kaleb Johnson,RB,Active,,,,Johnson (coach's decision) is inactive for Sunday's game against the Lions.
 2026-10-25T19:22:52+00:00,2026-10-25T19:11Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-25T19:38:02+00:00,2026-10-25T19:12Z,9,Green Bay Packers,GB,4259305,Bo Melton,WR,Active,,,,Melton (back) is active for Sunday's game against the Lions.
 2026-10-25T19:22:52+00:00,2026-10-25T19:13Z,4,Cincinnati Bengals,CIN,4427834,Erick All Jr.,TE,Questionable,QUESTIONABLE,Right Knee,2026-11-01,questionable
@@ -1357,12 +1358,14 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-25T19:38:02+00:00,2026-10-25T19:23Z,4,Cincinnati Bengals,CIN,4427834,Erick All Jr.,TE,Questionable,QUESTIONABLE,Right Knee,2026-11-01,All (knee) has been ruled out for the rest of Sunday's game against the Ravens.
 2026-10-25T19:38:02+00:00,2026-10-25T19:23Z,13,Las Vegas Raiders,LV,4379416,Quay Walker,LB,Active,,,,Walker (chest) is active for Sunday's game against the Rams.
 2026-10-25T19:38:02+00:00,2026-10-25T19:24Z,13,Las Vegas Raiders,LV,4260394,Aidan O'Connell,QB,Out,INACTIVE,Coach's Decision,2026-11-01,O'Connell (coach's decision) is inactive but will serve as the Raiders' emergency third quarterback against the Rams on Sunday.
+2026-10-26T19:08:14+00:00,2026-10-25T19:24Z,13,Las Vegas Raiders,LV,4260394,Aidan O'Connell,QB,Active,,,,O'Connell (coach's decision) is inactive but will serve as the Raiders' emergency third quarterback against the Rams on Sunday.
 2026-10-25T19:38:02+00:00,2026-10-25T19:25Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-25T19:38:02+00:00,2026-10-25T19:25Z,11,Indianapolis Colts,IND,4682909,Justin Walley,CB,Questionable,QUESTIONABLE,Undisclosed,2026-10-25,Walley (undisclosed) is questionable to return to Sunday's game against the Vikings.
 2026-10-25T19:38:02+00:00,2026-10-25T19:25Z,16,Minnesota Vikings,MIN,3042519,Aaron Jones Sr.,RB,Questionable,QUESTIONABLE,Knee,2026-11-01,"Jones (undisclosed) exited Sunday's game against the Colts, Kevin Seifert of ESPN.com reports."
 2026-10-25T19:52:51+00:00,2026-10-25T19:26Z,5,Cleveland Browns,CLE,4695783,Myles Harden,CB,Questionable,QUESTIONABLE,Hamstring,2026-10-25,"Harden (hamstring) is questionable to return to Sunday's game against the Titans, Daniel Oyefusi of ESPN.com reports."
 2026-10-25T19:38:02+00:00,2026-10-25T19:27Z,34,Houston Texans,HOU,4429059,Woody Marks,RB,Questionable,QUESTIONABLE,Left Leg,2026-10-25,questionable
 2026-10-25T19:38:02+00:00,2026-10-25T19:27Z,14,Los Angeles Rams,LAR,4685522,Ty Simpson,QB,Out,INACTIVE,Coach's Decision,2026-11-01,"Simpson (coach's decision) is inactive but will serve as the Rams' emergency third quarterback against the Raiders on Sunday, Sarah Barshop of ESPN.com reports."
+2026-10-26T19:08:14+00:00,2026-10-25T19:27Z,14,Los Angeles Rams,LAR,4685522,Ty Simpson,QB,Active,,,,"Simpson (coach's decision) is inactive but will serve as the Rams' emergency third quarterback against the Raiders on Sunday, Sarah Barshop of ESPN.com reports."
 2026-10-25T19:38:02+00:00,2026-10-25T19:28Z,27,Tampa Bay Buccaneers,TB,4371733,Kenny Gainwell,RB,Active,,,,"Gainwell (hip) reentered Sunday's game at Carolina, Greg Auman of Fox Sports reports."
 2026-10-25T19:38:02+00:00,2026-10-25T19:29Z,15,Miami Dolphins,MIA,4360488,JuJu Brents,CB,Active,,,,
 2026-10-25T19:52:51+00:00,2026-10-25T19:30Z,14,Los Angeles Rams,LAR,4426405,Trent McDuffie,CB,Out,INACTIVE,Groin,2026-11-01,"McDuffie (groin) is inactive for Sunday's game against the Raiders, Sarah Barshop of ESPN.com reports."
@@ -1488,6 +1491,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-25T23:37:54+00:00,2026-10-25T23:09Z,1,Atlanta Falcons,ATL,4360248,Kyle Pitts Sr.,TE,Active,,,,Pitts brought in all five targets for 22 yards and a touchdown in the Falcons' 29-20 win over the 49ers on Sunday.
 2026-10-25T23:22:59+00:00,2026-10-25T23:10Z,5,Cleveland Browns,CLE,5081397,Dylan Sampson,RB,Active,,,,Sampson carried the ball six times for 45 yards and caught all three of his targets for 32 yards in Sunday's 27-24 win over the Titans.
 2026-10-25T23:37:54+00:00,2026-10-25T23:10Z,12,Kansas City Chiefs,KC,4567747,Garrett Nussmeier,QB,Out,INACTIVE,Coach's Decision,2026-11-01,Nussmeier (coach's decision) is inactive as the emergency third quarterback for Sunday night's game against the Seahawks.
+2026-10-26T19:08:14+00:00,2026-10-25T23:10Z,12,Kansas City Chiefs,KC,4567747,Garrett Nussmeier,QB,Active,,,,Nussmeier (coach's decision) is inactive as the emergency third quarterback for Sunday night's game against the Seahawks.
 2026-10-25T23:37:54+00:00,2026-10-25T23:12Z,12,Kansas City Chiefs,KC,4040432,L'Jarius Sneed,CB,Active,,,,Sneed (knee) is active for Sunday night's game against the Seahawks.
 2026-10-25T23:37:54+00:00,2026-10-25T23:12Z,26,Seattle Seahawks,SEA,3120358,Uchenna Nwosu,LB,Active,,,,Nwosu (hip) is active for Sunday Night Football versus Kansas City.
 2026-10-25T23:37:54+00:00,2026-10-25T23:17Z,13,Las Vegas Raiders,LV,4243916,Patrick Johnson,DE,Questionable,QUESTIONABLE,Neck,2026-10-25,Johnson (stinger/neck) is questionable to return to Sunday's contest against the Rams.
@@ -1601,6 +1605,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-26T03:23:04+00:00,2026-10-26T03:14Z,26,Seattle Seahawks,SEA,4426376,Charles Cross,OT,Out,OUT,Ankle,2026-11-02,out
 2026-10-26T03:37:47+00:00,2026-10-26T03:18Z,26,Seattle Seahawks,SEA,4426376,Charles Cross,OT,Out,OUT,Ankle,2026-11-02,Cross exited Sunday night's game against the Chiefs with an ankle injury and did not return.
 2026-10-26T03:52:43+00:00,2026-10-26T03:18Z,26,Seattle Seahawks,SEA,4426376,Charles Cross,OT,Questionable,QUESTIONABLE,Ankle,2026-11-02,Cross exited Sunday night's game against the Chiefs with an ankle injury and did not return.
+2026-10-26T19:08:14+00:00,2026-10-26T03:18Z,26,Seattle Seahawks,SEA,4426376,Charles Cross,OT,Doubtful,DOUBTFUL,Ankle Sprain,2026-11-02,Cross exited Sunday night's game against the Chiefs with an ankle injury and did not return.
 2026-10-26T03:37:47+00:00,2026-10-26T03:28Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-26T03:37:47+00:00,2026-10-26T03:29Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-26T03:52:43+00:00,2026-10-26T03:29Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
@@ -1698,3 +1703,90 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-26T18:08:05+00:00,2026-10-26T17:58Z,7,Denver Broncos,DEN,4868598,Kage Casey,OT,Active,,,,
 2026-10-26T18:08:05+00:00,2026-10-26T17:58Z,7,Denver Broncos,DEN,4360853,Talanoa Hufanga,S,Out,QUESTIONABLE,Ankle,2026-11-01,out
 2026-10-26T18:08:05+00:00,2026-10-26T17:58Z,7,Denver Broncos,DEN,4683535,Tyler Onyedim,DT,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:18Z,22,Arizona Cardinals,ARI,4692835,Jalen Brooks,WR,Out,OUT,Wrist Surgery,2026-02-15,"Brooks announced Monday in a story on his personal Instagram account that he underwent season-ending wrist surgery, Tyler Drake of ArizonaSports.com reports."
+2026-10-26T19:08:14+00:00,2026-10-26T18:26Z,8,Detroit Lions,DET,4710422,Ahmed Hassanein,DE,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:26Z,8,Detroit Lions,DET,5151810,Bishop Fitzgerald,S,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:26Z,8,Detroit Lions,DET,4602788,Jackson Meeks,WR,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:26Z,8,Detroit Lions,DET,4586333,Mekhi Wingo,DT,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:26Z,8,Detroit Lions,DET,4429187,Seth McLaughlin,C,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:28Z,9,Green Bay Packers,GB,4360887,Donovan Jennings,G,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:28Z,9,Green Bay Packers,GB,4569661,Jager Burton,C,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:28Z,9,Green Bay Packers,GB,14931,Kevin Zeitler,G,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:31Z,34,Houston Texans,HOU,4432699,Blake Fisher,OT,Out,QUESTIONABLE,Thumb,2026-11-08,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:31Z,34,Houston Texans,HOU,4035538,David Montgomery,RB,Out,QUESTIONABLE,Groin,2026-11-08,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:31Z,34,Houston Texans,HOU,4880873,Febechi Nwaiwu,G,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:31Z,34,Houston Texans,HOU,4241223,Jalen Pitre,S,Out,QUESTIONABLE,Left Shoulder - AC Joint Sprain,2026-11-08,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:31Z,34,Houston Texans,HOU,4695705,Marlin Klein,TE,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:31Z,34,Houston Texans,HOU,4428656,Nate Thomas,OT,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:31Z,34,Houston Texans,HOU,4243956,Reed Blankenship,S,Out,QUESTIONABLE,Concussion Concussion,2026-11-08,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:34Z,11,Indianapolis Colts,IND,4429684,Anthony Gould,WR,Out,QUESTIONABLE,Concussion Concussion,2026-11-01,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:34Z,11,Indianapolis Colts,IND,5088571,Bryce Boettcher,LB,Out,QUESTIONABLE,Groin,2026-11-01,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:34Z,11,Indianapolis Colts,IND,4870598,CJ Allen,LB,Out,QUESTIONABLE,Ankle,2026-11-01,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:34Z,11,Indianapolis Colts,IND,4370363,Dalton Tucker,G,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:34Z,11,Indianapolis Colts,IND,4683423,Riley Leonard,QB,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:34Z,11,Indianapolis Colts,IND,4427250,Sauce Gardner,CB,Out,QUESTIONABLE,Left Calf Strain,2026-11-01,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:34Z,11,Indianapolis Colts,IND,4431459,Tyler Warren,TE,Out,QUESTIONABLE,Groin,2026-11-01,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:35Z,12,Kansas City Chiefs,KC,4372070,Ben VanSumeren,FB,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:35Z,12,Kansas City Chiefs,KC,4837252,Jack Pyburn,LB,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:35Z,12,Kansas City Chiefs,KC,4710706,Jadon Canady,CB,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:35Z,12,Kansas City Chiefs,KC,4043041,Jaylon Moore,OT,Out,QUESTIONABLE,Concussion Concussion,2026-11-01,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:35Z,12,Kansas City Chiefs,KC,4428331,Rashee Rice,WR,Out,QUESTIONABLE,Hamstring,2026-11-01,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:36Z,13,Las Vegas Raiders,LV,4612077,Bryce Cabeldue,G,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:36Z,13,Las Vegas Raiders,LV,5153665,Cian Slone,DE,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:36Z,13,Las Vegas Raiders,LV,4682488,Dalton Johnson,S,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:36Z,13,Las Vegas Raiders,LV,4373956,Jonah Laulu,DT,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:36Z,13,Las Vegas Raiders,LV,4360749,Thomas Booker IV,DT,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:36Z,13,Las Vegas Raiders,LV,4250393,Tristin McCollum,S,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:37Z,11,Indianapolis Colts,IND,4360078,Alec Pierce,WR,Injured Reserve,IR,Left Heel,2026-11-08,"Colts head coach Shane Steichen said Monday that Pierce (heel) will ""most likely not"" have his 21-day practice window opened in Week 8, Jake Arthur of Roundtabl"
+2026-10-26T19:08:14+00:00,2026-10-26T18:37Z,14,Los Angeles Rams,LAR,3912189,Bill Murray,G,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:37Z,14,Los Angeles Rams,LAR,4575003,Keagen Trost,OT,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:37Z,14,Los Angeles Rams,LAR,4833029,Max Klare,TE,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:37Z,14,Los Angeles Rams,LAR,4243181,Nate Landman,LB,Out,QUESTIONABLE,Concussion Concussion,2026-11-01,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:38Z,15,Miami Dolphins,MIA,5144457,Chukwuebuka Godrick,OT,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:38Z,15,Miami Dolphins,MIA,5081977,DJ Campbell,G,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:38Z,15,Miami Dolphins,MIA,4249417,Jalen Tolbert,WR,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:38Z,15,Miami Dolphins,MIA,4875079,Marcellas Dial Jr.,CB,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:38Z,15,Miami Dolphins,MIA,4371946,Reese Taylor,CB,Out,QUESTIONABLE,Quadriceps,2026-11-01,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:38Z,15,Miami Dolphins,MIA,4259558,Robert Beal Jr.,DE,Out,QUESTIONABLE,Hamstring,2026-11-01,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:38Z,15,Miami Dolphins,MIA,4259804,Willie Gay Jr.,LB,Out,QUESTIONABLE,Illness,2026-11-01,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:39Z,16,Minnesota Vikings,MIN,4592836,Caleb Tiernan,OT,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:39Z,16,Minnesota Vikings,MIN,5091793,Charles Demmings,CB,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:39Z,16,Minnesota Vikings,MIN,4832846,Demond Claiborne,RB,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:39Z,16,Minnesota Vikings,MIN,4696782,Elijah Williams,DE,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:39Z,16,Minnesota Vikings,MIN,4710865,Jakobe Thomas,S,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:39Z,16,Minnesota Vikings,MIN,4573398,Max Brosmer,QB,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:40Z,17,New England Patriots,NE,4431465,Behren Morton,QB,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:40Z,17,New England Patriots,NE,4362890,Ben Brown,C,Out,QUESTIONABLE,Knee,2026-11-01,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:40Z,17,New England Patriots,NE,3916923,Carlton Davis III,CB,Out,QUESTIONABLE,Neck,2026-11-01,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:40Z,17,New England Patriots,NE,4688779,Channing Canada,CB,Out,QUESTIONABLE,Hamstring,2026-11-01,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:40Z,17,New England Patriots,NE,4611993,Joshua Farmer,DT,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:40Z,17,New England Patriots,NE,4606666,Karon Prunty,CB,Out,QUESTIONABLE,Hamstring,2026-11-01,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:41Z,18,New Orleans Saints,NO,4258199,Cesar Ruiz,G,Out,QUESTIONABLE,Knee,2026-11-08,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:41Z,18,New Orleans Saints,NO,4248047,John Ridgeway III,DT,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:41Z,18,New Orleans Saints,NO,4775268,Mike Reid,CB,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:41Z,18,New Orleans Saints,NO,4076951,Nathan Shepherd,DT,Out,QUESTIONABLE,Illness,2026-11-08,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:41Z,18,New Orleans Saints,NO,4430684,Treyton Welch,TE,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:41Z,18,New Orleans Saints,NO,4372533,Tyree Wilson,DE,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:41Z,18,New Orleans Saints,NO,4361259,Zach Wilson,QB,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:42Z,19,New York Giants,NYG,4361266,Greg Newsome II,CB,Out,QUESTIONABLE,Concussion Concussion,2026-11-08,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:42Z,19,New York Giants,NYG,4243322,Jake Haener,QB,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:42Z,19,New York Giants,NYG,4373809,Jevon Holland,S,Out,QUESTIONABLE,Concussion Concussion,2026-11-08,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:42Z,19,New York Giants,NYG,4039243,Josh Sills,G,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:42Z,19,New York Giants,NYG,4686362,Marcus Mbow,OT,Out,QUESTIONABLE,Knee,2026-11-08,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:42Z,19,New York Giants,NYG,4691043,Nikko Reed,CB,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:42Z,19,New York Giants,NYG,4429148,Theo Johnson,TE,Out,QUESTIONABLE,Neck,2026-11-08,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:43Z,20,New York Jets,NYJ,4427366,Breece Hall,RB,Out,QUESTIONABLE,Right Quadriceps,2026-11-01,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:43Z,20,New York Jets,NYJ,4243375,Dylan Parham,G,Out,QUESTIONABLE,Knee,2026-11-01,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:43Z,20,New York Jets,NYJ,4039485,Jack Heflin,DT,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:43Z,20,New York Jets,NYJ,4426817,Jarvis Brownlee Jr.,CB,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:43Z,20,New York Jets,NYJ,4362094,Joseph Ossai,DE,Out,QUESTIONABLE,Ankle,2026-11-01,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:43Z,20,New York Jets,NYJ,4035537,Kene Nwangwu,RB,Out,QUESTIONABLE,Knee,2026-11-01,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:43Z,20,New York Jets,NYJ,4373656,Max Mitchell,OT,Out,QUESTIONABLE,Concussion Concussion,2026-11-01,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:54Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-26T19:08:14+00:00,2026-10-26T18:54Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-26T19:08:14+00:00,2026-10-26T18:54Z,23,Pittsburgh Steelers,PIT,4035656,Ben Skowronek,WR,Out,QUESTIONABLE,Calf,2026-11-01,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:54Z,23,Pittsburgh Steelers,PIT,4567979,Brandin Echols,CB,Out,QUESTIONABLE,Hamstring,2026-11-01,out
+2026-10-26T19:08:14+00:00,2026-10-26T18:54Z,23,Pittsburgh Steelers,PIT,4714771,Drew Allar,QB,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:54Z,23,Pittsburgh Steelers,PIT,5081508,Eli Heidenreich,RB,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:54Z,23,Pittsburgh Steelers,PIT,4360935,Terell Smith,CB,Active,,,,
+2026-10-26T19:08:14+00:00,2026-10-26T18:54Z,23,Pittsburgh Steelers,PIT,4429955,Will Howard,QB,Active,,,,
