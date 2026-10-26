@@ -149,6 +149,10 @@ def tick(store: Store, now: datetime, passphrase: str | None, *, events: dict[st
                 orders.grade(orders.load(passphrase), passphrase, now)
             except Exception as error:  # noqa: BLE001 - the type only
                 LOG.error("worker: ledger not graded: %s", type(error).__name__)
+            # Once a day, from six Eastern: the audit trail against the venue's account activity.
+            from atlas.polymarket import reconcile
+
+            reconcile.daily(passphrase, now)
     # Games over but not yet settled keep the quick pace: the finish-line rule lives in those minutes.
     live += finish.pending(events)
     return {"events": sum(len(v) for v in events.values()), "live": live, "quotes": int(len(quotes)),

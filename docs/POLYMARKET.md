@@ -424,6 +424,20 @@ venue cancels what does not fill at once, and its answer says so. The
 trail only grows; the worker and the scheduled run merge their copies by
 event.
 
+Once a day, from 6 AM Eastern, the trail is **reconciled** against the
+venue's own account history (`atlas/polymarket/reconcile.py`,
+`GET /v1/portfolio/activities`): every trade on the account in the previous
+Eastern day is matched by its trade id to an execution the trail recorded,
+and their quantity and price compared. What does not reconcile is named: a
+trade whose figures differ, a trade on the account the trail never recorded
+(one made by hand in the app, or a lost answer), a fill the trail recorded
+that the venue does not show, and a trade the venue busted or rejected
+after the fact. The result is an event in the trail, and the owner page's
+Live tab states the latest ("everything agrees", or MISMATCH and what). A
+read that fails is recorded and tried again an hour later. The worker runs
+it, and the scheduled run as a backstop; `python -m atlas.polymarket.reconcile`
+runs it by hand (`--day YYYY-MM-DD` for any day, printed only).
+
 ## Paper only
 
 Nothing here buys anything. Before real money, confirm: that each market's

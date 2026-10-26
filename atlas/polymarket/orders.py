@@ -513,9 +513,10 @@ def grade(ledger: pd.DataFrame, passphrase: str, now: datetime, *, where: Path |
 # ---------------------------------------------------------------------------
 
 
-def section(ledger: pd.DataFrame, now: datetime) -> dict:
+def section(ledger: pd.DataFrame, now: datetime, reconciled: dict | None = None) -> dict:
     """The live step's state and ledger: mode and arming, the caps, what is open, what the window has
-    made or lost, and the latest orders."""
+    made or lost, the latest reconciliation against the venue (`atlas/polymarket/reconcile.py`), and the
+    latest orders."""
     m = mode()
     c = caps()
     stop = stopped(ledger, now) if len(ledger) else None
@@ -537,6 +538,10 @@ def section(ledger: pd.DataFrame, now: datetime) -> dict:
                 if len(equity) else "."),
              "Every order is a limit at the ask the position was logged at, immediate-or-cancel, for the stake's "
              "worth of contracts; never a market order, never a resting one."]
+    if m != "off" or reconciled:
+        from atlas.polymarket import reconcile
+
+        notes.append(reconcile.describe(reconciled))
     if stop:
         notes.insert(1, f"STOPPED: {stop}.")
     kill = killed()
