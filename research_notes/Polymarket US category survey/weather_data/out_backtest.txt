@@ -1,0 +1,63 @@
+===== T1 D-1 20Z (NBS D-1 18Z): events 734, buckets 4403
+  per-event log loss: model 1.514  market 1.220 | Brier sum/event model 0.749 market 0.635
+  market calibration (Yes ask bin: n, mean ask, win rate, model mean q):
+    0.00-0.05: n 1142 ask 0.026 won 0.008 q 0.051  mid 0.022
+    0.05-0.15: n 1179 ask 0.085 won 0.051 q 0.126  mid 0.071
+    0.15-0.30: n  870 ask 0.217 won 0.189 q 0.211  mid 0.199
+    0.30-0.50: n  885 ask 0.385 won 0.366 q 0.264  mid 0.365
+    0.50-0.70: n  294 ask 0.562 won 0.517 q 0.318  mid 0.528
+    0.70-0.85: n   23 ask 0.766 won 0.783 q 0.429  mid 0.718
+    0.85-0.95: n    8 ask 0.897 won 0.875 q 0.582  mid 0.799
+    0.95-1.01: n    2 ask 0.960 won 0.000 q 0.083  mid 0.698
+  model calibration (q bin: n, mean q, win rate):
+    0.00-0.05: n 1172 q 0.018 won 0.026
+    0.05-0.15: n 1019 q 0.098 won 0.103
+    0.15-0.30: n 1488 q 0.224 won 0.234
+    0.30-0.50: n  666 q 0.362 won 0.333
+    0.50-0.70: n   41 q 0.586 won 0.390
+    0.70-0.85: n   11 q 0.788 won 0.818
+    0.85-0.95: n    6 q 0.918 won 0.500
+  rule w=1.0 X=0.02: n 2620 (Yes 1298, No 1322) mean pnl/contract -3.37c  se 0.71c  ROI on cost -8.6%
+  rule w=1.0 X=0.05: n 1914 (Yes 916, No 998) mean pnl/contract -3.41c  se 0.86c  ROI on cost -9.1%
+  rule w=1.0 X=0.1: n 1147 (Yes 507, No 640) mean pnl/contract -4.13c  se 1.18c  ROI on cost -11.1%
+  rule w=1.0 X=0.15: n 650 (Yes 267, No 383) mean pnl/contract -3.40c  se 1.62c  ROI on cost -9.2%
+  rule w=0.5 X=0.02: n 1727 (Yes 845, No 882) mean pnl/contract -3.38c  se 0.90c  ROI on cost -9.3%
+  rule w=0.5 X=0.05: n 905 (Yes 418, No 487) mean pnl/contract -4.04c  se 1.32c  ROI on cost -11.5%
+  rule w=0.5 X=0.1: n 295 (Yes 113, No 182) mean pnl/contract -5.16c  se 2.45c  ROI on cost -14.6%
+  rule w=0.5 X=0.15: n 87 (Yes 27, No 60) mean pnl/contract -3.05c  se 4.49c  ROI on cost -8.7%
+  rule w=0.3 X=0.02: n 978 (Yes 503, No 475) mean pnl/contract -4.31c  se 1.21c  ROI on cost -13.3%
+  rule w=0.3 X=0.05: n 306 (Yes 131, No 175) mean pnl/contract -4.85c  se 2.29c  ROI on cost -14.4%
+  rule w=0.3 X=0.1: n 52 (Yes 18, No 34) mean pnl/contract +9.42c  se 5.29c  ROI on cost +29.8%
+  rule w=0.3 X=0.15: n 15 (Yes 3, No 12) mean pnl/contract +34.05c  se 8.34c  ROI on cost +89.9%
+===== T2 D 14Z (NBS D 12Z): events 737, buckets 4421
+  per-event log loss: model 1.410  market 1.048 | Brier sum/event model 0.718 market 0.569
+  market calibration (Yes ask bin: n, mean ask, win rate, model mean q):
+    0.00-0.05: n 1711 ask 0.020 won 0.005 q 0.059  mid 0.019
+    0.05-0.15: n  877 ask 0.084 won 0.050 q 0.150  mid 0.070
+    0.15-0.30: n  592 ask 0.216 won 0.186 q 0.221  mid 0.197
+    0.30-0.50: n  649 ask 0.390 won 0.368 q 0.272  mid 0.364
+    0.50-0.70: n  447 ask 0.583 won 0.521 q 0.310  mid 0.554
+    0.70-0.85: n   98 ask 0.753 won 0.694 q 0.368  mid 0.716
+    0.85-0.95: n   27 ask 0.898 won 0.778 q 0.467  mid 0.848
+    0.95-1.01: n   20 ask 0.975 won 0.700 q 0.449  mid 0.895
+  model calibration (q bin: n, mean q, win rate):
+    0.00-0.05: n 1409 q 0.017 won 0.021
+    0.05-0.15: n  970 q 0.096 won 0.114
+    0.15-0.30: n 1179 q 0.229 won 0.217
+    0.30-0.50: n  796 q 0.377 won 0.382
+    0.50-0.70: n   32 q 0.614 won 0.531
+    0.70-0.85: n   18 q 0.766 won 0.389
+    0.85-0.95: n   11 q 0.900 won 0.818
+    0.95-1.01: n    6 q 0.987 won 0.500
+  rule w=1.0 X=0.02: n 2564 (Yes 1261, No 1303) mean pnl/contract -1.57c  se 0.71c  ROI on cost -4.4%
+  rule w=1.0 X=0.05: n 2018 (Yes 968, No 1050) mean pnl/contract -1.60c  se 0.84c  ROI on cost -4.8%
+  rule w=1.0 X=0.1: n 1434 (Yes 621, No 813) mean pnl/contract -1.20c  se 1.04c  ROI on cost -3.6%
+  rule w=1.0 X=0.15: n 951 (Yes 360, No 591) mean pnl/contract -1.26c  se 1.30c  ROI on cost -3.8%
+  rule w=0.5 X=0.02: n 1882 (Yes 911, No 971) mean pnl/contract -1.08c  se 0.86c  ROI on cost -3.3%
+  rule w=0.5 X=0.05: n 1174 (Yes 522, No 652) mean pnl/contract -1.38c  se 1.12c  ROI on cost -4.4%
+  rule w=0.5 X=0.1: n 510 (Yes 178, No 332) mean pnl/contract -1.61c  se 1.82c  ROI on cost -5.4%
+  rule w=0.5 X=0.15: n 192 (Yes 45, No 147) mean pnl/contract -3.23c  se 3.07c  ROI on cost -10.7%
+  rule w=0.3 X=0.02: n 1223 (Yes 582, No 641) mean pnl/contract -1.02c  se 1.06c  ROI on cost -3.4%
+  rule w=0.3 X=0.05: n 525 (Yes 206, No 319) mean pnl/contract -0.67c  se 1.71c  ROI on cost -2.4%
+  rule w=0.3 X=0.1: n 114 (Yes 28, No 86) mean pnl/contract +1.09c  se 3.70c  ROI on cost +4.1%
+  rule w=0.3 X=0.15: n 40 (Yes 12, No 28) mean pnl/contract +9.09c  se 5.59c  ROI on cost +40.6%
