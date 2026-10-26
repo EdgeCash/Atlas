@@ -1375,6 +1375,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-25T19:52:51+00:00,2026-10-25T19:34Z,33,Baltimore Ravens,BAL,3915189,Roquan Smith,LB,Active,,,,
 2026-10-25T19:52:51+00:00,2026-10-25T19:36Z,5,Cleveland Browns,CLE,3131498,Tytus Howard,OT,Questionable,QUESTIONABLE,Head,2026-10-25,Howard is being evaluated for a possible concussion and is questionable to return to Sunday's game against the Titans.
 2026-10-25T19:52:51+00:00,2026-10-25T19:37Z,4,Cincinnati Bengals,CIN,4401811,Kyle Dugger,S,Questionable,QUESTIONABLE,Left Quadriceps,2026-11-01,Dugger (quadriceps) has been ruled out for the remainder of Sunday's game against the Ravens.
+2026-10-26T20:07:56+00:00,2026-10-25T19:37Z,4,Cincinnati Bengals,CIN,4401811,Kyle Dugger,S,Out,OUT,Left Quadriceps,2026-11-08,Dugger (quadriceps) has been ruled out for the remainder of Sunday's game against the Ravens.
 2026-10-25T19:52:51+00:00,2026-10-25T19:49Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-25T19:52:51+00:00,2026-10-25T19:49Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-25T19:52:51+00:00,2026-10-25T19:49Z,34,Houston Texans,HOU,4429059,Woody Marks,RB,Active,,,,"Marks (leg) returned to Sunday's contest against the Giants, Aaron Wilson of KPRC 2 Houston reports."
@@ -1790,3 +1791,33 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-26T19:08:14+00:00,2026-10-26T18:54Z,23,Pittsburgh Steelers,PIT,5081508,Eli Heidenreich,RB,Active,,,,
 2026-10-26T19:08:14+00:00,2026-10-26T18:54Z,23,Pittsburgh Steelers,PIT,4360935,Terell Smith,CB,Active,,,,
 2026-10-26T19:08:14+00:00,2026-10-26T18:54Z,23,Pittsburgh Steelers,PIT,4429955,Will Howard,QB,Active,,,,
+2026-10-26T20:07:56+00:00,2026-10-26T19:04Z,19,New York Giants,NYG,5082424,Dominic Zvada,PK,Active,,,,"Head coach John Harbaugh reiterated Monday that he's confident in Zvada and said that the Giants have no plans to work out other kickers, Pat Leonard of the New"
+2026-10-26T20:07:56+00:00,2026-10-26T19:10Z,25,San Francisco 49ers,SF,3126486,Deebo Samuel Sr.,WR,Out,DOUBTFUL,Right Hamstring,2026-11-08,out
+2026-10-26T20:07:56+00:00,2026-10-26T19:10Z,25,San Francisco 49ers,SF,4241807,Garret Wallow,LB,Out,QUESTIONABLE,Hamstring Strain,2026-11-08,out
+2026-10-26T20:07:56+00:00,2026-10-26T19:10Z,25,San Francisco 49ers,SF,4430431,Kurtis Rourke,QB,Active,,,,
+2026-10-26T20:07:56+00:00,2026-10-26T19:10Z,25,San Francisco 49ers,SF,3116097,Luke Gifford,LB,Out,QUESTIONABLE,Groin,2026-11-08,out
+2026-10-26T20:07:56+00:00,2026-10-26T19:10Z,25,San Francisco 49ers,SF,4693337,Marques Sigle,S,Out,QUESTIONABLE,Ankle,2026-11-08,out
+2026-10-26T20:07:56+00:00,2026-10-26T19:10Z,25,San Francisco 49ers,SF,16737,Mike Evans,WR,Out,QUESTIONABLE,Right Achilles Tendinitis,2026-11-08,out
+2026-10-26T20:07:56+00:00,2026-10-26T19:10Z,25,San Francisco 49ers,SF,4040605,Nick Bosa,DE,Out,QUESTIONABLE,Left Knee Strain,2026-11-08,out
+2026-10-26T20:07:56+00:00,2026-10-26T19:11Z,26,Seattle Seahawks,SEA,4592823,Beau Stephens,G,Active,,,,
+2026-10-26T20:07:56+00:00,2026-10-26T19:11Z,26,Seattle Seahawks,SEA,4037521,Chazz Surratt,LB,Out,QUESTIONABLE,Calf,2026-11-02,out
+2026-10-26T20:07:56+00:00,2026-10-26T19:11Z,26,Seattle Seahawks,SEA,4428659,Drake Thomas,LB,Out,QUESTIONABLE,Ankle,2026-11-02,out
+2026-10-26T20:07:56+00:00,2026-10-26T19:11Z,26,Seattle Seahawks,SEA,5151317,Robert Henry Jr.,RB,Active,,,,
+2026-10-26T20:07:56+00:00,2026-10-26T19:11Z,26,Seattle Seahawks,SEA,4426385,Zach Charbonnet,RB,Out,QUESTIONABLE,Left Knee - ACL Surgery,2026-11-02,out
+2026-10-26T20:07:56+00:00,2026-10-26T19:13Z,33,Baltimore Ravens,BAL,3916387,Lamar Jackson,QB,Out,QUESTIONABLE,Left Ankle Sprain,2026-11-01,"Ravens head coach Jesse Minter said that Jackson (ankle) is ""in a decent spot"" to play Sunday against the Bills, Jeff Zrebiec of The Athletic reports."
+2026-10-26T20:07:56+00:00,2026-10-26T19:14Z,27,Tampa Bay Buccaneers,TB,4034790,Antoine Winfield Jr.,S,Out,QUESTIONABLE,Ribs Fracture,2026-11-01,out
+2026-10-26T20:07:56+00:00,2026-10-26T19:14Z,27,Tampa Bay Buccaneers,TB,4890885,Ayden Garnes,CB,Active,,,,
+2026-10-26T20:07:56+00:00,2026-10-26T19:14Z,27,Tampa Bay Buccaneers,TB,4685549,Billy Schrauth,G,Active,,,,
+2026-10-26T20:07:56+00:00,2026-10-26T19:14Z,27,Tampa Bay Buccaneers,TB,4429007,DeMonte Capehart,DT,Active,,,,
+2026-10-26T20:07:56+00:00,2026-10-26T19:14Z,27,Tampa Bay Buccaneers,TB,4567750,Emeka Egbuka,WR,Out,QUESTIONABLE,Concussion Concussion,2026-11-01,out
+2026-10-26T20:07:56+00:00,2026-10-26T19:14Z,27,Tampa Bay Buccaneers,TB,4380507,Luke Goedeke,OT,Out,QUESTIONABLE,Calf,2026-11-01,out
+2026-10-26T20:07:56+00:00,2026-10-26T19:21Z,10,Tennessee Titans,TEN,4426987,Brandon Crenshaw-Dickson,OT,Active,,,,
+2026-10-26T20:07:56+00:00,2026-10-26T19:21Z,10,Tennessee Titans,TEN,3925357,Calvin Ridley,WR,Out,QUESTIONABLE,Hip,2026-11-01,out
+2026-10-26T20:07:56+00:00,2026-10-26T19:21Z,10,Tennessee Titans,TEN,5081785,Jackie Marshall,DT,Active,,,,
+2026-10-26T20:07:56+00:00,2026-10-26T19:21Z,10,Tennessee Titans,TEN,4685145,Jaylon Jones,CB,Active,,,,
+2026-10-26T20:07:56+00:00,2026-10-26T19:21Z,10,Tennessee Titans,TEN,4039160,Kylen Granson,TE,Active,,,,
+2026-10-26T20:07:56+00:00,2026-10-26T19:21Z,10,Tennessee Titans,TEN,4685555,Nicholas Singleton,RB,Active,,,,
+2026-10-26T20:07:56+00:00,2026-10-26T19:21Z,10,Tennessee Titans,TEN,4428557,Tyjae Spears,RB,Out,QUESTIONABLE,Knee,2026-11-01,out
+2026-10-26T20:07:56+00:00,2026-10-26T19:29Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-26T20:07:56+00:00,2026-10-26T19:32Z,8,Detroit Lions,DET,4374302,Amon-Ra St. Brown,WR,Questionable,QUESTIONABLE,Ankle,2026-11-01,"Lions head coach Dan Campbell said that St. Brown tweaked his ankle during Sunday's 20-17 win over the Packers but should be ready to practice Thursday, Richard"
+2026-10-26T20:07:56+00:00,2026-10-26T20:00Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
