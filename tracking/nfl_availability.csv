@@ -1559,4 +1559,12 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-26T01:52:43+00:00,2026-10-26T01:38Z,25,San Francisco 49ers,SF,16002,Kyle Juszczyk,FB,Active,,,,Juszczyk caught all three of his targets for 11 yards and a touchdown during Sunday's 29-20 loss to Atlanta.
 2026-10-26T01:52:43+00:00,2026-10-26T01:41Z,4,Cincinnati Bengals,CIN,4362628,Ja'Marr Chase,WR,Active,,,,Chase brought in five of seven targets for 62 yards and a touchdown in the Bengals' 35-13 win over the Ravens on Sunday.
 2026-10-26T02:07:53+00:00,2026-10-26T01:49Z,25,San Francisco 49ers,SF,4361741,Brock Purdy,QB,Active,,,,Purdy completed 27 of 40 passes for 288 yards with one touchdown and two interceptions and added two carries for five yards in the 49ers' 29-20 loss to the Falc
+2026-10-26T02:23:07+00:00,2026-10-26T01:59Z,8,Detroit Lions,DET,4429795,Jahmyr Gibbs,RB,Active,,,,Gibbs carried the ball 29 times for 116 yards and caught five of six targets for 27 yards in Sunday's 20-17 win over Green Bay.
+2026-10-26T02:23:07+00:00,2026-10-26T02:00Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-26T02:07:53+00:00,2026-10-26T02:00Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-26T02:23:07+00:00,2026-10-26T02:02Z,7,Denver Broncos,DEN,3128429,Courtland Sutton,WR,Active,,,,Sutton caught three of five targets for 45 yards during Sunday's 30-16 win over Arizona.
+2026-10-26T02:23:07+00:00,2026-10-26T02:03Z,8,Detroit Lions,DET,4374302,Amon-Ra St. Brown,WR,Active,,,,St. Brown caught nine of 11 targets for 153 yards in Sunday's 20-17 win over the Packers.
+2026-10-26T02:23:07+00:00,2026-10-26T02:03Z,19,New York Giants,NYG,4361050,Isaiah Likely,TE,Active,,,,Likely caught two of four targets for 12 yards in Sunday's 27-21 overtime win over the Texans.
+2026-10-26T02:23:07+00:00,2026-10-26T02:06Z,8,Detroit Lions,DET,3046779,Jared Goff,QB,Active,,,,Goff completed 22 of 32 passes for 303 yards and two touchdowns in Sunday's 20-17 win over the Packers.
+2026-10-26T02:23:07+00:00,2026-10-26T02:13Z,26,Seattle Seahawks,SEA,4032473,Rashid Shaheed,WR,Questionable,QUESTIONABLE,Knee,2026-10-25,"Shaheed (knee) is questionable to return to Sunday's game against the Chiefs, Curtis Crabtree of FOX 13 Seattle reports."
+2026-10-26T02:23:07+00:00,2026-10-26T02:14Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
