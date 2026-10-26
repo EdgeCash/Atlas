@@ -146,6 +146,13 @@ SCHEMA: dict[str, list[str]] = {
         "period", "score", "finished_at", "minutes_after_finish", "payout", "won", "profit", "settled_at",
         "minutes_to_settle",
     ],
+    # The gold and silver 15-minute rule in practice (atlas/polymarket/metals.py): a paper position on the side a
+    # window's last minutes have all but decided, at each model threshold it reached, graded by the settlement.
+    "metals": [
+        "formed_at", "metal", "event_slug", "market_slug", "window_start", "window_end", "seconds_left",
+        "price_to_beat", "spot", "sigma", "p_side", "threshold", "side", "long", "ask", "bid", "fee_rate", "fee",
+        "cost", "edge", "shares_at_ask", "shares_under_cap", "tick", "payout", "won", "profit", "settled_at",
+    ],
     "prop_record": [
         "token_id", "game_id", "kickoff", "sport", "player", "stat", "line", "p_atlas", "p_close", "value", "played",
         "won", "graded_at",
@@ -220,6 +227,7 @@ KEYS: dict[str, list[str]] = {
     "prop_record": ["token_id"],
     "favorites": ["token_id", "threshold"],
     "finish": ["token_id"],
+    "metals": ["market_slug", "side", "threshold"],
     "nba_availability": ["player_id", "reported_at", "status"],
     "nfl_availability": ["player_id", "reported_at", "status"],
     "nhl_availability": ["player_id", "reported_at", "status"],
@@ -247,6 +255,7 @@ SORT: dict[str, list[str]] = {
     "prop_record": ["kickoff", "game_id", "player", "stat"],
     "favorites": ["game_start", "sport", "event_id", "market", "line", "side", "threshold"],
     "finish": ["formed_at", "token_id"],
+    "metals": ["window_end", "metal", "side", "threshold"],
     "nba_availability": ["reported_at", "team", "player"],
     "nfl_availability": ["reported_at", "team", "player"],
     "nhl_availability": ["reported_at", "team", "player"],

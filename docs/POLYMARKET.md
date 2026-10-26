@@ -334,6 +334,44 @@ only when `LIVE_RULES` names it (`favorites,finish`); it is never on by
 default. With the live mode at `dry` that writes a previewed order to the
 ledger and sends nothing.
 
+## The gold and silver 15-minute rule, in practice
+
+From 26 October 2026, the worker also runs a practice rule on Polymarket
+US's gold and silver Up/Down markets (`atlas/polymarket/metals.py`). A new
+window opens every fifteen minutes; Up settles to a dollar when the
+Chainlink spot price at its end is at or above the price at its start (one
+value each), read about a minute after the end. The category survey
+(`reports/Polymarket US category survey.md`) found these books priced to a
+simple model in the middle of a window, and one place they lag: in the last
+few minutes, the side the spot price has all but decided is sometimes still
+offered at 91-97 cents. On one trading day of the venue's history that paid
++0.8 to +2.9 cents a contract after the fee; one live sample lost.
+
+The rule is the test of that, on paper only: nothing is ordered, and the
+live step does not know it. Between its own ticks the worker wakes for each
+window's last five minutes and reads every ten seconds: the commodities
+listing (`/v2/tags/commodities/events`, not edge-cached) for the window's
+price to beat and top of book, and the venue's own Chainlink feed
+(`/v1/asset-prices/history`, not edge-cached) for the spot price and an
+hour of five-second candles. A driftless lognormal on those gives the
+chance the window ends Up. Where it puts a side at or above 0.95, 0.97 or
+0.99, the side is offered at or under 0.97, and the chance beats the ask
+and the fee by more than a cent, it takes a paper position at that ask,
+once per side and threshold per window, with the shares the market's full
+book holds there. That one book read carries a unique query: the edge
+cache otherwise serves a 30-second-old book, or the "not found" it cached
+before the window's market existed. A minute after the window, the venue's
+settlement grades it.
+
+The record is `tracking/metals.csv`, in the clear; the owner page's
+Metals 15m tab shows it by threshold and by metal, with what $1 orders
+would have made (a dollar at 93 cents or more pays no fee, since the venue
+rounds a fee under half a cent to nothing). Set `METALS_RULE=off` in the
+worker's environment to stop it. A loss at 0.95 costs about twenty wins, so
+the record needs a few hundred settled windows before its edge means
+anything; trading it for real would also need the authenticated WebSocket,
+since a REST read of the book is up to 30 seconds old.
+
 ## Going live, armed off
 
 The step that would place real orders exists and ships off

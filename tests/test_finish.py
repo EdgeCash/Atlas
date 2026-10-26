@@ -157,3 +157,13 @@ def test_the_worker_runs_the_rule_each_tick_and_keeps_its_quick_pace_while_games
     again = worker.tick(store, NOW + timedelta(seconds=45), None, events=EVENTS)
     assert len(store.read(finish.TABLE)) == 3 and again["finish_open"] == 3
     assert "tracking/finish.csv" in worker.FILES
+
+
+def test_a_record_read_back_from_its_csv_is_graded(tmp_path, monkeypatch):
+    # Read back with no settlement yet, settled_at is a column of blank floats; pandas 3 refuses text in it.
+    monkeypatch.delenv("ATLAS_OFFLINE", raising=False)
+    store = Store.open(tmp_path / "tracking")
+    record, _ = finish.take(pd.DataFrame(), _quotes(), EVENTS, NOW, depth=lambda *a: {})
+    store.write(finish.TABLE, record)
+    graded, n = finish.grade(store.read(finish.TABLE), NOW + timedelta(minutes=5), fetch=lambda slug: 1.0)
+    assert n == 3 and graded["settled_at"].notna().all()

@@ -17,6 +17,8 @@ settled ones, writes ``tracking/favorites.csv``, hands the new positions to
 the live step (`favorites.order`: nothing is sent unless its secrets say
 so, and late ones only by default), runs the finish-line rule on games the
 venue says are over (`atlas/polymarket/finish.py`), grades the live ledger,
+wakes between ticks for the last minutes of each gold and silver 15-minute
+window to run that practice rule (`atlas/polymarket/metals.py`),
 and commits and pushes what changed. It never lets git merge the record line by line:
 it reads what it holds, resets to the branch, and lays its rows back over
 the branch's (`sync`), so a run that wrote the same file meanwhile costs
@@ -47,7 +49,7 @@ import pandas as pd
 from atlas import config
 from atlas.live.store import Store
 from atlas.owner import crypto
-from atlas.polymarket import favorites, finish, match, source
+from atlas.polymarket import favorites, finish, match, metals, source
 from atlas.util import get_logger, offline, session
 
 LOG = get_logger(__name__)
@@ -63,7 +65,7 @@ BRANCH = "ATLAS_WORKER_BRANCH"
 LEDGER = "tracking/polymarket_live"
 #: The live step's audit trail (`atlas/polymarket/audit.py`): every call to the venue, sealed like the ledger.
 AUDIT = "tracking/polymarket_audit"
-FILES = ("tracking/favorites.csv", "tracking/finish.csv", LEDGER, AUDIT)
+FILES = ("tracking/favorites.csv", "tracking/finish.csv", "tracking/metals.csv", LEDGER, AUDIT)
 #: The sealed records the worker keeps, and what identifies a row in each when two copies are merged.
 SEALED = {LEDGER: ["position_id", "placed_at", "rule"], AUDIT: ["event_id"]}
 #: The venue's period strings: a quarter or period by its number, overtime past the last, the half between.
@@ -224,6 +226,7 @@ def sync(root: Path, passphrase: str | None = None) -> bool:
     store = Store.open(root / "tracking")
     ours = favorites.clean(store.read(favorites.TABLE))
     ours_finish = finish.clean(store.read(finish.TABLE))
+    ours_metals = metals.clean(store.read(metals.TABLE))
     held = {folder: _ledger(root, passphrase, folder) for folder in SEALED}
     for args in (("rebase", "--abort"), ("merge", "--abort")):
         _git(root, *args, check=False)
@@ -233,6 +236,8 @@ def sync(root: Path, passphrase: str | None = None) -> bool:
     _git(root, "reset", "-q", "--hard", f"origin/{target}")
     store.write(favorites.TABLE, favorites.merge(store.read(favorites.TABLE), ours))
     store.write(finish.TABLE, finish.merge(store.read(finish.TABLE), ours_finish))
+    if len(ours_metals) or len(store.read(metals.TABLE)):
+        store.write(metals.TABLE, metals.merge(store.read(metals.TABLE), ours_metals))
     for folder, files in held.items():
         keys = SEALED[folder]
         ident = lambda row, keys=keys: tuple(row.get(k) for k in keys)  # noqa: E731
@@ -310,7 +315,26 @@ def run(*, every: int = EVERY, idle: int = IDLE, once: bool = False, push: bool 
         if once:
             return
         wait = every if summary.get("live") else idle
-        time.sleep(min(wait * (2 ** min(failures, 4)), 1800))
+        rest(min(wait * (2 ** min(failures, 4)), 1800), store, sess=sess)
+
+
+def rest(seconds: float, store: Store, *, sess=None, clock=time.time, sleep=time.sleep) -> int:
+    """The wait between ticks, woken for the metals rule's reads in each 15-minute window's final minutes
+    (`atlas/polymarket/metals.py`, practice only; ``METALS_RULE=off`` sleeps straight through). Returns the
+    reads made."""
+    end = clock() + seconds
+    reads = 0
+    while True:
+        left = end - clock()
+        if left <= 0:
+            return reads
+        gap = metals.next_poll(datetime.fromtimestamp(clock(), UTC)) if metals.on() and not offline() else None
+        if gap is None or gap >= left:
+            sleep(left)
+            return reads
+        sleep(max(gap, 0.0))
+        metals.step(store, datetime.fromtimestamp(clock(), UTC), sess=sess)
+        reads += 1
 
 
 def main() -> None:

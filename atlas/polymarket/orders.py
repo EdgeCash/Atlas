@@ -475,6 +475,7 @@ def grade(ledger: pd.DataFrame, passphrase: str, now: datetime, *, where: Path |
     if ledger.empty or offline():
         return ledger
     out = ledger.copy()
+    out["graded_at"] = out["graded_at"].astype(object)        # read back all-blank as floats
     filled, payout = _num(out["filled"]), _num(out["payout"])
     kick = pd.to_datetime(out["kickoff"], utc=True, errors="coerce")
     pending = out[(filled > 0) & payout.isna() & (kick <= pd.Timestamp(now) - timedelta(hours=4))]

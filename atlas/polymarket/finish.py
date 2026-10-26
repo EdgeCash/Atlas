@@ -183,6 +183,8 @@ def grade(record: pd.DataFrame, now: datetime, fetch=None, limit: int = SETTLEME
     if record.empty or offline():
         return record, 0
     out = record.copy()
+    # Text goes into a column read back from the record as all-blank floats: pandas 3 refuses it unless object.
+    out["settled_at"] = out["settled_at"].astype(object)
     pending = out[pd.to_numeric(out["payout"], errors="coerce").isna()]
     if pending.empty:
         return out, 0

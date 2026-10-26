@@ -25,6 +25,7 @@ from atlas.polymarket import (
     favorites,
     finish,
     match,
+    metals,
     orders,
     page,
     positions,
@@ -110,7 +111,8 @@ def refresh(*, now: datetime | None = None, heavy: bool = False, store: Store | 
                 reconcile.daily(passphrase, now)
             checked = reconcile.latest(audit.load(passphrase))
             sections = [*page.sections(priced, chosen, graded, now), *prop_sections, fav_section,
-                        finish.section(store.read(finish.TABLE), now), orders.section(ledger, now, checked)]
+                        finish.section(store.read(finish.TABLE), now), metals.section(store.read(metals.TABLE), now),
+                        orders.section(ledger, now, checked)]
         else:
             reason = "The owner key is not configured."
     except Exception as error:  # noqa: BLE001 - the type only: a message could quote a price
