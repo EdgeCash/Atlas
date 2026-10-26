@@ -1831,3 +1831,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-26T21:07:58+00:00,2026-10-26T20:34Z,29,Carolina Panthers,CAR,2973051,Taylor Moton,OT,Injured Reserve,IR,Left Lower Leg Fracture,2027-01-03,ir
 2026-10-26T21:07:58+00:00,2026-10-26T20:51Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-26T21:07:58+00:00,2026-10-26T21:00Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-26T21:22:51+00:00,2026-10-26T21:02Z,24,Los Angeles Chargers,LAC,4612826,Ladd McConkey,WR,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-01,"McConkey (concussion) was spotted on the field in a no-contact jersey during the Chargers' bonus practice session Monday, Noah Furtado of The Athletic reports."
+2026-10-26T21:22:51+00:00,2026-10-26T21:03Z,9,Green Bay Packers,GB,3124005,Zaire Franklin,LB,Out,DOUBTFUL,Shin Fracture,2026-10-29,"Franklin suffered a hairline fracture during last Thursday's practice, Rob Demovsky of ESPN.com reports."
+2026-10-26T21:22:51+00:00,2026-10-26T21:07Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-26T21:22:51+00:00,2026-10-26T21:07Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
