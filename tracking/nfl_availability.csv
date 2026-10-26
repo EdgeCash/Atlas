@@ -1548,6 +1548,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-26T01:07:59+00:00,2026-10-26T01:00Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-26T01:23:02+00:00,2026-10-26T01:00Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-26T01:23:02+00:00,2026-10-26T01:02Z,9,Green Bay Packers,GB,4701936,Matthew Golden,WR,Active,,,,Golden gathered in six of 12 targets for 39 yards during Sunday's 20-17 defeat in Detroit.
+2026-10-26T21:53:04+00:00,2026-10-26T01:02Z,9,Green Bay Packers,GB,4701936,Matthew Golden,WR,Questionable,QUESTIONABLE,Shoulder,2026-10-29,Golden gathered in six of 12 targets for 39 yards during Sunday's 20-17 defeat in Detroit.
 2026-10-26T01:37:45+00:00,2026-10-26T01:06Z,19,New York Giants,NYG,5082424,Dominic Zvada,PK,Active,,,,Zvada missed both of his field-goal attempts and 3-for-3 on extra-point tries during Sunday's 27-21 overtime win against Houston.
 2026-10-26T01:37:45+00:00,2026-10-26T01:08Z,13,Las Vegas Raiders,LV,4432665,Brock Bowers,TE,Active,,,,Bowers secured six of eight targets for 73 yards in the Raiders' 35-21 loss to the Rams on Sunday.
 2026-10-26T01:23:02+00:00,2026-10-26T01:10Z,9,Green Bay Packers,GB,4572680,Tucker Kraft,TE,Active,,,,Kraft compiled four catches (on six targets) for 48 yards and one touchdown during Sunday's 20-17 loss at Detroit.
@@ -1840,4 +1841,8 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-26T21:37:44+00:00,2026-10-26T21:15Z,11,Indianapolis Colts,IND,4682909,Justin Walley,CB,Questionable,QUESTIONABLE,Knee,2026-11-01,"According to head coach Shane Steichen, Walley did not return to Sunday's 16-10 loss to Minnesota due to a knee injury, Kevin Bowen of 107.5 The Fan Indianapoli"
 2026-10-26T21:37:44+00:00,2026-10-26T21:17Z,21,Philadelphia Eagles,PHI,4241374,Grant Calcaterra,TE,Active,,,,The Eagles activated Calcaterra (back) from injured reserve Monday.
 2026-10-26T21:37:44+00:00,2026-10-26T21:19Z,21,Philadelphia Eagles,PHI,4241555,Elijah Mitchell,RB,Active,,,,The Eagles elevated Mitchell from the practice squad ahead of Monday night's game against Dallas.
+2026-10-26T21:53:04+00:00,2026-10-26T21:29Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-26T21:37:44+00:00,2026-10-26T21:29Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-26T21:53:04+00:00,2026-10-26T21:33Z,5,Cleveland Browns,CLE,4427238,Dillon Gabriel,QB,Active,,,,The Browns activated Gabriel (back) from injured reserve Monday.
+2026-10-26T21:53:04+00:00,2026-10-26T21:34Z,29,Carolina Panthers,CAR,4695883,Jalen Coker,WR,Questionable,QUESTIONABLE,Shoulder,2026-10-29,"Coker was listed as limited on Monday's estimated practice report due to a shoulder injury, Darin Gantt of the Panthers' official site reports."
+2026-10-26T21:53:04+00:00,2026-10-26T21:43Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
