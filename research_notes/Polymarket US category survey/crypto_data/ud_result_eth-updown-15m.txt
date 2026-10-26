@@ -1,0 +1,56 @@
+series eth-updown-15m align +55s  windows 264  obs 3193
+min-left | n | Brier mid | p60 | p1d | p15 | blend | logloss mid | blend | spread med
+1-2 | 43 | 0.1014 | 0.1062 | 0.1269 | 0.1067 | 0.1172 | 0.3249 | 0.3874 | 0.030
+2-3 | 109 | 0.1401 | 0.1428 | 0.1476 | 0.1376 | 0.1457 | 0.4452 | 0.4600 | 0.020
+3-5 | 324 | 0.1428 | 0.1454 | 0.1528 | 0.1434 | 0.1490 | 0.4444 | 0.4659 | 0.020
+5-10 | 1151 | 0.1690 | 0.1697 | 0.1736 | 0.1691 | 0.1717 | 0.5119 | 0.5183 | 0.020
+10-60 | 1303 | 0.2119 | 0.2129 | 0.2158 | 0.2130 | 0.2137 | 0.6127 | 0.6163 | 0.020
+implied vol from mid: median 0.299 (IQR 0.238-0.389); trailing-60m RV median 0.338; trailing-24h RV median 0.441; n=2434
+market mid calibration (tau 60-600s): bin | n | mean mid | win rate
+  0.0 | 367 | 0.043 | 0.063
+  0.1 | 223 | 0.151 | 0.103
+  0.2 | 190 | 0.249 | 0.232
+  0.3 | 164 | 0.349 | 0.268
+  0.4 | 139 | 0.445 | 0.374
+  0.5 | 138 | 0.546 | 0.522
+  0.6 | 132 | 0.649 | 0.576
+  0.7 | 138 | 0.746 | 0.710
+  0.8 | 141 | 0.851 | 0.865
+  0.9 | 253 | 0.955 | 0.953
+taker sim (buy at bar ask / sell at bar bid, one trade per window):
+  pbl tau 60-300s thr 0.00: n=238 mean=-0.0207 se=0.0222 hit=0.24
+  pbl tau 60-300s thr 0.02: n=202 mean=-0.0245 se=0.0248 hit=0.19
+  pbl tau 60-300s thr 0.05: n=147 mean=-0.0116 se=0.0302 hit=0.18
+  pbl tau 60-300s thr 0.10: n=65 mean=+0.0204 se=0.0476 hit=0.17
+  pbl tau 120-300s thr 0.00: n=236 mean=-0.0192 se=0.0223 hit=0.23
+  pbl tau 120-300s thr 0.02: n=200 mean=-0.0223 se=0.0249 hit=0.20
+  pbl tau 120-300s thr 0.05: n=139 mean=-0.0108 se=0.0313 hit=0.19
+  pbl tau 120-300s thr 0.10: n=57 mean=+0.0120 se=0.0491 hit=0.16
+  pbl tau 300-600s thr 0.00: n=261 mean=-0.0083 se=0.0263 hit=0.34
+  pbl tau 300-600s thr 0.02: n=225 mean=-0.0171 se=0.0281 hit=0.28
+  pbl tau 300-600s thr 0.05: n=139 mean=+0.0307 se=0.0362 hit=0.29
+  pbl tau 300-600s thr 0.10: n=27 mean=-0.0259 se=0.0698 hit=0.19
+  p60 tau 60-300s thr 0.00: n=223 mean=+0.0005 se=0.0235 hit=0.37
+  p60 tau 60-300s thr 0.02: n=152 mean=+0.0036 se=0.0312 hit=0.27
+  p60 tau 60-300s thr 0.05: n=91 mean=+0.0293 se=0.0437 hit=0.25
+  p60 tau 60-300s thr 0.10: n=32 mean=+0.0255 se=0.0692 hit=0.22
+  p60 tau 120-300s thr 0.00: n=221 mean=+0.0021 se=0.0237 hit=0.37
+  p60 tau 120-300s thr 0.02: n=146 mean=+0.0038 se=0.0319 hit=0.27
+  p60 tau 120-300s thr 0.05: n=85 mean=+0.0276 se=0.0459 hit=0.26
+  p60 tau 120-300s thr 0.10: n=22 mean=-0.0179 se=0.0715 hit=0.18
+  p60 tau 300-600s thr 0.00: n=252 mean=-0.0322 se=0.0266 hit=0.44
+  p60 tau 300-600s thr 0.02: n=173 mean=-0.0263 se=0.0328 hit=0.40
+  p60 tau 300-600s thr 0.05: n=65 mean=-0.0238 se=0.0546 hit=0.32
+  p60 tau 300-600s thr 0.10: n=8 mean=-0.0321 se=0.1207 hit=0.25
+  p1d tau 60-300s thr 0.00: n=242 mean=-0.0098 se=0.0217 hit=0.27
+  p1d tau 60-300s thr 0.02: n=211 mean=-0.0102 se=0.0240 hit=0.23
+  p1d tau 60-300s thr 0.05: n=176 mean=-0.0199 se=0.0265 hit=0.18
+  p1d tau 60-300s thr 0.10: n=101 mean=-0.0030 se=0.0354 hit=0.16
+  p1d tau 120-300s thr 0.00: n=242 mean=-0.0098 se=0.0217 hit=0.27
+  p1d tau 120-300s thr 0.02: n=211 mean=-0.0102 se=0.0240 hit=0.23
+  p1d tau 120-300s thr 0.05: n=174 mean=-0.0188 se=0.0268 hit=0.18
+  p1d tau 120-300s thr 0.10: n=94 mean=-0.0157 se=0.0356 hit=0.15
+  p1d tau 300-600s thr 0.00: n=261 mean=-0.0127 se=0.0271 hit=0.35
+  p1d tau 300-600s thr 0.02: n=249 mean=-0.0189 se=0.0273 hit=0.31
+  p1d tau 300-600s thr 0.05: n=173 mean=-0.0010 se=0.0324 hit=0.29
+  p1d tau 300-600s thr 0.10: n=75 mean=+0.0087 se=0.0441 hit=0.27

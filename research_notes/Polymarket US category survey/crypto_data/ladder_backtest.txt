@@ -1,0 +1,86 @@
+== HOURLY ladders 65
+ tau 30m n=673 med spread 0.020 Brier mid 0.0790 | rv1h 0.0790 | rv24h 0.0837 | dvol 0.0854
+    rv1h   thr 0.00: trades 442 ladders 64 mean -0.0240 se 0.0194
+    rv1h   thr 0.02: trades 155 ladders 54 mean -0.0053 se 0.0291
+    rv1h   thr 0.05: trades 67 ladders 35 mean +0.0674 se 0.0392
+    rv24h  thr 0.00: trades 476 ladders 59 mean -0.0032 se 0.0145
+    rv24h  thr 0.02: trades 277 ladders 59 mean +0.0111 se 0.0205
+    rv24h  thr 0.05: trades 156 ladders 52 mean +0.0217 se 0.0247
+    dvol   thr 0.00: trades 546 ladders 65 mean -0.0213 se 0.0114
+    dvol   thr 0.02: trades 408 ladders 64 mean -0.0133 se 0.0158
+    dvol   thr 0.05: trades 274 ladders 58 mean -0.0137 se 0.0202
+ tau 15m n=679 med spread 0.020 Brier mid 0.0454 | rv1h 0.0446 | rv24h 0.0480 | dvol 0.0510
+    rv1h   thr 0.00: trades 524 ladders 64 mean +0.0143 se 0.0064
+    rv1h   thr 0.02: trades 236 ladders 63 mean +0.0317 se 0.0115
+    rv1h   thr 0.05: trades 125 ladders 54 mean +0.0933 se 0.0119
+    rv24h  thr 0.00: trades 525 ladders 59 mean +0.0069 se 0.0080
+    rv24h  thr 0.02: trades 290 ladders 59 mean +0.0280 se 0.0127
+    rv24h  thr 0.05: trades 180 ladders 57 mean +0.0353 se 0.0156
+    dvol   thr 0.00: trades 575 ladders 65 mean -0.0095 se 0.0079
+    dvol   thr 0.02: trades 390 ladders 65 mean -0.0071 se 0.0101
+    dvol   thr 0.05: trades 259 ladders 65 mean +0.0033 se 0.0144
+== DAILY ladders 6
+ tau 720m n=143 med spread 0.030 Brier mid 0.0837 | rv1h 0.0797 | rv24h 0.0845 | dvol 0.0874
+    rv1h   thr 0.00: trades 96 ladders 6 mean +0.0426 se 0.0304
+    rv1h   thr 0.02: trades 35 ladders 6 mean +0.0868 se 0.0097
+    rv1h   thr 0.05: trades 8 ladders 4 mean +0.1296 se 0.0264
+    rv24h  thr 0.00: trades 82 ladders 6 mean -0.0078 se 0.0251
+    rv24h  thr 0.02: trades 27 ladders 6 mean +0.0291 se 0.0369
+    rv24h  thr 0.05: trades 8 ladders 4 mean -0.0245 se 0.1003
+    dvol   thr 0.00: trades 83 ladders 6 mean -0.0097 se 0.0370
+    dvol   thr 0.02: trades 41 ladders 6 mean -0.0336 se 0.0531
+    dvol   thr 0.05: trades 19 ladders 5 mean -0.1007 se 0.0406
+ tau 360m n=151 med spread 0.030 Brier mid 0.0407 | rv1h 0.0536 | rv24h 0.0376 | dvol 0.0420
+    rv1h   thr 0.00: trades 127 ladders 6 mean -0.0373 se 0.0321
+    rv1h   thr 0.02: trades 82 ladders 6 mean -0.0518 se 0.0406
+    rv1h   thr 0.05: trades 55 ladders 5 mean -0.0833 se 0.0402
+    rv24h  thr 0.00: trades 118 ladders 6 mean +0.0465 se 0.0109
+    rv24h  thr 0.02: trades 41 ladders 6 mean +0.0761 se 0.0169
+    rv24h  thr 0.05: trades 12 ladders 6 mean +0.1178 se 0.0317
+    dvol   thr 0.00: trades 93 ladders 6 mean +0.0075 se 0.0299
+    dvol   thr 0.02: trades 45 ladders 6 mean -0.0017 se 0.0425
+    dvol   thr 0.05: trades 15 ladders 4 mean +0.0172 se 0.0971
+ tau 120m n=156 med spread 0.020 Brier mid 0.0181 | rv1h 0.0159 | rv24h 0.0172 | dvol 0.0199
+    rv1h   thr 0.00: trades 136 ladders 6 mean +0.0377 se 0.0055
+    rv1h   thr 0.02: trades 76 ladders 6 mean +0.0557 se 0.0062
+    rv1h   thr 0.05: trades 24 ladders 5 mean +0.0876 se 0.0094
+    rv24h  thr 0.00: trades 132 ladders 6 mean +0.0304 se 0.0090
+    rv24h  thr 0.02: trades 78 ladders 6 mean +0.0354 se 0.0061
+    rv24h  thr 0.05: trades 23 ladders 5 mean +0.0889 se 0.0096
+    dvol   thr 0.00: trades 143 ladders 6 mean +0.0087 se 0.0100
+    dvol   thr 0.02: trades 90 ladders 6 mean +0.0228 se 0.0081
+    dvol   thr 0.05: trades 33 ladders 6 mean +0.0135 se 0.0242
+
+DETAIL hourly rv1h
+ tau 15m thr 0.02: n=236
+    buy Yes      n=  98 mean pnl +0.0328 mean cost 0.727 mean model 0.794 win 0.77 ladders 45
+    buy No       n= 138 mean pnl +0.0308 mean cost 0.695 mean model 0.767 win 0.73 ladders 56
+    cost<0.2     n=  42 mean pnl -0.0906 mean cost 0.108 mean model 0.162 win 0.02 ladders 21
+    cost 0.2-0.8 n=  31 mean pnl +0.0293 mean cost 0.376 mean model 0.470 win 0.42 ladders 23
+    cost>0.8     n= 163 mean pnl +0.0636 mean cost 0.926 mean model 0.996 win 0.99 ladders 62
+    first half   n= 115 mean pnl +0.0152 mean cost 0.674 mean model 0.745 win 0.70 ladders 30
+    second half  n= 121 mean pnl +0.0473 mean cost 0.740 mean model 0.810 win 0.79 ladders 33
+ tau 15m thr 0.05: n=125
+    buy Yes      n=  51 mean pnl +0.0730 mean cost 0.764 mean model 0.859 win 0.84 ladders 29
+    buy No       n=  74 mean pnl +0.1073 mean cost 0.764 mean model 0.864 win 0.88 ladders 42
+    cost<0.2     n=  15 mean pnl -0.0507 mean cost 0.111 mean model 0.193 win 0.07 ladders 7
+    cost 0.2-0.8 n=  14 mean pnl +0.2803 mean cost 0.491 mean model 0.644 win 0.79 ladders 10
+    cost>0.8     n=  96 mean pnl +0.0885 mean cost 0.906 mean model 0.998 win 1.00 ladders 51
+    first half   n=  57 mean pnl +0.0806 mean cost 0.702 mean model 0.804 win 0.79 ladders 23
+    second half  n=  68 mean pnl +0.1039 mean cost 0.816 mean model 0.910 win 0.93 ladders 31
+ tau 30m thr 0.02: n=155
+    buy Yes      n=  53 mean pnl -0.1156 mean cost 0.524 mean model 0.580 win 0.42 ladders 25
+    buy No       n= 102 mean pnl +0.0520 mean cost 0.627 mean model 0.693 win 0.69 ladders 46
+    cost<0.2     n=  45 mean pnl -0.0537 mean cost 0.114 mean model 0.164 win 0.07 ladders 19
+    cost 0.2-0.8 n=  28 mean pnl -0.0011 mean cost 0.380 mean model 0.465 win 0.39 ladders 20
+    cost>0.8     n=  82 mean pnl +0.0199 mean cost 0.927 mean model 0.989 win 0.95 ladders 45
+    first half   n=  81 mean pnl +0.0070 mean cost 0.541 mean model 0.605 win 0.56 ladders 25
+    second half  n=  74 mean pnl -0.0187 mean cost 0.647 mean model 0.709 win 0.64 ladders 29
+ tau 30m thr 0.05: n=67
+    buy Yes      n=  19 mean pnl -0.0660 mean cost 0.585 mean model 0.673 win 0.53 ladders 13
+    buy No       n=  48 mean pnl +0.1202 mean cost 0.705 mean model 0.803 win 0.83 ladders 26
+    cost<0.2     n=  14 mean pnl -0.0023 mean cost 0.137 mean model 0.210 win 0.14 ladders 6
+    cost 0.2-0.8 n=  10 mean pnl +0.1683 mean cost 0.418 mean model 0.573 win 0.60 ladders 8
+    cost>0.8     n=  43 mean pnl +0.0666 mean cost 0.904 mean model 0.992 win 0.98 ladders 29
+    first half   n=  36 mean pnl +0.0933 mean cost 0.566 mean model 0.659 win 0.67 ladders 18
+    second half  n=  31 mean pnl +0.0372 mean cost 0.794 mean model 0.890 win 0.84 ladders 17
