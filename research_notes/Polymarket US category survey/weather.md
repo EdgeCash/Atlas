@@ -4,7 +4,7 @@ Read-only survey, run 25 Oct 2026 23:16 UTC to 26 Oct 00:30 UTC. Labels: **measu
 
 ## Takeaway
 
-The weather tab is one Kalshi-mirrored product: daily high-temperature buckets for six US stations, plus two low-temperature series, a thin daily-rain ladder and two long-dated NASA-GISS ranking markets. PMUS quotes sit a median **0.5¢** from Kalshi's. The free-forecast edge is not there. A walk-forward model built on the National Blend of Models (NBM) and calibrated on 170 days of NWS CLI errors was beaten badly by the market on 734 settled events: per-event log loss was **1.51 for the model against 1.22 for the market** the evening before, and **1.41 against 1.05** on the morning of the day. Every "model probability − ask − fee > X" rule lost money, **−3.4¢ per contract (n = 1,914)** and **−1.6¢ (n = 2,018)**. The observation edge has also been taken. When an hourly METAR made a live bucket impossible, the market had already pushed that bucket's No ask to ≥ 0.98 a median **6 minutes before the METAR could be read** (n = 62). The winning bucket reached 95¢ a median **3.8 hours before** the 6-hour-maximum group confirmed it. The only residue is stale books on maker-outage days: 9 observation-certain mispricings at 28–90¢ across 275 events, 5 of them on one day (5 Sep). That is a **Test-grade sentinel worth roughly $0–1 a day** on a $135 account, not a model-based edge.
+The weather tab is one Kalshi-mirrored product: daily high-temperature buckets for six US stations, plus two low-temperature series, a thin daily-rain ladder and two long-dated NASA-GISS ranking markets. PMUS quotes sit a median **0.5¢** from Kalshi's. The free-forecast edge is not there. A walk-forward model built on the National Blend of Models (NBM) and calibrated on 170 days of NWS CLI errors was beaten badly by the market on 734 settled events: per-event log loss was **1.51 for the model against 1.22 for the market** the evening before, and **1.41 against 1.05** on the morning of the day. Every "model probability − ask − fee > X" rule lost money, **−3.4¢ per contract (n = 1,914)** and **−1.6¢ (n = 2,018)**. The observation edge has also been taken. When an hourly METAR made a live bucket impossible, the market had already pushed that bucket's No ask to ≥ 0.98 a median **6 minutes before the METAR could be read** (n = 62). The winning bucket reached 95¢ a median **3.8 hours before** the 6-hour-maximum group confirmed it. The only residue is stale books on maker-outage days: 8 observation-certain mispricings at 28–90¢ across 275 events, 4 of them on one day (5 Sep). That is a **Test-grade sentinel worth roughly $0–1 a day** on a $135 account, not a model-based edge.
 
 ## Q1. What is listed today
 
@@ -12,7 +12,7 @@ Source: [gateway events, `categories=climate`](https://gateway.polymarket.us/v1/
 
 | Family (series slug) | Cities / station | Buckets | Settlement source | Timing | Tick / fee | Spread & depth (measured) | Volume (measured, `/book` stats 23:17 UTC) |
 |---|---|---|---|---|---|---|---|
-| Daily high, `weather-daily-high-*` (`temp-{nyc,mia,mdw,lax,sfo,phl}high-YYYY-MM-DD`) | KNYC Central Park, KMIA, KMDW (Chicago **Midway**), KLAX, KSFO, KPHL | 6: two open tails plus four 2°F buckets, e.g. "68 to 69" (slug `gte68lt69f` means 68 or 69 inclusive) | Final NWS Daily Climate Report (CLI) for that station. CLI day = midnight–midnight **local standard time** | Listed about 09:45 UTC the day before. Market `endDate` is 09:00–12:00 UTC on D+1. FAQ: "Settlement occurs at 8:00 AM ET on the day following… may be delayed until 11:00 AM ET" if the CLI conflicts with the 24-h METAR ([Weather FAQs](https://docs.polymarket.us/faqs/weather-faqs.md), cited) | 0.01 / 0.0695·p(1−p) on every market | For tomorrow's (26 Oct) 25 two-sided legs priced 5–95¢: median spread **2¢**, p90 6¢. Top-of-ask **median $10**, p25 $4. **$124 within 5¢ of the ask** (median). 11 of 48 tops changed between snapshots 8 minutes apart (23:28 vs 23:36 UTC) | Settlement-day events traded 11k–65k shares and **$2.0k–10.2k notional** (NYC $9,951; MIA $10,188; LAX $7,968; SFO $5,733; MDW $1,985; PHL $1,941). The day before: $150–870 per event |
+| Daily high, `weather-daily-high-*` (`temp-{nyc,mia,mdw,lax,sfo,phl}high-YYYY-MM-DD`) | KNYC Central Park, KMIA, KMDW (Chicago **Midway**), KLAX, KSFO, KPHL | 6: two open tails plus four 2°F buckets, e.g. "68 to 69" (slug `gte68lt69f` means 68 or 69 inclusive) | Final NWS Daily Climate Report (CLI) for that station. CLI day = midnight–midnight **local standard time** | Listed about 09:45 UTC the day before. Market `endDate` is 09:00–12:00 UTC on D+1. FAQ: "Settlement occurs at 8:00 AM ET on the day following… may be delayed until 11:00 AM ET" if the CLI conflicts with the 24-h METAR ([Weather FAQs](https://docs.polymarket.us/faqs/weather-faqs.md), cited) | 0.01 / 0.0695·p(1−p) on every market | For tomorrow's (26 Oct) 25 two-sided legs priced 5–95¢: median spread **2¢**, p90 6¢. Top-of-ask **median $10**, p25 $4. **$124 within 5¢ of the ask** (median). 11 of 48 tops changed between snapshots 8 minutes apart (23:28 vs 23:36 UTC) | Settlement-day high events traded 5.6k–65k shares and **$1.9k–10.2k notional** (NYC $9,951; MIA $10,188; LAX $7,968; SFO $5,733; MDW $1,985; PHL $1,941). The day before: $150–870 per event |
 | Daily low, `weather-daily-low-{nyc,chicago}` | KNYC, KMDW | Same 6-bucket ladder | CLI minimum | Same | Same | Wider: 4–7¢ on the live legs, 28-share levels | $377–1,604 on settlement day |
 | Daily rain, `rain-daily` | KNYC, **KORD** (not Midway), KMIA, KPHL, KLAX, KSFO | 1 Yes/No per city | Any METAR/SPECI present-weather group with RA (not VCSH, RE, RMK), counted in local standard time. Source: aviationweather.gov raw METAR. CLI fallback | Market `endDate` is about 10 days out | Same | Five of six cities show only a **0.99 Yes ask with no bid** (placeholder). Miami is 0.86/0.93 | **45–80 shares a day**, ~$40–70 |
 | Hottest-year rank (`yr-httst`), 2026 and 2027 | Global, NASA GISS LOTI "No_Smoothing" | 1st / 2nd / 3rd / 4th / ≤5th | GISS table | Ends Mar 2027 / Mar 2028 | Same | 1¢ wide (2026 "1st" 0.84/0.85) | $28k notional lifetime (2026) |
@@ -103,12 +103,12 @@ The better models are an obvious upgrade: hourly NBM runs, HRRR, ECMWF/AIFS, sta
 
 **Lower-bound kills (measured, `weather_data/scripts/lag2.py`).** The test covers 275 high-temperature events from 1 Sep to 24 Oct with minute histories on day D (`fidelity=1`, 14:00Z D to 09:00Z D+1) and IEM ASOS METAR/SPECI with T-groups. A spike filter rejects any rise of more than 3°F over the previous observation. A "kill" is the first moment the running maximum exceeds a bucket's upper edge, which makes that bucket impossible (1 exception in 874 days, above). A kill is "marginal" if the bucket's mid was ≥ 5¢ thirty minutes earlier, giving **62 marginal kills**:
 
-- 4 minutes after the METAR (when it can first be read on aviationweather.gov), the bucket's No ask was already ≥ 0.98 in **57 of 62**.
-- Measured from that moment, the market reached No ≥ 0.98 a **median 6 minutes earlier**. The 10th, 25th, 75th and 90th percentiles were −32, −25, −3 and −2 minutes, and 60 of 62 had reached it by then.
+- 4 minutes after the METAR (when it can first be read on aviationweather.gov), the bucket's No ask was already ≥ 0.98 in **55 of 62**.
+- 60 of the 62 reached No ≥ 0.98 inside the window. Measured from that moment, they got there a **median 6 minutes earlier**. The 10th, 25th, 75th and 90th percentiles were −32, −25, −3 and −2 minutes, so at least 90% had moved before the METAR could be read.
 - The makers are reading data faster than hourly METAR. api.weather.gov serves 5-minute ASOS readings for KMDW, though in whole °C (71.6°F = 22°C). The KNYC feed had gaps: no 18, 20 or 21Z observations on 25 Oct (measured 23:40 UTC). On NYC 13 Oct the "70 or below" leg fell from 0.95 to 0.77 between 00:30 and 00:39Z, twenty minutes before the 00:51Z METAR showed the late warming.
-- Of the 5 kills whose No ask was below 0.98, three were crossed fillers with no Yes bid (not executable). The executable ones were SFO on 5 Sep, where 71–72 still showed a Yes ask of 0.60 and a No ask of 0.44 for 241 minutes after the observed maximum passed 72, and LAX on 9 Sep ("84 or below" No at 0.28 for 61 minutes).
+- Seven kills had a No ask below 0.98 at that moment, and five of those were crossed fillers with no Yes bid (not executable). The two uncrossed ones were both SFO on 5 Sep: 71–72 still showed a Yes ask of 0.60 and a No ask of 0.44 for 241 minutes after the observed maximum passed 72, and 69–70 showed a No ask of 0.92. LAX on 9 Sep later turned into an uncrossed "84 or below" No at 0.28 for 61 minutes.
 
-**Upper-side lock at 00:05Z (measured).** The rule: true maximum so far = max(T-group observations, 6-h maximum groups from the 18Z and 00Z METARs), and the current temperature is ≥ 3°F below it. In the **238 eligible events, the bucket holding that maximum won 234 (98.3%)**. The four misses all show the station-vs-CLI subtleties:
+**Upper-side lock at 00:05Z (measured).** The rule: true maximum so far = max(T-group observations, 6-h maximum groups from the 18Z and 00Z METARs), and the current temperature is ≥ 3°F below it. In the **239 events that qualified, the bucket holding that maximum won 234 (97.9%)**. The five misses all show the station-vs-CLI subtleties:
 
 | Station, date | What happened |
 |---|---|
@@ -116,8 +116,9 @@ The better models are an obvious upgrade: hourly NBM runs, HRRR, ECMWF/AIFS, sta
 | NYC 17 Oct | The maximum fell in the first LST hour |
 | PHL 15 Oct | CLI 73 against a METAR/6-h maximum of 70 |
 | LAX 11 Oct | CLI 74 against 73 |
+| LAX 22 Oct | No 6-h group at 00Z; CLI 72 against a METAR maximum of 71 |
 
-The market was already at 0.01 on the "locked" bucket in all four: it knew better than the rule. It was also earlier. The eventual winner first showed a Yes ask ≥ 0.95 (with an implied bid ≥ 0.90) a **median 230 minutes before 00:05Z** (quartiles −315 and −160; n = 272).
+In three of the five (NYC 17 Oct, PHL 15 Oct, LAX 11 Oct) the market already priced the "locked" bucket at 0.01 at 00:05Z: it knew better than the rule. In the other two it was as wrong as the rule (0.95 on NYC 13 Oct, which fell to 0.01 later in the night; 0.93 on LAX 22 Oct). It was also earlier. The eventual winner first showed a Yes ask ≥ 0.95 (with an implied bid ≥ 0.90) a **median 230 minutes before 00:05Z** (quartiles −315 and −160; n = 272).
 
 **Late favourites (measured, `late.py`, one point per event and hour).** Buckets asked at 0.97 or more at 17, 19 and 21 LST won **53 of 57 (93.0%)** against a 97.9% break-even. The losses were real station-vs-CLI cases:
 
@@ -135,7 +136,7 @@ Every rule tested is in the Q2 and Q3 tables. Sample sizes: 734–737 events (Ma
 
 The one positive-expectation pattern is the **stale-book sentinel**. It fires when an observation-certain outcome (a spike-filtered lower-bound kill, or the 00:05Z 6-h lock with a ≥ 3°F drop) is offered at an uncrossed price ≤ 0.90, and the market is not already at ≤ 0.10 on the "certain" side (that filter would have excluded all 4 lock-rule errors, which is in-sample tuning).
 
-- Over 275 events it found **9 instances on 6 dates, and all 9 won**:
+- Over 275 events it found **8 instances on 5 dates, and all 8 won**:
 
 | Date | Leg | Price |
 |---|---|---|
@@ -147,7 +148,8 @@ The one positive-expectation pattern is the **stale-book sentinel**. It fires wh
 | 18 Sep | SFO 68–69 | Yes 0.40 |
 | 26 Sep | NYC ≤ 61 | Yes 0.90 (3 minutes) |
 | 15 Oct | MDW 65–66 | Yes 0.31, for 331 minutes |
-| 15 Oct | NYC ≥ 61 | (the ninth instance) |
+
+- The ≤ 0.10 filter also threw away two 5 Sep winners: MDW 83–84 at 0.01 and MIA 92–93 at 0.10. That is the price of the filter.
 
 - The average edge is about **+50¢ per contract**, but the depth behind those quotes is unknown, and top-of-book on normal days is a median $10 (measured).
 - Rough dollars (inference): about 1 hit a week, each filling $5–25 at around +50%, comes to **$3–12 a week, roughly $0–1.5 a day**. This is a sample from one maker's bad days, and it could be zero next quarter.
@@ -188,7 +190,7 @@ The one positive-expectation pattern is the **stale-book sentinel**. It fires wh
 
 | Rank | Strategy | Verdict | Realistic $ at $135 | What the worker needs | Main risks |
 |---|---|---|---|---|---|
-| 1 | Stale-book sentinel: observation-certain bucket offered ≤ 0.85 on maker-outage days | **Test** ($5 clips, instrumented) | ~$0–1/day (9 hits in 275 events, 6 dates; depth unknown) | METAR parser with T-group, 6-h/24-h groups, spike filter and LST day; climate-category poll every 5 min; `/book` read to confirm a real bid/ask; CLI-text grader | One-sided depth of a few shares; CLI ≠ METAR (night maxima, between-observation peaks, QC'd spikes); overfitted filter; outages may stop |
+| 1 | Stale-book sentinel: observation-certain bucket offered ≤ 0.85 on maker-outage days | **Test** ($5 clips, instrumented) | ~$0–1/day (8 hits in 275 events, 5 dates; depth unknown) | METAR parser with T-group, 6-h/24-h groups, spike filter and LST day; climate-category poll every 5 min; `/book` read to confirm a real bid/ask; CLI-text grader | One-sided depth of a few shares; CLI ≠ METAR (night maxima, between-observation peaks, QC'd spikes); overfitted filter; outages may stop |
 | 2 | Passive maker selling favourites (realised 52% against a 58¢ ask at T2) | Skip for now (Test only on paper) | ≤ $0.5/day, unproven | Resting orders, cancel-on-move, WebSocket | Adverse selection by Kalshi-hedged makers; no rebates; mispricing sits inside the 2¢ spread |
 | 3 | NBM/MOS fair-value taker (any threshold) | **Skip** | Negative: −1.6 to −3.4¢ per contract | NBS ingest and calibration (free) | Market log loss 0.29–0.36 nats better than the model |
 | 4 | Buy evening favourites at 0.97–0.98 (settlement yield) | **Skip** | Negative: 53/57 won against 97.9% break-even | Nothing new | Station-vs-CLI tails; capital locked 12–16 h |
