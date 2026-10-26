@@ -1,6 +1,6 @@
 # Atlas on Polymarket US
 
-*Rebuilt every run; this one at 2026-10-26 22:07 UTC.*
+*Rebuilt every run; this one at 2026-10-26 22:22 UTC.*
 
 Polymarket US, the CFTC-regulated exchange, is the one venue Atlas is priced
 against. It lists a moneyline, a ladder of spreads and a ladder of totals on
@@ -57,12 +57,12 @@ side at disagreements this large or larger, never below one half.
 
 | Sport | Market | Games | Atlas, median gap | Atlas, largest gap | Anchored, median gap |
 |---|---|---|---|---|---|
-| NBA | margin | 23 | 2.1 | 8.3 | 0.08 |
-| NBA | total | 14 | 4.2 | 18.3 | 0.27 |
+| NBA | margin | 23 | 2.1 | 8.1 | 0.08 |
+| NBA | total | 14 | 4.2 | 18.3 | 0.25 |
 | NCAAF | margin | 3 | 0.9 | 3.2 | 0.00 |
-| NCAAF | total | 3 | 2.1 | 2.5 | 0.41 |
+| NCAAF | total | 3 | 2.1 | 2.5 | 0.08 |
 | NFL | margin | 1 | 3.3 | 3.3 | 0.02 |
-| NFL | total | 1 | 0.3 | 0.3 | 0.41 |
+| NFL | total | 1 | 0.3 | 0.3 | 0.46 |
 
 In points of margin or total, per game: Atlas's own projection against
 the market's centre, and the anchored number the contracts are priced from.
