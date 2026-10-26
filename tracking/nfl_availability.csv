@@ -1638,3 +1638,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-26T15:07:57+00:00,2026-10-26T14:56Z,17,New England Patriots,NE,4240545,Bryce Baringer,P,Active,,,,
 2026-10-26T15:07:57+00:00,2026-10-26T15:01Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-26T15:07:57+00:00,2026-10-26T15:01Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-26T16:08:00+00:00,2026-10-26T15:12Z,19,New York Giants,NYG,4360516,Tyrone Tracy Jr.,RB,Questionable,QUESTIONABLE,Left Hamstring,2026-11-08,"Tracy (hamstring) didn't return to Sunday's 27-21 overtime win over the Texans after exiting with 5:29 remaining in the second quarter, Pat Leonard of the New Y"
+2026-10-26T16:08:00+00:00,2026-10-26T15:15Z,16,Minnesota Vikings,MIN,3042519,Aaron Jones Sr.,RB,Questionable,QUESTIONABLE,Left Knee,2026-11-01,"The left knee injury that forced Jones out of Sunday's 16-10 win over the Colts isn't considered significant, and the running back is viewed as day-to-day, Adam"
+2026-10-26T16:08:00+00:00,2026-10-26T16:01Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-26T16:08:00+00:00,2026-10-26T16:01Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
