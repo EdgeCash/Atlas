@@ -77,6 +77,6 @@ jobs:
       POLYMARKET_US_LIVE: ${{ secrets.POLYMARKET_US_LIVE }}
       POLYMARKET_US_ARMED: ${{ secrets.POLYMARKET_US_ARMED }}
       ATLAS_LIVE_BANKROLL: ${{ secrets.ATLAS_LIVE_BANKROLL }}
-      # The kill switch: set to anything and nothing goes to the venue (or commit
-      # tracking/polymarket_live/KILL to the branch).
-      POLYMARKET_US_KILL: ${{ vars.POLYMARKET_US_KILL }}
+      # The kill switch (POLYMARKET_US_KILL) is a repository variable, not a secret: publish.yml reads
+      # vars.POLYMARKET_US_KILL itself, so it is not passed here. A name passed here that publish.yml does
+      # not declare stops the run before it starts.
