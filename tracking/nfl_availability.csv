@@ -1393,6 +1393,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-25T20:53:04+00:00,2026-10-25T20:49Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-25T20:53:04+00:00,2026-10-25T20:49Z,9,Green Bay Packers,GB,4428037,Jacob Monk,C,Questionable,QUESTIONABLE,Quadriceps,2026-10-25,questionable
 2026-10-25T21:07:46+00:00,2026-10-25T20:50Z,9,Green Bay Packers,GB,4428037,Jacob Monk,C,Questionable,QUESTIONABLE,Quadriceps,2026-10-25,Monk (quadriceps) is questionable to return to Sunday's game against the Lions.
+2026-10-26T15:07:57+00:00,2026-10-25T20:50Z,9,Green Bay Packers,GB,4428037,Jacob Monk,C,Doubtful,DOUBTFUL,Quadriceps,2026-10-29,Monk (quadriceps) is questionable to return to Sunday's game against the Lions.
 2026-10-25T21:23:00+00:00,2026-10-25T20:58Z,20,New York Jets,NYJ,15864,Geno Smith,QB,Active,,,,"Smith completed 23 of 30 passes for 287 yards, three touchdowns and one interception in Sunday's 28-25 loss to the Dolphins. He also rushed twice for no gain an"
 2026-10-25T21:23:00+00:00,2026-10-25T20:59Z,15,Miami Dolphins,MIA,4242512,Malik Willis,QB,Active,,,,Willis completed 14 of 21 passes for 208 yards and two touchdowns while rushing six times for 39 yards and a touchdown in Sunday's 28-25 win over the Jets.
 2026-10-25T21:07:46+00:00,2026-10-25T21:01Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
@@ -1629,3 +1630,11 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-26T11:23:05+00:00,2026-10-26T11:01Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-26T12:22:59+00:00,2026-10-26T12:01Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-26T12:22:59+00:00,2026-10-26T12:01Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Out,OUT,Undisclosed,2026-10-18,out
+2026-10-26T15:07:57+00:00,2026-10-26T13:22Z,21,Philadelphia Eagles,PHI,3929630,Saquon Barkley,RB,Questionable,QUESTIONABLE,Right Hamstring,2026-10-26,"Barkley (hamstring), who is listed as questionable for Monday's game against the Cowboys, is ""trending toward playing,"" Mike Garafolo of NFL Network reports."
+2026-10-26T15:07:57+00:00,2026-10-26T13:35Z,10,Tennessee Titans,TEN,3915398,Tommy Townsend,P,Questionable,QUESTIONABLE,Left Knee,2026-11-01,"Titans head coach Robert Saleh said Monday that Townsend is still being evaluated after sustaining a left knee injury in Sunday's 27-24 loss to the Browns, Terr"
+2026-10-26T15:07:57+00:00,2026-10-26T13:51Z,9,Green Bay Packers,GB,4426411,Sean Rhyan,G,Doubtful,DOUBTFUL,Ankle Sprain,2026-10-29,doubtful
+2026-10-26T15:07:57+00:00,2026-10-26T14:09Z,19,New York Giants,NYG,4696981,Cam Skattebo,RB,Questionable,QUESTIONABLE,Hamstring,2026-11-08,"Skattebo is expected to ""OK"" after tweaking his hamstring on a 42-yard run in overtime during Sunday's 27-21 win over the Texans, Mike Garafolo of NFL Network r"
+2026-10-26T15:07:57+00:00,2026-10-26T14:20Z,9,Green Bay Packers,GB,3124005,Zaire Franklin,LB,Out,DOUBTFUL,Shin Fracture,2026-10-29,out
+2026-10-26T15:07:57+00:00,2026-10-26T14:56Z,17,New England Patriots,NE,4240545,Bryce Baringer,P,Active,,,,
+2026-10-26T15:07:57+00:00,2026-10-26T15:01Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-26T15:07:57+00:00,2026-10-26T15:01Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
