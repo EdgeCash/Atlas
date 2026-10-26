@@ -14,7 +14,7 @@ Two small, model-based edges remain:
 1. **Late-window "certainty" buys in the metals 15-minute windows.** Measured at +0.8 to +2.9¢ per contract after fee, over 26–50 windows, with at most one loss; 49 of the 50 windows fall on 23 Oct, the only full trading day since launch.
 2. **Selling the upside tails of the gas year-end ladder.** Bids of 0.11–0.40 sit against model fair values of 0.01–0.21, a gap of 3–19¢, but the money is locked until January and exposed to an oil shock.
 
-At $135 the first is worth perhaps **$2–8 a day if it survives a live test**. The second is worth **$5–15 once**. Neither justifies more than a test.
+A 21-minute live sample of four windows found one ≥0.99 case with an offer left at 0.94–0.96 (8–22 contracts, about a minute) and one 0.96 case that reversed and lost. At $135 the first edge is worth perhaps **$1–4 a day, and only with a ≥0.99 threshold**. The second is worth **$5–15 once**. Neither justifies more than a test.
 
 ## Q1. What is under the Commodities tab
 
@@ -76,6 +76,12 @@ Sources: [listing](https://gateway.polymarket.us/v1/events?closed=false&limit=50
   | ≥ 0.99 | 26 | +2.5¢ | 0 |
 
   In the final stamped minute, the winning side's ask was ≥ 0.99 in 170 of 187 windows and ≤ 0.95 in 11. (Data: `commodities_data/metals_model_vs_quote_minute_rows.json`.)
+- **Live sample, 25 Oct 23:54:30 – 26 Oct 00:15Z.** Every ~11 s in the last 330 s of two gold and two silver windows, the uncached 1 s Chainlink price and the 30 s-cached `/book` were sampled (120 records; book `Age` 0–29 s).
+  - The model-favoured side typically showed 4–220 contracts at the top and 14–450 at or under 0.97.
+  - **Gold 00:00Z:** p(Down) ≥ 0.99 from τ = 330 s, with the Down ask at 0.94–0.96 for 8–22 contracts until τ ≈ 270 s, then 0.99. It settled Down, so roughly $0.3–1.2 of edge for one fill.
+  - **Silver 00:00Z:** p(Down) reached 0.95–0.96 at τ = 250–200 s against asks of 0.91–0.95 for 39–49 contracts, then reversed. It settled **Up**, so a ≥0.95 rule would have lost about $45.
+  - **Gold 23:45Z:** p(Down) 0.967 at τ = 297 s against 0.92; within 2.5 minutes it was back to 0.50, though it still settled Down.
+  - File: `commodities_data/metals_live_sample_2026-10-25T2354_to_10-26T0015Z.txt`.
 - **Context.** GVZ 24.34, OVX 60.02, Brent $116.72 / WTI $103.27 on 23 Oct closes; gold futures $4,007.9, silver $53.71 ([CBOE GVZ history](https://cdn.cboe.com/api/global/us_indices/daily_prices/GVZ_History.csv), Yahoo chart API `GC=F`, `SI=F`, `BZ=F`, `CL=F`, read 23:35Z). For 15-minute windows the trailing realised volatility on Chainlink was used, not GVZ. GVZ is a 30-day figure and misses intraday seasonality.
 
 ### Measured findings: AAA gasoline
@@ -179,7 +185,7 @@ $ figures are expected profit for a $135 account, after fee, under the measured 
 
 | Rank | Strategy | Verdict | Realistic $ at $135 | What the worker needs | Main risks |
 |---|---|---|---|---|---|
-| 1 | **Metals 15m late-window certainty**: in the last 2–5 minutes of a gold/silver window, if P(side) ≥ 0.97 on the live Chainlink price, IOC-buy that side at ≤ 0.97 | **Test** (paper for 2 weeks, then $5 orders) | $2–8 a day if the measured +0.8 to +2.9¢ per contract holds at ~10–20 contracts a fill. One loss costs ~$15–19 | New rule module. Poll `/v1/asset-prices/history` (1 s, uncached) every 5–10 s in the final 5 minutes. Read the book over the authenticated Markets WebSocket (REST `/book` is cached 30 s). BUY_LONG / BUY_SHORT IOC with a 0.97 cap. Discover windows by series slug. Metals hours Sun 6:15 PM – Fri 5 PM ET | One full trading day of history (23 Oct); makers will close the gap. Chainlink single-value settlement makes a last-second jump decisive. The 30 s cache makes REST quotes phantom. A loss costs about 30–90 wins |
+| 1 | **Metals 15m late-window certainty**: in the last 2–5 minutes of a gold/silver window, if P(side) ≥ 0.99 on the live Chainlink price, IOC-buy that side at ≤ 0.97 | **Test** (paper for 2 weeks, then $5 orders) | $1–4 a day at a ≥0.99 threshold: one or two fills an hour of 8–20 contracts at +3–5¢ while metals trade. One loss at 0.95 on 40 contracts costs ~$38, as live-sampled on 26 Oct | New rule module. Poll `/v1/asset-prices/history` (1 s, uncached) every 5–10 s in the final 5 minutes. Read the book over the authenticated Markets WebSocket (REST `/book` is cached 30 s). BUY_LONG / BUY_SHORT IOC with a 0.97 cap. Discover windows by series slug. Metals hours Sun 6:15 PM – Fri 5 PM ET | One full trading day of history (23 Oct); makers will close the gap. Chainlink single-value settlement makes a last-second jump decisive. The 30 s cache makes REST quotes phantom. A loss costs about 30–90 wins |
 | 2 | **Gas year-end upside tails**: sell (BUY_SHORT) >$4.80 / >$5.00 / >$5.20 at bids 0.16–0.40 against model fair 0.01–0.21 | **Test, small, manual** | $5–15 once, on $60–100 of collateral locked until mid-January | AAA + RBOB pass-through model (`gas_year_alt.py`), daily refresh, one IOC per strike. No speed needed | Oil-shock tail (OVX 60, Brent above $110). The large tail bidders may be hedgers who know more. 2.5-month capital lock on a $135 account |
 | 3 | **Beef stray bids**: sell ≥$7.00 at 0.98, ≥$7.20 at 0.20, ≥$7.10 at 0.17 | **Test, manual, one-off** | $2–9 in total, locked to late January | Nothing automated: a BLS random-walk table and three IOC orders | Beef has drifted up 0.75% a month since 2023. Stray bids may vanish. Thin books |
 | 4 | **Gas daily ladder nowcast** (AR + RBOB + GasBuddy scrape) against the 0.98 bids | **Skip** unless the 26 Oct test (Q2) goes the nowcast's way | ~$0 expected. The informed bidder won 4 of 4 nights. Depth 100–200 contracts | AAA history, RBOB, a GasBuddy scrape (check its terms), and an evening order before 00:00 ET | Competing against better data. Placeholder quotes |
