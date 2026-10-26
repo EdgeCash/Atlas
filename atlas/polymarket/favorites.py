@@ -225,6 +225,7 @@ def grade(record: pd.DataFrame, now: datetime, fetch=None, limit: int = SETTLEME
     if record.empty or offline():
         return record
     out = record.copy()
+    out["graded_at"] = out["graded_at"].astype(object)        # read back all-blank as floats
     payout = pd.to_numeric(out["payout"], errors="coerce")
     start = pd.to_datetime(out["game_start"], utc=True, errors="coerce")
     pending = out[payout.isna() & (start <= pd.Timestamp(now) - GRADE_AFTER)]
