@@ -1889,6 +1889,22 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-26T23:08:08+00:00,2026-10-26T22:50Z,21,Philadelphia Eagles,PHI,4240456,Michael Carter II,CB,Out,INACTIVE,Abdomen,2026-11-01,inactive
 2026-10-26T23:08:08+00:00,2026-10-26T22:50Z,21,Philadelphia Eagles,PHI,4426331,Nolan Smith Jr.,LB,Out,INACTIVE,Concussion Concussion,2026-11-01,inactive
 2026-10-26T23:08:08+00:00,2026-10-26T22:53Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-26T23:22:59+00:00,2026-10-26T22:53Z,6,Dallas Cowboys,DAL,4428914,Dee Winters,LB,Out,INACTIVE,Calf Strain,2026-11-01,inactive
+2026-10-26T23:22:59+00:00,2026-10-26T22:53Z,6,Dallas Cowboys,DAL,4685554,Drew Shelton,OT,Out,INACTIVE,Hamstring,2026-11-01,inactive
+2026-10-26T23:22:59+00:00,2026-10-26T22:53Z,6,Dallas Cowboys,DAL,3676833,KaVontae Turpin,WR,Out,INACTIVE,Ribs,2026-11-01,inactive
+2026-10-26T23:22:59+00:00,2026-10-26T22:53Z,6,Dallas Cowboys,DAL,4689333,Tyrus Wheat,LB,Out,INACTIVE,Coach's Decision,2026-11-01,inactive
 2026-10-26T23:08:08+00:00,2026-10-26T22:53Z,21,Philadelphia Eagles,PHI,15797,Lane Johnson,OT,Out,OUT,Personal,2027-02-15,out
+2026-10-26T23:22:59+00:00,2026-10-26T22:55Z,6,Dallas Cowboys,DAL,4362478,Emari Demercado,RB,Out,INACTIVE,Coach's Decision,2026-11-01,"Demercado (coach's decision) is inactive for Monday night's game against the Eagles, Patrik Walker of the Cowboys' official site reports."
 2026-10-26T23:08:08+00:00,2026-10-26T22:55Z,21,Philadelphia Eagles,PHI,4360238,Dameon Pierce,RB,Active,,,,Pierce is welcoming back Barkley (hamstring) to the Eagles backfield in Week 7 due to the latter being active Monday versus the Cowboys.
+2026-10-26T23:22:59+00:00,2026-10-26T23:00Z,21,Philadelphia Eagles,PHI,4879250,Cole Payton,QB,Out,INACTIVE,Coach's Decision,2026-11-01,Payton (coach's decision) is inactive for Monday's game against the Cowboys but will serve as the team's emergency quarterback.
 2026-10-26T23:08:08+00:00,2026-10-26T23:01Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Out,OUT,Undisclosed,2026-10-18,out
+2026-10-26T23:22:59+00:00,2026-10-26T23:03Z,21,Philadelphia Eagles,PHI,3916409,Jonathan Greenard,LB,Active,,,,Greenard (ankle) is available for Monday's game against the Cowboys.
+2026-10-26T23:22:59+00:00,2026-10-26T23:05Z,25,San Francisco 49ers,SF,4040605,Nick Bosa,DE,Out,QUESTIONABLE,Left Knee Strain,2026-11-08,"Head coach Kyle Shanahan indicated Monday that Bosa (knee) ""has a chance"" to return following the 49ers' Week 8 bye, David Lombardi of SFStandard.com reports."
+2026-10-26T23:22:59+00:00,2026-10-26T23:07Z,25,San Francisco 49ers,SF,4565200,Upton Stout,CB,Questionable,QUESTIONABLE,Shoulder - AC Joint,2026-11-08,"Stout (shoulder) was only active as an emergency depth option during Sunday's loss to the Falcons, David Lombardi of SFStandard.com reported Monday."
+2026-10-26T23:22:59+00:00,2026-10-26T23:08Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-26T23:22:59+00:00,2026-10-26T23:08Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Out,OUT,Undisclosed,2026-10-18,out
+2026-10-26T23:22:59+00:00,2026-10-26T23:08Z,21,Philadelphia Eagles,PHI,4571162,Jalyx Hunt,LB,Active,,,,Hunt (ankle/knee) is available for Monday's game versus Dallas.
+2026-10-26T23:22:59+00:00,2026-10-26T23:11Z,21,Philadelphia Eagles,PHI,4035624,Landon Dickerson,G,Active,,,,Dickerson (knee) was activated from injured reserve ahead of Monday night's matchup with the Cowboys.
+2026-10-26T23:22:59+00:00,2026-10-26T23:13Z,21,Philadelphia Eagles,PHI,4686911,Jakorian Bennett,CB,Injured Reserve,IR-R,Knee,2026-11-01,Bennett (knee) will remain on injured reserve and is inactive for Monday night's matchup with Dallas.
+2026-10-26T23:22:59+00:00,2026-10-26T23:14Z,9,Green Bay Packers,GB,4361791,Devonte Wyatt,DT,Questionable,QUESTIONABLE,Ankle,2026-10-29,"Wyatt (ankle) was listed as a non-participant on Monday's practice estimate, Matt Schneidman of The Athletic reports."
+2026-10-26T23:22:59+00:00,2026-10-26T23:14Z,25,San Francisco 49ers,SF,4685397,Jordan James,RB,Active,,,,"James logged a six-yard carry, turned his lone target into an 11-yard catch and registered 119 yards on four kickoff returns during the 49ers' 29-20 loss to the"
