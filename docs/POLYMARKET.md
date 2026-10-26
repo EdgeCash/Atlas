@@ -361,7 +361,11 @@ once per side and threshold per window, with the shares the market's full
 book holds there. That one book read carries a unique query: the edge
 cache otherwise serves a 30-second-old book, or the "not found" it cached
 before the window's market existed. A minute after the window, the venue's
-settlement grades it.
+settlement grades it. The listing's top of book is sometimes a price the
+book no longer holds (in the first practice window, three of six positions
+had no shares behind the quoted ask), so a position whose fresh book holds
+nothing at or under its ask is marked unfillable: kept in the record and
+left out of its totals, which count only trades that could have happened.
 
 The record is `tracking/metals.csv`, in the clear; the owner page's
 Metals 15m tab shows it by threshold and by metal, with what $1 orders
