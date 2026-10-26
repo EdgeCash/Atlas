@@ -402,9 +402,14 @@ def history(market_slug: str, sess=None, *, start=None, end=None, interval: str 
 
 def settlement(market_slug: str, sess=None) -> float:
     """What the market settled at, one or zero for the long side (or the last fair price where its rules say
-    so); nan when it has not settled."""
+    so); nan when it has not settled.
+
+    Read with a unique query, past the edge cache: before a market settles the endpoint answers "not found",
+    and the cache keeps serving that answer well past its 30-second max-age (a gold window settled Up on 26
+    October 2026 still read "not found" from the cache 197 seconds on), so every rule's grade would lag the
+    venue's settlement by minutes. A rule reads a market's settlement once a tick at most."""
     try:
-        raw = _get(f"/v1/markets/{market_slug}/settlement", sess=sess)
+        raw = _get(f"/v1/markets/{market_slug}/settlement", {"fresh": time.time_ns()}, sess=sess)
     except Exception:  # noqa: BLE001 - not settled, or not found: the same answer
         return float("nan")
     data = raw if isinstance(raw, dict) else {}

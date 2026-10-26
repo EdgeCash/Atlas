@@ -538,3 +538,20 @@ def test_the_owner_page_carries_one_box_and_the_old_address_forwards():
     assert "Nothing has been built yet." in empty
     forward = render.forward_page("../owner/")
     assert 'http-equiv="refresh" content="0; url=../owner/"' in forward and "noindex" in forward
+
+
+def test_a_settlement_is_read_past_the_edge_cache_and_not_found_means_unsettled(monkeypatch):
+    # The edge cache keeps serving the "not found" it stored before the market settled, past its max-age.
+    asked = []
+
+    def get(path, params=None, sess=None, **kw):
+        asked.append((path, dict(params or {})))
+        if path.endswith("/m2/settlement"):
+            raise RuntimeError("404 Settlement not found")
+        return {"slug": "m1", "settlement": 1}
+    monkeypatch.setattr(source, "_get", get)
+    assert source.settlement("m1") == 1.0 and math.isnan(source.settlement("m2"))
+    assert source.settlement("m1") == 1.0
+    paths = [p for p, _ in asked]
+    keys = [q.get("fresh") for _, q in asked]
+    assert paths[0] == "/v1/markets/m1/settlement" and all(keys) and len(set(keys)) == len(keys)   # unique each read
