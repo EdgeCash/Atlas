@@ -1581,6 +1581,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-26T02:52:47+00:00,2026-10-26T02:34Z,10,Tennessee Titans,TEN,4569587,Wan'Dale Robinson,WR,Active,,,,Robinson caught four of seven targets for seven yards during Sunday's 27-24 loss to the Browns.
 2026-10-26T03:07:53+00:00,2026-10-26T02:45Z,14,Los Angeles Rams,LAR,4429096,Blake Corum,RB,Active,,,,Corum rushed 17 times for 93 yards and a touchdown and brought in his only target for eight yards in the Rams' 35-21 win over the Raiders on Sunday.
 2026-10-26T03:07:53+00:00,2026-10-26T02:50Z,26,Seattle Seahawks,SEA,4032473,Rashid Shaheed,WR,Out,OUT,Knee,2026-11-02,Shaheed (knee) won't return to Sunday's game against the Chiefs.
+2026-10-26T03:52:43+00:00,2026-10-26T02:50Z,26,Seattle Seahawks,SEA,4032473,Rashid Shaheed,WR,Questionable,QUESTIONABLE,Knee,2026-11-02,Shaheed (knee) won't return to Sunday's game against the Chiefs.
 2026-10-26T02:52:47+00:00,2026-10-26T02:51Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-26T03:23:04+00:00,2026-10-26T02:51Z,13,Las Vegas Raiders,LV,14880,Kirk Cousins,QB,Active,,,,Cousins completed 26 of 44 passes for 295 yards with two touchdowns and no interceptions while rushing three times for six yards in the Raiders' 35-21 loss to t
 2026-10-26T03:07:53+00:00,2026-10-26T02:51Z,16,Minnesota Vikings,MIN,3886598,Jauan Jennings,WR,Active,,,,Jennings caught two of three targets for 34 yards in Sunday's 16-10 win over the Colts.
@@ -1597,5 +1598,10 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-26T03:23:04+00:00,2026-10-26T03:14Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-26T03:23:04+00:00,2026-10-26T03:14Z,26,Seattle Seahawks,SEA,4426376,Charles Cross,OT,Out,OUT,Ankle,2026-11-02,out
 2026-10-26T03:37:47+00:00,2026-10-26T03:18Z,26,Seattle Seahawks,SEA,4426376,Charles Cross,OT,Out,OUT,Ankle,2026-11-02,Cross exited Sunday night's game against the Chiefs with an ankle injury and did not return.
+2026-10-26T03:52:43+00:00,2026-10-26T03:18Z,26,Seattle Seahawks,SEA,4426376,Charles Cross,OT,Questionable,QUESTIONABLE,Ankle,2026-11-02,Cross exited Sunday night's game against the Chiefs with an ankle injury and did not return.
 2026-10-26T03:37:47+00:00,2026-10-26T03:28Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-26T03:37:47+00:00,2026-10-26T03:29Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-26T03:52:43+00:00,2026-10-26T03:29Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-26T03:52:43+00:00,2026-10-26T03:35Z,26,Seattle Seahawks,SEA,4430878,Jaxon Smith-Njigba,WR,Active,,,,Smith-Njigba caught nine of 12 targets for 150 yards and a touchdown while rushing twice for 13 yards in Sunday's 20-3 win over the Chiefs.
+2026-10-26T03:52:43+00:00,2026-10-26T03:36Z,12,Kansas City Chiefs,KC,4567048,Kenneth Walker III,RB,Active,,,,Walker rushed 14 times for 36 yards while catching four of five targets for 21 yards in Sunday's 20-3 loss to the Seahawks.
+2026-10-26T03:52:43+00:00,2026-10-26T03:37Z,26,Seattle Seahawks,SEA,4887558,Emanuel Wilson,RB,Active,,,,Wilson rushed 24 times for 100 yards and a touchdown while catching his lone target for 15 yards in Sunday's 20-3 win over the Chiefs.
