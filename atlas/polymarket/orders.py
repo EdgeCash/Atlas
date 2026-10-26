@@ -41,7 +41,10 @@ and the worker within a tick (`atlas/polymarket/worker.py`); made on the
 worker's machine, it holds at once and is pushed to the branch with the
 ledger. Deleting it on the branch lifts it. The price collar is the order
 itself: a limit at the ask the position was taken at, never a market
-order.
+order. Under the ledger, every call to the venue and every position
+declined before it goes into the audit trail (5.2(h);
+`atlas/polymarket/audit.py`), and a live order is sent only once its
+submit is on disk there.
 
 Every order, sent or not, is a row in the ledger, sealed with the owner
 key beside the positions record (``tracking/polymarket_live/``): the order
@@ -63,7 +66,7 @@ import requests
 
 from atlas import config
 from atlas.owner import sealed
-from atlas.polymarket import account, source
+from atlas.polymarket import account, audit, source
 from atlas.util import get_logger, offline
 
 LOG = get_logger(__name__)
@@ -138,6 +141,11 @@ def bankroll() -> float:
 
 def path() -> Path:
     return config.paths().root / "tracking" / "polymarket_live"
+
+
+def audit_dir(where: Path | None = None) -> Path:
+    """The audit trail's folder: beside the ledger's (`atlas/polymarket/audit.py`)."""
+    return where.parent / "polymarket_audit" if where is not None else audit.path()
 
 
 def load(passphrase: str, where: Path | None = None) -> pd.DataFrame:
@@ -371,14 +379,20 @@ def place(positions_: pd.DataFrame, passphrase: str, now: datetime, *, where: Pa
     kill = killed(where)
     if kill:
         LOG.warning("live (%s, %s): %s; nothing goes to the venue", m, rule, kill)
+    # Every call to the venue, and every position declined before it, goes into the audit trail.
+    trail = audit.Trail(passphrase, audit_dir(where), mode=m, rule=rule)
     # The account is read first, in a dry run too: no balance, or one below the floor, and nothing goes.
     equity, held = float("nan"), None
     if signer is not None and roll > 0 and not kill:
+        sent = trail.now()
         try:
-            equity = balances(signer, sess)["equity"]
+            got = balances(signer, sess)
+            equity = got["equity"]
             held = floor(equity, roll, peak(ledger))
+            trail.add("balance", path=BALANCES, sent_at=sent, ok=True, **got, note=held)
         except Exception as error:  # noqa: BLE001 - the type only
             held = f"no balance read ({type(error).__name__})"
+            trail.add("balance", path=BALANCES, sent_at=sent, note=held, **audit.failure(error))
     rows = []
     for x in positions_.itertuples(index=False):
         ask = float(x.ask)
@@ -396,27 +410,58 @@ def place(positions_: pd.DataFrame, passphrase: str, now: datetime, *, where: Pa
         why = why or held
         why = why or check(cost, pd.concat([ledger, pd.DataFrame(rows, columns=COLUMNS)], ignore_index=True)
                            if rows else ledger, str(x.day), now)
+        what = {"position_id": x.position_id, "market_slug": x.market_slug, "token_id": x.token_id,
+                "label": x.label, "ask": ask, "quantity": qty}
+        if not why and m == "live" and not armed():
+            why = "not armed"
         if why:
             row["state"], row["note"] = "refused", why
+            trail.add("refused", **what, request=account.order(x, qty), note=why)
         elif m == "dry":
+            body = account.order(x, qty)
+            ask_ = trail.add("submit", **what, request_id=audit.request_id(), path=account.PREVIEW, request=body)
             try:
-                seen = account.read(account.post(account.order(x, qty), signer, sess), x)
+                answer = account.post(body, signer, sess)
+                seen = account.read(answer, x)
                 row.update({"state": "dry", "filled": seen["preview_filled"], "avg_px": seen["preview_px"],
                             "fee": seen["preview_fee"], "note": f"preview {seen['preview_state']}"})
+                trail.add("response", **what, **audit.answered(ask_, trail.now()), ok=True, response=answer,
+                          state=seen["preview_state"], filled=seen["preview_filled"], avg_px=seen["preview_px"],
+                          fee=seen["preview_fee"])
             except Exception as error:  # noqa: BLE001 - the type only
                 row["state"], row["note"] = "dry", f"preview error:{type(error).__name__}"
-        elif not armed():
-            row["state"], row["note"] = "refused", "not armed"
+                trail.add("response", **what, **audit.answered(ask_, trail.now()), **audit.failure(error))
         else:
+            body = order(x, qty)
+            ask_ = trail.add("submit", **what, request_id=audit.request_id(), path=ORDERS, request=body)
             try:
-                row.update(read(post_order(order(x, qty), signer, sess), x, qty))
+                trail.flush()                           # the order's trace on disk before the order goes
+            except Exception as error:  # noqa: BLE001 - no trace, no order
+                trail.pending.remove(ask_)
+                why = f"audit: the submit was not written ({type(error).__name__})"
+                row["state"], row["note"] = "refused", why
+                trail.add("refused", **what, request=body, note=why)
+                LOG.error("live (%s, %s): %s; not sent", m, rule, why)
+                rows.append(row)
+                continue
+            try:
+                answer = post_order(body, signer, sess)
+                row.update(read(answer, x, qty))
+                trail.add("response", **what, **audit.answered(ask_, trail.now()), ok=True, response=answer,
+                          order_id=row["order_id"], state=row["state"], filled=row["filled"], avg_px=row["avg_px"],
+                          fee=row["fee"])
             except Exception as error:  # noqa: BLE001 - the type only; the body could quote the account
                 row["state"], row["note"] = "error", f"error:{type(error).__name__}"
+                trail.add("response", **what, **audit.answered(ask_, trail.now()), **audit.failure(error))
         rows.append(row)
     new = pd.DataFrame(rows, columns=COLUMNS)
     out = pd.concat([ledger, new], ignore_index=True) if len(ledger) else new
     weeks = {(int(y), int(w)) for y, w in new[["year", "week"]].drop_duplicates().itertuples(index=False)}
     seal(out, passphrase, weeks, where)
+    try:
+        trail.flush()
+    except Exception as error:  # noqa: BLE001 - the type only; the ledger stands, and the run goes on
+        LOG.error("live (%s, %s): the audit trail was not written (%s)", m, rule, type(error).__name__)
     sent = int(((new["mode"] == "live") & new["state"].isin(["filled", "partial", "canceled", "sent"])).sum())
     LOG.info("live (%s, %s): %d orders written, %d sent, %d refused", m, rule, len(new), sent,
              int((new["state"] == "refused").sum()))

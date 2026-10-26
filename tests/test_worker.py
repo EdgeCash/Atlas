@@ -275,3 +275,24 @@ def test_the_worker_reads_the_branchs_kill_file_every_tick(tmp_path, monkeypatch
     subprocess.run(["git", "remote", "set-url", "origin", str(tmp_path / "gone.git")], cwd=mine, check=True)
     monkeypatch.setattr(orders, "branch_kill", "held")
     assert worker.branch_kill(mine) == "held"
+
+
+def test_the_worker_merges_the_audit_trail_with_the_branchs_by_event(tmp_path, monkeypatch):
+    from atlas.polymarket import audit
+
+    monkeypatch.delenv("ATLAS_OFFLINE", raising=False)
+    monkeypatch.delenv(worker.BRANCH, raising=False)
+    key = "correct horse battery staple"
+    mine, runs = _repo(tmp_path)
+    (runs / "README.md").write_text("atlas\n")
+    _commit(runs, "first")
+    subprocess.run(["git", "pull", "-q", "origin", "main"], cwd=mine, check=True, capture_output=True)
+    for root, note in ((runs, "the scheduled run's"), (mine, "the worker's")):
+        trail = audit.Trail(key, root / worker.AUDIT, clock=lambda: NOW)
+        trail.add("refused", note=note)
+        trail.flush()
+    _commit(runs, "a run's trail")
+    assert worker.publish(mine, NOW, key) is True
+    subprocess.run(["git", "pull", "-q", "origin", "main"], cwd=runs, check=True, capture_output=True)
+    merged = audit.load(key, runs / worker.AUDIT)
+    assert sorted(merged["note"]) == ["the scheduled run's", "the worker's"] and merged["event_id"].is_unique

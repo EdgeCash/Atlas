@@ -42,6 +42,8 @@ SEALED: dict[str, list[str]] = {
     "polymarket_positions": ["position_id"],
     # The live ledger (atlas/polymarket/orders.py): a row per order written, the worker's and a run's alike.
     "polymarket_live": ["position_id", "placed_at", "rule"],
+    # The live step's audit trail (atlas/polymarket/audit.py): every call to the venue, an event a row.
+    "polymarket_audit": ["event_id"],
 }
 
 

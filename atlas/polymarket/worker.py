@@ -59,9 +59,13 @@ IDLE = 180
 GRADE_EVERY = 8
 #: The branch the record is pushed to; the checkout's own when unset.
 BRANCH = "ATLAS_WORKER_BRANCH"
-#: What the worker commits: the rule's record and the live ledger, and nothing else.
+#: What the worker commits: the rules' records, the live ledger and its audit trail, and nothing else.
 LEDGER = "tracking/polymarket_live"
-FILES = ("tracking/favorites.csv", "tracking/finish.csv", LEDGER)
+#: The live step's audit trail (`atlas/polymarket/audit.py`): every call to the venue, sealed like the ledger.
+AUDIT = "tracking/polymarket_audit"
+FILES = ("tracking/favorites.csv", "tracking/finish.csv", LEDGER, AUDIT)
+#: The sealed records the worker keeps, and what identifies a row in each when two copies are merged.
+SEALED = {LEDGER: ["position_id", "placed_at", "rule"], AUDIT: ["event_id"]}
 #: The venue's period strings: a quarter or period by its number, overtime past the last, the half between.
 _NUMBER = re.compile(r"(\d+)")
 
@@ -168,11 +172,12 @@ def branch(root: Path) -> str:
     return _git(root, "rev-parse", "--abbrev-ref", "HEAD").stdout.strip()
 
 
-def _ledger(root: Path, passphrase: str | None) -> dict[str, list[dict]]:
-    """The live ledger's weekly files as this checkout holds them, opened; nothing without the key."""
+def _ledger(root: Path, passphrase: str | None, folder: str = LEDGER) -> dict[str, list[dict]]:
+    """A sealed record's weekly files (the live ledger's, or the audit trail's) as this checkout holds them,
+    opened; nothing without the key."""
     from atlas.owner import sealed
 
-    where = root / LEDGER
+    where = root / folder
     if not passphrase or not where.exists():
         return {}
     out = {}
@@ -203,18 +208,19 @@ def branch_kill(root: Path) -> str | None:
 
 
 def sync(root: Path, passphrase: str | None = None) -> bool:
-    """This checkout brought level with the branch without losing anything it holds: the record and the
-    ledger read as they stand here (pushed or not), the checkout reset to the branch, and both laid back
-    over the branch's copies by their rows - the records by position (`favorites.merge`, `finish.merge`), the ledger by
-    order (`scripts/merge_tracking.py`'s key). Git never merges these files line by line, so no merge can
-    leave its marks in them. True when what this checkout holds is not all on the branch yet."""
+    """This checkout brought level with the branch without losing anything it holds: the records, the
+    ledger and the audit trail read as they stand here (pushed or not), the checkout reset to the branch, and
+    all laid back over the branch's copies by their rows - the records by position (`favorites.merge`,
+    `finish.merge`), the ledger by order and the audit trail by event (:data:`SEALED`, the same keys as
+    `scripts/merge_tracking.py`'s). Git never merges these files line by line, so no merge can leave its
+    marks in them. True when what this checkout holds is not all on the branch yet."""
     from atlas.owner import sealed
 
     target = branch(root)
     store = Store.open(root / "tracking")
     ours = favorites.clean(store.read(favorites.TABLE))
     ours_finish = finish.clean(store.read(finish.TABLE))
-    ledger = _ledger(root, passphrase)
+    held = {folder: _ledger(root, passphrase, folder) for folder in SEALED}
     for args in (("rebase", "--abort"), ("merge", "--abort")):
         _git(root, *args, check=False)
     if _git(root, "fetch", "-q", "origin", target, check=False).returncode != 0:
@@ -223,11 +229,11 @@ def sync(root: Path, passphrase: str | None = None) -> bool:
     _git(root, "reset", "-q", "--hard", f"origin/{target}")
     store.write(favorites.TABLE, favorites.merge(store.read(favorites.TABLE), ours))
     store.write(finish.TABLE, finish.merge(store.read(finish.TABLE), ours_finish))
-    if ledger:
-        keys = ["position_id", "placed_at", "rule"]
-        ident = lambda row: tuple(row.get(k) for k in keys)  # noqa: E731
-        for name, rows in ledger.items():
-            f = root / LEDGER / name
+    for folder, files in held.items():
+        keys = SEALED[folder]
+        ident = lambda row, keys=keys: tuple(row.get(k) for k in keys)  # noqa: E731
+        for name, rows in files.items():
+            f = root / folder / name
             theirs = sealed.open_text(f.read_text(), passphrase) if f.exists() else []
             have = {ident(r) for r in theirs}
             missing = [r for r in rows if ident(r) not in have]

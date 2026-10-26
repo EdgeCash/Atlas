@@ -403,6 +403,27 @@ balance read. Three ways to throw it:
 The price collar is the order itself: a limit at the ask the position was
 taken at, never a market order.
 
+Underneath the ledger is the **audit trail** the Rulebook's 5.2(h) asks
+for - "order entry, modification, cancellation, and execution timestamps
+sufficient to reconstruct all trading activity"
+(`atlas/polymarket/audit.py`, sealed with the owner key in
+`tracking/polymarket_audit/`, a file per ISO week). Every call the step
+makes to the venue is an event stamped to the millisecond in UTC: the
+balance read and what it said; each order's (or, dry, each preview's)
+exact request as it was sent; and the venue's answer in full - the order
+id, the executions with their prices, quantities and the venue's own
+timestamps, the commission and the state, or the error with its HTTP
+status and the body the venue sent - with the time it came back and the
+latency. A submit and its answer share a request id. Every position
+declined before the venue is an event too, with why (the kill switch, the
+throttle, a cap, the stop, the floor, not armed) and the order it would
+have been. A live order's submit is written to disk before the order is
+sent, and an order whose submit cannot be written is not sent. Orders are
+immediate-or-cancel, so nothing rests to be modified or cancelled: the
+venue cancels what does not fill at once, and its answer says so. The
+trail only grows; the worker and the scheduled run merge their copies by
+event.
+
 ## Paper only
 
 Nothing here buys anything. Before real money, confirm: that each market's
