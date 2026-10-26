@@ -77,3 +77,6 @@ jobs:
       POLYMARKET_US_LIVE: ${{ secrets.POLYMARKET_US_LIVE }}
       POLYMARKET_US_ARMED: ${{ secrets.POLYMARKET_US_ARMED }}
       ATLAS_LIVE_BANKROLL: ${{ secrets.ATLAS_LIVE_BANKROLL }}
+      # The kill switch: set to anything and nothing goes to the venue (or commit
+      # tracking/polymarket_live/KILL to the branch).
+      POLYMARKET_US_KILL: ${{ vars.POLYMARKET_US_KILL }}

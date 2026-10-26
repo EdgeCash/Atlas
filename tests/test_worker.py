@@ -251,3 +251,27 @@ def test_the_worker_and_a_run_writing_the_record_at_once_leave_it_whole(tmp_path
     subprocess.run(["git", "pull", "-q", "origin", "main"], cwd=runs, check=True, capture_output=True)
     assert "<<<<<<<" not in (runs / "tracking" / "favorites.csv").read_text()
     assert set(_record(runs)["token_id"].astype(str)) == {"100", "200", "300", "400"}
+
+
+def test_the_worker_reads_the_branchs_kill_file_every_tick(tmp_path, monkeypatch):
+    from atlas.polymarket import orders
+
+    monkeypatch.delenv(worker.BRANCH, raising=False)
+    mine, theirs = _repo(tmp_path)
+    (theirs / "README").write_text("x")
+    _commit(theirs, "start")
+    subprocess.run(["git", "pull", "-q", "origin", "main"], cwd=mine, check=True, capture_output=True)
+    assert worker.branch_kill(mine) is None
+    flag = theirs / worker.LEDGER / orders.KILL_FILE
+    flag.parent.mkdir(parents=True)
+    flag.write_text("stop: odd fills\n")
+    _commit(theirs, "kill")
+    assert worker.branch_kill(mine) == "stop: odd fills"           # without the worker's checkout moving
+    assert not (mine / worker.LEDGER / orders.KILL_FILE).exists()
+    flag.unlink()
+    _commit(theirs, "lift")
+    assert worker.branch_kill(mine) is None
+    # GitHub out of reach: the last reading holds, so an outage never lifts a kill.
+    subprocess.run(["git", "remote", "set-url", "origin", str(tmp_path / "gone.git")], cwd=mine, check=True)
+    monkeypatch.setattr(orders, "branch_kill", "held")
+    assert worker.branch_kill(mine) == "held"

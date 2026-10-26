@@ -377,8 +377,31 @@ not, is a row in a ledger sealed with the owner key beside the positions
 record (`tracking/polymarket_live/`), with the order id, the state, the
 fill and fee, and later the settlement and the profit; the owner page's
 Live tab sums it. To arm it for real: set the mode secret to `live`, the
-arming secret to the phrase, and the bankroll; to stop at once, change the
-mode secret.
+arming secret to the phrase, and the bankroll.
+
+Two more controls answer the venue's Rulebook (5.2(i) asks an automated
+system for "order throttles, price collars, and kill switches"). The
+**throttle** refuses an order once the run's mode has sent five in the last
+minute or fifty in the last day (`MAX_ORDERS_PER_MINUTE`,
+`MAX_ORDERS_PER_DAY`). The **kill switch** stops everything at once: every
+position is refused and nothing at all is sent to the venue, not even the
+balance read. Three ways to throw it:
+
+- **From anywhere, no restart:** commit a file named `KILL` to
+  `tracking/polymarket_live/` on the branch (GitHub's "Add file" on a phone
+  will do; its first line is the reason, shown on the owner page). The
+  worker reads the branch's copy every tick, so it holds within one tick
+  (45 seconds in play); the scheduled run holds at its next checkout.
+  Delete the file on the branch to lift it.
+- **On the worker's machine:** `touch /srv/atlas/tracking/polymarket_live/KILL`.
+  It holds at once, and the worker pushes it to the branch with the ledger,
+  so lifting it is the same: delete it on the branch.
+- **By variable:** set `POLYMARKET_US_KILL` to anything (the repository
+  variable for the scheduled run; the worker's environment file, then a
+  restart, for the worker).
+
+The price collar is the order itself: a limit at the ask the position was
+taken at, never a market order.
 
 ## Paper only
 

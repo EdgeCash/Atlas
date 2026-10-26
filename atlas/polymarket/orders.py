@@ -28,6 +28,21 @@ each order's row names its rule. The caps, the stop
 and the floor are constants here, overridable by environment for the
 owner, never widened by anything the venue or the market says.
 
+Two more controls, which the venue's Rulebook (5.2(i): "order throttles,
+price collars, and kill switches") asks of an automated system. The
+throttle refuses an order once the run's mode has sent
+``MAX_ORDERS_PER_MINUTE`` in the last minute or ``MAX_ORDERS_PER_DAY`` in
+the last day. The kill switch stops everything at once: with the variable
+:data:`KILL` set, or a file named :data:`KILL_FILE` in the ledger's folder,
+every position is refused and nothing at all is sent to the venue. The file
+is the switch that needs no restart: committed to the branch from anywhere
+(GitHub's web page will do), the scheduled run sees it on its next checkout
+and the worker within a tick (`atlas/polymarket/worker.py`); made on the
+worker's machine, it holds at once and is pushed to the branch with the
+ledger. Deleting it on the branch lifts it. The price collar is the order
+itself: a limit at the ask the position was taken at, never a market
+order.
+
 Every order, sent or not, is a row in the ledger, sealed with the owner
 key beside the positions record (``tracking/polymarket_live/``): the order
 id, the state, what filled at what price and fee, and later the settlement
@@ -71,7 +86,15 @@ BALANCES = "/v1/account/balances"
 #: The caps, in dollars, and the stop's window in days. Environment overrides for the owner. The floor is
 #: the share of the bankroll the account's balance (cash plus holdings) may not fall below.
 CAPS = {"MAX_ORDER_DOLLARS": 25.0, "MAX_DAY_DOLLARS": 100.0, "MAX_OPEN_DOLLARS": 250.0, "LOSS_STOP_DOLLARS": 50.0,
-        "BALANCE_FLOOR": 0.5}
+        "BALANCE_FLOOR": 0.5, "MAX_ORDERS_PER_MINUTE": 5.0, "MAX_ORDERS_PER_DAY": 50.0}
+#: The kill switch: this variable set to anything, or :data:`KILL_FILE` in the ledger's folder (committed to
+#: the branch from anywhere, or made on the worker's machine), and nothing goes to the venue at all - no
+#: balance read, no preview, no order - until it is unset or deleted. The file's first line is the reason.
+KILL = "POLYMARKET_US_KILL"
+KILL_FILE = "KILL"
+#: The kill file as the branch has it, for a process whose checkout lags the branch (the worker syncs every
+#: few minutes, and reads this every tick: `worker.branch_kill`); its first line, or None.
+branch_kill: str | None = None
 LOSS_WINDOW_DAYS = 3
 SETTLEMENT_READS = 20
 BLOCK_SECONDS = "10"
@@ -179,10 +202,48 @@ def stopped(ledger: pd.DataFrame, now: datetime) -> str | None:
     return None
 
 
-def check(cost: float, ledger: pd.DataFrame, day: str, now: datetime) -> str | None:
-    """Why an order of ``cost`` dollars may not go: a cap or the stop; None when it may. The per-order cap
-    is not here: an order is sized down to it (:func:`size`), not refused."""
+def killed(where: Path | None = None) -> str | None:
+    """The kill switch, in force when :data:`KILL` is set or :data:`KILL_FILE` is in the ledger's folder:
+    the reason, or None."""
+    value = os.environ.get(KILL, "").strip()
+    if value:
+        return f"kill: {KILL} is set ({value})"
+    flag = (where or path()) / KILL_FILE
+    if flag.exists():
+        try:
+            reason = flag.read_text().strip().splitlines()[0].strip()
+        except (OSError, IndexError, UnicodeDecodeError):
+            reason = ""
+        return f"kill: {KILL_FILE} file ({reason or 'no reason given'})"
+    if branch_kill is not None:
+        return f"kill: {KILL_FILE} file on the branch ({branch_kill or 'no reason given'})"
+    return None
+
+
+def throttled(ledger: pd.DataFrame, now: datetime) -> str | None:
+    """The throttle, in force when the run's own mode has sent :data:`CAPS`' ``MAX_ORDERS_PER_MINUTE`` orders in
+    the last minute or ``MAX_ORDERS_PER_DAY`` in the last day (refused ones not counted): the reason, or None."""
+    if ledger.empty:
+        return None
     c = caps()
+    placed = pd.to_datetime(ledger["placed_at"], utc=True, errors="coerce")
+    sent = (ledger["mode"].astype(str) == mode()) & (ledger["state"].astype(str) != "refused") & placed.notna()
+    at = pd.Timestamp(now)
+    at = at.tz_localize("UTC") if at.tzinfo is None else at.tz_convert("UTC")
+    for window, name in ((timedelta(minutes=1), "MAX_ORDERS_PER_MINUTE"), (timedelta(days=1), "MAX_ORDERS_PER_DAY")):
+        n = int((sent & (placed > at - window)).sum())
+        if n >= c[name]:
+            return f"throttle: {n} orders in the last {'minute' if window.days == 0 else 'day'} (cap {c[name]:.0f})"
+    return None
+
+
+def check(cost: float, ledger: pd.DataFrame, day: str, now: datetime) -> str | None:
+    """Why an order of ``cost`` dollars may not go: the throttle, a cap or the stop; None when it may. The
+    per-order cap is not here: an order is sized down to it (:func:`size`), not refused."""
+    c = caps()
+    slow = throttled(ledger, now)
+    if slow:
+        return slow
     if day_dollars(ledger, day) + cost > c["MAX_DAY_DOLLARS"]:
         return f"cap:day ${day_dollars(ledger, day) + cost:.2f} exceeds ${c['MAX_DAY_DOLLARS']:.0f}"
     if open_dollars(ledger) + cost > c["MAX_OPEN_DOLLARS"]:
@@ -306,9 +367,13 @@ def place(positions_: pd.DataFrame, passphrase: str, now: datetime, *, where: Pa
     sess = sess or requests.Session()
     roll = bankroll()
     stamp = _stamp(now)
+    # The kill switch before anything: in force, and the venue is not called at all, not even for the balance.
+    kill = killed(where)
+    if kill:
+        LOG.warning("live (%s, %s): %s; nothing goes to the venue", m, rule, kill)
     # The account is read first, in a dry run too: no balance, or one below the floor, and nothing goes.
     equity, held = float("nan"), None
-    if signer is not None and roll > 0:
+    if signer is not None and roll > 0 and not kill:
         try:
             equity = balances(signer, sess)["equity"]
             held = floor(equity, roll, peak(ledger))
@@ -327,7 +392,7 @@ def place(positions_: pd.DataFrame, passphrase: str, now: datetime, *, where: Pa
                "state": "", "filled": 0.0, "avg_px": float("nan"), "fee": float("nan"), "paid": 0.0,
                "payout": float("nan"), "profit": float("nan"), "graded_at": None, "note": "", "equity": equity,
                "rule": rule}
-        why = "no bankroll" if roll <= 0 else (None if signer else "no key")
+        why = kill or ("no bankroll" if roll <= 0 else (None if signer else "no key"))
         why = why or held
         why = why or check(cost, pd.concat([ledger, pd.DataFrame(rows, columns=COLUMNS)], ignore_index=True)
                            if rows else ledger, str(x.day), now)
@@ -420,14 +485,18 @@ def section(ledger: pd.DataFrame, now: datetime) -> dict:
              f"${c['MAX_DAY_DOLLARS']:.0f} a day, ${c['MAX_OPEN_DOLLARS']:.0f} open; the stop holds while the "
              f"orders settled over the last {LOSS_WINDOW_DAYS} days have lost more than "
              f"${c['LOSS_STOP_DOLLARS']:.0f}; the floor holds while the account's balance is below "
-             f"{c['BALANCE_FLOOR']:.0%} of the bankroll or of the highest balance read, whichever is more. "
-             f"Bankroll ${bankroll():,.0f}"
+             f"{c['BALANCE_FLOOR']:.0%} of the bankroll or of the highest balance read, whichever is more; the "
+             f"throttle holds at {c['MAX_ORDERS_PER_MINUTE']:.0f} orders a minute and "
+             f"{c['MAX_ORDERS_PER_DAY']:.0f} a day. Bankroll ${bankroll():,.0f}"
              + (f"; the balance last read ${float(equity.iloc[-1]):,.2f}, the highest ${float(equity.max()):,.2f}."
                 if len(equity) else "."),
              "Every order is a limit at the ask the position was logged at, immediate-or-cancel, for the stake's "
              "worth of contracts; never a market order, never a resting one."]
     if stop:
         notes.insert(1, f"STOPPED: {stop}.")
+    kill = killed()
+    if kill:
+        notes.insert(0, f"KILLED: {kill}. Nothing goes to the venue until it is lifted.")
     tables = []
     if len(ledger):
         sent = ledger[ledger["mode"].astype(str) == "live"]
@@ -449,4 +518,5 @@ def section(ledger: pd.DataFrame, now: datetime) -> dict:
                          f"{profit:+.2f}" if math.isfinite(profit) else "", f"{x.state} {x.note or ''}".strip()])
         tables.append({"title": "Latest orders", "head": ["Position", "Mode", "Order", "Filled", "Profit", "State"],
                        "stack": True, "rows": rows})
-    return {"title": f"Live orders ({m}{', armed' if armed() else ''})", "tab": TAB, "tables": tables, "notes": notes}
+    return {"title": f"Live orders ({m}{', armed' if armed() else ''}{', KILLED' if kill else ''})", "tab": TAB,
+            "tables": tables, "notes": notes}

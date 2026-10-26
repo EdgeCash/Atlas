@@ -184,6 +184,24 @@ def _ledger(root: Path, passphrase: str | None) -> dict[str, list[dict]]:
     return out
 
 
+def branch_kill(root: Path) -> str | None:
+    """The live step's kill file (`orders.KILL_FILE`) as the branch has it now: its first line ("" for an
+    empty file), or None when the branch has none. Read every tick, so a kill committed from anywhere holds
+    within one, though the checkout itself is brought level only every few minutes. A fetch that fails
+    keeps what was last read: an outage of GitHub's is not a reason to lift a kill."""
+    from atlas.polymarket import orders
+
+    target = branch(root)
+    if _git(root, "fetch", "-q", "origin", target, check=False).returncode != 0:
+        LOG.warning("worker: could not fetch %s to read the kill file", target)
+        return orders.branch_kill
+    shown = _git(root, "show", f"origin/{target}:{LEDGER}/{orders.KILL_FILE}", check=False)
+    if shown.returncode != 0:
+        return None
+    lines = shown.stdout.strip().splitlines()
+    return lines[0].strip() if lines else ""
+
+
 def sync(root: Path, passphrase: str | None = None) -> bool:
     """This checkout brought level with the branch without losing anything it holds: the record and the
     ledger read as they stand here (pushed or not), the checkout reset to the branch, and both laid back
@@ -258,6 +276,15 @@ def run(*, every: int = EVERY, idle: int = IDLE, once: bool = False, push: bool 
         now = datetime.now(UTC)
         try:
             level = n % GRADE_EVERY == 1
+            if push and not offline():
+                from atlas.polymarket import orders
+
+                held = orders.branch_kill
+                orders.branch_kill = branch_kill(root)      # every tick: a kill on the branch holds within one
+                if orders.branch_kill is not None and held is None:
+                    LOG.warning("worker: the branch's kill file is in force; nothing goes to the venue")
+                elif held is not None and orders.branch_kill is None:
+                    LOG.warning("worker: the branch's kill file is gone; orders may go again")
             if push and level and not offline():
                 sync(root, passphrase)          # the branch's scoreboard and projections, and anything unpushed
             summary = tick(store, now, passphrase, sess=sess, grade=level)
