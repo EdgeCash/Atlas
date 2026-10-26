@@ -4,6 +4,7 @@ the match by trade id, what does not reconcile, and once a day into the trail.""
 from __future__ import annotations
 
 import base64
+import functools
 from datetime import UTC, datetime, timedelta
 
 import pandas as pd
@@ -97,7 +98,7 @@ def test_a_day_reconciles_by_trade_id_and_names_everything_that_does_not(tmp_pat
     assert [x["trade_id"] for x in result["busted"]] == ["t6"] and result["busted"][0]["order_id"] == "ord-4"
     assert not result["ok"]
     line = reconcile.describe(result)
-    assert line.startswith(f"Reconciled {DAY}") and "MISMATCH: 1 differ in quantity or price, 1 on the account" in line
+    assert line.startswith(f"Reconciled {DAY}") and "MISMATCH: 1 trades differ in quantity or price, 1 trades on the account" in line
     clean = reconcile.compare(venue[venue["trade_id"].isin(["t1", "t2"])],
                               reconcile.ours(trail, start, end).query("trade_id in ['t1', 't2']"), DAY)
     assert clean["ok"] and reconcile.describe(clean).endswith("everything agrees.")
@@ -110,20 +111,23 @@ def test_once_a_day_from_six_eastern_into_the_trail_and_a_failed_read_retried_ho
     signer = account.Signer("key-1", SECRET)
     reads = []
 
-    def fetch(signer_, start, end, sess=None):
-        reads.append((start, end))
-        return [_trade("t1", "2026-10-24T18:00:00Z")]
+    def fetch(signer_, start, end, sess=None, kind=reconcile.TRADE):
+        reads.append((start, end, kind))
+        return [_trade("t1", "2026-10-24T18:00:00Z")] if kind == reconcile.TRADE else []
+    monkeypatch.setattr(reconcile, "daily", functools.partial(reconcile.daily, ledger_where=tmp_path / "live"))
     early = datetime(2026, 10, 25, 9, 0, tzinfo=UTC)                     # 05:00 Eastern: not yet
     assert reconcile.daily(KEY, early, signer=signer, where=tmp_path, fetch_=fetch) is None and not reads
     result = reconcile.daily(KEY, MORNING, signer=signer, where=tmp_path, fetch_=fetch)
     assert result["ok"] and result["day"] == DAY and result["matched"] == 1
     start, end = reconcile.window(DAY)
-    assert reads == [(start - reconcile.MARGIN, end + reconcile.MARGIN)]
+    assert reads == [(start - reconcile.MARGIN, end + reconcile.MARGIN, reconcile.TRADE),
+                     (start - reconcile.LOOKBACK, end + reconcile.MARGIN, reconcile.RESOLUTION)]
+    assert result["settled"] == 0 and result["settle_ok"]
     trail = audit.load(KEY, tmp_path)
     recorded = reconcile.latest(trail)
     assert recorded["kind"] == "reconcile" and recorded["ok"] is True and recorded["path"] == reconcile.ACTIVITIES
     assert reconcile.daily(KEY, MORNING + timedelta(hours=3), signer=signer, where=tmp_path, fetch_=fetch) is None
-    assert len(reads) == 1                                                  # a day is reconciled once
+    assert len(reads) == 2                                                  # a day is reconciled once
 
     def down(*a, **kw):
         raise ConnectionError("venue down")
@@ -155,3 +159,64 @@ def test_the_owner_page_states_the_latest_reconciliation(monkeypatch):
 def test_due_waits_for_six_eastern(hour, expected):
     now = pd.Timestamp(f"2026-10-25 {hour:02d}:30", tz=reconcile.EASTERN).to_pydatetime()
     assert reconcile.due(pd.DataFrame(), now) == expected
+
+
+def _resolution(slug, at, held, cost, realized_after, realized_before=0.0):
+    """A settlement as the venue records it: the position going in and coming out."""
+    return {"marketSlug": slug, "updateTime": at, "side": "POSITION_RESOLUTION_SIDE_LONG", "tradeId": f"r-{slug}",
+            "beforePosition": {"netPositionDecimal": f"{held}", "cost": {"value": f"{cost:.2f}", "currency": "USD"},
+                               "realized": {"value": f"{realized_before:.2f}", "currency": "USD"}},
+            "afterPosition": {"netPositionDecimal": "0", "cost": {"value": "0", "currency": "USD"},
+                              "realized": {"value": f"{realized_after:.2f}", "currency": "USD"}}}
+
+
+def _ledger(rows):
+    base = {**dict.fromkeys(orders.COLUMNS), "mode": "live", "state": "filled", "day": DAY, "year": 2026, "week": 43,
+            "position_id": "p", "rule": "finish", "placed_at": "2026-10-24T18:00:00+00:00"}
+    return pd.DataFrame([{**base, **r} for r in rows], columns=orders.COLUMNS)
+
+
+def test_the_days_settlements_are_set_beside_the_ledgers_grades(tmp_path):
+    graded = "2026-10-24T23:30:00+00:00"
+    ledger = _ledger([
+        {"order_id": "o1", "market_slug": "m1", "long": True, "filled": 50.0, "payout": 1.0, "graded_at": graded},
+        {"order_id": "o2", "market_slug": "m2", "long": False, "filled": 10.0, "payout": 0.0, "graded_at": graded},
+        {"order_id": "o3", "market_slug": "m3", "long": True, "filled": 20.0, "payout": 1.0, "graded_at": graded},
+        {"order_id": "o4", "market_slug": "m4", "long": True, "filled": 8.0},                         # not graded yet
+        {"order_id": "o6", "market_slug": "m6", "long": True, "filled": 5.0, "payout": 1.0, "graded_at": graded},
+        {"order_id": "o7", "market_slug": "m7", "long": True, "filled": 5.0, "payout": 1.0, "graded_at": graded},
+        {"order_id": "o8", "market_slug": "m8", "long": True, "filled": 4.0, "payout": 1.0, "graded_at": graded},
+        {"order_id": "o9", "market_slug": "m9", "filled": 0.0},                                    # nothing filled
+        {"order_id": "", "market_slug": "m10", "mode": "dry", "filled": 9.0, "payout": 1.0, "graded_at": graded},
+    ])
+    resolutions = reconcile.settlements([
+        _resolution("m1", "2026-10-24T22:00:00Z", 50, 20.00, 30.00),        # 50 at 0.40, paid 1: +30
+        _resolution("m2", "2026-10-24T22:00:00Z", -10, 9.85, -9.85),        # short, lost: paid 0
+        _resolution("m3", "2026-10-24T22:00:00Z", 18, 18.00, 0.00),          # 18 held, not 20
+        _resolution("m4", "2026-10-24T22:00:00Z", 8, 7.84, 0.16),
+        _resolution("m5", "2026-10-24T22:00:00Z", 3, 1.20, 1.80),            # bought by hand
+        _resolution("m7", "2026-10-22T22:00:00Z", 5, 4.90, 0.10),            # settled two days before it was graded
+        _resolution("m8", "2026-10-24T22:00:00Z", 4, 3.96, -3.96),           # the venue paid 0; the ledger says 1
+    ])
+    assert resolutions.set_index("market_slug").loc["m1", "payout"] == pytest.approx(1.0)
+    assert resolutions.set_index("market_slug").loc["m2", "qty"] == 10.0
+    out = reconcile.settle(resolutions, ledger, DAY)
+    assert out["settled"] == 6 and out["settled_matched"] == 4                 # m1 m2 m3 m8 beside a grade
+    assert [(d["market_slug"], d["field"]) for d in out["settle_differ"]] == [("m3", "qty"), ("m8", "payout")]
+    m8 = out["settle_differ"][1]
+    assert m8["venue_payout"] == 0.0 and m8["ledger"] == [1.0] and m8["venue_record"]["marketSlug"] == "m8"
+    assert [d["market_slug"] for d in out["settled_not_graded"]] == ["m4"]
+    assert [d["market_slug"] for d in out["settled_not_ours"]] == ["m5"]
+    assert [d["market_slug"] for d in out["graded_not_settled"]] == ["m6"] and not out["settle_ok"]
+    # Through the day's check: both reads, and the line the owner page shows.
+    trail = _trail(tmp_path, [[("t1", "2026-10-24T18:00:00Z", 50.0, 0.40)]])
+    reads = {reconcile.TRADE: [_trade("t1", "2026-10-24T18:00:00Z")],
+             reconcile.RESOLUTION: [_resolution("m1", "2026-10-24T22:00:00Z", 50, 20.00, 30.00)]}
+    signer = account.Signer("key-1", SECRET)
+    fetch = lambda s, start, end, sess=None, kind=reconcile.TRADE: reads[kind]  # noqa: E731
+    ok = reconcile.check(DAY, trail, signer, fetch_=fetch, ledger=ledger[ledger["market_slug"] == "m1"])
+    assert ok["ok"] and ok["settled_matched"] == 1
+    assert reconcile.describe(ok).endswith("1 settlements, 1 beside the ledger; everything agrees.")
+    bad = reconcile.check(DAY, trail, signer, fetch_=fetch, ledger=ledger[ledger["market_slug"].isin(["m1", "m6"])])
+    assert not bad["ok"] and bad["matched"] == 1
+    assert "MISMATCH: 1 graded in the ledger with no settlement on the account." in reconcile.describe(bad)

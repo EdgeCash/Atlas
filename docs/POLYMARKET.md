@@ -432,7 +432,16 @@ and their quantity and price compared. What does not reconcile is named: a
 trade whose figures differ, a trade on the account the trail never recorded
 (one made by hand in the app, or a lost answer), a fill the trail recorded
 that the venue does not show, and a trade the venue busted or rejected
-after the fact. The result is an event in the trail, and the owner page's
+after the fact. The same read checks the ledger's grades: each settlement
+the venue made of the account's positions that day is set beside the
+ledger's filled orders on that market - the contracts held going in, and
+the payout per contract (the realized profit the settlement added plus the
+position's cost, over its contracts) against the payout the ledger graded -
+and it names a settlement that differs, a market the venue settled that the
+ledger has not graded, a market the ledger graded that the account shows no
+settlement of (read three days back, since the ledger grades after the
+venue settles), and a settlement of a position the ledger does not hold (one
+bought by hand). The result is an event in the trail, and the owner page's
 Live tab states the latest ("everything agrees", or MISMATCH and what). A
 read that fails is recorded and tried again an hour later. The worker runs
 it, and the scheduled run as a backstop; `python -m atlas.polymarket.reconcile`
