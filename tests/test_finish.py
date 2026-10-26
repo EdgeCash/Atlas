@@ -115,6 +115,27 @@ def test_only_decided_positions_go_to_the_live_step_and_only_when_the_rule_is_na
     assert orders.rules() == ("favorites", "finish")
 
 
+def test_the_live_step_gets_the_markets_tick_so_a_half_cent_ask_is_ordered_at_itself(monkeypatch):
+    # College football ticks at half a cent: a 0.985 ask on either side is ordered at 0.985 on the long side's
+    # grid (0.015 for the short), not rounded to the cent where it would sit under the ask and never fill.
+    from atlas.polymarket import account, orders
+
+    placed = []
+    monkeypatch.setattr(orders, "place", lambda pos, passphrase, now, **kw: placed.append(pos))
+    monkeypatch.setenv(orders.MODE, "dry")
+    away, home = TEAMS[0]
+    events = {"ncaaf": [{**us.event("7", "cfb-g7", away, home, [
+        us.moneyline(7, "football", away, home, 0.015, 0.02, start=START, side_ids=("7001", "7002"),
+                     slug="aec-cfb-g7", tick=0.005)], start=START), "ended": True, "live": False, "period": "FT",
+        "score": "10-31", "finishedTimestamp": FINISHED}]}
+    record, added = finish.take(pd.DataFrame(), source.capture(NOW, events=events), events, NOW, depth=lambda *a: {})
+    assert added == 1 and record["tick"].iloc[0] == 0.005
+    finish.order(record, "key", NOW)
+    (pos,) = placed
+    row = next(pos.itertuples(index=False))
+    assert row.tick == 0.005 and account.order(row, 10)["price"]["value"] == "0.015"
+
+
 def test_two_copies_of_the_record_merge_into_one_position_per_contract_keeping_the_grade(monkeypatch):
     monkeypatch.delenv("ATLAS_OFFLINE", raising=False)
     record, _ = finish.take(pd.DataFrame(), _quotes(), EVENTS, NOW, depth=lambda *a: {})

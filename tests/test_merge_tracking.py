@@ -73,8 +73,14 @@ def test_sealed_weekly_files_both_runs_rewrote_are_merged_and_resealed(tmp_path)
 
 
 def test_every_sealed_record_the_owner_page_keeps_is_merged_by_its_row_key():
-    assert set(mt.SEALED) == {"polymarket_positions", "polymarket_live"}
+    assert set(mt.SEALED) == {"polymarket_positions", "polymarket_live", "polymarket_audit"}
     assert mt.SEALED["polymarket_positions"] == ["position_id"]
     # The live ledger: one row per order written, so an order is its position at the moment it was placed, by rule.
     assert mt.SEALED["polymarket_live"] == ["position_id", "placed_at", "rule"]
+    # The audit trail: one row per event, each with its own id; the worker merges by the same keys.
+    assert mt.SEALED["polymarket_audit"] == ["event_id"]
+    from atlas.polymarket import worker
+
+    assert {k.split("/")[-1]: v for k, v in worker.SEALED.items()} == {k: mt.SEALED[k] for k in
+                                                                        ("polymarket_live", "polymarket_audit")}
 

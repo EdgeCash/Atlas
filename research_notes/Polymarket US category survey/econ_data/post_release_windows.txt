@@ -1,0 +1,106 @@
+## uscpi-may2026yoy-2026-06-10 T=2026-06-10T12:30: markets w/ winning-side ask<=0.97 after +1m: 4
+    ('Exactly 4.1%', 0.0, 134, 107, 240, 0.52, 0.463)
+    ('Exactly 4.4%', 0.0, 240, 1, 240, 0.92, 0.075)
+    ('Less than or equal to 3.7%', 0.0, 42, 1, 42, 0.92, 0.075)
+    ('Exactly 4.2%', 1.0, 239, 1, 240, 0.94, 0.056)
+## usfed-fomc-2026-06-17 T=2026-06-17T18:00: markets w/ winning-side ask<=0.97 after +1m: 0
+## uschange-gte-june-2026-07-02 T=2026-07-02T12:30: markets w/ winning-side ask<=0.97 after +1m: 6
+    ('At least 100,000', 0.0, 14, 2, 15, 0.53, 0.453)
+    ('At least 150,000', 0.0, 20, 1, 20, 0.72, 0.266)
+    ('At least 200,000', 0.0, 240, 1, 240, 0.81, 0.179)
+    ('At least 250,000', 0.0, 240, 1, 240, 0.87, 0.122)
+    ('At least 0', 1.0, 223, 1, 240, 0.95, 0.047)
+    ('At least 50,000', 1.0, 5, 17, 21, 0.95, 0.047)
+## us-seasonadj-gte-june-2026-07-02 T=2026-07-02T12:30: markets w/ winning-side ask<=0.97 after +1m: 4
+    ('At least 4.3%', 0.0, 240, 1, 240, 0.28, 0.706)
+    ('At least 4.4%', 0.0, 240, 1, 240, 0.65, 0.334)
+    ('At least 4.6%', 0.0, 240, 1, 240, 0.93, 0.065)
+    ('At least 4.1%', 1.0, 240, 1, 240, 0.97, 0.028)
+## uscpi-june-yoy-2026-07-14 T=2026-07-14T12:30: markets w/ winning-side ask<=0.97 after +1m: 4
+    ('Above 3.6%', 0.0, 3, 1, 3, 0.26, 0.727)
+    ('Above 3.8%', 0.0, 18, 6, 23, 0.61, 0.373)
+    ('Above 3.7%', 0.0, 3, 1, 3, 0.76, 0.227)
+    ('Above 3.9%', 0.0, 18, 7, 24, 0.89, 0.103)
+## usfed-fomc-2026-07-29 T=2026-07-29T18:00: markets w/ winning-side ask<=0.97 after +1m: 0
+## boe-2026-07-30 T=2026-07-30T11:00: markets w/ winning-side ask<=0.97 after +1m: 0
+## us-saa-q2-2026-07-30 T=2026-07-30T12:30: markets w/ winning-side ask<=0.97 after +1m: 0
+## bcb-2026-08-05 T=2026-08-05T21:30: markets w/ winning-side ask<=0.97 after +1m: 0
+## usnfp-sa-july-2026-08-07 T=2026-08-07T12:30: markets w/ winning-side ask<=0.97 after +1m: 4
+    ('Above 200,000', 0.0, 240, 1, 240, 0.49, 0.493)
+    ('Above 100,000', 0.0, 240, 1, 240, 0.85, 0.141)
+    ('Above 50,000', 0.0, 39, 1, 39, 0.95, 0.047)
+    ('Above 150,000', 0.0, 240, 1, 240, 0.97, 0.028)
+## usunemp-sa-july-2026-08-07 T=2026-08-07T12:30: markets w/ winning-side ask<=0.97 after +1m: 4
+    ('Above 4.2%', 0.0, 85, 1, 86, 0.73, 0.256)
+    ('Above 4.0%', 1.0, 4, 1, 7, 0.91, 0.084)
+    ('Above 4.1%', 0.0, 240, 1, 240, 0.97, 0.028)
+    ('Above 4.4%', 0.0, 240, 1, 240, 0.97, 0.028)
+## uscpi-july-yoy-2026-08-12 T=2026-08-12T12:30: markets w/ winning-side ask<=0.97 after +1m: 4
+    ('Above 3.4%', 0.0, 4, 2, 5, 0.01, 0.989)
+    ('Above 3.4%', 0.5, 240, 1, 240, 0.76, 0.227)
+    ('Above 3.2%', 1.0, 2, 1, 2, 0.97, 0.028)
+    ('Above 3.6%', 0.0, 143, 1, 143, 0.97, 0.028)
+## boc-2026-09-02 T=2026-09-02T13:45: markets w/ winning-side ask<=0.97 after +1m: 1
+    ('25 bps Decrease', 0.0, 88, 1, 88, 0.94, 0.056)
+## usunemp-sa-august-2026-09-04 T=2026-09-04T12:30: markets w/ winning-side ask<=0.97 after +1m: 2
+    ('Above 4.1%', 0.0, 67, 1, 240, 0.35, 0.634)
+    ('Above 4.0%', 1.0, 230, 8, 240, 0.86, 0.132)
+## usnfp-sa-august-2026-09-04 T=2026-09-04T12:30: markets w/ winning-side ask<=0.97 after +1m: 3
+    ('Above 150,000', 1.0, 1, 1, 1, 0.07, 0.925)
+    ('Above 100,000', 1.0, 236, 5, 240, 0.41, 0.573)
+    ('Above 50,000', 1.0, 240, 1, 240, 0.66, 0.324)
+## ecb-2026-09-10 T=2026-09-10T12:15: markets w/ winning-side ask<=0.97 after +1m: 0
+## uscpi-august-yoy-2026-09-11 T=2026-09-11T12:30: markets w/ winning-side ask<=0.97 after +1m: 2
+    ('Above 3.3%', 1.0, 36, 1, 36, 0.81, 0.179)
+    ('Above 3.4%', 0.0, 16, 1, 16, 0.89, 0.103)
+## usfed-fomc-2026-09-16 T=2026-09-16T18:00: markets w/ winning-side ask<=0.97 after +1m: 0
+## bcb-2026-09-16 T=2026-09-16T21:30: markets w/ winning-side ask<=0.97 after +1m: 1
+    ('50+ bps Decrease', 0.0, 14, 1, 14, 0.93, 0.065)
+## boe-2026-09-17 T=2026-09-17T11:00: markets w/ winning-side ask<=0.97 after +1m: 1
+    ('25 bps Increase', 0.0, 171, 1, 172, 0.95, 0.047)
+## boj-2026-09-18 T=2026-09-18T03:00: markets w/ winning-side ask<=0.97 after +1m: 0
+## banxico-2026-09-24 T=2026-09-24T19:00: markets w/ winning-side ask<=0.97 after +1m: 0
+## umcsent-2026-09-25 T=2026-09-25T14:00: markets w/ winning-side ask<=0.97 after +1m: 5
+    ('Above 48', 1.0, 212, 1, 240, 0.15, 0.841)
+    ('Above 46', 1.0, 240, 1, 240, 0.87, 0.122)
+    ('Above 52', 0.0, 201, 40, 240, 0.87, 0.122)
+    ('Above 54', 0.0, 66, 1, 77, 0.92, 0.075)
+    ('Above 50', 0.0, 49, 1, 240, 0.97, 0.028)
+## usnfp-sa-september-2026-10-02 T=2026-10-02T12:30: markets w/ winning-side ask<=0.97 after +1m: 5
+    ('Above 50,000', 0.0, 240, 1, 240, 0.01, 0.989)
+    ('Above 100,000', 0.0, 240, 1, 240, 0.53, 0.453)
+    ('Above 150,000', 0.0, 240, 1, 240, 0.87, 0.122)
+    ('Above 0', 1.0, 240, 1, 240, 0.9, 0.094)
+    ('Above 250,000', 0.0, 240, 1, 240, 0.97, 0.028)
+## usunemp-sa-september-2026-10-02 T=2026-10-02T12:30: markets w/ winning-side ask<=0.97 after +1m: 4
+    ('Above 4.1%', 1.0, 240, 1, 240, 0.37, 0.614)
+    ('Above 4.0%', 1.0, 240, 1, 240, 0.7, 0.285)
+    ('Above 3.9%', 1.0, 240, 1, 240, 0.94, 0.056)
+    ('Above 4.2%', 0.0, 240, 1, 240, 0.95, 0.047)
+## uscpi-september-mom-2026-10-14 T=2026-10-14T12:30: markets w/ winning-side ask<=0.97 after +1m: 4
+    ('Above 0.5%', 1.0, 240, 1, 240, 0.66, 0.324)
+    ('Above 0.6%', 0.0, 240, 1, 240, 0.85, 0.141)
+    ('Above 0.4%', 1.0, 240, 1, 240, 0.91, 0.084)
+    ('Above 0.2%', 1.0, 240, 1, 240, 0.97, 0.028)
+## uscpi-september-yoy-2026-10-14 T=2026-10-14T12:30: markets w/ winning-side ask<=0.97 after +1m: 5
+    ('Above 3.6%', 1.0, 240, 1, 240, 0.47, 0.513)
+    ('Above 3.5%', 1.0, 240, 1, 240, 0.83, 0.16)
+    ('Above 3.7%', 0.0, 240, 1, 240, 0.89, 0.103)
+    ('Above 3.4%', 1.0, 240, 1, 240, 0.96, 0.037)
+    ('Above 2.9%', 1.0, 240, 1, 240, 0.97, 0.028)
+## uscpicore-september-yoy-2026-10-14 T=2026-10-14T12:30: markets w/ winning-side ask<=0.97 after +1m: 5
+    ('Above 2.5%', 1.0, 240, 1, 240, 0.05, 0.947)
+    ('Above 2.4%', 1.0, 240, 1, 240, 0.43, 0.553)
+    ('Above 2.7%', 0.0, 240, 1, 240, 0.51, 0.473)
+    ('Above 2.3%', 1.0, 240, 1, 240, 0.86, 0.132)
+    ('Above 2.6%', 0.0, 240, 1, 240, 0.92, 0.075)
+## uscpicore-september-mom-2026-10-14 T=2026-10-14T12:30: markets w/ winning-side ask<=0.97 after +1m: 5
+    ('Above 0.2%', 1.0, 240, 1, 240, 0.4, 0.583)
+    ('Above 0.1%', 1.0, 240, 1, 240, 0.82, 0.17)
+    ('Above 0.4%', 0.0, 240, 1, 240, 0.9, 0.094)
+    ('Above 0.3%', 0.0, 240, 1, 240, 0.93, 0.065)
+    ('Above 0.0%', 1.0, 240, 1, 240, 0.95, 0.047)
+## boi-2026-10-21 T=2026-10-21T13:00: markets w/ winning-side ask<=0.97 after +1m: 0
+## cbr-2026-10-23 T=2026-10-23T10:30: markets w/ winning-side ask<=0.97 after +1m: 2
+    ('25 bps Decrease', 0.0, 240, 1, 240, 0.92, 0.075)
+    ('No Change', 1.0, 240, 1, 240, 0.96, 0.037)

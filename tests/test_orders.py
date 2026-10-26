@@ -66,8 +66,9 @@ class _Response:
 @pytest.fixture
 def env(monkeypatch):
     for name in (orders.MODE, orders.ARMED, orders.BANKROLL, orders.RULES, account.KEY_ID, account.SECRET_KEY,
-                 "ATLAS_OFFLINE", *orders.CAPS):
+                 "ATLAS_OFFLINE", orders.KILL, *orders.CAPS):
         monkeypatch.delenv(name, raising=False)
+    monkeypatch.setattr(orders, "branch_kill", None)
     monkeypatch.setenv(account.KEY_ID, "key-1")
     monkeypatch.setenv(account.SECRET_KEY, SECRET)
     return monkeypatch
@@ -243,3 +244,64 @@ def test_the_owner_page_section_states_the_mode_and_sums_the_ledger(env):
     lost = ledger.copy()
     lost.loc[1, "profit"] = -80.0
     assert orders.section(lost, NOW)["notes"][1].startswith("STOPPED: stop:loss")
+
+
+def test_the_throttle_refuses_orders_past_the_minutes_and_the_days_count(env, tmp_path):
+    where = tmp_path / "live"
+    env.setenv(orders.MODE, "dry")
+    env.setenv(orders.BANKROLL, "1000")
+    env.setenv("MAX_ORDERS_PER_MINUTE", "2")
+    sess = _Session()
+    pos = _positions([{"position_id": f"p{i}", "token_id": f"t{i}", "market_slug": f"m{i}"} for i in range(3)])
+    ledger = orders.place(pos, KEY, NOW, where=where, sess=sess)
+    by = ledger.set_index("position_id")
+    assert list(by["state"]) == ["dry", "dry", "refused"]
+    assert by.loc["p2", "note"] == "throttle: 2 orders in the last minute (cap 2)"
+    assert sess.calls[-1]["url"] == account.API + account.PREVIEW and len(sess.calls) == 3   # balance, two previews
+    # A minute on, the minute's count is clear; the refused order is not counted, and a position is ordered once.
+    later = orders.place(_positions([{"position_id": "p3", "token_id": "t3"}]), KEY, NOW + timedelta(seconds=61),
+                         where=where, sess=sess)
+    assert later.set_index("position_id").loc["p3", "state"] == "dry"
+    # The day's count: three sent in the last day, so the cap of three refuses the fourth.
+    env.setenv("MAX_ORDERS_PER_DAY", "3")
+    day = orders.place(_positions([{"position_id": "p4", "token_id": "t4"}]), KEY, NOW + timedelta(hours=2),
+                       where=where, sess=sess)
+    assert day.set_index("position_id").loc["p4", "note"] == "throttle: 3 orders in the last day (cap 3)"
+    assert orders.throttled(day, NOW + timedelta(days=1, hours=3)) is None              # the day's window clears
+    # Only the run's own mode counts: a live run is not held by what the dry run sent.
+    env.setenv(orders.MODE, "live")
+    assert orders.throttled(day, NOW + timedelta(hours=2)) is None
+
+
+def test_the_kill_switch_stops_everything_without_calling_the_venue(env, tmp_path):
+    where = tmp_path / "live"
+    env.setenv(orders.MODE, "live")
+    env.setenv(orders.ARMED, orders.PHRASE)
+    env.setenv(orders.BANKROLL, "1000")
+    sess = _Session()
+    # The variable.
+    env.setenv(orders.KILL, "venue incident")
+    ledger = orders.place(_positions([{"position_id": "p1"}]), KEY, NOW, where=where, sess=sess)
+    row = ledger.set_index("position_id").loc["p1"]
+    assert row["state"] == "refused" and row["note"] == f"kill: {orders.KILL} is set (venue incident)"
+    assert sess.calls == []                                                             # not even the balance
+    env.delenv(orders.KILL)
+    # The file in the ledger's folder, its first line the reason; an empty file holds too.
+    (where / orders.KILL_FILE).write_text("paused for the election\nmore detail\n")
+    ledger = orders.place(_positions([{"position_id": "p2", "token_id": "t2"}]), KEY, NOW, where=where, sess=sess)
+    assert ledger.set_index("position_id").loc["p2", "note"] == "kill: KILL file (paused for the election)"
+    (where / orders.KILL_FILE).write_text("")
+    assert orders.killed(where) == "kill: KILL file (no reason given)" and sess.calls == []
+    # The branch's file, as the worker reads it each tick.
+    (where / orders.KILL_FILE).unlink()
+    env.setattr(orders, "branch_kill", "set from my phone")
+    assert orders.killed(where) == "kill: KILL file on the branch (set from my phone)"
+    env.setattr(orders, "branch_kill", None)
+    assert orders.killed(where) is None
+    lifted = orders.place(_positions([{"position_id": "p3", "token_id": "t3"}]), KEY, NOW, where=where, sess=sess)
+    assert lifted.set_index("position_id").loc["p3", "state"] == "filled" and len(sess.calls) == 2
+    # The owner page says so.
+    env.setenv(orders.KILL, "1")
+    sec = orders.section(lifted, NOW)
+    assert sec["title"] == "Live orders (live, armed, KILLED)" and sec["notes"][0].startswith("KILLED: kill:")
+    assert "the throttle holds at 5 orders a minute and 50 a day" in " ".join(sec["notes"])

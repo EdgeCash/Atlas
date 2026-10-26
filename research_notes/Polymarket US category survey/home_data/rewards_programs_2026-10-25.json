@@ -1,0 +1,3968 @@
+{
+ "source": "https://polymarket.us/rewards (RSC payload)",
+ "fetched_utc": "2026-10-25T23:21Z",
+ "programs": [
+  {
+   "programId": "nfl_spreads_live_20261021",
+   "name": "NFL Spreads Live",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "live",
+   "rewardPool": 9500,
+   "discountFactor": 0.25,
+   "targetSize": 15000,
+   "n_markets": 779,
+   "sample_symbols": [
+    "asc-nfl-ari-dal-2026-11-01-neg-10pt5",
+    "asc-nfl-ari-dal-2026-11-01-neg-13pt5",
+    "asc-nfl-ari-dal-2026-11-01-neg-14pt5",
+    "asc-nfl-ari-dal-2026-11-01-neg-16pt5",
+    "asc-nfl-ari-dal-2026-11-01-neg-17pt5"
+   ]
+  },
+  {
+   "programId": "nfl_totals_live_20261021",
+   "name": "NFL Totals Live",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "live",
+   "rewardPool": 8500,
+   "discountFactor": 0.25,
+   "targetSize": 10000,
+   "n_markets": 549,
+   "sample_symbols": [
+    "tsc-nfl-ari-dal-2026-11-01-total-24pt5",
+    "tsc-nfl-ari-dal-2026-11-01-total-27pt5",
+    "tsc-nfl-ari-dal-2026-11-01-total-30pt5",
+    "tsc-nfl-ari-dal-2026-11-01-total-33pt5",
+    "tsc-nfl-ari-dal-2026-11-01-total-36pt5"
+   ]
+  },
+  {
+   "programId": "ufc_main_moneyline_live_20260924",
+   "name": "UFC Main Moneyline Live",
+   "category": "SPR",
+   "subcategories": [
+    "MMA"
+   ],
+   "period": "live",
+   "rewardPool": 5000,
+   "discountFactor": 0.3,
+   "targetSize": 20000,
+   "n_markets": 11,
+   "sample_symbols": [
+    "aec-ufc-bilele-lucfer-2026-11-07",
+    "aec-ufc-davgra-elismi-2026-11-07",
+    "aec-ufc-gabbon-seabra-2026-11-07",
+    "aec-ufc-jealeb-farhas-2026-10-31",
+    "aec-ufc-mankon-wessch-2026-11-07"
+   ]
+  },
+  {
+   "programId": "mlb_ws_player_props_live_20261023",
+   "name": "MLB WS Player Props Live",
+   "category": "SPR",
+   "subcategories": [
+    "BASEBALL"
+   ],
+   "period": "live",
+   "rewardPool": 3960,
+   "discountFactor": 0.15,
+   "targetSize": 3000,
+   "n_markets": 275,
+   "sample_symbols": [
+    "astatc-mlb-mil-tb-2026-10-26-er-freper-gte1",
+    "astatc-mlb-mil-tb-2026-10-26-er-freper-gte2",
+    "astatc-mlb-mil-tb-2026-10-26-er-robgas-gte1",
+    "astatc-mlb-mil-tb-2026-10-26-er-robgas-gte2",
+    "astatc-mlb-mil-tb-2026-10-26-ha-freper-gte2"
+   ]
+  },
+  {
+   "programId": "mlb_ws_totals_live_20261023",
+   "name": "MLB WS Totals Live",
+   "category": "SPR",
+   "subcategories": [
+    "BASEBALL"
+   ],
+   "period": "live",
+   "rewardPool": 2760,
+   "discountFactor": 0.15,
+   "targetSize": 10000,
+   "n_markets": 34,
+   "sample_symbols": [
+    "tsc-mlb-mil-tb-2026-10-26-0pt5",
+    "tsc-mlb-mil-tb-2026-10-26-1pt5",
+    "tsc-mlb-mil-tb-2026-10-26-2pt5",
+    "tsc-mlb-mil-tb-2026-10-26-3pt5",
+    "tsc-mlb-mil-tb-2026-10-26-4pt5"
+   ]
+  },
+  {
+   "programId": "cfb_t1_totals_live_20261021",
+   "name": "CFB T1 Totals Live",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "live",
+   "rewardPool": 2700,
+   "discountFactor": 0.15,
+   "targetSize": 6000,
+   "n_markets": 550,
+   "sample_symbols": [
+    "tsc-cfb-arz-txtech-2026-10-31-total-24pt5",
+    "tsc-cfb-arz-txtech-2026-10-31-total-31pt5",
+    "tsc-cfb-arz-txtech-2026-10-31-total-35pt5",
+    "tsc-cfb-arz-txtech-2026-10-31-total-38pt5",
+    "tsc-cfb-arz-txtech-2026-10-31-total-42pt5"
+   ]
+  },
+  {
+   "programId": "cfb_t1_spreads_live_20261021",
+   "name": "CFB T1 Spreads Live",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "live",
+   "rewardPool": 2350,
+   "discountFactor": 0.15,
+   "targetSize": 7500,
+   "n_markets": 898,
+   "sample_symbols": [
+    "asc-cfb-arz-txtech-2026-10-31-neg-10pt5",
+    "asc-cfb-arz-txtech-2026-10-31-neg-13pt5",
+    "asc-cfb-arz-txtech-2026-10-31-neg-14pt5",
+    "asc-cfb-arz-txtech-2026-10-31-neg-16pt5",
+    "asc-cfb-arz-txtech-2026-10-31-neg-17pt5"
+   ]
+  },
+  {
+   "programId": "mlb_ws_spreads_live_20261023",
+   "name": "MLB WS Spreads Live",
+   "category": "SPR",
+   "subcategories": [
+    "BASEBALL"
+   ],
+   "period": "live",
+   "rewardPool": 2160,
+   "discountFactor": 0.15,
+   "targetSize": 8000,
+   "n_markets": 18,
+   "sample_symbols": [
+    "asc-mlb-mil-tb-2026-10-26-f5-neg-1pt5",
+    "asc-mlb-mil-tb-2026-10-26-f5-pos-1pt5",
+    "asc-mlb-mil-tb-2026-10-26-neg-1pt5",
+    "asc-mlb-mil-tb-2026-10-26-neg-2pt5",
+    "asc-mlb-mil-tb-2026-10-26-neg-3pt5"
+   ]
+  },
+  {
+   "programId": "nfl_player_props_live_20261021",
+   "name": "NFL Player Props Live",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "live",
+   "rewardPool": 2000,
+   "discountFactor": 0.35,
+   "targetSize": 750,
+   "n_markets": 1103,
+   "sample_symbols": [
+    "astatc-nfl-ari-dal-2026-11-01-ptd-0pt5",
+    "astatc-nfl-ari-dal-2026-11-01-ptd-1pt5",
+    "astatc-nfl-ari-dal-2026-11-01-ptd-2pt5",
+    "astatc-nfl-ari-dal-2026-11-01-ptd-3pt5",
+    "astatc-nfl-ari-dal-2026-11-01-ptd-4pt5"
+   ]
+  },
+  {
+   "programId": "mlb_ws_team_props_live_20261023",
+   "name": "MLB WS Team Props Live",
+   "category": "SPR",
+   "subcategories": [
+    "BASEBALL"
+   ],
+   "period": "live",
+   "rewardPool": 1920,
+   "discountFactor": 0.15,
+   "targetSize": 3000,
+   "n_markets": 46,
+   "sample_symbols": [
+    "atc-mlb-mil-tb-2026-10-26-f5-draw",
+    "atc-mlb-mil-tb-2026-10-26-f5-mil",
+    "atc-mlb-mil-tb-2026-10-26-f5-tb",
+    "atc-mlb-mil-tb-2026-10-26-i1-draw",
+    "atc-mlb-mil-tb-2026-10-26-i1-mil"
+   ]
+  },
+  {
+   "programId": "epl_teamwin_live_20261018",
+   "name": "EPL Teamwin Live",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "live",
+   "rewardPool": 1600,
+   "discountFactor": 0.3,
+   "targetSize": 10000,
+   "n_markets": 20,
+   "sample_symbols": [
+    "atc-epl-ast-ful-2026-10-31-ast",
+    "atc-epl-ast-ful-2026-10-31-ful",
+    "atc-epl-bor-lee-2026-10-31-bor",
+    "atc-epl-bor-lee-2026-10-31-lee",
+    "atc-epl-bre-not-2026-10-31-bre"
+   ]
+  },
+  {
+   "programId": "ligamx_moneyline_live_20261018",
+   "name": "Ligamx Moneyline Live",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "live",
+   "rewardPool": 1440,
+   "discountFactor": 0.35,
+   "targetSize": 10000,
+   "n_markets": 15,
+   "sample_symbols": [
+    "atc-lmx-ame-pac-2026-10-25-ame",
+    "atc-lmx-ame-pac-2026-10-25-draw",
+    "atc-lmx-ame-pac-2026-10-25-pac",
+    "atc-lmx-ame-tij-2026-10-28-ame",
+    "atc-lmx-ame-tij-2026-10-28-draw"
+   ]
+  },
+  {
+   "programId": "ucl_teamwin_live_20261018",
+   "name": "UCL Teamwin Live",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "live",
+   "rewardPool": 1280,
+   "discountFactor": 0.3,
+   "targetSize": 10000,
+   "n_markets": 36,
+   "sample_symbols": [
+    "atc-ucl-aek1-rma-2026-11-04-aek1",
+    "atc-ucl-aek1-rma-2026-11-04-rma",
+    "atc-ucl-atm-bay-2026-11-03-atm",
+    "atc-ucl-atm-bay-2026-11-03-bay",
+    "atc-ucl-bog-lil-2026-11-03-bog"
+   ]
+  },
+  {
+   "programId": "cfb_t2_spreads_live_20261021",
+   "name": "CFB T2 Spreads Live",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "live",
+   "rewardPool": 1000,
+   "discountFactor": 0.2,
+   "targetSize": 3000,
+   "n_markets": 1392,
+   "sample_symbols": [
+    "asc-cfb-applst-gas-2026-10-31-neg-10pt5",
+    "asc-cfb-applst-gas-2026-10-31-neg-13pt5",
+    "asc-cfb-applst-gas-2026-10-31-neg-14pt5",
+    "asc-cfb-applst-gas-2026-10-31-neg-16pt5",
+    "asc-cfb-applst-gas-2026-10-31-neg-17pt5"
+   ]
+  },
+  {
+   "programId": "nfl_period_spreads_live_20261021",
+   "name": "NFL Period Spreads Live",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "live",
+   "rewardPool": 900,
+   "discountFactor": 0.3,
+   "targetSize": 3000,
+   "n_markets": 1471,
+   "sample_symbols": [
+    "asc-nfl-ari-dal-2026-11-01-1h-neg-10pt5",
+    "asc-nfl-ari-dal-2026-11-01-1h-neg-13pt5",
+    "asc-nfl-ari-dal-2026-11-01-1h-neg-14pt5",
+    "asc-nfl-ari-dal-2026-11-01-1h-neg-16pt5",
+    "asc-nfl-ari-dal-2026-11-01-1h-neg-1pt5"
+   ]
+  },
+  {
+   "programId": "nfl_period_totals_live_20261014",
+   "name": "NFL Period Totals Live",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "live",
+   "rewardPool": 900,
+   "discountFactor": 0.25,
+   "targetSize": 5000,
+   "n_markets": 1381,
+   "sample_symbols": [
+    "tsc-nfl-ari-dal-2026-11-01-1h-17pt5",
+    "tsc-nfl-ari-dal-2026-11-01-1h-19pt5",
+    "tsc-nfl-ari-dal-2026-11-01-1h-21pt5",
+    "tsc-nfl-ari-dal-2026-11-01-1h-23pt5",
+    "tsc-nfl-ari-dal-2026-11-01-1h-24pt5"
+   ]
+  },
+  {
+   "programId": "cfb_t2_totals_live_20261021",
+   "name": "CFB T2 Totals Live",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "live",
+   "rewardPool": 800,
+   "discountFactor": 0.2,
+   "targetSize": 5000,
+   "n_markets": 850,
+   "sample_symbols": [
+    "tsc-cfb-applst-gas-2026-10-31-total-26pt5",
+    "tsc-cfb-applst-gas-2026-10-31-total-33pt5",
+    "tsc-cfb-applst-gas-2026-10-31-total-37pt5",
+    "tsc-cfb-applst-gas-2026-10-31-total-40pt5",
+    "tsc-cfb-applst-gas-2026-10-31-total-44pt5"
+   ]
+  },
+  {
+   "programId": "wnba_moneyline_live_20260924",
+   "name": "Wnba Moneyline Live",
+   "category": "SPR",
+   "subcategories": [
+    "BASKETBALL"
+   ],
+   "period": "live",
+   "rewardPool": 800,
+   "discountFactor": 0.3,
+   "targetSize": 10000,
+   "n_markets": 1,
+   "sample_symbols": [
+    "aec-wnba-atl-gsv-2026-10-26"
+   ]
+  },
+  {
+   "programId": "nfl_moneyline_live_20261021",
+   "name": "NFL Moneyline Live",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "live",
+   "rewardPool": 750,
+   "discountFactor": 0.25,
+   "targetSize": 300000,
+   "n_markets": 33,
+   "sample_symbols": [
+    "aec-nfl-ari-dal-2026-11-01",
+    "aec-nfl-ari-sea-2026-11-08",
+    "aec-nfl-atl-tb-2026-11-01",
+    "aec-nfl-bal-buf-2026-11-01",
+    "aec-nfl-car-gb-2026-10-29"
+   ]
+  },
+  {
+   "programId": "seriea_teamwin_live_20261018",
+   "name": "Seriea Teamwin Live",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "live",
+   "rewardPool": 640,
+   "discountFactor": 0.3,
+   "targetSize": 8000,
+   "n_markets": 40,
+   "sample_symbols": [
+    "atc-sea-ata-par-2026-11-02-ata",
+    "atc-sea-ata-par-2026-11-02-par",
+    "atc-sea-bol-mon-2026-10-31-bol",
+    "atc-sea-bol-mon-2026-10-31-mon",
+    "atc-sea-com-ven-2026-11-01-com"
+   ]
+  },
+  {
+   "programId": "laliga_teamwin_live_20261018",
+   "name": "Laliga Teamwin Live",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "live",
+   "rewardPool": 640,
+   "discountFactor": 0.3,
+   "targetSize": 8000,
+   "n_markets": 22,
+   "sample_symbols": [
+    "atc-lal-ath-rso-2026-11-01-ath",
+    "atc-lal-ath-rso-2026-11-01-rso",
+    "atc-lal-bet-mal-2026-10-31-bet",
+    "atc-lal-bet-mal-2026-10-31-mal",
+    "atc-lal-dep-osa-2026-11-02-dep"
+   ]
+  },
+  {
+   "programId": "bundesliga_teamwin_live_20261018",
+   "name": "Bundesliga Teamwin Live",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "live",
+   "rewardPool": 640,
+   "discountFactor": 0.3,
+   "targetSize": 10000,
+   "n_markets": 18,
+   "sample_symbols": [
+    "atc-bun-aug-scf-2026-10-31-aug",
+    "atc-bun-aug-scf-2026-10-31-scf",
+    "atc-bun-bmg-scp-2026-10-31-bmg",
+    "atc-bun-bmg-scp-2026-10-31-scp",
+    "atc-bun-bre-hof-2026-10-31-bre"
+   ]
+  },
+  {
+   "programId": "ufc_main_moneyline_dayof_20260924",
+   "name": "UFC Main Moneyline Day-of",
+   "category": "SPR",
+   "subcategories": [
+    "MMA"
+   ],
+   "period": "day_of",
+   "rewardPool": 625,
+   "discountFactor": 0.3,
+   "targetSize": 20000,
+   "n_markets": 11,
+   "sample_symbols": [
+    "aec-ufc-bilele-lucfer-2026-11-07",
+    "aec-ufc-davgra-elismi-2026-11-07",
+    "aec-ufc-gabbon-seabra-2026-11-07",
+    "aec-ufc-jealeb-farhas-2026-10-31",
+    "aec-ufc-mankon-wessch-2026-11-07"
+   ]
+  },
+  {
+   "programId": "nfl_team_totals_live_20261021",
+   "name": "NFL Team Totals Live",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "live",
+   "rewardPool": 600,
+   "discountFactor": 0.3,
+   "targetSize": 1500,
+   "n_markets": 1209,
+   "sample_symbols": [
+    "tsc-nfl-ari-dal-2026-11-01-tt-ari-10pt5",
+    "tsc-nfl-ari-dal-2026-11-01-tt-ari-13pt5",
+    "tsc-nfl-ari-dal-2026-11-01-tt-ari-14pt5",
+    "tsc-nfl-ari-dal-2026-11-01-tt-ari-16pt5",
+    "tsc-nfl-ari-dal-2026-11-01-tt-ari-17pt5"
+   ]
+  },
+  {
+   "programId": "rugby_wc_20261015",
+   "name": "Rugby WC",
+   "category": "SPR",
+   "subcategories": [
+    "RUGBY"
+   ],
+   "period": "daily",
+   "rewardPool": 600,
+   "discountFactor": 0.2,
+   "targetSize": 5000,
+   "n_markets": 10,
+   "sample_symbols": [
+    "tec-rlwc-2026-11-15-w-aus",
+    "tec-rlwc-2026-11-15-w-cok",
+    "tec-rlwc-2026-11-15-w-eng",
+    "tec-rlwc-2026-11-15-w-fij",
+    "tec-rlwc-2026-11-15-w-fra"
+   ]
+  },
+  {
+   "programId": "mlb_ws_moneyline_live_20261023",
+   "name": "MLB WS Moneyline Live",
+   "category": "SPR",
+   "subcategories": [
+    "BASEBALL"
+   ],
+   "period": "live",
+   "rewardPool": 600,
+   "discountFactor": 0.15,
+   "targetSize": 60000,
+   "n_markets": 2,
+   "sample_symbols": [
+    "aec-mlb-mil-tb-2026-10-26",
+    "aec-mlb-mil-tb-2026-10-27"
+   ]
+  },
+  {
+   "programId": "midterms_t1_control_bop_tossup_senate_20261001",
+   "name": "Midterms T1 Control BOP Tossup Senate",
+   "category": "POL",
+   "subcategories": [
+    "USCONGRESS",
+    "USSTATE"
+   ],
+   "period": "daily_event",
+   "rewardPool": 560,
+   "discountFactor": 0.3,
+   "targetSize": 25000,
+   "n_markets": 22,
+   "sample_symbols": [
+    "ewc-usse-ak-2026-11-03-dem",
+    "ewc-usse-ak-2026-11-03-rep",
+    "ewc-usse-ga-2026-11-03-dem",
+    "ewc-usse-ga-2026-11-03-rep",
+    "ewc-usse-ia-2026-11-03-dem"
+   ]
+  },
+  {
+   "programId": "nba_regular_totals_live_20261020",
+   "name": "NBA Regular Totals Live",
+   "category": "SPR",
+   "subcategories": [
+    "BASKETBALL"
+   ],
+   "period": "live",
+   "rewardPool": 525,
+   "discountFactor": 0.3,
+   "targetSize": 7500,
+   "n_markets": 385,
+   "sample_symbols": [
+    "tsc-nba-atl-hou-2026-10-26-200pt5",
+    "tsc-nba-atl-hou-2026-10-26-202pt5",
+    "tsc-nba-atl-hou-2026-10-26-204pt5",
+    "tsc-nba-atl-hou-2026-10-26-206pt5",
+    "tsc-nba-atl-hou-2026-10-26-208pt5"
+   ]
+  },
+  {
+   "programId": "nfl_period_winners_live_20261021",
+   "name": "NFL Period Winners Live",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "live",
+   "rewardPool": 500,
+   "discountFactor": 0.3,
+   "targetSize": 15000,
+   "n_markets": 573,
+   "sample_symbols": [
+    "atc-nfl-ari-dal-2026-11-01-winner-1h-ari",
+    "atc-nfl-ari-dal-2026-11-01-winner-1h-dal",
+    "atc-nfl-ari-dal-2026-11-01-winner-1h-draw",
+    "atc-nfl-ari-dal-2026-11-01-winner-1q-ari",
+    "atc-nfl-ari-dal-2026-11-01-winner-1q-dal"
+   ]
+  },
+  {
+   "programId": "presidential_election_20260924",
+   "name": "Presidential Election",
+   "category": "POL",
+   "subcategories": [
+    "USPRES"
+   ],
+   "period": "daily_event",
+   "rewardPool": 500,
+   "discountFactor": 0.2,
+   "targetSize": 20000,
+   "n_markets": 60,
+   "sample_symbols": [
+    "enwc-uspres-nom-dem-2028-aleocc",
+    "enwc-uspres-nom-dem-2028-andbes",
+    "enwc-uspres-nom-dem-2028-dwajoh",
+    "enwc-uspres-nom-dem-2028-gavnew",
+    "enwc-uspres-nom-dem-2028-jamtal"
+   ]
+  },
+  {
+   "programId": "nfl_team_props_live_20261021",
+   "name": "NFL Team Props Live",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "live",
+   "rewardPool": 450,
+   "discountFactor": 0.35,
+   "targetSize": 750,
+   "n_markets": 3064,
+   "sample_symbols": [
+    "astatc-nfl-ari-dal-2026-11-01-2pc-0pt5",
+    "astatc-nfl-ari-dal-2026-11-01-bp1q-0pt5",
+    "astatc-nfl-ari-dal-2026-11-01-bp2q-0pt5",
+    "astatc-nfl-ari-dal-2026-11-01-bp3q-0pt5",
+    "astatc-nfl-ari-dal-2026-11-01-bp4q-0pt5"
+   ]
+  },
+  {
+   "programId": "cfb_t1_ml_live_20261014",
+   "name": "CFB T1 ML Live",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "live",
+   "rewardPool": 450,
+   "discountFactor": 0.1,
+   "targetSize": 45000,
+   "n_markets": 25,
+   "sample_symbols": [
+    "aec-cfb-arz-txtech-2026-10-31",
+    "aec-cfb-arzst-byu-2026-10-31",
+    "aec-cfb-aubrn-miss-2026-10-31",
+    "aec-cfb-clmsn-flst-2026-10-31",
+    "aec-cfb-fl-ga-2026-10-31"
+   ]
+  },
+  {
+   "programId": "nba_regular_spreads_live_20261020",
+   "name": "NBA Regular Spreads Live",
+   "category": "SPR",
+   "subcategories": [
+    "BASKETBALL"
+   ],
+   "period": "live",
+   "rewardPool": 425,
+   "discountFactor": 0.3,
+   "targetSize": 10000,
+   "n_markets": 409,
+   "sample_symbols": [
+    "asc-nba-atl-hou-2026-10-26-neg-10pt5",
+    "asc-nba-atl-hou-2026-10-26-neg-12pt5",
+    "asc-nba-atl-hou-2026-10-26-neg-14pt5",
+    "asc-nba-atl-hou-2026-10-26-neg-16pt5",
+    "asc-nba-atl-hou-2026-10-26-neg-18pt5"
+   ]
+  },
+  {
+   "programId": "crypto_20260924",
+   "name": "Crypto",
+   "category": "CRY",
+   "subcategories": [
+    "COIN"
+   ],
+   "period": "daily",
+   "rewardPool": 400,
+   "discountFactor": 0.3,
+   "targetSize": 15000,
+   "n_markets": 52,
+   "sample_symbols": [
+    "cpc-btc-100k-10-31-2026",
+    "cpc-btc-100k-11-30-2026",
+    "cpc-btc-100k-12-31-2026",
+    "cpc-btc-150k-10-31-2026",
+    "cpc-btc-150k-11-30-2026"
+   ]
+  },
+  {
+   "programId": "f1_race_winner_live_20260924",
+   "name": "F1 Race Winner Live",
+   "category": "SPR",
+   "subcategories": [
+    "MOTORSPORT"
+   ],
+   "period": "live",
+   "rewardPool": 400,
+   "discountFactor": 0.3,
+   "targetSize": 10000,
+   "n_markets": 44,
+   "sample_symbols": [
+    "tec-f1-mcgp-2026-11-01-w-alealb",
+    "tec-f1-mcgp-2026-11-01-w-arvlin",
+    "tec-f1-mcgp-2026-11-01-w-carsai",
+    "tec-f1-mcgp-2026-11-01-w-chalec",
+    "tec-f1-mcgp-2026-11-01-w-estoco"
+   ]
+  },
+  {
+   "programId": "epl_draw_live_20261018",
+   "name": "EPL Draw Live",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "live",
+   "rewardPool": 400,
+   "discountFactor": 0.3,
+   "targetSize": 10000,
+   "n_markets": 10,
+   "sample_symbols": [
+    "atc-epl-ast-ful-2026-10-31-draw",
+    "atc-epl-bor-lee-2026-10-31-draw",
+    "atc-epl-bre-not-2026-10-31-draw",
+    "atc-epl-cfc-mnu-2026-10-31-draw",
+    "atc-epl-cov-sun-2026-10-31-draw"
+   ]
+  },
+  {
+   "programId": "ufc_prelim_moneyline_live_20260924",
+   "name": "UFC Prelim Moneyline Live",
+   "category": "SPR",
+   "subcategories": [
+    "MMA"
+   ],
+   "period": "live",
+   "rewardPool": 400,
+   "discountFactor": 0.3,
+   "targetSize": 10000,
+   "n_markets": 8,
+   "sample_symbols": [
+    "aec-ufc-azabek-andpet-2026-10-31",
+    "aec-ufc-framar-dakhop-2026-10-31",
+    "aec-ufc-julero-jeolee-2026-10-31",
+    "aec-ufc-lucsza-tailis-2026-10-31",
+    "aec-ufc-nickle-joekro-2026-10-31"
+   ]
+  },
+  {
+   "programId": "nhl_regular_moneyline_live_20261018",
+   "name": "NHL Regular Moneyline Live",
+   "category": "SPR",
+   "subcategories": [
+    "HOCKEY"
+   ],
+   "period": "live",
+   "rewardPool": 350,
+   "discountFactor": 0.3,
+   "targetSize": 8000,
+   "n_markets": 33,
+   "sample_symbols": [
+    "aec-nhl-bos-car-2026-10-27",
+    "aec-nhl-bos-stl-2026-10-29",
+    "aec-nhl-buf-ana-2026-10-29",
+    "aec-nhl-buf-sj-2026-10-27",
+    "aec-nhl-cbj-car-2026-10-29"
+   ]
+  },
+  {
+   "programId": "seriea_draw_live_20261018",
+   "name": "Seriea Draw Live",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "live",
+   "rewardPool": 320,
+   "discountFactor": 0.3,
+   "targetSize": 8000,
+   "n_markets": 20,
+   "sample_symbols": [
+    "atc-sea-ata-par-2026-11-02-draw",
+    "atc-sea-bol-mon-2026-10-31-draw",
+    "atc-sea-com-ven-2026-11-01-draw",
+    "atc-sea-fio-ata-2026-10-29-draw",
+    "atc-sea-fro-lec-2026-10-29-draw"
+   ]
+  },
+  {
+   "programId": "ucl_draw_live_20261018",
+   "name": "UCL Draw Live",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "live",
+   "rewardPool": 320,
+   "discountFactor": 0.3,
+   "targetSize": 10000,
+   "n_markets": 18,
+   "sample_symbols": [
+    "atc-ucl-aek1-rma-2026-11-04-draw",
+    "atc-ucl-atm-bay-2026-11-03-draw",
+    "atc-ucl-bog-lil-2026-11-03-draw",
+    "atc-ucl-bvb-rbb-2026-11-04-draw",
+    "atc-ucl-fcb-ast-2026-11-03-draw"
+   ]
+  },
+  {
+   "programId": "laliga_draw_live_20261018",
+   "name": "Laliga Draw Live",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "live",
+   "rewardPool": 320,
+   "discountFactor": 0.3,
+   "targetSize": 8000,
+   "n_markets": 11,
+   "sample_symbols": [
+    "atc-lal-ath-rso-2026-11-01-draw",
+    "atc-lal-bet-mal-2026-10-31-draw",
+    "atc-lal-dep-osa-2026-11-02-draw",
+    "atc-lal-elc-val-2026-11-01-draw",
+    "atc-lal-fcb-ala-2026-10-31-draw"
+   ]
+  },
+  {
+   "programId": "bundesliga_draw_live_20261018",
+   "name": "Bundesliga Draw Live",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "live",
+   "rewardPool": 320,
+   "discountFactor": 0.3,
+   "targetSize": 10000,
+   "n_markets": 9,
+   "sample_symbols": [
+    "atc-bun-aug-scf-2026-10-31-draw",
+    "atc-bun-bmg-scp-2026-10-31-draw",
+    "atc-bun-bre-hof-2026-10-31-draw",
+    "atc-bun-elv-mai-2026-10-30-draw",
+    "atc-bun-fcb-bvb-2026-10-31-draw"
+   ]
+  },
+  {
+   "programId": "midterms_t2_competitive_senate_gov_seatcounts_20261001",
+   "name": "Midterms T2 Competitive Senate GOV Seatcounts",
+   "category": "POL",
+   "subcategories": [
+    "USCONGRESS",
+    "USSTATE"
+   ],
+   "period": "daily_event",
+   "rewardPool": 315,
+   "discountFactor": 0.25,
+   "targetSize": 15000,
+   "n_markets": 57,
+   "sample_symbols": [
+    "ewc-usgub-az-2026-11-03-dem",
+    "ewc-usgub-az-2026-11-03-rep",
+    "ewc-usgub-ga-2026-11-03-dem",
+    "ewc-usgub-ga-2026-11-03-rep",
+    "ewc-usgub-ia-2026-11-03-dem"
+   ]
+  },
+  {
+   "programId": "ufc_main_moneyline_early_20260924",
+   "name": "UFC Main Moneyline Early",
+   "category": "SPR",
+   "subcategories": [
+    "MMA"
+   ],
+   "period": "early",
+   "rewardPool": 310,
+   "discountFactor": 0.3,
+   "targetSize": 20000,
+   "n_markets": 11,
+   "sample_symbols": [
+    "aec-ufc-bilele-lucfer-2026-11-07",
+    "aec-ufc-davgra-elismi-2026-11-07",
+    "aec-ufc-gabbon-seabra-2026-11-07",
+    "aec-ufc-jealeb-farhas-2026-10-31",
+    "aec-ufc-mankon-wessch-2026-11-07"
+   ]
+  },
+  {
+   "programId": "nba_regular_player_props_live_20261019",
+   "name": "NBA Regular Player Props Live",
+   "category": "SPR",
+   "subcategories": [
+    "BASKETBALL"
+   ],
+   "period": "live",
+   "rewardPool": 300,
+   "discountFactor": 0.35,
+   "targetSize": 1500,
+   "n_markets": 3010,
+   "sample_symbols": [
+    "astatc-nba-det-phi-2026-10-25-3pm-cadcun-gte1",
+    "astatc-nba-det-phi-2026-10-25-3pm-cadcun-gte2",
+    "astatc-nba-det-phi-2026-10-25-3pm-cadcun-gte3",
+    "astatc-nba-det-phi-2026-10-25-3pm-cadcun-gte4",
+    "astatc-nba-det-phi-2026-10-25-3pm-cadcun-gte5"
+   ]
+  },
+  {
+   "programId": "cfb_t1_period_spreads_live_20261014",
+   "name": "CFB T1 Period Spreads Live",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "live",
+   "rewardPool": 300,
+   "discountFactor": 0.25,
+   "targetSize": 1000,
+   "n_markets": 792,
+   "sample_symbols": [
+    "asc-cfb-arz-txtech-2026-10-31-1h-pos-1pt5",
+    "asc-cfb-arz-txtech-2026-10-31-1h-pos-2pt5",
+    "asc-cfb-arz-txtech-2026-10-31-1h-pos-3pt5",
+    "asc-cfb-arz-txtech-2026-10-31-1h-pos-4pt5",
+    "asc-cfb-arz-txtech-2026-10-31-1h-pos-5pt5"
+   ]
+  },
+  {
+   "programId": "cfb_t1_period_totals_live_20261014",
+   "name": "CFB T1 Period Totals Live",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "live",
+   "rewardPool": 300,
+   "discountFactor": 0.25,
+   "targetSize": 1500,
+   "n_markets": 792,
+   "sample_symbols": [
+    "tsc-cfb-arz-txtech-2026-10-31-1h-10pt5",
+    "tsc-cfb-arz-txtech-2026-10-31-1h-17pt5",
+    "tsc-cfb-arz-txtech-2026-10-31-1h-21pt5",
+    "tsc-cfb-arz-txtech-2026-10-31-1h-24pt5",
+    "tsc-cfb-arz-txtech-2026-10-31-1h-25pt5"
+   ]
+  },
+  {
+   "programId": "mlb_ws_player_props_day_of_20261023",
+   "name": "MLB WS Player Props DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "BASEBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 300,
+   "discountFactor": 0.15,
+   "targetSize": 5000,
+   "n_markets": 275,
+   "sample_symbols": [
+    "astatc-mlb-mil-tb-2026-10-26-er-freper-gte1",
+    "astatc-mlb-mil-tb-2026-10-26-er-freper-gte2",
+    "astatc-mlb-mil-tb-2026-10-26-er-robgas-gte1",
+    "astatc-mlb-mil-tb-2026-10-26-er-robgas-gte2",
+    "astatc-mlb-mil-tb-2026-10-26-ha-freper-gte2"
+   ]
+  },
+  {
+   "programId": "dancing_with_the_stars_20260924",
+   "name": "Dancing With THE Stars",
+   "category": "CUL",
+   "subcategories": [
+    "TV"
+   ],
+   "period": "live",
+   "rewardPool": 250,
+   "discountFactor": 0.3,
+   "targetSize": 500,
+   "n_markets": 40,
+   "sample_symbols": [
+    "rtc-dwts-s35-1-2026-11-17-ambgle",
+    "rtc-dwts-s35-1-2026-11-17-conwoo",
+    "rtc-dwts-s35-1-2026-11-17-ezrfre",
+    "rtc-dwts-s35-1-2026-11-17-harshu",
+    "rtc-dwts-s35-1-2026-11-17-jacols"
+   ]
+  },
+  {
+   "programId": "politics_high_20261020",
+   "name": "Politics High",
+   "category": "POL",
+   "subcategories": [
+    "GOODS",
+    "USFEDGOV",
+    "USSTATE"
+   ],
+   "period": "daily_event",
+   "rewardPool": 225,
+   "discountFactor": 0.2,
+   "targetSize": 10000,
+   "n_markets": 31,
+   "sample_symbols": [
+    "ewc-ref-ca-blntax-2026-11-03-pass",
+    "ewc-ref-fl-tax-2026-11-03-pass",
+    "nphc-presssec-repkz-alihab",
+    "nphc-presssec-repkz-annkel",
+    "nphc-presssec-repkz-arifle"
+   ]
+  },
+  {
+   "programId": "elections_boosted_medium_20260924",
+   "name": "Elections Boosted Medium",
+   "category": "POL",
+   "subcategories": [
+    "USCONGRESS"
+   ],
+   "period": "daily_event",
+   "rewardPool": 225,
+   "discountFactor": 0.2,
+   "targetSize": 10000,
+   "n_markets": 12,
+   "sample_symbols": [
+    "cpoc-ussec-tx-me-2026-11-03-dsweep",
+    "cpoc-ussec-tx-me-2026-11-03-dtx-rme",
+    "cpoc-ussec-tx-me-2026-11-03-rsweep",
+    "cpoc-ussec-tx-me-2026-11-03-rtx-dme",
+    "cpoc-ussec-tx-mi-me-2026-11-03-dsweep"
+   ]
+  },
+  {
+   "programId": "atp_wta_futures_20261018",
+   "name": "ATP WTA Futures",
+   "category": "SPR",
+   "subcategories": [
+    "TENNIS"
+   ],
+   "period": "daily_event",
+   "rewardPool": 200,
+   "discountFactor": 0.9,
+   "targetSize": 8000,
+   "n_markets": 118,
+   "sample_symbols": [
+    "arankc-atp-2026-12-31-no1-alebub",
+    "arankc-atp-2026-12-31-no1-alemin",
+    "arankc-atp-2026-12-31-no1-alezve",
+    "arankc-atp-2026-12-31-no1-andrub",
+    "arankc-atp-2026-12-31-no1-artfil"
+   ]
+  },
+  {
+   "programId": "usgas_daily_ladder_20261020",
+   "name": "Usgas Daily Ladder",
+   "category": "MAC",
+   "subcategories": [
+    "COMMODITY"
+   ],
+   "period": "daily_event",
+   "rewardPool": 200,
+   "discountFactor": 0.5,
+   "targetSize": 1000,
+   "n_markets": 17,
+   "sample_symbols": [
+    "aaagaspc-usgas-day-2026-10-26-gt4pt2500",
+    "aaagaspc-usgas-day-2026-10-26-gt4pt2550",
+    "aaagaspc-usgas-day-2026-10-26-gt4pt2600",
+    "aaagaspc-usgas-day-2026-10-26-gt4pt2650",
+    "aaagaspc-usgas-day-2026-10-26-gt4pt2700"
+   ]
+  },
+  {
+   "programId": "midterms_t3_coverage_gov_senate_house_districts_20260924",
+   "name": "Midterms T3 Coverage GOV Senate House Districts",
+   "category": "POL",
+   "subcategories": [
+    "USCONGRESS",
+    "USSTATE"
+   ],
+   "period": "daily_event",
+   "rewardPool": 190,
+   "discountFactor": 0.2,
+   "targetSize": 10000,
+   "n_markets": 54,
+   "sample_symbols": [
+    "ewc-usgub-ca-2026-11-03-stehil",
+    "ewc-usgub-ca-2026-11-03-xavbec",
+    "ewc-usgub-ks-2026-11-03-dem",
+    "ewc-usgub-ks-2026-11-03-rep",
+    "usgubewc-usgub-fl-2026-11-03-dem"
+   ]
+  },
+  {
+   "programId": "climate_20260924",
+   "name": "Climate",
+   "category": "CLI",
+   "subcategories": [
+    "WEATHER"
+   ],
+   "period": "live",
+   "rewardPool": 185,
+   "discountFactor": 0.3,
+   "targetSize": 7500,
+   "n_markets": 60,
+   "sample_symbols": [
+    "tc-temp-laxhigh-2026-10-25-gte74lt75f",
+    "tc-temp-laxhigh-2026-10-25-gte76lt77f",
+    "tc-temp-laxhigh-2026-10-25-gte78lt79f",
+    "tc-temp-laxhigh-2026-10-25-gte80lt81f",
+    "tc-temp-laxhigh-2026-10-25-gte82f"
+   ]
+  },
+  {
+   "programId": "atp_wta_moneyline_live_20261018",
+   "name": "ATP WTA Moneyline Live",
+   "category": "SPR",
+   "subcategories": [
+    "ATP",
+    "WTA"
+   ],
+   "period": "live",
+   "rewardPool": 184,
+   "discountFactor": 0.3,
+   "targetSize": 19000,
+   "n_markets": 199,
+   "sample_symbols": [
+    "aec-atp-abl-milhur-2026-10-25",
+    "aec-atp-adrman-ignbus-2026-10-27",
+    "aec-atp-aidmay-hynbar-2026-10-26",
+    "aec-atp-alamag-margal-2026-10-25",
+    "aec-atp-alegal-meerot-2026-10-26"
+   ]
+  },
+  {
+   "programId": "ligamx_moneyline_dayof_20261018",
+   "name": "Ligamx Moneyline Day-of",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "day_of",
+   "rewardPool": 180,
+   "discountFactor": 0.35,
+   "targetSize": 10000,
+   "n_markets": 15,
+   "sample_symbols": [
+    "atc-lmx-ame-pac-2026-10-25-ame",
+    "atc-lmx-ame-pac-2026-10-25-draw",
+    "atc-lmx-ame-pac-2026-10-25-pac",
+    "atc-lmx-ame-tij-2026-10-28-ame",
+    "atc-lmx-ame-tij-2026-10-28-draw"
+   ]
+  },
+  {
+   "programId": "cfb_t1_period_winners_live_20261021",
+   "name": "CFB T1 Period Winners Live",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "live",
+   "rewardPool": 175,
+   "discountFactor": 0.3,
+   "targetSize": 4000,
+   "n_markets": 450,
+   "sample_symbols": [
+    "atc-cfb-arz-txtech-2026-10-31-winner-1h-arz",
+    "atc-cfb-arz-txtech-2026-10-31-winner-1h-draw",
+    "atc-cfb-arz-txtech-2026-10-31-winner-1h-txtech",
+    "atc-cfb-arz-txtech-2026-10-31-winner-1q-arz",
+    "atc-cfb-arz-txtech-2026-10-31-winner-1q-draw"
+   ]
+  },
+  {
+   "programId": "cfb_t2_ml_live_20261014",
+   "name": "CFB T2 ML Live",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "live",
+   "rewardPool": 175,
+   "discountFactor": 0.15,
+   "targetSize": 20000,
+   "n_markets": 56,
+   "sample_symbols": [
+    "aec-cfb-airf-army-2026-11-07",
+    "aec-cfb-applst-gas-2026-10-31",
+    "aec-cfb-army-mphs-2026-10-31",
+    "aec-cfb-bayl-ucf-2026-10-30",
+    "aec-cfb-boise-colst-2026-11-07"
+   ]
+  },
+  {
+   "programId": "soccer_spreads_totals_live_20261018",
+   "name": "Soccer Spreads Totals Live",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "live",
+   "rewardPool": 160,
+   "discountFactor": 0.25,
+   "targetSize": 5000,
+   "n_markets": 3058,
+   "sample_symbols": [
+    "asc-bun-aug-scf-2026-10-31-fh-neg-1pt5",
+    "asc-bun-aug-scf-2026-10-31-fh-neg-2pt5",
+    "asc-bun-aug-scf-2026-10-31-fh-pos-1pt5",
+    "asc-bun-aug-scf-2026-10-31-fh-pos-2pt5",
+    "asc-bun-aug-scf-2026-10-31-neg-1pt5"
+   ]
+  },
+  {
+   "programId": "ucl_teamwin_dayof_20261018",
+   "name": "UCL Teamwin Day-of",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "day_of",
+   "rewardPool": 160,
+   "discountFactor": 0.35,
+   "targetSize": 10000,
+   "n_markets": 36,
+   "sample_symbols": [
+    "atc-ucl-aek1-rma-2026-11-04-aek1",
+    "atc-ucl-aek1-rma-2026-11-04-rma",
+    "atc-ucl-atm-bay-2026-11-03-atm",
+    "atc-ucl-atm-bay-2026-11-03-bay",
+    "atc-ucl-bog-lil-2026-11-03-bog"
+   ]
+  },
+  {
+   "programId": "mlb_ws_team_props_day_of_20261023",
+   "name": "MLB WS Team Props DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "BASEBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 150,
+   "discountFactor": 0.15,
+   "targetSize": 10000,
+   "n_markets": 46,
+   "sample_symbols": [
+    "atc-mlb-mil-tb-2026-10-26-f5-draw",
+    "atc-mlb-mil-tb-2026-10-26-f5-mil",
+    "atc-mlb-mil-tb-2026-10-26-f5-tb",
+    "atc-mlb-mil-tb-2026-10-26-i1-draw",
+    "atc-mlb-mil-tb-2026-10-26-i1-mil"
+   ]
+  },
+  {
+   "programId": "toronto_mayor_ewc_20261023",
+   "name": "Toronto Mayor EWC",
+   "category": "POL",
+   "subcategories": [
+    "CANPOL"
+   ],
+   "period": "daily_event",
+   "rewardPool": 150,
+   "discountFactor": 0.2,
+   "targetSize": 2000,
+   "n_markets": 3,
+   "sample_symbols": [
+    "ewc-camayor-toront-2026-10-26-brabra",
+    "ewc-camayor-toront-2026-10-26-chrale",
+    "ewc-camayor-toront-2026-10-26-olicho"
+   ]
+  },
+  {
+   "programId": "ufc_main_props_dayof_20260924",
+   "name": "UFC Main Props Day-of",
+   "category": "SPR",
+   "subcategories": [
+    "MMA"
+   ],
+   "period": "day_of",
+   "rewardPool": 125,
+   "discountFactor": 0.35,
+   "targetSize": 1000,
+   "n_markets": 106,
+   "sample_symbols": [
+    "astatc-ufc-jealeb-farhas-2026-10-31-gtd-yes",
+    "astatc-ufc-jealeb-farhas-2026-10-31-mof-dec",
+    "astatc-ufc-jealeb-farhas-2026-10-31-mof-ko",
+    "astatc-ufc-jealeb-farhas-2026-10-31-mof-sub",
+    "astatc-ufc-jealeb-farhas-2026-10-31-mov-draw"
+   ]
+  },
+  {
+   "programId": "ufc_main_props_live_20260924",
+   "name": "UFC Main Props Live",
+   "category": "SPR",
+   "subcategories": [
+    "MMA"
+   ],
+   "period": "live",
+   "rewardPool": 125,
+   "discountFactor": 0.35,
+   "targetSize": 1000,
+   "n_markets": 106,
+   "sample_symbols": [
+    "astatc-ufc-jealeb-farhas-2026-10-31-gtd-yes",
+    "astatc-ufc-jealeb-farhas-2026-10-31-mof-dec",
+    "astatc-ufc-jealeb-farhas-2026-10-31-mof-ko",
+    "astatc-ufc-jealeb-farhas-2026-10-31-mof-sub",
+    "astatc-ufc-jealeb-farhas-2026-10-31-mov-draw"
+   ]
+  },
+  {
+   "programId": "cbb_national_champ_futures_20260924",
+   "name": "CBB National Champ Futures",
+   "category": "SPR",
+   "subcategories": [
+    "BASKETBALL"
+   ],
+   "period": "daily_event",
+   "rewardPool": 125,
+   "discountFactor": 0.35,
+   "targetSize": 2500,
+   "n_markets": 73,
+   "sample_symbols": [
+    "tec-cbb-champ-2027-04-05-w-ala",
+    "tec-cbb-champ-2027-04-05-w-ark",
+    "tec-cbb-champ-2027-04-05-w-arz",
+    "tec-cbb-champ-2027-04-05-w-aubrn",
+    "tec-cbb-champ-2027-04-05-w-bayl"
+   ]
+  },
+  {
+   "programId": "cfb_t1_team_totals_live_20261021",
+   "name": "CFB T1 Team Totals Live",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "live",
+   "rewardPool": 120,
+   "discountFactor": 0.3,
+   "targetSize": 750,
+   "n_markets": 923,
+   "sample_symbols": [
+    "tsc-cfb-arz-txtech-2026-10-31-tt-arz-13pt5",
+    "tsc-cfb-arz-txtech-2026-10-31-tt-arz-17pt5",
+    "tsc-cfb-arz-txtech-2026-10-31-tt-arz-20pt5",
+    "tsc-cfb-arz-txtech-2026-10-31-tt-arz-21pt5",
+    "tsc-cfb-arz-txtech-2026-10-31-tt-arz-22pt5"
+   ]
+  },
+  {
+   "programId": "nfl_player_props_day_of_20261014",
+   "name": "NFL Player Props DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 110,
+   "discountFactor": 0.3,
+   "targetSize": 5000,
+   "n_markets": 1103,
+   "sample_symbols": [
+    "astatc-nfl-ari-dal-2026-11-01-ptd-0pt5",
+    "astatc-nfl-ari-dal-2026-11-01-ptd-1pt5",
+    "astatc-nfl-ari-dal-2026-11-01-ptd-2pt5",
+    "astatc-nfl-ari-dal-2026-11-01-ptd-3pt5",
+    "astatc-nfl-ari-dal-2026-11-01-ptd-4pt5"
+   ]
+  },
+  {
+   "programId": "nhl_regular_totals_live_20261018",
+   "name": "NHL Regular Totals Live",
+   "category": "SPR",
+   "subcategories": [
+    "HOCKEY"
+   ],
+   "period": "live",
+   "rewardPool": 100,
+   "discountFactor": 0.3,
+   "targetSize": 6000,
+   "n_markets": 680,
+   "sample_symbols": [
+    "tsc-nhl-bos-car-2026-10-27-2pt5",
+    "tsc-nhl-bos-car-2026-10-27-3pt5",
+    "tsc-nhl-bos-car-2026-10-27-4pt5",
+    "tsc-nhl-bos-car-2026-10-27-5pt5",
+    "tsc-nhl-bos-car-2026-10-27-6pt5"
+   ]
+  },
+  {
+   "programId": "nba_winner_futures_20261019",
+   "name": "NBA Winner Futures",
+   "category": "SPR",
+   "subcategories": [
+    "BASKETBALL"
+   ],
+   "period": "daily_event",
+   "rewardPool": 100,
+   "discountFactor": 0.9,
+   "targetSize": 10000,
+   "n_markets": 509,
+   "sample_symbols": [
+    "pntcbk-nba-brojam-2027-02-11-atl",
+    "pntcbk-nba-brojam-2027-02-11-bkn",
+    "pntcbk-nba-brojam-2027-02-11-bos",
+    "pntcbk-nba-brojam-2027-02-11-cha",
+    "pntcbk-nba-brojam-2027-02-11-chi"
+   ]
+  },
+  {
+   "programId": "nba_regular_period_totals_live_20261020",
+   "name": "NBA Regular Period Totals Live",
+   "category": "SPR",
+   "subcategories": [
+    "BASKETBALL"
+   ],
+   "period": "live",
+   "rewardPool": 100,
+   "discountFactor": 0.3,
+   "targetSize": 4000,
+   "n_markets": 378,
+   "sample_symbols": [
+    "tsc-nba-det-phi-2026-10-25-fh-100pt5",
+    "tsc-nba-det-phi-2026-10-25-fh-102pt5",
+    "tsc-nba-det-phi-2026-10-25-fh-104pt5",
+    "tsc-nba-det-phi-2026-10-25-fh-106pt5",
+    "tsc-nba-det-phi-2026-10-25-fh-108pt5"
+   ]
+  },
+  {
+   "programId": "nba_regular_period_spreads_live_20261020",
+   "name": "NBA Regular Period Spreads Live",
+   "category": "SPR",
+   "subcategories": [
+    "BASKETBALL"
+   ],
+   "period": "live",
+   "rewardPool": 100,
+   "discountFactor": 0.3,
+   "targetSize": 4000,
+   "n_markets": 336,
+   "sample_symbols": [
+    "asc-nba-det-phi-2026-10-25-fh-neg-11pt5",
+    "asc-nba-det-phi-2026-10-25-fh-neg-13pt5",
+    "asc-nba-det-phi-2026-10-25-fh-neg-15pt5",
+    "asc-nba-det-phi-2026-10-25-fh-neg-17pt5",
+    "asc-nba-det-phi-2026-10-25-fh-neg-1pt5"
+   ]
+  },
+  {
+   "programId": "nba_regular_team_totals_live_20261019",
+   "name": "NBA Regular Team Totals Live",
+   "category": "SPR",
+   "subcategories": [
+    "BASKETBALL"
+   ],
+   "period": "live",
+   "rewardPool": 100,
+   "discountFactor": 0.3,
+   "targetSize": 3000,
+   "n_markets": 322,
+   "sample_symbols": [
+    "tsc-nba-det-phi-2026-10-25-tt-det-fg-101pt5",
+    "tsc-nba-det-phi-2026-10-25-tt-det-fg-103pt5",
+    "tsc-nba-det-phi-2026-10-25-tt-det-fg-105pt5",
+    "tsc-nba-det-phi-2026-10-25-tt-det-fg-107pt5",
+    "tsc-nba-det-phi-2026-10-25-tt-det-fg-109pt5"
+   ]
+  },
+  {
+   "programId": "nba_regular_moneyline_live_20261019",
+   "name": "NBA Regular Moneyline Live",
+   "category": "SPR",
+   "subcategories": [
+    "BASKETBALL"
+   ],
+   "period": "live",
+   "rewardPool": 100,
+   "discountFactor": 0.3,
+   "targetSize": 25000,
+   "n_markets": 110,
+   "sample_symbols": [
+    "aec-nba-atl-hou-2026-10-26",
+    "aec-nba-atl-ind-2026-11-02",
+    "aec-nba-atl-no-2026-10-31",
+    "aec-nba-atl-was-2026-11-04",
+    "aec-nba-bkn-atl-2026-11-07"
+   ]
+  },
+  {
+   "programId": "cricket_moneyline_live_20260924",
+   "name": "Cricket Moneyline Live",
+   "category": "SPR",
+   "subcategories": [
+    "CRICKET"
+   ],
+   "period": "live",
+   "rewardPool": 100,
+   "discountFactor": 0.3,
+   "targetSize": 10000,
+   "n_markets": 2,
+   "sample_symbols": [
+    "aec-t20icr-afg-zim-2026-10-27",
+    "aec-t20icr-nze-india-2026-10-27"
+   ]
+  },
+  {
+   "programId": "wnba_moneyline_dayof_20260924",
+   "name": "Wnba Moneyline Day-of",
+   "category": "SPR",
+   "subcategories": [
+    "BASKETBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 100,
+   "discountFactor": 0.35,
+   "targetSize": 10000,
+   "n_markets": 1,
+   "sample_symbols": [
+    "aec-wnba-atl-gsv-2026-10-26"
+   ]
+  },
+  {
+   "programId": "nhl_regular_spreads_live_20261018",
+   "name": "NHL Regular Spreads Live",
+   "category": "SPR",
+   "subcategories": [
+    "HOCKEY"
+   ],
+   "period": "live",
+   "rewardPool": 90,
+   "discountFactor": 0.3,
+   "targetSize": 6000,
+   "n_markets": 612,
+   "sample_symbols": [
+    "asc-nhl-bos-car-2026-10-27-neg-1pt5",
+    "asc-nhl-bos-car-2026-10-27-neg-2pt5",
+    "asc-nhl-bos-car-2026-10-27-neg-3pt5",
+    "asc-nhl-bos-car-2026-10-27-p1-neg-0pt5",
+    "asc-nhl-bos-car-2026-10-27-p1-neg-1pt5"
+   ]
+  },
+  {
+   "programId": "midterms_senate_map_20261021",
+   "name": "Midterms Senate MAP",
+   "category": "POL",
+   "subcategories": [
+    "USCONGRESS"
+   ],
+   "period": "daily_event",
+   "rewardPool": 80,
+   "discountFactor": 0.2,
+   "targetSize": 1000,
+   "maxSpread": "0.005",
+   "n_markets": 128,
+   "sample_symbols": [
+    "cpoc-ussec-map-2026-11-03-d-all",
+    "cpoc-ussec-map-2026-11-03-r-ak-d-iaksmemiohtx",
+    "cpoc-ussec-map-2026-11-03-r-akia-d-ksmemiohtx",
+    "cpoc-ussec-map-2026-11-03-r-akiaks-d-memiohtx",
+    "cpoc-ussec-map-2026-11-03-r-akiaksme-d-miohtx"
+   ]
+  },
+  {
+   "programId": "seriea_teamwin_dayof_20261018",
+   "name": "Seriea Teamwin Day-of",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "day_of",
+   "rewardPool": 80,
+   "discountFactor": 0.35,
+   "targetSize": 8000,
+   "n_markets": 40,
+   "sample_symbols": [
+    "atc-sea-ata-par-2026-11-02-ata",
+    "atc-sea-ata-par-2026-11-02-par",
+    "atc-sea-bol-mon-2026-10-31-bol",
+    "atc-sea-bol-mon-2026-10-31-mon",
+    "atc-sea-com-ven-2026-11-01-com"
+   ]
+  },
+  {
+   "programId": "esports_moneyline_live_20261008",
+   "name": "Esports Moneyline Live",
+   "category": "SPR",
+   "subcategories": [
+    "ESPORTS"
+   ],
+   "period": "live",
+   "rewardPool": 80,
+   "discountFactor": 0.4,
+   "targetSize": 7500,
+   "n_markets": 39,
+   "sample_symbols": [
+    "aec-cs2-9z-tyloo-2026-10-26",
+    "aec-cs2-all-faze-2026-10-27",
+    "aec-cs2-ast-fnc-2026-10-27",
+    "aec-cs2-b8-k27-2026-10-27",
+    "aec-cs2-bb-navi-2026-10-26"
+   ]
+  },
+  {
+   "programId": "ucl_teamwin_early_20261018",
+   "name": "UCL Teamwin Early",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "early",
+   "rewardPool": 80,
+   "discountFactor": 0.4,
+   "targetSize": 10000,
+   "n_markets": 36,
+   "sample_symbols": [
+    "atc-ucl-aek1-rma-2026-11-04-aek1",
+    "atc-ucl-aek1-rma-2026-11-04-rma",
+    "atc-ucl-atm-bay-2026-11-03-atm",
+    "atc-ucl-atm-bay-2026-11-03-bay",
+    "atc-ucl-bog-lil-2026-11-03-bog"
+   ]
+  },
+  {
+   "programId": "laliga_teamwin_dayof_20261018",
+   "name": "Laliga Teamwin Day-of",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "day_of",
+   "rewardPool": 80,
+   "discountFactor": 0.35,
+   "targetSize": 8000,
+   "n_markets": 22,
+   "sample_symbols": [
+    "atc-lal-ath-rso-2026-11-01-ath",
+    "atc-lal-ath-rso-2026-11-01-rso",
+    "atc-lal-bet-mal-2026-10-31-bet",
+    "atc-lal-bet-mal-2026-10-31-mal",
+    "atc-lal-dep-osa-2026-11-02-dep"
+   ]
+  },
+  {
+   "programId": "epl_team_win_day_of_20261018",
+   "name": "EPL Team WIN DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "day_of",
+   "rewardPool": 80,
+   "discountFactor": 0.3,
+   "targetSize": 10000,
+   "n_markets": 20,
+   "sample_symbols": [
+    "atc-epl-ast-ful-2026-10-31-ast",
+    "atc-epl-ast-ful-2026-10-31-ful",
+    "atc-epl-bor-lee-2026-10-31-bor",
+    "atc-epl-bor-lee-2026-10-31-lee",
+    "atc-epl-bre-not-2026-10-31-bre"
+   ]
+  },
+  {
+   "programId": "bundesliga_teamwin_dayof_20261018",
+   "name": "Bundesliga Teamwin Day-of",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "day_of",
+   "rewardPool": 80,
+   "discountFactor": 0.35,
+   "targetSize": 10000,
+   "n_markets": 18,
+   "sample_symbols": [
+    "atc-bun-aug-scf-2026-10-31-aug",
+    "atc-bun-aug-scf-2026-10-31-scf",
+    "atc-bun-bmg-scp-2026-10-31-bmg",
+    "atc-bun-bmg-scp-2026-10-31-scp",
+    "atc-bun-bre-hof-2026-10-31-bre"
+   ]
+  },
+  {
+   "programId": "nhl_futures_20261018",
+   "name": "NHL Futures",
+   "category": "SPR",
+   "subcategories": [
+    "ICEHOCKEY"
+   ],
+   "period": "daily_event",
+   "rewardPool": 75,
+   "discountFactor": 0.8,
+   "targetSize": 3200,
+   "n_markets": 411,
+   "sample_symbols": [
+    "aqc-nhl-eastconf-2027-05-19-finalq-bos",
+    "aqc-nhl-eastconf-2027-05-19-finalq-buf",
+    "aqc-nhl-eastconf-2027-05-19-finalq-car",
+    "aqc-nhl-eastconf-2027-05-19-finalq-cbj",
+    "aqc-nhl-eastconf-2027-05-19-finalq-det"
+   ]
+  },
+  {
+   "programId": "mlb_ws_futures_20261023",
+   "name": "MLB WS Futures",
+   "category": "SPR",
+   "subcategories": [
+    "BASEBALL"
+   ],
+   "period": "daily_event",
+   "rewardPool": 75,
+   "discountFactor": 0.5,
+   "targetSize": 2000,
+   "n_markets": 334,
+   "sample_symbols": [
+    "aachc-mlb-2026-10-31-pscg-1cg",
+    "aachc-mlb-2026-10-31-pscg-2cg",
+    "aachc-mlb-2026-10-31-pscg-3cg",
+    "aachc-mlb-pshits-2026-10-31-leader-britur",
+    "aachc-mlb-pshits-2026-10-31-leader-chadel"
+   ]
+  },
+  {
+   "programId": "culture_high_20260924",
+   "name": "Culture High",
+   "category": "CUL",
+   "subcategories": [
+    "AWD",
+    "GAME",
+    "MUSIC",
+    "USFEDGOV"
+   ],
+   "period": "daily_event",
+   "rewardPool": 75,
+   "discountFactor": 0.3,
+   "targetSize": 500,
+   "n_markets": 134,
+   "sample_symbols": [
+    "ccrc-sptfy-1-artst-glbl-yr-2026-badbun",
+    "ccrc-sptfy-1-artst-glbl-yr-2026-drake",
+    "ccrc-sptfy-1-artst-glbl-yr-2026-tayswi",
+    "ccrc-sptfy-1-artst-us-yr-2026-brumar",
+    "ccrc-sptfy-1-artst-us-yr-2026-drake"
+   ]
+  },
+  {
+   "programId": "cfb_t3_ml_live_20261014",
+   "name": "CFB T3 ML Live",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "live",
+   "rewardPool": 75,
+   "discountFactor": 0.2,
+   "targetSize": 3000,
+   "n_markets": 120,
+   "sample_symbols": [
+    "aec-cfb-abchr-tarl-2026-11-07",
+    "aec-cfb-alaam-pvam-2026-11-07",
+    "aec-cfb-alast-alaam-2026-10-31",
+    "aec-cfb-alast-txs-2026-11-07",
+    "aec-cfb-albny-bryant-2026-11-07"
+   ]
+  },
+  {
+   "programId": "nba_regular_game_props_live_20261019",
+   "name": "NBA Regular Game Props Live",
+   "category": "SPR",
+   "subcategories": [
+    "BASKETBALL"
+   ],
+   "period": "live",
+   "rewardPool": 75,
+   "discountFactor": 0.35,
+   "targetSize": 2000,
+   "n_markets": 113,
+   "sample_symbols": [
+    "astatc-nba-det-phi-2026-10-25-ot",
+    "astatc-nba-ind-bkn-2026-10-25-ot",
+    "astatc-nba-lac-okc-2026-10-25-ot",
+    "astatc-nba-lal-uta-2026-10-25-ot",
+    "astatc-nba-mem-sac-2026-10-25-ot"
+   ]
+  },
+  {
+   "programId": "politics_mid_20260924",
+   "name": "Politics MID",
+   "category": "POL",
+   "subcategories": [
+    "ISRPOL",
+    "ORG",
+    "USFEDGOV",
+    "USLEGIS",
+    "USLEGISLAT",
+    "USSTATE"
+   ],
+   "period": "daily_event",
+   "rewardPool": 75,
+   "discountFactor": 0.2,
+   "targetSize": 5000,
+   "n_markets": 108,
+   "sample_symbols": [
+    "apdc-alito-2026-12-31",
+    "apdc-jerpowgov-2026-12-31",
+    "apdc-petehegseth-2026-12-31",
+    "cranc-uspres28-12-31-2026-aleoca",
+    "cranc-uspres28-12-31-2026-andyan"
+   ]
+  },
+  {
+   "programId": "macro_high_20260924",
+   "name": "Macro High",
+   "category": "MAC",
+   "subcategories": [
+    "GROWTH",
+    "INFLATION",
+    "LABOR",
+    "MONETARY"
+   ],
+   "period": "daily_event",
+   "rewardPool": 75,
+   "discountFactor": 0.15,
+   "targetSize": 5000,
+   "n_markets": 60,
+   "sample_symbols": [
+    "cbpac-usfed-2026-cut",
+    "cbpac-usfed-hike2-2026-12-31-hike",
+    "cpic-uscpi-october-mom-2026-11-10-gt0pt0pct",
+    "cpic-uscpi-october-mom-2026-11-10-gt0pt1pct",
+    "cpic-uscpi-october-mom-2026-11-10-gt0pt2pct"
+   ]
+  },
+  {
+   "programId": "lol_worlds26_swiss_r3_moneyline_live_20261022",
+   "name": "LOL Worlds26 Swiss R3 Moneyline Live",
+   "category": "SPR",
+   "subcategories": [
+    "ESPORTS"
+   ],
+   "period": "live",
+   "rewardPool": 74,
+   "discountFactor": 0.4,
+   "targetSize": 7500,
+   "n_markets": 5,
+   "sample_symbols": [
+    "aec-lol-al-tlaw-2026-10-26",
+    "aec-lol-blg-kc-2026-10-26",
+    "aec-lol-cfo-t1-2026-10-26",
+    "aec-lol-gen-lyon-2026-10-25",
+    "aec-lol-tsw-los-2026-10-26"
+   ]
+  },
+  {
+   "programId": "cfb_t2_period_winners_live_20261021",
+   "name": "CFB T2 Period Winners Live",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "live",
+   "rewardPool": 70,
+   "discountFactor": 0.3,
+   "targetSize": 750,
+   "n_markets": 1008,
+   "sample_symbols": [
+    "atc-cfb-airf-army-2026-11-07-winner-1h-airf",
+    "atc-cfb-airf-army-2026-11-07-winner-1h-army",
+    "atc-cfb-airf-army-2026-11-07-winner-1h-draw",
+    "atc-cfb-airf-army-2026-11-07-winner-1q-airf",
+    "atc-cfb-airf-army-2026-11-07-winner-1q-army"
+   ]
+  },
+  {
+   "programId": "doubles_moneyline_live_20261018",
+   "name": "Doubles Moneyline Live",
+   "category": "SPR",
+   "subcategories": [
+    "ATPDB",
+    "WTADB"
+   ],
+   "period": "live",
+   "rewardPool": 70,
+   "discountFactor": 0.3,
+   "targetSize": 4000,
+   "n_markets": 71,
+   "sample_symbols": [
+    "aec-atpdb-agucarroncad-drzewimatusz-2026-10-25",
+    "aec-atpdb-andradshelba-hilderpavel-2026-10-25",
+    "aec-atpdb-arendsjohnso-mansouneuchr-2026-10-25",
+    "aec-atpdb-ariascarou-camachveliz-2026-10-25",
+    "aec-atpdb-ayeniilagan-cukierrombol-2026-10-25"
+   ]
+  },
+  {
+   "programId": "lol_worlds26_swiss_game_winner_live_20261022",
+   "name": "LOL Worlds26 Swiss Game Winner Live",
+   "category": "SPR",
+   "subcategories": [
+    "ESPORTS"
+   ],
+   "period": "live",
+   "rewardPool": 62,
+   "discountFactor": 0.5,
+   "targetSize": 800,
+   "n_markets": 6,
+   "sample_symbols": [
+    "astatc-lol-al-tlaw-2026-10-26-game1",
+    "astatc-lol-al-tlaw-2026-10-26-game2",
+    "astatc-lol-gen-lyon-2026-10-25-game1",
+    "astatc-lol-gen-lyon-2026-10-25-game2",
+    "astatc-lol-tsw-los-2026-10-26-game1"
+   ]
+  },
+  {
+   "programId": "soccer_spreads_totals_day_of_20261018",
+   "name": "Soccer Spreads Totals DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "day_of",
+   "rewardPool": 60,
+   "discountFactor": 0.35,
+   "targetSize": 5000,
+   "n_markets": 3058,
+   "sample_symbols": [
+    "asc-bun-aug-scf-2026-10-31-fh-neg-1pt5",
+    "asc-bun-aug-scf-2026-10-31-fh-neg-2pt5",
+    "asc-bun-aug-scf-2026-10-31-fh-pos-1pt5",
+    "asc-bun-aug-scf-2026-10-31-fh-pos-2pt5",
+    "asc-bun-aug-scf-2026-10-31-neg-1pt5"
+   ]
+  },
+  {
+   "programId": "wnba_futures_20260924",
+   "name": "Wnba Futures",
+   "category": "SPR",
+   "subcategories": [
+    "BASKETBALL"
+   ],
+   "period": "daily_event",
+   "rewardPool": 60,
+   "discountFactor": 0.9,
+   "targetSize": 5000,
+   "n_markets": 16,
+   "sample_symbols": [
+    "tec-wnba-champion-2026-10-31-w-atl",
+    "tec-wnba-champion-2026-10-31-w-gsv",
+    "tec-wnba-finals-2026-10-31-mvp-angree",
+    "tec-wnba-finals-2026-10-31-mvp-ceczan",
+    "tec-wnba-finals-2026-10-31-mvp-dewbon"
+   ]
+  },
+  {
+   "programId": "nfl_spreads_day_of_20261014",
+   "name": "NFL Spreads DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 55,
+   "discountFactor": 0.15,
+   "targetSize": 300000,
+   "n_markets": 779,
+   "sample_symbols": [
+    "asc-nfl-ari-dal-2026-11-01-neg-10pt5",
+    "asc-nfl-ari-dal-2026-11-01-neg-13pt5",
+    "asc-nfl-ari-dal-2026-11-01-neg-14pt5",
+    "asc-nfl-ari-dal-2026-11-01-neg-16pt5",
+    "asc-nfl-ari-dal-2026-11-01-neg-17pt5"
+   ]
+  },
+  {
+   "programId": "nfl_totals_day_of_20261014",
+   "name": "NFL Totals DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 55,
+   "discountFactor": 0.15,
+   "targetSize": 125000,
+   "n_markets": 549,
+   "sample_symbols": [
+    "tsc-nfl-ari-dal-2026-11-01-total-24pt5",
+    "tsc-nfl-ari-dal-2026-11-01-total-27pt5",
+    "tsc-nfl-ari-dal-2026-11-01-total-30pt5",
+    "tsc-nfl-ari-dal-2026-11-01-total-33pt5",
+    "tsc-nfl-ari-dal-2026-11-01-total-36pt5"
+   ]
+  },
+  {
+   "programId": "itf_ml_live_20261018",
+   "name": "ITF ML Live",
+   "category": "SPR",
+   "subcategories": [
+    "TENNIS"
+   ],
+   "period": "live",
+   "rewardPool": 52,
+   "discountFactor": 0.5,
+   "targetSize": 7500,
+   "n_markets": 294,
+   "sample_symbols": [
+    "aec-itfme-abdhos-pragad-2026-10-26",
+    "aec-itfme-akhkos-shotos-2026-10-26",
+    "aec-itfme-albmor-deathu-2026-10-26",
+    "aec-itfme-albpue-timham-2026-10-26",
+    "aec-itfme-alebla-marmar-2026-10-26"
+   ]
+  },
+  {
+   "programId": "utr_moneyline_live_20261008",
+   "name": "UTR Moneyline Live",
+   "category": "SPR",
+   "subcategories": [
+    "TENNIS"
+   ],
+   "period": "live",
+   "rewardPool": 50,
+   "discountFactor": 0.3,
+   "targetSize": 500,
+   "maxSpread": "0.06",
+   "n_markets": 250,
+   "sample_symbols": [
+    "aec-utr-angiri-smachu-2026-10-26",
+    "aec-utr-arsnik-paasti-2026-10-25",
+    "aec-utr-artmar-khosad-2026-10-27",
+    "aec-utr-artmar-pherac-2026-10-26",
+    "aec-utr-artmar-salalb-2026-10-26"
+   ]
+  },
+  {
+   "programId": "finance_20260924",
+   "name": "Finance",
+   "category": "TECH",
+   "subcategories": [
+    "AI",
+    "EXECUTIVE",
+    "IPO"
+   ],
+   "period": "daily_event",
+   "rewardPool": 50,
+   "discountFactor": 0.2,
+   "targetSize": 500,
+   "n_markets": 64,
+   "sample_symbols": [
+    "aimc-anthropic-claude-6-2026-12-31",
+    "aimc-anthropic-claude-6-2027-03-31",
+    "aimc-anthropic-claude-6-2027-06-30",
+    "aimc-openai-gpt-7-2027-06-30",
+    "aimc-openai-gpt-7-2027-12-31"
+   ]
+  },
+  {
+   "programId": "technology_20260924",
+   "name": "Technology",
+   "category": "TECH",
+   "subcategories": [
+    "AI"
+   ],
+   "period": "daily_event",
+   "rewardPool": 50,
+   "discountFactor": 0.2,
+   "targetSize": 1000,
+   "n_markets": 59,
+   "sample_symbols": [
+    "aimc-xai-grok-5-2026-12-31",
+    "aimrc-chinese-arena-ovrall-1-2026-12-31",
+    "aimrc-cmpny-china-1-2026-10-31-alibab",
+    "aimrc-cmpny-china-1-2026-10-31-baidu",
+    "aimrc-cmpny-china-1-2026-10-31-byteda"
+   ]
+  },
+  {
+   "programId": "f1_race_winner_day_of_20260924",
+   "name": "F1 Race Winner DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "MOTORSPORT"
+   ],
+   "period": "day_of",
+   "rewardPool": 50,
+   "discountFactor": 0.35,
+   "targetSize": 10000,
+   "n_markets": 44,
+   "sample_symbols": [
+    "tec-f1-mcgp-2026-11-01-w-alealb",
+    "tec-f1-mcgp-2026-11-01-w-arvlin",
+    "tec-f1-mcgp-2026-11-01-w-carsai",
+    "tec-f1-mcgp-2026-11-01-w-chalec",
+    "tec-f1-mcgp-2026-11-01-w-estoco"
+   ]
+  },
+  {
+   "programId": "macro_strategic_20261012",
+   "name": "Macro Strategic",
+   "category": "MAC",
+   "subcategories": [
+    "FISCAL",
+    "GROWTH",
+    "INFLATION",
+    "LABOR"
+   ],
+   "period": "daily_event",
+   "rewardPool": 50,
+   "discountFactor": 0.15,
+   "targetSize": 3000,
+   "n_markets": 42,
+   "sample_symbols": [
+    "cusdc-ustariff-fy2027-gte150b",
+    "cusdc-ustariff-fy2027-gte200b",
+    "cusdc-ustariff-fy2027-gte250b",
+    "cusdc-ustariff-fy2027-gte300b",
+    "gbapc-usbeef-hi-yr-2026-12-31-gte7pt00"
+   ]
+  },
+  {
+   "programId": "mlb_ws_totals_dayof_20261023",
+   "name": "MLB WS Totals Day-of",
+   "category": "SPR",
+   "subcategories": [
+    "BASEBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 50,
+   "discountFactor": 0.15,
+   "targetSize": 40000,
+   "n_markets": 34,
+   "sample_symbols": [
+    "tsc-mlb-mil-tb-2026-10-26-0pt5",
+    "tsc-mlb-mil-tb-2026-10-26-1pt5",
+    "tsc-mlb-mil-tb-2026-10-26-2pt5",
+    "tsc-mlb-mil-tb-2026-10-26-3pt5",
+    "tsc-mlb-mil-tb-2026-10-26-4pt5"
+   ]
+  },
+  {
+   "programId": "climate_politics_science_strategic_20261013",
+   "name": "Climate Politics Science Strategic",
+   "category": "SCI",
+   "subcategories": [
+    "CLIMCHANGE",
+    "HEALTH",
+    "USCONGRESS",
+    "USSTATE"
+   ],
+   "period": "daily_event",
+   "rewardPool": 50,
+   "discountFactor": 0.15,
+   "targetSize": 3000,
+   "n_markets": 21,
+   "sample_symbols": [
+    "gfrc-usbirth-gfr-2026-gte51pt0",
+    "gfrc-usbirth-gfr-2026-gte51pt5",
+    "gfrc-usbirth-gfr-2026-gte52pt0",
+    "gfrc-usbirth-gfr-2026-gte52pt5",
+    "gfrc-usbirth-gfr-2026-gte53pt0"
+   ]
+  },
+  {
+   "programId": "mlb_ws_spreads_dayof_20261023",
+   "name": "MLB WS Spreads Day-of",
+   "category": "SPR",
+   "subcategories": [
+    "BASEBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 50,
+   "discountFactor": 0.15,
+   "targetSize": 30000,
+   "n_markets": 18,
+   "sample_symbols": [
+    "asc-mlb-mil-tb-2026-10-26-f5-neg-1pt5",
+    "asc-mlb-mil-tb-2026-10-26-f5-pos-1pt5",
+    "asc-mlb-mil-tb-2026-10-26-neg-1pt5",
+    "asc-mlb-mil-tb-2026-10-26-neg-2pt5",
+    "asc-mlb-mil-tb-2026-10-26-neg-3pt5"
+   ]
+  },
+  {
+   "programId": "ufc_prelim_moneyline_dayof_20260924",
+   "name": "UFC Prelim Moneyline Day-of",
+   "category": "SPR",
+   "subcategories": [
+    "MMA"
+   ],
+   "period": "day_of",
+   "rewardPool": 50,
+   "discountFactor": 0.35,
+   "targetSize": 10000,
+   "n_markets": 8,
+   "sample_symbols": [
+    "aec-ufc-azabek-andpet-2026-10-31",
+    "aec-ufc-framar-dakhop-2026-10-31",
+    "aec-ufc-julero-jeolee-2026-10-31",
+    "aec-ufc-lucsza-tailis-2026-10-31",
+    "aec-ufc-nickle-joekro-2026-10-31"
+   ]
+  },
+  {
+   "programId": "mlb_ws_moneyline_day_of_20261023",
+   "name": "MLB WS Moneyline DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "BASEBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 50,
+   "discountFactor": 0.15,
+   "targetSize": 80000,
+   "n_markets": 2,
+   "sample_symbols": [
+    "aec-mlb-mil-tb-2026-10-26",
+    "aec-mlb-mil-tb-2026-10-27"
+   ]
+  },
+  {
+   "programId": "mls_futures_20261018",
+   "name": "MLS Futures",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "daily_event",
+   "rewardPool": 48,
+   "discountFactor": 0.9,
+   "targetSize": 2500,
+   "n_markets": 59,
+   "sample_symbols": [
+    "tec-mls-eastconf-2026-12-12-w-atl",
+    "tec-mls-eastconf-2026-12-12-w-chi",
+    "tec-mls-eastconf-2026-12-12-w-clb",
+    "tec-mls-eastconf-2026-12-12-w-clt",
+    "tec-mls-eastconf-2026-12-12-w-dcu"
+   ]
+  },
+  {
+   "programId": "epl_futures_preevent_20261018",
+   "name": "EPL Futures Preevent",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "daily_event",
+   "rewardPool": 48,
+   "discountFactor": 0.9,
+   "targetSize": 2500,
+   "n_markets": 55,
+   "sample_symbols": [
+    "tec-epl-pots-2027-05-30-w-epladawha",
+    "tec-epl-pots-2027-05-30-w-eplalexall",
+    "tec-epl-pots-2027-05-30-w-eplalexisa",
+    "tec-epl-pots-2027-05-30-w-eplantosem",
+    "tec-epl-pots-2027-05-30-w-eplbenses"
+   ]
+  },
+  {
+   "programId": "ucl_futures_preevent_20261019",
+   "name": "UCL Futures Preevent",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "daily_event",
+   "rewardPool": 48,
+   "discountFactor": 0.9,
+   "targetSize": 2500,
+   "n_markets": 36,
+   "sample_symbols": [
+    "tec-ucl-final-2026-06-05-w-aek1",
+    "tec-ucl-final-2026-06-05-w-ars",
+    "tec-ucl-final-2026-06-05-w-ast",
+    "tec-ucl-final-2026-06-05-w-atm",
+    "tec-ucl-final-2026-06-05-w-bay"
+   ]
+  },
+  {
+   "programId": "atp_spreads_20261018",
+   "name": "ATP Spreads",
+   "category": "SPR",
+   "subcategories": [
+    "TENNIS"
+   ],
+   "period": "live",
+   "rewardPool": 40,
+   "discountFactor": 0.3,
+   "targetSize": 4000,
+   "n_markets": 1364,
+   "sample_symbols": [
+    "asc-atp-abl-milhur-2026-10-25-gs-neg-1pt5",
+    "asc-atp-abl-milhur-2026-10-25-gs-neg-4pt5",
+    "asc-atp-abl-milhur-2026-10-25-gs-neg-7pt5",
+    "asc-atp-abl-milhur-2026-10-25-gs-pos-1pt5",
+    "asc-atp-abl-milhur-2026-10-25-gs-pos-4pt5"
+   ]
+  },
+  {
+   "programId": "culture_low_20260924_v2",
+   "name": "Culture LOW 20260924 V2",
+   "category": "CUL",
+   "subcategories": [
+    "AWD",
+    "FILM",
+    "MOVIES",
+    "MUSIC",
+    "TV"
+   ],
+   "period": "daily_event",
+   "rewardPool": 40,
+   "discountFactor": 0.25,
+   "targetSize": 500,
+   "maxSpread": "0.06",
+   "n_markets": 870,
+   "sample_symbols": [
+    "ccpc-bilbrd-1album-any2026-alewar",
+    "ccpc-bilbrd-1album-any2026-benboo",
+    "ccpc-bilbrd-1album-any2026-beyonc",
+    "ccpc-bilbrd-1album-any2026-bileil",
+    "ccpc-bilbrd-1album-any2026-charoa"
+   ]
+  },
+  {
+   "programId": "wta_spreads_and_totals_20261018",
+   "name": "WTA Spreads AND Totals",
+   "category": "SPR",
+   "subcategories": [
+    "TENNIS"
+   ],
+   "period": "live",
+   "rewardPool": 40,
+   "discountFactor": 0.3,
+   "targetSize": 8000,
+   "n_markets": 792,
+   "sample_symbols": [
+    "asc-wta-adrnag-daryes-2026-10-26-gs-neg-1pt5",
+    "asc-wta-adrnag-daryes-2026-10-26-gs-neg-4pt5",
+    "asc-wta-adrnag-daryes-2026-10-26-gs-neg-7pt5",
+    "asc-wta-adrnag-daryes-2026-10-26-gs-pos-1pt5",
+    "asc-wta-adrnag-daryes-2026-10-26-gs-pos-4pt5"
+   ]
+  },
+  {
+   "programId": "atp_wta_moneyline_day_of_20261018",
+   "name": "ATP WTA Moneyline DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "ATP",
+    "WTA"
+   ],
+   "period": "day_of",
+   "rewardPool": 40,
+   "discountFactor": 0.3,
+   "targetSize": 19000,
+   "n_markets": 199,
+   "sample_symbols": [
+    "aec-atp-abl-milhur-2026-10-25",
+    "aec-atp-adrman-ignbus-2026-10-27",
+    "aec-atp-aidmay-hynbar-2026-10-26",
+    "aec-atp-alamag-margal-2026-10-25",
+    "aec-atp-alegal-meerot-2026-10-26"
+   ]
+  },
+  {
+   "programId": "seriea_teamwin_early_20261018",
+   "name": "Seriea Teamwin Early",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "early",
+   "rewardPool": 40,
+   "discountFactor": 0.4,
+   "targetSize": 8000,
+   "n_markets": 40,
+   "sample_symbols": [
+    "atc-sea-ata-par-2026-11-02-ata",
+    "atc-sea-ata-par-2026-11-02-par",
+    "atc-sea-bol-mon-2026-10-31-bol",
+    "atc-sea-bol-mon-2026-10-31-mon",
+    "atc-sea-com-ven-2026-11-01-com"
+   ]
+  },
+  {
+   "programId": "laliga_teamwin_early_20261018",
+   "name": "Laliga Teamwin Early",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "early",
+   "rewardPool": 40,
+   "discountFactor": 0.4,
+   "targetSize": 8000,
+   "n_markets": 22,
+   "sample_symbols": [
+    "atc-lal-ath-rso-2026-11-01-ath",
+    "atc-lal-ath-rso-2026-11-01-rso",
+    "atc-lal-bet-mal-2026-10-31-bet",
+    "atc-lal-bet-mal-2026-10-31-mal",
+    "atc-lal-dep-osa-2026-11-02-dep"
+   ]
+  },
+  {
+   "programId": "seriea_draw_dayof_20261018",
+   "name": "Seriea Draw Day-of",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "day_of",
+   "rewardPool": 40,
+   "discountFactor": 0.35,
+   "targetSize": 8000,
+   "n_markets": 20,
+   "sample_symbols": [
+    "atc-sea-ata-par-2026-11-02-draw",
+    "atc-sea-bol-mon-2026-10-31-draw",
+    "atc-sea-com-ven-2026-11-01-draw",
+    "atc-sea-fio-ata-2026-10-29-draw",
+    "atc-sea-fro-lec-2026-10-29-draw"
+   ]
+  },
+  {
+   "programId": "bundesliga_teamwin_early_20261018",
+   "name": "Bundesliga Teamwin Early",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "early",
+   "rewardPool": 40,
+   "discountFactor": 0.4,
+   "targetSize": 10000,
+   "n_markets": 18,
+   "sample_symbols": [
+    "atc-bun-aug-scf-2026-10-31-aug",
+    "atc-bun-aug-scf-2026-10-31-scf",
+    "atc-bun-bmg-scp-2026-10-31-bmg",
+    "atc-bun-bmg-scp-2026-10-31-scp",
+    "atc-bun-bre-hof-2026-10-31-bre"
+   ]
+  },
+  {
+   "programId": "ucl_draw_dayof_20261018",
+   "name": "UCL Draw Day-of",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "day_of",
+   "rewardPool": 40,
+   "discountFactor": 0.35,
+   "targetSize": 10000,
+   "n_markets": 18,
+   "sample_symbols": [
+    "atc-ucl-aek1-rma-2026-11-04-draw",
+    "atc-ucl-atm-bay-2026-11-03-draw",
+    "atc-ucl-bog-lil-2026-11-03-draw",
+    "atc-ucl-bvb-rbb-2026-11-04-draw",
+    "atc-ucl-fcb-ast-2026-11-03-draw"
+   ]
+  },
+  {
+   "programId": "laliga_draw_dayof_20261018",
+   "name": "Laliga Draw Day-of",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "day_of",
+   "rewardPool": 40,
+   "discountFactor": 0.35,
+   "targetSize": 8000,
+   "n_markets": 11,
+   "sample_symbols": [
+    "atc-lal-ath-rso-2026-11-01-draw",
+    "atc-lal-bet-mal-2026-10-31-draw",
+    "atc-lal-dep-osa-2026-11-02-draw",
+    "atc-lal-elc-val-2026-11-01-draw",
+    "atc-lal-fcb-ala-2026-10-31-draw"
+   ]
+  },
+  {
+   "programId": "bundesliga_draw_dayof_20261018",
+   "name": "Bundesliga Draw Day-of",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "day_of",
+   "rewardPool": 40,
+   "discountFactor": 0.35,
+   "targetSize": 10000,
+   "n_markets": 9,
+   "sample_symbols": [
+    "atc-bun-aug-scf-2026-10-31-draw",
+    "atc-bun-bmg-scp-2026-10-31-draw",
+    "atc-bun-bre-hof-2026-10-31-draw",
+    "atc-bun-elv-mai-2026-10-30-draw",
+    "atc-bun-fcb-bvb-2026-10-31-draw"
+   ]
+  },
+  {
+   "programId": "nfl_team_props_day_of_20261014",
+   "name": "NFL Team Props DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 35,
+   "discountFactor": 0.3,
+   "targetSize": 2000,
+   "n_markets": 3064,
+   "sample_symbols": [
+    "astatc-nfl-ari-dal-2026-11-01-2pc-0pt5",
+    "astatc-nfl-ari-dal-2026-11-01-bp1q-0pt5",
+    "astatc-nfl-ari-dal-2026-11-01-bp2q-0pt5",
+    "astatc-nfl-ari-dal-2026-11-01-bp3q-0pt5",
+    "astatc-nfl-ari-dal-2026-11-01-bp4q-0pt5"
+   ]
+  },
+  {
+   "programId": "darts_20260924",
+   "name": "Darts",
+   "category": "SPR",
+   "subcategories": [
+    "DARTS"
+   ],
+   "period": "daily_event",
+   "rewardPool": 35,
+   "discountFactor": 0.45,
+   "targetSize": 5000,
+   "n_markets": 18,
+   "sample_symbols": [
+    "tec-pdc-worldchamp-2027-01-03-w-chrdob",
+    "tec-pdc-worldchamp-2027-01-03-w-dannop",
+    "tec-pdc-worldchamp-2027-01-03-w-dirdui",
+    "tec-pdc-worldchamp-2027-01-03-w-garand",
+    "tec-pdc-worldchamp-2027-01-03-w-gerpri"
+   ]
+  },
+  {
+   "programId": "nhl_regular_moneyline_day_of_20261018",
+   "name": "NHL Regular Moneyline DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "HOCKEY"
+   ],
+   "period": "day_of",
+   "rewardPool": 33,
+   "discountFactor": 0.25,
+   "targetSize": 12000,
+   "n_markets": 33,
+   "sample_symbols": [
+    "aec-nhl-bos-car-2026-10-27",
+    "aec-nhl-bos-stl-2026-10-29",
+    "aec-nhl-buf-ana-2026-10-29",
+    "aec-nhl-buf-sj-2026-10-27",
+    "aec-nhl-cbj-car-2026-10-29"
+   ]
+  },
+  {
+   "programId": "nba_regular_spreads_day_of_20261020",
+   "name": "NBA Regular Spreads DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "BASKETBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 30,
+   "discountFactor": 0.25,
+   "targetSize": 25000,
+   "n_markets": 409,
+   "sample_symbols": [
+    "asc-nba-atl-hou-2026-10-26-neg-10pt5",
+    "asc-nba-atl-hou-2026-10-26-neg-12pt5",
+    "asc-nba-atl-hou-2026-10-26-neg-14pt5",
+    "asc-nba-atl-hou-2026-10-26-neg-16pt5",
+    "asc-nba-atl-hou-2026-10-26-neg-18pt5"
+   ]
+  },
+  {
+   "programId": "nba_regular_totals_day_of_20261020",
+   "name": "NBA Regular Totals DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "BASKETBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 30,
+   "discountFactor": 0.25,
+   "targetSize": 20000,
+   "n_markets": 385,
+   "sample_symbols": [
+    "tsc-nba-atl-hou-2026-10-26-200pt5",
+    "tsc-nba-atl-hou-2026-10-26-202pt5",
+    "tsc-nba-atl-hou-2026-10-26-204pt5",
+    "tsc-nba-atl-hou-2026-10-26-206pt5",
+    "tsc-nba-atl-hou-2026-10-26-208pt5"
+   ]
+  },
+  {
+   "programId": "politics_trump_approval_weekly_20261019",
+   "name": "Politics Trump Approval Weekly",
+   "category": "POL",
+   "subcategories": [
+    "USPRES"
+   ],
+   "period": "daily_event",
+   "rewardPool": 30,
+   "discountFactor": 0.2,
+   "targetSize": 2000,
+   "n_markets": 8,
+   "sample_symbols": [
+    "parc-trmpapprv-wk-2026-10-30-37pt8-38pt0",
+    "parc-trmpapprv-wk-2026-10-30-38pt1-38pt3",
+    "parc-trmpapprv-wk-2026-10-30-38pt4-38pt6",
+    "parc-trmpapprv-wk-2026-10-30-38pt7-38pt9",
+    "parc-trmpapprv-wk-2026-10-30-39pt0-39pt2"
+   ]
+  },
+  {
+   "programId": "cfb_futures_20261021",
+   "name": "CFB Futures",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "daily_event",
+   "rewardPool": 27,
+   "discountFactor": 0.3,
+   "targetSize": 7500,
+   "n_markets": 1655,
+   "sample_symbols": [
+    "aachc-cfb-2026-11-28-mostpasstds-arcman",
+    "aachc-cfb-2026-11-28-mostpasstds-avejoh",
+    "aachc-cfb-2026-11-28-mostpasstds-beabac",
+    "aachc-cfb-2026-11-28-mostpasstds-bryund",
+    "aachc-cfb-2026-11-28-mostpasstds-byrbro"
+   ]
+  },
+  {
+   "programId": "nfl_fantasy_futures_20261021",
+   "name": "NFL Fantasy Futures",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "daily_event",
+   "rewardPool": 27,
+   "discountFactor": 0.3,
+   "targetSize": 5500,
+   "n_markets": 709,
+   "sample_symbols": [
+    "fptc-nfl-qbfpou-2027-01-10-aarrod",
+    "fptc-nfl-qbfpou-2027-01-10-bakmay",
+    "fptc-nfl-qbfpou-2027-01-10-bonix",
+    "fptc-nfl-qbfpou-2027-01-10-bropur",
+    "fptc-nfl-qbfpou-2027-01-10-bryyou"
+   ]
+  },
+  {
+   "programId": "nhl_regular_player_props_day_of_20261018",
+   "name": "NHL Regular Player Props DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "HOCKEY"
+   ],
+   "period": "day_of",
+   "rewardPool": 26,
+   "discountFactor": 0.25,
+   "targetSize": 2400,
+   "n_markets": 610,
+   "sample_symbols": [
+    "astatc-nhl-bos-car-2026-10-27-ftts-bos",
+    "astatc-nhl-bos-car-2026-10-27-ftts-car",
+    "astatc-nhl-bos-car-2026-10-27-ftts-neither",
+    "astatc-nhl-bos-car-2026-10-27-ot",
+    "astatc-nhl-bos-car-2026-10-27-so"
+   ]
+  },
+  {
+   "programId": "nhl_regular_player_props_live_20261018",
+   "name": "NHL Regular Player Props Live",
+   "category": "SPR",
+   "subcategories": [
+    "HOCKEY"
+   ],
+   "period": "live",
+   "rewardPool": 26,
+   "discountFactor": 0.3,
+   "targetSize": 1600,
+   "n_markets": 610,
+   "sample_symbols": [
+    "astatc-nhl-bos-car-2026-10-27-ftts-bos",
+    "astatc-nhl-bos-car-2026-10-27-ftts-car",
+    "astatc-nhl-bos-car-2026-10-27-ftts-neither",
+    "astatc-nhl-bos-car-2026-10-27-ot",
+    "astatc-nhl-bos-car-2026-10-27-so"
+   ]
+  },
+  {
+   "programId": "nhl_regular_team_props_day_of_20261018",
+   "name": "NHL Regular Team Props DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "HOCKEY"
+   ],
+   "period": "day_of",
+   "rewardPool": 26,
+   "discountFactor": 0.25,
+   "targetSize": 2400,
+   "n_markets": 402,
+   "sample_symbols": [
+    "atc-nhl-bos-car-2026-10-27-p1-bos",
+    "atc-nhl-bos-car-2026-10-27-p1-car",
+    "atc-nhl-bos-car-2026-10-27-p1-draw",
+    "atc-nhl-bos-car-2026-10-27-p2-bos",
+    "atc-nhl-bos-car-2026-10-27-p2-car"
+   ]
+  },
+  {
+   "programId": "nhl_regular_team_props_live_20261018",
+   "name": "NHL Regular Team Props Live",
+   "category": "SPR",
+   "subcategories": [
+    "HOCKEY"
+   ],
+   "period": "live",
+   "rewardPool": 26,
+   "discountFactor": 0.3,
+   "targetSize": 1600,
+   "n_markets": 402,
+   "sample_symbols": [
+    "atc-nhl-bos-car-2026-10-27-p1-bos",
+    "atc-nhl-bos-car-2026-10-27-p1-car",
+    "atc-nhl-bos-car-2026-10-27-p1-draw",
+    "atc-nhl-bos-car-2026-10-27-p2-bos",
+    "atc-nhl-bos-car-2026-10-27-p2-car"
+   ]
+  },
+  {
+   "programId": "nba_regular_player_props_day_of_20261019",
+   "name": "NBA Regular Player Props DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "BASKETBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 25,
+   "discountFactor": 0.3,
+   "targetSize": 1000,
+   "n_markets": 3010,
+   "sample_symbols": [
+    "astatc-nba-det-phi-2026-10-25-3pm-cadcun-gte1",
+    "astatc-nba-det-phi-2026-10-25-3pm-cadcun-gte2",
+    "astatc-nba-det-phi-2026-10-25-3pm-cadcun-gte3",
+    "astatc-nba-det-phi-2026-10-25-3pm-cadcun-gte4",
+    "astatc-nba-det-phi-2026-10-25-3pm-cadcun-gte5"
+   ]
+  },
+  {
+   "programId": "cfb_t2_spreads_day_of_20261021",
+   "name": "CFB T2 Spreads DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 25,
+   "discountFactor": 0.2,
+   "targetSize": 19000,
+   "n_markets": 1392,
+   "sample_symbols": [
+    "asc-cfb-applst-gas-2026-10-31-neg-10pt5",
+    "asc-cfb-applst-gas-2026-10-31-neg-13pt5",
+    "asc-cfb-applst-gas-2026-10-31-neg-14pt5",
+    "asc-cfb-applst-gas-2026-10-31-neg-16pt5",
+    "asc-cfb-applst-gas-2026-10-31-neg-17pt5"
+   ]
+  },
+  {
+   "programId": "ufc_futures_20260924",
+   "name": "UFC Futures",
+   "category": "SPR",
+   "subcategories": [
+    "COMBAT"
+   ],
+   "period": "daily_event",
+   "rewardPool": 25,
+   "discountFactor": 0.6,
+   "targetSize": 2500,
+   "n_markets": 142,
+   "sample_symbols": [
+    "aachc-ufc-bantamw-2026-12-31-champ-corsan",
+    "aachc-ufc-bantamw-2026-12-31-champ-deifig",
+    "aachc-ufc-bantamw-2026-12-31-champ-marver",
+    "aachc-ufc-bantamw-2026-12-31-champ-merdva",
+    "aachc-ufc-bantamw-2026-12-31-champ-paytal"
+   ]
+  },
+  {
+   "programId": "motorsports_season_futures_20260924",
+   "name": "Motorsports Season Futures",
+   "category": "SPR",
+   "subcategories": [
+    "MOTORSPORT"
+   ],
+   "period": "daily_event",
+   "rewardPool": 25,
+   "discountFactor": 0.6,
+   "targetSize": 2500,
+   "n_markets": 50,
+   "sample_symbols": [
+    "tec-f1-cc-2026-12-06-w-fer",
+    "tec-f1-cc-2026-12-06-w-mcla",
+    "tec-f1-cc-2026-12-06-w-merce",
+    "tec-f1-cc-2026-12-06-w-rbr",
+    "tec-f1-dc-2026-12-06-w-chalec"
+   ]
+  },
+  {
+   "programId": "f1_race_winner_early_20260924",
+   "name": "F1 Race Winner Early",
+   "category": "SPR",
+   "subcategories": [
+    "MOTORSPORT"
+   ],
+   "period": "early",
+   "rewardPool": 25,
+   "discountFactor": 0.4,
+   "targetSize": 10000,
+   "n_markets": 44,
+   "sample_symbols": [
+    "tec-f1-mcgp-2026-11-01-w-alealb",
+    "tec-f1-mcgp-2026-11-01-w-arvlin",
+    "tec-f1-mcgp-2026-11-01-w-carsai",
+    "tec-f1-mcgp-2026-11-01-w-chalec",
+    "tec-f1-mcgp-2026-11-01-w-estoco"
+   ]
+  },
+  {
+   "programId": "darts_moneyline_live_20260924",
+   "name": "Darts Moneyline Live",
+   "category": "SPR",
+   "subcategories": [
+    "DARTS"
+   ],
+   "period": "live",
+   "rewardPool": 25,
+   "discountFactor": 0.5,
+   "targetSize": 2500,
+   "n_markets": 15,
+   "sample_symbols": [
+    "aec-modus-andbae-arcsel-2026-10-26",
+    "aec-modus-andbae-danayr-2026-10-26",
+    "aec-modus-arcsel-darbev-2026-10-26",
+    "aec-modus-arcsel-davdav-2026-10-26",
+    "aec-modus-arcsel-dercou-2026-10-26"
+   ]
+  },
+  {
+   "programId": "ufc_prelim_moneyline_early_20260924",
+   "name": "UFC Prelim Moneyline Early",
+   "category": "SPR",
+   "subcategories": [
+    "MMA"
+   ],
+   "period": "early",
+   "rewardPool": 25,
+   "discountFactor": 0.4,
+   "targetSize": 10000,
+   "n_markets": 8,
+   "sample_symbols": [
+    "aec-ufc-azabek-andpet-2026-10-31",
+    "aec-ufc-framar-dakhop-2026-10-31",
+    "aec-ufc-julero-jeolee-2026-10-31",
+    "aec-ufc-lucsza-tailis-2026-10-31",
+    "aec-ufc-nickle-joekro-2026-10-31"
+   ]
+  },
+  {
+   "programId": "nfl_period_spreads_day_of_20261014",
+   "name": "NFL Period Spreads DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 20,
+   "discountFactor": 0.25,
+   "targetSize": 8000,
+   "n_markets": 1471,
+   "sample_symbols": [
+    "asc-nfl-ari-dal-2026-11-01-1h-neg-10pt5",
+    "asc-nfl-ari-dal-2026-11-01-1h-neg-13pt5",
+    "asc-nfl-ari-dal-2026-11-01-1h-neg-14pt5",
+    "asc-nfl-ari-dal-2026-11-01-1h-neg-16pt5",
+    "asc-nfl-ari-dal-2026-11-01-1h-neg-1pt5"
+   ]
+  },
+  {
+   "programId": "nfl_period_totals_day_of_20261014",
+   "name": "NFL Period Totals DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 20,
+   "discountFactor": 0.2,
+   "targetSize": 10000,
+   "n_markets": 1381,
+   "sample_symbols": [
+    "tsc-nfl-ari-dal-2026-11-01-1h-17pt5",
+    "tsc-nfl-ari-dal-2026-11-01-1h-19pt5",
+    "tsc-nfl-ari-dal-2026-11-01-1h-21pt5",
+    "tsc-nfl-ari-dal-2026-11-01-1h-23pt5",
+    "tsc-nfl-ari-dal-2026-11-01-1h-24pt5"
+   ]
+  },
+  {
+   "programId": "nfl_team_totals_day_of_20261014",
+   "name": "NFL Team Totals DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 20,
+   "discountFactor": 0.3,
+   "targetSize": 10000,
+   "n_markets": 1209,
+   "sample_symbols": [
+    "tsc-nfl-ari-dal-2026-11-01-tt-ari-10pt5",
+    "tsc-nfl-ari-dal-2026-11-01-tt-ari-13pt5",
+    "tsc-nfl-ari-dal-2026-11-01-tt-ari-14pt5",
+    "tsc-nfl-ari-dal-2026-11-01-tt-ari-16pt5",
+    "tsc-nfl-ari-dal-2026-11-01-tt-ari-17pt5"
+   ]
+  },
+  {
+   "programId": "cfb_t1_spreads_day_of_20261021",
+   "name": "CFB T1 Spreads DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 20,
+   "discountFactor": 0.15,
+   "targetSize": 15000,
+   "n_markets": 898,
+   "sample_symbols": [
+    "asc-cfb-arz-txtech-2026-10-31-neg-10pt5",
+    "asc-cfb-arz-txtech-2026-10-31-neg-13pt5",
+    "asc-cfb-arz-txtech-2026-10-31-neg-14pt5",
+    "asc-cfb-arz-txtech-2026-10-31-neg-16pt5",
+    "asc-cfb-arz-txtech-2026-10-31-neg-17pt5"
+   ]
+  },
+  {
+   "programId": "atp_player_props_20261018",
+   "name": "ATP Player Props",
+   "category": "SPR",
+   "subcategories": [
+    "TENNIS"
+   ],
+   "period": "live",
+   "rewardPool": 20,
+   "discountFactor": 0.3,
+   "targetSize": 8000,
+   "n_markets": 696,
+   "sample_symbols": [
+    "astatc-atp-abl-milhur-2026-10-25-es-0-2",
+    "astatc-atp-abl-milhur-2026-10-25-es-1-2",
+    "astatc-atp-abl-milhur-2026-10-25-es-2-0",
+    "astatc-atp-abl-milhur-2026-10-25-es-2-1",
+    "astatc-atp-abl-milhur-2026-10-25-sw1"
+   ]
+  },
+  {
+   "programId": "nfl_period_winners_day_of_20261014",
+   "name": "NFL Period Winners DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 20,
+   "discountFactor": 0.3,
+   "targetSize": 20000,
+   "n_markets": 573,
+   "sample_symbols": [
+    "atc-nfl-ari-dal-2026-11-01-winner-1h-ari",
+    "atc-nfl-ari-dal-2026-11-01-winner-1h-dal",
+    "atc-nfl-ari-dal-2026-11-01-winner-1h-draw",
+    "atc-nfl-ari-dal-2026-11-01-winner-1q-ari",
+    "atc-nfl-ari-dal-2026-11-01-winner-1q-dal"
+   ]
+  },
+  {
+   "programId": "politics_low_20261023",
+   "name": "Politics LOW",
+   "category": "POL",
+   "subcategories": [
+    "ARGPOL",
+    "BRAPOL",
+    "FRAPOL",
+    "HUNPOL",
+    "ISRPOL",
+    "NETPOL",
+    "RUSPOL",
+    "UKPOL",
+    "USCONGRESS",
+    "USFEDGOV",
+    "USPRES",
+    "USSTATE",
+    "VENPOL"
+   ],
+   "period": "daily_event",
+   "rewardPool": 20,
+   "discountFactor": 0.1,
+   "targetSize": 2000,
+   "n_markets": 330,
+   "sample_symbols": [
+    "apdc-andburpm-2026-12-31",
+    "apdc-kashpatel-2026-12-31",
+    "apdc-trumpadmin-2026-brorol",
+    "apdc-trumpadmin-2026-howlut",
+    "apdc-trumpadmin-2026-johrat"
+   ]
+  },
+  {
+   "programId": "eurolg_spreads_totals_live_20261009",
+   "name": "Eurolg Spreads Totals Live",
+   "category": "SPR",
+   "subcategories": [
+    "BASKETBALL"
+   ],
+   "period": "live",
+   "rewardPool": 20,
+   "discountFactor": 0.25,
+   "targetSize": 5000,
+   "n_markets": 218,
+   "sample_symbols": [
+    "asc-eurolg-asv-bvg-2026-10-30-neg-10pt5",
+    "asc-eurolg-asv-bvg-2026-10-30-neg-1pt5",
+    "asc-eurolg-asv-bvg-2026-10-30-neg-4pt5",
+    "asc-eurolg-asv-bvg-2026-10-30-neg-7pt5",
+    "asc-eurolg-asv-bvg-2026-10-30-pos-10pt5"
+   ]
+  },
+  {
+   "programId": "seriea_draw_early_20261018",
+   "name": "Seriea Draw Early",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "early",
+   "rewardPool": 20,
+   "discountFactor": 0.4,
+   "targetSize": 8000,
+   "n_markets": 20,
+   "sample_symbols": [
+    "atc-sea-ata-par-2026-11-02-draw",
+    "atc-sea-bol-mon-2026-10-31-draw",
+    "atc-sea-com-ven-2026-11-01-draw",
+    "atc-sea-fio-ata-2026-10-29-draw",
+    "atc-sea-fro-lec-2026-10-29-draw"
+   ]
+  },
+  {
+   "programId": "ucl_draw_early_20261018",
+   "name": "UCL Draw Early",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "early",
+   "rewardPool": 20,
+   "discountFactor": 0.4,
+   "targetSize": 10000,
+   "n_markets": 18,
+   "sample_symbols": [
+    "atc-ucl-aek1-rma-2026-11-04-draw",
+    "atc-ucl-atm-bay-2026-11-03-draw",
+    "atc-ucl-bog-lil-2026-11-03-draw",
+    "atc-ucl-bvb-rbb-2026-11-04-draw",
+    "atc-ucl-fcb-ast-2026-11-03-draw"
+   ]
+  },
+  {
+   "programId": "laliga_draw_early_20261018",
+   "name": "Laliga Draw Early",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "early",
+   "rewardPool": 20,
+   "discountFactor": 0.4,
+   "targetSize": 8000,
+   "n_markets": 11,
+   "sample_symbols": [
+    "atc-lal-ath-rso-2026-11-01-draw",
+    "atc-lal-bet-mal-2026-10-31-draw",
+    "atc-lal-dep-osa-2026-11-02-draw",
+    "atc-lal-elc-val-2026-11-01-draw",
+    "atc-lal-fcb-ala-2026-10-31-draw"
+   ]
+  },
+  {
+   "programId": "bundesliga_draw_early_20261018",
+   "name": "Bundesliga Draw Early",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "early",
+   "rewardPool": 20,
+   "discountFactor": 0.4,
+   "targetSize": 10000,
+   "n_markets": 9,
+   "sample_symbols": [
+    "atc-bun-aug-scf-2026-10-31-draw",
+    "atc-bun-bmg-scp-2026-10-31-draw",
+    "atc-bun-bre-hof-2026-10-31-draw",
+    "atc-bun-elv-mai-2026-10-30-draw",
+    "atc-bun-fcb-bvb-2026-10-31-draw"
+   ]
+  },
+  {
+   "programId": "bskt_cup_3x3_moneyline_live_20261014",
+   "name": "Bskt CUP 3X3 Moneyline Live",
+   "category": "SPR",
+   "subcategories": [
+    "BASKETBALL"
+   ],
+   "period": "live",
+   "rewardPool": 20,
+   "discountFactor": 0.5,
+   "targetSize": 6000,
+   "n_markets": 6,
+   "sample_symbols": [
+    "aec-bskt3x3-dis-inn-2026-10-25",
+    "aec-bskt3x3-dis-met-2026-10-25",
+    "aec-bskt3x3-dis-run-2026-10-25",
+    "aec-bskt3x3-inn-met-2026-10-25",
+    "aec-bskt3x3-run-inn-2026-10-26"
+   ]
+  },
+  {
+   "programId": "astra_cup_women_moneyline_live_20261014",
+   "name": "Astra CUP Women Moneyline Live",
+   "category": "SPR",
+   "subcategories": [
+    "BEACHVOLLE"
+   ],
+   "period": "live",
+   "rewardPool": 20,
+   "discountFactor": 0.5,
+   "targetSize": 6000,
+   "n_markets": 1,
+   "sample_symbols": [
+    "aec-acw-lyushk-dekfar-2026-10-25-af067ae6"
+   ]
+  },
+  {
+   "programId": "lol_worlds26_swiss_r3_moneyline_pre_game_20261022",
+   "name": "LOL Worlds26 Swiss R3 Moneyline PRE Game",
+   "category": "SPR",
+   "subcategories": [
+    "ESPORTS"
+   ],
+   "period": "day_of",
+   "rewardPool": 18.5,
+   "discountFactor": 0.35,
+   "targetSize": 15000,
+   "n_markets": 5,
+   "sample_symbols": [
+    "aec-lol-al-tlaw-2026-10-26",
+    "aec-lol-blg-kc-2026-10-26",
+    "aec-lol-cfo-t1-2026-10-26",
+    "aec-lol-gen-lyon-2026-10-25",
+    "aec-lol-tsw-los-2026-10-26"
+   ]
+  },
+  {
+   "programId": "cfb_t1_totals_day_of_20261021",
+   "name": "CFB T1 Totals DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 18,
+   "discountFactor": 0.15,
+   "targetSize": 19000,
+   "n_markets": 550,
+   "sample_symbols": [
+    "tsc-cfb-arz-txtech-2026-10-31-total-24pt5",
+    "tsc-cfb-arz-txtech-2026-10-31-total-31pt5",
+    "tsc-cfb-arz-txtech-2026-10-31-total-35pt5",
+    "tsc-cfb-arz-txtech-2026-10-31-total-38pt5",
+    "tsc-cfb-arz-txtech-2026-10-31-total-42pt5"
+   ]
+  },
+  {
+   "programId": "table_tennis_moneyline_live_20261018",
+   "name": "Table Tennis Moneyline Live",
+   "category": "SPR",
+   "subcategories": [
+    "TABLETENIS"
+   ],
+   "period": "live",
+   "rewardPool": 17,
+   "discountFactor": 0.5,
+   "targetSize": 4800,
+   "n_markets": 351,
+   "sample_symbols": [
+    "aec-setkamecz-bertad-havond-2026-10-26",
+    "aec-setkamecz-bertad-hybtom-2026-10-26",
+    "aec-setkamecz-bertad-jupjac-2026-10-26",
+    "aec-setkamecz-blajan-sabdav-2026-10-26",
+    "aec-setkamecz-blajan-tumlad-2026-10-26"
+   ]
+  },
+  {
+   "programId": "nfl_futures_core_20261021",
+   "name": "NFL Futures Core",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "daily_event",
+   "rewardPool": 16,
+   "discountFactor": 0.25,
+   "targetSize": 15000,
+   "n_markets": 3273,
+   "sample_symbols": [
+    "aachc-football-txs-2026-02-14-w-nflcfb",
+    "aachc-nfl-2027-01-10-1000recyds-abro",
+    "aachc-nfl-2027-01-10-1000recyds-alepie",
+    "aachc-nfl-2027-01-10-1000recyds-amobro",
+    "aachc-nfl-2027-01-10-1000recyds-britho"
+   ]
+  },
+  {
+   "programId": "nhl_regular_totals_dayof_20261018",
+   "name": "NHL Regular Totals Day-of",
+   "category": "SPR",
+   "subcategories": [
+    "HOCKEY"
+   ],
+   "period": "day_of",
+   "rewardPool": 16,
+   "discountFactor": 0.25,
+   "targetSize": 8000,
+   "n_markets": 680,
+   "sample_symbols": [
+    "tsc-nhl-bos-car-2026-10-27-2pt5",
+    "tsc-nhl-bos-car-2026-10-27-3pt5",
+    "tsc-nhl-bos-car-2026-10-27-4pt5",
+    "tsc-nhl-bos-car-2026-10-27-5pt5",
+    "tsc-nhl-bos-car-2026-10-27-6pt5"
+   ]
+  },
+  {
+   "programId": "lol_worlds26_swiss_game_winner_pre_game_20261022",
+   "name": "LOL Worlds26 Swiss Game Winner PRE Game",
+   "category": "SPR",
+   "subcategories": [
+    "ESPORTS"
+   ],
+   "period": "day_of",
+   "rewardPool": 16,
+   "discountFactor": 0.5,
+   "targetSize": 1100,
+   "n_markets": 6,
+   "sample_symbols": [
+    "astatc-lol-al-tlaw-2026-10-26-game1",
+    "astatc-lol-al-tlaw-2026-10-26-game2",
+    "astatc-lol-gen-lyon-2026-10-25-game1",
+    "astatc-lol-gen-lyon-2026-10-25-game2",
+    "astatc-lol-tsw-los-2026-10-26-game1"
+   ]
+  },
+  {
+   "programId": "macro_low_20260924",
+   "name": "Macro LOW",
+   "category": "MAC",
+   "subcategories": [
+    "COMMODITY",
+    "INFLATION",
+    "MONETARY"
+   ],
+   "period": "daily_event",
+   "rewardPool": 15,
+   "discountFactor": 0.15,
+   "targetSize": 5000,
+   "n_markets": 72,
+   "sample_symbols": [
+    "aaagaspc-usgas-day-2026-10-26-gt4pt2500",
+    "aaagaspc-usgas-day-2026-10-26-gt4pt2550",
+    "aaagaspc-usgas-day-2026-10-26-gt4pt2600",
+    "aaagaspc-usgas-day-2026-10-26-gt4pt2650",
+    "aaagaspc-usgas-day-2026-10-26-gt4pt2700"
+   ]
+  },
+  {
+   "programId": "geopolitics_20260924",
+   "name": "Geopolitics",
+   "category": "GEO",
+   "subcategories": [
+    "GOODS",
+    "TREATY"
+   ],
+   "period": "daily_event",
+   "rewardPool": 15,
+   "discountFactor": 0.25,
+   "targetSize": 2000,
+   "n_markets": 7,
+   "sample_symbols": [
+    "dipcc-us-iran-contnts-2026--dilut",
+    "dipcc-us-iran-contnts-2026--enrcap",
+    "dipcc-us-iran-contnts-2026--enrcaplte5",
+    "dipcc-us-iran-contnts-2026--enrmor",
+    "dipcc-us-iran-contnts-2026--irnfnd"
+   ]
+  },
+  {
+   "programId": "cricket_moneyline_dayof_20260924",
+   "name": "Cricket Moneyline Day-of",
+   "category": "SPR",
+   "subcategories": [
+    "CRICKET"
+   ],
+   "period": "day_of",
+   "rewardPool": 15,
+   "discountFactor": 0.35,
+   "targetSize": 10000,
+   "n_markets": 2,
+   "sample_symbols": [
+    "aec-t20icr-afg-zim-2026-10-27",
+    "aec-t20icr-nze-india-2026-10-27"
+   ]
+  },
+  {
+   "programId": "cfb_t2_totals_day_of_20261021",
+   "name": "CFB T2 Totals DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 13,
+   "discountFactor": 0.2,
+   "targetSize": 7000,
+   "n_markets": 850,
+   "sample_symbols": [
+    "tsc-cfb-applst-gas-2026-10-31-total-26pt5",
+    "tsc-cfb-applst-gas-2026-10-31-total-33pt5",
+    "tsc-cfb-applst-gas-2026-10-31-total-37pt5",
+    "tsc-cfb-applst-gas-2026-10-31-total-40pt5",
+    "tsc-cfb-applst-gas-2026-10-31-total-44pt5"
+   ]
+  },
+  {
+   "programId": "nhl_regular_spreads_dayof_20261018",
+   "name": "NHL Regular Spreads Day-of",
+   "category": "SPR",
+   "subcategories": [
+    "HOCKEY"
+   ],
+   "period": "day_of",
+   "rewardPool": 13,
+   "discountFactor": 0.25,
+   "targetSize": 8000,
+   "n_markets": 612,
+   "sample_symbols": [
+    "asc-nhl-bos-car-2026-10-27-neg-1pt5",
+    "asc-nhl-bos-car-2026-10-27-neg-2pt5",
+    "asc-nhl-bos-car-2026-10-27-neg-3pt5",
+    "asc-nhl-bos-car-2026-10-27-p1-neg-0pt5",
+    "asc-nhl-bos-car-2026-10-27-p1-neg-1pt5"
+   ]
+  },
+  {
+   "programId": "itf_moneyline_dayof_20261018",
+   "name": "ITF Moneyline Day-of",
+   "category": "SPR",
+   "subcategories": [
+    "TENNIS"
+   ],
+   "period": "day_of",
+   "rewardPool": 12,
+   "discountFactor": 0.35,
+   "targetSize": 7500,
+   "n_markets": 294,
+   "sample_symbols": [
+    "aec-itfme-abdhos-pragad-2026-10-26",
+    "aec-itfme-akhkos-shotos-2026-10-26",
+    "aec-itfme-albmor-deathu-2026-10-26",
+    "aec-itfme-albpue-timham-2026-10-26",
+    "aec-itfme-alebla-marmar-2026-10-26"
+   ]
+  },
+  {
+   "programId": "cfb_t1_team_totals_day_of_20261014",
+   "name": "CFB T1 Team Totals DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 10,
+   "discountFactor": 0.3,
+   "targetSize": 2500,
+   "n_markets": 923,
+   "sample_symbols": [
+    "tsc-cfb-arz-txtech-2026-10-31-tt-arz-13pt5",
+    "tsc-cfb-arz-txtech-2026-10-31-tt-arz-17pt5",
+    "tsc-cfb-arz-txtech-2026-10-31-tt-arz-20pt5",
+    "tsc-cfb-arz-txtech-2026-10-31-tt-arz-21pt5",
+    "tsc-cfb-arz-txtech-2026-10-31-tt-arz-22pt5"
+   ]
+  },
+  {
+   "programId": "cfb_t1_period_spreads_day_of_20261014",
+   "name": "CFB T1 Period Spreads DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 10,
+   "discountFactor": 0.25,
+   "targetSize": 3000,
+   "n_markets": 792,
+   "sample_symbols": [
+    "asc-cfb-arz-txtech-2026-10-31-1h-pos-1pt5",
+    "asc-cfb-arz-txtech-2026-10-31-1h-pos-2pt5",
+    "asc-cfb-arz-txtech-2026-10-31-1h-pos-3pt5",
+    "asc-cfb-arz-txtech-2026-10-31-1h-pos-4pt5",
+    "asc-cfb-arz-txtech-2026-10-31-1h-pos-5pt5"
+   ]
+  },
+  {
+   "programId": "cfb_t1_period_totals_day_of_20261014",
+   "name": "CFB T1 Period Totals DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 10,
+   "discountFactor": 0.25,
+   "targetSize": 2500,
+   "n_markets": 792,
+   "sample_symbols": [
+    "tsc-cfb-arz-txtech-2026-10-31-1h-10pt5",
+    "tsc-cfb-arz-txtech-2026-10-31-1h-17pt5",
+    "tsc-cfb-arz-txtech-2026-10-31-1h-21pt5",
+    "tsc-cfb-arz-txtech-2026-10-31-1h-24pt5",
+    "tsc-cfb-arz-txtech-2026-10-31-1h-25pt5"
+   ]
+  },
+  {
+   "programId": "cfb_t1_period_winners_day_of_20261014",
+   "name": "CFB T1 Period Winners DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "FOOTBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 10,
+   "discountFactor": 0.3,
+   "targetSize": 6000,
+   "n_markets": 450,
+   "sample_symbols": [
+    "atc-cfb-arz-txtech-2026-10-31-winner-1h-arz",
+    "atc-cfb-arz-txtech-2026-10-31-winner-1h-draw",
+    "atc-cfb-arz-txtech-2026-10-31-winner-1h-txtech",
+    "atc-cfb-arz-txtech-2026-10-31-winner-1q-arz",
+    "atc-cfb-arz-txtech-2026-10-31-winner-1q-draw"
+   ]
+  },
+  {
+   "programId": "utr_moneyline_day_of_20261008",
+   "name": "UTR Moneyline DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "TENNIS"
+   ],
+   "period": "day_of",
+   "rewardPool": 10,
+   "discountFactor": 0.35,
+   "targetSize": 250,
+   "maxSpread": "0.07",
+   "n_markets": 250,
+   "sample_symbols": [
+    "aec-utr-angiri-smachu-2026-10-26",
+    "aec-utr-arsnik-paasti-2026-10-25",
+    "aec-utr-artmar-khosad-2026-10-27",
+    "aec-utr-artmar-pherac-2026-10-26",
+    "aec-utr-artmar-salalb-2026-10-26"
+   ]
+  },
+  {
+   "programId": "doubles_moneyline_day_of_20261018",
+   "name": "Doubles Moneyline DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "ATPDB",
+    "WTADB"
+   ],
+   "period": "day_of",
+   "rewardPool": 10,
+   "discountFactor": 0.3,
+   "targetSize": 6000,
+   "n_markets": 71,
+   "sample_symbols": [
+    "aec-atpdb-agucarroncad-drzewimatusz-2026-10-25",
+    "aec-atpdb-andradshelba-hilderpavel-2026-10-25",
+    "aec-atpdb-arendsjohnso-mansouneuchr-2026-10-25",
+    "aec-atpdb-ariascarou-camachveliz-2026-10-25",
+    "aec-atpdb-ayeniilagan-cukierrombol-2026-10-25"
+   ]
+  },
+  {
+   "programId": "esports_moneyline_pre_game_20261008",
+   "name": "Esports Moneyline PRE Game",
+   "category": "SPR",
+   "subcategories": [
+    "ESPORTS"
+   ],
+   "period": "day_of",
+   "rewardPool": 10,
+   "discountFactor": 0.35,
+   "targetSize": 15000,
+   "n_markets": 39,
+   "sample_symbols": [
+    "aec-cs2-9z-tyloo-2026-10-26",
+    "aec-cs2-all-faze-2026-10-27",
+    "aec-cs2-ast-fnc-2026-10-27",
+    "aec-cs2-b8-k27-2026-10-27",
+    "aec-cs2-bb-navi-2026-10-26"
+   ]
+  },
+  {
+   "programId": "science_20260924",
+   "name": "Science",
+   "category": "SCI",
+   "subcategories": [
+    "DISEASE"
+   ],
+   "period": "daily_event",
+   "rewardPool": 10,
+   "discountFactor": 0.25,
+   "targetSize": 10000,
+   "n_markets": 4,
+   "sample_symbols": [
+    "dccc-measles-us-2026-12-31-gt5000",
+    "dccc-measles-us-2026-12-31-gt7500",
+    "pandc-anydis-2026-12-31",
+    "pandc-anydis-2027-12-31"
+   ]
+  },
+  {
+   "programId": "soccer_futures_20261019",
+   "name": "Soccer Futures",
+   "category": "SPR",
+   "subcategories": [
+    "SOCCER"
+   ],
+   "period": "daily",
+   "rewardPool": 8,
+   "discountFactor": 0.35,
+   "targetSize": 2500,
+   "n_markets": 1008,
+   "sample_symbols": [
+    "aachc-bun-2027-05-22-relegation-aug",
+    "aachc-bun-2027-05-22-relegation-bmg",
+    "aachc-bun-2027-05-22-relegation-bre",
+    "aachc-bun-2027-05-22-relegation-bvb",
+    "aachc-bun-2027-05-22-relegation-elv"
+   ]
+  },
+  {
+   "programId": "setka_totals_live_20261018",
+   "name": "Setka Totals Live",
+   "category": "SPR",
+   "subcategories": [
+    "TABLETENIS"
+   ],
+   "period": "live",
+   "rewardPool": 8,
+   "discountFactor": 0.5,
+   "targetSize": 3200,
+   "n_markets": 690,
+   "sample_symbols": [
+    "tsc-setkamecz-bertad-havond-2026-10-26-st-3pt5",
+    "tsc-setkamecz-bertad-havond-2026-10-26-st-4pt5",
+    "tsc-setkamecz-bertad-hybtom-2026-10-26-st-3pt5",
+    "tsc-setkamecz-bertad-hybtom-2026-10-26-st-4pt5",
+    "tsc-setkamecz-bertad-jupjac-2026-10-26-st-3pt5"
+   ]
+  },
+  {
+   "programId": "ebattles_moneyline_live_20261001",
+   "name": "Ebattles Moneyline Live",
+   "category": "SPR",
+   "subcategories": [
+    "EFOOTBALL"
+   ],
+   "period": "live",
+   "rewardPool": 6,
+   "discountFactor": 0.5,
+   "targetSize": 2000,
+   "n_markets": 636,
+   "sample_symbols": [
+    "atc-ebfcwc-bjo-mca-2026-10-26-bjo",
+    "atc-ebfcwc-bjo-mca-2026-10-26-draw",
+    "atc-ebfcwc-bjo-mca-2026-10-26-mca",
+    "atc-ebfcwc-bjo-paris-2026-10-26-bjo",
+    "atc-ebfcwc-bjo-paris-2026-10-26-draw"
+   ]
+  },
+  {
+   "programId": "bskt_cup_3x3_moneyline_day_of_20261014",
+   "name": "Bskt CUP 3X3 Moneyline DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "BASKETBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 6,
+   "discountFactor": 0.5,
+   "targetSize": 4000,
+   "n_markets": 6,
+   "sample_symbols": [
+    "aec-bskt3x3-dis-inn-2026-10-25",
+    "aec-bskt3x3-dis-met-2026-10-25",
+    "aec-bskt3x3-dis-run-2026-10-25",
+    "aec-bskt3x3-inn-met-2026-10-25",
+    "aec-bskt3x3-run-inn-2026-10-26"
+   ]
+  },
+  {
+   "programId": "astra_cup_women_moneyline_day_of_20261014",
+   "name": "Astra CUP Women Moneyline DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "BEACHVOLLE"
+   ],
+   "period": "day_of",
+   "rewardPool": 6,
+   "discountFactor": 0.5,
+   "targetSize": 4000,
+   "n_markets": 1,
+   "sample_symbols": [
+    "aec-acw-lyushk-dekfar-2026-10-25-af067ae6"
+   ]
+  },
+  {
+   "programId": "table_tennis_moneyline_day_of_20261018",
+   "name": "Table Tennis Moneyline DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "TABLETENIS"
+   ],
+   "period": "day_of",
+   "rewardPool": 5,
+   "discountFactor": 0.5,
+   "targetSize": 3200,
+   "n_markets": 1041,
+   "sample_symbols": [
+    "aec-setkamecz-bertad-havond-2026-10-26",
+    "aec-setkamecz-bertad-hybtom-2026-10-26",
+    "aec-setkamecz-bertad-jupjac-2026-10-26",
+    "aec-setkamecz-blajan-sabdav-2026-10-26",
+    "aec-setkamecz-blajan-tumlad-2026-10-26"
+   ]
+  },
+  {
+   "programId": "nba_other_futures_20261020",
+   "name": "NBA Other Futures",
+   "category": "SPR",
+   "subcategories": [
+    "BASKETBALL"
+   ],
+   "period": "daily_event",
+   "rewardPool": 5,
+   "discountFactor": 0.9,
+   "targetSize": 5000,
+   "n_markets": 905,
+   "sample_symbols": [
+    "aachc-nba-2027-02-21-allstar-ajdyb",
+    "aachc-nba-2027-02-21-allstar-alpsen",
+    "aachc-nba-2027-02-21-allstar-ametho",
+    "aachc-nba-2027-02-21-allstar-antdav",
+    "aachc-nba-2027-02-21-allstar-antedw"
+   ]
+  },
+  {
+   "programId": "midterms_t4_house_winners_20260924",
+   "name": "Midterms T4 House Winners",
+   "category": "POL",
+   "subcategories": [
+    "USCONGRESS"
+   ],
+   "period": "daily_event",
+   "rewardPool": 5,
+   "discountFactor": 0.4,
+   "targetSize": 2000,
+   "maxSpread": "0.06",
+   "n_markets": 849,
+   "sample_symbols": [
+    "frewcush-ushr-frw-ga-01-2026-11-03-yes",
+    "frewcush-ushr-frw-ga-02-2026-11-03-yes",
+    "frewcush-ushr-frw-ga-03-2026-11-03-yes",
+    "frewcush-ushr-frw-ga-04-2026-11-03-yes",
+    "frewcush-ushr-frw-ga-05-2026-11-03-yes"
+   ]
+  },
+  {
+   "programId": "nba_regular_period_totals_day_of_20261020",
+   "name": "NBA Regular Period Totals DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "BASKETBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 5,
+   "discountFactor": 0.25,
+   "targetSize": 5000,
+   "n_markets": 378,
+   "sample_symbols": [
+    "tsc-nba-det-phi-2026-10-25-fh-100pt5",
+    "tsc-nba-det-phi-2026-10-25-fh-102pt5",
+    "tsc-nba-det-phi-2026-10-25-fh-104pt5",
+    "tsc-nba-det-phi-2026-10-25-fh-106pt5",
+    "tsc-nba-det-phi-2026-10-25-fh-108pt5"
+   ]
+  },
+  {
+   "programId": "nba_regular_period_spreads_day_of_20261020",
+   "name": "NBA Regular Period Spreads DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "BASKETBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 5,
+   "discountFactor": 0.25,
+   "targetSize": 5000,
+   "n_markets": 336,
+   "sample_symbols": [
+    "asc-nba-det-phi-2026-10-25-fh-neg-11pt5",
+    "asc-nba-det-phi-2026-10-25-fh-neg-13pt5",
+    "asc-nba-det-phi-2026-10-25-fh-neg-15pt5",
+    "asc-nba-det-phi-2026-10-25-fh-neg-17pt5",
+    "asc-nba-det-phi-2026-10-25-fh-neg-1pt5"
+   ]
+  },
+  {
+   "programId": "eurolg_spreads_totals_day_of_20261009",
+   "name": "Eurolg Spreads Totals DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "BASKETBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 5,
+   "discountFactor": 0.35,
+   "targetSize": 5000,
+   "n_markets": 218,
+   "sample_symbols": [
+    "asc-eurolg-asv-bvg-2026-10-30-neg-10pt5",
+    "asc-eurolg-asv-bvg-2026-10-30-neg-1pt5",
+    "asc-eurolg-asv-bvg-2026-10-30-neg-4pt5",
+    "asc-eurolg-asv-bvg-2026-10-30-neg-7pt5",
+    "asc-eurolg-asv-bvg-2026-10-30-pos-10pt5"
+   ]
+  },
+  {
+   "programId": "nba_regular_game_props_day_of_20261019",
+   "name": "NBA Regular Game Props DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "BASKETBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 5,
+   "discountFactor": 0.3,
+   "targetSize": 1000,
+   "n_markets": 113,
+   "sample_symbols": [
+    "astatc-nba-det-phi-2026-10-25-ot",
+    "astatc-nba-ind-bkn-2026-10-25-ot",
+    "astatc-nba-lac-okc-2026-10-25-ot",
+    "astatc-nba-lal-uta-2026-10-25-ot",
+    "astatc-nba-mem-sac-2026-10-25-ot"
+   ]
+  },
+  {
+   "programId": "darts_moneyline_day_of_20260924",
+   "name": "Darts Moneyline DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "DARTS"
+   ],
+   "period": "day_of",
+   "rewardPool": 5,
+   "discountFactor": 0.5,
+   "targetSize": 2500,
+   "n_markets": 15,
+   "sample_symbols": [
+    "aec-modus-andbae-arcsel-2026-10-26",
+    "aec-modus-andbae-danayr-2026-10-26",
+    "aec-modus-arcsel-darbev-2026-10-26",
+    "aec-modus-arcsel-davdav-2026-10-26",
+    "aec-modus-arcsel-dercou-2026-10-26"
+   ]
+  },
+  {
+   "programId": "cricket_moneyline_early_20260924",
+   "name": "Cricket Moneyline Early",
+   "category": "SPR",
+   "subcategories": [
+    "CRICKET"
+   ],
+   "period": "early",
+   "rewardPool": 5,
+   "discountFactor": 0.4,
+   "targetSize": 10000,
+   "n_markets": 2,
+   "sample_symbols": [
+    "aec-t20icr-afg-zim-2026-10-27",
+    "aec-t20icr-nze-india-2026-10-27"
+   ]
+  },
+  {
+   "programId": "table_tennis_set_winners_live_20261018",
+   "name": "Table Tennis SET Winners Live",
+   "category": "SPR",
+   "subcategories": [
+    "TABLETENIS"
+   ],
+   "period": "live",
+   "rewardPool": 4,
+   "discountFactor": 0.2,
+   "targetSize": 1500,
+   "n_markets": 1012,
+   "sample_symbols": [
+    "astatc-setkamecz-bertad-havond-2026-10-26-sw1",
+    "astatc-setkamecz-bertad-havond-2026-10-26-sw2",
+    "astatc-setkamecz-bertad-havond-2026-10-26-sw3",
+    "astatc-setkamecz-bertad-hybtom-2026-10-26-sw1",
+    "astatc-setkamecz-bertad-hybtom-2026-10-26-sw2"
+   ]
+  },
+  {
+   "programId": "esports_props_live_20261008",
+   "name": "Esports Props Live",
+   "category": "SPR",
+   "subcategories": [
+    "ESPORTS"
+   ],
+   "period": "live",
+   "rewardPool": 4,
+   "discountFactor": 0.5,
+   "targetSize": 800,
+   "n_markets": 76,
+   "sample_symbols": [
+    "astatc-cs2-9z-tyloo-2026-10-26-map1",
+    "astatc-cs2-9z-tyloo-2026-10-26-map2",
+    "astatc-cs2-all-faze-2026-10-27-map1",
+    "astatc-cs2-all-faze-2026-10-27-map2",
+    "astatc-cs2-ast-fnc-2026-10-27-map1"
+   ]
+  },
+  {
+   "programId": "politics_t4_coverage_20260924",
+   "name": "Politics T4 Coverage",
+   "category": "POL",
+   "subcategories": [
+    "USCONGRESS",
+    "USFEDGOV",
+    "USSCOTUS",
+    "USSTATE"
+   ],
+   "period": "daily_event",
+   "rewardPool": 2,
+   "discountFactor": 0.4,
+   "targetSize": 2000,
+   "maxSpread": "0.06",
+   "n_markets": 5055,
+   "sample_symbols": [
+    "cmovcusg-usgubclose-2026-11-03-ak",
+    "cmovcusg-usgubclose-2026-11-03-az",
+    "cmovcusg-usgubclose-2026-11-03-co",
+    "cmovcusg-usgubclose-2026-11-03-fl",
+    "cmovcusg-usgubclose-2026-11-03-ga"
+   ]
+  },
+  {
+   "programId": "table_tennis_set_winners_day_of_20261018",
+   "name": "Table Tennis SET Winners DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "TABLETENIS"
+   ],
+   "period": "day_of",
+   "rewardPool": 2,
+   "discountFactor": 0.2,
+   "targetSize": 1500,
+   "n_markets": 1012,
+   "sample_symbols": [
+    "astatc-setkamecz-bertad-havond-2026-10-26-sw1",
+    "astatc-setkamecz-bertad-havond-2026-10-26-sw2",
+    "astatc-setkamecz-bertad-havond-2026-10-26-sw3",
+    "astatc-setkamecz-bertad-hybtom-2026-10-26-sw1",
+    "astatc-setkamecz-bertad-hybtom-2026-10-26-sw2"
+   ]
+  },
+  {
+   "programId": "ebattles_moneyline_day_of_20261001",
+   "name": "Ebattles Moneyline DAY OF",
+   "category": "SPR",
+   "subcategories": [
+    "EFOOTBALL"
+   ],
+   "period": "day_of",
+   "rewardPool": 2,
+   "discountFactor": 0.5,
+   "targetSize": 2000,
+   "n_markets": 636,
+   "sample_symbols": [
+    "atc-ebfcwc-bjo-mca-2026-10-26-bjo",
+    "atc-ebfcwc-bjo-mca-2026-10-26-draw",
+    "atc-ebfcwc-bjo-mca-2026-10-26-mca",
+    "atc-ebfcwc-bjo-paris-2026-10-26-bjo",
+    "atc-ebfcwc-bjo-paris-2026-10-26-draw"
+   ]
+  },
+  {
+   "programId": "esports_props_pre_game_20261008",
+   "name": "Esports Props PRE Game",
+   "category": "SPR",
+   "subcategories": [
+    "ESPORTS"
+   ],
+   "period": "day_of",
+   "rewardPool": 1,
+   "discountFactor": 0.5,
+   "targetSize": 1100,
+   "n_markets": 76,
+   "sample_symbols": [
+    "astatc-cs2-9z-tyloo-2026-10-26-map1",
+    "astatc-cs2-9z-tyloo-2026-10-26-map2",
+    "astatc-cs2-all-faze-2026-10-27-map1",
+    "astatc-cs2-all-faze-2026-10-27-map2",
+    "astatc-cs2-ast-fnc-2026-10-27-map1"
+   ]
+  }
+ ]
+}

@@ -19,13 +19,13 @@ def team(team_id: int, name: str, safe: str | None = None, abbreviation: str | N
 
 def market(mid, kind: str, question: str, long_label: str, short_label: str, bid: float, ask: float, *,
            line=None, long_team=None, short_team=None, fee: float = FEE, status: str = OPEN, slug: str | None = None,
-           start: str = "2026-10-24T19:30:00Z", side_ids=None) -> dict:
+           start: str = "2026-10-24T19:30:00Z", side_ids=None, tick: float = 0.01) -> dict:
     side_ids = side_ids or (f"s{mid}a", f"s{mid}b")
     return {"id": str(mid), "slug": slug or f"m{mid}", "question": question, "sportsMarketType": kind, "line": line,
             "status": status, "active": True, "closed": False, "feeCoefficient": fee,
             "bestBidQuote": {"value": f"{bid:.4f}", "currency": "USD"},
             "bestAskQuote": {"value": f"{ask:.4f}", "currency": "USD"}, "gameStartTime": start,
-            "minimumTradeQty": 0.01, "orderPriceMinTickSize": 0.01, "outcomes": [long_label, short_label],
+            "minimumTradeQty": 0.01, "orderPriceMinTickSize": tick, "outcomes": [long_label, short_label],
             "marketSides": [
                 {"id": side_ids[0], "description": long_label, "long": True, "teamId": long_team, "price": f"{bid:.4f}"},
                 {"id": side_ids[1], "description": short_label, "long": False, "teamId": short_team,

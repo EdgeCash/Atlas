@@ -11,8 +11,8 @@ less the bid. Its public gateway (``gateway.polymarket.us``) needs no key:
 * ``/v1/events?slug=`` returns one game with every market on it: the
   moneyline, the ladders of spreads and totals, the periods and team
   totals, and the player props (`atlas/polymarket/props.py`);
-* ``/v1/markets/{slug}/bbo`` is the top of one market's book with the shares
-  resting on each side (:func:`depth`), ``/v1/price-history`` its stored
+* ``/v1/markets/{slug}/book`` is one market's book, every price level with
+  the shares resting there (:func:`depth`), ``/v1/price-history`` its stored
   prices (:func:`history`) and ``/v1/markets/{slug}/settlement`` what it
   settled at (:func:`settlement`).
 
@@ -72,6 +72,16 @@ LEAGUES = {
     "nhl": League("nhl", "nhl", "hockey"),
     "ncaaf": League("ncaaf", "cfb", "football"),
     "nba": League("nba", "nba", "basketball"),
+}
+#: What the always-on worker (`atlas/polymarket/worker.py`) reads besides: leagues Atlas has no model for, so
+#: the scheduled capture does not read their games in full, but whose games the favorites and finish-line
+#: rules take on the venue's prices alone. College basketball was the largest source of finished games on
+#: the venue's tape (``reports/Polymarket US worker edge survey.md``); its season's games list from early
+#: November 2026 under ``basketball_team_full_game_*`` market types, as the NBA's do this season (last
+#: season's were the bare ``moneyline``, which this module does not read).
+WORKER_LEAGUES = {
+    **LEAGUES,
+    "ncaab": League("ncaab", "cbb", "basketball"),
 }
 #: The tail of a game market's ``sportsMarketType`` to Atlas's market.
 GAME_MARKETS = {"team_full_game_winner": "moneyline", "team_full_game_spread": "spread",
@@ -344,12 +354,27 @@ def capture(now: datetime, leagues=None, sess=None, events: dict[str, list[dict]
 # ---------------------------------------------------------------------------
 
 
+def _levels(raw, best) -> list[tuple[float, float]]:
+    """A side of the book as (price, shares) levels, best first; levels that do not read are dropped."""
+    out = [(_num(level.get("px")), _num(level.get("qty"))) for level in raw or [] if isinstance(level, dict)]
+    out = [(px, qty) for px, qty in out if math.isfinite(px) and math.isfinite(qty) and qty > 0]
+    return sorted(out, key=lambda level: level[0], reverse=best == "high")
+
+
 def depth(market_slug: str, side_long: bool, sess=None) -> dict:
     """The top of the market's book for one side: its bid and ask, the spread, and the dollars that can be
-    bought at the ask (the shares resting there times the price). The short side is the long one inverted."""
-    raw = (_get(f"/v1/markets/{market_slug}/bbo", sess=sess) or {}).get("marketData") or {}
-    bid, ask = _num(raw.get("bestBid")), _num(raw.get("bestAsk"))
-    bid_shares, ask_shares = _num(raw.get("bidShares")), _num(raw.get("askShares"))
+    bought at the ask (the shares resting at that one price times the price). The short side is the long one
+    inverted: its ask is one less the long bid, with the shares bid there.
+
+    Read from the full book (``/v1/markets/{slug}/book``), not the top-of-book endpoint: ``/bbo``'s
+    ``askShares`` and ``bidShares`` are the whole side of the book, every level summed (on 26 October 2026 an
+    NBA moneyline's ``askShares`` read 770,000 with 380,259 at the best ask), so a depth read from them
+    overstates what one price will fill. Both endpoints are edge-cached for 30 seconds."""
+    raw = (_get(f"/v1/markets/{market_slug}/book", sess=sess) or {}).get("marketData") or {}
+    bids = _levels(raw.get("bids"), "high")
+    offers = _levels(raw.get("offers") or raw.get("asks"), "low")
+    bid, bid_shares = bids[0] if bids else (float("nan"), float("nan"))
+    ask, ask_shares = offers[0] if offers else (float("nan"), float("nan"))
     if not side_long:
         bid, ask = (1.0 - ask if math.isfinite(ask) else float("nan")), (1.0 - bid if math.isfinite(bid) else float("nan"))
         ask_shares, bid_shares = bid_shares, ask_shares

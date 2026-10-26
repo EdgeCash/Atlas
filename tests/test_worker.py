@@ -32,11 +32,28 @@ def test_the_venues_period_is_read_as_the_scoreboard_counts_them():
     assert worker.venue_period("P3", "nhl") == 3.0 and worker.venue_period("OT", "nhl") == 4.0
     assert worker.venue_period("2OT", "nba") == 5.0 and worker.venue_period("SO", "nhl") == 4.0
     assert worker.venue_period("HT", "nfl") == 2.0
+    # College basketball plays two halves: half-time ends the first, and the second half is its last.
+    assert worker.venue_period("HT", "ncaab") == 1.0 and worker.venue_period("H2", "ncaab") == 2.0
+    assert worker.venue_period("OT", "ncaab") == 3.0 and favorites.is_late("ncaab", 2.0, "in_play")
+    assert not favorites.is_late("ncaab", 1.0, "in_play")
     assert all(math.isnan(worker.venue_period(x, "nba")) for x in ("NS", "FT", "VFT", "", None))
     state = worker.venue_state({"nba": [_stub("1", "nba-a-b", BULLS, CELTICS, 0.85, 0.86),
                                         _stub("2", "nba-c-d", BULLS, CELTICS, 0.85, 0.86, live=False, period="NS"),
                                         _stub("3", "nba-e-f", BULLS, CELTICS, 0.85, 0.86, ended=True, period="FT")]})
     assert state == {"1": (4.0, "03:12")}
+
+
+def test_the_worker_reads_college_basketball_which_the_scheduled_capture_does_not(monkeypatch):
+    from atlas.polymarket import source
+
+    read = []
+    monkeypatch.setattr(source, "fetch_listing", lambda league, sess=None: read.append(league.slug) or [])
+    out = worker.listings(sess=object())
+    assert read == ["nfl", "nhl", "cfb", "nba", "cbb"] and set(out) == {"nfl", "nhl", "ncaaf", "nba", "ncaab"}
+    assert "ncaab" not in source.LEAGUES                    # Atlas has no model for it: no full reads each run
+    events = {"ncaab": [_stub("4", "cbb-duke-unc-2026-11-10", BULLS, CELTICS, 0.85, 0.86, period="H2")]}
+    q = source.capture(NOW, leagues=source.WORKER_LEAGUES.values(), events=events)
+    assert len(q) == 2 and set(q["sport"]) == {"ncaab"} and worker.venue_state(events) == {"4": (2.0, "03:12")}
 
 
 def test_a_tick_takes_the_crossings_with_the_venues_clock_and_orders_nothing_offline(tmp_path, monkeypatch):
@@ -234,3 +251,48 @@ def test_the_worker_and_a_run_writing_the_record_at_once_leave_it_whole(tmp_path
     subprocess.run(["git", "pull", "-q", "origin", "main"], cwd=runs, check=True, capture_output=True)
     assert "<<<<<<<" not in (runs / "tracking" / "favorites.csv").read_text()
     assert set(_record(runs)["token_id"].astype(str)) == {"100", "200", "300", "400"}
+
+
+def test_the_worker_reads_the_branchs_kill_file_every_tick(tmp_path, monkeypatch):
+    from atlas.polymarket import orders
+
+    monkeypatch.delenv(worker.BRANCH, raising=False)
+    mine, theirs = _repo(tmp_path)
+    (theirs / "README").write_text("x")
+    _commit(theirs, "start")
+    subprocess.run(["git", "pull", "-q", "origin", "main"], cwd=mine, check=True, capture_output=True)
+    assert worker.branch_kill(mine) is None
+    flag = theirs / worker.LEDGER / orders.KILL_FILE
+    flag.parent.mkdir(parents=True)
+    flag.write_text("stop: odd fills\n")
+    _commit(theirs, "kill")
+    assert worker.branch_kill(mine) == "stop: odd fills"           # without the worker's checkout moving
+    assert not (mine / worker.LEDGER / orders.KILL_FILE).exists()
+    flag.unlink()
+    _commit(theirs, "lift")
+    assert worker.branch_kill(mine) is None
+    # GitHub out of reach: the last reading holds, so an outage never lifts a kill.
+    subprocess.run(["git", "remote", "set-url", "origin", str(tmp_path / "gone.git")], cwd=mine, check=True)
+    monkeypatch.setattr(orders, "branch_kill", "held")
+    assert worker.branch_kill(mine) == "held"
+
+
+def test_the_worker_merges_the_audit_trail_with_the_branchs_by_event(tmp_path, monkeypatch):
+    from atlas.polymarket import audit
+
+    monkeypatch.delenv("ATLAS_OFFLINE", raising=False)
+    monkeypatch.delenv(worker.BRANCH, raising=False)
+    key = "correct horse battery staple"
+    mine, runs = _repo(tmp_path)
+    (runs / "README.md").write_text("atlas\n")
+    _commit(runs, "first")
+    subprocess.run(["git", "pull", "-q", "origin", "main"], cwd=mine, check=True, capture_output=True)
+    for root, note in ((runs, "the scheduled run's"), (mine, "the worker's")):
+        trail = audit.Trail(key, root / worker.AUDIT, clock=lambda: NOW)
+        trail.add("refused", note=note)
+        trail.flush()
+    _commit(runs, "a run's trail")
+    assert worker.publish(mine, NOW, key) is True
+    subprocess.run(["git", "pull", "-q", "origin", "main"], cwd=runs, check=True, capture_output=True)
+    merged = audit.load(key, runs / worker.AUDIT)
+    assert sorted(merged["note"]) == ["the scheduled run's", "the worker's"] and merged["event_id"].is_unique

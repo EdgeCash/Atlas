@@ -1,0 +1,215 @@
+{
+ "source": "https://status.polymarketexchange.com/api/v2/incidents.json fetched 2026-10-25T23:30Z",
+ "incidents": [
+  {
+   "created_at": "2026-10-18T12:35:50.000-04:00",
+   "resolved_at": "2026-10-19T17:48:37.000-04:00",
+   "impact": "minor",
+   "name": "Delayed/Missing Events on RFQ Streams"
+  },
+  {
+   "created_at": "2026-10-09T18:39:18.536-04:00",
+   "resolved_at": "2026-10-09T19:38:30.355-04:00",
+   "impact": "major",
+   "name": "Position holdings degraded"
+  },
+  {
+   "created_at": "2026-09-24T09:08:18.000-04:00",
+   "resolved_at": "2026-09-24T10:36:15.831-04:00",
+   "impact": "minor",
+   "name": "Market Data FIX degradation"
+  },
+  {
+   "created_at": "2026-09-13T17:05:50.236-04:00",
+   "resolved_at": "2026-09-13T18:06:02.867-04:00",
+   "impact": "none",
+   "name": "Preprod unavailable"
+  },
+  {
+   "created_at": "2026-09-13T01:27:29.831-04:00",
+   "resolved_at": "2026-09-13T01:37:26.284-04:00",
+   "impact": "major",
+   "name": "Position streaming delayed"
+  },
+  {
+   "created_at": "2026-09-10T11:35:46.036-04:00",
+   "resolved_at": "2026-09-11T06:03:46.178-04:00",
+   "impact": "minor",
+   "name": "High latency on balance ledger API calls"
+  },
+  {
+   "created_at": "2026-09-09T14:41:57.674-04:00",
+   "resolved_at": "2026-09-09T15:27:35.251-04:00",
+   "impact": "minor",
+   "name": "Staleness on order searches"
+  },
+  {
+   "created_at": "2026-09-05T19:35:04.876-04:00",
+   "resolved_at": "2026-09-05T20:52:28.530-04:00",
+   "impact": "major",
+   "name": "Markets are halted"
+  },
+  {
+   "created_at": "2026-09-05T13:45:14.843-04:00",
+   "resolved_at": "2026-09-05T18:44:44.207-04:00",
+   "impact": "critical",
+   "name": "Matching engine offline"
+  },
+  {
+   "created_at": "2026-09-02T14:17:42.503-04:00",
+   "resolved_at": "2026-09-02T15:41:19.727-04:00",
+   "impact": "minor",
+   "name": "Delayed Order Searches"
+  },
+  {
+   "created_at": "2026-08-28T14:48:41.981-04:00",
+   "resolved_at": "2026-08-28T15:12:02.122-04:00",
+   "impact": "major",
+   "name": "Resolutions payouts delayed"
+  },
+  {
+   "created_at": "2026-08-27T16:08:39.638-04:00",
+   "resolved_at": "2026-08-27T20:13:18.658-04:00",
+   "impact": "critical",
+   "name": "Matching Engine Down"
+  },
+  {
+   "created_at": "2026-07-22T13:50:24.842-04:00",
+   "resolved_at": "2026-07-22T16:59:23.027-04:00",
+   "impact": "critical",
+   "name": "Lag on Account Balances"
+  },
+  {
+   "created_at": "2026-07-20T15:49:34.065-04:00",
+   "resolved_at": "2026-07-20T17:31:58.998-04:00",
+   "impact": "major",
+   "name": "Position updates are delayed"
+  },
+  {
+   "created_at": "2026-07-20T04:10:33.456-04:00",
+   "resolved_at": "2026-07-20T04:44:36.477-04:00",
+   "impact": "critical",
+   "name": "Matching engine offline"
+  },
+  {
+   "created_at": "2026-07-18T20:20:42.842-04:00",
+   "resolved_at": "2026-07-18T21:13:41.256-04:00",
+   "impact": "critical",
+   "name": "Matching engine offline"
+  },
+  {
+   "created_at": "2026-07-14T20:11:30.831-04:00",
+   "resolved_at": "2026-07-14T20:15:11.910-04:00",
+   "impact": "major",
+   "name": "Matcher stall"
+  },
+  {
+   "created_at": "2026-07-01T19:55:30.037-04:00",
+   "resolved_at": "2026-07-01T20:47:08.559-04:00",
+   "impact": "minor",
+   "name": "Exchange trading impacted"
+  },
+  {
+   "created_at": "2026-07-01T19:37:59.156-04:00",
+   "resolved_at": "2026-07-01T19:52:18.491-04:00",
+   "impact": "major",
+   "name": "Exchange trading impact"
+  },
+  {
+   "created_at": "2026-07-01T13:13:58.444-04:00",
+   "resolved_at": "2026-07-01T14:45:48.000-04:00",
+   "impact": "none",
+   "name": "Holdings Degraded - Resolutions Failing and some Balances Delayed"
+  },
+  {
+   "created_at": "2026-06-25T18:06:33.100-04:00",
+   "resolved_at": "2026-06-25T18:33:08.000-04:00",
+   "impact": "critical",
+   "name": "Matcher is offline"
+  },
+  {
+   "created_at": "2026-06-24T20:40:55.656-04:00",
+   "resolved_at": "2026-06-24T20:56:37.453-04:00",
+   "impact": "critical",
+   "name": "Matching engine is offline"
+  },
+  {
+   "created_at": "2026-06-24T17:41:31.490-04:00",
+   "resolved_at": "2026-06-24T17:57:11.220-04:00",
+   "impact": "minor",
+   "name": "gRPC & REST API access to exchange is degraded"
+  },
+  {
+   "created_at": "2026-06-15T20:44:24.548-04:00",
+   "resolved_at": "2026-06-15T23:32:22.316-04:00",
+   "impact": "critical",
+   "name": "Systems Offline"
+  },
+  {
+   "created_at": "2026-06-13T16:44:26.518-04:00",
+   "resolved_at": "2026-06-13T19:06:08.378-04:00",
+   "impact": "critical",
+   "name": "Systems Offline"
+  },
+  {
+   "created_at": "2026-06-11T18:43:22.000-04:00",
+   "resolved_at": "2026-06-11T20:07:47.971-04:00",
+   "impact": "minor",
+   "name": "Exchange Degraded"
+  },
+  {
+   "created_at": "2026-06-11T14:42:56.944-04:00",
+   "resolved_at": "2026-06-11T16:29:45.892-04:00",
+   "impact": "critical",
+   "name": "Matcher Down"
+  },
+  {
+   "created_at": "2026-06-07T23:12:02.911-04:00",
+   "resolved_at": "2026-06-08T02:58:10.891-04:00",
+   "impact": "none",
+   "name": "Systems Offline"
+  },
+  {
+   "created_at": "2024-12-11T06:04:28.123-05:00",
+   "resolved_at": "2024-12-11T12:42:07.886-05:00",
+   "impact": "none",
+   "name": "All QCEX Systems are currently offline"
+  },
+  {
+   "created_at": "2024-12-10T14:14:59.790-05:00",
+   "resolved_at": "2024-12-10T14:22:52.524-05:00",
+   "impact": "none",
+   "name": "All QCEX Systems are currently offline"
+  },
+  {
+   "created_at": "2023-08-31T06:27:18.532-04:00",
+   "resolved_at": "2023-08-31T12:40:36.762-04:00",
+   "impact": "critical",
+   "name": "DR TEST - QCEX Systems are currently offline"
+  },
+  {
+   "created_at": "2023-08-17T05:37:59.335-04:00",
+   "resolved_at": "2023-08-17T11:14:57.710-04:00",
+   "impact": "critical",
+   "name": "QCEX Systems are currently Offline"
+  },
+  {
+   "created_at": "2023-04-27T11:34:15.811-04:00",
+   "resolved_at": "2023-04-27T11:36:13.726-04:00",
+   "impact": "critical",
+   "name": "TEST - Halt due to some issue."
+  },
+  {
+   "created_at": "2023-04-27T10:09:56.680-04:00",
+   "resolved_at": "2023-04-27T10:10:22.176-04:00",
+   "impact": "none",
+   "name": "Intermittent Connectivity Issues"
+  },
+  {
+   "created_at": "2023-04-25T11:21:39.485-04:00",
+   "resolved_at": "2023-04-25T10:55:39.581-04:00",
+   "impact": "none",
+   "name": "This is an example incident"
+  }
+ ]
+}

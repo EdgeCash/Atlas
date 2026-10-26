@@ -1,0 +1,41 @@
+settlement (avg of 60 BRTI 1s closes): {'btc-above-hr-2026-10-26-0100z': 79986.47}
+ladder chk K | bid ask (sizes) | p_rv p_dv | side cost | EV rv / dv (c) | outcome pnl
+0100z   300 80000 | [0.09, 5.0] [0.13, 50.0] | 0.058 0.044 | No 0.91 | +2.6 / +4.0 | 1 +8.4
+signals 1 mean pnl 0.0843 losses 0 | also DVOL-positive: 1 mean pnl 0.0843
+
+All two-sided deep-ITM quotes (cost 0.80-0.99) in the 01:00Z ladder:
+chk  1800 K 79500 S 80147 Yes cost 0.99 x 37 | p_rv 0.989 (rv 0.47) p_dv 0.997 | EV rv -0.2 dv +0.7 | won 1
+chk  1800 K 79600 S 80147 Yes cost 0.99 x 52 | p_rv 0.973 (rv 0.47) p_dv 0.991 | EV rv -1.7 dv +0.0 | won 1
+chk  1800 K 79700 S 80147 Yes cost 0.97 x 4 | p_rv 0.943 (rv 0.47) p_dv 0.974 | EV rv -2.9 dv +0.2 | won 1
+chk  1800 K 79800 S 80147 Yes cost 0.94 x 109 | p_rv 0.890 (rv 0.47) p_dv 0.934 | EV rv -5.4 dv -1.0 | won 1
+chk  1800 K 79900 S 80147 Yes cost 0.88 x 103 | p_rv 0.809 (rv 0.47) p_dv 0.857 | EV rv -7.9 dv -3.0 | won 1
+chk  1800 K 80400 S 80147 No cost 0.86 x 13 | p_rv 0.814 (rv 0.47) p_dv 0.863 | EV rv -5.4 dv -0.5 | won 1
+chk  1800 K 80500 S 80147 No cost 0.93 x 9 | p_rv 0.894 (rv 0.47) p_dv 0.937 | EV rv -4.1 dv +0.2 | won 1
+chk  1800 K 80600 S 80147 No cost 0.97 x 24 | p_rv 0.945 (rv 0.47) p_dv 0.975 | EV rv -2.7 dv +0.3 | won 1
+chk  1800 K 80700 S 80147 No cost 0.98 x 4 | p_rv 0.974 (rv 0.47) p_dv 0.992 | EV rv -0.7 dv +1.0 | won 1
+chk  1200 K 79700 S 80082 Yes cost 0.98 x 143 | p_rv 0.965 (rv 0.43) p_dv 0.979 | EV rv -1.6 dv -0.2 | won 1
+chk  1200 K 79800 S 80082 Yes cost 0.95 x 159 | p_rv 0.910 (rv 0.43) p_dv 0.934 | EV rv -4.4 dv -2.0 | won 1
+chk  1200 K 79900 S 80082 Yes cost 0.87 x 145 | p_rv 0.806 (rv 0.43) p_dv 0.834 | EV rv -7.2 dv -4.4 | won 1
+chk  1200 K 80300 S 80082 No cost 0.89 x 1 | p_rv 0.850 (rv 0.43) p_dv 0.878 | EV rv -4.6 dv -1.9 | won 1
+chk  1200 K 80400 S 80082 No cost 0.96 x 10 | p_rv 0.935 (rv 0.43) p_dv 0.955 | EV rv -2.8 dv -0.7 | won 1
+chk  1200 K 80500 S 80082 No cost 0.98 x 21 | p_rv 0.977 (rv 0.43) p_dv 0.987 | EV rv -0.5 dv +0.6 | won 1
+chk  1200 K 80600 S 80082 No cost 0.99 x 21 | p_rv 0.993 (rv 0.43) p_dv 0.997 | EV rv +0.2 dv +0.6 | won 1
+chk   900 K 79700 S 80061 Yes cost 0.99 x 45 | p_rv 0.979 (rv 0.42) p_dv 0.987 | EV rv -1.1 dv -0.3 | won 1
+chk   900 K 79800 S 80061 Yes cost 0.95 x 11 | p_rv 0.930 (rv 0.42) p_dv 0.947 | EV rv -2.3 dv -0.6 | won 1
+chk   900 K 79900 S 80061 Yes cost 0.90 x 260 | p_rv 0.819 (rv 0.42) p_dv 0.841 | EV rv -8.7 dv -6.5 | won 1
+chk   900 K 80200 S 80061 No cost 0.84 x 16 | p_rv 0.784 (rv 0.42) p_dv 0.805 | EV rv -6.6 dv -4.4 | won 1
+chk   900 K 80300 S 80061 No cost 0.95 x 14 | p_rv 0.911 (rv 0.42) p_dv 0.931 | EV rv -4.2 dv -2.3 | won 1
+chk   900 K 80400 S 80061 No cost 0.98 x 13 | p_rv 0.972 (rv 0.42) p_dv 0.982 | EV rv -0.9 dv +0.1 | won 1
+chk   900 K 80500 S 80061 No cost 0.99 x 27 | p_rv 0.993 (rv 0.42) p_dv 0.997 | EV rv +0.3 dv +0.6 | won 1
+chk   600 K 79500 S 79897 Yes cost 0.99 x 15 | p_rv 0.997 (rv 0.43) p_dv 0.999 | EV rv +0.6 dv +0.8 | won 1
+chk   600 K 79600 S 79897 Yes cost 0.97 x 21 | p_rv 0.981 (rv 0.43) p_dv 0.989 | EV rv +0.9 dv +1.7 | won 1
+chk   600 K 79700 S 79897 Yes cost 0.91 x 17 | p_rv 0.915 (rv 0.43) p_dv 0.936 | EV rv -0.0 dv +2.0 | won 1
+chk   600 K 80000 S 79897 No cost 0.82 x 19 | p_rv 0.764 (rv 0.43) p_dv 0.786 | EV rv -6.7 dv -4.4 | won 1
+chk   600 K 80100 S 79897 No cost 0.95 x 7 | p_rv 0.922 (rv 0.43) p_dv 0.941 | EV rv -3.2 dv -1.2 | won 1
+chk   600 K 80200 S 79897 No cost 0.98 x 33 | p_rv 0.983 (rv 0.43) p_dv 0.990 | EV rv +0.2 dv +0.9 | won 1
+chk   600 K 80300 S 79897 No cost 0.99 x 14 | p_rv 0.998 (rv 0.43) p_dv 0.999 | EV rv +0.7 dv +0.8 | won 1
+chk   300 K 79700 S 79850 Yes cost 0.99 x 32 | p_rv 0.941 (rv 0.42) p_dv 0.955 | EV rv -5.0 dv -3.6 | won 1
+chk   300 K 79800 S 79850 Yes cost 0.83 x 114 | p_rv 0.698 (rv 0.42) p_dv 0.713 | EV rv -14.2 dv -12.7 | won 1
+chk   300 K 80000 S 79850 No cost 0.91 x 5 | p_rv 0.942 (rv 0.42) p_dv 0.956 | EV rv +2.6 dv +4.0 | won 1
+chk   300 K 80100 S 79850 No cost 0.99 x 116 | p_rv 0.996 (rv 0.42) p_dv 0.998 | EV rv +0.5 dv +0.7 | won 1
+n 34

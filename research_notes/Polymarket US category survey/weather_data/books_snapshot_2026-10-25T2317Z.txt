@@ -1,0 +1,120 @@
+2026-10-25T23:17:05.416346Z
+trc-yr-httst-rnk-glbl-2026-1st                   1st          bid 0.84 x55 ask 0.85 x9 | $ask5c 7 | traded 32278.2600 notional 24264.6364 OI 2396.7400 last 2026-10-25T22:35:48
+trc-yr-httst-rnk-glbl-2026-2nd                   2nd          bid 0.14 x37 ask 0.15 x62 | $ask5c 48 | traded 12557.6500 notional 2516.3736 OI 970.2400 last 2026-10-25T22:35:48
+trc-yr-httst-rnk-glbl-2026-3rd                   3rd          bid 0.01 x217367 ask 0.03 x5816 | $ask5c 174 | traded 15078.5900 notional 479.8777 OI 1773.0100 last 2026-10-25T22:35:48
+trc-yr-httst-rnk-glbl-2026-4th                   4th          bid 0.01 x250541 ask 0.02 x4518 | $ask5c 90 | traded 8180.4800 notional 314.6365 OI 824.1600 last 2026-10-25T22:35:48
+trc-yr-httst-rnk-glbl-2026-lte5th                5th Or Lower bid 0.01 x147266 ask 0.02 x4480 | $ask5c 90 | traded 6950.2500 notional 758.8874 OI 733.6700 last 2026-10-25T22:35:48
+trc-yr-httst-rnk-glbl-2027-1st                   1st          bid 0.43 x86 ask 0.44 x69 | $ask5c 30 | traded 4016.1300 notional 962.8492 OI 242.9800 last 2026-10-22T21:54:19
+trc-yr-httst-rnk-glbl-2027-2nd                   2nd          bid 0.27 x177 ask 0.28 x54 | $ask5c 27 | traded 2997.4800 notional 760.7475 OI 210.2800 last 2026-10-24T02:30:20
+trc-yr-httst-rnk-glbl-2027-3rd                   3rd          bid 0.19 x18 ask 0.2 x79 | $ask5c 765 | traded 2593.7800 notional 576.4892 OI 212.7000 last 2026-10-23T17:00:45
+trc-yr-httst-rnk-glbl-2027-4th                   4th          bid 0.06 x704 ask 0.07 x103 | $ask5c 383 | traded 2793.1200 notional 259.2732 OI 212.1900 last 2026-10-22T21:47:56
+trc-yr-httst-rnk-glbl-2027-lte5th                5th Or Lower bid 0.06 x301 ask 0.07 x28 | $ask5c 5 | traded 3341.0500 notional 616.7274 OI 210.4500 last 2026-10-25T21:19:11
+tc-temp-sjc-dec-lt40                             Below 40F    bid None x0 ask None x0 | $ask5c 0 | traded 0.0000 notional 0.0000 OI None last 
+tc-temp-nychigh-2026-10-25-gte66lt67f            66 to 67     bid None x0 ask 0.01 x15824 | $ask5c 168 | traded 9761.4300 notional 1393.6860 OI 2986.5200 last 2026-10-25T22:54:35
+tc-temp-nychigh-2026-10-25-gte68lt69f            68 to 69     bid None x0 ask 0.01 x16252 | $ask5c 172 | traded 3567.0700 notional 127.2987 OI 1529.1000 last 2026-10-25T22:48:47
+tc-temp-nychigh-2026-10-25-gte70lt71f            70 to 71     bid None x0 ask 0.01 x26707 | $ask5c 276 | traded 1186.2300 notional 17.7061 OI 566.2600 last 2026-10-25T19:36:19
+tc-temp-nychigh-2026-10-25-gte72f                72 or above  bid None x0 ask 0.01 x12452 | $ask5c 126 | traded 370.5000 notional 4.5800 OI 185.5000 last 2026-10-25T19:36:45
+tc-temp-nychigh-2026-10-25-lt64f                 63 or below  bid None x0 ask 0.01 x37596 | $ask5c 378 | traded 10970.5500 notional 482.9988 OI 2734.9300 last 2026-10-25T21:28:52
+tc-temp-nychigh-2026-10-25-gte64lt65f            64 to 65     bid 0.99 x11612 ask None x0 | $ask5c 0 | traded 11365.4200 notional 7924.2385 OI 2459.1000 last 2026-10-25T22:59:39
+tc-temp-nyclow-2026-10-25-gte44lt45f             44 to 45     bid None x0 ask 0.01 x5051 | $ask5c 51 | traded 2479.3800 notional 414.9100 OI 953.9600 last 2026-10-25T18:58:04
+tc-temp-nyclow-2026-10-25-gte46lt47f             46 to 47     bid None x0 ask 0.01 x5117 | $ask5c 52 | traded 1702.1000 notional 46.1572 OI 818.9600 last 2026-10-25T18:57:49
+tc-temp-nyclow-2026-10-25-gte48f                 48 or above  bid None x0 ask 0.01 x5637 | $ask5c 57 | traded 788.6200 notional 25.9738 OI 388.6200 last 2026-10-25T13:47:41
+tc-temp-nyclow-2026-10-25-gte40lt41f             40 to 41     bid None x0 ask 0.27 x2024 | $ask5c 546 | traded 2434.5200 notional 92.2003 OI 1129.5100 last 2026-10-25T22:04:45
+tc-temp-nyclow-2026-10-25-gte42lt43f             42 to 43     bid 0.01 x2005 ask 0.99 x376 | $ask5c 372 | traded 2069.5700 notional 1022.4178 OI 607.7300 last 2026-10-25T21:52:13
+tc-temp-nyclow-2026-10-25-lt40f                  39 or below  bid None x0 ask 0.02 x2028 | $ask5c 41 | traded 244.9400 notional 2.4686 OI 121.9600 last 2026-10-25T13:30:33
+tc-temp-miahigh-2026-10-25-gte83lt84f            83 to 84     bid None x0 ask 0.01 x948 | $ask5c 23 | traded 6512.2200 notional 1087.2102 OI 1999.4800 last 2026-10-25T22:53:49
+tc-temp-miahigh-2026-10-25-gte85lt86f            85 to 86     bid None x0 ask 0.01 x6225 | $ask5c 66 | traded 14048.5100 notional 181.5509 OI 6886.4600 last 2026-10-25T23:08:09
+tc-temp-miahigh-2026-10-25-gte87lt88f            87 to 88     bid None x0 ask 0.01 x1598 | $ask5c 23 | traded 1196.0000 notional 11.9600 OI 598.0000 last 2026-10-25T20:53:24
+tc-temp-miahigh-2026-10-25-gte89f                89 or above  bid None x0 ask 0.01 x2038 | $ask5c 26 | traded 1310.9700 notional 13.1194 OI 655.9700 last 2026-10-25T20:53:24
+tc-temp-miahigh-2026-10-25-lt81f                 80 or below  bid None x0 ask 0.01 x93723 | $ask5c 940 | traded 20413.9000 notional 545.9935 OI 9024.8000 last 2026-10-25T22:03:38
+tc-temp-miahigh-2026-10-25-gte81lt82f            81 to 82     bid 0.99 x2571 ask None x0 | $ask5c 0 | traded 9308.7500 notional 8348.3931 OI 3193.9000 last 2026-10-25T23:08:06
+tc-temp-mdwhigh-2026-10-25-gte70lt71f            70 to 71     bid None x0 ask 0.01 x470373 | $ask5c 4704 | traded 2765.8100 notional 63.8674 OI 1176.7200 last 2026-10-25T18:28:26
+tc-temp-mdwhigh-2026-10-25-gte72lt73f            72 to 73     bid None x0 ask 0.01 x18636 | $ask5c 189 | traded 2520.0300 notional 949.3804 OI 1168.8400 last 2026-10-25T21:17:00
+tc-temp-mdwhigh-2026-10-25-gte76lt77f            76 to 77     bid None x0 ask 0.01 x1248 | $ask5c 24 | traded 862.3500 notional 29.6224 OI 378.3500 last 2026-10-25T20:07:25
+tc-temp-mdwhigh-2026-10-25-gte78f                78 or above  bid None x0 ask 0.01 x1807 | $ask5c 32 | traded 0.0000 notional 0.0000 OI None last 
+tc-temp-mdwhigh-2026-10-25-lt70f                 69 or below  bid None x0 ask 0.01 x468103 | $ask5c 4681 | traded 3630.9300 notional 41.9380 OI 1750.9400 last 2026-10-25T18:53:52
+tc-temp-mdwhigh-2026-10-25-gte74lt75f            74 to 75     bid 0.99 x1145 ask None x0 | $ask5c 0 | traded 1622.6600 notional 899.8565 OI 460.5600 last 2026-10-25T21:43:09
+tc-temp-mdwlow-2026-10-25-gte52lt53f             52 to 53     bid 0.97 x2000 ask 0.99 x28 | $ask5c 28 | traded 283.7700 notional 265.3234 OI 154.0500 last 2026-10-25T22:09:34
+tc-temp-mdwlow-2026-10-25-gte46lt47f             46 to 47     bid 0.01 x4 ask 0.04 x28 | $ask5c 7 | traded 2.0000 notional 0.0200 OI 1.0000 last 2026-10-25T09:18:58
+tc-temp-mdwlow-2026-10-25-gte48lt49f             48 to 49     bid 0.01 x4 ask 0.04 x28 | $ask5c 7 | traded 51.4900 notional 2.2292 OI 25.4900 last 2026-10-25T16:58:03
+tc-temp-mdwlow-2026-10-25-gte50lt51f             50 to 51     bid None x0 ask 0.02 x2028 | $ask5c 42 | traded 431.4200 notional 51.2024 OI 146.4700 last 2026-10-25T21:35:13
+tc-temp-mdwlow-2026-10-25-lt46f                  45 or below  bid None x0 ask 0.02 x2028 | $ask5c 42 | traded 98.4700 notional 1.8788 OI 49.4700 last 2026-10-25T13:31:12
+tc-temp-mdwlow-2026-10-25-gte54f                 54 or above  bid None x0 ask 0.01 x5714 | $ask5c 57 | traded 717.2100 notional 56.6510 OI 167.9300 last 2026-10-25T12:59:00
+tc-temp-laxhigh-2026-10-25-gte80lt81f            80 to 81     bid 0.01 x64 ask 0.02 x655 | $ask5c 25 | traded 19998.3600 notional 1139.2685 OI 9258.9700 last 2026-10-25T22:47:24
+tc-temp-laxhigh-2026-10-25-gte74lt75f            74 to 75     bid None x0 ask 0.01 x417798 | $ask5c 4182 | traded 8905.0500 notional 217.1290 OI 4494.3500 last 2026-10-25T23:10:47
+tc-temp-laxhigh-2026-10-25-gte76lt77f            76 to 77     bid None x0 ask 0.01 x65131 | $ask5c 653 | traded 13749.9500 notional 1401.4888 OI 6497.9100 last 2026-10-25T22:52:56
+tc-temp-laxhigh-2026-10-25-gte82f                82 or above  bid None x0 ask 0.01 x1337 | $ask5c 25 | traded 15255.6600 notional 214.4294 OI 6892.2100 last 2026-10-25T21:17:53
+tc-temp-laxhigh-2026-10-25-lt74f                 73 or below  bid None x0 ask 0.01 x473461 | $ask5c 4736 | traded 937.9700 notional 9.3894 OI 468.9700 last 2026-10-25T13:18:03
+tc-temp-laxhigh-2026-10-25-gte78lt79f            78 to 79     bid 0.99 x1217 ask None x0 | $ask5c 0 | traded 6398.0600 notional 4986.3000 OI 1652.3800 last 2026-10-25T23:01:36
+tc-temp-sfohigh-2026-10-25-gte73lt74f            73 to 74     bid 0.98 x105 ask 0.99 x1136 | $ask5c 1125 | traded 11007.2600 notional 1778.5921 OI 5218.0900 last 2026-10-25T22:59:08
+tc-temp-sfohigh-2026-10-25-gte75f                75 or above  bid None x0 ask 0.02 x1558 | $ask5c 65 | traded 17026.2700 notional 567.2490 OI 7523.8300 last 2026-10-25T22:43:56
+tc-temp-sfohigh-2026-10-25-gte67lt68f            67 to 68     bid None x0 ask 0.01 x418913 | $ask5c 4191 | traded 5511.0100 notional 659.6852 OI 2742.6800 last 2026-10-25T23:05:44
+tc-temp-sfohigh-2026-10-25-gte69lt70f            69 to 70     bid None x0 ask 0.01 x416821 | $ask5c 4178 | traded 6122.2500 notional 1070.7612 OI 4276.9300 last 2026-10-25T22:32:34
+tc-temp-sfohigh-2026-10-25-gte71lt72f            71 to 72     bid None x0 ask 0.01 x68597 | $ask5c 689 | traded 5325.5700 notional 1524.3834 OI 2430.1900 last 2026-10-25T22:15:24
+tc-temp-sfohigh-2026-10-25-lt67f                 66 or below  bid None x0 ask 0.01 x418531 | $ask5c 4186 | traded 3594.6600 notional 131.9013 OI 1858.6600 last 2026-10-25T22:15:12
+tc-temp-phlhigh-2026-10-25-gte65lt66f            65 to 66     bid 0.97 x2027 ask 0.99 x1 | $ask5c 1 | traded 1957.5700 notional 794.5987 OI 849.1600 last 2026-10-25T23:00:43
+tc-temp-phlhigh-2026-10-25-gte67lt68f            67 to 68     bid 0.01 x2 ask 0.04 x2028 | $ask5c 93 | traded 1988.1200 notional 1050.0336 OI 588.2300 last 2026-10-25T22:22:13
+tc-temp-phlhigh-2026-10-25-gte69lt70f            69 to 70     bid 0.01 x0 ask 0.02 x2030 | $ask5c 41 | traded 422.3100 notional 42.5029 OI 194.4200 last 2026-10-25T21:17:36
+tc-temp-phlhigh-2026-10-25-gte71lt72f            71 to 72     bid None x0 ask 0.01 x1807 | $ask5c 20 | traded 7.0000 notional 0.0700 OI 5.0000 last 2026-10-25T21:17:36
+tc-temp-phlhigh-2026-10-25-gte73f                73 or above  bid None x0 ask 0.01 x1791 | $ask5c 18 | traded 124.3300 notional 3.7398 OI 62.3300 last 2026-10-25T13:57:11
+tc-temp-phlhigh-2026-10-25-lt65f                 64 or below  bid None x0 ask 0.01 x17457 | $ask5c 175 | traded 1148.8900 notional 50.1296 OI 411.8900 last 2026-10-25T18:12:26
+rainc-rain-daily-2026-10-25-klax                 Los Angeles  bid None x0 ask 0.99 x25 | $ask5c 25 | traded 0.0000 notional 0.0000 OI None last 
+rainc-rain-daily-2026-10-25-kmia                 Miami        bid 0.41 x500 ask None x0 | $ask5c 0 | traded 45.0000 notional 42.9500 OI 25.0000 last 2026-10-25T14:55:53
+rainc-rain-daily-2026-10-25-knyc                 New York     bid None x0 ask 0.99 x50 | $ask5c 50 | traded 0.0000 notional 0.0000 OI None last 
+rainc-rain-daily-2026-10-25-kord                 Chicago      bid None x0 ask 0.99 x25 | $ask5c 25 | traded 0.0000 notional 0.0000 OI None last 
+rainc-rain-daily-2026-10-25-kphl                 Philadelphia bid None x0 ask 0.99 x50 | $ask5c 50 | traded 0.0000 notional 0.0000 OI None last 
+rainc-rain-daily-2026-10-25-ksfo                 San Francisc bid None x0 ask 0.99 x25 | $ask5c 25 | traded 0.0000 notional 0.0000 OI None last 
+tc-temp-nychigh-2026-10-26-gte68lt69f            68 to 69     bid 0.6 x73 ask 0.63 x164 | $ask5c 590 | traded 1000.5600 notional 531.3984 OI 601.5600 last 2026-10-25T21:15:35
+tc-temp-nychigh-2026-10-26-gte70lt71f            70 to 71     bid 0.18 x103 ask 0.19 x64 | $ask5c 110 | traded 191.0900 notional 77.5860 OI 98.4400 last 2026-10-25T22:46:30
+tc-temp-nychigh-2026-10-26-lt68f                 67 or below  bid 0.16 x5 ask 0.17 x63 | $ask5c 41 | traded 660.0200 notional 117.2516 OI 623.0000 last 2026-10-25T23:02:43
+tc-temp-nychigh-2026-10-26-gte72lt73f            72 to 73     bid 0.04 x1336 ask 0.06 x92 | $ask5c 126 | traded 953.0600 notional 54.9065 OI 408.5900 last 2026-10-25T22:29:12
+tc-temp-nychigh-2026-10-26-gte74lt75f            74 to 75     bid None x0 ask 0.01 x100 | $ask5c 25 | traded 22.0000 notional 0.8600 OI 11.0000 last 2026-10-25T14:05:54
+tc-temp-nychigh-2026-10-26-gte76f                76 or above  bid None x0 ask 0.01 x1302 | $ask5c 14 | traded 0.0000 notional 0.0000 OI None last 
+tc-temp-nyclow-2026-10-26-gte46lt47f             46 to 47     bid 0.4 x25 ask 0.46 x28 | $ask5c 67 | traded 82.0300 notional 38.0434 OI 21.0300 last 2026-10-25T17:43:34
+tc-temp-nyclow-2026-10-26-gte48lt49f             48 to 49     bid 0.37 x28 ask 0.42 x28 | $ask5c 52 | traded 56.0100 notional 19.9248 OI 28.0100 last 2026-10-25T16:21:22
+tc-temp-nyclow-2026-10-26-gte50lt51f             50 to 51     bid 0.07 x28 ask 0.13 x1 | $ask5c 19 | traded 316.3200 notional 47.5540 OI 118.3200 last 2026-10-25T20:06:51
+tc-temp-nyclow-2026-10-26-gte44lt45f             44 to 45     bid 0.02 x22 ask 0.07 x42 | $ask5c 21 | traded 160.9200 notional 19.4392 OI 78.9200 last 2026-10-25T15:36:40
+tc-temp-nyclow-2026-10-26-gte52f                 52 or above  bid None x0 ask 0.05 x28 | $ask5c 80 | traded 38.6000 notional 1.9600 OI 19.6000 last 2026-10-25T14:05:56
+tc-temp-nyclow-2026-10-26-lt44f                  43 or below  bid None x0 ask 0.05 x28 | $ask5c 8 | traded 2.0100 notional 0.0398 OI 1.0100 last 2026-10-25T14:05:54
+tc-temp-miahigh-2026-10-26-gte83lt84f            83 to 84     bid 0.69 x108 ask 0.72 x103 | $ask5c 665 | traded 619.4500 notional 388.6238 OI 357.3400 last 2026-10-25T22:27:29
+tc-temp-miahigh-2026-10-26-gte81lt82f            81 to 82     bid 0.17 x105 ask 0.2 x216 | $ask5c 273 | traded 604.8200 notional 112.4552 OI 326.8200 last 2026-10-25T21:04:59
+tc-temp-miahigh-2026-10-26-gte85lt86f            85 to 86     bid 0.1 x108 ask 0.11 x122 | $ask5c 212 | traded 471.4500 notional 68.6860 OI 392.0000 last 2026-10-25T22:14:04
+tc-temp-miahigh-2026-10-26-gte79lt80f            79 to 80     bid 0.01 x2208 ask 0.02 x164 | $ask5c 54 | traded 0.0000 notional 0.0000 OI None last 
+tc-temp-miahigh-2026-10-26-gte87f                87 or above  bid 0.01 x20 ask 0.02 x1285 | $ask5c 41 | traded 0.0000 notional 0.0000 OI None last 
+tc-temp-miahigh-2026-10-26-lt79f                 78 or below  bid None x0 ask 0.01 x100 | $ask5c 64 | traded 0.0000 notional 0.0000 OI None last 
+tc-temp-mdwhigh-2026-10-26-gte62lt63f            62 to 63     bid 0.38 x36 ask 0.41 x101 | $ask5c 290 | traded 202.1000 notional 72.7631 OI 91.4100 last 2026-10-25T20:16:58
+tc-temp-mdwhigh-2026-10-26-gte64lt65f            64 to 65     bid 0.37 x128 ask 0.39 x8 | $ask5c 164 | traded 352.3200 notional 151.6793 OI 162.9500 last 2026-10-25T23:05:59
+tc-temp-mdwhigh-2026-10-26-lt62f                 61 or below  bid 0.11 x128 ask 0.13 x99 | $ask5c 61 | traded 42.0000 notional 4.3000 OI 21.0000 last 2026-10-25T15:00:10
+tc-temp-mdwhigh-2026-10-26-gte66lt67f            66 to 67     bid 0.09 x938 ask 0.1 x41 | $ask5c 211 | traded 432.4600 notional 42.3828 OI 216.4600 last 2026-10-25T19:18:33
+tc-temp-mdwhigh-2026-10-26-gte68lt69f            68 to 69     bid 0.01 x7500 ask 0.02 x133 | $ask5c 91 | traded 14.0000 notional 0.2800 OI 7.0000 last 2026-10-25T17:09:02
+tc-temp-mdwhigh-2026-10-26-gte70f                70 or above  bid None x0 ask 0.02 x158 | $ask5c 4 | traded 0.0000 notional 0.0000 OI None last 
+tc-temp-mdwlow-2026-10-26-gte52lt53f             52 to 53     bid 0.41 x28 ask 0.48 x28 | $ask5c 56 | traded 60.0000 notional 29.6000 OI 30.0000 last 2026-10-25T16:41:22
+tc-temp-mdwlow-2026-10-26-gte54lt55f             54 to 55     bid 0.34 x28 ask 0.4 x4 | $ask5c 54 | traded 134.2000 notional 32.9376 OI 28.9600 last 2026-10-25T21:29:00
+tc-temp-mdwlow-2026-10-26-gte50lt51f             50 to 51     bid 0.09 x28 ask 0.16 x28 | $ask5c 23 | traded 29.0000 notional 2.5200 OI 26.0000 last 2026-10-25T23:17:02
+tc-temp-mdwlow-2026-10-26-gte56f                 56 or above  bid 0.01 x28 ask 0.06 x39 | $ask5c 12 | traded 20.0000 notional 2.6000 OI 10.0000 last 2026-10-25T14:44:09
+tc-temp-mdwlow-2026-10-26-gte48lt49f             48 to 49     bid None x0 ask 0.05 x28 | $ask5c 8 | traded 0.0000 notional 0.0000 OI None last 
+tc-temp-mdwlow-2026-10-26-lt48f                  47 or below  bid None x0 ask 0.05 x2028 | $ask5c 108 | traded 0.0000 notional 0.0000 OI None last 
+tc-temp-laxhigh-2026-10-26-gte77lt78f            77 to 78     bid 0.7 x164 ask 0.71 x8 | $ask5c 465 | traded 876.3100 notional 481.4540 OI 508.3100 last 2026-10-25T22:01:44
+tc-temp-laxhigh-2026-10-26-gte75lt76f            75 to 76     bid 0.15 x127 ask 0.17 x164 | $ask5c 177 | traded 659.0000 notional 151.8100 OI 348.0000 last 2026-10-25T22:01:44
+tc-temp-laxhigh-2026-10-26-gte79f                79 or above  bid 0.12 x8 ask 0.13 x64 | $ask5c 117 | traded 1157.2600 notional 238.0984 OI 734.2600 last 2026-10-25T22:36:45
+tc-temp-laxhigh-2026-10-26-gte73lt74f            73 to 74     bid 0.01 x7500 ask 0.02 x168 | $ask5c 42 | traded 44.8500 notional 1.1310 OI 17.8500 last 2026-10-25T22:01:44
+tc-temp-laxhigh-2026-10-26-gte71lt72f            71 to 72     bid None x0 ask 0.01 x111 | $ask5c 33 | traded 1.0000 notional 0.0100 OI 1.0000 last 2026-10-25T21:15:42
+tc-temp-laxhigh-2026-10-26-lt71f                 70 or below  bid None x0 ask 0.01 x1413 | $ask5c 21 | traded 1.0000 notional 0.0100 OI 1.0000 last 2026-10-25T21:15:41
+tc-temp-sfohigh-2026-10-26-gte66lt67f            66 to 67     bid 0.51 x94 ask 0.53 x100 | $ask5c 99 | traded 116.0000 notional 58.8000 OI 58.0000 last 2026-10-25T20:04:21
+tc-temp-sfohigh-2026-10-26-gte68lt69f            68 to 69     bid 0.31 x99 ask 0.33 x37 | $ask5c 292 | traded 250.2300 notional 62.7440 OI 88.2400 last 2026-10-25T20:04:21
+tc-temp-sfohigh-2026-10-26-gte64lt65f            64 to 65     bid 0.09 x32 ask 0.11 x28 | $ask5c 41 | traded 482.0800 notional 76.6264 OI 197.0000 last 2026-10-25T23:09:35
+tc-temp-sfohigh-2026-10-26-gte70f                70 or above  bid 0.02 x1503 ask 0.03 x33 | $ask5c 126 | traded 0.0000 notional 0.0000 OI None last 
+tc-temp-sfohigh-2026-10-26-gte62lt63f            62 to 63     bid 0.01 x25 ask 0.02 x33 | $ask5c 14 | traded 200.0000 notional 4.0000 OI 100.0000 last 2026-10-25T17:03:11
+tc-temp-sfohigh-2026-10-26-lt62f                 61 or below  bid 0.01 x1 ask 0.02 x33 | $ask5c 8 | traded 0.0000 notional 0.0000 OI None last 
+tc-temp-phlhigh-2026-10-26-gte70lt71f            70 to 71     bid 0.53 x28 ask 0.6 x40 | $ask5c 303 | traded 307.8100 notional 122.1929 OI 107.8100 last 2026-10-25T21:08:07
+tc-temp-phlhigh-2026-10-26-gte72lt73f            72 to 73     bid 0.25 x80 ask 0.32 x28 | $ask5c 52 | traded 79.5600 notional 32.0362 OI 38.5300 last 2026-10-25T23:15:35
+tc-temp-phlhigh-2026-10-26-gte68lt69f            68 to 69     bid 0.1 x46 ask 0.14 x1 | $ask5c 45 | traded 2.0000 notional 0.2200 OI 1.0000 last 2026-10-25T14:36:51
+tc-temp-phlhigh-2026-10-26-gte74lt75f            74 to 75     bid 0.01 x109 ask 0.05 x4 | $ask5c 16 | traded 0.0000 notional 0.0000 OI None last 
+tc-temp-phlhigh-2026-10-26-gte76f                76 or above  bid None x0 ask 0.04 x4 | $ask5c 108 | traded 0.0000 notional 0.0000 OI None last 
+tc-temp-phlhigh-2026-10-26-lt68f                 67 or below  bid 0.01 x28 ask 0.06 x39 | $ask5c 10 | traded 0.0000 notional 0.0000 OI None last 
+rainc-rain-daily-2026-10-26-kmia                 Miami        bid 0.86 x10 ask 0.93 x20 | $ask5c 76 | traded 80.0000 notional 68.4000 OI 40.0000 last 2026-10-25T16:00:49
+rainc-rain-daily-2026-10-26-klax                 Los Angeles  bid None x0 ask 0.99 x25 | $ask5c 25 | traded 0.0000 notional 0.0000 OI None last 
+rainc-rain-daily-2026-10-26-knyc                 New York     bid None x0 ask 0.99 x50 | $ask5c 50 | traded 0.0000 notional 0.0000 OI None last 
+rainc-rain-daily-2026-10-26-kord                 Chicago      bid None x0 ask 0.99 x25 | $ask5c 25 | traded 0.0000 notional 0.0000 OI None last 
+rainc-rain-daily-2026-10-26-kphl                 Philadelphia bid None x0 ask 0.99 x50 | $ask5c 50 | traded 0.0000 notional 0.0000 OI None last 
+rainc-rain-daily-2026-10-26-ksfo                 San Francisc bid None x0 ask 0.99 x25 | $ask5c 25 | traded 0.0000 notional 0.0000 OI None last 

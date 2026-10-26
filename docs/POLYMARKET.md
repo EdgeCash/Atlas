@@ -54,8 +54,9 @@ Every run, heavy or poll (`python -m atlas.polymarket refresh`):
    and last seen. The rest of the ladder is read and priced, not kept. The
    gateway's game feed carries the top of each book but not what rests
    there, so the depth of a contract is read from its book
-   (`/v1/markets/{slug}/bbo`) only for the contracts that clear the rest of
-   the rule, up to forty a run (`positions.deepen`).
+   (`/v1/markets/{slug}/book`, the shares at the best ask alone; `/bbo`'s
+   share counts are the whole side summed) only for the contracts that
+   clear the rest of the rule, up to forty a run (`positions.deepen`).
 2. **Price** (`pricing.py`). For every contract, three probabilities:
    Polymarket's own (the two outcomes' midpoints normalised to one);
    Atlas's raw reading of the line (the fitted market shape centred on the
@@ -224,7 +225,8 @@ limit sent that late fills nothing. So from 24 October 2026 the rule can run
 as an always-on loop instead
 (`atlas/polymarket/worker.py`, `make polymarket-worker`): every 45 seconds
 while a game is in play (every three minutes while none is) it reads the
-four leagues' listings - about ten requests, fifty games a page, each game with its moneyline's top
+five leagues' listings (the four Atlas models and, from November, college
+basketball) - about ten requests, fifty games a page, each game with its moneyline's top
 of book and the venue's own period and clock - takes the crossings, grades
 the settled ones, writes `tracking/favorites.csv`, hands the new positions
 to the live step (late ones only unless `LIVE_PHASE` is `any`), grades the
@@ -375,15 +377,82 @@ not, is a row in a ledger sealed with the owner key beside the positions
 record (`tracking/polymarket_live/`), with the order id, the state, the
 fill and fee, and later the settlement and the profit; the owner page's
 Live tab sums it. To arm it for real: set the mode secret to `live`, the
-arming secret to the phrase, and the bankroll; to stop at once, change the
-mode secret.
+arming secret to the phrase, and the bankroll.
+
+Two more controls answer the venue's Rulebook (5.2(i) asks an automated
+system for "order throttles, price collars, and kill switches"). The
+**throttle** refuses an order once the run's mode has sent five in the last
+minute or fifty in the last day (`MAX_ORDERS_PER_MINUTE`,
+`MAX_ORDERS_PER_DAY`). The **kill switch** stops everything at once: every
+position is refused and nothing at all is sent to the venue, not even the
+balance read. Three ways to throw it:
+
+- **From anywhere, no restart:** commit a file named `KILL` to
+  `tracking/polymarket_live/` on the branch (GitHub's "Add file" on a phone
+  will do; its first line is the reason, shown on the owner page). The
+  worker reads the branch's copy every tick, so it holds within one tick
+  (45 seconds in play); the scheduled run holds at its next checkout.
+  Delete the file on the branch to lift it.
+- **On the worker's machine:** `touch /srv/atlas/tracking/polymarket_live/KILL`.
+  It holds at once, and the worker pushes it to the branch with the ledger,
+  so lifting it is the same: delete it on the branch.
+- **By variable:** set `POLYMARKET_US_KILL` to anything (the repository
+  variable for the scheduled run; the worker's environment file, then a
+  restart, for the worker).
+
+The price collar is the order itself: a limit at the ask the position was
+taken at, never a market order.
+
+Underneath the ledger is the **audit trail** the Rulebook's 5.2(h) asks
+for - "order entry, modification, cancellation, and execution timestamps
+sufficient to reconstruct all trading activity"
+(`atlas/polymarket/audit.py`, sealed with the owner key in
+`tracking/polymarket_audit/`, a file per ISO week). Every call the step
+makes to the venue is an event stamped to the millisecond in UTC: the
+balance read and what it said; each order's (or, dry, each preview's)
+exact request as it was sent; and the venue's answer in full - the order
+id, the executions with their prices, quantities and the venue's own
+timestamps, the commission and the state, or the error with its HTTP
+status and the body the venue sent - with the time it came back and the
+latency. A submit and its answer share a request id. Every position
+declined before the venue is an event too, with why (the kill switch, the
+throttle, a cap, the stop, the floor, not armed) and the order it would
+have been. A live order's submit is written to disk before the order is
+sent, and an order whose submit cannot be written is not sent. Orders are
+immediate-or-cancel, so nothing rests to be modified or cancelled: the
+venue cancels what does not fill at once, and its answer says so. The
+trail only grows; the worker and the scheduled run merge their copies by
+event.
+
+Once a day, from 6 AM Eastern, the trail is **reconciled** against the
+venue's own account history (`atlas/polymarket/reconcile.py`,
+`GET /v1/portfolio/activities`): every trade on the account in the previous
+Eastern day is matched by its trade id to an execution the trail recorded,
+and their quantity and price compared. What does not reconcile is named: a
+trade whose figures differ, a trade on the account the trail never recorded
+(one made by hand in the app, or a lost answer), a fill the trail recorded
+that the venue does not show, and a trade the venue busted or rejected
+after the fact. The same read checks the ledger's grades: each settlement
+the venue made of the account's positions that day is set beside the
+ledger's filled orders on that market - the contracts held going in, and
+the payout per contract (the realized profit the settlement added plus the
+position's cost, over its contracts) against the payout the ledger graded -
+and it names a settlement that differs, a market the venue settled that the
+ledger has not graded, a market the ledger graded that the account shows no
+settlement of (read three days back, since the ledger grades after the
+venue settles), and a settlement of a position the ledger does not hold (one
+bought by hand). The result is an event in the trail, and the owner page's
+Live tab states the latest ("everything agrees", or MISMATCH and what). A
+read that fails is recorded and tried again an hour later. The worker runs
+it, and the scheduled run as a backstop; `python -m atlas.polymarket.reconcile`
+runs it by hand (`--day YYYY-MM-DD` for any day, printed only).
 
 ## Paper only
 
 Nothing here buys anything. Before real money, confirm: that each market's
 fee coefficient is what the API says and the taker tier the account sits
 in; that the depth figure (the shares resting at the best ask times the
-price, from `/v1/markets/{slug}/bbo`) fills at that price for the size
+price, from `/v1/markets/{slug}/book`) fills at that price for the size
 meant; and that the settlement rules the pricing assumes (a player who does
 not play settled at the last fair price; a game moved more than two days
 settled the same way) are the ones on each market's page.

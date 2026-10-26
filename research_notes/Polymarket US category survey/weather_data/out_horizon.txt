@@ -1,0 +1,50 @@
+events with full hourly history: 874
+Yes-ask bin | window: n hourly obs, mean ask, win rate, buy-Yes pnl/contract after fee, buy-No pnl after fee
+  0.00-0.03 | D-1 (any hour) : n  9172 ask 0.017 won 0.003  Yes -1.51c  No +0.60c
+  0.00-0.03 | D 00-09 LST    : n  8185 ask 0.016 won 0.003  Yes -1.37c  No +0.69c
+  0.00-0.03 | D 09-12        : n  5196 ask 0.012 won 0.001  Yes -1.17c  No +0.83c
+  0.00-0.03 | D 12-15        : n  8474 ask 0.011 won 0.000  Yes -1.18c  No +0.93c
+  0.00-0.03 | D 15-18        : n 11032 ask 0.011 won 0.000  Yes -1.14c  No +0.95c
+  0.00-0.03 | D 18-24        : n 23811 ask 0.010 won 0.000  Yes -1.10c  No +0.94c
+  0.03-0.10 | D-1 (any hour) : n 25484 ask 0.053 won 0.023  Yes -3.32c  No +0.58c
+  0.03-0.10 | D 00-09 LST    : n 13201 ask 0.051 won 0.023  Yes -3.09c  No +0.52c
+  0.03-0.10 | D 09-12        : n  2997 ask 0.052 won 0.026  Yes -2.93c  No +0.02c
+  0.03-0.10 | D 12-15        : n  1807 ask 0.049 won 0.014  Yes -3.83c  No +0.82c
+  0.03-0.10 | D 15-18        : n   657 ask 0.045 won 0.012  Yes -3.56c  No +0.87c
+  0.03-0.10 | D 18-24        : n   659 ask 0.044 won 0.015  Yes -3.22c  No +0.74c
+  0.10-0.30 | D-1 (any hour) : n 27521 ask 0.188 won 0.150  Yes -4.74c  No -1.60c
+  0.10-0.30 | D 00-09 LST    : n 10773 ask 0.182 won 0.151  Yes -4.12c  No -1.74c
+  0.10-0.30 | D 09-12        : n  2444 ask 0.184 won 0.157  Yes -3.71c  No -3.14c
+  0.10-0.30 | D 12-15        : n  1108 ask 0.174 won 0.107  Yes -7.61c  No -0.46c
+  0.10-0.30 | D 15-18        : n   223 ask 0.159 won 0.067  Yes -10.11c  No -0.05c
+  0.10-0.30 | D 18-24        : n   186 ask 0.152 won 0.022  Yes -13.93c  No +3.62c
+  0.30-0.50 | D-1 (any hour) : n 19928 ask 0.389 won 0.330  Yes -7.60c  No -4.76c
+  0.30-0.50 | D 00-09 LST    : n  7552 ask 0.390 won 0.354  Yes -5.22c  No -2.81c
+  0.30-0.50 | D 09-12        : n  1699 ask 0.392 won 0.343  Yes -6.56c  No -3.98c
+  0.30-0.50 | D 12-15        : n   619 ask 0.383 won 0.330  Yes -7.00c  No -6.18c
+  0.30-0.50 | D 15-18        : n    80 ask 0.383 won 0.113  Yes -28.62c  No +5.02c
+  0.30-0.50 | D 18-24        : n    67 ask 0.395 won 0.104  Yes -30.69c  No +7.21c
+  0.50-0.70 | D-1 (any hour) : n 14422 ask 0.558 won 0.318  Yes -25.77c  No -2.51c
+  0.50-0.70 | D 00-09 LST    : n  4756 ask 0.573 won 0.507  Yes -8.32c  No -1.37c
+  0.50-0.70 | D 09-12        : n  1442 ask 0.583 won 0.491  Yes -10.88c  No -0.50c
+  0.50-0.70 | D 12-15        : n   602 ask 0.582 won 0.472  Yes -12.67c  No -1.43c
+  0.50-0.70 | D 15-18        : n   151 ask 0.538 won 0.252  Yes -30.29c  No +14.37c
+  0.50-0.70 | D 18-24        : n   238 ask 0.519 won 0.172  Yes -36.35c  No +24.82c
+  0.70-0.90 | D-1 (any hour) : n   944 ask 0.788 won 0.521  Yes -27.83c  No -4.66c
+  0.70-0.90 | D 00-09 LST    : n   904 ask 0.776 won 0.608  Yes -17.91c  No -2.03c
+  0.70-0.90 | D 09-12        : n   763 ask 0.778 won 0.712  Yes -7.80c  No -5.65c
+  0.70-0.90 | D 12-15        : n   657 ask 0.805 won 0.758  Yes -5.77c  No -9.78c
+  0.70-0.90 | D 15-18        : n    77 ask 0.815 won 0.636  Yes -18.93c  No -7.12c
+  0.70-0.90 | D 18-24        : n    43 ask 0.810 won 0.442  Yes -37.81c  No -7.42c
+  0.90-0.95 | D-1 (any hour) : n   580 ask 0.927 won 0.319  Yes -61.24c  No -15.76c
+  0.90-0.95 | D 00-09 LST    : n   206 ask 0.923 won 0.607  Yes -32.07c  No -14.82c
+  0.90-0.95 | D 09-12        : n   146 ask 0.916 won 0.801  Yes -12.03c  No -4.70c
+  0.90-0.95 | D 12-15        : n   319 ask 0.922 won 0.865  Yes -6.16c  No -5.98c
+  0.90-0.95 | D 15-18        : n    88 ask 0.921 won 0.830  Yes -9.67c  No -14.62c
+  0.90-0.95 | D 18-24        : n    52 ask 0.925 won 0.846  Yes -8.38c  No -26.68c
+  0.95-0.99 | D-1 (any hour) : n  1100 ask 0.968 won 0.164  Yes -80.61c  No +16.92c
+  0.95-0.99 | D 00-09 LST    : n   332 ask 0.967 won 0.358  Yes -61.09c  No +1.38c
+  0.95-0.99 | D 09-12        : n   150 ask 0.965 won 0.747  Yes -22.07c  No -3.73c
+  0.95-0.99 | D 12-15        : n   560 ask 0.970 won 0.929  Yes -4.31c  No -5.76c
+  0.95-0.99 | D 15-18        : n   389 ask 0.973 won 0.938  Yes -3.69c  No -8.07c
+  0.95-0.99 | D 18-24        : n   426 ask 0.977 won 0.944  Yes -3.45c  No -4.59c

@@ -56,9 +56,9 @@ GRADE_AFTER = timedelta(hours=4)
 SETTLEMENT_READS = 40
 COLUMNS = ["formed_at", "threshold", "phase", "minutes_in", "sport", "game_id", "event_id", "event_slug", "game_start",
            "label", "market", "side", "long", "line", "market_id", "market_slug", "token_id", "ask", "bid", "spread",
-           "fee_rate", "fee", "cost", "payout", "won", "profit", "graded_at", "period", "clock", "late"]
+           "fee_rate", "fee", "cost", "payout", "won", "profit", "graded_at", "period", "clock", "late", "tick"]
 #: The regulation periods a sport plays: in that period or past it (overtime), a position is late.
-FINAL_PERIOD = {"nba": 4, "nfl": 4, "ncaaf": 4, "nhl": 3}
+FINAL_PERIOD = {"nba": 4, "nfl": 4, "ncaaf": 4, "nhl": 3, "ncaab": 2}
 #: The variable that widens the live step from late positions (unset, ``late``) to every crossing (``any``).
 #: Late is the default since 24 October 2026: on the venue's own tape (``reports/favorites_backtest.md``, with
 #: late defined as it can be known during the game) a late favorite on a tight book has lost about a point
@@ -209,7 +209,8 @@ def take(record: pd.DataFrame, quotes: pd.DataFrame, now: datetime, games: pd.Da
                 "long": bool(_truthy(x.long)), "line": x.line, "market_id": x.market_id, "market_slug": x.market_slug,
                 "token_id": ident(x.token_id), "ask": ask, "bid": source._num(x.bid), "spread": source._num(x.spread),
                 "fee_rate": fee_rate, "fee": fee, "cost": ask + (fee if math.isfinite(fee) else 0.0),
-                "payout": float("nan"), "won": float("nan"), "profit": float("nan"), "graded_at": None})
+                "payout": float("nan"), "won": float("nan"), "profit": float("nan"), "graded_at": None,
+                "tick": source._num(getattr(x, "tick", float("nan")))})
     if not rows:
         return record, 0
     new = pd.DataFrame(rows, columns=COLUMNS)
@@ -411,7 +412,8 @@ def as_positions(rows: pd.DataFrame) -> pd.DataFrame:
         "market": rows["market"], "side": rows["side"], "long": rows["long"], "line": rows["line"],
         "token_id": rows["token_id"], "market_id": rows["market_id"], "market_slug": rows["market_slug"],
         "event_slug": rows["event_slug"], "ask": rows["ask"], "fee_rate": rows["fee_rate"], "fee": rows["fee"],
-        "cost": rows["cost"], "stake": 1.0, "spread": rows["spread"]})
+        "cost": rows["cost"], "stake": 1.0, "spread": rows["spread"],
+        "tick": rows["tick"] if "tick" in rows else float("nan")})
     return out.reindex(columns=positions.COLUMNS)
 
 

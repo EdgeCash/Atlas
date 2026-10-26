@@ -21,6 +21,7 @@ from atlas.live import probability
 from atlas.live.store import Store
 from atlas.owner import crypto
 from atlas.polymarket import (
+    audit,
     favorites,
     finish,
     match,
@@ -29,6 +30,7 @@ from atlas.polymarket import (
     positions,
     pricing,
     props,
+    reconcile,
     report,
     source,
 )
@@ -102,8 +104,13 @@ def refresh(*, now: datetime | None = None, heavy: bool = False, store: Store | 
             finals = paper.results(research, store.read("games"))
             chosen, graded = positions.run(priced, finals, record, passphrase, now)
             ledger = orders.grade(orders.load(passphrase), passphrase, now) if orders.mode() != "off" else orders.load(passphrase)
+            # The audit trail against the venue's account activity, once a day (the worker's too, whichever
+            # comes first); the latest result goes on the owner page.
+            if orders.mode() != "off":
+                reconcile.daily(passphrase, now)
+            checked = reconcile.latest(audit.load(passphrase))
             sections = [*page.sections(priced, chosen, graded, now), *prop_sections, fav_section,
-                        finish.section(store.read(finish.TABLE), now), orders.section(ledger, now)]
+                        finish.section(store.read(finish.TABLE), now), orders.section(ledger, now, checked)]
         else:
             reason = "The owner key is not configured."
     except Exception as error:  # noqa: BLE001 - the type only: a message could quote a price

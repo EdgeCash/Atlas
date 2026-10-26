@@ -233,6 +233,11 @@ jobs:
           MAX_OPEN_DOLLARS: ${{ vars.MAX_OPEN_DOLLARS }}
           LOSS_STOP_DOLLARS: ${{ vars.LOSS_STOP_DOLLARS }}
           BALANCE_FLOOR: ${{ vars.BALANCE_FLOOR }}
+          # The throttle (orders a minute and a day), and the kill switch: set to anything and nothing goes
+          # to the venue. A file named KILL in tracking/polymarket_live/ on the branch does the same.
+          MAX_ORDERS_PER_MINUTE: ${{ vars.MAX_ORDERS_PER_MINUTE }}
+          MAX_ORDERS_PER_DAY: ${{ vars.MAX_ORDERS_PER_DAY }}
+          POLYMARKET_US_KILL: ${{ vars.POLYMARKET_US_KILL }}
           LIVE_RULES: ${{ vars.LIVE_RULES }}
           # Late positions only unless the variable says `any` (atlas/polymarket/favorites.py).
           LIVE_PHASE: ${{ vars.LIVE_PHASE }}

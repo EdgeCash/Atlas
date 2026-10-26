@@ -1,0 +1,2350 @@
+{
+"KXPAYROLLS-26OCT": [
+{
+"ticker": "KXPAYROLLS-26OCT-T-25000",
+"yes_sub_title": "Above -25,000",
+"yes_bid_dollars": "0.9300",
+"yes_ask_dollars": "0.9400",
+"volume_fp": "5329.24",
+"open_interest_fp": "3784.90",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above -25000 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXPAYROLLS-26OCT-T0",
+"yes_sub_title": "Above 0",
+"yes_bid_dollars": "0.8400",
+"yes_ask_dollars": "0.8800",
+"volume_fp": "4729.28",
+"open_interest_fp": "2110.18",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above 0 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXPAYROLLS-26OCT-T10000",
+"yes_sub_title": "Above 10,000",
+"yes_bid_dollars": "0.7900",
+"yes_ask_dollars": "0.8300",
+"volume_fp": "1569.23",
+"open_interest_fp": "1322.00",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above 10000 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXPAYROLLS-26OCT-T20000",
+"yes_sub_title": "Above 20,000",
+"yes_bid_dollars": "0.7100",
+"yes_ask_dollars": "0.7600",
+"volume_fp": "12257.13",
+"open_interest_fp": "11760.13",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above 20000 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXPAYROLLS-26OCT-T30000",
+"yes_sub_title": "Above 30,000",
+"yes_bid_dollars": "0.6400",
+"yes_ask_dollars": "0.7100",
+"volume_fp": "27610.86",
+"open_interest_fp": "21090.11",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above 30000 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXPAYROLLS-26OCT-T40000",
+"yes_sub_title": "Above 40,000",
+"yes_bid_dollars": "0.6200",
+"yes_ask_dollars": "0.6800",
+"volume_fp": "11519.57",
+"open_interest_fp": "10595.00",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above 40000 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXPAYROLLS-26OCT-T50000",
+"yes_sub_title": "Above 50,000",
+"yes_bid_dollars": "0.5800",
+"yes_ask_dollars": "0.5900",
+"volume_fp": "22411.98",
+"open_interest_fp": "20227.61",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above 50000 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXPAYROLLS-26OCT-T60000",
+"yes_sub_title": "Above 60,000",
+"yes_bid_dollars": "0.5300",
+"yes_ask_dollars": "0.5800",
+"volume_fp": "2146.69",
+"open_interest_fp": "1307.09",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above 60000 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXPAYROLLS-26OCT-T70000",
+"yes_sub_title": "Above 70,000",
+"yes_bid_dollars": "0.5100",
+"yes_ask_dollars": "0.5200",
+"volume_fp": "24169.81",
+"open_interest_fp": "23295.21",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above 70000 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXPAYROLLS-26OCT-T80000",
+"yes_sub_title": "Above 80,000",
+"yes_bid_dollars": "0.4100",
+"yes_ask_dollars": "0.4800",
+"volume_fp": "15310.01",
+"open_interest_fp": "13438.26",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above 80000 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXPAYROLLS-26OCT-T90000",
+"yes_sub_title": "Above 90,000",
+"yes_bid_dollars": "0.3300",
+"yes_ask_dollars": "0.3800",
+"volume_fp": "2435.00",
+"open_interest_fp": "2057.00",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above 90000 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXPAYROLLS-26OCT-T100000",
+"yes_sub_title": "Above 100,000",
+"yes_bid_dollars": "0.2700",
+"yes_ask_dollars": "0.2800",
+"volume_fp": "3472.58",
+"open_interest_fp": "2460.47",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above 100000 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXPAYROLLS-26OCT-T125000",
+"yes_sub_title": "Above 125,000",
+"yes_bid_dollars": "0.1200",
+"yes_ask_dollars": "0.1700",
+"volume_fp": "3883.00",
+"open_interest_fp": "2198.00",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above 125000 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of October 2026, then the market resolves to Yes."
+}
+],
+"KXPAYROLLS-26NOV": [
+{
+"ticker": "KXPAYROLLS-26NOV-T-25000",
+"yes_sub_title": "Above -25,000",
+"yes_bid_dollars": "0.8000",
+"yes_ask_dollars": "0.8800",
+"volume_fp": "889.24",
+"open_interest_fp": "294.07",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above -25000 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXPAYROLLS-26NOV-T0",
+"yes_sub_title": "Above 0",
+"yes_bid_dollars": "0.7300",
+"yes_ask_dollars": "0.8300",
+"volume_fp": "524.64",
+"open_interest_fp": "245.44",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above 0 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXPAYROLLS-26NOV-T10000",
+"yes_sub_title": "Above 10,000",
+"yes_bid_dollars": "0.6900",
+"yes_ask_dollars": "0.7900",
+"volume_fp": "345.78",
+"open_interest_fp": "86.78",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above 10000 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXPAYROLLS-26NOV-T20000",
+"yes_sub_title": "Above 20,000",
+"yes_bid_dollars": "0.6600",
+"yes_ask_dollars": "0.7600",
+"volume_fp": "273.10",
+"open_interest_fp": "100.00",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above 20000 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXPAYROLLS-26NOV-T30000",
+"yes_sub_title": "Above 30,000",
+"yes_bid_dollars": "0.6100",
+"yes_ask_dollars": "0.7000",
+"volume_fp": "698.88",
+"open_interest_fp": "192.88",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above 30000 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXPAYROLLS-26NOV-T40000",
+"yes_sub_title": "Above 40,000",
+"yes_bid_dollars": "0.5800",
+"yes_ask_dollars": "0.6800",
+"volume_fp": "269.51",
+"open_interest_fp": "13.45",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above 40000 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXPAYROLLS-26NOV-T50000",
+"yes_sub_title": "Above 50,000",
+"yes_bid_dollars": "0.5400",
+"yes_ask_dollars": "0.6400",
+"volume_fp": "583.57",
+"open_interest_fp": "119.06",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above 50000 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXPAYROLLS-26NOV-T60000",
+"yes_sub_title": "Above 60,000",
+"yes_bid_dollars": "0.4900",
+"yes_ask_dollars": "0.5900",
+"volume_fp": "538.04",
+"open_interest_fp": "170.98",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above 60000 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXPAYROLLS-26NOV-T70000",
+"yes_sub_title": "Above 70,000",
+"yes_bid_dollars": "0.4300",
+"yes_ask_dollars": "0.5300",
+"volume_fp": "311.00",
+"open_interest_fp": "50.00",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above 70000 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXPAYROLLS-26NOV-T80000",
+"yes_sub_title": "Above 80,000",
+"yes_bid_dollars": "0.3700",
+"yes_ask_dollars": "0.4500",
+"volume_fp": "443.01",
+"open_interest_fp": "117.00",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above 80000 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXPAYROLLS-26NOV-T90000",
+"yes_sub_title": "Above 90,000",
+"yes_bid_dollars": "0.3200",
+"yes_ask_dollars": "0.4200",
+"volume_fp": "707.10",
+"open_interest_fp": "215.10",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above 90000 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXPAYROLLS-26NOV-T100000",
+"yes_sub_title": "Above 100,000",
+"yes_bid_dollars": "0.2600",
+"yes_ask_dollars": "0.3600",
+"volume_fp": "84.00",
+"open_interest_fp": "12.00",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above 100000 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXPAYROLLS-26NOV-T125000",
+"yes_sub_title": "Above 125,000",
+"yes_bid_dollars": "0.1400",
+"yes_ask_dollars": "0.2400",
+"volume_fp": "1624.00",
+"open_interest_fp": "178.00",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the increase in total non-farm payroll employment is above 125000 as reported by the Bureau of Labor Statistics Monthly Employment Situation Report for the month of November 2026, then the market resolves to Yes."
+}
+],
+"KXFEDDECISION-26OCT": [
+{
+"ticker": "KXFEDDECISION-26OCT-C26",
+"yes_sub_title": "Cut >25bps",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0100",
+"volume_fp": "246653.69",
+"open_interest_fp": "233200.24",
+"close_time": "2026-10-28T17:59:00Z",
+"rules_primary": "If the Federal Reserve does a Cut of   25bps on October 28, 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXFEDDECISION-26OCT-C25",
+"yes_sub_title": "Cut 25bps",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0100",
+"volume_fp": "1530541.22",
+"open_interest_fp": "1411600.96",
+"close_time": "2026-10-28T17:59:00Z",
+"rules_primary": "If the Federal Reserve does a Cut of 25bps on October 28, 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXFEDDECISION-26OCT-H0",
+"yes_sub_title": "Fed maintains rate",
+"yes_bid_dollars": "0.9200",
+"yes_ask_dollars": "0.9300",
+"volume_fp": "7529982.07",
+"open_interest_fp": "3040019.81",
+"close_time": "2026-10-28T17:59:00Z",
+"rules_primary": "If the Federal Reserve does a Hike of 0bps on October 28, 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXFEDDECISION-26OCT-H25",
+"yes_sub_title": "Hike 25bps",
+"yes_bid_dollars": "0.0600",
+"yes_ask_dollars": "0.0800",
+"volume_fp": "5508369.25",
+"open_interest_fp": "2299982.56",
+"close_time": "2026-10-28T17:59:00Z",
+"rules_primary": "If the Federal Reserve does a Hike of 25bps on October 28, 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXFEDDECISION-26OCT-H26",
+"yes_sub_title": "Hike >25bps",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0100",
+"volume_fp": "1028840.73",
+"open_interest_fp": "932341.88",
+"close_time": "2026-10-28T17:59:00Z",
+"rules_primary": "If the Federal Reserve does a Hike of   25bps on October 28, 2026, then the market resolves to Yes."
+}
+],
+"KXFEDDECISION-26DEC": [
+{
+"ticker": "KXFEDDECISION-26DEC-C26",
+"yes_sub_title": "Cut >25bps",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0100",
+"volume_fp": "137682.14",
+"open_interest_fp": "129343.84",
+"close_time": "2026-12-09T18:59:00Z",
+"rules_primary": "If the Federal Reserve does a Cut of   25bps on December 09, 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXFEDDECISION-26DEC-C25",
+"yes_sub_title": "Cut 25bps",
+"yes_bid_dollars": "0.0100",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "228877.89",
+"open_interest_fp": "194376.73",
+"close_time": "2026-12-09T18:59:00Z",
+"rules_primary": "If the Federal Reserve does a Cut of 25bps on December 09, 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXFEDDECISION-26DEC-H0",
+"yes_sub_title": "Fed maintains rate",
+"yes_bid_dollars": "0.2300",
+"yes_ask_dollars": "0.2400",
+"volume_fp": "429687.30",
+"open_interest_fp": "265305.46",
+"close_time": "2026-12-09T18:59:00Z",
+"rules_primary": "If the Federal Reserve does a Hike of 0bps on December 09, 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXFEDDECISION-26DEC-H25",
+"yes_sub_title": "Hike 25bps",
+"yes_bid_dollars": "0.7400",
+"yes_ask_dollars": "0.7500",
+"volume_fp": "257571.11",
+"open_interest_fp": "154790.51",
+"close_time": "2026-12-09T18:59:00Z",
+"rules_primary": "If the Federal Reserve does a Hike of 25bps on December 09, 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXFEDDECISION-26DEC-H26",
+"yes_sub_title": "Hike >25bps",
+"yes_bid_dollars": "0.0400",
+"yes_ask_dollars": "0.0500",
+"volume_fp": "297110.46",
+"open_interest_fp": "216327.47",
+"close_time": "2026-12-09T18:59:00Z",
+"rules_primary": "If the Federal Reserve does a Hike of   25bps on December 09, 2026, then the market resolves to Yes."
+}
+],
+"KXU3-26OCT": [
+{
+"ticker": "KXU3-26OCT-T3.7",
+"yes_sub_title": "Above 3.7%",
+"yes_bid_dollars": "0.9900",
+"yes_ask_dollars": "1.0000",
+"volume_fp": "3713.03",
+"open_interest_fp": "2959.01",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 3.7% in October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26OCT-T3.8",
+"yes_sub_title": "Above 3.8%",
+"yes_bid_dollars": "0.9800",
+"yes_ask_dollars": "0.9900",
+"volume_fp": "10857.98",
+"open_interest_fp": "9010.97",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 3.8% in October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26OCT-T3.9",
+"yes_sub_title": "Above 3.9%",
+"yes_bid_dollars": "0.9700",
+"yes_ask_dollars": "0.9900",
+"volume_fp": "8565.92",
+"open_interest_fp": "2352.04",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 3.9% in October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26OCT-T4.0",
+"yes_sub_title": "Above 4.0%",
+"yes_bid_dollars": "0.9400",
+"yes_ask_dollars": "0.9500",
+"volume_fp": "11952.81",
+"open_interest_fp": "4863.50",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 4.0% in October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26OCT-T4.1",
+"yes_sub_title": "Above 4.1%",
+"yes_bid_dollars": "0.6800",
+"yes_ask_dollars": "0.7200",
+"volume_fp": "51514.26",
+"open_interest_fp": "43305.42",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 4.1% in October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26OCT-T4.2",
+"yes_sub_title": "Above 4.2%",
+"yes_bid_dollars": "0.3200",
+"yes_ask_dollars": "0.3400",
+"volume_fp": "13376.86",
+"open_interest_fp": "5571.74",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 4.2% in October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26OCT-T4.3",
+"yes_sub_title": "Above 4.3%",
+"yes_bid_dollars": "0.0500",
+"yes_ask_dollars": "0.0900",
+"volume_fp": "11304.34",
+"open_interest_fp": "7110.25",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 4.3% in October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26OCT-T4.4",
+"yes_sub_title": "Above 4.4%",
+"yes_bid_dollars": "0.0100",
+"yes_ask_dollars": "0.0300",
+"volume_fp": "12410.93",
+"open_interest_fp": "9667.25",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 4.4% in October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26OCT-T4.5",
+"yes_sub_title": "Above 4.5%",
+"yes_bid_dollars": "0.0100",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "30257.72",
+"open_interest_fp": "29330.29",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 4.5% in October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26OCT-T4.6",
+"yes_sub_title": "Above 4.6%",
+"yes_bid_dollars": "0.0100",
+"yes_ask_dollars": "0.0300",
+"volume_fp": "5097.24",
+"open_interest_fp": "4245.02",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 4.6% in October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26OCT-T4.7",
+"yes_sub_title": "Above 4.7%",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0300",
+"volume_fp": "5898.76",
+"open_interest_fp": "3427.05",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 4.7% in October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26OCT-T4.8",
+"yes_sub_title": "Above 4.8%",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0300",
+"volume_fp": "2086.48",
+"open_interest_fp": "1299.00",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 4.8% in October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26OCT-T4.9",
+"yes_sub_title": "Above 4.9%",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "1986.02",
+"open_interest_fp": "1576.01",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 4.9% in October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26OCT-T5.0",
+"yes_sub_title": "Above 5.0%",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "2158.59",
+"open_interest_fp": "1701.84",
+"close_time": "2026-11-06T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 5.0% in October 2026, then the market resolves to Yes."
+}
+],
+"KXU3-26NOV": [
+{
+"ticker": "KXU3-26NOV-T3.7",
+"yes_sub_title": "Above 3.7%",
+"yes_bid_dollars": "0.9300",
+"yes_ask_dollars": "0.9900",
+"volume_fp": "2101.98",
+"open_interest_fp": "1566.24",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 3.7% in November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26NOV-T3.8",
+"yes_sub_title": "Above 3.8%",
+"yes_bid_dollars": "0.9000",
+"yes_ask_dollars": "0.9500",
+"volume_fp": "2093.56",
+"open_interest_fp": "766.01",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 3.8% in November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26NOV-T3.9",
+"yes_sub_title": "Above 3.9%",
+"yes_bid_dollars": "0.8000",
+"yes_ask_dollars": "0.8500",
+"volume_fp": "1376.67",
+"open_interest_fp": "502.68",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 3.9% in November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26NOV-T4.0",
+"yes_sub_title": "Above 4.0%",
+"yes_bid_dollars": "0.7500",
+"yes_ask_dollars": "0.7600",
+"volume_fp": "1857.16",
+"open_interest_fp": "1145.23",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 4.0% in November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26NOV-T4.1",
+"yes_sub_title": "Above 4.1%",
+"yes_bid_dollars": "0.4600",
+"yes_ask_dollars": "0.5400",
+"volume_fp": "3419.88",
+"open_interest_fp": "1892.95",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 4.1% in November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26NOV-T4.2",
+"yes_sub_title": "Above 4.2%",
+"yes_bid_dollars": "0.1700",
+"yes_ask_dollars": "0.1800",
+"volume_fp": "4213.10",
+"open_interest_fp": "1906.52",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 4.2% in November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26NOV-T4.3",
+"yes_sub_title": "Above 4.3%",
+"yes_bid_dollars": "0.0800",
+"yes_ask_dollars": "0.0900",
+"volume_fp": "3835.99",
+"open_interest_fp": "2951.03",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 4.3% in November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26NOV-T4.4",
+"yes_sub_title": "Above 4.4%",
+"yes_bid_dollars": "0.0200",
+"yes_ask_dollars": "0.0700",
+"volume_fp": "1134.24",
+"open_interest_fp": "460.00",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 4.4% in November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26NOV-T4.5",
+"yes_sub_title": "Above 4.5%",
+"yes_bid_dollars": "0.0300",
+"yes_ask_dollars": "0.0700",
+"volume_fp": "1198.26",
+"open_interest_fp": "599.26",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 4.5% in November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26NOV-T4.6",
+"yes_sub_title": "Above 4.6%",
+"yes_bid_dollars": "0.0300",
+"yes_ask_dollars": "0.0700",
+"volume_fp": "1748.00",
+"open_interest_fp": "880.00",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 4.6% in November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26NOV-T4.7",
+"yes_sub_title": "Above 4.7%",
+"yes_bid_dollars": "0.0300",
+"yes_ask_dollars": "0.0600",
+"volume_fp": "115.00",
+"open_interest_fp": "80.00",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 4.7% in November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26NOV-T4.8",
+"yes_sub_title": "Above 4.8%",
+"yes_bid_dollars": "0.0200",
+"yes_ask_dollars": "0.0500",
+"volume_fp": "438.01",
+"open_interest_fp": "24.01",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 4.8% in November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26NOV-T4.9",
+"yes_sub_title": "Above 4.9%",
+"yes_bid_dollars": "0.0100",
+"yes_ask_dollars": "0.0300",
+"volume_fp": "60.02",
+"open_interest_fp": "12.01",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 4.9% in November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXU3-26NOV-T5.0",
+"yes_sub_title": "Above 5.0%",
+"yes_bid_dollars": "0.0100",
+"yes_ask_dollars": "0.0500",
+"volume_fp": "61.00",
+"open_interest_fp": "29.00",
+"close_time": "2026-12-04T13:29:00Z",
+"rules_primary": "If the seasonally adjusted unemployment rate (U-3) reported by the Bureau of Labor Statistics in the Employment Situation Report is above 5.0% in November 2026, then the market resolves to Yes."
+}
+],
+"KXCPICOREYOY-26NOV": [
+{
+"ticker": "KXCPICOREYOY-26NOV-T2.0",
+"yes_sub_title": "Above 2.0%",
+"yes_bid_dollars": "0.9800",
+"yes_ask_dollars": "0.9900",
+"volume_fp": "12934.00",
+"open_interest_fp": "3506.00",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 2.0% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26NOV-T2.1",
+"yes_sub_title": "Above 2.1%",
+"yes_bid_dollars": "0.9800",
+"yes_ask_dollars": "0.9900",
+"volume_fp": "2473.28",
+"open_interest_fp": "716.01",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 2.1% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26NOV-T2.2",
+"yes_sub_title": "Above 2.2%",
+"yes_bid_dollars": "0.9800",
+"yes_ask_dollars": "0.9900",
+"volume_fp": "45074.28",
+"open_interest_fp": "22043.09",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 2.2% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26NOV-T2.3",
+"yes_sub_title": "Above 2.3%",
+"yes_bid_dollars": "0.9800",
+"yes_ask_dollars": "0.9900",
+"volume_fp": "15354.42",
+"open_interest_fp": "8933.06",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 2.3% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26NOV-T2.4",
+"yes_sub_title": "Above 2.4%",
+"yes_bid_dollars": "0.9800",
+"yes_ask_dollars": "0.9900",
+"volume_fp": "23259.34",
+"open_interest_fp": "12387.76",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 2.4% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26NOV-T2.5",
+"yes_sub_title": "Above 2.5%",
+"yes_bid_dollars": "0.9400",
+"yes_ask_dollars": "0.9500",
+"volume_fp": "11542.14",
+"open_interest_fp": "3812.63",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 2.5% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26NOV-T2.6",
+"yes_sub_title": "Above 2.6%",
+"yes_bid_dollars": "0.9000",
+"yes_ask_dollars": "0.9100",
+"volume_fp": "16594.47",
+"open_interest_fp": "7990.99",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 2.6% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26NOV-T2.7",
+"yes_sub_title": "Above 2.7%",
+"yes_bid_dollars": "0.7800",
+"yes_ask_dollars": "0.7900",
+"volume_fp": "11620.38",
+"open_interest_fp": "7186.44",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 2.7% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26NOV-T2.8",
+"yes_sub_title": "Above 2.8%",
+"yes_bid_dollars": "0.5800",
+"yes_ask_dollars": "0.5900",
+"volume_fp": "10361.36",
+"open_interest_fp": "2049.47",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 2.8% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26NOV-T2.9",
+"yes_sub_title": "Above 2.9%",
+"yes_bid_dollars": "0.3300",
+"yes_ask_dollars": "0.3400",
+"volume_fp": "49001.55",
+"open_interest_fp": "40380.85",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 2.9% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26NOV-T3.0",
+"yes_sub_title": "Above 3.0%",
+"yes_bid_dollars": "0.2100",
+"yes_ask_dollars": "0.2200",
+"volume_fp": "9514.94",
+"open_interest_fp": "4694.38",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 3.0% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26NOV-T3.1",
+"yes_sub_title": "Above 3.1%",
+"yes_bid_dollars": "0.1100",
+"yes_ask_dollars": "0.1200",
+"volume_fp": "17399.58",
+"open_interest_fp": "3193.62",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 3.1% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26NOV-T3.2",
+"yes_sub_title": "Above 3.2%",
+"yes_bid_dollars": "0.0400",
+"yes_ask_dollars": "0.0500",
+"volume_fp": "7496.82",
+"open_interest_fp": "897.13",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 3.2% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26NOV-T3.3",
+"yes_sub_title": "Above 3.3%",
+"yes_bid_dollars": "0.0200",
+"yes_ask_dollars": "0.0300",
+"volume_fp": "15003.02",
+"open_interest_fp": "2235.20",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 3.3% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26NOV-T3.4",
+"yes_sub_title": "Above 3.4%",
+"yes_bid_dollars": "0.0200",
+"yes_ask_dollars": "0.0300",
+"volume_fp": "16459.54",
+"open_interest_fp": "2255.95",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 3.4% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26NOV-T3.5",
+"yes_sub_title": "Above 3.5%",
+"yes_bid_dollars": "0.0100",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "12219.25",
+"open_interest_fp": "1760.15",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 3.5% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+}
+],
+"KXCPICOREYOY-26DEC": [
+{
+"ticker": "KXCPICOREYOY-26DEC-T2.1",
+"yes_sub_title": "Above 2.1%",
+"yes_bid_dollars": "0.9800",
+"yes_ask_dollars": "0.9900",
+"volume_fp": "2775.00",
+"open_interest_fp": "2775.00",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 2.1% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26DEC-T2.2",
+"yes_sub_title": "Above 2.2%",
+"yes_bid_dollars": "0.9600",
+"yes_ask_dollars": "0.9700",
+"volume_fp": "8837.43",
+"open_interest_fp": "3518.23",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 2.2% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26DEC-T2.3",
+"yes_sub_title": "Above 2.3%",
+"yes_bid_dollars": "0.9500",
+"yes_ask_dollars": "0.9600",
+"volume_fp": "5672.59",
+"open_interest_fp": "2951.00",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 2.3% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26DEC-T2.4",
+"yes_sub_title": "Above 2.4%",
+"yes_bid_dollars": "0.9500",
+"yes_ask_dollars": "0.9600",
+"volume_fp": "6738.06",
+"open_interest_fp": "3154.00",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 2.4% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26DEC-T2.5",
+"yes_sub_title": "Above 2.5%",
+"yes_bid_dollars": "0.9400",
+"yes_ask_dollars": "0.9500",
+"volume_fp": "21916.87",
+"open_interest_fp": "8977.53",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 2.5% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26DEC-T2.6",
+"yes_sub_title": "Above 2.6%",
+"yes_bid_dollars": "0.8800",
+"yes_ask_dollars": "0.8900",
+"volume_fp": "16174.87",
+"open_interest_fp": "6340.39",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 2.6% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26DEC-T2.7",
+"yes_sub_title": "Above 2.7%",
+"yes_bid_dollars": "0.8000",
+"yes_ask_dollars": "0.8100",
+"volume_fp": "16588.50",
+"open_interest_fp": "4307.40",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 2.7% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26DEC-T2.8",
+"yes_sub_title": "Above 2.8%",
+"yes_bid_dollars": "0.6100",
+"yes_ask_dollars": "0.6200",
+"volume_fp": "10452.26",
+"open_interest_fp": "2806.41",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 2.8% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26DEC-T2.9",
+"yes_sub_title": "Above 2.9%",
+"yes_bid_dollars": "0.3100",
+"yes_ask_dollars": "0.4300",
+"volume_fp": "11802.38",
+"open_interest_fp": "2240.09",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 2.9% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26DEC-T3.0",
+"yes_sub_title": "Above 3.0%",
+"yes_bid_dollars": "0.2200",
+"yes_ask_dollars": "0.2500",
+"volume_fp": "17143.67",
+"open_interest_fp": "5405.77",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 3.0% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26DEC-T3.1",
+"yes_sub_title": "Above 3.1%",
+"yes_bid_dollars": "0.1400",
+"yes_ask_dollars": "0.1500",
+"volume_fp": "21390.94",
+"open_interest_fp": "6000.81",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 3.1% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26DEC-T3.2",
+"yes_sub_title": "Above 3.2%",
+"yes_bid_dollars": "0.0600",
+"yes_ask_dollars": "0.0800",
+"volume_fp": "20214.29",
+"open_interest_fp": "11651.98",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 3.2% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26DEC-T3.3",
+"yes_sub_title": "Above 3.3%",
+"yes_bid_dollars": "0.0500",
+"yes_ask_dollars": "0.0600",
+"volume_fp": "15398.45",
+"open_interest_fp": "6582.48",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 3.3% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26DEC-T3.4",
+"yes_sub_title": "Above 3.4%",
+"yes_bid_dollars": "0.0500",
+"yes_ask_dollars": "0.0600",
+"volume_fp": "7899.55",
+"open_interest_fp": "3578.87",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 3.4% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICOREYOY-26DEC-T3.5",
+"yes_sub_title": "Above 3.5%",
+"yes_bid_dollars": "0.0100",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "5923.58",
+"open_interest_fp": "1277.94",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) for All Urban Consumers: All Items less Food and Energy increases by more than 3.5% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+}
+],
+"KXCPICORE-26OCT": [
+{
+"ticker": "KXCPICORE-26OCT-T0.0",
+"yes_sub_title": "Above 0.0%",
+"yes_bid_dollars": "0.9400",
+"yes_ask_dollars": "0.9500",
+"volume_fp": "76640.29",
+"open_interest_fp": "51906.15",
+"close_time": "2026-11-10T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for October 2026, as published by the Bureau of Labor Statistics, increases by above 0.0%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26OCT-T0.1",
+"yes_sub_title": "Above 0.1%",
+"yes_bid_dollars": "0.7500",
+"yes_ask_dollars": "0.7600",
+"volume_fp": "214658.39",
+"open_interest_fp": "75383.04",
+"close_time": "2026-11-10T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for October 2026, as published by the Bureau of Labor Statistics, increases by above 0.1%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26OCT-T0.2",
+"yes_sub_title": "Above 0.2%",
+"yes_bid_dollars": "0.3900",
+"yes_ask_dollars": "0.4000",
+"volume_fp": "149964.47",
+"open_interest_fp": "44669.93",
+"close_time": "2026-11-10T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for October 2026, as published by the Bureau of Labor Statistics, increases by above 0.2%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26OCT-T0.3",
+"yes_sub_title": "Above 0.3%",
+"yes_bid_dollars": "0.1600",
+"yes_ask_dollars": "0.1700",
+"volume_fp": "80813.44",
+"open_interest_fp": "53968.39",
+"close_time": "2026-11-10T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for October 2026, as published by the Bureau of Labor Statistics, increases by above 0.3%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26OCT-T0.4",
+"yes_sub_title": "Above 0.4%",
+"yes_bid_dollars": "0.0500",
+"yes_ask_dollars": "0.0600",
+"volume_fp": "46756.38",
+"open_interest_fp": "33137.35",
+"close_time": "2026-11-10T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for October 2026, as published by the Bureau of Labor Statistics, increases by above 0.4%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26OCT-T0.5",
+"yes_sub_title": "Above 0.5%",
+"yes_bid_dollars": "0.0100",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "57940.06",
+"open_interest_fp": "38315.53",
+"close_time": "2026-11-10T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for October 2026, as published by the Bureau of Labor Statistics, increases by above 0.5%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26OCT-T0.6",
+"yes_sub_title": "Above 0.6%",
+"yes_bid_dollars": "0.0100",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "29635.08",
+"open_interest_fp": "21247.02",
+"close_time": "2026-11-10T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for October 2026, as published by the Bureau of Labor Statistics, increases by above 0.6%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26OCT-T0.7",
+"yes_sub_title": "Above 0.7%",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0100",
+"volume_fp": "41553.00",
+"open_interest_fp": "4309.00",
+"close_time": "2026-11-10T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for October 2026, as published by the Bureau of Labor Statistics, increases by above 0.7%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26OCT-T0.8",
+"yes_sub_title": "Above 0.8%",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0100",
+"volume_fp": "5288.00",
+"open_interest_fp": "4275.00",
+"close_time": "2026-11-10T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for October 2026, as published by the Bureau of Labor Statistics, increases by above 0.8%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26OCT-T0.9",
+"yes_sub_title": "Above 0.9%",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0100",
+"volume_fp": "4028.00",
+"open_interest_fp": "4007.00",
+"close_time": "2026-11-10T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for October 2026, as published by the Bureau of Labor Statistics, increases by above 0.9%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26OCT-T1.0",
+"yes_sub_title": "Above 1.0%",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0100",
+"volume_fp": "11194.02",
+"open_interest_fp": "1219.01",
+"close_time": "2026-11-10T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for October 2026, as published by the Bureau of Labor Statistics, increases by above 1.0%, then the market resolves to Yes."
+}
+],
+"KXCPICORE-26NOV": [
+{
+"ticker": "KXCPICORE-26NOV-T0.0",
+"yes_sub_title": "Above 0.0%",
+"yes_bid_dollars": "0.9500",
+"yes_ask_dollars": "0.9600",
+"volume_fp": "7713.03",
+"open_interest_fp": "2628.01",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for November 2026, as published by the Bureau of Labor Statistics, increases by above 0.0%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26NOV-T0.1",
+"yes_sub_title": "Above 0.1%",
+"yes_bid_dollars": "0.8400",
+"yes_ask_dollars": "0.8500",
+"volume_fp": "6797.69",
+"open_interest_fp": "1675.39",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for November 2026, as published by the Bureau of Labor Statistics, increases by above 0.1%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26NOV-T0.2",
+"yes_sub_title": "Above 0.2%",
+"yes_bid_dollars": "0.5000",
+"yes_ask_dollars": "0.5100",
+"volume_fp": "9057.94",
+"open_interest_fp": "1940.05",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for November 2026, as published by the Bureau of Labor Statistics, increases by above 0.2%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26NOV-T0.3",
+"yes_sub_title": "Above 0.3%",
+"yes_bid_dollars": "0.2000",
+"yes_ask_dollars": "0.2100",
+"volume_fp": "15607.49",
+"open_interest_fp": "6633.18",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for November 2026, as published by the Bureau of Labor Statistics, increases by above 0.3%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26NOV-T0.4",
+"yes_sub_title": "Above 0.4%",
+"yes_bid_dollars": "0.0800",
+"yes_ask_dollars": "0.0900",
+"volume_fp": "21179.61",
+"open_interest_fp": "7246.35",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for November 2026, as published by the Bureau of Labor Statistics, increases by above 0.4%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26NOV-T0.5",
+"yes_sub_title": "Above 0.5%",
+"yes_bid_dollars": "0.0100",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "5321.00",
+"open_interest_fp": "2237.81",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for November 2026, as published by the Bureau of Labor Statistics, increases by above 0.5%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26NOV-T0.6",
+"yes_sub_title": "Above 0.6%",
+"yes_bid_dollars": "0.0100",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "4178.17",
+"open_interest_fp": "2432.59",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for November 2026, as published by the Bureau of Labor Statistics, increases by above 0.6%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26NOV-T0.7",
+"yes_sub_title": "Above 0.7%",
+"yes_bid_dollars": "0.0100",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "6086.27",
+"open_interest_fp": "3406.25",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for November 2026, as published by the Bureau of Labor Statistics, increases by above 0.7%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26NOV-T0.8",
+"yes_sub_title": "Above 0.8%",
+"yes_bid_dollars": "0.0100",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "3053.29",
+"open_interest_fp": "952.78",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for November 2026, as published by the Bureau of Labor Statistics, increases by above 0.8%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26NOV-T0.9",
+"yes_sub_title": "Above 0.9%",
+"yes_bid_dollars": "0.0100",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "1703.02",
+"open_interest_fp": "1066.00",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for November 2026, as published by the Bureau of Labor Statistics, increases by above 0.9%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26NOV-T1.0",
+"yes_sub_title": "Above 1.0%",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0100",
+"volume_fp": "3514.40",
+"open_interest_fp": "3203.00",
+"close_time": "2026-12-10T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for November 2026, as published by the Bureau of Labor Statistics, increases by above 1.0%, then the market resolves to Yes."
+}
+],
+"KXCPICORE-26DEC": [
+{
+"ticker": "KXCPICORE-26DEC-T0.0",
+"yes_sub_title": "Above 0.0%",
+"yes_bid_dollars": "0.9400",
+"yes_ask_dollars": "0.9500",
+"volume_fp": "3445.49",
+"open_interest_fp": "1643.62",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for December 2026, as published by the Bureau of Labor Statistics, increases by above 0.0%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26DEC-T0.1",
+"yes_sub_title": "Above 0.1%",
+"yes_bid_dollars": "0.8100",
+"yes_ask_dollars": "0.8200",
+"volume_fp": "2054.51",
+"open_interest_fp": "631.65",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for December 2026, as published by the Bureau of Labor Statistics, increases by above 0.1%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26DEC-T0.2",
+"yes_sub_title": "Above 0.2%",
+"yes_bid_dollars": "0.4900",
+"yes_ask_dollars": "0.5100",
+"volume_fp": "4745.59",
+"open_interest_fp": "912.72",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for December 2026, as published by the Bureau of Labor Statistics, increases by above 0.2%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26DEC-T0.3",
+"yes_sub_title": "Above 0.3%",
+"yes_bid_dollars": "0.1700",
+"yes_ask_dollars": "0.1800",
+"volume_fp": "10396.44",
+"open_interest_fp": "5001.01",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for December 2026, as published by the Bureau of Labor Statistics, increases by above 0.3%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26DEC-T0.4",
+"yes_sub_title": "Above 0.4%",
+"yes_bid_dollars": "0.0800",
+"yes_ask_dollars": "0.0900",
+"volume_fp": "4705.66",
+"open_interest_fp": "2120.83",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for December 2026, as published by the Bureau of Labor Statistics, increases by above 0.4%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26DEC-T0.5",
+"yes_sub_title": "Above 0.5%",
+"yes_bid_dollars": "0.0400",
+"yes_ask_dollars": "0.0500",
+"volume_fp": "5701.02",
+"open_interest_fp": "3153.75",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for December 2026, as published by the Bureau of Labor Statistics, increases by above 0.5%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26DEC-T0.6",
+"yes_sub_title": "Above 0.6%",
+"yes_bid_dollars": "0.0200",
+"yes_ask_dollars": "0.0300",
+"volume_fp": "11251.66",
+"open_interest_fp": "5931.23",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for December 2026, as published by the Bureau of Labor Statistics, increases by above 0.6%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26DEC-T0.7",
+"yes_sub_title": "Above 0.7%",
+"yes_bid_dollars": "0.0100",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "3158.46",
+"open_interest_fp": "1440.03",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for December 2026, as published by the Bureau of Labor Statistics, increases by above 0.7%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26DEC-T0.8",
+"yes_sub_title": "Above 0.8%",
+"yes_bid_dollars": "0.0100",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "859.33",
+"open_interest_fp": "565.77",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for December 2026, as published by the Bureau of Labor Statistics, increases by above 0.8%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26DEC-T0.9",
+"yes_sub_title": "Above 0.9%",
+"yes_bid_dollars": "0.0100",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "2847.00",
+"open_interest_fp": "2585.00",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for December 2026, as published by the Bureau of Labor Statistics, increases by above 0.9%, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPICORE-26DEC-T1.0",
+"yes_sub_title": "Above 1.0%",
+"yes_bid_dollars": "0.0100",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "260.00",
+"open_interest_fp": "100.00",
+"close_time": "2027-01-13T13:25:00Z",
+"rules_primary": "If the seasonally adjusted Consumer Price Index for All Urban Consumers: All Items less Food and Energy for December 2026, as published by the Bureau of Labor Statistics, increases by above 1.0%, then the market resolves to Yes."
+}
+],
+"KXFED-26OCT": [
+{
+"ticker": "KXFED-26OCT-T2.75",
+"yes_sub_title": "Above 2.75%",
+"yes_bid_dollars": "0.9900",
+"yes_ask_dollars": "1.0000",
+"volume_fp": "3274.19",
+"open_interest_fp": "2028.17",
+"close_time": "2026-10-28T17:55:00Z",
+"rules_primary": "If the upper bound of the target federal funds rate published on the Federal Reserve's official website is greater than 2.75% following the Federal Reserve's Oct 28, 2026 meeting, then the market resolves to Yes."
+},
+{
+"ticker": "KXFED-26OCT-T3.00",
+"yes_sub_title": "Above 3.00%",
+"yes_bid_dollars": "0.9900",
+"yes_ask_dollars": "1.0000",
+"volume_fp": "3608.99",
+"open_interest_fp": "1819.96",
+"close_time": "2026-10-28T17:55:00Z",
+"rules_primary": "If the upper bound of the target federal funds rate published on the Federal Reserve's official website is greater than 3.00% following the Federal Reserve's Oct 28, 2026 meeting, then the market resolves to Yes."
+},
+{
+"ticker": "KXFED-26OCT-T3.25",
+"yes_sub_title": "Above 3.25%",
+"yes_bid_dollars": "0.9900",
+"yes_ask_dollars": "1.0000",
+"volume_fp": "6385.09",
+"open_interest_fp": "2711.09",
+"close_time": "2026-10-28T17:55:00Z",
+"rules_primary": "If the upper bound of the target federal funds rate published on the Federal Reserve's official website is greater than 3.25% following the Federal Reserve's Oct 28, 2026 meeting, then the market resolves to Yes."
+},
+{
+"ticker": "KXFED-26OCT-T3.50",
+"yes_sub_title": "Above 3.50%",
+"yes_bid_dollars": "0.9900",
+"yes_ask_dollars": "1.0000",
+"volume_fp": "14288.62",
+"open_interest_fp": "8383.96",
+"close_time": "2026-10-28T17:55:00Z",
+"rules_primary": "If the upper bound of the target federal funds rate published on the Federal Reserve's official website is greater than 3.50% following the Federal Reserve's Oct 28, 2026 meeting, then the market resolves to Yes."
+},
+{
+"ticker": "KXFED-26OCT-T3.75",
+"yes_sub_title": "Above 3.75%",
+"yes_bid_dollars": "0.9900",
+"yes_ask_dollars": "1.0000",
+"volume_fp": "35845.90",
+"open_interest_fp": "25957.25",
+"close_time": "2026-10-28T17:55:00Z",
+"rules_primary": "If the upper bound of the target federal funds rate published on the Federal Reserve's official website is greater than 3.75% following the Federal Reserve's Oct 28, 2026 meeting, then the market resolves to Yes."
+},
+{
+"ticker": "KXFED-26OCT-T4.00",
+"yes_sub_title": "Above 4.00%",
+"yes_bid_dollars": "0.0700",
+"yes_ask_dollars": "0.0800",
+"volume_fp": "289592.54",
+"open_interest_fp": "69512.93",
+"close_time": "2026-10-28T17:55:00Z",
+"rules_primary": "If the upper bound of the target federal funds rate published on the Federal Reserve's official website is greater than 4.00% following the Federal Reserve's Oct 28, 2026 meeting, then the market resolves to Yes."
+},
+{
+"ticker": "KXFED-26OCT-T4.25",
+"yes_sub_title": "Above 4.25%",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0100",
+"volume_fp": "73798.29",
+"open_interest_fp": "70714.86",
+"close_time": "2026-10-28T17:55:00Z",
+"rules_primary": "If the upper bound of the target federal funds rate published on the Federal Reserve's official website is greater than 4.25% following the Federal Reserve's Oct 28, 2026 meeting, then the market resolves to Yes."
+},
+{
+"ticker": "KXFED-26OCT-T4.50",
+"yes_sub_title": "Above 4.50%",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0100",
+"volume_fp": "14315.71",
+"open_interest_fp": "12541.66",
+"close_time": "2026-10-28T17:55:00Z",
+"rules_primary": "If the upper bound of the target federal funds rate published on the Federal Reserve's official website is greater than 4.50% following the Federal Reserve's Oct 28, 2026 meeting, then the market resolves to Yes."
+},
+{
+"ticker": "KXFED-26OCT-T4.75",
+"yes_sub_title": "Above 4.75%",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0100",
+"volume_fp": "11145.13",
+"open_interest_fp": "9905.29",
+"close_time": "2026-10-28T17:55:00Z",
+"rules_primary": "If the upper bound of the target federal funds rate published on the Federal Reserve's official website is greater than 4.75% following the Federal Reserve's Oct 28, 2026 meeting, then the market resolves to Yes."
+},
+{
+"ticker": "KXFED-26OCT-T5.00",
+"yes_sub_title": "Above 5.00%",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0100",
+"volume_fp": "4067.32",
+"open_interest_fp": "3920.32",
+"close_time": "2026-10-28T17:55:00Z",
+"rules_primary": "If the upper bound of the target federal funds rate published on the Federal Reserve's official website is greater than 5.00% following the Federal Reserve's Oct 28, 2026 meeting, then the market resolves to Yes."
+},
+{
+"ticker": "KXFED-26OCT-T5.25",
+"yes_sub_title": "Above 5.25%",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0100",
+"volume_fp": "1537.33",
+"open_interest_fp": "1025.33",
+"close_time": "2026-10-28T17:55:00Z",
+"rules_primary": "If the upper bound of the target federal funds rate published on the Federal Reserve's official website is greater than 5.25% following the Federal Reserve's Oct 28, 2026 meeting, then the market resolves to Yes."
+}
+],
+"KXFED-26DEC": [
+{
+"ticker": "KXFED-26DEC-T2.75",
+"yes_sub_title": "Above 2.75%",
+"yes_bid_dollars": "0.9900",
+"yes_ask_dollars": "1.0000",
+"volume_fp": "21665.95",
+"open_interest_fp": "6582.63",
+"close_time": "2026-12-09T18:55:00Z",
+"rules_primary": "If the upper bound of the target federal funds rate published on the Federal Reserve's official website is greater than 2.75% following the Federal Reserve's Dec 9, 2026 meeting, then the market resolves to Yes."
+},
+{
+"ticker": "KXFED-26DEC-T3.00",
+"yes_sub_title": "Above 3.00%",
+"yes_bid_dollars": "0.9800",
+"yes_ask_dollars": "0.9900",
+"volume_fp": "8039.42",
+"open_interest_fp": "2802.17",
+"close_time": "2026-12-09T18:55:00Z",
+"rules_primary": "If the upper bound of the target federal funds rate published on the Federal Reserve's official website is greater than 3.00% following the Federal Reserve's Dec 9, 2026 meeting, then the market resolves to Yes."
+},
+{
+"ticker": "KXFED-26DEC-T3.25",
+"yes_sub_title": "Above 3.25%",
+"yes_bid_dollars": "0.9800",
+"yes_ask_dollars": "0.9900",
+"volume_fp": "14038.48",
+"open_interest_fp": "2125.00",
+"close_time": "2026-12-09T18:55:00Z",
+"rules_primary": "If the upper bound of the target federal funds rate published on the Federal Reserve's official website is greater than 3.25% following the Federal Reserve's Dec 9, 2026 meeting, then the market resolves to Yes."
+},
+{
+"ticker": "KXFED-26DEC-T3.50",
+"yes_sub_title": "Above 3.50%",
+"yes_bid_dollars": "0.9800",
+"yes_ask_dollars": "0.9900",
+"volume_fp": "37190.57",
+"open_interest_fp": "18812.22",
+"close_time": "2026-12-09T18:55:00Z",
+"rules_primary": "If the upper bound of the target federal funds rate published on the Federal Reserve's official website is greater than 3.50% following the Federal Reserve's Dec 9, 2026 meeting, then the market resolves to Yes."
+},
+{
+"ticker": "KXFED-26DEC-T3.75",
+"yes_sub_title": "Above 3.75%",
+"yes_bid_dollars": "0.9600",
+"yes_ask_dollars": "0.9700",
+"volume_fp": "62437.88",
+"open_interest_fp": "31746.55",
+"close_time": "2026-12-09T18:55:00Z",
+"rules_primary": "If the upper bound of the target federal funds rate published on the Federal Reserve's official website is greater than 3.75% following the Federal Reserve's Dec 9, 2026 meeting, then the market resolves to Yes."
+},
+{
+"ticker": "KXFED-26DEC-T4.00",
+"yes_sub_title": "Above 4.00%",
+"yes_bid_dollars": "0.7800",
+"yes_ask_dollars": "0.8000",
+"volume_fp": "56719.65",
+"open_interest_fp": "19567.26",
+"close_time": "2026-12-09T18:55:00Z",
+"rules_primary": "If the upper bound of the target federal funds rate published on the Federal Reserve's official website is greater than 4.00% following the Federal Reserve's Dec 9, 2026 meeting, then the market resolves to Yes."
+},
+{
+"ticker": "KXFED-26DEC-T4.25",
+"yes_sub_title": "Above 4.25%",
+"yes_bid_dollars": "0.1000",
+"yes_ask_dollars": "0.1100",
+"volume_fp": "56893.70",
+"open_interest_fp": "23133.59",
+"close_time": "2026-12-09T18:55:00Z",
+"rules_primary": "If the upper bound of the target federal funds rate published on the Federal Reserve's official website is greater than 4.25% following the Federal Reserve's Dec 9, 2026 meeting, then the market resolves to Yes."
+},
+{
+"ticker": "KXFED-26DEC-T4.50",
+"yes_sub_title": "Above 4.50%",
+"yes_bid_dollars": "0.0400",
+"yes_ask_dollars": "0.0500",
+"volume_fp": "174735.01",
+"open_interest_fp": "158878.27",
+"close_time": "2026-12-09T18:55:00Z",
+"rules_primary": "If the upper bound of the target federal funds rate published on the Federal Reserve's official website is greater than 4.50% following the Federal Reserve's Dec 9, 2026 meeting, then the market resolves to Yes."
+},
+{
+"ticker": "KXFED-26DEC-T4.75",
+"yes_sub_title": "Above 4.75%",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "1932.13",
+"open_interest_fp": "1458.04",
+"close_time": "2026-12-09T18:55:00Z",
+"rules_primary": "If the upper bound of the target federal funds rate published on the Federal Reserve's official website is greater than 4.75% following the Federal Reserve's Dec 9, 2026 meeting, then the market resolves to Yes."
+},
+{
+"ticker": "KXFED-26DEC-T5.00",
+"yes_sub_title": "Above 5.00%",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "1719.32",
+"open_interest_fp": "969.86",
+"close_time": "2026-12-09T18:55:00Z",
+"rules_primary": "If the upper bound of the target federal funds rate published on the Federal Reserve's official website is greater than 5.00% following the Federal Reserve's Dec 9, 2026 meeting, then the market resolves to Yes."
+},
+{
+"ticker": "KXFED-26DEC-T5.25",
+"yes_sub_title": "Above 5.25%",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "944.87",
+"open_interest_fp": "679.86",
+"close_time": "2026-12-09T18:55:00Z",
+"rules_primary": "If the upper bound of the target federal funds rate published on the Federal Reserve's official website is greater than 5.25% following the Federal Reserve's Dec 9, 2026 meeting, then the market resolves to Yes."
+}
+],
+"KXGDP-26OCT30": [
+{
+"ticker": "KXGDP-26OCT30-T0.0",
+"yes_sub_title": "Above 0.0%",
+"yes_bid_dollars": "0.9900",
+"yes_ask_dollars": "1.0000",
+"volume_fp": "6778.84",
+"open_interest_fp": "6346.70",
+"close_time": "2026-10-30T12:29:00Z",
+"rules_primary": "If real GDP (as measured by the BEA\u2019s seasonally adjusted and annualized Advance Estimate) increases by more than 0.0, then the market resolves to Yes."
+},
+{
+"ticker": "KXGDP-26OCT30-T0.5",
+"yes_sub_title": "Above 0.5%",
+"yes_bid_dollars": "0.9900",
+"yes_ask_dollars": "1.0000",
+"volume_fp": "2392.05",
+"open_interest_fp": "1910.22",
+"close_time": "2026-10-30T12:29:00Z",
+"rules_primary": "If real GDP (as measured by the BEA\u2019s seasonally adjusted and annualized Advance Estimate) increases by more than 0.5, then the market resolves to Yes."
+},
+{
+"ticker": "KXGDP-26OCT30-T1.0",
+"yes_sub_title": "Above 1.0%",
+"yes_bid_dollars": "0.9800",
+"yes_ask_dollars": "0.9900",
+"volume_fp": "9740.31",
+"open_interest_fp": "7255.71",
+"close_time": "2026-10-30T12:29:00Z",
+"rules_primary": "If real GDP (as measured by the BEA\u2019s seasonally adjusted and annualized Advance Estimate) increases by more than 1.0, then the market resolves to Yes."
+},
+{
+"ticker": "KXGDP-26OCT30-T1.5",
+"yes_sub_title": "Above 1.5%",
+"yes_bid_dollars": "0.9400",
+"yes_ask_dollars": "0.9700",
+"volume_fp": "15223.14",
+"open_interest_fp": "9283.75",
+"close_time": "2026-10-30T12:29:00Z",
+"rules_primary": "If real GDP (as measured by the BEA\u2019s seasonally adjusted and annualized Advance Estimate) increases by more than 1.5, then the market resolves to Yes."
+},
+{
+"ticker": "KXGDP-26OCT30-T2.0",
+"yes_sub_title": "Above 2.0%",
+"yes_bid_dollars": "0.9100",
+"yes_ask_dollars": "0.9200",
+"volume_fp": "82465.52",
+"open_interest_fp": "60428.44",
+"close_time": "2026-10-30T12:29:00Z",
+"rules_primary": "If real GDP (as measured by the BEA\u2019s seasonally adjusted and annualized Advance Estimate) increases by more than 2.0, then the market resolves to Yes."
+},
+{
+"ticker": "KXGDP-26OCT30-T2.5",
+"yes_sub_title": "Above 2.5%",
+"yes_bid_dollars": "0.8100",
+"yes_ask_dollars": "0.8200",
+"volume_fp": "34644.80",
+"open_interest_fp": "15379.03",
+"close_time": "2026-10-30T12:29:00Z",
+"rules_primary": "If real GDP (as measured by the BEA\u2019s seasonally adjusted and annualized Advance Estimate) increases by more than 2.5, then the market resolves to Yes."
+},
+{
+"ticker": "KXGDP-26OCT30-T3.0",
+"yes_sub_title": "Above 3.0%",
+"yes_bid_dollars": "0.6300",
+"yes_ask_dollars": "0.6400",
+"volume_fp": "32765.91",
+"open_interest_fp": "15220.37",
+"close_time": "2026-10-30T12:29:00Z",
+"rules_primary": "If real GDP (as measured by the BEA\u2019s seasonally adjusted and annualized Advance Estimate) increases by more than 3.0, then the market resolves to Yes."
+},
+{
+"ticker": "KXGDP-26OCT30-T3.5",
+"yes_sub_title": "Above 3.5%",
+"yes_bid_dollars": "0.2800",
+"yes_ask_dollars": "0.3200",
+"volume_fp": "23974.65",
+"open_interest_fp": "10967.42",
+"close_time": "2026-10-30T12:29:00Z",
+"rules_primary": "If real GDP (as measured by the BEA\u2019s seasonally adjusted and annualized Advance Estimate) increases by more than 3.5, then the market resolves to Yes."
+},
+{
+"ticker": "KXGDP-26OCT30-T4.0",
+"yes_sub_title": "Above 4.0%",
+"yes_bid_dollars": "0.1100",
+"yes_ask_dollars": "0.1200",
+"volume_fp": "93148.37",
+"open_interest_fp": "17906.78",
+"close_time": "2026-10-30T12:29:00Z",
+"rules_primary": "If real GDP (as measured by the BEA\u2019s seasonally adjusted and annualized Advance Estimate) increases by more than 4.0, then the market resolves to Yes."
+}
+],
+"KXCPIYOY-26NOV": [
+{
+"ticker": "KXCPIYOY-26NOV-T3.0",
+"yes_sub_title": "Above 3.0%",
+"yes_bid_dollars": "0.9800",
+"yes_ask_dollars": "0.9900",
+"volume_fp": "1840.82",
+"open_interest_fp": "845.90",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 3.0% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26NOV-T3.1",
+"yes_sub_title": "Above 3.1%",
+"yes_bid_dollars": "0.9800",
+"yes_ask_dollars": "0.9900",
+"volume_fp": "1779.55",
+"open_interest_fp": "722.95",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 3.1% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26NOV-T3.2",
+"yes_sub_title": "Above 3.2%",
+"yes_bid_dollars": "0.9800",
+"yes_ask_dollars": "0.9900",
+"volume_fp": "12566.16",
+"open_interest_fp": "2829.35",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 3.2% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26NOV-T3.3",
+"yes_sub_title": "Above 3.3%",
+"yes_bid_dollars": "0.9700",
+"yes_ask_dollars": "0.9800",
+"volume_fp": "10118.79",
+"open_interest_fp": "3854.04",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 3.3% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26NOV-T3.4",
+"yes_sub_title": "Above 3.4%",
+"yes_bid_dollars": "0.9500",
+"yes_ask_dollars": "0.9600",
+"volume_fp": "8190.53",
+"open_interest_fp": "4535.20",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 3.4% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26NOV-T3.5",
+"yes_sub_title": "Above 3.5%",
+"yes_bid_dollars": "0.9300",
+"yes_ask_dollars": "0.9400",
+"volume_fp": "13982.97",
+"open_interest_fp": "3842.00",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 3.5% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26NOV-T3.6",
+"yes_sub_title": "Above 3.6%",
+"yes_bid_dollars": "0.8300",
+"yes_ask_dollars": "0.8400",
+"volume_fp": "17424.09",
+"open_interest_fp": "8625.33",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 3.6% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26NOV-T3.7",
+"yes_sub_title": "Above 3.7%",
+"yes_bid_dollars": "0.7500",
+"yes_ask_dollars": "0.7600",
+"volume_fp": "18267.90",
+"open_interest_fp": "6388.36",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 3.7% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26NOV-T3.8",
+"yes_sub_title": "Above 3.8%",
+"yes_bid_dollars": "0.6400",
+"yes_ask_dollars": "0.6700",
+"volume_fp": "97432.70",
+"open_interest_fp": "53553.92",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 3.8% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26NOV-T3.9",
+"yes_sub_title": "Above 3.9%",
+"yes_bid_dollars": "0.4400",
+"yes_ask_dollars": "0.4500",
+"volume_fp": "106566.66",
+"open_interest_fp": "36299.46",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 3.9% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26NOV-T4.0",
+"yes_sub_title": "Above 4.0%",
+"yes_bid_dollars": "0.3300",
+"yes_ask_dollars": "0.3400",
+"volume_fp": "69279.77",
+"open_interest_fp": "31634.94",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 4.0% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26NOV-T4.1",
+"yes_sub_title": "Above 4.1%",
+"yes_bid_dollars": "0.2400",
+"yes_ask_dollars": "0.2500",
+"volume_fp": "85870.38",
+"open_interest_fp": "37441.24",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 4.1% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26NOV-T4.2",
+"yes_sub_title": "Above 4.2%",
+"yes_bid_dollars": "0.1900",
+"yes_ask_dollars": "0.2000",
+"volume_fp": "20963.99",
+"open_interest_fp": "10348.00",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 4.2% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26NOV-T4.3",
+"yes_sub_title": "Above 4.3%",
+"yes_bid_dollars": "0.1100",
+"yes_ask_dollars": "0.1400",
+"volume_fp": "17577.63",
+"open_interest_fp": "10198.09",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 4.3% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26NOV-T4.4",
+"yes_sub_title": "Above 4.4%",
+"yes_bid_dollars": "0.1100",
+"yes_ask_dollars": "0.1200",
+"volume_fp": "17509.66",
+"open_interest_fp": "8912.40",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 4.4% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26NOV-T4.5",
+"yes_sub_title": "Above 4.5%",
+"yes_bid_dollars": "0.1100",
+"yes_ask_dollars": "0.1200",
+"volume_fp": "55179.51",
+"open_interest_fp": "19718.01",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 4.5% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26NOV-T4.6",
+"yes_sub_title": "Above 4.6%",
+"yes_bid_dollars": "0.0500",
+"yes_ask_dollars": "0.0700",
+"volume_fp": "18458.71",
+"open_interest_fp": "8222.71",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 4.6% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26NOV-T4.7",
+"yes_sub_title": "Above 4.7%",
+"yes_bid_dollars": "0.0300",
+"yes_ask_dollars": "0.0400",
+"volume_fp": "18659.01",
+"open_interest_fp": "10234.01",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 4.7% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26NOV-T4.8",
+"yes_sub_title": "Above 4.8%",
+"yes_bid_dollars": "0.0100",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "5045.05",
+"open_interest_fp": "1817.03",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 4.8% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26NOV-T4.9",
+"yes_sub_title": "Above 4.9%",
+"yes_bid_dollars": "0.0100",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "5632.07",
+"open_interest_fp": "1798.00",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 4.9% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26NOV-T5.0",
+"yes_sub_title": "Above 5.0%",
+"yes_bid_dollars": "0.0100",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "9302.91",
+"open_interest_fp": "2375.01",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 5.0% in the twelve months ending November 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+}
+],
+"KXCPIYOY-26DEC": [
+{
+"ticker": "KXCPIYOY-26DEC-T3.0",
+"yes_sub_title": "Above 3.0%",
+"yes_bid_dollars": "0.9600",
+"yes_ask_dollars": "0.9700",
+"volume_fp": "3772.83",
+"open_interest_fp": "1865.01",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 3.0% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26DEC-T3.1",
+"yes_sub_title": "Above 3.1%",
+"yes_bid_dollars": "0.9400",
+"yes_ask_dollars": "0.9500",
+"volume_fp": "7979.90",
+"open_interest_fp": "3913.90",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 3.1% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26DEC-T3.2",
+"yes_sub_title": "Above 3.2%",
+"yes_bid_dollars": "0.9400",
+"yes_ask_dollars": "0.9500",
+"volume_fp": "10817.36",
+"open_interest_fp": "4427.09",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 3.2% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26DEC-T3.3",
+"yes_sub_title": "Above 3.3%",
+"yes_bid_dollars": "0.9400",
+"yes_ask_dollars": "0.9500",
+"volume_fp": "8386.49",
+"open_interest_fp": "5974.30",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 3.3% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26DEC-T3.4",
+"yes_sub_title": "Above 3.4%",
+"yes_bid_dollars": "0.9100",
+"yes_ask_dollars": "0.9300",
+"volume_fp": "14440.26",
+"open_interest_fp": "4115.58",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 3.4% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26DEC-T3.5",
+"yes_sub_title": "Above 3.5%",
+"yes_bid_dollars": "0.8600",
+"yes_ask_dollars": "0.8700",
+"volume_fp": "9591.96",
+"open_interest_fp": "5035.25",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 3.5% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26DEC-T3.6",
+"yes_sub_title": "Above 3.6%",
+"yes_bid_dollars": "0.7600",
+"yes_ask_dollars": "0.7700",
+"volume_fp": "1542.81",
+"open_interest_fp": "779.00",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 3.6% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26DEC-T3.7",
+"yes_sub_title": "Above 3.7%",
+"yes_bid_dollars": "0.6600",
+"yes_ask_dollars": "0.6800",
+"volume_fp": "8048.32",
+"open_interest_fp": "1959.14",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 3.7% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26DEC-T3.8",
+"yes_sub_title": "Above 3.8%",
+"yes_bid_dollars": "0.6100",
+"yes_ask_dollars": "0.6400",
+"volume_fp": "73747.22",
+"open_interest_fp": "34580.15",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 3.8% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26DEC-T3.9",
+"yes_sub_title": "Above 3.9%",
+"yes_bid_dollars": "0.4900",
+"yes_ask_dollars": "0.6400",
+"volume_fp": "62765.59",
+"open_interest_fp": "28676.08",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 3.9% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26DEC-T4.0",
+"yes_sub_title": "Above 4.0%",
+"yes_bid_dollars": "0.3600",
+"yes_ask_dollars": "0.6100",
+"volume_fp": "16599.42",
+"open_interest_fp": "8839.36",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 4.0% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26DEC-T4.1",
+"yes_sub_title": "Above 4.1%",
+"yes_bid_dollars": "0.3200",
+"yes_ask_dollars": "0.3300",
+"volume_fp": "19007.44",
+"open_interest_fp": "11586.39",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 4.1% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26DEC-T4.2",
+"yes_sub_title": "Above 4.2%",
+"yes_bid_dollars": "0.3300",
+"yes_ask_dollars": "0.3400",
+"volume_fp": "5640.91",
+"open_interest_fp": "1848.63",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 4.2% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26DEC-T4.3",
+"yes_sub_title": "Above 4.3%",
+"yes_bid_dollars": "0.2200",
+"yes_ask_dollars": "0.2300",
+"volume_fp": "12091.92",
+"open_interest_fp": "7595.46",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 4.3% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26DEC-T4.4",
+"yes_sub_title": "Above 4.4%",
+"yes_bid_dollars": "0.1500",
+"yes_ask_dollars": "0.1600",
+"volume_fp": "14266.57",
+"open_interest_fp": "9377.57",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 4.4% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26DEC-T4.5",
+"yes_sub_title": "Above 4.5%",
+"yes_bid_dollars": "0.0900",
+"yes_ask_dollars": "0.1500",
+"volume_fp": "11767.57",
+"open_interest_fp": "6782.57",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 4.5% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26DEC-T4.6",
+"yes_sub_title": "Above 4.6%",
+"yes_bid_dollars": "0.1400",
+"yes_ask_dollars": "0.1500",
+"volume_fp": "7109.00",
+"open_interest_fp": "3492.75",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 4.6% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26DEC-T4.7",
+"yes_sub_title": "Above 4.7%",
+"yes_bid_dollars": "0.0600",
+"yes_ask_dollars": "0.0700",
+"volume_fp": "13075.55",
+"open_interest_fp": "6113.01",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 4.7% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26DEC-T4.8",
+"yes_sub_title": "Above 4.8%",
+"yes_bid_dollars": "0.0600",
+"yes_ask_dollars": "0.0700",
+"volume_fp": "17971.15",
+"open_interest_fp": "9444.01",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 4.8% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26DEC-T4.9",
+"yes_sub_title": "Above 4.9%",
+"yes_bid_dollars": "0.0400",
+"yes_ask_dollars": "0.0500",
+"volume_fp": "21295.00",
+"open_interest_fp": "11377.00",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 4.9% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+},
+{
+"ticker": "KXCPIYOY-26DEC-T5.0",
+"yes_sub_title": "Above 5.0%",
+"yes_bid_dollars": "0.0200",
+"yes_ask_dollars": "0.0300",
+"volume_fp": "8330.01",
+"open_interest_fp": "2204.01",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 5.0% in the twelve months ending December 2026 (as represented by the one-decimal place value reported by the Bureau of Labor Statistics), then the market resolves to Yes."
+}
+],
+"KXCPI-26OCT": [
+{
+"ticker": "KXCPI-26OCT-T-0.1",
+"yes_sub_title": "Above -0.1%",
+"yes_bid_dollars": "0.9800",
+"yes_ask_dollars": "0.9900",
+"volume_fp": "35081.92",
+"open_interest_fp": "5395.81",
+"close_time": "2026-11-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than -0.1% (single-decimal) in October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26OCT-T0.0",
+"yes_sub_title": "Above 0.0%",
+"yes_bid_dollars": "0.9800",
+"yes_ask_dollars": "0.9900",
+"volume_fp": "81451.10",
+"open_interest_fp": "21668.22",
+"close_time": "2026-11-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.0% (single-decimal) in October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26OCT-T0.1",
+"yes_sub_title": "Above 0.1%",
+"yes_bid_dollars": "0.8900",
+"yes_ask_dollars": "0.9000",
+"volume_fp": "201437.50",
+"open_interest_fp": "112460.97",
+"close_time": "2026-11-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.1% (single-decimal) in October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26OCT-T0.2",
+"yes_sub_title": "Above 0.2%",
+"yes_bid_dollars": "0.6100",
+"yes_ask_dollars": "0.6600",
+"volume_fp": "254514.79",
+"open_interest_fp": "184602.81",
+"close_time": "2026-11-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.2% (single-decimal) in October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26OCT-T0.3",
+"yes_sub_title": "Above 0.3%",
+"yes_bid_dollars": "0.2200",
+"yes_ask_dollars": "0.2300",
+"volume_fp": "91560.48",
+"open_interest_fp": "33220.19",
+"close_time": "2026-11-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.3% (single-decimal) in October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26OCT-T0.4",
+"yes_sub_title": "Above 0.4%",
+"yes_bid_dollars": "0.0400",
+"yes_ask_dollars": "0.0900",
+"volume_fp": "79073.05",
+"open_interest_fp": "42913.73",
+"close_time": "2026-11-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.4% (single-decimal) in October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26OCT-T0.5",
+"yes_sub_title": "Above 0.5%",
+"yes_bid_dollars": "0.0100",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "33355.99",
+"open_interest_fp": "13133.44",
+"close_time": "2026-11-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.5% (single-decimal) in October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26OCT-T0.6",
+"yes_sub_title": "Above 0.6%",
+"yes_bid_dollars": "0.0100",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "12313.04",
+"open_interest_fp": "7395.99",
+"close_time": "2026-11-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.6% (single-decimal) in October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26OCT-T0.7",
+"yes_sub_title": "Above 0.7%",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0100",
+"volume_fp": "7808.11",
+"open_interest_fp": "5818.98",
+"close_time": "2026-11-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.7% (single-decimal) in October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26OCT-T0.8",
+"yes_sub_title": "Above 0.8%",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0100",
+"volume_fp": "18285.45",
+"open_interest_fp": "8248.88",
+"close_time": "2026-11-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.8% (single-decimal) in October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26OCT-T0.9",
+"yes_sub_title": "Above 0.9%",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0200",
+"volume_fp": "12024.62",
+"open_interest_fp": "7041.17",
+"close_time": "2026-11-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.9% (single-decimal) in October 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26OCT-T1.0",
+"yes_sub_title": "Above 1.0%",
+"yes_bid_dollars": "0.0000",
+"yes_ask_dollars": "0.0100",
+"volume_fp": "17788.15",
+"open_interest_fp": "8905.77",
+"close_time": "2026-11-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 1.0% (single-decimal) in October 2026, then the market resolves to Yes."
+}
+],
+"KXCPI-26NOV": [
+{
+"ticker": "KXCPI-26NOV-T-0.1",
+"yes_sub_title": "Above -0.1%",
+"yes_bid_dollars": "0.8800",
+"yes_ask_dollars": "0.8900",
+"volume_fp": "8919.84",
+"open_interest_fp": "2713.58",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than -0.1% (single-decimal) in November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26NOV-T0.0",
+"yes_sub_title": "Above 0.0%",
+"yes_bid_dollars": "0.8100",
+"yes_ask_dollars": "0.8300",
+"volume_fp": "7752.67",
+"open_interest_fp": "1845.88",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.0% (single-decimal) in November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26NOV-T0.1",
+"yes_sub_title": "Above 0.1%",
+"yes_bid_dollars": "0.6500",
+"yes_ask_dollars": "0.7000",
+"volume_fp": "15857.40",
+"open_interest_fp": "4703.50",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.1% (single-decimal) in November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26NOV-T0.2",
+"yes_sub_title": "Above 0.2%",
+"yes_bid_dollars": "0.4800",
+"yes_ask_dollars": "0.4900",
+"volume_fp": "12998.53",
+"open_interest_fp": "4384.17",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.2% (single-decimal) in November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26NOV-T0.3",
+"yes_sub_title": "Above 0.3%",
+"yes_bid_dollars": "0.3200",
+"yes_ask_dollars": "0.3300",
+"volume_fp": "8310.73",
+"open_interest_fp": "2873.89",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.3% (single-decimal) in November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26NOV-T0.4",
+"yes_sub_title": "Above 0.4%",
+"yes_bid_dollars": "0.2300",
+"yes_ask_dollars": "0.2400",
+"volume_fp": "20018.91",
+"open_interest_fp": "10966.91",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.4% (single-decimal) in November 2026, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26NOV-T0.5",
+"yes_sub_title": "Above 0.5%",
+"yes_bid_dollars": "0.2000",
+"yes_ask_dollars": "0.2100",
+"volume_fp": "11918.14",
+"open_interest_fp": "4822.25",
+"close_time": "2026-12-10T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.5% (single-decimal) in November 2026, then the market resolves to Yes."
+}
+],
+"KXCPI-26DEC": [
+{
+"ticker": "KXCPI-26DEC-T-0.1",
+"yes_sub_title": "Above -0.1%",
+"yes_bid_dollars": "0.9100",
+"yes_ask_dollars": "0.9200",
+"volume_fp": "12714.10",
+"open_interest_fp": "3997.01",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than -0.1% in December 2026, as reported to one decimal place, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26DEC-T0.0",
+"yes_sub_title": "Above 0.0%",
+"yes_bid_dollars": "0.9100",
+"yes_ask_dollars": "0.9200",
+"volume_fp": "10071.12",
+"open_interest_fp": "3736.00",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.0% in December 2026, as reported to one decimal place, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26DEC-T0.1",
+"yes_sub_title": "Above 0.1%",
+"yes_bid_dollars": "0.7400",
+"yes_ask_dollars": "0.7500",
+"volume_fp": "3931.00",
+"open_interest_fp": "1353.00",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.1% in December 2026, as reported to one decimal place, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26DEC-T0.2",
+"yes_sub_title": "Above 0.2%",
+"yes_bid_dollars": "0.5800",
+"yes_ask_dollars": "0.6000",
+"volume_fp": "4413.65",
+"open_interest_fp": "1984.21",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.2% in December 2026, as reported to one decimal place, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26DEC-T0.3",
+"yes_sub_title": "Above 0.3%",
+"yes_bid_dollars": "0.3400",
+"yes_ask_dollars": "0.3800",
+"volume_fp": "8783.71",
+"open_interest_fp": "2655.95",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.3% in December 2026, as reported to one decimal place, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26DEC-T0.4",
+"yes_sub_title": "Above 0.4%",
+"yes_bid_dollars": "0.2100",
+"yes_ask_dollars": "0.2700",
+"volume_fp": "10619.25",
+"open_interest_fp": "4173.83",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.4% in December 2026, as reported to one decimal place, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26DEC-T0.5",
+"yes_sub_title": "Above 0.5%",
+"yes_bid_dollars": "0.1300",
+"yes_ask_dollars": "0.1400",
+"volume_fp": "11397.89",
+"open_interest_fp": "7644.00",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.5% in December 2026, as reported to one decimal place, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26DEC-T0.6",
+"yes_sub_title": "Above 0.6%",
+"yes_bid_dollars": "0.1200",
+"yes_ask_dollars": "0.1300",
+"volume_fp": "8783.00",
+"open_interest_fp": "3876.14",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.6% in December 2026, as reported to one decimal place, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26DEC-T0.7",
+"yes_sub_title": "Above 0.7%",
+"yes_bid_dollars": "0.0800",
+"yes_ask_dollars": "0.0900",
+"volume_fp": "8533.00",
+"open_interest_fp": "4229.00",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.7% in December 2026, as reported to one decimal place, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26DEC-T0.8",
+"yes_sub_title": "Above 0.8%",
+"yes_bid_dollars": "0.0500",
+"yes_ask_dollars": "0.0600",
+"volume_fp": "13674.00",
+"open_interest_fp": "9261.00",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.8% in December 2026, as reported to one decimal place, then the market resolves to Yes."
+},
+{
+"ticker": "KXCPI-26DEC-T0.9",
+"yes_sub_title": "Above 0.9%",
+"yes_bid_dollars": "0.0400",
+"yes_ask_dollars": "0.0600",
+"volume_fp": "7856.00",
+"open_interest_fp": "5899.00",
+"close_time": "2027-01-13T13:29:00Z",
+"rules_primary": "If the Consumer Price Index (CPI) increases by more than 0.9% in December 2026, as reported to one decimal place, then the market resolves to Yes."
+}
+]
+}

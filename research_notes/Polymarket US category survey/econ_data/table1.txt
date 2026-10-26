@@ -1,0 +1,221 @@
+## jerpowgov
+By July 31, 2026                   b -x0         a -x0         trd 32949 \$975 oi 0 last None 2026-07-31T16:51
+By August 31, 2026                 b -x0         a -x0         trd 41698 \$2275 oi 0 last None 2026-08-31T17:05
+By December 31, 2026               b 0.070x25915     a 0.080x9911      trd 661073 \$102864 oi 23397 last 0.0700 2026-10-25T03:47
+## usfed-2026
+Cut                                b 0.070x5639      a 0.080x2969      trd 5467340 \$429373 oi 70892 last 0.0700 2026-10-25T23:04
+## usfed-fomc-2026-10-28
+50+ bps Increase                   b -x0         a 0.010x614730    trd 4476400 \$69414 oi 145498 last 0.0100 2026-10-25T15:44
+25 bps Increase                    b 0.050x63490     a 0.070x5074      trd 5312529 \$2073613 oi 107257 last 0.0600 2026-10-25T23:16
+No Change                          b 0.930x12141     a 0.940x8907      trd 7192894 \$4348130 oi 194157 last 0.9400 2026-10-25T22:12
+25 bps Decrease                    b -x0         a 0.010x594733    trd 5332338 \$132197 oi 240256 last 0.0100 2026-10-25T22:29
+50+ bps Decrease                   b -x0         a 0.010x18974     trd 3693355 \$38134 oi 146713 last 0.0100 2026-10-25T15:44
+## us-saa-q3-2026-10-29
+Above 0.0%                         b 0.980x65        a -x0         trd 114223 \$110786 oi 2484 last 0.9900 2026-10-25T17:06
+Above 0.5%                         b 0.980x275       a -x0         trd 47162 \$44830 oi 1893 last 0.9800 2026-10-22T00:21
+Above 1.0%                         b 0.980x1219      a 0.990x7992      trd 81923 \$74166 oi 3316 last 0.9800 2026-10-23T20:45
+Above 1.5%                         b 0.960x694       a 0.970x12024     trd 130648 \$111974 oi 3744 last 0.9600 2026-10-24T23:22
+Above 2.0%                         b 0.890x744       a 0.900x113       trd 161467 \$130963 oi 4284 last 0.9000 2026-10-25T17:54
+Above 2.5%                         b 0.790x1164      a 0.800x45        trd 259471 \$189896 oi 8264 last 0.8000 2026-10-25T21:03
+## liscook-fedgov
+By August 31, 2026                 b -x0         a -x0         trd 1148 \$11 oi 0 last None 2026-09-01T20:56
+By December 31, 2026               b 0.100x360       a 0.110x61        trd 34371 \$4066 oi 673 last 0.1100 2026-10-24T14:38
+## ecb-2026-10-29
+50+ bps Increase                   b -x0         a 0.010x1655      trd 52480 \$967 oi 2221 last 0.0200 2026-10-15T03:23
+25 bps Increase                    b -x0         a 0.020x4351      trd 132852 \$24625 oi 2516 last 0.0100 2026-10-25T22:58
+No Change                          b 0.980x158       a 0.990x809       trd 162522 \$122205 oi 2741 last 0.9900 2026-10-24T20:10
+25 bps Decrease                    b -x0         a 0.010x5012      trd 45971 \$911 oi 2010 last 0.0100 2026-10-25T11:14
+50+ bps Decrease                   b -x0         a 0.010x1480      trd 54318 \$1260 oi 2001 last 0.0100 2026-10-21T12:57
+## boc-2026-10-28
+50+ bps Increase                   b -x0         a 0.010x2597      trd 60469 \$1058 oi 3318 last 0.0100 2026-10-16T21:07
+25 bps Increase                    b 0.790x14        a 0.820x5321      trd 97467 \$41469 oi 2711 last 0.8200 2026-10-25T22:07
+No Change                          b 0.170x622       a 0.180x18        trd 288576 \$180069 oi 3987 last 0.1700 2026-10-25T02:29
+25 bps Decrease                    b -x0         a 0.010x1994      trd 101331 \$2444 oi 2382 last 0.0100 2026-10-25T11:13
+50+ bps Decrease                   b -x0         a 0.010x7856      trd 130042 \$1317 oi 6271 last 0.0100 2026-10-22T03:05
+## us-ann-2026
+Above 1.0%                         b -x0         a -x0         trd 225071 \$113973 oi 498 last 0.9000 2026-10-06T21:28
+Above 1.4%                         b -x0         a -x0         trd 4140 \$2325 oi 60 last 0.9900 2026-09-26T21:04
+Above 1.8%                         b -x0         a -x0         trd 11770 \$5888 oi 0 last 0.9900 2026-09-26T19:39
+Above 2.2%                         b -x0         a -x0         trd 22291 \$7868 oi 157 last 0.1000 2026-10-07T16:51
+Above 2.6%                         b -x0         a -x0         trd 28587 \$14313 oi 35 last 0.7500 2026-10-06T19:05
+Above 3.0%                         b -x0         a -x0         trd 0 \$0 oi 0 last None None
+Above 3.4%                         b -x0         a -x0         trd 315088 \$146226 oi 124 last 0.4000 2026-10-04T21:03
+## fed-gt25bps
+By December 31, 2026               b 0.030x56243     a 0.040x137       trd 167871 \$8988 oi 2517 last 0.0400 2026-10-24T14:38
+## cut-by-2026-12-31
+Bank of Russia                     b 0.020x250       a 0.980x250       trd 384 \$226 oi 0 last 0.5900 2026-10-15T16:05
+European Central Bank              b 0.010x2500      a 0.980x250       trd 0 \$1 oi 0 last 0.0200 2026-09-24T06:26
+Central Bank of Brazil             b 0.150x251       a 0.980x250       trd 1466 \$1169 oi 9 last 0.3500 2026-10-25T05:22
+Bank of Japan                      b 0.020x250       a 0.980x250       trd 0 \$0 oi 0 last 0.2500 2026-10-18T05:36
+Reserve Bank of Australia          b 0.020x245       a 0.980x254       trd 52 \$12 oi 5 last 0.0200 2026-10-20T00:24
+Bank of Canada                     b 0.040x17        a 0.980x250       trd 421 \$35 oi 19 last 0.0900 2026-10-18T15:54
+Bank of England                    b 0.020x250       a 0.980x250       trd 46 \$5 oi 1 last 0.1300 2026-10-01T12:47
+Bank of Israel                     b 0.020x250       a 0.660x31        trd 3125 \$2425 oi 63 last 0.4200 2026-10-25T20:13
+Reserve Bank of New Zealand        b 0.010x2500      a 0.990x2500      trd 0 \$0 oi 0 last None None
+## boe-2026-11-05
+50+ bps Increase                   b -x0         a 0.030x77        trd 0 \$0 oi 0 last None None
+25 bps Increase                    b 0.950x1483      a 0.980x92        trd 1 \$5 oi 1 last 0.9600 2026-10-16T01:23
+No Change                          b 0.020x17        a 0.060x176       trd 847 \$96 oi 91 last 0.2200 2026-10-23T01:32
+25 bps Decrease                    b -x0         a 0.020x147       trd 9680 \$579 oi 438 last 0.0100 2026-10-05T02:14
+50+ bps Decrease                   b -x0         a 0.180x2000      trd 0 \$0 oi 0 last None None
+## usfed-hike2-2026-12-31
+Hike                               b 0.740x6152      a 0.750x2062      trd 834863 \$657260 oi 7191 last 0.7500 2026-10-25T22:19
+## bcb-2026-11-04
+50+ bps Increase                   b -x0         a 0.270x1000      trd 0 \$0 oi 0 last None None
+25 bps Increase                    b -x0         a 0.040x1412      trd 577 \$35 oi 28 last 0.4000 2026-10-10T17:52
+No Change                          b 0.150x129       a 0.480x1000      trd 0 \$0 oi 0 last None None
+25 bps Decrease                    b 0.540x250       a 0.830x2023      trd 138 \$120 oi 23 last 0.8600 2026-10-21T15:19
+50+ bps Decrease                   b -x0         a -x0         trd 0 \$0 oi 0 last None None
+## usfed-fomc-2026-12-09
+50+ bps Increase                   b 0.030x25343     a 0.040x1301      trd 332176 \$9008 oi 7478 last 0.0400 2026-10-25T15:44
+25 bps Increase                    b 0.730x19093     a 0.740x3695      trd 373099 \$267419 oi 7982 last 0.7400 2026-10-25T21:03
+No Change                          b 0.230x728       a 0.240x18744     trd 901568 \$250062 oi 16298 last 0.2400 2026-10-25T19:07
+25 bps Decrease                    b 0.010x54054     a 0.020x1438      trd 586577 \$13461 oi 10871 last 0.0200 2026-10-25T15:45
+50+ bps Decrease                   b -x0         a 0.010x9689      trd 70389 \$1003 oi 4199 last 0.0100 2026-10-25T15:45
+## boj-2026-10-30
+50+ bps Increase                   b -x0         a 0.020x50        trd 0 \$0 oi 0 last None None
+25 bps Increase                    b 0.010x77        a 0.040x50        trd 1439 \$79 oi 246 last 0.0600 2026-10-25T13:23
+No Change                          b 0.960x50        a 0.970x18        trd 586 \$556 oi 3 last 0.9800 2026-10-24T15:47
+25 bps Decrease                    b -x0         a 0.020x1260      trd 0 \$0 oi 0 last None None
+50+ bps Decrease                   b -x0         a 0.020x1260      trd 0 \$0 oi 0 last None None
+## fedfnds-ondt-2027-12-31
+3.25% Or Above                     b 0.050x600       a -x0         trd 2584 \$1477 oi 22 last 0.0100 2026-10-12T01:07
+3.50% Or Above                     b 0.070x500       a 0.990x500       trd 559 \$522 oi 14 last 0.9800 2026-10-23T19:02
+3.75% Or Above                     b 0.020x598       a -x0         trd 0 \$0 oi 0 last None None
+4.00% Or Above                     b 0.030x500       a 0.990x500       trd 0 \$0 oi 0 last None None
+4.25% Or Above                     b 0.010x500       a 0.990x500       trd 0 \$0 oi 0 last None None
+4.50% Or Above                     b 0.010x500       a 0.990x500       trd 60 \$59 oi 2 last 0.9900 2026-09-24T18:19
+4.75% Or Above                     b 0.010x500       a 0.990x500       trd 0 \$0 oi 0 last None None
+5.00% Or Above                     b 0.010x500       a 0.980x598       trd 0 \$0 oi 0 last None None
+5.25% Or Above                     b -x0         a 0.980x598       trd 2344 \$1076 oi 11 last 0.4400 2026-09-27T23:59
+## hike-by-2026-12-31
+Bank of England                    b 0.930x140       a 0.990x451       trd 0 \$0 oi 0 last 0.9900 2026-09-25T05:14
+Bank of Canada                     b 0.660x600       a 0.980x542       trd 0 \$0 oi 0 last 0.0200 2026-10-04T21:50
+Central Bank of Brazil             b -x0         a -x0         trd 0 \$0 oi 0 last None None
+Bank of Israel                     b -x0         a -x0         trd 0 \$0 oi 0 last None None
+Bank of Japan                      b -x0         a -x0         trd 0 \$0 oi 0 last None None
+Bank of Russia                     b -x0         a -x0         trd 0 \$0 oi 0 last None None
+European Central Bank              b -x0         a -x0         trd 0 \$0 oi 0 last None None
+Reserve Bank of Australia          b 0.010x500       a -x0         trd 0 \$0 oi 0 last None None
+Reserve Bank of New Zealand        b -x0         a -x0         trd 0 \$0 oi 0 last None None
+## usunemp-sa-october-2026-11-06
+Above 3.8%                         b 0.980x1176      a 0.990x22469     trd 227 \$232 oi 33 last 0.9800 2026-10-24T19:01
+Above 3.9%                         b 0.970x696       a 0.980x103       trd 3099 \$3017 oi 222 last 0.2600 2026-10-22T15:26
+Above 4.0%                         b 0.930x1401      a 0.940x74        trd 10920 \$10026 oi 347 last 0.9400 2026-10-25T22:12
+Above 4.1%                         b 0.700x46        a 0.710x44        trd 20977 \$14195 oi 645 last 0.7100 2026-10-24T19:12
+Above 4.2%                         b 0.330x108       a 0.340x174       trd 13202 \$4273 oi 283 last 0.3300 2026-10-23T18:46
+Above 4.3%                         b 0.070x35        a 0.080x7         trd 4769 \$546 oi 151 last 0.1000 2026-10-20T17:21
+Above 4.4%                         b 0.030x17        a 0.040x518       trd 50064 \$1532 oi 1614 last 0.0300 2026-10-23T20:15
+Above 4.5%                         b 0.020x32        a 0.030x1244      trd 17627 \$726 oi 990 last 0.0200 2026-10-19T08:55
+Above 4.6%                         b 0.010x63363     a 0.020x834       trd 34655 \$1289 oi 319 last 0.0100 2026-10-25T02:41
+## usnfp-sa-october-2026-11-06
+Above -100,000                     b 0.970x20        a 0.990x2525      trd 2490 \$2174 oi 0 last 0.9700 2026-10-16T19:14
+Above -50,000                      b 0.960x25        a 0.970x350       trd 5751 \$5115 oi 193 last 0.9700 2026-10-24T15:56
+Above 0                            b 0.850x54        a 0.860x48        trd 18061 \$15258 oi 71 last 0.8600 2026-10-24T19:14
+Above 50,000                       b 0.580x94        a 0.590x72        trd 4635 \$2570 oi 28 last 0.5900 2026-10-22T12:33
+Above 100,000                      b 0.280x97        a 0.290x58        trd 8455 \$2238 oi 327 last 0.2800 2026-10-25T02:12
+Above 150,000                      b 0.060x154       a 0.070x29        trd 5196 \$801 oi 154 last 0.0700 2026-10-22T20:03
+## usmort30-hi-yr-2026-12-31
+7.50%                              b 0.290x100       a 0.990x2525      trd 43 \$23 oi 7 last 0.4000 2026-10-25T16:20
+7.60%                              b 0.020x1149      a 0.980x250       trd 51 \$41 oi 6 last 0.6700 2026-10-25T16:20
+7.70%                              b 0.020x250       a 0.980x250       trd 0 \$1 oi 0 last 0.6600 2026-10-23T00:26
+7.80%                              b 0.010x2500      a 0.980x250       trd 20 \$13 oi 5 last 0.0300 2026-10-22T20:16
+7.90%                              b 0.100x10        a 0.390x9         trd 266 \$71 oi 52 last 0.3300 2026-10-25T23:08
+8.00%                              b 0.080x35        a 0.090x28        trd 9038 \$3632 oi 529 last 0.0800 2026-10-25T13:09
+8.10%                              b 0.070x61        a 0.980x253       trd 559 \$57 oi 18 last 0.0700 2026-10-24T14:05
+## usmort30-lw-yr-2026-12-31
+7.30%                              b 0.020x257       a 0.990x5242      trd 258 \$174 oi 12 last 0.9700 2026-10-22T21:56
+7.20%                              b 0.020x1148      a 0.980x250       trd 116 \$52 oi 5 last 0.0100 2026-10-25T16:57
+7.10%                              b 0.020x250       a 0.980x249       trd 17 \$9 oi 1 last 0.1700 2026-10-25T22:42
+7.00%                              b 0.580x5         a 0.600x21        trd 65 \$22 oi 2 last 0.6000 2026-10-25T23:08
+6.90%                              b 0.020x1151      a 0.990x5250      trd 317 \$162 oi 12 last 0.9900 2026-10-25T22:42
+6.80%                              b 0.020x549       a 0.980x252       trd 45 \$27 oi 7 last 0.7000 2026-10-25T23:08
+6.70%                              b 0.030x248       a 0.980x251       trd 29 \$4 oi 2 last 0.9100 2026-10-25T22:42
+## ussnap-40m-2027-12-31
+40M                                b 0.300x5389      a 0.310x1336      trd 32373 \$9984 oi 668 last 0.3100 2026-10-25T13:29
+## usunemp-sa-hi-yr-2026-12-31
+4.4%                               b 0.020x216       a 0.980x283       trd 1461 \$666 oi 115 last 0.3900 2026-10-23T18:55
+4.6%                               b 0.120x50        a 0.150x98        trd 4824 \$762 oi 417 last 0.1400 2026-10-25T04:16
+4.8%                               b 0.040x1460      a 0.080x9         trd 4211 \$287 oi 98 last 0.0700 2026-10-25T04:17
+## usrxcpi-fall-2027
+Yes                                b 0.300x891       a 0.310x392       trd 8375 \$6380 oi 361 last 0.3100 2026-10-24T16:57
+## usunemp-sa-lw-yr-2026-12-31
+4.0%                               b 0.510x17        a 0.520x53        trd 4010 \$1537 oi 71 last 0.5200 2026-10-20T05:09
+3.8%                               b 0.040x1000      a 0.140x3636      trd 31 \$5 oi 2 last 0.1300 2026-10-24T23:20
+3.6%                               b 0.060x1000      a 0.070x46        trd 6798 \$544 oi 236 last 0.0600 2026-10-24T23:20
+## usdebt-hi-2027-12-31
+$41T                               b 0.960x64        a 0.970x536       trd 6004 \$5082 oi 567 last 0.9600 2026-10-23T00:06
+$42T                               b 0.370x20        a 0.380x24        trd 512 \$387 oi 48 last 0.3700 2026-10-23T00:36
+$43T                               b 0.370x68        a 0.380x53        trd 1158 \$615 oi 37 last 0.3700 2026-10-23T02:39
+$44T                               b 0.200x267       a 0.210x97        trd 8185 \$2681 oi 561 last 0.2100 2026-10-23T15:13
+$45T                               b 0.200x49        a 0.210x47        trd 5827 \$2583 oi 451 last 0.2000 2026-10-23T15:49
+## ustariff-fy2027
+$150B                              b 0.730x119       a 0.740x310       trd 9199 \$6753 oi 344 last 0.7300 2026-10-25T15:33
+$200B                              b 0.540x28        a 0.680x40        trd 6458 \$4967 oi 312 last 0.5900 2026-10-23T20:01
+$250B                              b 0.640x84        a 0.650x215       trd 8511 \$3350 oi 389 last 0.6400 2026-10-23T19:24
+$300B                              b 0.580x37        a 0.590x21        trd 2767 \$2064 oi 76 last 0.4800 2026-10-22T03:30
+## usrealwage-v-infl-2026
+Yes                                b 0.140x55178     a 0.150x11829     trd 59191 \$13708 oi 2128 last 0.1400 2026-10-25T13:35
+## usunion-rise-2027
+Yes                                b 0.400x4283      a 0.410x652       trd 9356 \$4267 oi 605 last 0.4000 2026-10-25T14:01
+## uscompl-2026
+1.20M+                             b 0.760x6         a 0.960x254       trd 1492 \$1241 oi 55 last 0.9700 2026-10-24T23:59
+1.25M+                             b 0.550x30        a 0.560x19        trd 808 \$647 oi 44 last 0.5600 2026-10-22T23:57
+1.30M+                             b 0.230x21        a 0.240x15        trd 375 \$195 oi 18 last 0.2300 2026-10-24T05:00
+1.35M+                             b 0.060x168       a 0.070x24        trd 7556 \$5043 oi 384 last 0.0500 2026-10-23T21:57
+1.40M+                             b 0.030x1337      a 0.040x26        trd 3731 \$1027 oi 103 last 0.0400 2026-10-24T07:43
+## usnim-2026-06-30
+250K+                              b -x0         a 0.990x25        trd 0 \$0 oi 0 last None None
+500K+                              b -x0         a 0.990x25        trd 0 \$0 oi 0 last None None
+750K+                              b -x0         a 0.990x25        trd 0 \$0 oi 0 last None None
+1M+                                b -x0         a 0.990x25        trd 0 \$0 oi 0 last None None
+## usrentcpi-fall-2027
+Yes                                b -x0         a -x0         trd 0 \$0 oi 0 last None None
+## uscpi-october-yoy-2026-11-10
+Above 3.2%                         b 0.630x26        a 0.980x256       trd 260 \$164 oi 40 last 0.6400 2026-10-25T22:55
+Above 3.3%                         b 0.020x255       a 0.970x10        trd 318 \$266 oi 21 last 0.7100 2026-10-25T22:51
+Above 3.4%                         b 0.020x256       a 0.990x2500      trd 264 \$125 oi 12 last 0.6000 2026-10-25T20:39
+Above 3.5%                         b 0.020x252       a 0.920x5         trd 742 \$474 oi 21 last 0.8800 2026-10-25T22:50
+Above 3.6%                         b 0.500x34        a 0.960x23        trd 1046 \$439 oi 55 last 0.4700 2026-10-25T18:16
+Above 3.7%                         b 0.010x2500      a 0.980x248       trd 545 \$125 oi 7 last 0.0200 2026-10-24T15:05
+Above 3.8%                         b 0.020x230       a 0.980x269       trd 617 \$120 oi 48 last 0.1900 2026-10-24T20:15
+Above 3.9%                         b 0.020x247       a 0.250x25        trd 222 \$73 oi 44 last 0.2300 2026-10-24T23:05
+Above 4.0%                         b 0.030x30        a 0.150x11        trd 387 \$71 oi 31 last 0.0300 2026-10-23T16:17
+Above 4.1%                         b 0.080x48        a 0.980x258       trd 420 \$61 oi 30 last 0.0800 2026-10-25T13:39
+Above 4.2%                         b 0.020x238       a 0.100x9         trd 497 \$50 oi 68 last 0.1200 2026-10-25T17:27
+Above 4.3%                         b 0.020x246       a 0.980x253       trd 65 \$10 oi 10 last 0.1400 2026-10-25T18:21
+## uscpi-october-mom-2026-11-10
+Above -0.2%                        b 0.980x304       a 0.990x7599      trd 305 \$266 oi 18 last 0.9800 2026-10-22T18:48
+Above -0.1%                        b 0.980x105       a 0.990x7600      trd 145 \$124 oi 8 last 0.9800 2026-10-20T14:49
+Above 0.0%                         b 0.980x245       a 0.990x22500     trd 5254 \$4922 oi 837 last 0.9800 2026-10-22T18:31
+Above 0.1%                         b 0.900x208       a 0.910x878       trd 1306 \$1098 oi 95 last 0.9000 2026-10-24T14:52
+Above 0.2%                         b 0.650x52        a 0.660x463       trd 544 \$302 oi 51 last 0.6500 2026-10-25T20:39
+Above 0.3%                         b 0.240x252       a 0.250x257       trd 1386 \$851 oi 121 last 0.2400 2026-10-24T14:52
+Above 0.4%                         b 0.070x42        a 0.080x175       trd 1771 \$179 oi 154 last 0.0700 2026-10-25T22:42
+Above 0.5%                         b 0.020x674       a 0.030x209       trd 2835 \$160 oi 342 last 0.0200 2026-10-22T20:08
+Above 0.6%                         b 0.010x56590     a 0.020x834       trd 7992 \$196 oi 1513 last 0.0200 2026-10-25T13:30
+## uscpicore-october-mom-2026-11-10
+Above -0.2%                        b 0.020x252       a 0.980x247       trd 55 \$34 oi 5 last 0.2500 2026-10-21T14:30
+Above -0.1%                        b 0.020x250       a 0.980x249       trd 33 \$21 oi 3 last 0.7200 2026-10-22T16:43
+Above 0.0%                         b 0.940x15        a 0.950x765       trd 155 \$147 oi 26 last 0.9700 2026-10-25T17:33
+Above 0.1%                         b 0.740x204       a 0.750x17        trd 416 \$331 oi 33 last 0.7400 2026-10-24T14:38
+Above 0.2%                         b 0.410x102       a 0.420x6         trd 87 \$43 oi 4 last 0.4300 2026-10-24T14:38
+Above 0.3%                         b 0.160x582       a 0.170x182       trd 85 \$15 oi 3 last 0.1800 2026-10-23T22:54
+Above 0.4%                         b 0.050x50        a 0.060x161       trd 0 \$0 oi 0 last 0.0200 2026-10-20T00:44
+Above 0.5%                         b 0.010x7497      a 0.030x146       trd 1100 \$40 oi 282 last 0.0300 2026-10-25T13:14
+## uscpicore-october-yoy-2026-11-10
+Above 2.1%                         b 0.010x2500      a 0.990x2500      trd 0 \$0 oi 0 last None None
+Above 2.2%                         b 0.020x250       a 0.980x249       trd 39 \$12 oi 3 last 0.2400 2026-10-23T14:40
+Above 2.3%                         b 0.020x250       a 0.970x23        trd 238 \$190 oi 24 last 0.9700 2026-10-23T19:42
+Above 2.4%                         b 0.020x257       a 0.960x14        trd 180 \$143 oi 14 last 0.8800 2026-10-23T19:14
+Above 2.5%                         b 0.840x7         a 0.980x246       trd 65 \$59 oi 12 last 0.9800 2026-10-23T19:51
+Above 2.6%                         b 0.020x251       a 0.980x248       trd 116 \$38 oi 8 last 0.1700 2026-10-25T20:17
+Above 2.7%                         b 0.020x247       a 0.980x252       trd 74 \$23 oi 8 last 0.3500 2026-10-24T14:38
+Above 2.8%                         b 0.020x248       a 0.980x251       trd 50 \$21 oi 7 last 0.1000 2026-10-23T17:26
+Above 2.9%                         b 0.020x250       a 0.140x23        trd 149 \$18 oi 23 last 0.0400 2026-10-25T09:37
+Above 3.0%                         b 0.010x7600      a 0.960x2002      trd 17 \$2 oi 1 last 0.0300 2026-10-25T14:40
+Above 3.1%                         b 0.020x249       a 0.980x250       trd 1 \$0 oi 0 last 0.0100 2026-10-23T18:41
+Above 3.2%                         b 0.010x2499      a 0.980x250       trd 34 \$4 oi 4 last 0.0100 2026-10-24T15:10
+Above 3.3%                         b 0.020x249       a 0.980x250       trd 25 \$3 oi 5 last 0.1000 2026-10-25T13:39
+Above 3.4%                         b 0.010x2500      a 0.980x250       trd 51 \$5 oi 4 last 0.0200 2026-10-23T20:15
+Above 3.5%                         b 0.020x47        a 0.110x26        trd 402 \$39 oi 47 last 0.0300 2026-10-22T08:31

@@ -1,0 +1,38 @@
+HOURLY, buy side priced >=0.80 when model(rv1h) edge > 2c
+ taus (900,) spot-lag   5s exec-delay   0s: trades  167 ladders  62 mean +0.0638 se 0.0066 losses 1 avg cost 0.926 avg model 0.9956
+ taus (900,) spot-lag  60s exec-delay   0s: trades  172 ladders  62 mean +0.0644 se 0.0064 losses 1 avg cost 0.925 avg model 0.9948
+ taus (900,) spot-lag   5s exec-delay  60s: trades  167 ladders  62 mean +0.0624 se 0.0067 losses 1 avg cost 0.927 avg model 0.9956
+ taus (900,) spot-lag  60s exec-delay  60s: trades  172 ladders  62 mean +0.0639 se 0.0066 losses 1 avg cost 0.926 avg model 0.9948
+ taus (900,) spot-lag 120s exec-delay 120s: trades  187 ladders  63 mean +0.0555 se 0.0098 losses 3 avg cost 0.924 avg model 0.9918
+ taus (1800,) spot-lag   5s exec-delay   0s: trades   83 ladders  45 mean +0.0202 se 0.0291 losses 4 avg cost 0.927 avg model 0.9887
+ taus (1800,) spot-lag  60s exec-delay   0s: trades   89 ladders  47 mean +0.0171 se 0.0252 losses 5 avg cost 0.922 avg model 0.9843
+ taus (1800,) spot-lag   5s exec-delay  60s: trades   83 ladders  45 mean +0.0153 se 0.0281 losses 4 avg cost 0.932 avg model 0.9887
+ taus (1800,) spot-lag  60s exec-delay  60s: trades   89 ladders  47 mean +0.0159 se 0.0255 losses 5 avg cost 0.923 avg model 0.9843
+ taus (1800,) spot-lag 120s exec-delay 120s: trades   97 ladders  51 mean +0.0213 se 0.0245 losses 6 avg cost 0.912 avg model 0.9812
+ taus (900, 1800, 2700) spot-lag   5s exec-delay   0s: trades  291 ladders  63 mean +0.0288 se 0.0168 losses 12 avg cost 0.925 avg model 0.9897
+ taus (900, 1800, 2700) spot-lag  60s exec-delay   0s: trades  298 ladders  63 mean +0.0286 se 0.0152 losses 13 avg cost 0.923 avg model 0.9884
+ taus (900, 1800, 2700) spot-lag   5s exec-delay  60s: trades  291 ladders  63 mean +0.0265 se 0.0166 losses 12 avg cost 0.928 avg model 0.9897
+ taus (900, 1800, 2700) spot-lag  60s exec-delay  60s: trades  298 ladders  63 mean +0.0280 se 0.0154 losses 13 avg cost 0.924 avg model 0.9884
+ taus (900, 1800, 2700) spot-lag 120s exec-delay 120s: trades  329 ladders  64 mean +0.0265 se 0.0127 losses 16 avg cost 0.920 avg model 0.9858
+HOURLY vol sensitivity (taus 15/30/45m, lag 60, delay 60)
+  rv1h x1.0: trades  298 ladders  63 mean +0.0280 se 0.0154 losses 13 avg cost 0.924 avg model 0.9884
+  rv1h x1.5: trades  188 ladders  59 mean +0.0680 se 0.0065 losses 1 avg cost 0.922 avg model 0.9869
+  rv24h x1.0: trades  262 ladders  54 mean +0.0515 se 0.0162 losses 8 avg cost 0.913 avg model 0.9845
+  dvol x1.0: trades  201 ladders  56 mean +0.0576 se 0.0141 losses 4 avg cost 0.917 avg model 0.9811
+  dvol x0.8: trades  268 ladders  60 mean +0.0497 se 0.0154 losses 8 avg cost 0.915 avg model 0.9847
+HOURLY min price 0.90 / thr 0.04
+   trades  124 ladders  49 mean +0.0472 se 0.0164 losses 2 avg cost 0.932 avg model 0.9973
+DAILY (taus 2h/4h/6h, lag 60, delay 60)
+  rv1h: trades  146 ladders   6 mean +0.0574 se 0.0080 losses 0 avg cost 0.939 avg model 0.9943
+  rv24h: trades  170 ladders   6 mean +0.0577 se 0.0071 losses 0 avg cost 0.938 avg model 0.9944
+  dvol: trades  151 ladders   6 mean +0.0562 se 0.0076 losses 0 avg cost 0.940 avg model 0.9955
+
+STRICT (both bars two-sided, 0 < spread <= 8c)
+ hourly taus (900,) lag60 delay60 rv1h: trades   24 ladders  20 mean +0.0194 se 0.0404 losses 1 avg cost 0.935 avg model 0.9785
+ hourly taus (900,) lag60 delay60 dvol: trades    7 ladders   7 mean +0.0333 se 0.0040 losses 0 avg cost 0.964 avg model 0.9862
+ hourly taus (1800,) lag60 delay60 rv1h: trades   34 ladders  24 mean -0.0363 se 0.0577 losses 4 avg cost 0.914 avg model 0.9632
+ hourly taus (1800,) lag60 delay60 dvol: trades   11 ladders   6 mean -0.0746 se 0.1534 losses 2 avg cost 0.886 avg model 0.9334
+ hourly taus (900, 1800, 2700) lag60 delay60 rv1h: trades   83 ladders  37 mean -0.0672 se 0.0419 losses 12 avg cost 0.918 avg model 0.9660
+ hourly taus (900, 1800, 2700) lag60 delay60 dvol: trades   29 ladders  12 mean -0.0090 se 0.0860 losses 3 avg cost 0.900 avg model 0.9511
+ daily rv24h: trades   29 ladders   6 mean +0.0555 se 0.0083 losses 0 avg cost 0.941 avg model 0.9732
+ daily dvol : trades   15 ladders   5 mean +0.0323 se 0.0033 losses 0 avg cost 0.965 avg model 0.9997
