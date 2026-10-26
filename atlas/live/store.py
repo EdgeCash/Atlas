@@ -151,7 +151,8 @@ SCHEMA: dict[str, list[str]] = {
     "metals": [
         "formed_at", "metal", "event_slug", "market_slug", "window_start", "window_end", "seconds_left",
         "price_to_beat", "spot", "sigma", "p_side", "threshold", "side", "long", "ask", "bid", "fee_rate", "fee",
-        "cost", "edge", "shares_at_ask", "shares_under_cap", "tick", "payout", "won", "profit", "settled_at",
+        "cost", "edge", "shares_at_ask", "shares_under_cap", "fillable", "tick", "payout", "won", "profit",
+        "settled_at",
     ],
     "prop_record": [
         "token_id", "game_id", "kickoff", "sport", "player", "stat", "line", "p_atlas", "p_close", "value", "played",

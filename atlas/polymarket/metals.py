@@ -32,7 +32,11 @@ fee, mostly from one trading day, and a live sample saw one such side lose
   which pays), whose ask is at or under :data:`CAP`, and whose model
   probability beats the ask plus the fee by more than :data:`MIN_EDGE`:
   once per side per threshold per window, at the ask, with the shares the
-  book holds at the ask and at or under the cap.
+  book holds at or under the ask and at or under the cap. The listing's top
+  of book can be a price the book no longer holds; a position whose fresh
+  book has nothing at or under its ask is marked unfillable and left out of
+  the record's totals, so the record counts only trades that could have
+  happened.
 * **Grade.** The venue's settlement of the market, read once the window
   has been over :data:`GRADE_AFTER`.
 
@@ -76,7 +80,8 @@ GRADE_AFTER = timedelta(seconds=75)
 SETTLEMENT_READS = 20
 COLUMNS = ["formed_at", "metal", "event_slug", "market_slug", "window_start", "window_end", "seconds_left",
            "price_to_beat", "spot", "sigma", "p_side", "threshold", "side", "long", "ask", "bid", "fee_rate", "fee",
-           "cost", "edge", "shares_at_ask", "shares_under_cap", "tick", "payout", "won", "profit", "settled_at"]
+           "cost", "edge", "shares_at_ask", "shares_under_cap", "fillable", "tick", "payout", "won", "profit",
+           "settled_at"]
 GRADED = ("payout", "won", "profit", "settled_at")
 
 
@@ -176,13 +181,14 @@ def p_up(spot: float, beat: float, sigma: float, left: float) -> float:
 
 
 def book_depth(market_slug: str, up: bool, ask: float, sess=None) -> tuple[float, float]:
-    """(shares at the side's ask, shares at or under :data:`CAP`) from the market's full book, read with a unique
-    query past the edge cache. The Down side's offers are the long side's bids, one less."""
+    """(shares at or under the side's ask, shares at or under :data:`CAP`) from the market's full book, read with
+    a unique query past the edge cache: what an order at the ask would have found. The Down side's offers are the
+    long side's bids, one less."""
     raw = (source._get(f"/v1/markets/{market_slug}/book", {"fresh": int(time.time() * 1000)}, sess) or {})
     md = raw.get("marketData") or {}
     levels = source._levels(md.get("offers") or md.get("asks"), "low") if up else \
         [(round(1.0 - px, 6), q) for px, q in source._levels(md.get("bids"), "high")]
-    at = sum(q for px, q in levels if abs(px - ask) < 1e-9)
+    at = sum(q for px, q in levels if px <= ask + 1e-9)
     under = sum(q for px, q in levels if px <= CAP + 1e-9)
     return float(at), float(under)
 
@@ -266,6 +272,7 @@ def take(record: pd.DataFrame, now: datetime, *, events=None, spot=None, depth=N
                     "price_to_beat": w["beat"], "spot": s, "sigma": sigma, "p_side": round(p, 5), "threshold": th,
                     "side": side, "long": side == "up", "ask": ask, "bid": bid, "fee_rate": w["fee_rate"], "fee": fee,
                     "cost": ask + fee, "edge": round(p - ask - fee, 5), "shares_at_ask": at, "shares_under_cap": under,
+                    "fillable": (at > 0) if math.isfinite(at) else None,
                     "tick": w["tick"], "payout": float("nan"), "won": float("nan"), "profit": float("nan"),
                     "settled_at": None})
     if not rows:
@@ -333,11 +340,21 @@ def step(store, now: datetime, *, sess=None, events=None, spot=None, depth=None,
 # ---------------------------------------------------------------------------
 
 
+def _fillable(value):
+    """True, False, or None (the book was not read) however the record was read back."""
+    if value is None or (isinstance(value, float) and math.isnan(value)) or value is pd.NA:
+        return None
+    text = str(value).strip().lower()
+    return True if text in ("true", "1", "1.0") else False if text in ("false", "0", "0.0") else None
+
+
 def summary(record: pd.DataFrame, by=("threshold",)) -> pd.DataFrame:
-    """Per group: positions taken and settled, losses, the win rate against the break-even (mean cost), the edge
+    """Per group: positions taken, how many the book could not have filled (nothing at or under the ask) or was not
+    read for, and over the fillable ones settled: losses, the win rate against the break-even (mean cost), the edge
     per contract with a window-clustered standard error, and what a one-dollar order would have made: a dollar's
     worth of contracts at the ask, its fee rounded to the cent (a fee under half a cent is no fee)."""
-    cols = [*by, "taken", "settled", "losses", "win_rate", "break_even", "edge", "se", "dollar_orders"]
+    cols = [*by, "taken", "unfillable", "unread", "settled", "losses", "win_rate", "break_even", "edge", "se",
+            "dollar_orders"]
     if record is None or record.empty:
         return pd.DataFrame(columns=cols)
     from atlas.polymarket import backtest
@@ -345,14 +362,16 @@ def summary(record: pd.DataFrame, by=("threshold",)) -> pd.DataFrame:
     rows = []
     for key, g in clean(record).groupby(list(by), sort=True, dropna=False):
         key = key if isinstance(key, tuple) else (key,)
-        done = g[pd.to_numeric(g["payout"], errors="coerce").notna()]
+        fill = g["fillable"].map(_fillable)
+        done = g[(fill == True) & pd.to_numeric(g["payout"], errors="coerce").notna()]  # noqa: E712
         n = len(done)
         won, cost = pd.to_numeric(done["won"], errors="coerce"), pd.to_numeric(done["cost"], errors="coerce")
         ask, rate = pd.to_numeric(done["ask"], errors="coerce"), pd.to_numeric(done["fee_rate"], errors="coerce")
         contracts = 1.0 / ask
         fee = (rate * contracts * ask * (1 - ask)).round(2)
         dollar = float((won * contracts - 1.0 - fee).sum()) if n else float("nan")
-        rows.append({**dict(zip(by, key, strict=True)), "taken": int(len(g)), "settled": n,
+        rows.append({**dict(zip(by, key, strict=True)), "taken": int(len(g)), "unfillable": int((fill == False).sum()),  # noqa: E712
+                     "unread": int(fill.isna().sum()), "settled": n,
                      "losses": int((won == 0).sum()), "win_rate": float(won.mean()) if n else float("nan"),
                      "break_even": float(cost.mean()) if n else float("nan"),
                      "edge": float((won - cost).mean()) if n else float("nan"),
@@ -371,11 +390,12 @@ def section(record: pd.DataFrame, now: datetime) -> dict:
     def table(s: pd.DataFrame, keys: list[str], title: str) -> dict:
         rows = []
         for x in s.itertuples(index=False):
-            rows.append([*[str(getattr(x, k)) for k in keys], f"{x.taken} / {x.settled}", str(x.losses),
+            rows.append([*[str(getattr(x, k)) for k in keys], f"{x.taken} / {x.settled}", str(x.unfillable),
+                         str(x.losses),
                          f"{x.win_rate:.1%}" if x.settled else "", f"{x.break_even:.1%}" if x.settled else "",
                          (f"{100 * x.edge:+.2f} ± {100 * x.se:.2f}" if math.isfinite(x.se) else f"{100 * x.edge:+.2f}")
                          if x.settled else "", f"{x.dollar_orders:+.2f}" if x.settled else ""])
-        return {"title": title, "head": [*[k.title() for k in keys], "Taken / settled", "Losses", "Win rate",
+        return {"title": title, "head": [*[k.title() for k in keys], "Taken / settled", "Unfillable", "Losses", "Win rate",
                                          "Break-even", "Edge (¢ a contract)", "$1 orders ($)"], "stack": True, "rows": rows}
     if n:
         tables.append(table(summary(record, ("threshold",)), ["threshold"], "By model threshold"))
@@ -385,6 +405,8 @@ def section(record: pd.DataFrame, now: datetime) -> dict:
         for x in latest.itertuples():
             payout = pd.to_numeric(pd.Series([x.payout]), errors="coerce").iloc[0]
             state = "open" if pd.isna(payout) else ("won" if payout >= 0.999 else "lost")
+            if _fillable(x.fillable) is False:
+                state += ", unfillable"
             under = pd.to_numeric(pd.Series([x.shares_under_cap]), errors="coerce").iloc[0]
             rows.append([[f"{x.metal} {str(x.window_end)[11:16]}Z", f"{x.side}, model {float(x.p_side):.3f}"],
                          f"{float(x.threshold):.2f}", f"{float(x.ask):.2f}", f"{float(x.seconds_left):.0f}",
@@ -401,4 +423,7 @@ def section(record: pd.DataFrame, now: datetime) -> dict:
         "+0.8 to +2.9¢ a contract on one trading day and one live loss at 0.95; a single loss at 0.95 costs about "
         "twenty wins, so the edge column needs a few hundred settled windows before it means anything.",
         "$1 orders: what a dollar's worth of contracts at the ask would have made in all, the fee rounded to the cent "
-        "as the venue rounds it (under half a cent is nothing)."]}
+        "as the venue rounds it (under half a cent is nothing).",
+        "Unfillable: the listing quoted the side at the ask, but the market's own book, read at that moment, held no "
+        "shares at or under it. These are kept in the record and left out of every total from Taken / settled on, "
+        "as are positions whose book could not be read."]}

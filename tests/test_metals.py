@@ -101,6 +101,8 @@ def test_the_book_is_read_past_the_cache_and_the_down_side_is_the_long_bids(monk
                                       {"px": {"value": "0.9900"}, "qty": "900"}]}}
     monkeypatch.setattr(source, "_get", lambda path, params=None, sess=None, **kw: asked.append((path, params)) or book)
     assert metals.book_depth("m1", True, 0.95) == (12.0, 20.0)
+    assert metals.book_depth("m1", True, 0.97) == (20.0, 20.0)                 # at or under the ask, not only at it
+    assert metals.book_depth("m1", True, 0.94) == (0.0, 20.0)                  # the quote is gone: nothing to fill
     assert metals.book_depth("m1", False, 0.96) == (30.0, 100.0)               # 1 - 0.04 and 1 - 0.03
     assert asked[0][0] == "/v1/markets/m1/book" and "fresh" in asked[0][1]
 
@@ -194,3 +196,30 @@ def test_the_worker_merges_the_practice_record_with_the_branchs(tmp_path, monkey
     subprocess.run(["git", "pull", "-q", "origin", "main"], cwd=runs, check=True, capture_output=True)
     merged = Store.open(runs / "tracking").read(metals.TABLE)
     assert sorted(set(merged["metal"])) == ["gold", "silver"] and len(merged) == 6
+
+
+def test_a_position_the_book_could_not_fill_is_kept_and_left_out_of_the_totals(tmp_path, monkeypatch):
+    monkeypatch.delenv("ATLAS_OFFLINE", raising=False)
+    spot = {"gold": (4004.0, 3.6e-5), "silver": (53.55, 7.8e-5)}.get
+    books = {"cpausp-gold-updown-15m-2026-10-26-1330z": (21.0, 93.0),          # filled at the ask
+             "cpagsp-silver-updown-15m-2026-10-26-1330z": (0.0, 0.0)}          # the quote was not in the book
+    events = [_event("gold"), _event("silver", bid=0.04, ask=0.06, beat=53.70)]
+    record, _ = metals.take(pd.DataFrame(), NOW, events=events, spot=spot, depth=lambda slug, up, ask: books[slug])
+    assert record.groupby("metal")["fillable"].agg(set).to_dict() == {"gold": {True}, "silver": {False}}
+    unread, _ = metals.take(pd.DataFrame(), NOW, events=[_event("gold")], spot=spot,
+                            depth=lambda *a: (_ for _ in ()).throw(RuntimeError("book down")))
+    assert unread["fillable"].isna().all()
+    record = pd.concat([record, unread.assign(market_slug="other-gold")], ignore_index=True)
+    graded, _ = metals.grade(record, END + timedelta(minutes=2), fetch=lambda slug: 0.0)   # Down won everywhere
+    s = metals.summary(graded, ("metal",)).set_index("metal")
+    assert (s.loc["gold", "taken"], s.loc["gold", "unread"], s.loc["gold", "settled"]) == (6, 3, 3)
+    assert s.loc["gold", "losses"] == 3                                        # the three it could have filled lost
+    assert (s.loc["silver", "taken"], s.loc["silver", "unfillable"], s.loc["silver", "settled"]) == (3, 3, 0)
+    assert math.isnan(s.loc["silver", "dollar_orders"])                        # silver's wins never happened
+    # Read back from the record's CSV, the flag still counts.
+    store = Store.open(tmp_path)
+    store.write(metals.TABLE, graded)
+    again = metals.summary(store.read(metals.TABLE), ("metal",)).set_index("metal")
+    assert again.loc["silver", "unfillable"] == 3 and again.loc["gold", "settled"] == 3
+    rows = metals.section(graded, END + timedelta(minutes=2))["tables"][-1]["rows"]
+    assert any(r[-1] == "won, unfillable" for r in rows)
