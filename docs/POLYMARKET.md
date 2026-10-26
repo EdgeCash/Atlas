@@ -54,8 +54,9 @@ Every run, heavy or poll (`python -m atlas.polymarket refresh`):
    and last seen. The rest of the ladder is read and priced, not kept. The
    gateway's game feed carries the top of each book but not what rests
    there, so the depth of a contract is read from its book
-   (`/v1/markets/{slug}/bbo`) only for the contracts that clear the rest of
-   the rule, up to forty a run (`positions.deepen`).
+   (`/v1/markets/{slug}/book`, the shares at the best ask alone; `/bbo`'s
+   share counts are the whole side summed) only for the contracts that
+   clear the rest of the rule, up to forty a run (`positions.deepen`).
 2. **Price** (`pricing.py`). For every contract, three probabilities:
    Polymarket's own (the two outcomes' midpoints normalised to one);
    Atlas's raw reading of the line (the fitted market shape centred on the
@@ -224,7 +225,8 @@ limit sent that late fills nothing. So from 24 October 2026 the rule can run
 as an always-on loop instead
 (`atlas/polymarket/worker.py`, `make polymarket-worker`): every 45 seconds
 while a game is in play (every three minutes while none is) it reads the
-four leagues' listings - about ten requests, fifty games a page, each game with its moneyline's top
+five leagues' listings (the four Atlas models and, from November, college
+basketball) - about ten requests, fifty games a page, each game with its moneyline's top
 of book and the venue's own period and clock - takes the crossings, grades
 the settled ones, writes `tracking/favorites.csv`, hands the new positions
 to the live step (late ones only unless `LIVE_PHASE` is `any`), grades the
@@ -383,7 +385,7 @@ mode secret.
 Nothing here buys anything. Before real money, confirm: that each market's
 fee coefficient is what the API says and the taker tier the account sits
 in; that the depth figure (the shares resting at the best ask times the
-price, from `/v1/markets/{slug}/bbo`) fills at that price for the size
+price, from `/v1/markets/{slug}/book`) fills at that price for the size
 meant; and that the settlement rules the pricing assumes (a player who does
 not play settled at the last fair price; a game moved more than two days
 settled the same way) are the ones on each market's page.

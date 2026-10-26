@@ -61,6 +61,8 @@ MIN_GRADED = 50
 COLUMNS = ["position_id", "formed_at", "day", "year", "week", "game_id", "sport", "kickoff", "label", "away", "home",
            "market", "side", "long", "line", "token_id", "market_id", "market_slug", "event_slug", "ask", "fee_rate", "fee",
            "cost", "p_market", "p_raw", "p", "ev", "kelly", "stake", "liquidity", "spread",
+           # The market's price tick, which an order's limit is put on (atlas/polymarket/account.py).
+           "tick",
            # What the venue's order preview said when the position was logged (atlas/polymarket/account.py).
            "previewed_at", "preview_qty", "preview_px", "preview_filled", "preview_fee", "preview_state"]
 

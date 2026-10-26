@@ -57,7 +57,7 @@ SETTLEMENT_READS = 20
 COLUMNS = ["formed_at", "sport", "game_id", "event_id", "event_slug", "game_start", "label", "side", "long",
            "market_slug", "token_id", "ask", "bid", "spread", "ask_shares", "fee_rate", "fee", "cost", "decided",
            "period", "score", "finished_at", "minutes_after_finish", "payout", "won", "profit", "settled_at",
-           "minutes_to_settle"]
+           "minutes_to_settle", "tick"]
 GRADED = ("payout", "won", "profit", "settled_at", "minutes_to_settle")
 
 
@@ -169,7 +169,7 @@ def take(record: pd.DataFrame, quotes: pd.DataFrame, events: dict[str, list[dict
             "finished_at": finished.isoformat() if pd.notna(finished) else None,
             "minutes_after_finish": round(after, 1) if math.isfinite(after) else float("nan"),
             "payout": float("nan"), "won": float("nan"), "profit": float("nan"), "settled_at": None,
-            "minutes_to_settle": float("nan")})
+            "minutes_to_settle": float("nan"), "tick": source._num(getattr(x, "tick", float("nan")))})
     new = pd.DataFrame(rows, columns=COLUMNS)
     out = pd.concat([record, new], ignore_index=True) if len(record) else new
     LOG.info("finish: %d positions taken (%d decided by the market)", len(new), int(new["decided"].sum()))
@@ -227,7 +227,7 @@ def as_positions(rows: pd.DataFrame) -> pd.DataFrame:
         "market": "moneyline", "side": rows["side"], "long": rows["long"], "line": 0.0,
         "token_id": rows["token_id"], "market_slug": rows["market_slug"], "event_slug": rows["event_slug"],
         "ask": rows["ask"], "fee_rate": rows["fee_rate"], "fee": rows["fee"], "cost": rows["cost"], "stake": 1.0,
-        "spread": rows["spread"]})
+        "spread": rows["spread"], "tick": rows["tick"] if "tick" in rows else float("nan")})
     return out.reindex(columns=positions.COLUMNS)
 
 

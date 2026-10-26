@@ -93,6 +93,19 @@ def test_the_order_is_a_limit_at_the_ask_on_the_long_side_immediate_or_cancel():
     assert account.quantity(_record([{"position_id": "p3", "ask": float("nan")}]).iloc[0], 1000.0) == account.MIN_QUANTITY
 
 
+def test_the_limit_is_put_on_the_markets_own_tick_not_rounded_to_the_cent():
+    # An NFL moneyline ticks at a quarter cent: its 0.9975 ask, kept as 0.997 in the record, is 0.9975 again,
+    # never "1.00"; college football's half cent keeps 0.985, never "0.98", which would sit under the ask.
+    nfl = _record([{"position_id": "p1", "market_slug": "nfl-ml", "long": True, "ask": 0.997, "tick": 0.0025}]).iloc[0]
+    assert account.order(nfl, 10)["price"]["value"] == "0.9975"
+    cfb = _record([{"position_id": "p2", "market_slug": "cfb-ml", "long": False, "ask": 0.985, "tick": 0.005}]).iloc[0]
+    assert account.order(cfb, 10)["price"]["value"] == "0.015"                     # the long side's, on the tick
+    assert account.price_text(0.905, 0.001) == "0.905" and account.price_text(0.42, 0.01) == "0.42"
+    assert account.price_text(0.5800000000000001, 0.01) == "0.58" and account.price_text(0.42, 0.001) == "0.42"
+    assert account.price_text(0.997, float("nan")) == "0.997" and account.price_text(0.42, None) == "0.42"
+    assert account.price_text(1.0, 0.01) == "0.99" and account.price_text(0.0, 0.0025) == "0.0025"
+
+
 def test_only_the_preview_path_can_be_called():
     signer = account.Signer("key-1", SECRET)
     with pytest.raises(ValueError):

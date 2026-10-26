@@ -9,8 +9,8 @@ five minutes to start, and the rule's live orders go late in games, when a
 limit sent that late fills nothing (``reports/favorites_backtest.md``). On
 the venue's own tape a late favorite has lost about a point against its
 cost, and an earlier one more; the live record is the test of the late rule. So the
-rule runs here, on a machine that stays up: each tick reads the four
-leagues' listings - about ten requests, fifty games a page, each game with
+rule runs here, on a machine that stays up: each tick reads the five
+leagues' listings (`source.WORKER_LEAGUES`) - about ten requests, fifty games a page, each game with
 its moneyline's top of book and the venue's own
 period and clock - takes the crossings (`favorites.take`), grades the
 settled ones, writes ``tracking/favorites.csv``, hands the new positions to
@@ -67,9 +67,10 @@ _NUMBER = re.compile(r"(\d+)")
 
 
 def venue_period(text, sport) -> float:
-    """The period a venue's event stub says the game is in, as the scoreboard counts them: "Q4" and "End Q3"
-    by their number, "OT" and "SO" one past the sport's last, "HT" the second of four; nan before the
-    start, after the end, or unread."""
+    """The period a venue's event stub says the game is in, as the scoreboard counts them: "Q4", "End Q3" and
+    a half's "H2" by their number, "OT" and "SO" one past the sport's last, "HT" the end of the first half
+    (the second of four quarters, the first of college basketball's two halves); nan before the start, after
+    the end, or unread."""
     s = str(text or "").strip().upper()
     final = favorites.FINAL_PERIOD.get(str(sport).lower())
     if not s or s in ("NS", "FT", "VFT", "FINAL", "ENDED", "CANCELLED", "POSTPONED"):
@@ -77,7 +78,7 @@ def venue_period(text, sport) -> float:
     if "OT" in s or s.startswith("SO") or "SHOOTOUT" in s.replace(" ", ""):
         return float(final + 1) if final else float("nan")
     if s in ("HT", "HALF", "HALFTIME"):
-        return 2.0
+        return 1.0 if final == 2 else 2.0
     m = _NUMBER.search(s)
     return float(m.group(1)) if m else float("nan")
 
@@ -100,7 +101,7 @@ def listings(sess=None, leagues=None) -> dict[str, list[dict]]:
     the moneyline with its top of book. A league that fails is skipped."""
     sess = sess or session()
     out: dict[str, list[dict]] = {}
-    for league in (leagues or source.LEAGUES.values()):
+    for league in (leagues or source.WORKER_LEAGUES.values()):
         try:
             out[league.sport] = source.fetch_listing(league, sess)
         except Exception as error:  # noqa: BLE001 - one league's outage is not the tick's
@@ -115,7 +116,8 @@ def tick(store: Store, now: datetime, passphrase: str | None, *, events: dict[st
     what happened, for the log."""
     events = events if events is not None else (listings(sess) if not offline() else {})
     live = sum(1 for stubs in events.values() for e in stubs if e.get("live") and not e.get("ended"))
-    quotes = source.capture(now, events=events) if events else pd.DataFrame(columns=source.QUOTE_COLUMNS)
+    quotes = source.capture(now, leagues=source.WORKER_LEAGUES.values(), events=events) if events \
+        else pd.DataFrame(columns=source.QUOTE_COLUMNS)
     games = store.read("games")
     if len(quotes):
         up = match.upcoming(games, now, store.read("projections"), store.read("nhl_projections"))

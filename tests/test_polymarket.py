@@ -300,6 +300,28 @@ def _board():
     return p
 
 
+def test_depth_is_the_shares_at_the_best_price_from_the_full_book_not_the_whole_side(monkeypatch):
+    # /bbo's askShares is every offer summed (770,000 against 380,259 at the best ask on 26 October 2026), so
+    # the depth is read from /book's levels: the shares at the one best price, the levels in any order.
+    asked = []
+    book = {"marketData": {"marketSlug": "m1", "state": "MARKET_STATE_OPEN",
+                           "bids": [{"px": {"value": "0.7500", "currency": "USD"}, "qty": "19379.84"},
+                                    {"px": {"value": "0.7600", "currency": "USD"}, "qty": "310648.18"}],
+                           "offers": [{"px": {"value": "0.7800", "currency": "USD"}, "qty": "19502.83"},
+                                      {"px": {"value": "0.7700", "currency": "USD"}, "qty": "380259.44"},
+                                      {"px": {"value": "0.9900", "currency": "USD"}, "qty": "0"}]}}
+    monkeypatch.setattr(source, "_get", lambda path, params=None, sess=None, **kw: asked.append(path) or book)
+    long_ = source.depth("m1", True)
+    assert asked == ["/v1/markets/m1/book"]
+    assert (long_["bid"], long_["ask"], long_["spread"]) == (0.76, 0.77, 0.01)
+    assert long_["ask_shares"] == pytest.approx(380259.44) and long_["ask_dollars"] == pytest.approx(380259.44 * 0.77)
+    short = source.depth("m1", False)                       # the short side's ask is one less the long bid
+    assert (short["bid"], short["ask"]) == (0.23, 0.24) and short["ask_shares"] == pytest.approx(310648.18)
+    monkeypatch.setattr(source, "_get", lambda *a, **kw: {"marketData": {"bids": [], "offers": []}})
+    empty = source.depth("m1", True)
+    assert math.isnan(empty["ask"]) and math.isnan(empty["ask_shares"]) and math.isnan(empty["ask_dollars"])
+
+
 def test_depth_is_read_from_the_book_for_the_candidates_only():
     p = _priced(calibration=_calibration(k=1.0, k_margin=0.0), projections=_projections(total=49.0))
     assert p["liquidity"].isna().all()

@@ -30,6 +30,7 @@ import math
 import os
 import time
 from datetime import UTC, datetime
+from decimal import ROUND_HALF_UP, Decimal
 
 import pandas as pd
 import requests
@@ -47,6 +48,8 @@ SECRET_KEY = "POLYMARKET_US_SECRET"
 BANKROLL = "ATLAS_PREVIEW_BANKROLL"
 DEFAULT_BANKROLL = 1000.0
 MIN_QUANTITY = 0.01
+#: The finest tick the record's prices are kept to (three decimals), taken when a market's own is unknown.
+FINEST_TICK = Decimal("0.001")
 TIMEOUT = 20
 USER_AGENT = "Atlas sports research (github.com/EdgeCash/Atlas; previews only)"
 #: What a preview writes into the sealed record, beside the paper price.
@@ -92,13 +95,36 @@ def quantity(row, bankroll: float) -> float:
     return max(MIN_QUANTITY, round(float(row.stake) * bankroll / ask, 2))
 
 
+def price_text(price: float, tick=None) -> str:
+    """A limit price as the venue takes it: on the market's tick (``orderPriceMinTickSize``: a cent on most
+    markets, a quarter cent on NFL moneylines, half a cent on college football's, a tenth on some), to the
+    tick's own decimals and no fewer than two. The nearest tick, not the one below: the record keeps prices
+    to three decimals, so an NFL ask of 0.9975 comes back as 0.997 and only the nearest tick restores it.
+    A tick unknown (a record from before it was kept) is taken as the tenth of a cent the record holds."""
+    try:
+        step = Decimal(str(float(tick)))
+    except (TypeError, ValueError):
+        step = Decimal("NaN")
+    if not step.is_finite() or step <= 0:
+        step = FINEST_TICK
+    snapped = (Decimal(str(price)) / step).to_integral_value(rounding=ROUND_HALF_UP) * step
+    snapped = min(max(snapped, step), 1 - step)
+    places = max(2, -step.normalize().as_tuple().exponent)
+    text = f"{snapped:.{places}f}"
+    while text.endswith("0") and len(text.split(".")[1]) > 2:
+        text = text[:-1]
+    return text
+
+
 def order(row, qty: float) -> dict:
-    """The order the position would be: a limit at the quoted ask, immediate-or-cancel. The venue prices
-    every order on the long side, so a short position's price is one less its ask."""
+    """The order the position would be: a limit at the quoted ask, immediate-or-cancel, on the market's tick
+    (:func:`price_text`). The venue prices every order on the long side, so a short position's price is one
+    less its ask."""
     long_ = bool(row.long) if str(row.long).lower() not in ("false", "0", "nan", "") else False
     ask = float(row.ask)
     return {"marketSlug": str(row.market_slug), "type": "ORDER_TYPE_LIMIT",
-            "price": {"value": f"{(ask if long_ else 1.0 - ask):.2f}", "currency": "USD"}, "quantity": qty,
+            "price": {"value": price_text(ask if long_ else 1.0 - ask, getattr(row, "tick", None)),
+                      "currency": "USD"}, "quantity": qty,
             "tif": "TIME_IN_FORCE_IMMEDIATE_OR_CANCEL",
             "intent": "ORDER_INTENT_BUY_LONG" if long_ else "ORDER_INTENT_BUY_SHORT",
             "manualOrderIndicator": "MANUAL_ORDER_INDICATOR_AUTOMATIC"}

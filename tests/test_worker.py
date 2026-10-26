@@ -32,11 +32,28 @@ def test_the_venues_period_is_read_as_the_scoreboard_counts_them():
     assert worker.venue_period("P3", "nhl") == 3.0 and worker.venue_period("OT", "nhl") == 4.0
     assert worker.venue_period("2OT", "nba") == 5.0 and worker.venue_period("SO", "nhl") == 4.0
     assert worker.venue_period("HT", "nfl") == 2.0
+    # College basketball plays two halves: half-time ends the first, and the second half is its last.
+    assert worker.venue_period("HT", "ncaab") == 1.0 and worker.venue_period("H2", "ncaab") == 2.0
+    assert worker.venue_period("OT", "ncaab") == 3.0 and favorites.is_late("ncaab", 2.0, "in_play")
+    assert not favorites.is_late("ncaab", 1.0, "in_play")
     assert all(math.isnan(worker.venue_period(x, "nba")) for x in ("NS", "FT", "VFT", "", None))
     state = worker.venue_state({"nba": [_stub("1", "nba-a-b", BULLS, CELTICS, 0.85, 0.86),
                                         _stub("2", "nba-c-d", BULLS, CELTICS, 0.85, 0.86, live=False, period="NS"),
                                         _stub("3", "nba-e-f", BULLS, CELTICS, 0.85, 0.86, ended=True, period="FT")]})
     assert state == {"1": (4.0, "03:12")}
+
+
+def test_the_worker_reads_college_basketball_which_the_scheduled_capture_does_not(monkeypatch):
+    from atlas.polymarket import source
+
+    read = []
+    monkeypatch.setattr(source, "fetch_listing", lambda league, sess=None: read.append(league.slug) or [])
+    out = worker.listings(sess=object())
+    assert read == ["nfl", "nhl", "cfb", "nba", "cbb"] and set(out) == {"nfl", "nhl", "ncaaf", "nba", "ncaab"}
+    assert "ncaab" not in source.LEAGUES                    # Atlas has no model for it: no full reads each run
+    events = {"ncaab": [_stub("4", "cbb-duke-unc-2026-11-10", BULLS, CELTICS, 0.85, 0.86, period="H2")]}
+    q = source.capture(NOW, leagues=source.WORKER_LEAGUES.values(), events=events)
+    assert len(q) == 2 and set(q["sport"]) == {"ncaab"} and worker.venue_state(events) == {"4": (2.0, "03:12")}
 
 
 def test_a_tick_takes_the_crossings_with_the_venues_clock_and_orders_nothing_offline(tmp_path, monkeypatch):
