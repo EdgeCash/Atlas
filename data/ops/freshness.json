@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-10-27T03:53:45.192071+00:00",
+      "detail": "market in 12s",
+      "mode": "Monday night",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-10-27T03:53:45.032966+00:00",
+      "detail": "58 cards, 14 NFL cards, 48 NHL cards, 116 teams, 28 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-10-27T03:38:59.836127+00:00",
       "detail": "market in 15s",
       "mode": "Monday night",
@@ -1283,24 +1296,11 @@
       "detail": "56 cards, 25 NFL cards, 52 NHL cards, 112 teams, 30 NFL teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-10-25T14:54:11.565678+00:00",
-      "detail": "market in 17s",
-      "mode": "NFL Sunday",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-10-25T14:54:11.420666+00:00",
-      "detail": "56 cards, 25 NFL cards, 52 NHL cards, 112 teams, 30 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-10-27T03:38:59.671480+00:00",
+      "at": "2026-10-27T03:53:45.032966+00:00",
       "detail": "58 cards, 14 NFL cards, 48 NHL cards, 116 teams, 28 NFL teams",
       "name": "build",
       "ok": true
@@ -1312,8 +1312,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-27T03:38:59.836127+00:00",
-      "detail": "market in 15s",
+      "at": "2026-10-27T03:53:45.192071+00:00",
+      "detail": "market in 12s",
       "mode": "Monday night",
       "name": "poll",
       "ok": true
@@ -1327,7 +1327,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-10-27T03:38:59.671480+00:00",
+      "at": "2026-10-27T03:53:45.032966+00:00",
       "detail": "58 cards, 14 NFL cards, 48 NHL cards, 116 teams, 28 NFL teams",
       "name": "build",
       "ok": true
@@ -1339,8 +1339,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-27T03:38:59.836127+00:00",
-      "detail": "market in 15s",
+      "at": "2026-10-27T03:53:45.192071+00:00",
+      "detail": "market in 12s",
       "mode": "Monday night",
       "name": "poll",
       "ok": true
