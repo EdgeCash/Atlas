@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-10-27T02:09:12.741243+00:00",
+      "detail": "market in 17s",
+      "mode": "Monday night",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-10-27T02:09:12.543099+00:00",
+      "detail": "58 cards, 14 NFL cards, 48 NHL cards, 116 teams, 28 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-10-27T01:54:15.779976+00:00",
       "detail": "market in 17s",
       "mode": "Monday night",
@@ -1283,24 +1296,11 @@
       "detail": "56 cards, 26 NFL cards, 52 NHL cards, 112 teams, 31 NFL teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-10-25T13:08:26.284945+00:00",
-      "detail": "market in 9s",
-      "mode": "NFL Sunday",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-10-25T13:08:26.166905+00:00",
-      "detail": "56 cards, 26 NFL cards, 52 NHL cards, 112 teams, 31 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-10-27T01:54:15.640210+00:00",
+      "at": "2026-10-27T02:09:12.543099+00:00",
       "detail": "58 cards, 14 NFL cards, 48 NHL cards, 116 teams, 28 NFL teams",
       "name": "build",
       "ok": true
@@ -1312,7 +1312,7 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-27T01:54:15.779976+00:00",
+      "at": "2026-10-27T02:09:12.741243+00:00",
       "detail": "market in 17s",
       "mode": "Monday night",
       "name": "poll",
@@ -1327,7 +1327,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-10-27T01:54:15.640210+00:00",
+      "at": "2026-10-27T02:09:12.543099+00:00",
       "detail": "58 cards, 14 NFL cards, 48 NHL cards, 116 teams, 28 NFL teams",
       "name": "build",
       "ok": true
@@ -1339,7 +1339,7 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-10-27T01:54:15.779976+00:00",
+      "at": "2026-10-27T02:09:12.741243+00:00",
       "detail": "market in 17s",
       "mode": "Monday night",
       "name": "poll",
