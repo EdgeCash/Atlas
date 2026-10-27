@@ -1842,6 +1842,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-26T21:37:44+00:00,2026-10-26T21:06Z,8,Detroit Lions,DET,4566092,Ennis Rakestraw Jr.,CB,Questionable,QUESTIONABLE,Ankle,2026-11-01,"Rakestraw (ankle) is not believed to be dealing with a major injury after he was forced to exit Sunday's win over the Packers, Nolan Bianchi of The Detroit News"
 2026-10-26T21:22:51+00:00,2026-10-26T21:07Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-26T21:22:51+00:00,2026-10-26T21:07Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-27T20:07:49+00:00,2026-10-26T21:14Z,4,Cincinnati Bengals,CIN,4700712,Cam Grandy,TE,Active,,,,"The Bengals signed Grandy off the Vikings' practice squad Monday, Aaron Wilson of KPRC 2 Houston reports."
 2026-10-26T21:37:44+00:00,2026-10-26T21:15Z,11,Indianapolis Colts,IND,4682909,Justin Walley,CB,Questionable,QUESTIONABLE,Knee,2026-11-01,"According to head coach Shane Steichen, Walley did not return to Sunday's 16-10 loss to Minnesota due to a knee injury, Kevin Bowen of 107.5 The Fan Indianapoli"
 2026-10-26T21:37:44+00:00,2026-10-26T21:17Z,21,Philadelphia Eagles,PHI,4241374,Grant Calcaterra,TE,Active,,,,The Eagles activated Calcaterra (back) from injured reserve Monday.
 2026-10-26T21:37:44+00:00,2026-10-26T21:19Z,21,Philadelphia Eagles,PHI,4241555,Elijah Mitchell,RB,Active,,,,The Eagles elevated Mitchell from the practice squad ahead of Monday night's game against Dallas.
@@ -2133,3 +2134,8 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-27T19:07:47+00:00,2026-10-27T18:33Z,4,Cincinnati Bengals,CIN,4427834,Erick All Jr.,TE,Injured Reserve,IR,Right Knee - ACL Surgery,2027-02-15,The Bengals placed All (knee) on injured reserve Tuesday.
 2026-10-27T19:07:47+00:00,2026-10-27T18:42Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-27T19:07:47+00:00,2026-10-27T18:42Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-27T20:07:49+00:00,2026-10-27T19:23Z,29,Carolina Panthers,CAR,4695883,Jalen Coker,WR,Active,,,,"Coker (shoulder) was listed as a full participant in Tuesday's practice, Mike Kaye of ESPN.com reports."
+2026-10-27T20:07:49+00:00,2026-10-27T19:27Z,29,Carolina Panthers,CAR,4372518,Bobby Brown III,DT,Active,,,,
+2026-10-27T20:07:49+00:00,2026-10-27T19:31Z,11,Indianapolis Colts,IND,4361196,Cam Taylor-Britt,CB,Injured Reserve,IR,Groin,2026-11-29,ir
+2026-10-27T20:07:49+00:00,2026-10-27T19:32Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-27T20:07:49+00:00,2026-10-27T19:32Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
