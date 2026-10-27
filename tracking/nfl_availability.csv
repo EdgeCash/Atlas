@@ -1709,6 +1709,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-26T18:08:05+00:00,2026-10-26T17:58Z,7,Denver Broncos,DEN,4360853,Talanoa Hufanga,S,Out,QUESTIONABLE,Ankle,2026-11-01,out
 2026-10-26T18:08:05+00:00,2026-10-26T17:58Z,7,Denver Broncos,DEN,4683535,Tyler Onyedim,DT,Active,,,,
 2026-10-26T19:08:14+00:00,2026-10-26T18:18Z,22,Arizona Cardinals,ARI,4692835,Jalen Brooks,WR,Out,OUT,Wrist Surgery,2026-02-15,"Brooks announced Monday in a story on his personal Instagram account that he underwent season-ending wrist surgery, Tyler Drake of ArizonaSports.com reports."
+2026-10-27T16:07:51+00:00,2026-10-26T18:24Z,11,Indianapolis Colts,IND,3917792,Daniel Jones,QB,Active,,,,"Colts head coach Shane Steichen said that Jones will remain the team's starting quarterback in Sunday's game against the Jaguars, Mike Chappell of Fox 59 News I"
 2026-10-26T19:08:14+00:00,2026-10-26T18:26Z,8,Detroit Lions,DET,4710422,Ahmed Hassanein,DE,Active,,,,
 2026-10-26T19:08:14+00:00,2026-10-26T18:26Z,8,Detroit Lions,DET,5151810,Bishop Fitzgerald,S,Active,,,,
 2026-10-26T19:08:14+00:00,2026-10-26T18:26Z,8,Detroit Lions,DET,4602788,Jackson Meeks,WR,Active,,,,
@@ -2118,3 +2119,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-27T15:08:01+00:00,2026-10-27T14:34Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-27T15:08:01+00:00,2026-10-27T14:34Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Out,OUT,Undisclosed,2026-10-18,out
 2026-10-27T15:08:01+00:00,2026-10-27T14:48Z,6,Dallas Cowboys,DAL,4360967,Brevyn Spann-Ford,TE,Active,,,,Spann-Ford finished with two catches for 11 yards on two targets in Monday's 38-21 win over the Eagles.
+2026-10-27T16:07:51+00:00,2026-10-27T14:56Z,6,Dallas Cowboys,DAL,4372096,Luke Schoonmaker,TE,Active,,,,Schoonmaker went without a target while playing 11 of the Cowboys' 68 offensive snaps in Monday's 38-21 win over the Eagles.
+2026-10-27T16:07:51+00:00,2026-10-27T15:10Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-27T16:07:51+00:00,2026-10-27T15:10Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Out,OUT,Undisclosed,2026-10-18,out
+2026-10-27T16:07:51+00:00,2026-10-27T15:38Z,21,Philadelphia Eagles,PHI,3929630,Saquon Barkley,RB,Questionable,QUESTIONABLE,Back,2026-11-01,"Barkley said after Monday's 38-21 loss to the Cowboys that his ""hamstring came out great,"" and noted that the back issue that kept him out for the entire fourth"
