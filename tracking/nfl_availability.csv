@@ -1858,6 +1858,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-26T22:07:59+00:00,2026-10-26T21:50Z,29,Carolina Panthers,CAR,4362647,Damien Lewis,G,Questionable,QUESTIONABLE,Knee,2026-10-29,questionable
 2026-10-26T22:07:59+00:00,2026-10-26T21:50Z,29,Carolina Panthers,CAR,4696902,Torricelli Simpkins III,G,Questionable,QUESTIONABLE,Ankle,2026-10-29,questionable
 2026-10-26T22:07:59+00:00,2026-10-26T21:50Z,9,Green Bay Packers,GB,4426411,Sean Rhyan,G,Doubtful,DOUBTFUL,Ankle Sprain,2026-10-29,"Rhyan (ankle) is expected to miss multiple weeks after being injured in Sunday's loss to the Lions, Ian Rapoport of NFL Network reports."
+2026-10-27T15:08:01+00:00,2026-10-26T21:50Z,9,Green Bay Packers,GB,4426411,Sean Rhyan,G,Out,OUT,Ankle Sprain,2026-11-25,"Rhyan (ankle) is expected to miss multiple weeks after being injured in Sunday's loss to the Lions, Ian Rapoport of NFL Network reports."
 2026-10-26T22:07:59+00:00,2026-10-26T21:52Z,9,Green Bay Packers,GB,4887255,Anthony Campbell,DT,Questionable,QUESTIONABLE,Ankle,2026-10-29,questionable
 2026-10-26T22:07:59+00:00,2026-10-26T21:52Z,9,Green Bay Packers,GB,4428037,Jacob Monk,C,Injured Reserve,IR,Quadriceps,2026-12-06,The Packers placed Monk (quadriceps) on injured reserve Monday.
 2026-10-26T22:07:59+00:00,2026-10-26T21:53Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
@@ -2112,3 +2113,8 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-27T14:08:07+00:00,2026-10-27T13:11Z,27,Tampa Bay Buccaneers,TB,4380507,Luke Goedeke,OT,Questionable,QUESTIONABLE,Calf,2026-11-01,questionable
 2026-10-27T14:08:07+00:00,2026-10-27T13:11Z,10,Tennessee Titans,TEN,3925357,Calvin Ridley,WR,Questionable,QUESTIONABLE,Hip,2026-11-01,questionable
 2026-10-27T14:08:07+00:00,2026-10-27T13:11Z,10,Tennessee Titans,TEN,4428557,Tyjae Spears,RB,Questionable,QUESTIONABLE,Knee,2026-11-01,questionable
+2026-10-27T15:08:01+00:00,2026-10-27T14:28Z,21,Philadelphia Eagles,PHI,4360238,Dameon Pierce,RB,Questionable,QUESTIONABLE,Undisclosed,2026-11-01,Pierce didn't take the field for either of the Eagles' final two possessions of Monday's 38-21 loss to the Cowboys after sustaining an undisclosed injury with 8
+2026-10-27T15:08:01+00:00,2026-10-27T14:34Z,33,Baltimore Ravens,BAL,4832793,Olaivavega Ioane,G,Doubtful,DOUBTFUL,Knee - MCL Sprain,2026-11-01,doubtful
+2026-10-27T15:08:01+00:00,2026-10-27T14:34Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-27T15:08:01+00:00,2026-10-27T14:34Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Out,OUT,Undisclosed,2026-10-18,out
+2026-10-27T15:08:01+00:00,2026-10-27T14:48Z,6,Dallas Cowboys,DAL,4360967,Brevyn Spann-Ford,TE,Active,,,,Spann-Ford finished with two catches for 11 yards on two targets in Monday's 38-21 win over the Eagles.
