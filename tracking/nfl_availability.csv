@@ -2265,3 +2265,6 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-28T13:07:50+00:00,2026-10-28T13:01Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-28T14:08:09+00:00,2026-10-28T13:54Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-28T14:08:09+00:00,2026-10-28T14:00Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Active,RESERVE-SUS,Suspension,2026-11-09,
+2026-10-28T15:08:12+00:00,2026-10-28T14:08Z,7,Denver Broncos,DEN,4372016,Jaylen Waddle,WR,Questionable,QUESTIONABLE,Chest,2026-11-01,"Waddle aggravated a previous chest injury during last week's 30-16 win over the Cardinals, and his status for Sunday's game against the Chiefs will be determine"
+2026-10-28T15:08:12+00:00,2026-10-28T14:59Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-28T15:08:12+00:00,2026-10-28T15:00Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
