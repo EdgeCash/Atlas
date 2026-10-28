@@ -2255,3 +2255,5 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-28T07:52:42+00:00,2026-10-28T07:00Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-28T09:07:45+00:00,2026-10-28T08:01Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-28T09:07:45+00:00,2026-10-28T09:00Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-28T10:07:50+00:00,2026-10-28T09:00Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-28T10:07:50+00:00,2026-10-28T10:01Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
