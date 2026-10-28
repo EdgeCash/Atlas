@@ -2205,6 +2205,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-28T01:52:52+00:00,2026-10-28T01:39Z,10,Tennessee Titans,TEN,4035369,Jeffery Simmons,DT,Active,,,,Simmons logged four tackles (two solo) and a pass defense during the Titans' 27-24 loss to the Browns on Sunday.
 2026-10-28T02:07:45+00:00,2026-10-28T01:45Z,12,Kansas City Chiefs,KC,3129310,Drue Tranquill,LB,Active,,,,Tranquill finished Sunday's 20-3 loss to the Seahawks with 12 tackles (four solo).
 2026-10-28T02:07:45+00:00,2026-10-28T01:47Z,27,Tampa Bay Buccaneers,TB,4870998,Josiah Trotter,LB,Active,,,,Trotter logged 10 tackles and a defensed pass in Sunday's 43-13 win over Carolina.
+2026-10-28T21:08:01+00:00,2026-10-28T01:47Z,27,Tampa Bay Buccaneers,TB,4870998,Josiah Trotter,LB,Questionable,QUESTIONABLE,Illness,2026-11-01,Trotter logged 10 tackles and a defensed pass in Sunday's 43-13 win over Carolina.
 2026-10-28T02:07:45+00:00,2026-10-28T01:51Z,12,Kansas City Chiefs,KC,4362759,Nick Bolton,LB,Active,,,,Bolton registered 11 tackles (six solo) during the Chiefs' 20-3 loss to the Seahawks on Sunday.
 2026-10-28T02:07:45+00:00,2026-10-28T01:51Z,23,Pittsburgh Steelers,PIT,4361652,Payton Wilson,LB,Active,,,,Wilson totaled six tackles (three solo) and an interception during Pittsburgh's win over the Saints on Sunday.
 2026-10-28T02:07:45+00:00,2026-10-28T01:56Z,12,Kansas City Chiefs,KC,4610705,Nohl Williams,CB,Active,,,,Williams finished Sunday's 20-3 loss to the Seahawks with 10 tackles (four solo) and one interception.
@@ -2213,6 +2214,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-28T02:07:45+00:00,2026-10-28T02:00Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-28T02:22:59+00:00,2026-10-28T02:00Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-28T02:22:59+00:00,2026-10-28T02:05Z,27,Tampa Bay Buccaneers,TB,4686334,Yaya Diaby,LB,Active,,,,"Diaby made three tackles, all of which were sacks, in Sunday's 43-13 win against Carolina."
+2026-10-28T21:08:01+00:00,2026-10-28T02:05Z,27,Tampa Bay Buccaneers,TB,4686334,Yaya Diaby,LB,Questionable,QUESTIONABLE,Illness,2026-11-01,"Diaby made three tackles, all of which were sacks, in Sunday's 43-13 win against Carolina."
 2026-10-28T02:22:59+00:00,2026-10-28T02:08Z,4,Cincinnati Bengals,CIN,4247726,Bryan Cook,S,Active,,,,"Cook recorded nine tackles (six solo), including 0.5 sacks, during the Bengals' 35-13 win over the Ravens on Sunday."
 2026-10-28T02:22:59+00:00,2026-10-28T02:11Z,27,Tampa Bay Buccaneers,TB,4428522,Tykee Smith,S,Active,,,,"Smith posted seven tackles (one solo), an interception and a blocked extra-point attempt Sunday in a 43-13 Week 7 win against Carolina."
 2026-10-28T02:37:43+00:00,2026-10-28T02:15Z,11,Indianapolis Colts,IND,4905664,A.J. Haulcy,S,Active,,,,Haulcy produced nine tackles (five solo) in a loss to the Vikings on Sunday.
@@ -2327,4 +2329,45 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-28T20:08:04+00:00,2026-10-28T20:01Z,1,Atlanta Falcons,ATL,4034961,Jawaan Taylor,OT,Questionable,QUESTIONABLE,Hamstring,2026-11-01,questionable
 2026-10-28T20:08:04+00:00,2026-10-28T20:01Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-28T20:08:04+00:00,2026-10-28T20:01Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-28T21:08:01+00:00,2026-10-28T20:01Z,11,Indianapolis Colts,IND,4431459,Tyler Warren,TE,Questionable,QUESTIONABLE,Groin,2026-11-01,Warren (groin) returned to practice as a limited participant Wednesday.
 2026-10-28T20:08:04+00:00,2026-10-28T20:03Z,10,Tennessee Titans,TEN,3120464,John Franklin-Myers,DE,Questionable,QUESTIONABLE,Groin,2026-11-01,questionable
+2026-10-28T21:08:01+00:00,2026-10-28T20:07Z,3,Chicago Bears,CHI,4608686,Kyle Monangai,RB,Questionable,QUESTIONABLE,Toe Sprain,2026-11-02,"Monangai (thumb/toe) was on a stationary bike during warmups but wasn't on the field during the open portion of Wednesday's practice, Adam Jahns of AllCHGO.com "
+2026-10-28T21:08:01+00:00,2026-10-28T20:07Z,10,Tennessee Titans,TEN,3925357,Calvin Ridley,WR,Questionable,QUESTIONABLE,Hip,2026-11-01,Ridley (hip) was a limited participant in Wednesday's practice.
+2026-10-28T21:08:01+00:00,2026-10-28T20:08Z,30,Jacksonville Jaguars,JAX,4242149,Montaric Brown,CB,Active,,,,
+2026-10-28T21:08:01+00:00,2026-10-28T20:09Z,30,Jacksonville Jaguars,JAX,3124587,Jahlani Tavai,LB,Questionable,QUESTIONABLE,Hamstring,2026-11-01,questionable
+2026-10-28T21:08:01+00:00,2026-10-28T20:09Z,30,Jacksonville Jaguars,JAX,4430271,Ruke Orhorhoro,DT,Questionable,QUESTIONABLE,Ankle,2026-11-01,questionable
+2026-10-28T21:08:01+00:00,2026-10-28T20:15Z,10,Tennessee Titans,TEN,4428557,Tyjae Spears,RB,Questionable,QUESTIONABLE,Knee,2026-11-01,Spears (knee) did not practice Wednesday.
+2026-10-28T21:08:01+00:00,2026-10-28T20:16Z,30,Jacksonville Jaguars,JAX,3916433,Jakobi Meyers,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-01,Meyers (hamstring) was a limited participant in Wednesday's practice due to a hamstring injury.
+2026-10-28T21:08:01+00:00,2026-10-28T20:19Z,4,Cincinnati Bengals,CIN,4567098,Jordan Battle,S,Questionable,QUESTIONABLE,Hamstring,2026-11-01,questionable
+2026-10-28T21:08:01+00:00,2026-10-28T20:20Z,4,Cincinnati Bengals,CIN,3917797,Joe Giles-Harris,LB,Questionable,QUESTIONABLE,Calf,2026-11-01,questionable
+2026-10-28T21:08:01+00:00,2026-10-28T20:21Z,27,Tampa Bay Buccaneers,TB,4034790,Antoine Winfield Jr.,S,Active,,,,
+2026-10-28T21:08:01+00:00,2026-10-28T20:22Z,4,Cincinnati Bengals,CIN,4362628,Ja'Marr Chase,WR,Questionable,QUESTIONABLE,Ankle,2026-11-01,"Chase (ankle/rest) was listed as a non-participant for Wednesday's practice, Ben Baby of ESPN.com reports."
+2026-10-28T21:08:01+00:00,2026-10-28T20:25Z,17,New England Patriots,NE,4688779,Channing Canada,CB,Active,,,,
+2026-10-28T21:08:01+00:00,2026-10-28T20:26Z,17,New England Patriots,NE,3916923,Carlton Davis III,CB,Active,,,,
+2026-10-28T21:08:01+00:00,2026-10-28T20:26Z,17,New England Patriots,NE,16910,DaQuan Jones,DT,Questionable,QUESTIONABLE,Back,2026-11-01,questionable
+2026-10-28T21:08:01+00:00,2026-10-28T20:26Z,17,New England Patriots,NE,4606666,Karon Prunty,CB,Active,,,,
+2026-10-28T21:08:01+00:00,2026-10-28T20:26Z,17,New England Patriots,NE,16771,Morgan Moses,OT,Questionable,QUESTIONABLE,Foot,2026-11-01,questionable
+2026-10-28T21:08:01+00:00,2026-10-28T20:26Z,27,Tampa Bay Buccaneers,TB,4567750,Emeka Egbuka,WR,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-01,"Egbuka (concussion/foot) practiced in a limited capacity Wednesday, Brianna Dix of the Buccaneers' official site reports."
+2026-10-28T21:08:01+00:00,2026-10-28T20:28Z,17,New England Patriots,NE,4047646,A.J. Brown,WR,Questionable,QUESTIONABLE,Ankle,2026-11-01,Brown (ankle/knee) was a limited participant in Wednesday's practice.
+2026-10-28T21:08:01+00:00,2026-10-28T20:31Z,15,Miami Dolphins,MIA,4870976,Kadyn Proctor,OT,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-01,questionable
+2026-10-28T21:08:01+00:00,2026-10-28T20:32Z,15,Miami Dolphins,MIA,4431664,Dante Trader Jr.,S,Questionable,QUESTIONABLE,Shoulder,2026-11-01,questionable
+2026-10-28T21:08:01+00:00,2026-10-28T20:32Z,15,Miami Dolphins,MIA,4034729,Tucker Addington,LS,Questionable,QUESTIONABLE,Shoulder,2026-11-01,questionable
+2026-10-28T21:08:01+00:00,2026-10-28T20:32Z,15,Miami Dolphins,MIA,4880236,Will Kacmarek,TE,Questionable,QUESTIONABLE,Hamstring,2026-11-01,questionable
+2026-10-28T21:08:01+00:00,2026-10-28T20:33Z,15,Miami Dolphins,MIA,4430681,Jared Wayne,WR,Questionable,QUESTIONABLE,Knee,2026-11-01,questionable
+2026-10-28T21:08:01+00:00,2026-10-28T20:34Z,15,Miami Dolphins,MIA,4259804,Willie Gay Jr.,LB,Active,,,,
+2026-10-28T21:08:01+00:00,2026-10-28T20:35Z,15,Miami Dolphins,MIA,4259558,Robert Beal Jr.,DE,Active,,,,
+2026-10-28T21:08:01+00:00,2026-10-28T20:35Z,27,Tampa Bay Buccaneers,TB,4371733,Kenny Gainwell,RB,Questionable,QUESTIONABLE,Hip,2026-11-01,"Gainwell (hip) was held out Wednesday due to the injury he sustained against the Panthers, Scott Smith of the Buccaneers' official site reports."
+2026-10-28T21:08:01+00:00,2026-10-28T20:36Z,15,Miami Dolphins,MIA,4880346,Michael Taaffe,S,Questionable,QUESTIONABLE,Neck,2026-11-01,questionable
+2026-10-28T21:08:01+00:00,2026-10-28T20:39Z,20,New York Jets,NYJ,4035537,Kene Nwangwu,RB,Active,,,,
+2026-10-28T21:08:01+00:00,2026-10-28T20:42Z,8,Detroit Lions,DET,4383429,Jacob Saylors,RB,Questionable,QUESTIONABLE,Neck,2026-11-01,questionable
+2026-10-28T21:08:01+00:00,2026-10-28T20:42Z,8,Detroit Lions,DET,4431615,Tyleik Williams,DT,Questionable,QUESTIONABLE,Illness,2026-11-01,questionable
+2026-10-28T21:08:01+00:00,2026-10-28T20:43Z,8,Detroit Lions,DET,4429795,Jahmyr Gibbs,RB,Questionable,QUESTIONABLE,Shoulder,2026-11-01,Gibbs (shoulder) did not practice Wednesday.
+2026-10-28T21:08:01+00:00,2026-10-28T20:44Z,8,Detroit Lions,DET,4374302,Amon-Ra St. Brown,WR,Questionable,QUESTIONABLE,Ankle,2026-11-01,St. Brown (ankle) didn't practice Wednesday.
+2026-10-28T21:08:01+00:00,2026-10-28T20:45Z,12,Kansas City Chiefs,KC,4040432,L'Jarius Sneed,CB,Questionable,QUESTIONABLE,Knee,2026-11-01,questionable
+2026-10-28T21:08:01+00:00,2026-10-28T20:48Z,15,Miami Dolphins,MIA,4367209,Greg Dulcich,TE,Questionable,QUESTIONABLE,Ankle,2026-11-01,"Dulcich was a limited participant in Wednesday's practice due to an ankle injury, Marcel Louis-Jacques of ESPN.com reports."
+2026-10-28T21:08:01+00:00,2026-10-28T20:51Z,15,Miami Dolphins,MIA,4682745,Jaylen Wright,RB,Active,,,,"Wright (quadriceps/foot) was a full participant in Wednesday's practice, Marcel Louis-Jacques of ESPN.com reports."
+2026-10-28T21:08:01+00:00,2026-10-28T20:55Z,15,Miami Dolphins,MIA,4569603,Malik Washington,WR,Questionable,QUESTIONABLE,Knee,2026-11-01,"Washington was a limited participant in Wednesday's practice due to a knee injury, Marcel Louis-Jacques of ESPN.com reports."
+2026-10-28T21:08:01+00:00,2026-10-28T21:01Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-28T21:08:01+00:00,2026-10-28T21:01Z,7,Denver Broncos,DEN,4372016,Jaylen Waddle,WR,Questionable,QUESTIONABLE,Chest,2026-11-01,"Waddle (chest) was present for Wednesday's practice, Zac Stevens of TheDNVR.com reports."
+2026-10-28T21:08:01+00:00,2026-10-28T21:03Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-28T21:08:01+00:00,2026-10-28T21:03Z,34,Houston Texans,HOU,4586312,Jaylin Noel,WR,Injured Reserve,IR,Toe Sprain,2026-12-06,ir
