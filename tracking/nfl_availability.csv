@@ -2282,6 +2282,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-28T17:07:58+00:00,2026-10-28T16:53Z,11,Indianapolis Colts,IND,4688813,Josh Downs,WR,Active,,,,"Downs formally requested a trade from the Colts on Wednesday, Jeremy Fowler of ESPN.com reports."
 2026-10-28T17:07:58+00:00,2026-10-28T17:00Z,15,Miami Dolphins,MIA,4360488,JuJu Brents,CB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-01,questionable
 2026-10-28T17:07:58+00:00,2026-10-28T17:01Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-28T20:08:04+00:00,2026-10-28T17:01Z,16,Minnesota Vikings,MIN,4602969,Bryson Nesbit,TE,Active,,,,
 2026-10-28T17:07:58+00:00,2026-10-28T17:02Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-28T17:07:58+00:00,2026-10-28T17:02Z,16,Minnesota Vikings,MIN,4688418,Michael Briscoe,WR,Out,OUT,Undisclosed,2026-11-29,out
 2026-10-28T18:08:00+00:00,2026-10-28T17:11Z,10,Tennessee Titans,TEN,4871023,Carnell Tate,WR,Questionable,QUESTIONABLE,Shoulder,2026-11-01,"Titans head coach Robert Saleh said that Tate won't practice Wednesday due to a shoulder injury, Turron Davenport of ESPN.com reports."
@@ -2303,4 +2304,27 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-28T19:07:59+00:00,2026-10-28T18:36Z,1,Atlanta Falcons,ATL,4241474,Brian Robinson Jr.,RB,Questionable,QUESTIONABLE,Hamstring,2026-11-01,"Robinson (hamstring) wasn't spotted during the open portion of Wednesday's practice, Daniel Flick of The Atlanta Journal-Constitution reports."
 2026-10-28T19:07:59+00:00,2026-10-28T18:42Z,2,Buffalo Bills,BUF,3915416,DJ Moore,WR,Questionable,QUESTIONABLE,Shoulder - AC Joint Sprain,2026-11-01,"Moore (shoulder) was spotted on the field for the open portion of Wednesday's practice but was donning a no-contact jersey, Matt Parrino of The Syracuse Post-St"
 2026-10-28T19:07:59+00:00,2026-10-28T19:00Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-28T20:08:04+00:00,2026-10-28T19:04Z,9,Green Bay Packers,GB,4361904,Travis Glover,OT,Out,OUT,Knee,2026-11-08,out
+2026-10-28T20:08:04+00:00,2026-10-28T19:04Z,9,Green Bay Packers,GB,3124005,Zaire Franklin,LB,Out,OUT,Shin Fracture,2026-11-08,out
 2026-10-28T19:07:59+00:00,2026-10-28T19:05Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-28T20:08:04+00:00,2026-10-28T19:05Z,4,Cincinnati Bengals,CIN,4427834,Erick All Jr.,TE,Injured Reserve,IR,Right Knee - ACL Surgery,2027-02-15,"Bengals head coach Zac Taylor confirmed Wednesday that All has been diagnosed with a torn ACL in his right knee and will require season-ending surgery, Jay Morr"
+2026-10-28T20:08:04+00:00,2026-10-28T19:05Z,9,Green Bay Packers,GB,4242390,Aaron Banks,G,Active,,,,
+2026-10-28T20:08:04+00:00,2026-10-28T19:10Z,24,Los Angeles Chargers,LAC,3691739,Derwin James Jr.,S,Doubtful,DOUBTFUL,Hamstring,2026-11-01,doubtful
+2026-10-28T20:08:04+00:00,2026-10-28T19:12Z,9,Green Bay Packers,GB,4701936,Matthew Golden,WR,Questionable,QUESTIONABLE,Shoulder,2026-10-29,"Golden (shoulder/foot) is listed as questionable for Thursday's game against the Panthers, Weston Hodkiewicz of the Packers' official site reports."
+2026-10-28T20:08:04+00:00,2026-10-28T19:19Z,24,Los Angeles Chargers,LAC,4690171,Deane Leonard,CB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-01,questionable
+2026-10-28T20:08:04+00:00,2026-10-28T19:31Z,24,Los Angeles Chargers,LAC,4612826,Ladd McConkey,WR,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-01,"Chargers head coach Jim Harbaugh said McConkey remains in concussion protocol but will practice Wednesday, Alex Insdorf of BoltBeat.com reports."
+2026-10-28T20:08:04+00:00,2026-10-28T19:37Z,12,Kansas City Chiefs,KC,4912218,Cyrus Allen,WR,Active,,,,"Chiefs head coach Andy Reid said Wednesday that Allen will ""get a little bit more [snaps]"" during Sunday's game against the Broncos, Nate Taylor of ESPN.com rep"
+2026-10-28T20:08:04+00:00,2026-10-28T19:40Z,20,New York Jets,NYJ,4569618,Garrett Wilson,WR,Active,,,,"Wilson said Wednesday that he won't ask to be traded from the Jets, Zack Rosenblatt of The Athletic reports."
+2026-10-28T20:08:04+00:00,2026-10-28T19:44Z,10,Tennessee Titans,TEN,3925357,Calvin Ridley,WR,Questionable,QUESTIONABLE,Hip,2026-11-01,"Ridley (hip) returned to practice Wednesday, Turron Davenport of ESPN.com reports."
+2026-10-28T20:08:04+00:00,2026-10-28T19:55Z,11,Indianapolis Colts,IND,4870598,CJ Allen,LB,Active,,,,
+2026-10-28T20:08:04+00:00,2026-10-28T19:56Z,11,Indianapolis Colts,IND,4722908,Drew Ogletree,TE,Questionable,QUESTIONABLE,Knee,2026-11-01,questionable
+2026-10-28T20:08:04+00:00,2026-10-28T19:56Z,11,Indianapolis Colts,IND,4427298,Matt Goncalves,G,Questionable,QUESTIONABLE,Ankle,2026-11-01,questionable
+2026-10-28T20:08:04+00:00,2026-10-28T19:56Z,11,Indianapolis Colts,IND,4692033,Tim Smith,DT,Questionable,QUESTIONABLE,Ankle,2026-11-01,questionable
+2026-10-28T20:08:04+00:00,2026-10-28T19:58Z,1,Atlanta Falcons,ATL,4241474,Brian Robinson Jr.,RB,Questionable,QUESTIONABLE,Hamstring,2026-11-01,"Robinson (hamstring) officially didn't practice Wednesday, Tori McElhaney of the Falcons' official site reports."
+2026-10-28T20:08:04+00:00,2026-10-28T20:00Z,1,Atlanta Falcons,ATL,4376288,LaCale London,DE,Questionable,QUESTIONABLE,Chest,2026-11-01,questionable
+2026-10-28T20:08:04+00:00,2026-10-28T20:00Z,1,Atlanta Falcons,ATL,3045527,Samson Ebukam,DE,Questionable,QUESTIONABLE,Hamstring,2026-11-01,questionable
+2026-10-28T20:08:04+00:00,2026-10-28T20:01Z,1,Atlanta Falcons,ATL,4240849,Charles Snowden,LB,Questionable,QUESTIONABLE,Back,2026-11-01,questionable
+2026-10-28T20:08:04+00:00,2026-10-28T20:01Z,1,Atlanta Falcons,ATL,4034961,Jawaan Taylor,OT,Questionable,QUESTIONABLE,Hamstring,2026-11-01,questionable
+2026-10-28T20:08:04+00:00,2026-10-28T20:01Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-28T20:08:04+00:00,2026-10-28T20:01Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-28T20:08:04+00:00,2026-10-28T20:03Z,10,Tennessee Titans,TEN,3120464,John Franklin-Myers,DE,Questionable,QUESTIONABLE,Groin,2026-11-01,questionable
