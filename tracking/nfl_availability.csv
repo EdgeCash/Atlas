@@ -2270,3 +2270,16 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-28T15:08:12+00:00,2026-10-28T15:00Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-28T16:08:06+00:00,2026-10-28T15:59Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Out,OUT,Undisclosed,2026-10-18,out
 2026-10-28T16:08:06+00:00,2026-10-28T16:00Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-28T17:07:58+00:00,2026-10-28T16:09Z,27,Tampa Bay Buccaneers,TB,4567750,Emeka Egbuka,WR,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-01,"Egbuka (concussion/foot) was on the field for the start of Wednesday's practice and was donning a non-contact jersey, Greg Auman of Fox Sports reports."
+2026-10-28T17:07:58+00:00,2026-10-28T16:16Z,5,Cleveland Browns,CLE,4578085,Jared Verse,DE,Questionable,QUESTIONABLE,Knee Inflammation,2026-11-01,questionable
+2026-10-28T17:07:58+00:00,2026-10-28T16:19Z,20,New York Jets,NYJ,4685248,David Bailey,LB,Questionable,QUESTIONABLE,Groin,2026-11-01,questionable
+2026-10-28T17:07:58+00:00,2026-10-28T16:22Z,20,New York Jets,NYJ,4428617,T'Vondre Sweat,DT,Doubtful,DOUBTFUL,Knee,2026-11-01,doubtful
+2026-10-28T17:07:58+00:00,2026-10-28T16:23Z,20,New York Jets,NYJ,4362094,Joseph Ossai,DE,Doubtful,DOUBTFUL,Ankle,2026-11-01,doubtful
+2026-10-28T17:07:58+00:00,2026-10-28T16:35Z,20,New York Jets,NYJ,4427366,Breece Hall,RB,Questionable,QUESTIONABLE,Right Quadriceps,2026-11-01,"Jets head coach Aaron Glenn said that Hall (quadriceps) will be limited participant in Wednesday's practice, Zack Rosenblatt of The Athletic reports."
+2026-10-28T17:07:58+00:00,2026-10-28T16:38Z,20,New York Jets,NYJ,4685247,Braelon Allen,RB,Questionable,QUESTIONABLE,Ankle,2026-11-01,"Jets head coach Aaron Glenn said that Allen will be a limited participant in Wednesday's practice due to ankle injury, Zack Rosenblatt of The Athletic reports."
+2026-10-28T17:07:58+00:00,2026-10-28T16:43Z,28,Washington Commanders,WSH,3121422,Terry McLaurin,WR,Injured Reserve,IR,Left Knee Surgery,2027-02-15,"The Commanders placed McLaurin (knee) on injured reserve Wednesday, Zach Selby of the team's official site reports."
+2026-10-28T17:07:58+00:00,2026-10-28T16:53Z,11,Indianapolis Colts,IND,4688813,Josh Downs,WR,Active,,,,"Downs formally requested a trade from the Colts on Wednesday, Jeremy Fowler of ESPN.com reports."
+2026-10-28T17:07:58+00:00,2026-10-28T17:00Z,15,Miami Dolphins,MIA,4360488,JuJu Brents,CB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-01,questionable
+2026-10-28T17:07:58+00:00,2026-10-28T17:01Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-28T17:07:58+00:00,2026-10-28T17:02Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-28T17:07:58+00:00,2026-10-28T17:02Z,16,Minnesota Vikings,MIN,4688418,Michael Briscoe,WR,Out,OUT,Undisclosed,2026-11-29,out
