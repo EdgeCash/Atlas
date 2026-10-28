@@ -2186,6 +2186,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-28T01:22:48+00:00,2026-10-28T01:01Z,26,Seattle Seahawks,SEA,4869523,Nick Emmanwori,S,Active,,,,Emmanwori registered four tackles (two solo) Sunday in a 20-3 Week 7 win over the Chiefs.
 2026-10-28T01:22:48+00:00,2026-10-28T01:03Z,8,Detroit Lions,DET,4569465,Jack Campbell,LB,Active,,,,Campbell tallied 11 tackles (eight solo) during the Lions' 20-17 win over the Packers on Sunday.
 2026-10-28T01:22:48+00:00,2026-10-28T01:09Z,33,Baltimore Ravens,BAL,3915189,Roquan Smith,LB,Active,,,,Smith recorded eight tackles (five solo) during Sunday's 35-13 loss versus the Bengals.
+2026-10-28T19:07:59+00:00,2026-10-28T01:09Z,33,Baltimore Ravens,BAL,3915189,Roquan Smith,LB,Questionable,QUESTIONABLE,Knee,2026-11-01,Smith recorded eight tackles (five solo) during Sunday's 35-13 loss versus the Bengals.
 2026-10-28T01:22:48+00:00,2026-10-28T01:09Z,13,Las Vegas Raiders,LV,4426340,Nakobe Dean,LB,Active,,,,Dean produced 12 tackles and an interception in Sunday's loss to the Rams.
 2026-10-28T01:37:12+00:00,2026-10-28T01:11Z,5,Cleveland Browns,CLE,3110565,Quincy Williams,LB,Active,,,,Williams finished Sunday's 27-24 win over the Titans with 10 tackles (seven solo).
 2026-10-28T01:22:48+00:00,2026-10-28T01:13Z,33,Baltimore Ravens,BAL,4575517,Kyle Hamilton,S,Active,,,,Hamilton recorded four tackles (three solo) during Sunday's 35-13 loss versus the Bengals.
@@ -2298,3 +2299,8 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-28T18:08:00+00:00,2026-10-28T18:01Z,29,Carolina Panthers,CAR,4242975,Jaelan Phillips,LB,Out,OUT,Hamstring,2026-11-08,out
 2026-10-28T18:08:00+00:00,2026-10-28T18:01Z,29,Carolina Panthers,CAR,4696902,Torricelli Simpkins III,G,Out,OUT,Left Ankle,2026-11-08,out
 2026-10-28T18:08:00+00:00,2026-10-28T18:01Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Out,OUT,Undisclosed,2026-10-18,out
+2026-10-28T19:07:59+00:00,2026-10-28T18:11Z,16,Minnesota Vikings,MIN,3042519,Aaron Jones Sr.,RB,Questionable,QUESTIONABLE,Left Knee,2026-11-01,"Head coach Kevin O'Connell said Jones (knee) won't practice Wednesday, Alec Lewis of The Athletic reports."
+2026-10-28T19:07:59+00:00,2026-10-28T18:36Z,1,Atlanta Falcons,ATL,4241474,Brian Robinson Jr.,RB,Questionable,QUESTIONABLE,Hamstring,2026-11-01,"Robinson (hamstring) wasn't spotted during the open portion of Wednesday's practice, Daniel Flick of The Atlanta Journal-Constitution reports."
+2026-10-28T19:07:59+00:00,2026-10-28T18:42Z,2,Buffalo Bills,BUF,3915416,DJ Moore,WR,Questionable,QUESTIONABLE,Shoulder - AC Joint Sprain,2026-11-01,"Moore (shoulder) was spotted on the field for the open portion of Wednesday's practice but was donning a no-contact jersey, Matt Parrino of The Syracuse Post-St"
+2026-10-28T19:07:59+00:00,2026-10-28T19:00Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-28T19:07:59+00:00,2026-10-28T19:05Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
