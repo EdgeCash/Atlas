@@ -2194,6 +2194,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-28T01:37:12+00:00,2026-10-28T01:14Z,15,Miami Dolphins,MIA,4043130,Jordyn Brooks,LB,Active,,,,Brooks posted nine tackles (five solo) during the Dolphins' win Sunday over the Jets.
 2026-10-28T01:37:12+00:00,2026-10-28T01:18Z,5,Cleveland Browns,CLE,4569620,Ronnie Hickman,S,Active,,,,Hickman registered 10 tackles (six solo) and a fumble recovery during Sundays' 27-24 win over Tennessee.
 2026-10-28T01:52:52+00:00,2026-10-28T01:21Z,5,Cleveland Browns,CLE,4876017,Carson Schwesinger,LB,Active,,,,Schwesinger finished Sundays' 27-24 win over the Titans with eight tackles (four solo).
+2026-10-28T22:23:01+00:00,2026-10-28T01:21Z,5,Cleveland Browns,CLE,4876017,Carson Schwesinger,LB,Questionable,QUESTIONABLE,Ankle,2026-11-01,Schwesinger finished Sundays' 27-24 win over the Titans with eight tackles (four solo).
 2026-10-28T01:52:52+00:00,2026-10-28T01:21Z,21,Philadelphia Eagles,PHI,3917657,Zack Baun,LB,Active,,,,Baun recorded nine tackles (two solo) and a pass defensed during Monday's 38-21 loss versus the Cowboys.
 2026-10-28T01:37:12+00:00,2026-10-28T01:22Z,15,Miami Dolphins,MIA,4566094,Jacob Rodriguez,LB,Active,,,,Rodriguez tallied four tackles (one solo) during Miami's win over the Jets on Sunday.
 2026-10-28T01:52:52+00:00,2026-10-28T01:24Z,13,Las Vegas Raiders,LV,4379416,Quay Walker,LB,Active,,,,Walker posted 12 tackles (six solo) in Sunday's Week 7 loss to the Rams.
@@ -2231,6 +2232,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-28T03:07:45+00:00,2026-10-28T02:47Z,14,Los Angeles Rams,LAR,4242154,Kam Curl,S,Active,,,,Curl logged four tackles (two solo) during the Rams' 35-21 win over the Raiders on Sunday.
 2026-10-28T03:07:45+00:00,2026-10-28T02:53Z,20,New York Jets,NYJ,4426686,Dane Belton,S,Active,,,,Belton registered nine tackles (six solo) in Sunday's loss to the Dolphins.
 2026-10-28T03:07:45+00:00,2026-10-28T02:54Z,6,Dallas Cowboys,DAL,4870706,Caleb Downs,S,Active,,,,Downs recorded five tackles (three solo) during the Cowboys' 38-21 win over the Eagles on Monday.
+2026-10-28T22:23:01+00:00,2026-10-28T02:54Z,6,Dallas Cowboys,DAL,4870706,Caleb Downs,S,Questionable,QUESTIONABLE,Ankle,2026-11-01,Downs recorded five tackles (three solo) during the Cowboys' 38-21 win over the Eagles on Monday.
 2026-10-28T03:07:45+00:00,2026-10-28T02:58Z,20,New York Jets,NYJ,4361331,Jamien Sherwood,LB,Active,,,,Sherwood totaled eight tackles (four solo) and two defensed passes Sunday in a loss to Miami.
 2026-10-28T03:22:57+00:00,2026-10-28T02:59Z,6,Dallas Cowboys,DAL,4362088,DeMarvion Overshown,LB,Active,,,,Overshown posted six tackles (five solo) and two pass defenses (including one interception) during the Cowboys' 38-21 win over the Eagles on Monday.
 2026-10-28T03:07:45+00:00,2026-10-28T03:01Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
@@ -2411,3 +2413,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-28T22:07:52+00:00,2026-10-28T22:01Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Out,OUT,Undisclosed,2026-10-18,out
 2026-10-28T22:07:52+00:00,2026-10-28T22:02Z,7,Denver Broncos,DEN,4372016,Jaylen Waddle,WR,Questionable,QUESTIONABLE,Chest,2026-11-01,Waddle (chest) was listed as a non-participant in Wednesday's practice.
 2026-10-28T22:07:52+00:00,2026-10-28T22:06Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-28T22:23:01+00:00,2026-10-28T22:08Z,5,Cleveland Browns,CLE,5081397,Dylan Sampson,RB,Questionable,QUESTIONABLE,Knee,2026-11-01,Sampson (knee) was a limited participant in Wednesday's practice.
+2026-10-28T22:23:01+00:00,2026-10-28T22:15Z,22,Arizona Cardinals,ARI,4373626,Tyler Allgeier,RB,Active,,,,"Allgeier was not present during the portion of Wednesday's practice open to the media, Tyler Drake of ArizonaSports.com reports."
+2026-10-28T22:23:01+00:00,2026-10-28T22:16Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Out,IR,Undisclosed,2026-10-18,out
+2026-10-28T22:23:01+00:00,2026-10-28T22:18Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
