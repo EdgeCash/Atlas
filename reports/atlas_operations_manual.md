@@ -1,6 +1,6 @@
 # Atlas Operations Manual
 
-*Generated 2026-10-29 10:23 UTC by `python -m atlas.live check`. Atlas research is
+*Generated 2026-10-29 11:22 UTC by `python -m atlas.live check`. Atlas research is
 complete; this document is about keeping the live tracker alive and honest for
 two seasons.*
 
@@ -17,8 +17,8 @@ two seasons.*
 |---|---|
 | Signals recorded | 556 |
 | Grades recorded | 452 |
-| Line snapshots | 7,667 |
-| Tracker runs logged | 876 |
+| Line snapshots | 7,673 |
+| Tracker runs logged | 877 |
 | Blocking data-quality exceptions | 0 |
 | Monitor alerts firing | 2 |
 | Replays clean | 9 of 9 |
@@ -100,7 +100,7 @@ trace(Store.open(), "<signal_id>")   # signal, grade, full line history, run
 
 | Table | Rows | Columns | Primary key |
 |---|---|---|---|
-| runs | 876 | 14 | run_id |
+| runs | 877 | 14 | run_id |
 | numbers | 2,880 | 8 | game_id, market, model_version, refreshed_at |
 | projections | 7,492 | 49 | sport, game_id, model_version |
 | nhl_projections | 181 | 42 | game_id, model_version |
@@ -110,7 +110,7 @@ trace(Store.open(), "<signal_id>")   # signal, grade, full line history, run
 | polymarket_quotes | 30,754 | 26 | token_id, captured_at |
 | polymarket_props | 214,656 | 29 | token_id, captured_at |
 | nba_availability | 569 | 13 | player_id, reported_at, status |
-| nfl_availability | 2,562 | 13 | player_id, reported_at, status |
+| nfl_availability | 2,564 | 13 | player_id, reported_at, status |
 | nhl_availability | 248 | 13 | player_id, reported_at, status |
 | favorites | 930 | 30 | token_id, threshold |
 | finish | 0 | 28 | token_id |
@@ -118,7 +118,7 @@ trace(Store.open(), "<signal_id>")   # signal, grade, full line history, run
 | prop_record | 10,640 | 13 | token_id |
 | availability | 1,426 | 13 | conference, report_id, team, player |
 | games | 661 | 17 | game_id |
-| snapshots | 7,667 | 11 | game_id, book, market, captured_at |
+| snapshots | 7,673 | 11 | game_id, book, market, captured_at |
 | signals | 556 | 17 | signal_id |
 | grades | 452 | 14 | signal_id |
 | market_shape | 486 | 5 | sport, market, point |
