@@ -2436,6 +2436,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-28T22:52:41+00:00,2026-10-28T22:42Z,28,Washington Commanders,WSH,2576980,Marcus Mariota,QB,Active,,,,
 2026-10-28T22:52:41+00:00,2026-10-28T22:48Z,14,Los Angeles Rams,LAR,4242557,Colby Parkinson,TE,Questionable,QUESTIONABLE,Ribs,2026-11-01,questionable
 2026-10-28T23:08:02+00:00,2026-10-28T22:53Z,28,Washington Commanders,WSH,2976212,Stefon Diggs,WR,Questionable,QUESTIONABLE,Hand,2026-11-01,Diggs (hand/hamstring/rest) was a non-participant at Wednesday's practice.
+2026-10-29T21:52:44+00:00,2026-10-28T22:53Z,28,Washington Commanders,WSH,2976212,Stefon Diggs,WR,Active,,,,Diggs (hand/hamstring/rest) was a non-participant at Wednesday's practice.
 2026-10-28T23:08:02+00:00,2026-10-28T23:02Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Out,OUT,Undisclosed,2026-10-18,out
 2026-10-28T23:08:02+00:00,2026-10-28T23:02Z,21,Philadelphia Eagles,PHI,4685287,Jihaad Campbell,LB,Questionable,QUESTIONABLE,Hamstring,2026-11-01,questionable
 2026-10-28T23:08:02+00:00,2026-10-28T23:03Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
@@ -2681,3 +2682,8 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-29T21:38:00+00:00,2026-10-29T21:25Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-29T21:38:00+00:00,2026-10-29T21:25Z,7,Denver Broncos,DEN,4039059,Brandon Jones,S,Questionable,QUESTIONABLE,Hamstring,2026-11-01,questionable
 2026-10-29T21:38:00+00:00,2026-10-29T21:28Z,16,Minnesota Vikings,MIN,3042519,Aaron Jones Sr.,RB,Questionable,QUESTIONABLE,Left Knee,2026-11-01,Jones (knee) was limited at Thursday's practice.
+2026-10-29T21:52:44+00:00,2026-10-29T21:32Z,7,Denver Broncos,DEN,4568490,RJ Harvey,RB,Questionable,QUESTIONABLE,Knee,2026-11-01,Harvey (knee) was a limited participant in Thursday's practice.
+2026-10-29T21:52:44+00:00,2026-10-29T21:34Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Out,IR,Undisclosed,2026-11-08,out
+2026-10-29T21:52:44+00:00,2026-10-29T21:34Z,28,Washington Commanders,WSH,3115922,Nick Allegretti,G,Questionable,QUESTIONABLE,Back,2026-11-01,questionable
+2026-10-29T21:52:44+00:00,2026-10-29T21:35Z,7,Denver Broncos,DEN,4372016,Jaylen Waddle,WR,Questionable,QUESTIONABLE,Chest,2026-11-01,"Waddle (chest) practiced in a limited capacity Thursday, Aric DiLalla of the Broncos' official site reports."
+2026-10-29T21:52:44+00:00,2026-10-29T21:40Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
