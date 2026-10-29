@@ -2395,6 +2395,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-28T22:07:52+00:00,2026-10-28T21:26Z,33,Baltimore Ravens,BAL,4035479,John Simpson,G,Questionable,QUESTIONABLE,Groin,2026-11-01,questionable
 2026-10-28T22:07:52+00:00,2026-10-28T21:26Z,33,Baltimore Ravens,BAL,2980153,Ronnie Stanley,OT,Questionable,QUESTIONABLE,Toe,2026-11-01,questionable
 2026-10-28T22:07:52+00:00,2026-10-28T21:28Z,13,Las Vegas Raiders,LV,4432665,Brock Bowers,TE,Questionable,QUESTIONABLE,Calf,2026-11-01,"Bowers (calf) was listed as a limited participant in Wednesday's practice, Paul Gutierrez of the Raiders' official site reports."
+2026-10-29T21:07:53+00:00,2026-10-28T21:28Z,13,Las Vegas Raiders,LV,4432665,Brock Bowers,TE,Active,,,,"Bowers (calf) was listed as a limited participant in Wednesday's practice, Paul Gutierrez of the Raiders' official site reports."
 2026-10-28T22:07:52+00:00,2026-10-28T21:31Z,23,Pittsburgh Steelers,PIT,4692628,Doneiko Slaughter,CB,Questionable,QUESTIONABLE,Hamstring,2026-11-01,questionable
 2026-10-28T22:07:52+00:00,2026-10-28T21:31Z,23,Pittsburgh Steelers,PIT,3045373,Jalen Ramsey,CB,Questionable,QUESTIONABLE,Wrist,2026-11-01,questionable
 2026-10-28T22:07:52+00:00,2026-10-28T21:32Z,23,Pittsburgh Steelers,PIT,4037333,Alex Highsmith,LB,Questionable,QUESTIONABLE,Groin,2026-11-01,questionable
@@ -2469,6 +2470,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-28T23:53:02+00:00,2026-10-28T23:41Z,29,Carolina Panthers,CAR,4242975,Jaelan Phillips,LB,Out,OUT,Hamstring,2026-11-08,Phillips (hamstring) has been ruled out ahead of Thursday night's game against the Packers.
 2026-10-28T23:53:02+00:00,2026-10-28T23:45Z,2,Buffalo Bills,BUF,4241476,Tyrell Shavers,WR,Out,PUP-R,Knee - ACL Surgery,2026-11-09,"The Bills designated Shavers (knee) to return from the reserve/PUP list Wednesday, but he will not play against the Ravens on Sunday, Cameron Wolfe of NFL Netwo"
 2026-10-28T23:53:02+00:00,2026-10-28T23:47Z,29,Carolina Panthers,CAR,4244607,Akayleb Evans,CB,Active,,,,Evans (triceps) has been ruled out ahead of Thursday night's game against the Packers.
+2026-10-29T21:07:53+00:00,2026-10-28T23:47Z,29,Carolina Panthers,CAR,4244607,Akayleb Evans,CB,Injured Reserve,IR,Triceps,2026-11-30,Evans (triceps) has been ruled out ahead of Thursday night's game against the Packers.
 2026-10-28T23:53:02+00:00,2026-10-28T23:48Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-29T00:07:53+00:00,2026-10-28T23:52Z,3,Chicago Bears,CHI,4239094,Coby Bryant,S,Injured Reserve,IR,Left Knee Surgery,2026-12-19,"Coach Ben Johnson said Wednesday that Bryant (knee) will start running again in the ""near future,"" Courtney Cronin of ESPN.com reports."
 2026-10-29T00:07:53+00:00,2026-10-28T23:55Z,9,Green Bay Packers,GB,3124005,Zaire Franklin,LB,Out,OUT,Shin Fracture,2026-11-08,"Franklin (shin) has been ruled out for Thursday's game against the Panthers, Wes Hodkiewicz of the Packers' official site reports."
@@ -2503,6 +2505,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-29T00:38:00+00:00,2026-10-29T00:25Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-29T00:38:00+00:00,2026-10-29T00:25Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-29T00:38:00+00:00,2026-10-29T00:27Z,2,Buffalo Bills,BUF,4039303,Ed Oliver,DT,Questionable,QUESTIONABLE,Knee,2026-11-01,"Oliver (knee) returned to practice on a limited basis Wednesday, Chris Brown of the Bills Radio Network reports."
+2026-10-29T21:07:53+00:00,2026-10-29T00:27Z,2,Buffalo Bills,BUF,4039303,Ed Oliver,DT,Active,,,,"Oliver (knee) returned to practice on a limited basis Wednesday, Chris Brown of the Bills Radio Network reports."
 2026-10-29T00:38:00+00:00,2026-10-29T00:27Z,5,Cleveland Browns,CLE,4578085,Jared Verse,DE,Questionable,QUESTIONABLE,Knee Inflammation,2026-11-01,Verse (knee) did not participate at practice Wednesday.
 2026-10-29T00:38:00+00:00,2026-10-29T00:27Z,15,Miami Dolphins,MIA,4880236,Will Kacmarek,TE,Questionable,QUESTIONABLE,Hamstring,2026-11-01,"Kacmarek (hamstring) was a limited participant in Wednesday's practice, Marcel Louis-Jacques of ESPN.com reports."
 2026-10-29T00:38:00+00:00,2026-10-29T00:29Z,20,New York Jets,NYJ,4035537,Kene Nwangwu,RB,Active,,,,Nwangwu was a full participant in Wednesday's practice.
@@ -2628,6 +2631,34 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-29T20:23:06+00:00,2026-10-29T20:02Z,11,Indianapolis Colts,IND,4692033,Tim Smith,DT,Active,,,,
 2026-10-29T20:23:06+00:00,2026-10-29T20:04Z,23,Pittsburgh Steelers,PIT,3045373,Jalen Ramsey,CB,Active,,,,
 2026-10-29T20:23:06+00:00,2026-10-29T20:04Z,27,Tampa Bay Buccaneers,TB,4371733,Kenny Gainwell,RB,Questionable,QUESTIONABLE,Hip,2026-11-01,"Gainwell (hip) was a limited participant at Thursday's practice, Scott Smith of the Buccaneers' official site reports."
+2026-10-29T21:07:53+00:00,2026-10-29T20:05Z,5,Cleveland Browns,CLE,5081397,Dylan Sampson,RB,Active,,,,"Sampson (knee) was a full participant in Thursday's practice, Daniel Oyefusi of ESPN.com reports."
 2026-10-29T20:23:06+00:00,2026-10-29T20:06Z,27,Tampa Bay Buccaneers,TB,4567750,Emeka Egbuka,WR,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-01,Egbuka (concussion) was a limited participant in Thursday's practice.
 2026-10-29T20:23:06+00:00,2026-10-29T20:07Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-29T20:23:06+00:00,2026-10-29T20:07Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-11-08,ir
+2026-10-29T21:07:53+00:00,2026-10-29T20:13Z,3,Chicago Bears,CHI,4241007,D'Marco Jackson,LB,Questionable,QUESTIONABLE,Ankle,2026-11-02,questionable
+2026-10-29T21:07:53+00:00,2026-10-29T20:13Z,3,Chicago Bears,CHI,3121544,T.J. Edwards,LB,Active,,,,
+2026-10-29T21:07:53+00:00,2026-10-29T20:14Z,8,Detroit Lions,DET,4429795,Jahmyr Gibbs,RB,Active,,,,Gibbs (shoulder) practiced fully Thursday.
+2026-10-29T21:07:53+00:00,2026-10-29T20:14Z,11,Indianapolis Colts,IND,4431459,Tyler Warren,TE,Questionable,QUESTIONABLE,Groin,2026-11-01,Warren (groin) was a limited participant at Thursday's practice.
+2026-10-29T21:07:53+00:00,2026-10-29T20:19Z,3,Chicago Bears,CHI,4608686,Kyle Monangai,RB,Questionable,QUESTIONABLE,Thumb Sprain,2026-11-02,Monangai (thumb/toe) did not practice Thursday.
+2026-10-29T21:07:53+00:00,2026-10-29T20:20Z,8,Detroit Lions,DET,4374302,Amon-Ra St. Brown,WR,Active,,,,St. Brown (ankle) practiced in full Thursday.
+2026-10-29T21:07:53+00:00,2026-10-29T20:20Z,15,Miami Dolphins,MIA,4569603,Malik Washington,WR,Questionable,QUESTIONABLE,Knee,2026-11-01,"Washington (knee) was a limited participant in Thursday's practice, David Furones of the South Florida Sun Sentinel reports."
+2026-10-29T21:07:53+00:00,2026-10-29T20:25Z,8,Detroit Lions,DET,4383429,Jacob Saylors,RB,Active,,,,
+2026-10-29T21:07:53+00:00,2026-10-29T20:26Z,8,Detroit Lions,DET,4431615,Tyleik Williams,DT,Active,,,,
+2026-10-29T21:07:53+00:00,2026-10-29T20:26Z,17,New England Patriots,NE,4047646,A.J. Brown,WR,Questionable,QUESTIONABLE,Knee,2026-11-01,"Brown (ankle/knee) was officially listed as a non-participant at Thursday's practice, David Furones of the South Florida Sun Sentinel reports."
+2026-10-29T21:07:53+00:00,2026-10-29T20:29Z,17,New England Patriots,NE,4432710,TreVeyon Henderson,RB,Questionable,QUESTIONABLE,Illness,2026-11-01,"Henderson (illness) did not practice Thursday, David Furones of the South Florida Sun Sentinel reports."
+2026-10-29T21:07:53+00:00,2026-10-29T20:33Z,20,New York Jets,NYJ,4427366,Breece Hall,RB,Questionable,QUESTIONABLE,Right Quadriceps,2026-11-01,Hall (quadriceps) remained limited at Thursday's practice.
+2026-10-29T21:07:53+00:00,2026-10-29T20:36Z,7,Denver Broncos,DEN,4372016,Jaylen Waddle,WR,Questionable,QUESTIONABLE,Chest,2026-11-01,"Waddle (chest) is present for the medica-access portion of Thursday's practice, Chris Tomasson of the Denver Gazette reports."
+2026-10-29T21:07:53+00:00,2026-10-29T20:37Z,2,Buffalo Bills,BUF,4366349,Joe Andreessen,LB,Questionable,QUESTIONABLE,Knee,2026-11-01,questionable
+2026-10-29T21:07:53+00:00,2026-10-29T20:38Z,2,Buffalo Bills,BUF,4684527,T.J. Sanders,DT,Active,,,,
+2026-10-29T21:07:53+00:00,2026-10-29T20:41Z,33,Baltimore Ravens,BAL,3915837,Broderick Washington Jr.,DT,Active,,,,
+2026-10-29T21:07:53+00:00,2026-10-29T20:41Z,33,Baltimore Ravens,BAL,15846,John Jenkins,DT,Active,,,,
+2026-10-29T21:07:53+00:00,2026-10-29T20:41Z,33,Baltimore Ravens,BAL,2980153,Ronnie Stanley,OT,Active,,,,
+2026-10-29T21:07:53+00:00,2026-10-29T20:42Z,22,Arizona Cardinals,ARI,4360761,Michael Wilson,WR,Questionable,QUESTIONABLE,Ribs Soreness,2026-11-01,"Wilson (ribs) wore a yellow non-contact jersey for a second consecutive practice Thursday, Bo Brack of PHNX Cardinals reports."
+2026-10-29T21:07:53+00:00,2026-10-29T20:44Z,13,Las Vegas Raiders,LV,4875295,Jackson Powers-Johnson,G,Questionable,QUESTIONABLE,Back,2026-11-01,questionable
+2026-10-29T21:07:53+00:00,2026-10-29T20:44Z,13,Las Vegas Raiders,LV,4379416,Quay Walker,LB,Active,,,,
+2026-10-29T21:07:53+00:00,2026-10-29T20:46Z,12,Kansas City Chiefs,KC,15847,Travis Kelce,TE,Questionable,QUESTIONABLE,Ankle,2026-11-01,questionable
+2026-10-29T21:07:53+00:00,2026-10-29T20:48Z,20,New York Jets,NYJ,4685247,Braelon Allen,RB,Active,,,,Allen (ankle) was a full participant at Thursday's practice.
+2026-10-29T21:07:53+00:00,2026-10-29T20:51Z,4,Cincinnati Bengals,CIN,4362628,Ja'Marr Chase,WR,Active,,,,"Chase (ankle) was a full participant in Thursday's practice, Mike Petraglia of CLNSCincy.com reports."
+2026-10-29T21:07:53+00:00,2026-10-29T20:53Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-29T21:07:53+00:00,2026-10-29T20:53Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Out,OUT,Undisclosed,2026-11-08,out
+2026-10-29T21:07:53+00:00,2026-10-29T21:03Z,6,Dallas Cowboys,DAL,4372096,Luke Schoonmaker,TE,Questionable,QUESTIONABLE,Groin,2026-11-01,questionable
