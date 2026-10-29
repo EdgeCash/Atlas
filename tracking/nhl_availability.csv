@@ -243,3 +243,4 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-28T20:08:04+00:00,2026-10-28T19:55Z,16,Pittsburgh Penguins,PIT,5075840,Elmer Soderblom,LW,Injured Reserve,IR,Upper Body,2026-11-07,ir
 2026-10-28T21:08:01+00:00,2026-10-28T20:23Z,16,Pittsburgh Penguins,PIT,4063605,Justin Brazeau,RW,Out,OUT,Lower Body,2026-11-03,out
 2026-10-29T00:22:59+00:00,2026-10-29T00:11Z,21,Toronto Maple Leafs,TOR,3042110,Miles Wood,LW,Injured Reserve,IR-LT,Undisclosed,2026-11-07,"Wood (undisclosed) was transferred to long-term injured reserve Wednesday, David Alter of The Hockey News reports."
+2026-10-29T02:08:02+00:00,2026-10-29T02:02Z,3,Calgary Flames,CGY,4319911,Devin Cooley,G,Day-To-Day,Day-To-Day,Lower Body,2026-10-30,day-to-day
