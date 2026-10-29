@@ -2569,3 +2569,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-29T12:22:47+00:00,2026-10-29T12:00Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Out,OUT,Undisclosed,2026-10-18,out
 2026-10-29T13:23:02+00:00,2026-10-29T13:00Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-29T13:23:02+00:00,2026-10-29T13:00Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-29T14:22:58+00:00,2026-10-29T14:01Z,33,Baltimore Ravens,BAL,3916387,Lamar Jackson,QB,Questionable,QUESTIONABLE,Left Ankle Sprain,2026-11-01,"Jackson (ankle) handled all of the first-team work during Wednesday's practice and is on track to play Sunday against the Bills, Matt Zenitz of CBS Sports repor"
+2026-10-29T14:22:58+00:00,2026-10-29T14:01Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-29T14:22:58+00:00,2026-10-29T14:10Z,9,Green Bay Packers,GB,4701936,Matthew Golden,WR,Questionable,QUESTIONABLE,Shoulder,2026-10-29,"The Packers expect Golden (shoulder/foot), who is listed as questionable for Thursday night's game against the Panthers, to suit up, James Palmer of NFL on Prim"
+2026-10-29T14:22:58+00:00,2026-10-29T14:16Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-11-08,ir
