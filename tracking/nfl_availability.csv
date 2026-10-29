@@ -2484,6 +2484,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-29T00:22:59+00:00,2026-10-29T00:09Z,22,Arizona Cardinals,ARI,3059839,Elijah Wilkinson,OT,Questionable,QUESTIONABLE,Knee,2026-11-01,questionable
 2026-10-29T00:22:59+00:00,2026-10-29T00:09Z,22,Arizona Cardinals,ARI,4040983,Mack Wilson Sr.,LB,Questionable,QUESTIONABLE,Knee,2026-11-01,questionable
 2026-10-29T00:22:59+00:00,2026-10-29T00:09Z,22,Arizona Cardinals,ARI,4244606,Zaven Collins,LB,Questionable,QUESTIONABLE,Illness,2026-11-01,questionable
+2026-10-29T00:38:00+00:00,2026-10-29T00:09Z,30,Jacksonville Jaguars,JAX,4242149,Montaric Brown,CB,Active,,,,Brown (hamstring) was a full participant in Wednesday's practice.
 2026-10-29T00:22:59+00:00,2026-10-29T00:10Z,22,Arizona Cardinals,ARI,4426923,Kei'Trel Clark,CB,Questionable,QUESTIONABLE,Illness,2026-11-01,questionable
 2026-10-29T00:22:59+00:00,2026-10-29T00:10Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-29T00:22:59+00:00,2026-10-29T00:10Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
@@ -2493,3 +2494,15 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-29T00:22:59+00:00,2026-10-29T00:12Z,27,Tampa Bay Buccaneers,TB,4034790,Antoine Winfield Jr.,S,Active,,,,"Winfield (ribs) was a full participant in Wednesday's practice, Brianna Dix of the Buccaneers' official site reports."
 2026-10-29T00:22:59+00:00,2026-10-29T00:15Z,11,Indianapolis Colts,IND,4427250,Sauce Gardner,CB,Questionable,QUESTIONABLE,Left Calf Strain,2026-11-01,Gardner (calf) was estimated as a limited participant on the Colts' official injury report Wednesday.
 2026-10-29T00:22:59+00:00,2026-10-29T00:16Z,22,Arizona Cardinals,ARI,4373626,Tyler Allgeier,RB,Questionable,QUESTIONABLE,Toe,2026-11-01,"Allgeier (toe) didn't practice Wednesday, Darren Urban of the Cardinals' official site reports."
+2026-10-29T00:38:00+00:00,2026-10-29T00:19Z,17,New England Patriots,NE,3916923,Carlton Davis III,CB,Active,,,,Davis (neck) was a full participant in Wednesday's practice.
+2026-10-29T00:38:00+00:00,2026-10-29T00:19Z,27,Tampa Bay Buccaneers,TB,4870998,Josiah Trotter,LB,Questionable,QUESTIONABLE,Illness,2026-11-01,"Trotter (illness) did not practice Wednesday, Brianna Dix of the Buccaneers' official site reports."
+2026-10-29T00:38:00+00:00,2026-10-29T00:24Z,15,Miami Dolphins,MIA,4360488,JuJu Brents,CB,Questionable,QUESTIONABLE,Neck Concussion,2026-11-01,"Brents (neck/concussion) did not practice Wednesday, Marcel Louis-Jacques of ESPN.com reports."
+2026-10-29T00:38:00+00:00,2026-10-29T00:25Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-29T00:38:00+00:00,2026-10-29T00:25Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
+2026-10-29T00:38:00+00:00,2026-10-29T00:27Z,2,Buffalo Bills,BUF,4039303,Ed Oliver,DT,Questionable,QUESTIONABLE,Knee,2026-11-01,"Oliver (knee) returned to practice on a limited basis Wednesday, Chris Brown of the Bills Radio Network reports."
+2026-10-29T00:38:00+00:00,2026-10-29T00:27Z,5,Cleveland Browns,CLE,4578085,Jared Verse,DE,Questionable,QUESTIONABLE,Knee Inflammation,2026-11-01,Verse (knee) did not participate at practice Wednesday.
+2026-10-29T00:38:00+00:00,2026-10-29T00:27Z,15,Miami Dolphins,MIA,4880236,Will Kacmarek,TE,Questionable,QUESTIONABLE,Hamstring,2026-11-01,"Kacmarek (hamstring) was a limited participant in Wednesday's practice, Marcel Louis-Jacques of ESPN.com reports."
+2026-10-29T00:38:00+00:00,2026-10-29T00:29Z,20,New York Jets,NYJ,4035537,Kene Nwangwu,RB,Active,,,,Nwangwu was a full participant in Wednesday's practice.
+2026-10-29T00:38:00+00:00,2026-10-29T00:30Z,5,Cleveland Browns,CLE,4695783,Myles Harden,CB,Questionable,QUESTIONABLE,Hamstring,2026-11-01,Harden (hamstring) was a limited participant at practice Wednesday.
+2026-10-29T00:38:00+00:00,2026-10-29T00:33Z,5,Cleveland Browns,CLE,4600415,Mike Hall Jr.,DT,Questionable,QUESTIONABLE,Ankle,2026-11-01,Hall (ankle) was a limited participant at practice Wednesday.
+2026-10-29T00:38:00+00:00,2026-10-29T00:33Z,15,Miami Dolphins,MIA,4430681,Jared Wayne,WR,Questionable,QUESTIONABLE,Knee,2026-11-01,"Wayne (knee) was a limited participant in Wednesday's practice, Marcel Louis-Jacques of ESPN.com reports."
