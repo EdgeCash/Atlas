@@ -2506,6 +2506,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-29T00:38:00+00:00,2026-10-29T00:30Z,5,Cleveland Browns,CLE,4695783,Myles Harden,CB,Questionable,QUESTIONABLE,Hamstring,2026-11-01,Harden (hamstring) was a limited participant at practice Wednesday.
 2026-10-29T00:38:00+00:00,2026-10-29T00:33Z,5,Cleveland Browns,CLE,4600415,Mike Hall Jr.,DT,Questionable,QUESTIONABLE,Ankle,2026-11-01,Hall (ankle) was a limited participant at practice Wednesday.
 2026-10-29T00:38:00+00:00,2026-10-29T00:33Z,15,Miami Dolphins,MIA,4430681,Jared Wayne,WR,Questionable,QUESTIONABLE,Knee,2026-11-01,"Wayne (knee) was a limited participant in Wednesday's practice, Marcel Louis-Jacques of ESPN.com reports."
+2026-10-29T03:07:59+00:00,2026-10-29T00:34Z,10,Tennessee Titans,LV,4373956,Jonah Laulu,DT,Active,,,,"The Titans claimed Laulu off waivers Wednesday, NFL reporter Jordan Schultz reports."
 2026-10-29T00:53:02+00:00,2026-10-29T00:36Z,15,Miami Dolphins,MIA,4259804,Willie Gay Jr.,LB,Active,,,,"Gay (illness) was a full participant in Wednesday's practice, Marcel Louis-Jacques of ESPN.com reports."
 2026-10-29T00:53:02+00:00,2026-10-29T00:43Z,13,Las Vegas Raiders,LV,4045305,Ian Thomas,TE,Questionable,QUESTIONABLE,Shoulder,2026-11-01,"Thomas (shoulder) was a limited participant in Wednesday's practice, Anthony Galaviz of The Fresno Bee reports."
 2026-10-29T00:53:02+00:00,2026-10-29T00:44Z,14,Los Angeles Rams,LAR,4426405,Trent McDuffie,CB,Questionable,QUESTIONABLE,Groin,2026-11-01,"McDuffie (groin) was a limited participant in Wednesday's practice, Stu Jackson of the Rams' official site reports."
@@ -2546,3 +2547,4 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-29T02:23:01+00:00,2026-10-29T02:00Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-29T02:08:02+00:00,2026-10-29T02:00Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-10-18,ir
 2026-10-29T02:08:02+00:00,2026-10-29T02:02Z,24,Los Angeles Chargers,LAC,2576702,Bud Dupree,LB,Active,,,,Dupree (neck) is off the Chargers' injury report ahead of the team's matchup versus the Rams on Sunday.
+2026-10-29T03:07:59+00:00,2026-10-29T03:00Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Out,OUT,Undisclosed,2026-10-18,out
