@@ -1,6 +1,6 @@
 # Atlas Operations Manual
 
-*Generated 2026-10-29 23:23 UTC by `python -m atlas.live check`. Atlas research is
+*Generated 2026-10-29 23:37 UTC by `python -m atlas.live check`. Atlas research is
 complete; this document is about keeping the live tracker alive and honest for
 two seasons.*
 
@@ -16,9 +16,9 @@ two seasons.*
 | | |
 |---|---|
 | Signals recorded | 556 |
-| Grades recorded | 452 |
-| Line snapshots | 7,931 |
-| Tracker runs logged | 896 |
+| Grades recorded | 456 |
+| Line snapshots | 7,937 |
+| Tracker runs logged | 897 |
 | Blocking data-quality exceptions | 0 |
 | Monitor alerts firing | 2 |
 | Replays clean | 9 of 9 |
@@ -100,27 +100,27 @@ trace(Store.open(), "<signal_id>")   # signal, grade, full line history, run
 
 | Table | Rows | Columns | Primary key |
 |---|---|---|---|
-| runs | 896 | 14 | run_id |
+| runs | 897 | 14 | run_id |
 | numbers | 2,880 | 8 | game_id, market, model_version, refreshed_at |
 | projections | 7,492 | 49 | sport, game_id, model_version |
 | nhl_projections | 181 | 42 | game_id, model_version |
 | calibration | 49,795 | 10 | sport, game_id, market |
 | card_grades | 347 | 17 | sport, game_id |
 | other_models | 913 | 9 | sport, game_id, model |
-| polymarket_quotes | 33,526 | 26 | token_id, captured_at |
-| polymarket_props | 229,086 | 29 | token_id, captured_at |
+| polymarket_quotes | 33,636 | 26 | token_id, captured_at |
+| polymarket_props | 229,580 | 29 | token_id, captured_at |
 | nba_availability | 607 | 13 | player_id, reported_at, status |
-| nfl_availability | 2,730 | 13 | player_id, reported_at, status |
+| nfl_availability | 2,742 | 13 | player_id, reported_at, status |
 | nhl_availability | 268 | 13 | player_id, reported_at, status |
-| favorites | 936 | 30 | token_id, threshold |
+| favorites | 939 | 30 | token_id, threshold |
 | finish | 0 | 28 | token_id |
 | metals | 0 | 28 | market_slug, side, threshold |
 | prop_record | 10,640 | 13 | token_id |
 | availability | 1,426 | 13 | conference, report_id, team, player |
 | games | 661 | 17 | game_id |
-| snapshots | 7,931 | 11 | game_id, book, market, captured_at |
+| snapshots | 7,937 | 11 | game_id, book, market, captured_at |
 | signals | 556 | 17 | signal_id |
-| grades | 452 | 14 | signal_id |
+| grades | 456 | 14 | signal_id |
 | market_shape | 486 | 5 | sport, market, point |
 
 Storage is CSV, not a database file: it survives the container, a scheduled

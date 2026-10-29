@@ -267,3 +267,4 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-29T22:08:02+00:00,2026-10-29T21:48Z,5,Detroit Red Wings,DET,3114755,Dylan Larkin,C,Suspension,IR-NR,Suspension,2026-11-14,suspension
 2026-10-29T22:22:56+00:00,2026-10-29T22:03Z,5,Detroit Red Wings,DET,3114755,Dylan Larkin,C,Injured Reserve,IR-NR,Suspension,2026-11-14,ir-nr
 2026-10-29T22:22:56+00:00,2026-10-29T22:06Z,2,Buffalo Sabres,BUF,4894355,Justin Danforth,RW,Injured Reserve,IR,Upper Body,2026-10-31,"Danforth (upper body) was placed on injured reserve Thursday, per the NHL media site."
+2026-10-29T23:37:58+00:00,2026-10-29T23:36Z,10,Montreal Canadiens,MTL,2976851,Mike Matheson,D,Out,OUT,Lower Body,2026-10-31,out
