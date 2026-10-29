@@ -247,3 +247,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-29T02:23:01+00:00,2026-10-29T02:05Z,3,Calgary Flames,CGY,4874733,Brennan Othmann,LW,Day-To-Day,Day-To-Day,Upper Body,2026-10-30,day-to-day
 2026-10-29T03:07:59+00:00,2026-10-29T02:52Z,17,Colorado Avalanche,COL,2590829,Josh Manson,D,Day-To-Day,Day-To-Day,Lower Body,2026-10-31,day-to-day
 2026-10-29T04:23:10+00:00,2026-10-29T04:10Z,17,Colorado Avalanche,COL,2590829,Josh Manson,D,Out,OUT,Left Lower Body,2026-11-05,out
+2026-10-29T16:22:56+00:00,2026-10-29T15:21Z,5,Detroit Red Wings,DET,3114755,Dylan Larkin,C,Out,OUT,Not Injury Related,2026-10-31,out
+2026-10-29T16:22:56+00:00,2026-10-29T15:56Z,30,Minnesota Wild,MIN,5079,Jared Spurgeon,D,Out,OUT,Undisclosed,2026-11-06,out
+2026-10-29T16:22:56+00:00,2026-10-29T16:12Z,16,Pittsburgh Penguins,PIT,4063401,Samuel Girard,D,Injured Reserve,IR,Undisclosed,2026-10-29,"Girard (undisclosed) is considered a game-time decision for Thursday's home game against the Mammoth, per Seth Rorabaugh of Tribune-Review Sports."
+2026-10-29T16:22:56+00:00,2026-10-29T16:13Z,26,Florida Panthers,FLA,3041970,Aleksander Barkov,C,Injured Reserve,IR-LT,Left Lower Body,2026-11-27,"Barkov (lower body) resumed skating Wednesday, George Richards of Florida Hockey Now reports."
