@@ -2789,6 +2789,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-30T00:53:19+00:00,2026-10-30T00:41Z,7,Denver Broncos,DEN,3915282,Zach Allen,DE,Questionable,QUESTIONABLE,Hamstring,2026-11-01,"Allen (hamstring) was a limited participant at the Broncos' practice Thursday, Aric DiLalla of the team's official website reports."
 2026-10-30T01:07:47+00:00,2026-10-30T00:45Z,7,Denver Broncos,DEN,4360853,Talanoa Hufanga,S,Questionable,QUESTIONABLE,Ankle,2026-11-01,"Hufanga (ankle) did not participate at the Broncos' practice Thursday, Aric DiLalla of the team's official website reports."
 2026-10-30T00:53:19+00:00,2026-10-30T00:47Z,6,Dallas Cowboys,DAL,3676833,KaVontae Turpin,WR,Questionable,QUESTIONABLE,Ribs,2026-11-01,"Turpin (ribs) was a non-participant in practice Thursday, Tommy Yarrish of the Cowboys' official site reports."
+2026-10-30T21:07:57+00:00,2026-10-30T00:47Z,6,Dallas Cowboys,DAL,3676833,KaVontae Turpin,WR,Out,OUT,Ribs,2026-11-08,"Turpin (ribs) was a non-participant in practice Thursday, Tommy Yarrish of the Cowboys' official site reports."
 2026-10-30T01:07:47+00:00,2026-10-30T00:51Z,26,Seattle Seahawks,SEA,2971622,Leonard Williams,DT,Questionable,QUESTIONABLE,Achilles,2026-11-02,Williams (Achilles) was a limited participant at the Seahawks' practice Thursday.
 2026-10-30T01:23:04+00:00,2026-10-30T00:54Z,6,Dallas Cowboys,DAL,4428914,Dee Winters,LB,Questionable,QUESTIONABLE,Calf Strain,2026-11-01,"Winters (calf) didn't practice Thursday, Tommy Yarrish of the Cowboys' official site reports."
 2026-10-30T01:07:47+00:00,2026-10-30T00:55Z,26,Seattle Seahawks,SEA,4686540,Tyrice Knight,LB,Questionable,QUESTIONABLE,Hip,2026-11-02,Knight (hip) was a limited participant at the Seahawks' practice Thursday.
@@ -2799,6 +2800,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-30T01:23:04+00:00,2026-10-30T01:00Z,26,Seattle Seahawks,SEA,4428659,Drake Thomas,LB,Questionable,QUESTIONABLE,Ankle,2026-11-02,Thomas (ankle) was a limited participant at the Seahawks' practice Thursday.
 2026-10-30T01:23:04+00:00,2026-10-30T01:03Z,26,Seattle Seahawks,SEA,3924327,Drew Lock,QB,Questionable,QUESTIONABLE,Right Elbow,2026-11-02,Lock (elbow) was a limited participant at the Seahawks' practice Thursday.
 2026-10-30T01:23:04+00:00,2026-10-30T01:07Z,24,Los Angeles Chargers,LAC,4685553,Brenen Thompson,WR,Questionable,QUESTIONABLE,Quadriceps,2026-11-01,Thompson (quadriceps/hamstring) did not practice Thursday.
+2026-10-30T21:07:57+00:00,2026-10-30T01:07Z,24,Los Angeles Chargers,LAC,4685553,Brenen Thompson,WR,Out,OUT,Quadriceps,2026-11-08,Thompson (quadriceps/hamstring) did not practice Thursday.
 2026-10-30T01:23:04+00:00,2026-10-30T01:10Z,6,Dallas Cowboys,DAL,4040982,Quinnen Williams,DT,Questionable,QUESTIONABLE,Hamstring,2026-11-01,"Williams (hamstring) practiced in a limited fashion Thursday, Tommy Yarrish of the Cowboys' official site reports."
 2026-10-30T01:23:04+00:00,2026-10-30T01:10Z,26,Seattle Seahawks,SEA,4035693,Velus Jones Jr.,RB,Questionable,QUESTIONABLE,Hamstring,2026-11-02,Jones (hamstring) did not participate at the Seahawks' practice Thursday.
 2026-10-30T01:38:02+00:00,2026-10-30T01:16Z,27,Tampa Bay Buccaneers,TB,4380507,Luke Goedeke,OT,Questionable,QUESTIONABLE,Calf,2026-11-01,Goedeke (calf) did not participate at the Buccaneers' practice Thursday.
@@ -2979,4 +2981,21 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-30T20:22:59+00:00,2026-10-30T20:12Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-11-08,ir
 2026-10-30T20:22:59+00:00,2026-10-30T20:12Z,17,New England Patriots,NE,4362890,Ben Brown,C,Active,,,,
 2026-10-30T20:22:59+00:00,2026-10-30T20:15Z,10,Tennessee Titans,TEN,4428557,Tyjae Spears,RB,Out,OUT,Knee,2026-11-15,Spears (knee) has been ruled out for Sunday's game against the Bengals.
+2026-10-30T21:07:57+00:00,2026-10-30T20:17Z,21,Philadelphia Eagles,PHI,4241478,DeVonta Smith,WR,Out,OUT,Hamstring,2026-11-08,Smith (hamstring) is listed as out for Sunday night's game against the Commanders.
 2026-10-30T20:22:59+00:00,2026-10-30T20:19Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-30T21:07:57+00:00,2026-10-30T20:19Z,24,Los Angeles Chargers,LAC,3691739,Derwin James Jr.,S,Out,OUT,Hamstring,2026-11-08,out
+2026-10-30T21:07:57+00:00,2026-10-30T20:19Z,24,Los Angeles Chargers,LAC,4040842,Kayode Awosika,G,Out,OUT,Lower Leg,2026-11-08,out
+2026-10-30T21:07:57+00:00,2026-10-30T20:19Z,21,Philadelphia Eagles,PHI,4428850,Dontayvion Wicks,WR,Out,OUT,Ankle,2026-11-08,Wicks (ankle) has been ruled out for Sunday night's game against the Commanders.
+2026-10-30T21:07:57+00:00,2026-10-30T20:20Z,24,Los Angeles Chargers,LAC,4690171,Deane Leonard,CB,Out,OUT,Concussion Concussion,2026-11-08,out
+2026-10-30T21:07:57+00:00,2026-10-30T20:21Z,28,Washington Commanders,WSH,4567156,Treylon Burks,WR,Questionable,QUESTIONABLE,Foot,2026-11-01,Burks (foot) is questionable for Sunday night's game against the Eagles.
+2026-10-30T21:07:57+00:00,2026-10-30T20:24Z,4,Cincinnati Bengals,CIN,4567098,Jordan Battle,S,Active,,,,
+2026-10-30T21:07:57+00:00,2026-10-30T20:28Z,24,Los Angeles Chargers,LAC,4686612,Tre' Harris,WR,Active,,,,Harris (hamstring) doesn't have an injury designation for Sunday's game against the Rams.
+2026-10-30T21:07:57+00:00,2026-10-30T20:32Z,14,Los Angeles Rams,LAR,4243181,Nate Landman,LB,Active,,,,
+2026-10-30T21:07:57+00:00,2026-10-30T20:32Z,15,Miami Dolphins,MIA,4367209,Greg Dulcich,TE,Active,,,,"Dulcich (ankle) doesn't have an injury designation for Sunday's game against the Patriots, C. Isaiah Smalls II of the Miami Herald reports."
+2026-10-30T21:07:57+00:00,2026-10-30T20:39Z,15,Miami Dolphins,MIA,4569603,Malik Washington,WR,Active,,,,"Washington (knee) doesn't have an injury designation for Sunday's game against the Patriots, C. Isaiah Smalls II of the Miami Herald reports."
+2026-10-30T21:07:57+00:00,2026-10-30T20:43Z,17,New England Patriots,NE,4432710,TreVeyon Henderson,RB,Questionable,QUESTIONABLE,Illness,2026-11-01,Henderson (illness) is questionable for Sunday's game against the Dolphins.
+2026-10-30T21:07:57+00:00,2026-10-30T20:44Z,24,Los Angeles Chargers,LAC,4612826,Ladd McConkey,WR,Active,,,,"McConkey (concussion) is off the injury report and will play in Sunday's game against the Rams, Noah Furtado of The Athletic reports."
+2026-10-30T21:07:57+00:00,2026-10-30T20:49Z,7,Denver Broncos,DEN,4360853,Talanoa Hufanga,S,Out,OUT,Ankle,2026-11-08,out
+2026-10-30T21:07:57+00:00,2026-10-30T20:53Z,7,Denver Broncos,DEN,4568490,RJ Harvey,RB,Out,OUT,Knee,2026-11-08,"Harvey (knee) has been ruled out for Sunday's game against the Chiefs, Chris Tomasson of the Denver Gazette reports."
+2026-10-30T21:07:57+00:00,2026-10-30T21:00Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-11-08,ir
+2026-10-30T21:07:57+00:00,2026-10-30T21:03Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
