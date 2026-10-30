@@ -2774,6 +2774,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-30T00:53:19+00:00,2026-10-30T00:25Z,13,Las Vegas Raiders,LV,4045305,Ian Thomas,TE,Questionable,QUESTIONABLE,Shoulder,2026-11-01,Thomas (shoulder) was a limited participant at the Raiders' practice Thursday.
 2026-10-30T00:38:03+00:00,2026-10-30T00:26Z,15,Miami Dolphins,MIA,4430681,Jared Wayne,WR,Questionable,QUESTIONABLE,Knee,2026-11-01,"Wayne (knee) was a limited practice participant Thursday, David Furones of the South Florida Sun Sentinel reports."
 2026-10-30T00:53:19+00:00,2026-10-30T00:30Z,33,Baltimore Ravens,BAL,4575517,Kyle Hamilton,S,Questionable,QUESTIONABLE,Right Knee,2026-11-01,Hamilton (knee) was limited in practice Thursday.
+2026-10-30T19:22:42+00:00,2026-10-30T00:30Z,33,Baltimore Ravens,BAL,4575517,Kyle Hamilton,S,Active,,,,Hamilton (knee) was limited in practice Thursday.
 2026-10-30T00:53:19+00:00,2026-10-30T00:34Z,6,Dallas Cowboys,DAL,2980097,Jonathan Bullard,DT,Injured Reserve,IR-R,Calf,2026-11-01,Bullard (calf) was designated to return from injured reserve by the Cowboys on Thursday.
 2026-10-30T00:53:19+00:00,2026-10-30T00:36Z,33,Baltimore Ravens,BAL,3915189,Roquan Smith,LB,Questionable,QUESTIONABLE,Knee,2026-11-01,Smith (knee) was limited in Thursday's practice.
 2026-10-30T00:53:19+00:00,2026-10-30T00:41Z,7,Denver Broncos,DEN,3915282,Zach Allen,DE,Questionable,QUESTIONABLE,Hamstring,2026-11-01,"Allen (hamstring) was a limited participant at the Broncos' practice Thursday, Aric DiLalla of the team's official website reports."
@@ -2805,6 +2806,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-30T01:38:02+00:00,2026-10-30T01:29Z,29,Carolina Panthers,CAR,5151083,Will Lee III,CB,Questionable,QUESTIONABLE,Hamstring,2026-10-29,questionable
 2026-10-30T01:52:52+00:00,2026-10-30T01:29Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Out,OUT,Undisclosed,2026-11-08,out
 2026-10-30T01:52:52+00:00,2026-10-30T01:31Z,33,Baltimore Ravens,BAL,4832793,Olaivavega Ioane,G,Questionable,QUESTIONABLE,Right Knee - MCL Sprain,2026-11-01,Ioane (knee) was a limited participant at the Ravens' practice Thursday.
+2026-10-30T19:22:42+00:00,2026-10-30T01:31Z,33,Baltimore Ravens,BAL,4832793,Olaivavega Ioane,G,Out,OUT,Right Knee - MCL Sprain,2026-11-05,Ioane (knee) was a limited participant at the Ravens' practice Thursday.
 2026-10-30T01:52:52+00:00,2026-10-30T01:34Z,29,Carolina Panthers,CAR,5151083,Will Lee III,CB,Questionable,QUESTIONABLE,Hamstring,2026-10-29,"Lee is dealing with a hamstring injury and is doubtful to return to Thursday's Week 8 matchup against Green Bay, Joe Person of The Athletic reports."
 2026-10-30T01:52:52+00:00,2026-10-30T01:48Z,4,Cincinnati Bengals,CIN,4368003,Andrei Iosivas,WR,Injured Reserve,IR,Thumb Surgery,2026-11-08,"Iosivas (thumb) is making good progress in his rehab, Mike Petraglia of CLNSCincy.com reports."
 2026-10-30T02:07:44+00:00,2026-10-30T01:49Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
@@ -2900,3 +2902,29 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-30T18:22:44+00:00,2026-10-30T18:18Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-30T18:22:44+00:00,2026-10-30T18:18Z,16,Minnesota Vikings,MIN,4708049,Gavin Bartholomew,TE,Active,,,,
 2026-10-30T18:22:44+00:00,2026-10-30T18:18Z,16,Minnesota Vikings,MIN,4568007,Jay Ward,S,Questionable,QUESTIONABLE,Knee,2026-11-01,questionable
+2026-10-30T19:22:42+00:00,2026-10-30T18:32Z,14,Los Angeles Rams,LAR,4569382,Jordan Whittington,WR,Questionable,QUESTIONABLE,Back,2026-11-01,questionable
+2026-10-30T19:22:42+00:00,2026-10-30T18:33Z,14,Los Angeles Rams,LAR,2575907,Joe Cardona,LS,Doubtful,DOUBTFUL,Ankle,2026-11-01,doubtful
+2026-10-30T19:22:42+00:00,2026-10-30T18:33Z,23,Pittsburgh Steelers,PIT,4037333,Alex Highsmith,LB,Active,,,,
+2026-10-30T19:22:42+00:00,2026-10-30T18:33Z,23,Pittsburgh Steelers,PIT,4567979,Brandin Echols,CB,Out,OUT,Hamstring,2026-11-08,out
+2026-10-30T19:22:42+00:00,2026-10-30T18:33Z,23,Pittsburgh Steelers,PIT,4692628,Doneiko Slaughter,CB,Out,OUT,Hamstring,2026-11-08,out
+2026-10-30T19:22:42+00:00,2026-10-30T18:39Z,14,Los Angeles Rams,LAR,4242557,Colby Parkinson,TE,Questionable,QUESTIONABLE,Ribs,2026-11-01,"Parkinson (ribs) is questionable for Sunday's game against the Chargers, Nate Atkins of The Athletic reports."
+2026-10-30T19:22:42+00:00,2026-10-30T19:05Z,5,Cleveland Browns,CLE,3115485,Elgton Jenkins,C,Active,,,,
+2026-10-30T19:22:42+00:00,2026-10-30T19:05Z,5,Cleveland Browns,CLE,4242208,Grant Delpit,S,Active,,,,
+2026-10-30T19:22:42+00:00,2026-10-30T19:05Z,5,Cleveland Browns,CLE,4578085,Jared Verse,DE,Active,,,,
+2026-10-30T19:22:42+00:00,2026-10-30T19:05Z,5,Cleveland Browns,CLE,4600415,Mike Hall Jr.,DT,Active,,,,
+2026-10-30T19:22:42+00:00,2026-10-30T19:11Z,12,Kansas City Chiefs,KC,4043041,Jaylon Moore,OT,Active,,,,
+2026-10-30T19:22:42+00:00,2026-10-30T19:11Z,12,Kansas City Chiefs,KC,5081927,R Mason Thomas,DE,Questionable,QUESTIONABLE,Personal,2026-11-01,questionable
+2026-10-30T19:22:42+00:00,2026-10-30T19:12Z,2,Buffalo Bills,BUF,3116733,Bradley Chubb,LB,Active,,,,
+2026-10-30T19:22:42+00:00,2026-10-30T19:12Z,2,Buffalo Bills,BUF,3127294,Greg Gaines,DT,Questionable,QUESTIONABLE,Calf,2026-11-01,questionable
+2026-10-30T19:22:42+00:00,2026-10-30T19:12Z,2,Buffalo Bills,BUF,4366349,Joe Andreessen,LB,Active,,,,
+2026-10-30T19:22:42+00:00,2026-10-30T19:12Z,2,Buffalo Bills,BUF,4429501,Ray Davis,RB,Active,,,,
+2026-10-30T19:22:42+00:00,2026-10-30T19:13Z,5,Cleveland Browns,CLE,4873232,Mason Graham,DT,Active,,,,
+2026-10-30T19:22:42+00:00,2026-10-30T19:14Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-11-08,ir
+2026-10-30T19:22:42+00:00,2026-10-30T19:14Z,5,Cleveland Browns,CLE,4876017,Carson Schwesinger,LB,Active,,,,
+2026-10-30T19:22:42+00:00,2026-10-30T19:17Z,20,New York Jets,NYJ,4685248,David Bailey,LB,Doubtful,DOUBTFUL,Groin,2026-11-01,doubtful
+2026-10-30T19:22:42+00:00,2026-10-30T19:17Z,20,New York Jets,NYJ,4362094,Joseph Ossai,DE,Out,OUT,Ankle,2026-11-08,out
+2026-10-30T19:22:42+00:00,2026-10-30T19:17Z,20,New York Jets,NYJ,4373656,Max Mitchell,OT,Out,OUT,Concussion Concussion,2026-11-08,out
+2026-10-30T19:22:42+00:00,2026-10-30T19:17Z,20,New York Jets,NYJ,4428617,T'Vondre Sweat,DT,Out,OUT,Knee,2026-11-08,out
+2026-10-30T19:22:42+00:00,2026-10-30T19:18Z,33,Baltimore Ravens,BAL,4035479,John Simpson,G,Active,,,,
+2026-10-30T19:22:42+00:00,2026-10-30T19:18Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-30T19:22:42+00:00,2026-10-30T19:18Z,12,Kansas City Chiefs,KC,15847,Travis Kelce,TE,Active,,,,Kelce (ankle) doesn't have an injury designation for Sunday's game against the Broncos.
