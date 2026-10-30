@@ -1,6 +1,6 @@
 # Atlas Operations Manual
 
-*Generated 2026-10-30 07:53 UTC by `python -m atlas.live check`. Atlas research is
+*Generated 2026-10-30 08:12 UTC by `python -m atlas.live check`. Atlas research is
 complete; this document is about keeping the live tracker alive and honest for
 two seasons.*
 
@@ -17,8 +17,8 @@ two seasons.*
 |---|---|
 | Signals recorded | 558 |
 | Grades recorded | 456 |
-| Line snapshots | 8,028 |
-| Tracker runs logged | 921 |
+| Line snapshots | 8,029 |
+| Tracker runs logged | 922 |
 | Blocking data-quality exceptions | 0 |
 | Monitor alerts firing | 2 |
 | Replays clean | 9 of 9 |
@@ -100,17 +100,17 @@ trace(Store.open(), "<signal_id>")   # signal, grade, full line history, run
 
 | Table | Rows | Columns | Primary key |
 |---|---|---|---|
-| runs | 921 | 14 | run_id |
-| numbers | 2,880 | 8 | game_id, market, model_version, refreshed_at |
-| projections | 7,492 | 49 | sport, game_id, model_version |
-| nhl_projections | 181 | 42 | game_id, model_version |
-| calibration | 49,795 | 10 | sport, game_id, market |
+| runs | 922 | 14 | run_id |
+| numbers | 2,882 | 8 | game_id, market, model_version, refreshed_at |
+| projections | 7,717 | 49 | sport, game_id, model_version |
+| nhl_projections | 184 | 42 | game_id, model_version |
+| calibration | 49,808 | 10 | sport, game_id, market |
 | card_grades | 348 | 17 | sport, game_id |
 | other_models | 913 | 9 | sport, game_id, model |
-| polymarket_quotes | 36,136 | 26 | token_id, captured_at |
-| polymarket_props | 250,106 | 29 | token_id, captured_at |
+| polymarket_quotes | 36,234 | 26 | token_id, captured_at |
+| polymarket_props | 251,278 | 29 | token_id, captured_at |
 | nba_availability | 624 | 13 | player_id, reported_at, status |
-| nfl_availability | 2,839 | 13 | player_id, reported_at, status |
+| nfl_availability | 2,841 | 13 | player_id, reported_at, status |
 | nhl_availability | 273 | 13 | player_id, reported_at, status |
 | favorites | 1,010 | 30 | token_id, threshold |
 | finish | 0 | 28 | token_id |
@@ -118,7 +118,7 @@ trace(Store.open(), "<signal_id>")   # signal, grade, full line history, run
 | prop_record | 10,640 | 13 | token_id |
 | availability | 1,426 | 13 | conference, report_id, team, player |
 | games | 678 | 17 | game_id |
-| snapshots | 8,028 | 11 | game_id, book, market, captured_at |
+| snapshots | 8,029 | 11 | game_id, book, market, captured_at |
 | signals | 558 | 17 | signal_id |
 | grades | 456 | 14 | signal_id |
 | market_shape | 486 | 5 | sport, market, point |
