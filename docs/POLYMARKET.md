@@ -252,7 +252,11 @@ sudo bash /srv/atlas/deploy/setup-worker.sh start
  Set the repository variable
 `FAVORITES_TAKER` to `worker` once it is up: the scheduled run then reads
 the record the worker pushed and takes, grades and orders nothing for this
-rule itself, so the two never write it at once. The scheduled run still
+rule itself, so the two never write it at once. The worker's
+`ATLAS_OWNER_KEY` must be the repository secret's own: a ledger week file
+sealed with another key cannot be opened by the scheduled run, which then
+leaves the file as it is, grades nothing of the ledger, and says so on the
+Live tab instead of failing the page. The scheduled run still
 logs the model's positions and places their orders; the worker's
 `LIVE_RULES` is `favorites`. Run exactly one worker: two would take every
 position twice.
@@ -488,6 +492,19 @@ Live tab states the latest ("everything agrees", or MISMATCH and what). A
 read that fails is recorded and tried again an hour later. The worker runs
 it, and the scheduled run as a backstop; `python -m atlas.polymarket.reconcile`
 runs it by hand (`--day YYYY-MM-DD` for any day, printed only).
+
+The key is checked before anything else, and a bad one is written down
+rather than crashing the step. `python -m atlas.polymarket.account` with
+the two secrets in the environment says whether the key id is set, whether
+the secret decodes to an Ed25519 key, and whether the venue accepts one
+signed read of the account's balances - and prints nothing from the key
+itself. The secret is read as the portal shows it, standard base64 of the
+seed (the venue's own sample decodes it with `base64.b64decode` and takes
+the first 32 bytes); pasted without its padding, in the URL-safe alphabet,
+as hex, or as a PEM block it is read too. When it is none of those, every
+order of the run is refused with the note `bad key: the secret key does
+not decode to an Ed25519 key`, with the lengths it saw, on the Live tab
+and in the log, and no preview is taken.
 
 ## Paper only
 

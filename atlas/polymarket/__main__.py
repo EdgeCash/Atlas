@@ -78,6 +78,31 @@ def price(store: Store, quotes: pd.DataFrame) -> pd.DataFrame:
                          store.read("calibration"))
 
 
+def _live_section(passphrase: str, now: datetime) -> dict:
+    """The Live tab: the ledger graded and the audit trail reconciled, as before. A sealed week file this
+    key cannot open (the worker's, sealed with another owner key) is not this run's to rewrite: nothing of
+    the ledger is graded or written, and the tab says which key is at fault, rather than the whole page
+    failing to seal."""
+    from atlas.owner import sealed
+
+    try:
+        ledger = orders.grade(orders.load(passphrase), passphrase, now) if orders.mode() != "off" else orders.load(passphrase)
+        # The audit trail against the venue's account activity, once a day (the worker's too, whichever
+        # comes first); the latest result goes on the owner page.
+        if orders.mode() != "off":
+            reconcile.daily(passphrase, now)
+        return orders.section(ledger, now, reconcile.latest(audit.load(passphrase)))
+    except sealed.Unreadable as error:
+        LOG.error("polymarket: a sealed week file of the live ledger or the audit trail cannot be opened with "
+                  "this run's owner key (%s); the ledger was not graded or written", error)
+        return {"title": "Live: the ledger could not be opened", "tab": orders.TAB, "tables": [],
+                "notes": [f"A sealed week file of the live ledger or the audit trail (tracking/polymarket_live, "
+                          f"tracking/polymarket_audit) cannot be opened with this run's owner key ({error}). "
+                          "Nothing of the ledger was graded or rewritten this run. The always-on worker and the "
+                          "scheduled run must seal with the same ATLAS_OWNER_KEY: check the worker's environment "
+                          "file against the repository secret."]}
+
+
 def refresh(*, now: datetime | None = None, heavy: bool = False, store: Store | None = None) -> list[dict]:
     """The Polymarket step of every run. Returns the owner page's sections, having written the record, the
     public report and the owner page. Never raises."""
@@ -104,15 +129,9 @@ def refresh(*, now: datetime | None = None, heavy: bool = False, store: Store | 
             research = _research()
             finals = paper.results(research, store.read("games"))
             chosen, graded = positions.run(priced, finals, record, passphrase, now)
-            ledger = orders.grade(orders.load(passphrase), passphrase, now) if orders.mode() != "off" else orders.load(passphrase)
-            # The audit trail against the venue's account activity, once a day (the worker's too, whichever
-            # comes first); the latest result goes on the owner page.
-            if orders.mode() != "off":
-                reconcile.daily(passphrase, now)
-            checked = reconcile.latest(audit.load(passphrase))
             sections = [*page.sections(priced, chosen, graded, now), *prop_sections, fav_section,
                         finish.section(store.read(finish.TABLE), now), metals.section(store.read(metals.TABLE), now),
-                        orders.section(ledger, now, checked)]
+                        _live_section(passphrase, now)]
         else:
             reason = "The owner key is not configured."
     except Exception as error:  # noqa: BLE001 - the type only: a message could quote a price

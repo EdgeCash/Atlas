@@ -26,8 +26,10 @@ and never fails the run.
 from __future__ import annotations
 
 import base64
+import binascii
 import math
 import os
+import re
 import time
 from datetime import UTC, datetime
 from decimal import ROUND_HALF_UP, Decimal
@@ -60,6 +62,40 @@ def configured() -> bool:
     return bool(os.environ.get(KEY_ID, "").strip()) and bool(os.environ.get(SECRET_KEY, "").strip())
 
 
+#: The DER prefix of a PKCS#8 Ed25519 private key; the 32-byte seed follows it.
+_PKCS8 = bytes.fromhex("302e020100300506032b657004220420")
+
+
+def decode_secret(secret: str) -> bytes:
+    """The 32-byte Ed25519 seed from the secret as the portal shows it. The venue's own sample is
+    ``base64.b64decode(secret)[:32]``: standard base64 of the seed, or of the seed and the public key. A
+    key pasted without its padding, in the URL-safe alphabet, as hex, or as a PEM or DER block is read
+    too. Anything else raises ValueError, with the decoded lengths and never the key."""
+    s = str(secret or "").strip().strip("\"'").strip()
+    if "-----BEGIN" in s:
+        from cryptography.hazmat.primitives import serialization
+
+        key = serialization.load_pem_private_key(s.encode(), password=None)
+        return key.private_bytes(serialization.Encoding.Raw, serialization.PrivateFormat.Raw,
+                                 serialization.NoEncryption())
+    s = "".join(s.split())
+    candidates: list[bytes] = []
+    if re.fullmatch(r"(?:[0-9a-fA-F]{64}|[0-9a-fA-F]{128})", s):
+        candidates.append(bytes.fromhex(s))
+    b = s.replace("-", "+").replace("_", "/")
+    try:
+        candidates.append(base64.b64decode(b + "=" * (-len(b) % 4), validate=True))
+    except (binascii.Error, ValueError):
+        pass
+    for raw in candidates:
+        if len(raw) in (32, 64):
+            return raw[:32]
+        if len(raw) == 48 and raw.startswith(_PKCS8):
+            return raw[16:]
+    lengths = ",".join(str(len(r)) for r in candidates) or "none"
+    raise ValueError(f"the secret key does not decode to an Ed25519 key ({len(s)} characters; {lengths} bytes)")
+
+
 class Signer:
     """The venue's request signature: Ed25519 over ``timestamp + method + path`` with the secret key."""
 
@@ -67,13 +103,23 @@ class Signer:
         from cryptography.hazmat.primitives.asymmetric import ed25519
 
         self.key_id = key_id
-        self._key = ed25519.Ed25519PrivateKey.from_private_bytes(base64.b64decode(secret)[:32])
+        self._key = ed25519.Ed25519PrivateKey.from_private_bytes(decode_secret(secret))
 
     @classmethod
     def from_env(cls) -> Signer | None:
+        """The signer from the two secrets; None when they are not set. A secret that is set but is not a
+        key raises ValueError: the caller decides whether that stops the run or is written down."""
         if not configured():
             return None
         return cls(os.environ[KEY_ID].strip(), os.environ[SECRET_KEY].strip())
+
+    @classmethod
+    def try_env(cls) -> tuple[Signer | None, str | None]:
+        """(the signer, None), (None, None) with no key set, or (None, why) when the key is set but bad."""
+        try:
+            return cls.from_env(), None
+        except Exception as error:  # noqa: BLE001 - the type and the lengths only; never the key
+            return None, f"bad key: {error}" if isinstance(error, ValueError) else f"bad key: {type(error).__name__}"
 
     def public_key(self) -> bytes:
         from cryptography.hazmat.primitives import serialization
@@ -168,7 +214,10 @@ def preview(record: pd.DataFrame, ids, now: datetime, *, signer: Signer | None =
             out[c] = float("nan")
     if out.empty or not ids:
         return out
-    signer = signer or Signer.from_env()
+    if signer is None:
+        signer, why = Signer.try_env()
+        if why:
+            LOG.error("account: no previews; %s", why)
     if signer is None or offline():
         return out
     bankroll = float(bankroll if bankroll is not None else os.environ.get(BANKROLL) or DEFAULT_BANKROLL)
@@ -217,3 +266,32 @@ def summary(record: pd.DataFrame, day: str) -> dict | None:
 
 def now_utc() -> datetime:
     return datetime.now(UTC)
+
+
+def check(sess: requests.Session | None = None) -> int:
+    """Say whether the key in the environment is one the venue accepts: the key id's shape, whether the
+    secret decodes, and one signed read of the account's balances. Prints a line per step and nothing
+    from the key itself; returns 0 when every step passes."""
+    key_id = os.environ.get(KEY_ID, "").strip()
+    print(f"{KEY_ID}: {'set, ' + str(len(key_id)) + ' characters' if key_id else 'not set'}")
+    if not configured():
+        print(f"{SECRET_KEY}: {'set' if os.environ.get(SECRET_KEY, '').strip() else 'not set'}")
+        return 1
+    signer, why = Signer.try_env()
+    if signer is None:
+        print(f"{SECRET_KEY}: {why}")
+        return 1
+    print(f"{SECRET_KEY}: decodes to an Ed25519 key")
+    if offline():
+        print("offline: the venue was not asked")
+        return 0
+    sess = sess or requests.Session()
+    r = sess.get(API + "/v1/account/balances", headers=signer.headers("GET", "/v1/account/balances"),
+                 timeout=TIMEOUT)
+    print(f"GET /v1/account/balances: HTTP {r.status_code}"
+          + (" - the venue accepts the key" if r.ok else " - the venue does not accept the key"))
+    return 0 if r.ok else 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(check())
