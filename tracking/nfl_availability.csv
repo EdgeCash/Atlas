@@ -2801,6 +2801,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-30T01:23:04+00:00,2026-10-30T01:00Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Out,IR,Undisclosed,2026-11-08,out
 2026-10-30T01:23:04+00:00,2026-10-30T01:00Z,24,Los Angeles Chargers,LAC,3843769,Donte Jackson,CB,Questionable,QUESTIONABLE,Hamstring,2026-11-01,Jackson (hamstring) was limited in Thursday's practice.
 2026-10-30T01:23:04+00:00,2026-10-30T01:00Z,26,Seattle Seahawks,SEA,4428659,Drake Thomas,LB,Questionable,QUESTIONABLE,Ankle,2026-11-02,Thomas (ankle) was a limited participant at the Seahawks' practice Thursday.
+2026-10-30T23:22:55+00:00,2026-10-30T01:00Z,26,Seattle Seahawks,SEA,4428659,Drake Thomas,LB,Active,,,,Thomas (ankle) was a limited participant at the Seahawks' practice Thursday.
 2026-10-30T01:23:04+00:00,2026-10-30T01:03Z,26,Seattle Seahawks,SEA,3924327,Drew Lock,QB,Questionable,QUESTIONABLE,Right Elbow,2026-11-02,Lock (elbow) was a limited participant at the Seahawks' practice Thursday.
 2026-10-30T01:23:04+00:00,2026-10-30T01:07Z,24,Los Angeles Chargers,LAC,4685553,Brenen Thompson,WR,Questionable,QUESTIONABLE,Quadriceps,2026-11-01,Thompson (quadriceps/hamstring) did not practice Thursday.
 2026-10-30T21:07:57+00:00,2026-10-30T01:07Z,24,Los Angeles Chargers,LAC,4685553,Brenen Thompson,WR,Out,OUT,Quadriceps,2026-11-08,Thompson (quadriceps/hamstring) did not practice Thursday.
@@ -3048,3 +3049,13 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-30T23:07:59+00:00,2026-10-30T22:59Z,28,Washington Commanders,WSH,3925354,Daron Payne,DT,Out,OUT,Foot,2026-12-13,out
 2026-10-30T23:07:59+00:00,2026-10-30T23:00Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-30T23:07:59+00:00,2026-10-30T23:00Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Out,OUT,Undisclosed,2026-11-08,out
+2026-10-30T23:22:55+00:00,2026-10-30T23:06Z,10,Tennessee Titans,TEN,3916148,Tony Pollard,RB,Active,,,,Pollard and the rest of the Tennessee's skill-position players will all have to step up against Cincinnati on Sunday due to the absences of both Tyjae Spears (k
+2026-10-30T23:22:55+00:00,2026-10-30T23:10Z,10,Tennessee Titans,TEN,4569587,Wan'Dale Robinson,WR,Active,,,,Robinson and the other pass catchers will operate in elevated roles against the Bengals on Sunday due to the absence of rookie fourth-overall pick Carnell Tate 
+2026-10-30T23:22:55+00:00,2026-10-30T23:12Z,6,Dallas Cowboys,DAL,3122752,Kenny Clark,DT,Questionable,QUESTIONABLE,Back,2026-11-01,questionable
+2026-10-30T23:22:55+00:00,2026-10-30T23:15Z,26,Seattle Seahawks,SEA,4259651,Brandon Pili,DT,Questionable,QUESTIONABLE,Back,2026-11-01,questionable
+2026-10-30T23:22:55+00:00,2026-10-30T23:16Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-30T23:22:55+00:00,2026-10-30T23:16Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-11-08,ir
+2026-10-30T23:22:55+00:00,2026-10-30T23:16Z,26,Seattle Seahawks,SEA,4570040,Byron Murphy II,DT,Questionable,QUESTIONABLE,Back,2026-11-01,questionable
+2026-10-30T23:22:55+00:00,2026-10-30T23:16Z,26,Seattle Seahawks,SEA,4037521,Chazz Surratt,LB,Active,,,,
+2026-10-30T23:22:55+00:00,2026-10-30T23:16Z,26,Seattle Seahawks,SEA,4605491,Connor O'Toole,LB,Active,,,,
+2026-10-30T23:22:55+00:00,2026-10-30T23:18Z,26,Seattle Seahawks,SEA,4426385,Zach Charbonnet,RB,Questionable,QUESTIONABLE,Left Knee - ACL Surgery,2026-11-02,"Charbonnet (knee) was a limited participant in Friday's practice, John Boyle of the Seahawks' official site reports."
