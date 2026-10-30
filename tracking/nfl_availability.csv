@@ -2792,6 +2792,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-30T00:53:19+00:00,2026-10-30T00:47Z,6,Dallas Cowboys,DAL,3676833,KaVontae Turpin,WR,Questionable,QUESTIONABLE,Ribs,2026-11-01,"Turpin (ribs) was a non-participant in practice Thursday, Tommy Yarrish of the Cowboys' official site reports."
 2026-10-30T21:07:57+00:00,2026-10-30T00:47Z,6,Dallas Cowboys,DAL,3676833,KaVontae Turpin,WR,Out,OUT,Ribs,2026-11-08,"Turpin (ribs) was a non-participant in practice Thursday, Tommy Yarrish of the Cowboys' official site reports."
 2026-10-30T01:07:47+00:00,2026-10-30T00:51Z,26,Seattle Seahawks,SEA,2971622,Leonard Williams,DT,Questionable,QUESTIONABLE,Achilles,2026-11-02,Williams (Achilles) was a limited participant at the Seahawks' practice Thursday.
+2026-10-30T23:37:51+00:00,2026-10-30T00:51Z,26,Seattle Seahawks,SEA,2971622,Leonard Williams,DT,Active,,,,Williams (Achilles) was a limited participant at the Seahawks' practice Thursday.
 2026-10-30T01:23:04+00:00,2026-10-30T00:54Z,6,Dallas Cowboys,DAL,4428914,Dee Winters,LB,Questionable,QUESTIONABLE,Calf Strain,2026-11-01,"Winters (calf) didn't practice Thursday, Tommy Yarrish of the Cowboys' official site reports."
 2026-10-30T21:22:55+00:00,2026-10-30T00:54Z,6,Dallas Cowboys,DAL,4428914,Dee Winters,LB,Out,OUT,Calf Strain,2026-11-08,"Winters (calf) didn't practice Thursday, Tommy Yarrish of the Cowboys' official site reports."
 2026-10-30T01:07:47+00:00,2026-10-30T00:55Z,26,Seattle Seahawks,SEA,4686540,Tyrice Knight,LB,Questionable,QUESTIONABLE,Hip,2026-11-02,Knight (hip) was a limited participant at the Seahawks' practice Thursday.
@@ -3059,3 +3060,11 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-30T23:22:55+00:00,2026-10-30T23:16Z,26,Seattle Seahawks,SEA,4037521,Chazz Surratt,LB,Active,,,,
 2026-10-30T23:22:55+00:00,2026-10-30T23:16Z,26,Seattle Seahawks,SEA,4605491,Connor O'Toole,LB,Active,,,,
 2026-10-30T23:22:55+00:00,2026-10-30T23:18Z,26,Seattle Seahawks,SEA,4426385,Zach Charbonnet,RB,Questionable,QUESTIONABLE,Left Knee - ACL Surgery,2026-11-02,"Charbonnet (knee) was a limited participant in Friday's practice, John Boyle of the Seahawks' official site reports."
+2026-10-30T23:37:51+00:00,2026-10-30T23:20Z,10,Tennessee Titans,TEN,4883647,Elic Ayomanor,WR,Active,,,,"Carnell Tate (shoulder) has been ruled out for Sunday's game against the Bengals, leaving Ayomanor and Wan'Dale Robinson as the top wide receivers in the passin"
+2026-10-30T23:37:51+00:00,2026-10-30T23:24Z,26,Seattle Seahawks,SEA,4685512,Jadarian Price,RB,Injured Reserve,IR-R,Chest,2026-11-02,"Price (chest) was a full participant in Friday's practice, John Boyle of the Seahawks' official site reports."
+2026-10-30T23:37:51+00:00,2026-10-30T23:27Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-30T23:37:51+00:00,2026-10-30T23:27Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-11-08,ir
+2026-10-30T23:37:51+00:00,2026-10-30T23:27Z,30,Jacksonville Jaguars,JAX,4429168,Antonio Johnson,S,Out,OUT,Ankle,2026-11-05,Johnson (ankle) has been ruled out for Sunday's game against the Colts.
+2026-10-30T23:37:51+00:00,2026-10-30T23:27Z,28,Washington Commanders,WSH,3115922,Nick Allegretti,G,Active,,,,
+2026-10-30T23:37:51+00:00,2026-10-30T23:29Z,30,Jacksonville Jaguars,JAX,4911851,LeQuint Allen Jr.,RB,Active,,,,Allen (hamstring) does not carry an injury designation into Sunday's game against the Colts.
+2026-10-30T23:37:51+00:00,2026-10-30T23:29Z,26,Seattle Seahawks,SEA,4032473,Rashid Shaheed,WR,Questionable,QUESTIONABLE,Knee,2026-11-02,"Shaheed (knee) didn't practice Friday, John Boyle of the Seahawks' official site reports."
