@@ -9,7 +9,8 @@ sorted files, and the whole run's work is lost with the commit that never
 happens. Line-level git cannot merge them; the store can. Every table is
 keyed (`atlas.live.store.KEYS`), so each is rewritten as the branch's rows
 with this run's upserted over them, the way `Store.upsert` writes. Both runs'
-captures survive.
+captures survive. A table's archive files (`atlas.live.store.ARCHIVE`) merge
+the same way, each with the branch's copy of the same file.
 
 The sealed owner records (``tracking/polymarket_positions``: one file per week, rewritten
 whole) are merged the same way when the owner key is in the environment
@@ -94,12 +95,18 @@ def merge_store(ref: str, tracking: Path | None = None,
     store = Store.open(tracking)
     merged = []
     for table in SCHEMA:
-        if not (tracking / f"{table}.csv").exists():
-            continue
-        text = remote(f"tracking/{table}.csv")
-        theirs = pd.read_csv(io.StringIO(text)) if text else None
-        store.write(table, merge_table(table, store.read(table), theirs))
-        merged.append(table)
+        if (tracking / f"{table}.csv").exists():
+            text = remote(f"tracking/{table}.csv")
+            theirs = pd.read_csv(io.StringIO(text)) if text else None
+            store.write(table, merge_table(table, store.read(table), theirs))
+            merged.append(table)
+        # The table's archive (atlas.live.store.ARCHIVE), a file at a time, the same way. A row one run
+        # retired and the other still holds live comes back live and is retired again by the next run.
+        for part in store.parts(table):
+            text = remote(f"tracking/{table}/{part}")
+            theirs = pd.read_csv(io.StringIO(text)) if text else None
+            store.write(table, merge_table(table, store.read(table, part), theirs), part=part)
+            merged.append(f"{table}/{part}")
     return merged
 
 

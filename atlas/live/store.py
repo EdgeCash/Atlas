@@ -318,6 +318,17 @@ def changes(existing: pd.DataFrame, incoming: pd.DataFrame) -> tuple[pd.DataFram
     return history, len(appended)
 
 
+#: Tables kept as a live file and an archive. The live file, tracking/<table>.csv,
+#: holds the rows a run still needs - the contracts the venue is quoting, the
+#: games waiting on a box score - and `Store.retire` moves the rest into
+#: tracking/<table>/<date>.csv by the column named here, the start of the game
+#: the row belongs to, where they are added to and never otherwise rewritten.
+#: `Store.history` reads both. GitHub refuses any file over 100 MB: the props
+#: table reached it on 31 October 2026, eight days after it was opened, and every
+#: poll's push was rejected until its graded rows had somewhere else to go.
+ARCHIVE: dict[str, str] = {"polymarket_props": "game_start"}
+
+
 def tracking_dir() -> Path:
     """Where the committed tracking tables live.
 
@@ -340,13 +351,21 @@ class Store:
         path.mkdir(parents=True, exist_ok=True)
         return cls(path)
 
-    def path(self, table: str) -> Path:
+    def path(self, table: str, part: str | None = None) -> Path:
+        """The table's live file, or the archive file named ``part`` (`ARCHIVE`)."""
         if table not in SCHEMA:
             raise KeyError(f"unknown table: {table}")
+        if part is not None:
+            return self.root / table / part
         return self.root / f"{table}.csv"
 
-    def read(self, table: str) -> pd.DataFrame:
-        path = self.path(table)
+    def parts(self, table: str) -> list[str]:
+        """The archive files the table has here, oldest first."""
+        where = self.root / table
+        return sorted(p.name for p in where.glob("*.csv")) if where.is_dir() else []
+
+    def read(self, table: str, part: str | None = None) -> pd.DataFrame:
+        path = self.path(table, part)
         if not path.exists():
             return pd.DataFrame(columns=SCHEMA[table])
         frame = pd.read_csv(path)
@@ -355,18 +374,50 @@ class Store:
                 frame[column] = pd.NA
         return frame[SCHEMA[table]]
 
-    def write(self, table: str, frame: pd.DataFrame) -> Path:
-        """Atomic, deterministic write. Never called with a partial table."""
+    def history(self, table: str) -> pd.DataFrame:
+        """The whole table: the archive's rows, oldest file first, then the live file's."""
+        frames = [self.read(table, part) for part in self.parts(table)]
+        frames = [f for f in [*frames, self.read(table)] if len(f)]
+        return pd.concat(frames, ignore_index=True) if frames else self.read(table)
+
+    def write(self, table: str, frame: pd.DataFrame, part: str | None = None) -> Path:
+        """Atomic, deterministic write. Never called with a partial table (or a partial archive file)."""
         columns = SCHEMA[table]
         out = frame.reindex(columns=columns)
         sort = [c for c in SORT[table] if c in out.columns]
         out = out.sort_values(sort, kind="stable").reset_index(drop=True)
 
-        path = self.path(table)
+        path = self.path(table, part)
+        path.parent.mkdir(parents=True, exist_ok=True)
         tmp = path.with_suffix(".csv.tmp")
         out.to_csv(tmp, index=False, float_format=FLOAT_FORMAT, lineterminator="\n")
         os.replace(tmp, path)
         return path
+
+    def retire(self, table: str, rows: pd.DataFrame) -> int:
+        """Move ``rows`` of the live table (matched by the table's keys) into its archive, each under
+        the date of its `ARCHIVE` column. Returns the rows moved. A row the archive already holds (two
+        overlapping runs retired it, or the branch merge brought it back) is moved again and lands once.
+        """
+        by = ARCHIVE[table]
+        live = self.read(table)
+        if rows is None or rows.empty or live.empty:
+            return 0
+        keys = KEYS[table]
+        marked = set(map(tuple, rows[keys].astype(str).to_numpy()))
+        leaving = pd.Series([tuple(r) in marked for r in live[keys].astype(str).to_numpy()], index=live.index)
+        going = live[leaving]
+        if going.empty:
+            return 0
+        when = pd.to_datetime(going[by], utc=True, errors="coerce")
+        for day, batch in going.groupby(when.dt.strftime("%Y-%m-%d").fillna("undated")):
+            part = f"{day}.csv"
+            held = self.read(table, part)
+            combined = batch if held.empty else pd.concat([held, batch], ignore_index=True)
+            self.write(table, combined.drop_duplicates(subset=keys, keep="last"), part=part)
+        self.write(table, live[~leaving])
+        LOG.info("%s: %d rows retired to the archive, %d live", table, len(going), int((~leaving).sum()))
+        return int(len(going))
 
     def upsert(self, table: str, rows: pd.DataFrame) -> int:
         """Insert new rows and update existing ones. Returns the rows added."""

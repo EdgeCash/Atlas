@@ -148,7 +148,12 @@ as a sportsbook's would.
 - **The record.** The main line of each player's stat (the one the market
   prices nearest to even) on a matched game is folded into
   `tracking/polymarket_props.csv` append-on-change, and graded against the
-  box score into `tracking/prop_record.csv` once the game is final - a
+  box score into `tracking/prop_record.csv` once the game is final. A
+  market's rows then leave the live table for the archive,
+  `tracking/polymarket_props/<game date>.csv` (`Store.retire`; a game that
+  never grades leaves after five days), because GitHub refuses a file over
+  100 MB and the live table reached it in eight days; `Store.history` reads
+  the archive and the live table together. A
   player who did not play is a push, in the record (which measures the rate
   model) and on a paper position (which the venue settles at the last
   price). The NHL's box score is the warehouse's skater games, whose game

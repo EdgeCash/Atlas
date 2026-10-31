@@ -365,6 +365,29 @@ def _value(results: pd.DataFrame, sport: str, game_id, player, stat) -> tuple[fl
     return (float(row[stat]), bool(row["played"]))
 
 
+#: A market's rows leave the live props table for the archive (`Store.retire`) once it is graded, or this
+#: long after its game started if it never grades (no box score came) - and in neither case within
+#: RETIRE_QUIET of the start, while the venue may still quote it and `match.BEHIND` still attaches it, so
+#: that a row retired is not folded straight back in as new.
+RETIRE_AFTER = pd.Timedelta(days=5)
+RETIRE_QUIET = pd.Timedelta(hours=12)
+
+
+def retired(record: pd.DataFrame, graded: pd.DataFrame, now: datetime) -> pd.DataFrame:
+    """The rows of the live props table that leave for the archive: both sides of every market whose over
+    side is in the prop record, and every row of a game that started RETIRE_AFTER ago - each only once the
+    game started RETIRE_QUIET ago."""
+    if record.empty:
+        return record
+    at = pd.Timestamp(now)
+    start = pd.to_datetime(record["game_start"], utc=True, errors="coerce")
+    done = set(graded["token_id"].astype(str)) if len(graded) else set()
+    over = record[(record["side"].astype(str) == "over") & record["token_id"].astype(str).isin(done)]
+    markets = set(over["market_id"].astype(str))
+    quiet = start <= at - RETIRE_QUIET
+    return record[quiet & (record["market_id"].astype(str).isin(markets) | (start <= at - RETIRE_AFTER))]
+
+
 def grade_record(kept: pd.DataFrame, graded: pd.DataFrame, results: pd.DataFrame, now: datetime) -> pd.DataFrame:
     """New rows for ``prop_record``: each kept over-side prop whose game has started and has a box score,
     not yet graded, with Atlas's probability of the over as kept, the close's, what the player recorded,
@@ -729,6 +752,12 @@ def refresh(store, events: dict[str, list[dict]], pairs: pd.DataFrame, now: date
                                        columns=POSITION_COLUMNS, grader=grade_positions)
         out = sections(priced, chosen, graded, now)
         rec = record_section(graded_record)
+        # Last, after the positions read their close from the record: the graded markets' rows, and any
+        # game's that never graded, leave the live table for the archive.
+        leaving = retired(record, graded_record, now)
+        if len(leaving):
+            moved = store.retire("polymarket_props", leaving)
+            LOG.info("props: %d rows of graded or stale markets retired to the archive", moved)
         return ([*out, rec] if rec else out), summary
     except Exception as error:  # noqa: BLE001 - the type only
         from atlas.util import where

@@ -39,6 +39,28 @@ def test_the_store_merges_table_by_table_and_only_where_this_run_wrote(tmp_path)
     assert not (tmp_path / "runs.csv").exists()
 
 
+def test_a_tables_archive_files_merge_with_the_branchs_copy_of_each(tmp_path):
+    store = Store.open(tmp_path)
+
+    def rows(*tokens, at="2026-10-24T12:00:00+00:00"):
+        return pd.DataFrame([{"token_id": t, "market_id": "m", "captured_at": at, "sport": "nba", "side": "over",
+                              "game_start": "2026-10-24T23:00:00+00:00"} for t in tokens]) \
+            .reindex(columns=SCHEMA["polymarket_props"])
+
+    store.write("polymarket_props", rows("live"))
+    store.write("polymarket_props", rows("a", "b"), part="2026-10-24.csv")
+    store.write("polymarket_props", rows("x"), part="2026-10-23.csv")           # only this run has this file
+    remote = {"tracking/polymarket_props.csv": rows("branch").to_csv(index=False),
+              "tracking/polymarket_props/2026-10-24.csv": rows("b", "c").to_csv(index=False),
+              "tracking/polymarket_props/2026-10-22.csv": rows("y").to_csv(index=False)}   # arrives with the branch
+    merged = mt.merge_store("origin/main", tracking=tmp_path, remote=remote.get)
+    assert merged == ["polymarket_props", "polymarket_props/2026-10-23.csv", "polymarket_props/2026-10-24.csv"]
+    assert sorted(store.read("polymarket_props")["token_id"]) == ["branch", "live"]
+    assert sorted(store.read("polymarket_props", "2026-10-24.csv")["token_id"]) == ["a", "b", "c"]
+    assert store.read("polymarket_props", "2026-10-23.csv")["token_id"].tolist() == ["x"]
+    assert store.parts("polymarket_props") == ["2026-10-23.csv", "2026-10-24.csv"]
+
+
 def test_sealed_rows_merge_by_key_in_the_branchs_order_then_this_runs_new_rows():
     theirs = [{"play_id": "p1", "g": 1}, {"play_id": "p2", "g": None}]
     ours = [{"play_id": "p2", "g": 2}, {"play_id": "p3", "g": None}]
