@@ -2957,6 +2957,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-30T20:22:59+00:00,2026-10-30T19:35Z,8,Detroit Lions,DET,4566092,Ennis Rakestraw Jr.,CB,Active,,,,
 2026-10-30T20:22:59+00:00,2026-10-30T19:39Z,30,Jacksonville Jaguars,JAX,3916433,Jakobi Meyers,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-01,Meyers (hamstring/ankle) is questionable for Sunday's game against the Colts.
 2026-10-30T20:22:59+00:00,2026-10-30T19:40Z,3,Chicago Bears,CHI,4608686,Kyle Monangai,RB,Questionable,QUESTIONABLE,Thumb Sprain,2026-11-02,"Monangai (thumb/toe) was listed as a non-participant for Friday's practice, Kevin Fishbain of The Athletic reports."
+2026-10-31T17:07:52+00:00,2026-10-30T19:40Z,3,Chicago Bears,CHI,4608686,Kyle Monangai,RB,Out,OUT,Thumb Sprain,2026-11-08,"Monangai (thumb/toe) was listed as a non-participant for Friday's practice, Kevin Fishbain of The Athletic reports."
 2026-10-30T20:22:59+00:00,2026-10-30T19:44Z,13,Las Vegas Raiders,LV,4243916,Patrick Johnson,DE,Out,OUT,Neck Stinger,2026-11-08,out
 2026-10-30T20:22:59+00:00,2026-10-30T19:45Z,13,Las Vegas Raiders,LV,4606683,DJ Glaze,OT,Active,,,,
 2026-10-30T20:22:59+00:00,2026-10-30T19:45Z,13,Las Vegas Raiders,LV,3045172,Folorunso Fatukasi,DT,Active,,,,
@@ -3178,3 +3179,5 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-31T15:37:58+00:00,2026-10-31T15:10Z,10,Tennessee Titans,TEN,4871023,Carnell Tate,WR,Out,OUT,Shoulder,2026-11-15,Tate (shoulder) will not play against the Bengals on Sunday but is expected to be back in action following the Titans' bye for Week 10 against the Jaguars on Su
 2026-10-31T16:22:46+00:00,2026-10-31T16:01Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-31T16:22:46+00:00,2026-10-31T16:01Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-11-08,ir
+2026-10-31T17:07:52+00:00,2026-10-31T16:52Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-31T17:07:52+00:00,2026-10-31T16:52Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-11-08,ir
