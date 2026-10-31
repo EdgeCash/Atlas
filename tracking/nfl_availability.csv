@@ -2953,6 +2953,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-30T20:22:59+00:00,2026-10-30T19:23Z,30,Jacksonville Jaguars,JAX,4430271,Ruke Orhorhoro,DT,Active,,,,
 2026-10-30T20:22:59+00:00,2026-10-30T19:28Z,11,Indianapolis Colts,IND,4682909,Justin Walley,CB,Out,OUT,Knee,2026-11-08,out
 2026-10-30T20:22:59+00:00,2026-10-30T19:31Z,3,Chicago Bears,CHI,4723086,Colston Loveland,TE,Questionable,QUESTIONABLE,Neck,2026-11-02,"Loveland was limited at Friday's practice due to a neck injury, Kevin Fishbain of The Athletic reports."
+2026-10-31T19:07:42+00:00,2026-10-30T19:31Z,3,Chicago Bears,CHI,4723086,Colston Loveland,TE,Active,,,,"Loveland was limited at Friday's practice due to a neck injury, Kevin Fishbain of The Athletic reports."
 2026-10-30T20:22:59+00:00,2026-10-30T19:34Z,8,Detroit Lions,DET,4371973,Roger McCreary,CB,Questionable,QUESTIONABLE,Foot,2026-11-01,questionable
 2026-10-30T20:22:59+00:00,2026-10-30T19:35Z,8,Detroit Lions,DET,4566092,Ennis Rakestraw Jr.,CB,Active,,,,
 2026-10-30T20:22:59+00:00,2026-10-30T19:39Z,30,Jacksonville Jaguars,JAX,3916433,Jakobi Meyers,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-01,Meyers (hamstring/ankle) is questionable for Sunday's game against the Colts.
@@ -3199,3 +3200,4 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-31T18:37:55+00:00,2026-10-31T18:15Z,6,Dallas Cowboys,DAL,3929850,P.J. Locke,S,Questionable,QUESTIONABLE,Right Foot Plantar Fasciitis,2026-11-01,questionable
 2026-10-31T18:52:54+00:00,2026-10-31T18:38Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-31T18:52:54+00:00,2026-10-31T18:38Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Out,OUT,Undisclosed,2026-11-08,out
+2026-10-31T19:07:42+00:00,2026-10-31T18:54Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
