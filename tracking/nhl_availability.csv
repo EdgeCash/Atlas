@@ -306,3 +306,5 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-31T17:07:52+00:00,2026-10-31T16:53Z,12,New York Islanders,NYI,3042019,Ryan Pulock,D,Out,OUT,Upper Body,2026-11-05,out
 2026-10-31T17:07:52+00:00,2026-10-31T16:54Z,9,Dallas Stars,DAL,3939716,Kyle Capobianco,D,Injured Reserve,IR,Left Leg,2026-11-27,ir
 2026-10-31T17:07:52+00:00,2026-10-31T17:00Z,5,Detroit Red Wings,DET,3114755,Dylan Larkin,C,Suspension,OUT,Suspension,2026-11-14,suspension
+2026-10-31T17:23:03+00:00,2026-10-31T17:03Z,5,Detroit Red Wings,DET,3114755,Dylan Larkin,C,Injured Reserve,IR-NR,Suspension,2026-11-14,ir-nr
+2026-10-31T17:23:03+00:00,2026-10-31T17:10Z,17,Colorado Avalanche,COL,3988782,Logan O'Connor,RW,Out,OUT,Personal,2026-11-02,"O'Connor (personal) will not play in Saturday's home clash against the Flames, per Corey Masisak of The Denver Post."
