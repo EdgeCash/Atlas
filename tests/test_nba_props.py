@@ -193,6 +193,57 @@ def test_the_record_grades_from_the_box_score_and_gives_the_share(tables, tmp_pa
     assert sec["title"] == "Prop record: 1 graded" and sec["tab"] == "Props"
 
 
+def test_graded_and_stale_markets_retire_once_the_venue_has_let_the_game_go():
+    now = datetime(2026, 10, 31, 12, 0, tzinfo=UTC)
+    last_night, small_hours, last_week, tomorrow = ("2026-10-30T23:00:00+00:00", "2026-10-31T02:00:00+00:00",
+                                                    "2026-10-25T23:00:00+00:00", "2026-11-01T23:00:00+00:00")
+
+    def row(token, market, start, side):
+        return {"token_id": token, "market_id": market, "game_start": start, "side": side, "captured_at": start}
+
+    record = pd.DataFrame([
+        row("o1", "m1", last_night, "over"), row("u1", "m1", last_night, "under"),      # graded: both sides go
+        row("o2", "m2", last_night, "over"), row("u2", "m2", last_night, "under"),      # not graded yet: stays
+        row("o3", "m3", small_hours, "over"), row("u3", "m3", small_hours, "under"),    # graded, ten hours ago: too soon
+        row("o4", "m4", last_week, "over"),                                              # never graded: stale
+        row("o5", "m5", tomorrow, "over"),
+    ]).reindex(columns=props.PROP_COLUMNS)
+    graded = pd.DataFrame({"token_id": ["o1", "o3"]})
+    assert sorted(props.retired(record, graded, now)["token_id"]) == ["o1", "o4", "u1"]
+    assert props.retired(record, graded.iloc[0:0], now)["token_id"].tolist() == ["o4"]
+    assert props.retired(record.iloc[0:0], graded, now).empty
+    assert props.RETIRE_QUIET > match.BEHIND                                             # nothing retired is still matched
+
+
+def test_refresh_retires_the_graded_markets_to_the_archive_after_the_positions_are_graded(tables, tmp_path, monkeypatch):
+    p, tg = tables
+    now = datetime(2025, 3, 1, 15, 0, tzinfo=UTC)
+    snap = npr.snapshot(p, tg, now, npr.Spec())
+    from atlas.live.store import Store
+
+    monkeypatch.setenv("ATLAS_OFFLINE", "1")
+    store = Store.open(tmp_path / "tracking")
+    monkeypatch.setattr(props, "path", lambda: tmp_path / "prop_positions")
+    snaps = {"nba": snap, "nhl": None, "nfl": None}
+    results = pd.DataFrame([{"sport": "nba", "game_id": "901", "player_key": "bos player 0", "played": True,
+                             "points": 22.0, "rebounds": 5.0, "assists": 2.0, "threes": 1.0},
+                            {"sport": "nba", "game_id": "901", "player_key": "lal player 1", "played": False,
+                             "points": 0.0, "rebounds": 0.0, "assists": 0.0, "threes": 0.0}])
+    props.refresh(store, {"nba": [_event()]}, _pairs(), now, KEY, snaps=snaps, results=results)
+    assert len(store.read("polymarket_props")) == 6 and store.parts("polymarket_props") == []   # before the game
+    # The afternoon after, with the box score: the two projected players' markets grade and their rows leave the
+    # live table for the game date's archive file. The player without a projection never grades and stays.
+    later = datetime(2025, 3, 2, 15, 0, tzinfo=UTC)
+    props.refresh(store, {"nba": [_event()]}, _pairs(), later, KEY, snaps=snaps, results=results)
+    assert len(store.read("prop_record")) == 2
+    live = store.read("polymarket_props")
+    assert set(live["player"]) == {"Nobody Known"} and len(live) == 2
+    assert store.parts("polymarket_props") == ["2025-03-02.csv"]
+    archived = store.read("polymarket_props", "2025-03-02.csv")
+    assert set(archived["player"]) == {"BOS Player 0", "LAL Player 1"} and len(archived) == 4
+    assert len(store.history("polymarket_props")) == 6                                           # nothing lost
+
+
 def test_refresh_reads_grades_prices_and_seals_offline(tables, tmp_path, monkeypatch):
     p, tg = tables
     now = datetime(2025, 3, 1, 15, 0, tzinfo=UTC)

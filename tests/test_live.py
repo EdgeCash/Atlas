@@ -18,7 +18,7 @@ import pytest
 from atlas.live import grade as grading
 from atlas.live import scorecard as sc
 from atlas.live import signals as signalling
-from atlas.live.store import SCHEMA, Store
+from atlas.live.store import ARCHIVE, SCHEMA, Store
 
 
 @pytest.fixture
@@ -289,6 +289,41 @@ def test_writes_are_deterministic(store):
     first = store.path("games").read_text()
     store.upsert("games", quotes.assign(first_seen_at="t", updated_at="t"))
     assert store.path("games").read_text() == first
+
+
+def _prop(token, market, start, at, side="over"):
+    return {"captured_at": at, "last_seen_at": at, "sport": "nba", "game_id": "1", "event_id": "e", "game_start": start,
+            "player": "P", "stat": "points", "market_id": market, "token_id": token, "side": side, "line": 10.5,
+            "bid": 0.4, "ask": 0.5, "mid": 0.45}
+
+
+def test_retired_rows_leave_the_live_table_for_the_archive_file_of_their_game_date(store):
+    assert ARCHIVE == {"polymarket_props": "game_start"} and all(v in SCHEMA[k] for k, v in ARCHIVE.items())
+    cols = SCHEMA["polymarket_props"]
+    day, night = "2026-10-24T23:00:00+00:00", "2026-10-26T01:00:00+00:00"
+    rows = pd.DataFrame([_prop("t1", "m1", day, "2026-10-24T12:00:00+00:00"),
+                         _prop("t1", "m1", day, "2026-10-24T20:00:00+00:00"),
+                         _prop("t2", "m1", day, "2026-10-24T12:00:00+00:00", side="under"),
+                         _prop("t3", "m2", night, "2026-10-25T12:00:00+00:00")]).reindex(columns=cols)
+    store.write("polymarket_props", rows)
+    assert store.parts("polymarket_props") == [] and len(store.history("polymarket_props")) == 4
+    assert store.retire("polymarket_props", rows[rows["market_id"] == "m1"]) == 3
+    assert store.parts("polymarket_props") == ["2026-10-24.csv"]
+    assert store.read("polymarket_props")["token_id"].tolist() == ["t3"]
+    archived = store.read("polymarket_props", "2026-10-24.csv")
+    assert sorted(archived["token_id"]) == ["t1", "t1", "t2"] and list(archived.columns) == cols
+    history = store.history("polymarket_props")
+    assert len(history) == 4 and history["token_id"].tolist()[-1] == "t3"             # the archive first, then live
+    # The same rows retired again (the branch merge brought them back live) land in the archive once.
+    store.write("polymarket_props", rows)
+    assert store.retire("polymarket_props", rows[rows["market_id"] == "m1"]) == 3
+    assert len(store.read("polymarket_props", "2026-10-24.csv")) == 3 and len(store.history("polymarket_props")) == 4
+    # Nothing marked, or nothing live: nothing moves.
+    assert store.retire("polymarket_props", rows.iloc[0:0]) == 0
+    assert store.retire("polymarket_props", rows[rows["token_id"] == "t1"]) == 0        # no longer live
+    before = store.path("polymarket_props").read_text()
+    store.retire("polymarket_props", rows.iloc[0:0])
+    assert store.path("polymarket_props").read_text() == before
 
 
 # ---------------------------------------------------------------------------
