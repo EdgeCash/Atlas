@@ -1,6 +1,6 @@
 # Atlas Drift Monitoring
 
-*Generated 2026-10-31 16:22 UTC by `python -m atlas.live check`. Every alarm compares
+*Generated 2026-10-31 16:37 UTC by `python -m atlas.live check`. Every alarm compares
 the most recent week of the record against its own history.*
 
 ---
@@ -14,7 +14,7 @@ worse problem than the drift it was watching for.
 | Alarm | Severity | Observed | Threshold | Detail |
 |---|---|---|---|---|
 | signal volume | alarm | -0.7679 | 0.5 | week 10: 26 signals against 112 the week before (-77%) |
-| silence | ok | 0.5103 | 7 | last signal 0.5 days ago (2026-10-31) |
+| silence | ok | 0.5208 | 7 | last signal 0.5 days ago (2026-10-31) |
 | single book | alarm | 1.0000 | 1 | 100% of signals from book 'DraftKings' (1 distinct) |
 | single market | ok | 0.5000 | 1 | 50% of signals from market 'margin' (2 distinct) |
 | model output (margin) | ok | n/a | 3 | 13 recent / 278 prior rows; too few to compare |
@@ -62,15 +62,15 @@ newest week never finds.
 
 | Period | Scope | Rows | Matched | Mismatched | Missing | Clean | Detail |
 |---|---|---|---|---|---|---|---|
+| 2026-w04 | signals | 116 | 116 | 0 | 0 | yes | exact match |
+| 2026-w04 | grades | 116 | 116 | 0 | 0 | yes | exact match |
+| 2026-w04 | statistics | 12 | 12 | 0 | 0 | yes | recomputed from the replayed grades |
 | 2026-w05 | signals | 112 | 112 | 0 | 0 | yes | exact match |
 | 2026-w05 | grades | 112 | 112 | 0 | 0 | yes | exact match |
 | 2026-w05 | statistics | 12 | 12 | 0 | 0 | yes | recomputed from the replayed grades |
 | 2026-w08 | signals | 100 | 100 | 0 | 0 | yes | exact match |
 | 2026-w08 | grades | 100 | 100 | 0 | 0 | yes | exact match |
 | 2026-w08 | statistics | 12 | 12 | 0 | 0 | yes | recomputed from the replayed grades |
-| 2026-w09 | signals | 112 | 112 | 0 | 0 | yes | exact match |
-| 2026-w09 | grades | 36 | 36 | 0 | 0 | yes | exact match |
-| 2026-w09 | statistics | 12 | 12 | 0 | 0 | yes | recomputed from the replayed grades |
 
 A **signals** mismatch means the record is not reproducible. A **grades**
 mismatch means the grading logic changed under a published number. A
