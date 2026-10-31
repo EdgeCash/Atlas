@@ -3080,6 +3080,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-30T23:52:49+00:00,2026-10-30T23:46Z,12,Kansas City Chiefs,KC,4880124,Mansoor Delane,CB,Questionable,QUESTIONABLE,Shoulder,2026-11-01,Delane (shoulder) is listed as questionable for Sunday's game against the Broncos.
 2026-10-30T23:52:49+00:00,2026-10-30T23:48Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-31T00:08:06+00:00,2026-10-30T23:49Z,12,Kansas City Chiefs,KC,4040432,L'Jarius Sneed,CB,Questionable,QUESTIONABLE,Knee,2026-11-01,Sneed (knee) is questionable for Sunday's game against Denver.
+2026-10-31T19:22:54+00:00,2026-10-30T23:49Z,12,Kansas City Chiefs,KC,4040432,L'Jarius Sneed,CB,Injured Reserve,IR,Knee,2026-11-26,Sneed (knee) is questionable for Sunday's game against Denver.
 2026-10-31T00:08:06+00:00,2026-10-30T23:52Z,8,Detroit Lions,DET,4360383,Kerby Joseph,S,Out,PUP-R,Knee,2026-11-08,Joseph (knee) has been ruled out for Sunday's game against the Vikings.
 2026-10-31T00:22:48+00:00,2026-10-30T23:54Z,8,Detroit Lions,DET,4371973,Roger McCreary,CB,Questionable,QUESTIONABLE,Foot,2026-11-01,McCreary (foot) is questionable for Sunday's Week 8 matchup against Minnesota.
 2026-10-31T00:08:06+00:00,2026-10-30T23:56Z,13,Las Vegas Raiders,LV,5155825,Carter Runyon,TE,Injured Reserve,IR-R,Foot,2026-11-08,"Runyon (foot) has been ruled out for Sunday's game against the Jets, Sam Warren of The Athletic reports."
@@ -3201,3 +3202,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-10-31T18:52:54+00:00,2026-10-31T18:38Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-10-31T18:52:54+00:00,2026-10-31T18:38Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Out,OUT,Undisclosed,2026-11-08,out
 2026-10-31T19:07:42+00:00,2026-10-31T18:54Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-31T19:22:54+00:00,2026-10-31T18:57Z,3,Chicago Bears,CHI,4723086,Colston Loveland,TE,Active,,,,Loveland (neck) does not carry an injury designation into Monday's game against the Seahawks.
+2026-10-31T19:22:54+00:00,2026-10-31T19:10Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-10-31T19:22:54+00:00,2026-10-31T19:10Z,3,Chicago Bears,CHI,4361748,Anthony Johnson Jr.,S,Injured Reserve,IR,Undisclosed,2026-11-08,ir
+2026-10-31T19:22:54+00:00,2026-10-31T19:15Z,12,Kansas City Chiefs,KC,4880124,Mansoor Delane,CB,Out,OUT,Shoulder,2026-11-08,out
