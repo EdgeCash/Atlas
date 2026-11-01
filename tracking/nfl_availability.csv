@@ -3519,3 +3519,10 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-01T19:23:02+00:00,2026-11-01T19:10Z,33,Baltimore Ravens,BAL,4035671,Tyler Huntley,QB,Questionable,QUESTIONABLE,Toe,2026-11-05,questionable
 2026-11-01T19:23:02+00:00,2026-11-01T19:16Z,30,Jacksonville Jaguars,JAX,3915520,DaVon Hamilton,DT,Questionable,QUESTIONABLE,Right Knee,2026-11-05,Hamilton (knee) won't return to Sunday's game against Indianapolis.
 2026-11-01T19:23:02+00:00,2026-11-01T19:17Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-11-01T19:37:45+00:00,2026-11-01T19:17Z,5,Cleveland Browns,CLE,3040471,Maliek Collins,DT,Questionable,QUESTIONABLE,Elbow,2026-11-01,questionable
+2026-11-01T19:37:45+00:00,2026-11-01T19:21Z,10,Tennessee Titans,TEN,4570469,Marcus Harris,CB,Questionable,QUESTIONABLE,Ankle,2026-11-01,questionable
+2026-11-01T19:37:45+00:00,2026-11-01T19:22Z,8,Detroit Lions,DET,4692025,Brian Branch,S,Questionable,QUESTIONABLE,Head,2026-11-01,questionable
+2026-11-01T19:37:45+00:00,2026-11-01T19:22Z,8,Detroit Lions,DET,4038849,DJ Wonnum,LB,Questionable,QUESTIONABLE,Head,2026-11-01,questionable
+2026-11-01T19:37:45+00:00,2026-11-01T19:24Z,6,Dallas Cowboys,DAL,4426506,Joey Porter Jr.,CB,Active,,,,
+2026-11-01T19:37:45+00:00,2026-11-01T19:27Z,33,Baltimore Ravens,BAL,4035671,Tyler Huntley,QB,Questionable,QUESTIONABLE,Toe,2026-11-05,questionable
+2026-11-01T19:37:45+00:00,2026-11-01T19:27Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
