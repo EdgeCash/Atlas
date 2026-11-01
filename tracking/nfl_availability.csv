@@ -3505,6 +3505,17 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-01T18:52:51+00:00,2026-11-01T18:43Z,1,Atlanta Falcons,ATL,4870612,Zachariah Branch,WR,Out,OUT,Hamstring,2026-11-08,out
 2026-11-01T18:52:51+00:00,2026-11-01T18:43Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-11-01T18:52:51+00:00,2026-11-01T18:47Z,30,Jacksonville Jaguars,JAX,2970716,Eric Murray,S,Questionable,QUESTIONABLE,Elbow,2026-11-05,"Murray (elbow) won't return to Sunday's game against the Colts, John Oehser of the Jaguars' official site reports."
+2026-11-01T19:23:02+00:00,2026-11-01T18:58Z,1,Atlanta Falcons,ATL,4870612,Zachariah Branch,WR,Out,OUT,Hamstring,2026-11-08,"Branch (hamstring) was forced out Sunday's game against the Buccaneers with a hamstring injury, Tori McElhaney of the Falcons' official site reports."
 2026-11-01T19:07:57+00:00,2026-11-01T18:59Z,22,Arizona Cardinals,ARI,4870808,Jeremiyah Love,RB,Questionable,QUESTIONABLE,Undisclosed,2026-11-01,"Love headed into the locker room during the second quarter of Sunday's game against the Cowboys to be further evaluated for an apparent lower-body injury, Josh "
+2026-11-01T19:23:02+00:00,2026-11-01T18:59Z,27,Tampa Bay Buccaneers,TB,4686334,Yaya Diaby,LB,Questionable,QUESTIONABLE,Knee,2026-11-08,"Diaby (knee) is questionable to return to Sunday's game against Atlanta, Evan Closky of WTSP reports."
+2026-11-01T19:23:02+00:00,2026-11-01T19:01Z,8,Detroit Lions,DET,4374302,Amon-Ra St. Brown,WR,Active,,,,St. Brown (undisclosed) returned to Sunday's game versus the Vikings.
+2026-11-01T19:23:02+00:00,2026-11-01T19:02Z,8,Detroit Lions,DET,4361788,Cade Mays,C,Questionable,QUESTIONABLE,Ankle,2026-11-01,questionable
+2026-11-01T19:23:02+00:00,2026-11-01T19:04Z,2,Buffalo Bills,BUF,4242433,Joshua Palmer,WR,Questionable,QUESTIONABLE,Right Hamstring,2026-11-01,Palmer exited Sunday's game against the Ravens after sustaining a hamstring injury.
 2026-11-01T19:07:57+00:00,2026-11-01T19:05Z,2,Buffalo Bills,BUF,4242433,Joshua Palmer,WR,Questionable,QUESTIONABLE,Right Hamstring,2026-11-01,questionable
+2026-11-01T19:23:02+00:00,2026-11-01T19:05Z,30,Jacksonville Jaguars,JAX,4048231,Ezra Cleveland,G,Questionable,QUESTIONABLE,Ankle,2026-11-01,questionable
 2026-11-01T19:07:57+00:00,2026-11-01T19:06Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-11-01T19:23:02+00:00,2026-11-01T19:08Z,22,Arizona Cardinals,ARI,4870808,Jeremiyah Love,RB,Questionable,QUESTIONABLE,Right Ankle,2026-11-01,"Love (ankle) is questionable to return to Sunday's game at Dallas, Theo Mackie of The Arizona Republic reports."
+2026-11-01T19:23:02+00:00,2026-11-01T19:08Z,8,Detroit Lions,DET,4383429,Jacob Saylors,RB,Questionable,QUESTIONABLE,Neck,2026-11-01,questionable
+2026-11-01T19:23:02+00:00,2026-11-01T19:10Z,33,Baltimore Ravens,BAL,4035671,Tyler Huntley,QB,Questionable,QUESTIONABLE,Toe,2026-11-05,questionable
+2026-11-01T19:23:02+00:00,2026-11-01T19:16Z,30,Jacksonville Jaguars,JAX,3915520,DaVon Hamilton,DT,Questionable,QUESTIONABLE,Right Knee,2026-11-05,Hamilton (knee) won't return to Sunday's game against Indianapolis.
+2026-11-01T19:23:02+00:00,2026-11-01T19:17Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
