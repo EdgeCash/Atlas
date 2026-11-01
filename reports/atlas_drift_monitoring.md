@@ -1,27 +1,27 @@
 # Atlas Drift Monitoring
 
-*Generated 2026-11-01 16:08 UTC by `python -m atlas.live check`. Every alarm compares
+*Generated 2026-11-01 16:22 UTC by `python -m atlas.live check`. Every alarm compares
 the most recent week of the record against its own history.*
 
 ---
 
 ## Status
 
-**2 alert(s) firing.** Alarms are advisory: nothing in the monitor edits the record and
+**1 alert(s) firing.** Alarms are advisory: nothing in the monitor edits the record and
 nothing in it stops the tracker. A monitor that can silently discard data is a
 worse problem than the drift it was watching for.
 
 | Alarm | Severity | Observed | Threshold | Detail |
 |---|---|---|---|---|
-| signal volume | ok | -0.1607 | 0.5 | week 10: 94 signals against 112 the week before (-16%) |
+| signal volume | ok | -0.0536 | 0.5 | week 10: 106 signals against 112 the week before (-5%) |
 | silence | ok | 0.0000 | 7 | last signal 0.0 days ago (2026-11-01) |
 | single book | alarm | 1.0000 | 1 | 100% of signals from book 'DraftKings' (1 distinct) |
 | single market | ok | 0.5000 | 1 | 50% of signals from market 'margin' (2 distinct) |
-| model output (margin) | ok | -2.9722 | 3 | mean Atlas number moved -2.97 points against prior weeks |
-| model output (total) | ok | -0.4275 | 3 | mean Atlas number moved -0.43 points against prior weeks |
-| disagreement shape (margin) | ok | 0.0224 | 0.01 | KS statistic 0.231, p = 0.0224 |
-| disagreement shape (total) | ok | 0.1258 | 0.01 | KS statistic 0.181, p = 0.1258 |
-| primary rate | watch | -1.0000 | 0.5 | 0.0% of signals primary against 0.9% before (-100%) |
+| model output (margin) | ok | -2.1494 | 3 | mean Atlas number moved -2.15 points against prior weeks |
+| model output (total) | ok | -0.1098 | 3 | mean Atlas number moved -0.11 points against prior weeks |
+| disagreement shape (margin) | ok | 0.0323 | 0.01 | KS statistic 0.211, p = 0.0323 |
+| disagreement shape (total) | ok | 0.1795 | 0.01 | KS statistic 0.160, p = 0.1795 |
+| primary rate | ok | 0.0491 | 0.5 | 0.9% of signals primary against 0.9% before (+5%) |
 | college state | ok | n/a | 36 | not due until Mon 16:00 UTC |
 
 ---
@@ -62,15 +62,15 @@ newest week never finds.
 
 | Period | Scope | Rows | Matched | Mismatched | Missing | Clean | Detail |
 |---|---|---|---|---|---|---|---|
+| 2026-w05 | signals | 112 | 112 | 0 | 0 | yes | exact match |
+| 2026-w05 | grades | 112 | 112 | 0 | 0 | yes | exact match |
+| 2026-w05 | statistics | 12 | 12 | 0 | 0 | yes | recomputed from the replayed grades |
 | 2026-w06 | signals | 116 | 116 | 0 | 0 | yes | exact match |
 | 2026-w06 | grades | 116 | 116 | 0 | 0 | yes | exact match |
 | 2026-w06 | statistics | 16 | 16 | 0 | 0 | yes | recomputed from the replayed grades |
 | 2026-w08 | signals | 100 | 100 | 0 | 0 | yes | exact match |
 | 2026-w08 | grades | 100 | 100 | 0 | 0 | yes | exact match |
 | 2026-w08 | statistics | 12 | 12 | 0 | 0 | yes | recomputed from the replayed grades |
-| 2026-w09 | signals | 112 | 112 | 0 | 0 | yes | exact match |
-| 2026-w09 | grades | 112 | 112 | 0 | 0 | yes | exact match |
-| 2026-w09 | statistics | 12 | 12 | 0 | 0 | yes | recomputed from the replayed grades |
 
 A **signals** mismatch means the record is not reproducible. A **grades**
 mismatch means the grading logic changed under a published number. A
