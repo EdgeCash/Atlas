@@ -3621,7 +3621,22 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-01T20:53:06+00:00,2026-11-01T20:35Z,8,Detroit Lions,DET,4692025,Brian Branch,S,Questionable,QUESTIONABLE,Concussion,2026-11-08,Branch (concussion) has been ruled out for the rest of Sunday's game against the Vikings.
 2026-11-01T20:53:06+00:00,2026-11-01T20:37Z,5,Cleveland Browns,CLE,3040471,Maliek Collins,DT,Active,,,,"Collins (elbow) has returned to Sunday's game against the Steelers, Scott Petrak of the Elyria Chronicle-Telegram reports."
 2026-11-01T20:53:06+00:00,2026-11-01T20:38Z,16,Minnesota Vikings,MIN,4242436,Theo Jackson,S,Questionable,QUESTIONABLE,Quadriceps,2026-11-09,Jackson (quadriceps) has been ruled out for the rest of Sunday's game against the Lions.
+2026-11-01T21:07:54+00:00,2026-11-01T20:39Z,10,Tennessee Titans,TEN,4570469,Marcus Harris,CB,Questionable,QUESTIONABLE,Ankle,2026-11-15,Harris (ankle) has been ruled out for the rest of Sunday's game against the Bengals.
+2026-11-01T21:07:54+00:00,2026-11-01T20:40Z,10,Tennessee Titans,TEN,4685617,Kevin Winston Jr.,S,Active,,,,
 2026-11-01T20:53:06+00:00,2026-11-01T20:42Z,30,Jacksonville Jaguars,JAX,4426349,Travon Walker,DE,Questionable,QUESTIONABLE,Ribs,2026-11-01,Walker (ribs) is questionable to return to Sunday's game against the Colts.
+2026-11-01T21:07:54+00:00,2026-11-01T20:44Z,4,Cincinnati Bengals,CIN,4430065,Cedric Johnson,DE,Questionable,QUESTIONABLE,Left Ankle,2026-11-08,questionable
+2026-11-01T21:07:54+00:00,2026-11-01T20:44Z,8,Detroit Lions,DET,4383429,Jacob Saylors,RB,Questionable,QUESTIONABLE,Neck,2026-11-08,"Saylors (neck) has been ruled out for the rest of Sunday's game against the Vikings, Nolan Bianchi of The Detroit News reports."
+2026-11-01T21:07:54+00:00,2026-11-01T20:45Z,4,Cincinnati Bengals,CIN,4710752,Cashius Howell,DE,Questionable,QUESTIONABLE,Right Wrist,2026-11-08,questionable
 2026-11-01T20:53:06+00:00,2026-11-01T20:46Z,22,Arizona Cardinals,ARI,4709718,Jayden Williams,OT,Questionable,QUESTIONABLE,Knee,2026-11-08,"Williams (knee) has been ruled out for the rest of Sunday's game against the Cowboys, Darren Urban of the Cardinals' official site reports."
+2026-11-01T21:07:54+00:00,2026-11-01T20:49Z,8,Detroit Lions,DET,4569465,Jack Campbell,LB,Doubtful,DOUBTFUL,Undisclosed,2026-11-01,"Campbell (undisclosed) was carted off the field during the third quarter of Sunday's game against the Vikings, Tim Twentyman of the Lions' official site reports"
 2026-11-01T20:53:06+00:00,2026-11-01T20:51Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-11-01T20:53:06+00:00,2026-11-01T20:51Z,2,Buffalo Bills,BUF,4379399,James Cook III,RB,Questionable,QUESTIONABLE,Undisclosed,2026-11-01,questionable
+2026-11-01T21:07:54+00:00,2026-11-01T20:52Z,6,Dallas Cowboys,DAL,4870706,Caleb Downs,S,Questionable,QUESTIONABLE,Head,2026-11-08,"Downs (head) has been ruled out for the rest of Sunday's game against the Cardinals, Jon Machota of The Athletic reports."
+2026-11-01T21:07:54+00:00,2026-11-01T20:54Z,8,Detroit Lions,DET,4896353,Jimmy Rolder,LB,Questionable,QUESTIONABLE,Hamstring,2026-11-01,questionable
+2026-11-01T21:07:54+00:00,2026-11-01T20:55Z,10,Tennessee Titans,TEN,4431613,James Williams Sr.,LB,Questionable,QUESTIONABLE,Groin,2026-11-15,Williams (groin) has been ruled out for the rest of Sunday's game against the Bengals.
+2026-11-01T21:07:54+00:00,2026-11-01T20:56Z,1,Atlanta Falcons,ATL,3045527,Samson Ebukam,DE,Questionable,QUESTIONABLE,Hamstring,2026-11-01,"Ebukam (hamstring) is doubtful to return to Sunday's game against the Buccaneers, Tori McElhaney of the Falcons' official site reports."
+2026-11-01T21:07:54+00:00,2026-11-01T20:58Z,33,Baltimore Ravens,BAL,4601278,Nate Wiggins,CB,Questionable,QUESTIONABLE,Neck Stinger,2026-11-01,Wiggins (stinger) is being evaluated for a possible concussion and is questionable to return to Sunday's game against the Bills.
+2026-11-01T21:07:54+00:00,2026-11-01T20:59Z,1,Atlanta Falcons,ATL,4870612,Zachariah Branch,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-08,questionable
+2026-11-01T21:07:54+00:00,2026-11-01T20:59Z,2,Buffalo Bills,BUF,4379399,James Cook III,RB,Active,,,,
+2026-11-01T21:07:54+00:00,2026-11-01T20:59Z,8,Detroit Lions,DET,3139387,D.J. Reed,CB,Questionable,QUESTIONABLE,Hamstring,2026-11-01,questionable
+2026-11-01T21:07:54+00:00,2026-11-01T21:02Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
