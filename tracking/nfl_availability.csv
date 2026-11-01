@@ -3594,6 +3594,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-01T20:23:03+00:00,2026-11-01T20:06Z,12,Kansas City Chiefs,KC,4837252,Jack Pyburn,LB,Out,INACTIVE,Coach's Decision,2026-11-08,inactive
 2026-11-01T20:23:03+00:00,2026-11-01T20:06Z,12,Kansas City Chiefs,KC,4361340,Tyreke Smith,DE,Out,INACTIVE,Coach's Decision,2026-11-08,inactive
 2026-11-01T20:23:03+00:00,2026-11-01T20:09Z,33,Baltimore Ravens,BAL,4035671,Tyler Huntley,QB,Out,OUT,Toe,2026-11-05,Huntley (toe) has been ruled out for the rest of Sunday's game against the Bills.
+2026-11-01T21:53:10+00:00,2026-11-01T20:09Z,33,Baltimore Ravens,BAL,4035671,Tyler Huntley,QB,Questionable,QUESTIONABLE,Toe,2026-11-05,Huntley (toe) has been ruled out for the rest of Sunday's game against the Bills.
 2026-11-01T20:23:03+00:00,2026-11-01T20:09Z,24,Los Angeles Chargers,LAC,3843769,Donte Jackson,CB,Out,INACTIVE,Hamstring,2026-11-08,Jackson (hamstring) is inactive for Sunday's game against the Rams.
 2026-11-01T20:23:03+00:00,2026-11-01T20:10Z,30,Jacksonville Jaguars,JAX,4426349,Travon Walker,DE,Questionable,QUESTIONABLE,Ribs,2026-11-01,questionable
 2026-11-01T20:23:03+00:00,2026-11-01T20:12Z,5,Cleveland Browns,CLE,4379397,Tyson Campbell,CB,Active,,,,
@@ -3613,6 +3614,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-01T20:38:02+00:00,2026-11-01T20:27Z,7,Denver Broncos,DEN,3915282,Zach Allen,DE,Active,,,,"Allen (hamstring) is active for Sunday's game against the Chiefs, Aric DiLalla of the Broncos' official site reports."
 2026-11-01T20:38:02+00:00,2026-11-01T20:28Z,22,Arizona Cardinals,ARI,4360761,Michael Wilson,WR,Active,,,,"Wilson (undisclosed) returned to Sunday's contest in Dallas, Darren Urban of the Cardinals' officials site reports."
 2026-11-01T20:38:02+00:00,2026-11-01T20:28Z,2,Buffalo Bills,BUF,4242433,Joshua Palmer,WR,Out,OUT,Right Hamstring,2026-11-09,Palmer (hamstring) has been ruled out for the rest of Sunday's game against the Ravens.
+2026-11-01T21:53:10+00:00,2026-11-01T20:28Z,2,Buffalo Bills,BUF,4242433,Joshua Palmer,WR,Questionable,QUESTIONABLE,Right Hamstring,2026-11-09,Palmer (hamstring) has been ruled out for the rest of Sunday's game against the Ravens.
 2026-11-01T20:38:02+00:00,2026-11-01T20:28Z,14,Los Angeles Rams,LAR,2575907,Joe Cardona,LS,Out,INACTIVE,Ankle,2026-11-08,Cardona (ankle) is inactive against the Chargers on Sunday.
 2026-11-01T20:53:06+00:00,2026-11-01T20:30Z,15,Miami Dolphins,MIA,4371946,Reese Taylor,CB,Active,,,,Taylor (quadriceps) is active against the Patriots on Sunday.
 2026-11-01T20:53:06+00:00,2026-11-01T20:31Z,10,Tennessee Titans,TEN,4685617,Kevin Winston Jr.,S,Questionable,,,,questionable
@@ -3658,3 +3660,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-01T21:37:57+00:00,2026-11-01T21:22Z,24,Los Angeles Chargers,LAC,4241597,Daiyan Henley,LB,Questionable,QUESTIONABLE,Shoulder,2026-11-01,questionable
 2026-11-01T21:37:57+00:00,2026-11-01T21:32Z,33,Baltimore Ravens,BAL,3916387,Lamar Jackson,QB,Questionable,QUESTIONABLE,Right Thumb,2026-11-05,questionable
 2026-11-01T21:37:57+00:00,2026-11-01T21:32Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-11-01T21:53:10+00:00,2026-11-01T21:37Z,13,Las Vegas Raiders,LV,4890973,Ashton Jeanty,RB,Active,,,,Jeanty rushed twice for nine yards while catching three of four targets for 64 yards in Sunday's 38-33 win over the Jets.
+2026-11-01T21:53:10+00:00,2026-11-01T21:42Z,13,Las Vegas Raiders,LV,4432665,Brock Bowers,TE,Active,,,,Bowers caught seven of 10 targets for 92 yards and two touchdowns in Sunday's 38-33 win over the Jets.
+2026-11-01T21:53:10+00:00,2026-11-01T21:44Z,13,Las Vegas Raiders,LV,14880,Kirk Cousins,QB,Active,,,,Cousins completed 19 of 26 passes for 247 yards and three touchdowns in Sunday's 38-33 win over the Jets. He added five rushing attempts for three yards and a r
+2026-11-01T21:53:10+00:00,2026-11-01T21:50Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
