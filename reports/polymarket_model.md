@@ -1,6 +1,6 @@
 # Atlas on Polymarket US
 
-*Rebuilt every run; this one at 2026-11-01 18:22 UTC.*
+*Rebuilt every run; this one at 2026-11-01 18:38 UTC.*
 
 Polymarket US, the CFTC-regulated exchange, is the one venue Atlas is priced
 against. It lists a moneyline, a ladder of spreads and a ladder of totals on
@@ -57,12 +57,12 @@ side at disagreements this large or larger, never below one half.
 
 | Sport | Market | Games | Atlas, median gap | Atlas, largest gap | Anchored, median gap |
 |---|---|---|---|---|---|
-| NBA | margin | 16 | 3.0 | 8.1 | 0.11 |
-| NBA | total | 3 | 0.6 | 0.9 | 0.36 |
+| NBA | margin | 16 | 3.0 | 7.5 | 0.11 |
+| NBA | total | 3 | 0.6 | 1.0 | 0.30 |
 | NCAAF | margin | 2 | 1.4 | 2.7 | 0.00 |
-| NCAAF | total | 2 | 2.1 | 2.7 | 0.51 |
-| NFL | margin | 13 | 2.5 | 9.6 | 0.00 |
-| NFL | total | 13 | 2.9 | 7.3 | 0.29 |
+| NCAAF | total | 2 | 2.3 | 2.8 | 0.73 |
+| NFL | margin | 13 | 4.7 | 12.3 | 0.01 |
+| NFL | total | 13 | 2.6 | 10.3 | 0.36 |
 
 In points of margin or total, per game: Atlas's own projection against
 the market's centre, and the anchored number the contracts are priced from.
@@ -88,13 +88,13 @@ error.
 
 | Phase | Threshold | Taken | Graded | Win rate | Break-even | Edge (pts) | Profit per $ |
 |---|---|---|---|---|---|---|---|
-| in play | 80% | 303 | 301 | 82.7% | 84.4% | -1.6 ± 2.2 | -1.9% |
-| in play | 85% | 322 | 320 | 86.9% | 88.6% | -1.7 ± 1.9 | -1.9% |
+| in play | 80% | 305 | 301 | 82.7% | 84.4% | -1.6 ± 2.2 | -1.9% |
+| in play | 85% | 325 | 320 | 86.9% | 88.6% | -1.7 ± 1.9 | -1.9% |
 | in play | 90% | 308 | 307 | 90.9% | 92.4% | -1.6 ± 1.6 | -1.7% |
 | in play | 95% | 280 | 280 | 95.4% | 96.1% | -0.8 ± 1.3 | -0.8% |
 | pregame | 80% | 161 | 108 | 87.0% | 85.6% | +1.5 ± 3.2 | 1.7% |
-| pregame | 85% | 94 | 58 | 94.8% | 89.7% | +5.1 ± 2.9 | 5.7% |
-| pregame | 90% | 50 | 34 | 97.1% | 92.8% | +4.3 ± 2.9 | 4.6% |
+| pregame | 85% | 95 | 58 | 94.8% | 89.7% | +5.1 ± 2.9 | 5.7% |
+| pregame | 90% | 51 | 34 | 97.1% | 92.8% | +4.3 ± 2.9 | 4.6% |
 | pregame | 95% | 18 | 13 | 100.0% | 96.0% | +4.0 | 4.2% |
 
 ## The record
