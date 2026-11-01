@@ -1,6 +1,6 @@
 # Atlas on Polymarket US
 
-*Rebuilt every run; this one at 2026-11-01 18:08 UTC.*
+*Rebuilt every run; this one at 2026-11-01 18:22 UTC.*
 
 Polymarket US, the CFTC-regulated exchange, is the one venue Atlas is priced
 against. It lists a moneyline, a ladder of spreads and a ladder of totals on
@@ -58,11 +58,11 @@ side at disagreements this large or larger, never below one half.
 | Sport | Market | Games | Atlas, median gap | Atlas, largest gap | Anchored, median gap |
 |---|---|---|---|---|---|
 | NBA | margin | 16 | 3.0 | 8.1 | 0.11 |
-| NBA | total | 3 | 0.3 | 0.7 | 0.23 |
+| NBA | total | 3 | 0.6 | 0.9 | 0.36 |
 | NCAAF | margin | 2 | 1.4 | 2.7 | 0.00 |
-| NCAAF | total | 2 | 2.2 | 2.7 | 0.65 |
-| NFL | margin | 13 | 2.3 | 6.4 | 0.00 |
-| NFL | total | 13 | 2.6 | 5.5 | 0.29 |
+| NCAAF | total | 2 | 2.1 | 2.7 | 0.51 |
+| NFL | margin | 13 | 2.5 | 9.6 | 0.00 |
+| NFL | total | 13 | 2.9 | 7.3 | 0.29 |
 
 In points of margin or total, per game: Atlas's own projection against
 the market's centre, and the anchored number the contracts are priced from.
@@ -88,9 +88,9 @@ error.
 
 | Phase | Threshold | Taken | Graded | Win rate | Break-even | Edge (pts) | Profit per $ |
 |---|---|---|---|---|---|---|---|
-| in play | 80% | 301 | 301 | 82.7% | 84.4% | -1.6 ± 2.2 | -1.9% |
-| in play | 85% | 320 | 320 | 86.9% | 88.6% | -1.7 ± 1.9 | -1.9% |
-| in play | 90% | 307 | 307 | 90.9% | 92.4% | -1.6 ± 1.6 | -1.7% |
+| in play | 80% | 303 | 301 | 82.7% | 84.4% | -1.6 ± 2.2 | -1.9% |
+| in play | 85% | 322 | 320 | 86.9% | 88.6% | -1.7 ± 1.9 | -1.9% |
+| in play | 90% | 308 | 307 | 90.9% | 92.4% | -1.6 ± 1.6 | -1.7% |
 | in play | 95% | 280 | 280 | 95.4% | 96.1% | -0.8 ± 1.3 | -0.8% |
 | pregame | 80% | 161 | 108 | 87.0% | 85.6% | +1.5 ± 3.2 | 1.7% |
 | pregame | 85% | 94 | 58 | 94.8% | 89.7% | +5.1 ± 2.9 | 5.7% |

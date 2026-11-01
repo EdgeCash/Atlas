@@ -3486,3 +3486,8 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-01T17:53:02+00:00,2026-11-01T17:32Z,10,Tennessee Titans,TEN,4685145,Jaylon Jones,CB,Out,INACTIVE,Knee,2026-11-15,"Jones (knee) is inactive for Sunday's game against the Bengals, Jim Wyatt of the Titans' official site reports."
 2026-11-01T17:53:02+00:00,2026-11-01T17:33Z,2,Buffalo Bills,BUF,3127294,Greg Gaines,DT,Out,INACTIVE,Calf,2026-11-09,Gaines (calf) is inactive for Sunday's game against the Ravens.
 2026-11-01T18:08:02+00:00,2026-11-01T18:00Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-11-01T18:22:58+00:00,2026-11-01T18:10Z,5,Cleveland Browns,CLE,3122840,Deshaun Watson,QB,Active,,,,"Watson went to the sideline tent in the first quarter of Sunday's game at Pittsburgh, Daniel Oyefusi of ESPN.com reports."
+2026-11-01T18:22:58+00:00,2026-11-01T18:15Z,30,Jacksonville Jaguars,JAX,2970716,Eric Murray,S,Questionable,QUESTIONABLE,Elbow,2026-11-01,questionable
+2026-11-01T18:22:58+00:00,2026-11-01T18:19Z,33,Baltimore Ravens,BAL,3916387,Lamar Jackson,QB,Questionable,QUESTIONABLE,Right Hand,2026-11-01,questionable
+2026-11-01T18:22:58+00:00,2026-11-01T18:19Z,13,Las Vegas Raiders,LV,4430330,Darien Porter,CB,Questionable,QUESTIONABLE,Groin,2026-11-01,questionable
+2026-11-01T18:22:58+00:00,2026-11-01T18:21Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
