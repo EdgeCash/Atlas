@@ -1,6 +1,6 @@
 # Atlas on Polymarket US
 
-*Rebuilt every run; this one at 2026-11-01 19:37 UTC.*
+*Rebuilt every run; this one at 2026-11-01 19:52 UTC.*
 
 Polymarket US, the CFTC-regulated exchange, is the one venue Atlas is priced
 against. It lists a moneyline, a ladder of spreads and a ladder of totals on
@@ -16,7 +16,7 @@ the point-in-time archive of the market Atlas is measured against.
 |---|---|---|---|---|---|---|
 | NCAAF | 63 | 2 | 268 | 6.0¢ | – | 0.0695 |
 | NFL | 27 | 13 | 1846 | 0.5¢ | – | 0.0695 |
-| NBA | 58 | 17 | 1096 | 1.0¢ | – | 0.0695 |
+| NBA | 58 | 17 | 2172 | 1.0¢ | – | 0.0695 |
 | NHL | 56 | 20 | 600 | 1.0¢ | – | 0.0695 |
 
 Spread is the gap between the best bid and the best ask on the contracts
@@ -57,12 +57,12 @@ side at disagreements this large or larger, never below one half.
 
 | Sport | Market | Games | Atlas, median gap | Atlas, largest gap | Anchored, median gap |
 |---|---|---|---|---|---|
-| NBA | margin | 16 | 3.0 | 7.5 | 0.11 |
-| NBA | total | 3 | 0.6 | 0.8 | 0.44 |
+| NBA | margin | 16 | 4.2 | 12.4 | 0.16 |
+| NBA | total | 14 | 5.4 | 17.4 | 0.43 |
 | NCAAF | margin | 2 | 1.6 | 3.2 | 0.00 |
-| NCAAF | total | 2 | 2.4 | 3.1 | 0.43 |
-| NFL | margin | 13 | 3.0 | 24.4 | 0.01 |
-| NFL | total | 13 | 4.9 | 22.5 | 0.41 |
+| NCAAF | total | 2 | 2.5 | 3.1 | 0.53 |
+| NFL | margin | 13 | 3.0 | 20.9 | 0.01 |
+| NFL | total | 13 | 3.0 | 25.9 | 0.12 |
 
 In points of margin or total, per game: Atlas's own projection against
 the market's centre, and the anchored number the contracts are priced from.
@@ -91,9 +91,9 @@ error.
 | in play | 80% | 306 | 301 | 82.7% | 84.4% | -1.6 ± 2.2 | -1.9% |
 | in play | 85% | 326 | 320 | 86.9% | 88.6% | -1.7 ± 1.9 | -1.9% |
 | in play | 90% | 312 | 307 | 90.9% | 92.4% | -1.6 ± 1.6 | -1.7% |
-| in play | 95% | 282 | 280 | 95.4% | 96.1% | -0.8 ± 1.3 | -0.8% |
-| pregame | 80% | 161 | 108 | 87.0% | 85.6% | +1.5 ± 3.2 | 1.7% |
-| pregame | 85% | 95 | 58 | 94.8% | 89.7% | +5.1 ± 2.9 | 5.7% |
+| in play | 95% | 284 | 280 | 95.4% | 96.1% | -0.8 ± 1.3 | -0.8% |
+| pregame | 80% | 162 | 108 | 87.0% | 85.6% | +1.5 ± 3.2 | 1.7% |
+| pregame | 85% | 96 | 58 | 94.8% | 89.7% | +5.1 ± 2.9 | 5.7% |
 | pregame | 90% | 51 | 34 | 97.1% | 92.8% | +4.3 ± 2.9 | 4.6% |
 | pregame | 95% | 18 | 13 | 100.0% | 96.0% | +4.0 | 4.2% |
 

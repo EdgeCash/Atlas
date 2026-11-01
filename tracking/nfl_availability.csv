@@ -3526,3 +3526,24 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-01T19:37:45+00:00,2026-11-01T19:24Z,6,Dallas Cowboys,DAL,4426506,Joey Porter Jr.,CB,Active,,,,
 2026-11-01T19:37:45+00:00,2026-11-01T19:27Z,33,Baltimore Ravens,BAL,4035671,Tyler Huntley,QB,Questionable,QUESTIONABLE,Toe,2026-11-05,questionable
 2026-11-01T19:37:45+00:00,2026-11-01T19:27Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-11-01T19:52:54+00:00,2026-11-01T19:29Z,8,Detroit Lions,DET,4383429,Jacob Saylors,RB,Questionable,QUESTIONABLE,Neck,2026-11-01,Saylors (neck) is questionable to return to Sunday's game against the Vikings.
+2026-11-01T19:52:54+00:00,2026-11-01T19:33Z,27,Tampa Bay Buccaneers,TB,4686334,Yaya Diaby,LB,Questionable,QUESTIONABLE,Knee,2026-11-08,"Diaby (knee) won't return to Sunday's game versus the Falconsm, Greg Auman of Fox Sports reports."
+2026-11-01T19:52:54+00:00,2026-11-01T19:35Z,22,Arizona Cardinals,ARI,3045523,Kendrick Bourne,WR,Questionable,QUESTIONABLE,Right Leg,2026-11-01,"Bourne sustained an apparent right leg injury late in the second quarter of Sunday's game against the Cowboys and headed to the locker room, Josh Weinfuss of ES"
+2026-11-01T19:52:54+00:00,2026-11-01T19:37Z,22,Arizona Cardinals,ARI,4427728,Bam Knight,RB,Questionable,QUESTIONABLE,Undisclosed,2026-11-01,"Knight headed to the locker room during Sunday's game against the Cowboys after sustaining an unspecified injury, Josh Weinfuss of ESPN.com reports."
+2026-11-01T19:52:54+00:00,2026-11-01T19:38Z,5,Cleveland Browns,CLE,3040471,Maliek Collins,DT,Questionable,QUESTIONABLE,Elbow,2026-11-01,Collins (elbow) is questionable to return to Sunday's game against the Steelers.
+2026-11-01T19:52:54+00:00,2026-11-01T19:40Z,24,Los Angeles Chargers,LAC,4685553,Brenen Thompson,WR,Out,INACTIVE,Quadriceps,2026-11-08,inactive
+2026-11-01T19:52:54+00:00,2026-11-01T19:40Z,24,Los Angeles Chargers,LAC,4690171,Deane Leonard,CB,Out,INACTIVE,Concussion Concussion,2026-11-08,inactive
+2026-11-01T19:52:54+00:00,2026-11-01T19:40Z,24,Los Angeles Chargers,LAC,3843769,Donte Jackson,CB,Out,INACTIVE,Hamstring,2026-11-08,inactive
+2026-11-01T19:52:54+00:00,2026-11-01T19:40Z,24,Los Angeles Chargers,LAC,4040842,Kayode Awosika,G,Out,INACTIVE,Lower Leg,2026-11-08,inactive
+2026-11-01T19:52:54+00:00,2026-11-01T19:40Z,24,Los Angeles Chargers,LAC,4838693,Rodney Shelley,CB,Out,INACTIVE,Hamstring,2026-11-08,inactive
+2026-11-01T19:52:54+00:00,2026-11-01T19:40Z,24,Los Angeles Chargers,LAC,4426535,Theo Wease Jr.,WR,Out,INACTIVE,Coach's Decision,2026-11-08,inactive
+2026-11-01T19:52:54+00:00,2026-11-01T19:41Z,14,Los Angeles Rams,LAR,3912189,Bill Murray,G,Out,INACTIVE,Coach's Decision,2026-11-08,inactive
+2026-11-01T19:52:54+00:00,2026-11-01T19:41Z,14,Los Angeles Rams,LAR,4242557,Colby Parkinson,TE,Out,INACTIVE,Ribs,2026-11-01,inactive
+2026-11-01T19:52:54+00:00,2026-11-01T19:41Z,14,Los Angeles Rams,LAR,4362294,Desjuan Johnson,DE,Out,INACTIVE,Coach's Decision,2026-11-08,inactive
+2026-11-01T19:52:54+00:00,2026-11-01T19:41Z,14,Los Angeles Rams,LAR,2575907,Joe Cardona,LS,Out,INACTIVE,Ankle,2026-11-08,inactive
+2026-11-01T19:52:54+00:00,2026-11-01T19:41Z,14,Los Angeles Rams,LAR,4575003,Keagen Trost,OT,Out,INACTIVE,Coach's Decision,2026-11-08,inactive
+2026-11-01T19:52:54+00:00,2026-11-01T19:41Z,14,Los Angeles Rams,LAR,4685522,Ty Simpson,QB,Out,INACTIVE,Coach's Decision,2026-11-08,inactive
+2026-11-01T19:52:54+00:00,2026-11-01T19:42Z,14,Los Angeles Rams,LAR,3052180,Coleman Shelton,C,Active,,,,
+2026-11-01T19:52:54+00:00,2026-11-01T19:42Z,14,Los Angeles Rams,LAR,4569382,Jordan Whittington,WR,Active,,,,
+2026-11-01T19:52:54+00:00,2026-11-01T19:42Z,14,Los Angeles Rams,LAR,4426405,Trent McDuffie,CB,Active,,,,
+2026-11-01T19:52:54+00:00,2026-11-01T19:47Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
