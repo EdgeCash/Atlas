@@ -3598,4 +3598,19 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-01T20:23:03+00:00,2026-11-01T20:12Z,5,Cleveland Browns,CLE,4379397,Tyson Campbell,CB,Active,,,,
 2026-11-01T20:23:03+00:00,2026-11-01T20:13Z,24,Los Angeles Chargers,LAC,4838693,Rodney Shelley,CB,Out,INACTIVE,Hamstring,2026-11-08,Shelley (ankle) is inactive for Sunday's game against the Rams.
 2026-11-01T20:23:03+00:00,2026-11-01T20:14Z,22,Arizona Cardinals,ARI,4427728,Bam Knight,RB,Out,OUT,Concussion,2026-11-08,out
+2026-11-01T20:38:02+00:00,2026-11-01T20:14Z,17,New England Patriots,NE,3916923,Carlton Davis III,CB,Active,,,,Davis (neck) is active against the Dolphins on Sunday.
 2026-11-01T20:23:03+00:00,2026-11-01T20:15Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-11-01T20:38:02+00:00,2026-11-01T20:17Z,17,New England Patriots,NE,4245273,Christian Elliss,LB,Active,,,,Elliss (chest) is active for Sunday's game against the Dolphins.
+2026-11-01T20:38:02+00:00,2026-11-01T20:18Z,10,Tennessee Titans,TEN,4431437,JC Latham,OT,Questionable,QUESTIONABLE,Finger,2026-11-01,questionable
+2026-11-01T20:38:02+00:00,2026-11-01T20:19Z,15,Miami Dolphins,MIA,4360488,JuJu Brents,CB,Active,,,,Brents (neck/concussion) is active for Sunday's game against New England.
+2026-11-01T20:38:02+00:00,2026-11-01T20:20Z,17,New England Patriots,NE,4431465,Behren Morton,QB,Out,INACTIVE,Coach's Decision,2026-11-08,Morton (coach's decision) is inactive but will serve as the Patriots' emergency third quarterback against the Dolphins on Sunday.
+2026-11-01T20:38:02+00:00,2026-11-01T20:22Z,22,Arizona Cardinals,ARI,4427728,Bam Knight,RB,Out,OUT,Concussion,2026-11-08,Knight (concussion) has been ruled out for the rest of Sunday's game against the Cowboys.
+2026-11-01T20:38:02+00:00,2026-11-01T20:22Z,7,Denver Broncos,DEN,4241820,Sam Ehlinger,QB,Out,INACTIVE,Coach's Decision,2026-11-08,"Ehlinger (coach's decision) is inactive but will be the third emergency quarterback against the Chiefs on Sunday, Aric DiLalla of the Broncos' official site rep"
+2026-11-01T20:38:02+00:00,2026-11-01T20:22Z,15,Miami Dolphins,MIA,4430681,Jared Wayne,WR,Out,INACTIVE,Coach's Decision,2026-11-08,Wayne (coach's decision) is inactive for Sunday's game versus the Patriots.
+2026-11-01T20:38:02+00:00,2026-11-01T20:24Z,7,Denver Broncos,DEN,4039059,Brandon Jones,S,Active,,,,"Jones (hamstring) is active for Sunday's game against the Chiefs, Aric DiLalla of the Broncos' official site reports."
+2026-11-01T20:38:02+00:00,2026-11-01T20:25Z,12,Kansas City Chiefs,KC,4567747,Garrett Nussmeier,QB,Out,INACTIVE,Coach's Decision,2026-11-08,"Nussmeier (coach's decision) is inactive for Sunday's game against Denver, though he will be available as the team's emergency quarterback."
+2026-11-01T20:38:02+00:00,2026-11-01T20:27Z,7,Denver Broncos,DEN,3915282,Zach Allen,DE,Active,,,,"Allen (hamstring) is active for Sunday's game against the Chiefs, Aric DiLalla of the Broncos' official site reports."
+2026-11-01T20:38:02+00:00,2026-11-01T20:28Z,22,Arizona Cardinals,ARI,4360761,Michael Wilson,WR,Active,,,,"Wilson (undisclosed) returned to Sunday's contest in Dallas, Darren Urban of the Cardinals' officials site reports."
+2026-11-01T20:38:02+00:00,2026-11-01T20:28Z,2,Buffalo Bills,BUF,4242433,Joshua Palmer,WR,Out,OUT,Right Hamstring,2026-11-09,Palmer (hamstring) has been ruled out for the rest of Sunday's game against the Ravens.
+2026-11-01T20:38:02+00:00,2026-11-01T20:28Z,14,Los Angeles Rams,LAR,2575907,Joe Cardona,LS,Out,INACTIVE,Ankle,2026-11-08,Cardona (ankle) is inactive against the Chargers on Sunday.
+2026-11-01T20:38:02+00:00,2026-11-01T20:32Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
