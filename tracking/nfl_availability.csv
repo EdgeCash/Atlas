@@ -3568,6 +3568,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-01T20:08:06+00:00,2026-11-01T19:57Z,17,New England Patriots,NE,4606666,Karon Prunty,CB,Out,INACTIVE,Coach's Decision,,inactive
 2026-11-01T20:08:06+00:00,2026-11-01T19:57Z,17,New England Patriots,NE,4432710,TreVeyon Henderson,RB,Out,INACTIVE,Illness,2026-11-08,inactive
 2026-11-01T20:23:03+00:00,2026-11-01T19:59Z,7,Denver Broncos,DEN,4372016,Jaylen Waddle,WR,Active,,,,
+2026-11-01T21:23:05+00:00,2026-11-01T19:59Z,15,Miami Dolphins,MIA,4362135,Christian Haynes,G,Out,INACTIVE,Coach's Decision,2026-11-08,inactive
 2026-11-01T20:23:03+00:00,2026-11-01T19:59Z,15,Miami Dolphins,MIA,4372463,Jamree Kromah,DE,Out,INACTIVE,Coach's Decision,2026-11-08,inactive
 2026-11-01T20:23:03+00:00,2026-11-01T19:59Z,15,Miami Dolphins,MIA,4430681,Jared Wayne,WR,Out,INACTIVE,Coach's Decision,2026-11-08,inactive
 2026-11-01T20:23:03+00:00,2026-11-01T19:59Z,15,Miami Dolphins,MIA,4567225,Jaylin Simpson,S,Out,INACTIVE,Coach's Decision,2026-11-08,inactive
@@ -3639,4 +3640,16 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-01T21:07:54+00:00,2026-11-01T20:59Z,1,Atlanta Falcons,ATL,4870612,Zachariah Branch,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-08,questionable
 2026-11-01T21:07:54+00:00,2026-11-01T20:59Z,2,Buffalo Bills,BUF,4379399,James Cook III,RB,Active,,,,
 2026-11-01T21:07:54+00:00,2026-11-01T20:59Z,8,Detroit Lions,DET,3139387,D.J. Reed,CB,Questionable,QUESTIONABLE,Hamstring,2026-11-01,questionable
+2026-11-01T21:23:05+00:00,2026-11-01T21:01Z,8,Detroit Lions,DET,4569465,Jack Campbell,LB,Doubtful,DOUBTFUL,Neck,2026-11-01,Campbell has been taken to a local Detroit hospital to be evaluated for a neck injury.
 2026-11-01T21:07:54+00:00,2026-11-01T21:02Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-11-01T21:23:05+00:00,2026-11-01T21:02Z,8,Detroit Lions,DET,3139387,D.J. Reed,CB,Questionable,QUESTIONABLE,Hip,2026-11-01,Reed (hip) is questionable to return to Sunday's game against the Dolphins.
+2026-11-01T21:23:05+00:00,2026-11-01T21:02Z,10,Tennessee Titans,TEN,4429100,Peter Skoronski,G,Questionable,QUESTIONABLE,Hamstring,2026-11-01,questionable
+2026-11-01T21:23:05+00:00,2026-11-01T21:03Z,8,Detroit Lions,DET,4361788,Cade Mays,C,Questionable,QUESTIONABLE,Ankle,2026-11-08,"Mays (ankle) has been ruled out for the rest of Sunday's game against the Vikings, Nolan Bianchi of The Detroit News reports."
+2026-11-01T21:23:05+00:00,2026-11-01T21:06Z,2,Buffalo Bills,BUF,4379399,James Cook III,RB,Active,,,,"After being evaluated for a head injury, Cook was cleared to return to Sunday's game against the Ravens."
+2026-11-01T21:23:05+00:00,2026-11-01T21:06Z,10,Tennessee Titans,TEN,4431437,JC Latham,OT,Questionable,QUESTIONABLE,Finger,2026-11-01,"Latham (finger) is questionable to return to Sunday's game against the Bengals, Jim Wyatt of the Titans' official site reports."
+2026-11-01T21:23:05+00:00,2026-11-01T21:08Z,4,Cincinnati Bengals,CIN,4572036,DJ Turner II,CB,Questionable,QUESTIONABLE,Left Ankle,2026-11-08,Turner (ankle) has been ruled out for the rest of Sunday's game against the Titans.
+2026-11-01T21:23:05+00:00,2026-11-01T21:10Z,4,Cincinnati Bengals,CIN,4430065,Cedric Johnson,DE,Questionable,QUESTIONABLE,Left Ankle,2026-11-08,Johnson (ankle) has been ruled out for the rest of Sunday's game against the Falcons.
+2026-11-01T21:23:05+00:00,2026-11-01T21:11Z,22,Arizona Cardinals,ARI,4870808,Jeremiyah Love,RB,Out,OUT,Right Ankle,2026-11-08,"Love (ankle) was ruled out for Sunday's game against the Cowboys to begin the second half, Alex Weiner of ArizonaSports.com reports."
+2026-11-01T21:23:05+00:00,2026-11-01T21:12Z,4,Cincinnati Bengals,CIN,4710752,Cashius Howell,DE,Questionable,QUESTIONABLE,Right Wrist,2026-11-08,Howell (wrist) has been ruled out for the rest of Sunday's game against the Titans.
+2026-11-01T21:23:05+00:00,2026-11-01T21:13Z,8,Detroit Lions,DET,4896353,Jimmy Rolder,LB,Questionable,QUESTIONABLE,Hamstring,2026-11-08,Rolder did not return to Sunday's game against the Vikings after sustaining a hamstring injury in the third quarter.
+2026-11-01T21:23:05+00:00,2026-11-01T21:14Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
