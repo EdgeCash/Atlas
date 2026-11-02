@@ -336,3 +336,6 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-01T20:38:02+00:00,2026-11-01T20:27Z,129764,Utah Mammoth,UTA,3941974,John Marino,D,Injured Reserve,IR,Upper Body,2026-11-05,ir
 2026-11-01T20:53:06+00:00,2026-11-01T20:35Z,129764,Utah Mammoth,UTA,4233648,Kailer Yamamoto,RW,Out,OUT,Upper Body,2026-11-03,out
 2026-11-01T22:52:48+00:00,2026-11-01T22:36Z,13,New York Rangers,NYR,4378683,Sean Durzi,D,Out,OUT,Undisclosed,2026-11-03,out
+2026-11-02T14:22:58+00:00,2026-11-02T14:13Z,7,Carolina Hurricanes,CAR,5428,Taylor Hall,LW,Day-To-Day,Day-To-Day,Upper Body,2026-11-03,day-to-day
+2026-11-02T14:22:58+00:00,2026-11-02T14:13Z,6,Edmonton Oilers,EDM,5080179,Isaac Howard,LW,Day-To-Day,Day-To-Day,Knee,2026-11-03,day-to-day
+2026-11-02T14:22:58+00:00,2026-11-02T14:13Z,13,New York Rangers,NYR,4378683,Sean Durzi,D,Day-To-Day,Day-To-Day,Undisclosed,2026-11-03,day-to-day

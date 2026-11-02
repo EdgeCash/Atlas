@@ -3688,6 +3688,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-01T22:38:02+00:00,2026-11-01T22:24Z,4,Cincinnati Bengals,CIN,4362628,Ja'Marr Chase,WR,Active,,,,Chase secured 11 of 16 targets for 141 yards and a touchdown in the Bengals' 43-36 overtime win over the Titans on Sunday.
 2026-11-01T22:38:02+00:00,2026-11-01T22:28Z,2,Buffalo Bills,BUF,3918298,Josh Allen,QB,Active,,,,"Allen completed 21 of 34 passes for 289 yards, two touchdowns and one interception in Sunday's 36-10 win over the Ravens. He added 30 rushing yards and a rushin"
 2026-11-01T22:52:48+00:00,2026-11-01T22:29Z,33,Baltimore Ravens,BAL,4429582,Joe Fagnano,QB,Out,INACTIVE,Coach's Decision,2026-11-05,"Fagnano (undisclosed) said that he hopes to be ready for Thursday's game against the Jaguars, but acknowledged he's not 100 percent following Sunday's loss to t"
+2026-11-02T14:22:58+00:00,2026-11-01T22:29Z,33,Baltimore Ravens,BAL,4429582,Joe Fagnano,QB,Questionable,QUESTIONABLE,Left Knee,2026-11-05,"Fagnano (undisclosed) said that he hopes to be ready for Thursday's game against the Jaguars, but acknowledged he's not 100 percent following Sunday's loss to t"
 2026-11-01T22:52:48+00:00,2026-11-01T22:30Z,2,Buffalo Bills,BUF,4379399,James Cook III,RB,Active,,,,Cook rushed 21 times for 80 yards and a touchdown while catching two of three targets for 21 yards in Sunday's 36-10 win over the Ravens.
 2026-11-01T22:38:02+00:00,2026-11-01T22:32Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-11-01T22:52:48+00:00,2026-11-01T22:34Z,24,Los Angeles Chargers,LAC,4241597,Daiyan Henley,LB,Active,,,,"Henley (shoulder) has returned to Sunday's matchup versus the Rams, David Droegemeier of Locked On Chargers reports."
@@ -3872,3 +3873,4 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-02T11:23:09+00:00,2026-11-02T11:01Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-11-02T12:23:02+00:00,2026-11-02T12:00Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-11-02T13:23:06+00:00,2026-11-02T13:00Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-11-02T14:22:58+00:00,2026-11-02T14:12Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Active,RESERVE-SUS,Suspension,2026-11-09,
