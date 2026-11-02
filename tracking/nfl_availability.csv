@@ -3610,11 +3610,13 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-01T20:38:02+00:00,2026-11-01T20:18Z,10,Tennessee Titans,TEN,4431437,JC Latham,OT,Questionable,QUESTIONABLE,Finger,2026-11-01,questionable
 2026-11-01T20:38:02+00:00,2026-11-01T20:19Z,15,Miami Dolphins,MIA,4360488,JuJu Brents,CB,Active,,,,Brents (neck/concussion) is active for Sunday's game against New England.
 2026-11-01T20:38:02+00:00,2026-11-01T20:20Z,17,New England Patriots,NE,4431465,Behren Morton,QB,Out,INACTIVE,Coach's Decision,2026-11-08,Morton (coach's decision) is inactive but will serve as the Patriots' emergency third quarterback against the Dolphins on Sunday.
+2026-11-02T20:23:06+00:00,2026-11-01T20:20Z,17,New England Patriots,NE,4431465,Behren Morton,QB,Active,,,,Morton (coach's decision) is inactive but will serve as the Patriots' emergency third quarterback against the Dolphins on Sunday.
 2026-11-01T20:38:02+00:00,2026-11-01T20:22Z,22,Arizona Cardinals,ARI,4427728,Bam Knight,RB,Out,OUT,Concussion,2026-11-08,Knight (concussion) has been ruled out for the rest of Sunday's game against the Cowboys.
 2026-11-01T22:23:04+00:00,2026-11-01T20:22Z,22,Arizona Cardinals,ARI,4427728,Bam Knight,RB,Questionable,QUESTIONABLE,Concussion,2026-11-08,Knight (concussion) has been ruled out for the rest of Sunday's game against the Cowboys.
 2026-11-01T20:38:02+00:00,2026-11-01T20:22Z,7,Denver Broncos,DEN,4241820,Sam Ehlinger,QB,Out,INACTIVE,Coach's Decision,2026-11-08,"Ehlinger (coach's decision) is inactive but will be the third emergency quarterback against the Chiefs on Sunday, Aric DiLalla of the Broncos' official site rep"
 2026-11-02T19:23:08+00:00,2026-11-01T20:22Z,7,Denver Broncos,DEN,4241820,Sam Ehlinger,QB,Active,,,,"Ehlinger (coach's decision) is inactive but will be the third emergency quarterback against the Chiefs on Sunday, Aric DiLalla of the Broncos' official site rep"
 2026-11-01T20:38:02+00:00,2026-11-01T20:22Z,15,Miami Dolphins,MIA,4430681,Jared Wayne,WR,Out,INACTIVE,Coach's Decision,2026-11-08,Wayne (coach's decision) is inactive for Sunday's game versus the Patriots.
+2026-11-02T20:23:06+00:00,2026-11-01T20:22Z,15,Miami Dolphins,MIA,4430681,Jared Wayne,WR,Active,,,,Wayne (coach's decision) is inactive for Sunday's game versus the Patriots.
 2026-11-01T20:38:02+00:00,2026-11-01T20:24Z,7,Denver Broncos,DEN,4039059,Brandon Jones,S,Active,,,,"Jones (hamstring) is active for Sunday's game against the Chiefs, Aric DiLalla of the Broncos' official site reports."
 2026-11-01T20:38:02+00:00,2026-11-01T20:25Z,12,Kansas City Chiefs,KC,4567747,Garrett Nussmeier,QB,Out,INACTIVE,Coach's Decision,2026-11-08,"Nussmeier (coach's decision) is inactive for Sunday's game against Denver, though he will be available as the team's emergency quarterback."
 2026-11-02T19:23:08+00:00,2026-11-01T20:25Z,12,Kansas City Chiefs,KC,4567747,Garrett Nussmeier,QB,Active,,,,"Nussmeier (coach's decision) is inactive for Sunday's game against Denver, though he will be available as the team's emergency quarterback."
@@ -3663,6 +3665,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-01T22:23:04+00:00,2026-11-01T21:11Z,22,Arizona Cardinals,ARI,4870808,Jeremiyah Love,RB,Questionable,QUESTIONABLE,Right Ankle,2026-11-08,"Love (ankle) was ruled out for Sunday's game against the Cowboys to begin the second half, Alex Weiner of ArizonaSports.com reports."
 2026-11-01T21:23:05+00:00,2026-11-01T21:12Z,4,Cincinnati Bengals,CIN,4710752,Cashius Howell,DE,Questionable,QUESTIONABLE,Right Wrist,2026-11-08,Howell (wrist) has been ruled out for the rest of Sunday's game against the Titans.
 2026-11-01T21:23:05+00:00,2026-11-01T21:13Z,8,Detroit Lions,DET,4896353,Jimmy Rolder,LB,Questionable,QUESTIONABLE,Hamstring,2026-11-08,Rolder did not return to Sunday's game against the Vikings after sustaining a hamstring injury in the third quarter.
+2026-11-02T20:23:06+00:00,2026-11-01T21:13Z,8,Detroit Lions,DET,4896353,Jimmy Rolder,LB,Out,OUT,Hamstring,2027-02-15,Rolder did not return to Sunday's game against the Vikings after sustaining a hamstring injury in the third quarter.
 2026-11-01T21:23:05+00:00,2026-11-01T21:14Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-11-01T21:37:57+00:00,2026-11-01T21:14Z,10,Tennessee Titans,TEN,4429100,Peter Skoronski,G,Questionable,QUESTIONABLE,Hamstring,2026-11-01,Skoronski (hamstring) is questionable to return to Sunday's game against the Bengals.
 2026-11-01T21:37:57+00:00,2026-11-01T21:17Z,2,Buffalo Bills,BUF,3915416,DJ Moore,WR,Questionable,QUESTIONABLE,Undisclosed,2026-11-01,"Moore (undisclosed) headed to the medical tent during Sunday's game against the Ravens, Katherine Fitzgerald of The Buffalo Newsreports."
@@ -3754,6 +3757,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-02T00:23:10+00:00,2026-11-02T00:06Z,6,Dallas Cowboys,DAL,4242355,Jake Ferguson,TE,Questionable,QUESTIONABLE,Ankle Sprain,2026-11-08,"Ferguson suffered a low-ankle sprain during Sunday's loss to the Cardinals, Jeremy Fowler of ESPN reports."
 2026-11-02T00:23:10+00:00,2026-11-02T00:07Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-11-02T00:23:10+00:00,2026-11-02T00:08Z,28,Washington Commanders,WSH,4432722,Athan Kaliakmanis,QB,Out,INACTIVE,Coach's Decision,2026-11-08,Kaliakmanis (coach's decision) is inactive but serving as the Commanders' emergency third quarterback Sunday night against the Eagles.
+2026-11-02T20:23:06+00:00,2026-11-02T00:08Z,28,Washington Commanders,WSH,4432722,Athan Kaliakmanis,QB,Active,,,,Kaliakmanis (coach's decision) is inactive but serving as the Commanders' emergency third quarterback Sunday night against the Eagles.
 2026-11-02T00:23:10+00:00,2026-11-02T00:11Z,17,New England Patriots,NE,3046439,Hunter Henry,TE,Out,OUT,Foot,2026-11-08,Henry (foot) has been ruled out for the rest of Sunday's game at Miami.
 2026-11-02T01:53:06+00:00,2026-11-02T00:11Z,17,New England Patriots,NE,3046439,Hunter Henry,TE,Questionable,QUESTIONABLE,Foot,2026-11-08,Henry (foot) has been ruled out for the rest of Sunday's game at Miami.
 2026-11-02T00:23:10+00:00,2026-11-02T00:12Z,28,Washington Commanders,WSH,3929865,Charles Omenihu,DE,Active,,,,Omenihu (groin/ankle) is active for Sunday night's contest against the Eagles.
@@ -3999,16 +4003,59 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-02T19:23:08+00:00,2026-11-02T19:10Z,15,Miami Dolphins,MIA,4912052,Justin Joly,TE,Active,,,,
 2026-11-02T19:23:08+00:00,2026-11-02T19:10Z,15,Miami Dolphins,MIA,4870976,Kadyn Proctor,OT,Out,QUESTIONABLE,Concussion Concussion,2026-11-08,out
 2026-11-02T19:23:08+00:00,2026-11-02T19:10Z,15,Miami Dolphins,MIA,4875079,Marcellas Dial Jr.,CB,Active,,,,
+2026-11-02T20:23:06+00:00,2026-11-02T19:12Z,16,Minnesota Vikings,MIN,4592836,Caleb Tiernan,OT,Active,,,,
+2026-11-02T20:23:06+00:00,2026-11-02T19:12Z,16,Minnesota Vikings,MIN,5091793,Charles Demmings,CB,Active,,,,
+2026-11-02T20:23:06+00:00,2026-11-02T19:12Z,16,Minnesota Vikings,MIN,4832846,Demond Claiborne,RB,Active,,,,
+2026-11-02T20:23:06+00:00,2026-11-02T19:12Z,16,Minnesota Vikings,MIN,4696782,Elijah Williams,DE,Active,,,,
+2026-11-02T20:23:06+00:00,2026-11-02T19:12Z,16,Minnesota Vikings,MIN,4710865,Jakobe Thomas,S,Active,,,,
+2026-11-02T20:23:06+00:00,2026-11-02T19:12Z,16,Minnesota Vikings,MIN,4573398,Max Brosmer,QB,Active,,,,
 2026-11-02T19:23:08+00:00,2026-11-02T19:13Z,17,New England Patriots,NE,4688779,Channing Canada,CB,Active,,,,
 2026-11-02T19:23:08+00:00,2026-11-02T19:13Z,17,New England Patriots,NE,4688366,Elliott Davison,S,Active,,,,
 2026-11-02T19:23:08+00:00,2026-11-02T19:13Z,17,New England Patriots,NE,4606666,Karon Prunty,CB,Active,,,,
 2026-11-02T19:23:08+00:00,2026-11-02T19:13Z,17,New England Patriots,NE,4432710,TreVeyon Henderson,RB,Out,QUESTIONABLE,Illness,2026-11-08,out
+2026-11-02T20:23:06+00:00,2026-11-02T19:14Z,29,Carolina Panthers,CAR,4678008,Jonathon Brooks,RB,Injured Reserve,IR,Abdomen Surgery,2026-11-08,"Panthers head coach Dave Canales said Monday that Brooks (core) will ""potentially"" be designated for return from injured reserve this week, Joe Person of The At"
+2026-11-02T20:23:06+00:00,2026-11-02T19:16Z,20,New York Jets,NYJ,4685248,David Bailey,LB,Out,QUESTIONABLE,Groin,2026-11-08,out
+2026-11-02T20:23:06+00:00,2026-11-02T19:16Z,20,New York Jets,NYJ,4362094,Joseph Ossai,DE,Out,QUESTIONABLE,Ankle,2026-11-08,out
+2026-11-02T20:23:06+00:00,2026-11-02T19:16Z,20,New York Jets,NYJ,4373951,Kohl Levao,G,Active,,,,
+2026-11-02T20:23:06+00:00,2026-11-02T19:16Z,20,New York Jets,NYJ,4373656,Max Mitchell,OT,Out,QUESTIONABLE,Concussion Concussion,2026-11-08,out
+2026-11-02T20:23:06+00:00,2026-11-02T19:16Z,20,New York Jets,NYJ,4570470,Nahshon Wright,CB,Active,,,,
+2026-11-02T20:23:06+00:00,2026-11-02T19:16Z,20,New York Jets,NYJ,3134353,Tim Patrick,WR,Active,,,,
 2026-11-02T19:23:08+00:00,2026-11-02T19:19Z,21,Philadelphia Eagles,PHI,3926231,Britain Covey,WR,Out,QUESTIONABLE,Knee,2026-11-08,out
 2026-11-02T19:23:08+00:00,2026-11-02T19:19Z,21,Philadelphia Eagles,PHI,4241478,DeVonta Smith,WR,Out,QUESTIONABLE,Hamstring,2026-11-08,out
 2026-11-02T19:23:08+00:00,2026-11-02T19:19Z,21,Philadelphia Eagles,PHI,4428850,Dontayvion Wicks,WR,Out,QUESTIONABLE,Ankle,2026-11-08,out
 2026-11-02T19:23:08+00:00,2026-11-02T19:19Z,21,Philadelphia Eagles,PHI,4430814,Jake Majors,C,Active,,,,
 2026-11-02T19:23:08+00:00,2026-11-02T19:19Z,21,Philadelphia Eagles,PHI,4685287,Jihaad Campbell,LB,Out,QUESTIONABLE,Hamstring,2026-11-08,out
 2026-11-02T19:23:08+00:00,2026-11-02T19:19Z,21,Philadelphia Eagles,PHI,2971027,Jonathan Jones,CB,Out,QUESTIONABLE,Hamstring,2026-11-08,out
+2026-11-02T20:23:06+00:00,2026-11-02T19:20Z,23,Pittsburgh Steelers,PIT,4035656,Ben Skowronek,WR,Out,QUESTIONABLE,Calf,2026-11-08,out
+2026-11-02T20:23:06+00:00,2026-11-02T19:20Z,23,Pittsburgh Steelers,PIT,4567979,Brandin Echols,CB,Out,QUESTIONABLE,Hamstring,2026-11-08,out
+2026-11-02T20:23:06+00:00,2026-11-02T19:20Z,23,Pittsburgh Steelers,PIT,4692628,Doneiko Slaughter,CB,Out,QUESTIONABLE,Hamstring,2026-11-08,out
 2026-11-02T19:23:08+00:00,2026-11-02T19:20Z,23,Pittsburgh Steelers,PIT,4714771,Drew Allar,QB,Active,,,,
 2026-11-02T19:23:08+00:00,2026-11-02T19:20Z,23,Pittsburgh Steelers,PIT,5081508,Eli Heidenreich,RB,Active,,,,
 2026-11-02T19:23:08+00:00,2026-11-02T19:20Z,23,Pittsburgh Steelers,PIT,4429955,Will Howard,QB,Active,,,,
+2026-11-02T20:23:06+00:00,2026-11-02T19:22Z,27,Tampa Bay Buccaneers,TB,4890885,Ayden Garnes,CB,Active,,,,
+2026-11-02T20:23:06+00:00,2026-11-02T19:22Z,27,Tampa Bay Buccaneers,TB,4685549,Billy Schrauth,G,Active,,,,
+2026-11-02T20:23:06+00:00,2026-11-02T19:22Z,27,Tampa Bay Buccaneers,TB,4429007,DeMonte Capehart,DT,Active,,,,
+2026-11-02T20:23:06+00:00,2026-11-02T19:22Z,27,Tampa Bay Buccaneers,TB,4567750,Emeka Egbuka,WR,Out,QUESTIONABLE,Foot,2026-11-08,out
+2026-11-02T20:23:06+00:00,2026-11-02T19:22Z,27,Tampa Bay Buccaneers,TB,4686884,Luke Haggard,G,Active,,,,
+2026-11-02T20:23:06+00:00,2026-11-02T19:23Z,29,Carolina Panthers,CAR,4430034,Xavier Legette,WR,Injured Reserve,IR,Knee,2026-11-08,"Panthers head coach Dave Canales said Monday that Legette (knee) will ""potentially"" be designated for return from injured reserve this week, Joe Person of The A"
+2026-11-02T20:23:06+00:00,2026-11-02T19:24Z,10,Tennessee Titans,TEN,4426987,Brandon Crenshaw-Dickson,OT,Active,,,,
+2026-11-02T20:23:06+00:00,2026-11-02T19:24Z,10,Tennessee Titans,TEN,4871023,Carnell Tate,WR,Out,QUESTIONABLE,Shoulder,2026-11-15,out
+2026-11-02T20:23:06+00:00,2026-11-02T19:24Z,10,Tennessee Titans,TEN,5081785,Jackie Marshall,DT,Active,,,,
+2026-11-02T20:23:06+00:00,2026-11-02T19:24Z,10,Tennessee Titans,TEN,4685145,Jaylon Jones,CB,Out,QUESTIONABLE,Knee,2026-11-15,out
+2026-11-02T20:23:06+00:00,2026-11-02T19:24Z,10,Tennessee Titans,TEN,4039160,Kylen Granson,TE,Active,,,,
+2026-11-02T20:23:06+00:00,2026-11-02T19:24Z,10,Tennessee Titans,TEN,3915398,Tommy Townsend,P,Out,QUESTIONABLE,Left Knee,2026-11-15,out
+2026-11-02T20:23:06+00:00,2026-11-02T19:24Z,10,Tennessee Titans,TEN,4428557,Tyjae Spears,RB,Out,QUESTIONABLE,Knee,2026-11-15,out
+2026-11-02T20:23:06+00:00,2026-11-02T19:26Z,28,Washington Commanders,WSH,3925354,Daron Payne,DT,Out,OUT,Left Foot Surgery,2027-02-15,out
+2026-11-02T20:23:06+00:00,2026-11-02T19:26Z,28,Washington Commanders,WSH,2971586,Fabian Moreau,CB,Active,,,,
+2026-11-02T20:23:06+00:00,2026-11-02T19:26Z,28,Washington Commanders,WSH,3122797,Isaac Yiadom,CB,Active,,,,
+2026-11-02T20:23:06+00:00,2026-11-02T19:26Z,28,Washington Commanders,WSH,4259491,Javon Kinlaw,DT,Out,QUESTIONABLE,Knee,2026-11-08,out
+2026-11-02T20:23:06+00:00,2026-11-02T19:26Z,28,Washington Commanders,WSH,4605488,Tanoa Togiai,G,Active,,,,
+2026-11-02T20:23:06+00:00,2026-11-02T19:27Z,11,Indianapolis Colts,IND,3917792,Daniel Jones,QB,Active,,,,"Head coach Shane Steichen said that Jones will remain the Colts' starting quarterback heading into Sunday's game against the Cowboys, Mike Chappell of Fox 59 Ne"
+2026-11-02T20:23:06+00:00,2026-11-02T19:39Z,9,Green Bay Packers,GB,4361423,Micah Parsons,DE,Out,PUP-R,Left Knee - ACL Surgery,2026-11-25,"Head coach Matt LaFleur said Monday that the Packers' ""intention"" is for Parsons (knee) to resume practicing in Week 9, Weston Hodkiewicz of the team's official"
+2026-11-02T20:23:06+00:00,2026-11-02T19:48Z,9,Green Bay Packers,GB,4047365,Josh Jacobs,RB,Active,,,,"Head coach Matt LaFleur said Monday that the Packers are aware of the prior physical abuse allegations involving Jacobs that recently surfaced and ""anticipate h"
+2026-11-02T20:23:06+00:00,2026-11-02T19:57Z,16,Minnesota Vikings,MIN,3917315,Kyler Murray,QB,Questionable,QUESTIONABLE,Hamstring,2026-11-09,"Murray (hamstring), who is dealing with a sore hamstring, is undergoing a full evaluation to determine the extent of the issue, Alec Lewis of The Athletic repor"
+2026-11-02T20:23:06+00:00,2026-11-02T19:59Z,25,San Francisco 49ers,SF,4360438,Brandon Aiyuk,WR,Out,RESERVE-DNR,Personal,2027-02-15,"Aiyuk is close to hiring new representation and is expected to file for reinstatement to the NFL in the near future, according to NFL reporter Jordan Schultz."
+2026-11-02T20:23:06+00:00,2026-11-02T20:04Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-11-02T20:23:06+00:00,2026-11-02T20:04Z,16,Minnesota Vikings,MIN,4361985,Christian Darrisaw,OT,Questionable,QUESTIONABLE,Shoulder,2026-11-09,questionable
+2026-11-02T20:23:06+00:00,2026-11-02T20:10Z,19,New York Giants,NYG,4696981,Cam Skattebo,RB,Questionable,QUESTIONABLE,Hamstring,2026-11-08,"Skattebo (hamstring) was spotted working out off to the side during the Giants' unofficial practice session Monday, Jordan Raanan of ESPN.com reports."
+2026-11-02T20:23:06+00:00,2026-11-02T20:13Z,9,Green Bay Packers,GB,4248528,Christian Watson,WR,Questionable,QUESTIONABLE,Ribs Fracture,2026-11-08,"Packers passing game coordinator Jason Vrable said Monday that Watson (ribs) is sore but ""doing great"" Matt Schneidman of The Athletic reports."
