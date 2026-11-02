@@ -346,3 +346,8 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-02T16:23:07+00:00,2026-11-02T15:52Z,16,Pittsburgh Penguins,PIT,5075840,Elmer Soderblom,LW,Injured Reserve,IR,Upper Body,2026-11-14,"Soderblom (upper body) is week-to-week, per Penguins PR on Monday."
 2026-11-02T16:23:07+00:00,2026-11-02T15:52Z,16,Pittsburgh Penguins,PIT,4565264,Kaedan Korczak,D,Day-To-Day,Day-To-Day,Lower Body,2026-11-03,day-to-day
 2026-11-02T16:23:07+00:00,2026-11-02T15:57Z,16,Pittsburgh Penguins,PIT,3124,Evgeni Malkin,C,Day-To-Day,Day-To-Day,Lower Body,2026-11-03,day-to-day
+2026-11-02T18:23:04+00:00,2026-11-02T17:13Z,20,Tampa Bay Lightning,TB,2968829,Zemgus Girgensons,C,Out,OUT,Lower Body,2026-11-05,"Girgensons (lower body) won't play against Detroit on Tuesday, per Lightning reporter Gabby Shirley."
+2026-11-02T18:23:04+00:00,2026-11-02T17:29Z,2,Buffalo Sabres,BUF,5216882,Konsta Helenius,C,Out,OUT,Upper Body,2026-11-17,"Helenius (upper body) is week-to-week, according to Matthew Fairburn of The Athletic on Monday."
+2026-11-02T18:23:04+00:00,2026-11-02T17:29Z,2,Buffalo Sabres,BUF,5149186,Zach Benson,LW,Day-To-Day,Day-To-Day,Undisclosed,2026-11-04,day-to-day
+2026-11-02T18:23:04+00:00,2026-11-02T17:40Z,4,Chicago Blackhawks,CHI,4565225,Bowen Byram,D,Out,OUT,Upper Body,2026-11-04,out
+2026-11-02T18:23:04+00:00,2026-11-02T18:01Z,11,New Jersey Devils,NJ,3648008,Evan Rodrigues,C,Day-To-Day,Day-To-Day,Illness,2026-11-03,"Rodrigues (illness) is questionable for Tuesday's matchup against Edmonton, per Amanda Stein of the Devils' official site."
