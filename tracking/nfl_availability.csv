@@ -3744,3 +3744,9 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-02T00:07:49+00:00,2026-11-01T23:55Z,21,Philadelphia Eagles,PHI,2971027,Jonathan Jones,CB,Out,INACTIVE,Hamstring,2026-11-08,inactive
 2026-11-02T00:07:49+00:00,2026-11-01T23:57Z,28,Washington Commanders,WSH,4567156,Treylon Burks,WR,Active,,,,Burks (foot) is listed as active Sunday versus the Eagles.
 2026-11-02T00:07:49+00:00,2026-11-02T00:01Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-11-02T00:23:10+00:00,2026-11-02T00:03Z,28,Washington Commanders,WSH,4048228,John Bates,TE,Active,,,,Bates (shoulder) is active for Sunday night's matchup with the Eagles.
+2026-11-02T00:23:10+00:00,2026-11-02T00:06Z,6,Dallas Cowboys,DAL,4242355,Jake Ferguson,TE,Questionable,QUESTIONABLE,Ankle Sprain,2026-11-08,"Ferguson suffered a low-ankle sprain during Sunday's loss to the Cardinals, Jeremy Fowler of ESPN reports."
+2026-11-02T00:23:10+00:00,2026-11-02T00:07Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-11-02T00:23:10+00:00,2026-11-02T00:08Z,28,Washington Commanders,WSH,4432722,Athan Kaliakmanis,QB,Out,INACTIVE,Coach's Decision,2026-11-08,Kaliakmanis (coach's decision) is inactive but serving as the Commanders' emergency third quarterback Sunday night against the Eagles.
+2026-11-02T00:23:10+00:00,2026-11-02T00:11Z,17,New England Patriots,NE,3046439,Hunter Henry,TE,Out,OUT,Foot,2026-11-08,Henry (foot) has been ruled out for the rest of Sunday's game at Miami.
+2026-11-02T00:23:10+00:00,2026-11-02T00:12Z,28,Washington Commanders,WSH,3929865,Charles Omenihu,DE,Active,,,,Omenihu (groin/ankle) is active for Sunday night's contest against the Eagles.
