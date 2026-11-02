@@ -4032,6 +4032,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-02T19:23:08+00:00,2026-11-02T19:20Z,23,Pittsburgh Steelers,PIT,4714771,Drew Allar,QB,Active,,,,
 2026-11-02T19:23:08+00:00,2026-11-02T19:20Z,23,Pittsburgh Steelers,PIT,5081508,Eli Heidenreich,RB,Active,,,,
 2026-11-02T19:23:08+00:00,2026-11-02T19:20Z,23,Pittsburgh Steelers,PIT,4429955,Will Howard,QB,Active,,,,
+2026-11-02T21:23:04+00:00,2026-11-02T19:20Z,25,San Francisco 49ers,SF,3047876,KhaDarel Hodge,WR,Active,,,,
 2026-11-02T20:23:06+00:00,2026-11-02T19:22Z,27,Tampa Bay Buccaneers,TB,4890885,Ayden Garnes,CB,Active,,,,
 2026-11-02T20:23:06+00:00,2026-11-02T19:22Z,27,Tampa Bay Buccaneers,TB,4685549,Billy Schrauth,G,Active,,,,
 2026-11-02T20:23:06+00:00,2026-11-02T19:22Z,27,Tampa Bay Buccaneers,TB,4429007,DeMonte Capehart,DT,Active,,,,
@@ -4059,3 +4060,8 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-02T20:23:06+00:00,2026-11-02T20:04Z,16,Minnesota Vikings,MIN,4361985,Christian Darrisaw,OT,Questionable,QUESTIONABLE,Shoulder,2026-11-09,questionable
 2026-11-02T20:23:06+00:00,2026-11-02T20:10Z,19,New York Giants,NYG,4696981,Cam Skattebo,RB,Questionable,QUESTIONABLE,Hamstring,2026-11-08,"Skattebo (hamstring) was spotted working out off to the side during the Giants' unofficial practice session Monday, Jordan Raanan of ESPN.com reports."
 2026-11-02T20:23:06+00:00,2026-11-02T20:13Z,9,Green Bay Packers,GB,4248528,Christian Watson,WR,Questionable,QUESTIONABLE,Ribs Fracture,2026-11-08,"Packers passing game coordinator Jason Vrable said Monday that Watson (ribs) is sore but ""doing great"" Matt Schneidman of The Athletic reports."
+2026-11-02T21:23:04+00:00,2026-11-02T20:31Z,28,Washington Commanders,WSH,3127586,Jeremy McNichols,RB,Doubtful,DOUBTFUL,Foot,2026-11-08,"Commanders head coach Dan Quinn said Monday that McNichols has a ""mid-foot"" injury and is concerned that the running back is dealing with something ""serious,"" N"
+2026-11-02T21:23:04+00:00,2026-11-02T20:33Z,8,Detroit Lions,DET,4569465,Jack Campbell,LB,Doubtful,DOUBTFUL,Neck,2026-11-08,"The Lions announced Monday that ""preliminary indications are positive"" for Campbell (neck), who continues to rest and recover at a Detroit-area hospital."
+2026-11-02T21:23:04+00:00,2026-11-02T20:53Z,27,Tampa Bay Buccaneers,TB,4686334,Yaya Diaby,LB,Out,OUT,Knee - MCL Sprain,2026-11-22,"Head coach Todd Bowles said that Diaby (knee) has been diagnosed with an MCL sprain and won't be available for Sunday's game against the Bears, Scott Smith of t"
+2026-11-02T21:23:04+00:00,2026-11-02T21:00Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
+2026-11-02T21:23:04+00:00,2026-11-02T21:11Z,19,New York Giants,NYG,4696981,Cam Skattebo,RB,Questionable,QUESTIONABLE,Hamstring,2026-11-08,"Giants head coach John Harbaugh said that Skattebo (hamstring) is day-to-day and could end up being a game-time decision for Sunday's tilt with the Eagles, Jord"
