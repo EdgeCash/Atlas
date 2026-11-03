@@ -4097,6 +4097,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-02T23:53:08+00:00,2026-11-02T23:23Z,8,Detroit Lions,DET,4896353,Jimmy Rolder,LB,Out,OUT,Hamstring,2027-02-15,"Rolder will miss the remainder of the season due to a hamstring injury, Nolan Bianchi of The Detroit News reports."
 2026-11-02T23:53:08+00:00,2026-11-02T23:35Z,6,Dallas Cowboys,DAL,4242355,Jake Ferguson,TE,Questionable,QUESTIONABLE,Ankle Sprain,2026-11-08,"Head coach Brian Schottenheimer said Monday that Ferguson (ankle) has a chance to play Sunday at Indianapolis, Jon Machota of The Athletic reports."
 2026-11-02T23:53:08+00:00,2026-11-02T23:38Z,24,Los Angeles Chargers,LAC,3123076,David Njoku,TE,Injured Reserve,IR,Lower Leg,2026-11-08,"Coach Jim Harbaugh said Monday that the Chargers will likely open the return window for Njoku (fibula) this week, Alex Insdorf of BoltBeat.com reports."
+2026-11-03T00:08:05+00:00,2026-11-02T23:43Z,33,Baltimore Ravens,BAL,4429582,Joe Fagnano,QB,Questionable,QUESTIONABLE,Left Knee,2026-11-05,"Coach Jesse Minter said Monday that Fagnano (knee) ""is fighting through a couple things"" but has a chance to play Thursday against the Jaguars."
 2026-11-02T23:53:08+00:00,2026-11-02T23:46Z,14,Los Angeles Rams,LAR,4240255,Grant Stuard,LB,Questionable,QUESTIONABLE,Hamstring,2026-11-08,"Stuard is battling a hamstring injury, Nate Atkins of The Athletic reports."
 2026-11-02T23:53:08+00:00,2026-11-02T23:47Z,3,Chicago Bears,CHI,15168,Case Keenum,QB,Out,INACTIVE,Coach's Decision,2026-11-08,inactive
 2026-11-02T23:53:08+00:00,2026-11-02T23:47Z,3,Chicago Bears,CHI,4241007,D'Marco Jackson,LB,Active,,,,
@@ -4105,3 +4106,14 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-02T23:53:08+00:00,2026-11-02T23:47Z,3,Chicago Bears,CHI,4875381,Jordan van den Berg,DT,Out,INACTIVE,Coach's Decision,2026-11-08,inactive
 2026-11-02T23:53:08+00:00,2026-11-02T23:47Z,3,Chicago Bears,CHI,4608686,Kyle Monangai,RB,Out,INACTIVE,Thumb Sprain,2026-11-08,inactive
 2026-11-02T23:53:08+00:00,2026-11-02T23:47Z,3,Chicago Bears,CHI,4870953,Malik Muhammad II,CB,Out,INACTIVE,Toe,2026-11-08,inactive
+2026-11-03T00:08:05+00:00,2026-11-02T23:50Z,33,Baltimore Ravens,BAL,4697745,Tyler Loop,PK,Questionable,QUESTIONABLE,Undisclosed,2026-11-05,"Loop has been dealing with an unspecified issue and may go on injured reserve, Brian Wacker of the Baltimore Sun reports."
+2026-11-03T00:08:05+00:00,2026-11-02T23:51Z,26,Seattle Seahawks,SEA,4429211,Anthony Bradford,G,Active,,,,
+2026-11-03T00:08:05+00:00,2026-11-02T23:51Z,26,Seattle Seahawks,SEA,4592823,Beau Stephens,G,Out,INACTIVE,Coach's Decision,2026-11-08,inactive
+2026-11-03T00:08:05+00:00,2026-11-02T23:51Z,26,Seattle Seahawks,SEA,4259651,Brandon Pili,DT,Out,INACTIVE,Back,2026-11-08,inactive
+2026-11-03T00:08:05+00:00,2026-11-02T23:51Z,26,Seattle Seahawks,SEA,4426376,Charles Cross,OT,Out,INACTIVE,Ankle Sprain,2026-11-08,inactive
+2026-11-03T00:08:05+00:00,2026-11-02T23:51Z,26,Seattle Seahawks,SEA,3924327,Drew Lock,QB,Out,INACTIVE,Right Elbow,2026-11-08,inactive
+2026-11-03T00:08:05+00:00,2026-11-02T23:51Z,26,Seattle Seahawks,SEA,4364623,Patrick O'Connell,LB,Active,,,,
+2026-11-03T00:08:05+00:00,2026-11-02T23:51Z,26,Seattle Seahawks,SEA,4032473,Rashid Shaheed,WR,Out,INACTIVE,Knee,2026-11-08,inactive
+2026-11-03T00:08:05+00:00,2026-11-02T23:51Z,26,Seattle Seahawks,SEA,3120358,Uchenna Nwosu,LB,Out,INACTIVE,Ankle,2026-11-08,inactive
+2026-11-03T00:08:05+00:00,2026-11-02T23:51Z,26,Seattle Seahawks,SEA,4035693,Velus Jones Jr.,RB,Out,INACTIVE,Hamstring,2026-11-08,inactive
+2026-11-03T00:08:05+00:00,2026-11-03T00:01Z,3,Chicago Bears,CHI,3948283,Stephen Carlson,TE,Active,,,,The Bears elevated Carlson from their practice squad Monday ahead of the team's matchup versus Seattle.
