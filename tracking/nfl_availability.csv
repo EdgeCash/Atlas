@@ -3894,6 +3894,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-02T15:23:02+00:00,2026-11-02T15:15Z,29,Carolina Panthers,CAR,4567096,John Metchie III,WR,Active,,,,Metchie recorded three receptions for 14 yards on three targets in Thursday's 27-19 loss to the Packers.
 2026-11-02T15:23:02+00:00,2026-11-02T15:17Z,29,Carolina Panthers,CAR,4360763,Brycen Tremayne,WR,Active,,,,Tremayne finished with an 11-yard reception on his lone target in Thursday's 27-19 loss to the Packers.
 2026-11-02T16:23:07+00:00,2026-11-02T15:35Z,20,New York Jets,NYJ,4427366,Breece Hall,RB,Out,QUESTIONABLE,Right Quadriceps,2026-11-08,"Hall (quadriceps) is considered ""good to go"" and is expected to return to action in next Sunday's game against the Chiefs, Ian Rapoport of NFL Network reports."
+2026-11-03T13:22:55+00:00,2026-11-02T15:35Z,20,New York Jets,NYJ,4427366,Breece Hall,RB,Questionable,QUESTIONABLE,Right Quadriceps,2026-11-08,"Hall (quadriceps) is considered ""good to go"" and is expected to return to action in next Sunday's game against the Chiefs, Ian Rapoport of NFL Network reports."
 2026-11-02T16:23:07+00:00,2026-11-02T15:44Z,23,Pittsburgh Steelers,PIT,4035687,Michael Pittman Jr.,WR,Injured Reserve,IR,Left Foot Plantar Fasciitis,2026-11-15,"Pittman (foot) said Monday that he resumed running last week as part of a program to return, but the wideout acknowledged that he's without a clear timeline to "
 2026-11-02T16:23:07+00:00,2026-11-02T15:53Z,4,Cincinnati Bengals,CIN,5092508,Colbie Young,WR,Active,,,,Young went without a target while playing 19 of the Bengals' 74 snaps on offense in Sunday's 43-36 overtime win over the Titans.
 2026-11-02T16:23:07+00:00,2026-11-02T15:56Z,5,Cleveland Browns,CLE,4808839,Isaiah Bond,WR,Active,,,,Bond went without a target while taking the field for eight of the Browns' 70 snaps on offense in Sunday's 27-6 loss to the Steelers. He returned one kickoff fo
@@ -3902,6 +3903,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-02T16:23:07+00:00,2026-11-02T16:04Z,5,Cleveland Browns,CLE,4613104,Malachi Corley,WR,Active,,,,Corley went untargeted while playing 13 of 70 snaps on offense Sunday in the Browns' 27-6 loss to the Steelers. He returned one kickoff for 26 yards.
 2026-11-02T17:23:13+00:00,2026-11-02T16:29Z,34,Houston Texans,HOU,4035538,David Montgomery,RB,Questionable,QUESTIONABLE,Groin,2026-11-08,"Texans head coach DeMeco Ryans said Monday that he has ""no significant update"" on the status of Montgomery (groin) heading into a Week 9 matchup with the Charge"
 2026-11-02T17:23:13+00:00,2026-11-02T16:43Z,17,New England Patriots,NE,4047646,A.J. Brown,WR,Out,INACTIVE,Ankle,2026-11-08,"When asked whether Brown (ankle/knee) might practice at some point this week, coach Mike Vrabel said Monday ""we'll see,"" Doug Kyed of the Boston Herald reports."
+2026-11-03T13:22:55+00:00,2026-11-02T16:43Z,17,New England Patriots,NE,4047646,A.J. Brown,WR,Questionable,QUESTIONABLE,Ankle,2026-11-08,"When asked whether Brown (ankle/knee) might practice at some point this week, coach Mike Vrabel said Monday, ""We'll see,"" Doug Kyed of the Boston Herald reports"
 2026-11-02T17:23:13+00:00,2026-11-02T16:55Z,17,New England Patriots,NE,2991662,Mack Hollins,WR,Injured Reserve,IR,Calf,2026-11-08,"Hollins (calf), who is eligible to be activated from IR this week, per Doug Kyed of the Boston Herald, could return to practice this week, Evan Lazar of the Pat"
 2026-11-02T17:23:13+00:00,2026-11-02T17:11Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Suspension,RESERVE-SUS,Suspension,2026-11-09,reserve-sus
 2026-11-02T18:23:04+00:00,2026-11-02T17:14Z,18,New Orleans Saints,NO,4880281,Jordyn Tyson,WR,Injured Reserve,IR-R,Right Hamstring Strain,2026-11-08,"Saints head coach Kellen Moore said that the Saints will decide by Wednesday whether to open Tyson's (hamstring) 21-day practice window this week, Nick Underhil"
@@ -4120,14 +4122,19 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-03T00:08:05+00:00,2026-11-03T00:01Z,3,Chicago Bears,CHI,3948283,Stephen Carlson,TE,Active,,,,The Bears elevated Carlson from their practice squad Monday ahead of the team's matchup versus Seattle.
 2026-11-03T00:23:07+00:00,2026-11-03T00:02Z,33,Baltimore Ravens,BAL,4035671,Tyler Huntley,QB,Questionable,QUESTIONABLE,Right Toe Sprain,2026-11-05,"Head coach Jesse Minter said Monday that Huntley (toe) ""probably"" won't play Thursday versus the Jaguars, and the Ravens then will ""see how it goes from a long-"
 2026-11-03T00:23:07+00:00,2026-11-03T00:07Z,3,Chicago Bears,CHI,15168,Case Keenum,QB,Out,INACTIVE,Coach's Decision,2026-11-08,Keenum (coach's decision) is inactive but will operate as the Bears' emergency third quarterback for Monday night's matchup against the Seahawks.
+2026-11-03T13:22:55+00:00,2026-11-03T00:07Z,3,Chicago Bears,CHI,15168,Case Keenum,QB,Active,,,,Keenum (coach's decision) is inactive but will operate as the Bears' emergency third quarterback for Monday night's matchup against the Seahawks.
 2026-11-03T00:23:07+00:00,2026-11-03T00:11Z,3,Chicago Bears,CHI,4870953,Malik Muhammad II,CB,Out,INACTIVE,Toe,2026-11-08,Muhammad (toe) is inactive for Monday's game against the Seahawks.
+2026-11-03T13:22:55+00:00,2026-11-03T00:11Z,3,Chicago Bears,CHI,4870953,Malik Muhammad II,CB,Questionable,QUESTIONABLE,Toe,2026-11-08,Muhammad (toe) is inactive for Monday's game against the Seahawks.
 2026-11-03T00:37:52+00:00,2026-11-03T00:11Z,26,Seattle Seahawks,SEA,3924327,Drew Lock,QB,Out,INACTIVE,Right Elbow,2026-11-08,"Lock (coach's decision) is inactive for Monday's matchup with the Bears, John Boyle of the Seahawks' official site reports."
+2026-11-03T13:22:55+00:00,2026-11-03T00:11Z,26,Seattle Seahawks,SEA,3924327,Drew Lock,QB,Questionable,QUESTIONABLE,Right Elbow,2026-11-08,"Lock (coach's decision) is inactive for Monday's matchup with the Bears, John Boyle of the Seahawks' official site reports."
 2026-11-03T00:37:52+00:00,2026-11-03T00:12Z,26,Seattle Seahawks,SEA,4600597,Montorie Foster Jr.,WR,Active,,,,"The Seahawks elevated Foster from their practice squad Monday ahead of the team's matchup versus the Bears, John Boyle of the team's official site reports."
 2026-11-03T00:37:52+00:00,2026-11-03T00:14Z,3,Chicago Bears,CHI,4241007,D'Marco Jackson,LB,Active,,,,Jackson (ankle) is active for Monday night's game against the Seahawks.
 2026-11-03T00:37:52+00:00,2026-11-03T00:16Z,26,Seattle Seahawks,SEA,3120358,Uchenna Nwosu,LB,Out,INACTIVE,Ankle,2026-11-08,"Nwosu (ankle) is inactive for Monday's clash with the Bears, John Boyle of the Seahawks' official site reports."
+2026-11-03T13:22:55+00:00,2026-11-03T00:16Z,26,Seattle Seahawks,SEA,3120358,Uchenna Nwosu,LB,Questionable,QUESTIONABLE,Ankle,2026-11-08,"Nwosu (ankle) is inactive for Monday's clash with the Bears, John Boyle of the Seahawks' official site reports."
 2026-11-03T00:37:52+00:00,2026-11-03T00:19Z,30,Jacksonville Jaguars,JAX,3916433,Jakobi Meyers,WR,Active,,,,Meyers logged two catches for 24 yards on three targets in Sunday's 42-7 win against Indianapolis.
 2026-11-03T01:07:56+00:00,2026-11-03T00:19Z,30,Jacksonville Jaguars,JAX,3916433,Jakobi Meyers,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-05,Meyers logged two catches for 24 yards on three targets in Sunday's 42-7 win against Indianapolis.
 2026-11-03T00:37:52+00:00,2026-11-03T00:20Z,26,Seattle Seahawks,SEA,4259651,Brandon Pili,DT,Out,INACTIVE,Back,2026-11-08,"Pili (back) is inactive for Monday night's game against the Bears, John Boyle of the Seahawks' official site reports."
+2026-11-03T13:22:55+00:00,2026-11-03T00:20Z,26,Seattle Seahawks,SEA,4259651,Brandon Pili,DT,Questionable,QUESTIONABLE,Back,2026-11-08,"Pili (back) is inactive for Monday night's game against the Bears, John Boyle of the Seahawks' official site reports."
 2026-11-03T00:52:54+00:00,2026-11-03T00:26Z,12,Kansas City Chiefs,KC,3055899,Harrison Butker,PK,Active,,,,Butker made one of his two field-goal attempts and converted all three PATs in the Chiefs' 28-24 loss to the Broncos on Sunday.
 2026-11-03T00:52:54+00:00,2026-11-03T00:29Z,30,Jacksonville Jaguars,JAX,2970716,Eric Murray,S,Out,OUT,Elbow,2027-02-15,"Murray will miss the remainder of the season due to an elbow injury, Demetrius Harvey of The Florida Times-Union reports."
 2026-11-03T00:37:52+00:00,2026-11-03T00:29Z,28,Washington Commanders,WSH,3127586,Jeremy McNichols,RB,Doubtful,DOUBTFUL,Foot,2026-11-08,"McNichols is getting additional opinions on the foot injury that he suffered Sunday against the Eagles, but there's an expectation that he'll miss multiple mont"
@@ -4142,6 +4149,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-03T01:07:56+00:00,2026-11-03T00:49Z,26,Seattle Seahawks,SEA,4426385,Zach Charbonnet,RB,Active,,,,"Charbonnet was ""the first running back getting handoffs"" during warmups before Monday's game against the Bears, Gregg Bell of The Tacoma News Tribune reports."
 2026-11-03T01:07:56+00:00,2026-11-03T00:50Z,34,Houston Texans,HOU,4243956,Reed Blankenship,S,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-08,"Blankenship (concussion/hand) underwent surgery on his left hand in October, Jonathan M. Alexander of the Houston Chronicle reports."
 2026-11-03T01:07:56+00:00,2026-11-03T00:51Z,29,Carolina Panthers,CAR,4242975,Jaelan Phillips,LB,Out,INACTIVE,Hamstring,2026-11-08,"Phillips (hamstring) is considered day-to-day, Joe Person of The Athletic reported Monday."
+2026-11-03T13:22:55+00:00,2026-11-03T00:51Z,29,Carolina Panthers,CAR,4242975,Jaelan Phillips,LB,Questionable,QUESTIONABLE,Hamstring,2026-11-08,"Phillips (hamstring) is considered day-to-day, Joe Person of The Athletic reported Monday."
 2026-11-03T01:23:02+00:00,2026-11-03T00:54Z,30,Jacksonville Jaguars,JAX,3916433,Jakobi Meyers,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-05,Meyers was listed as limited on Monday's estimated injury report due to hamstring and ankle issues.
 2026-11-03T01:23:02+00:00,2026-11-03T00:57Z,30,Jacksonville Jaguars,JAX,4426448,Jarrian Jones,CB,Questionable,QUESTIONABLE,Ankle,2026-11-05,questionable
 2026-11-03T01:23:02+00:00,2026-11-03T00:59Z,30,Jacksonville Jaguars,JAX,4572704,Branson Combs,LB,Questionable,QUESTIONABLE,Shoulder,2026-11-05,questionable
@@ -4181,9 +4189,11 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-03T02:23:01+00:00,2026-11-03T02:06Z,23,Pittsburgh Steelers,PIT,17372,Chris Boswell,PK,Active,,,,Boswell made two of his three field-goal attempts and all three PATs in the Steelers' 27-6 win over the Browns on Sunday.
 2026-11-03T02:23:01+00:00,2026-11-03T02:06Z,10,Tennessee Titans,TEN,3124084,Joey Slye,PK,Active,,,,Slye hit both field-goal tries and his only two extra-point attempts in Sunday's 43-36 loss to the Bengals.
 2026-11-03T02:23:01+00:00,2026-11-03T02:10Z,24,Los Angeles Chargers,LAC,4685553,Brenen Thompson,WR,Out,QUESTIONABLE,Quadriceps,2026-11-08,"Thompson (quadriceps/hamstring) is not expected to practice this week, Noah Furtado of The Athletic reports."
+2026-11-03T13:22:55+00:00,2026-11-03T02:10Z,24,Los Angeles Chargers,LAC,4685553,Brenen Thompson,WR,Questionable,QUESTIONABLE,Quadriceps,2026-11-08,"Thompson (quadriceps/hamstring) is not expected to practice this week, Noah Furtado of The Athletic reports."
 2026-11-03T02:38:15+00:00,2026-11-03T02:13Z,33,Baltimore Ravens,BAL,3915189,Roquan Smith,LB,Questionable,QUESTIONABLE,Foot,2026-11-05,Smith (foot) was estimated as a limited participant on Monday's practice report.
 2026-11-03T02:38:15+00:00,2026-11-03T02:13Z,2,Buffalo Bills,BUF,4034953,C.J. Gardner-Johnson,S,Active,,,,"Gardner-Johnson has been reinstated after serving a one-game suspension for unsportsmanlike conduct, Katherine Fitzgerald of The Buffalo News reported Monday."
 2026-11-03T02:38:15+00:00,2026-11-03T02:15Z,33,Baltimore Ravens,BAL,3858276,Jaylinn Hawkins,S,Out,QUESTIONABLE,Knee,2026-11-05,Hawkins (knee) was estimated as a non-participant on Monday's practice reports.
+2026-11-03T13:22:55+00:00,2026-11-03T02:15Z,33,Baltimore Ravens,BAL,3858276,Jaylinn Hawkins,S,Questionable,QUESTIONABLE,Knee,2026-11-05,Hawkins (knee) was estimated as a non-participant on Monday's practice reports.
 2026-11-03T02:38:15+00:00,2026-11-03T02:20Z,1,Atlanta Falcons,ATL,4035886,Khalil Herbert,RB,Active,,,,"Herbert reverted to the Falcons' practice squad Monday, per the NFL's transaction log."
 2026-11-03T02:38:15+00:00,2026-11-03T02:21Z,1,Atlanta Falcons,ATL,5081394,James Pearce Jr.,LB,Active,,,,"The NFL reinstated Pearce on Monday after he served his eight-game suspension for violating the league's personal conduct policy, Darius Hayes of Sports Illustr"
 2026-11-03T02:53:07+00:00,2026-11-03T02:33Z,2,Buffalo Bills,BUF,4429501,Ray Davis,RB,Active,,,,Davis rushed six times for 30 yards in Sunday's 36-10 win over the Ravens.
@@ -4244,3 +4254,67 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-03T05:38:01+00:00,2026-11-03T05:19Z,26,Seattle Seahawks,SEA,4426385,Zach Charbonnet,RB,Active,,,,Charbonnet (knee) rushed six times for 23 yards and brought in three of four targets for six yards in the Seahawks' 34-17 loss to the Bears on Monday night.
 2026-11-03T05:53:03+00:00,2026-11-03T05:24Z,26,Seattle Seahawks,SEA,3912547,Sam Darnold,QB,Active,,,,Darnold completed 17 of 34 passes for 188 yards with two touchdowns and one interception while adding two rushes for 20 yards in the Seahawks' 34-17 loss to the
 2026-11-03T05:53:03+00:00,2026-11-03T05:35Z,26,Seattle Seahawks,SEA,4576297,AJ Barner,TE,Active,,,,Barner brought in two of five targets for 23 yards in the Seahawks' 34-17 loss to the Bears on Monday night.
+2026-11-03T13:22:55+00:00,2026-11-03T12:58Z,9,Green Bay Packers,GB,4360887,Donovan Jennings,G,Active,,,,
+2026-11-03T13:22:55+00:00,2026-11-03T12:58Z,9,Green Bay Packers,GB,3054212,Jonnu Smith,TE,Active,,,,
+2026-11-03T13:22:55+00:00,2026-11-03T12:58Z,9,Green Bay Packers,GB,4819231,Kaleb Johnson,RB,Active,,,,
+2026-11-03T13:22:55+00:00,2026-11-03T12:59Z,29,Carolina Panthers,CAR,4239934,AJ Dillon,RB,Active,,,,
+2026-11-03T13:22:55+00:00,2026-11-03T12:59Z,29,Carolina Panthers,CAR,4428993,Haynes King,QB,Active,,,,
+2026-11-03T13:22:55+00:00,2026-11-03T12:59Z,29,Carolina Panthers,CAR,4431588,Ja'Tavion Sanders,TE,Active,,,,
+2026-11-03T13:22:55+00:00,2026-11-03T12:59Z,3,Chicago Bears,CHI,4877376,Jayden Loving,DT,Active,,,,
+2026-11-03T13:22:55+00:00,2026-11-03T12:59Z,3,Chicago Bears,CHI,4360319,Jordan McFadden,G,Active,,,,
+2026-11-03T13:22:55+00:00,2026-11-03T12:59Z,3,Chicago Bears,CHI,4875381,Jordan van den Berg,DT,Active,,,,
+2026-11-03T13:22:55+00:00,2026-11-03T13:00Z,26,Seattle Seahawks,SEA,4592823,Beau Stephens,G,Active,,,,
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,22,Arizona Cardinals,ARI,4367199,Jon Gaines II,G,Questionable,QUESTIONABLE,Ankle,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,22,Arizona Cardinals,ARI,4685503,Walter Nolen III,DT,Questionable,QUESTIONABLE,Ankle,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,1,Atlanta Falcons,ATL,4431194,Billy Bowman Jr.,CB,Questionable,QUESTIONABLE,Hamstring,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,1,Atlanta Falcons,ATL,4241474,Brian Robinson Jr.,RB,Questionable,QUESTIONABLE,Hamstring,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,1,Atlanta Falcons,ATL,4037626,Divine Deablo,LB,Questionable,QUESTIONABLE,Forearm,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,33,Baltimore Ravens,BAL,4832793,Olaivavega Ioane,G,Questionable,QUESTIONABLE,Right Knee - MCL Sprain,2026-11-05,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,2,Buffalo Bills,BUF,4401823,Dee Alford,CB,Questionable,QUESTIONABLE,Ankle,2026-11-09,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,2,Buffalo Bills,BUF,3127294,Greg Gaines,DT,Questionable,QUESTIONABLE,Calf,2026-11-09,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,2,Buffalo Bills,BUF,4030899,Spencer Brown,OT,Questionable,QUESTIONABLE,Back,2026-11-09,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,29,Carolina Panthers,CAR,4372518,Bobby Brown III,DT,Questionable,QUESTIONABLE,Hand,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,29,Carolina Panthers,CAR,4362647,Damien Lewis,G,Questionable,QUESTIONABLE,Knee,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,29,Carolina Panthers,CAR,4696902,Torricelli Simpkins III,G,Questionable,QUESTIONABLE,Left Ankle,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,3,Chicago Bears,CHI,4608686,Kyle Monangai,RB,Questionable,QUESTIONABLE,Thumb Sprain,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,4,Cincinnati Bengals,CIN,4401811,Kyle Dugger,S,Questionable,QUESTIONABLE,Left Quadriceps,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,6,Dallas Cowboys,DAL,4428914,Dee Winters,LB,Questionable,QUESTIONABLE,Calf Strain,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,6,Dallas Cowboys,DAL,3676833,KaVontae Turpin,WR,Questionable,QUESTIONABLE,Ribs,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,6,Dallas Cowboys,DAL,4372096,Luke Schoonmaker,TE,Questionable,QUESTIONABLE,Groin,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,7,Denver Broncos,DEN,4360853,Talanoa Hufanga,S,Questionable,QUESTIONABLE,Ankle,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,9,Green Bay Packers,GB,4426411,Sean Rhyan,G,Questionable,QUESTIONABLE,Ankle Sprain,2026-11-25,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,9,Green Bay Packers,GB,4361904,Travis Glover,OT,Questionable,QUESTIONABLE,Knee,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,9,Green Bay Packers,GB,3124005,Zaire Franklin,LB,Questionable,QUESTIONABLE,Shin Fracture,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,11,Indianapolis Colts,IND,4429684,Anthony Gould,WR,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,11,Indianapolis Colts,IND,5088571,Bryce Boettcher,LB,Questionable,QUESTIONABLE,Groin,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,11,Indianapolis Colts,IND,4682909,Justin Walley,CB,Questionable,QUESTIONABLE,Knee,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,30,Jacksonville Jaguars,JAX,4429168,Antonio Johnson,S,Questionable,QUESTIONABLE,Ankle,2026-11-05,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,12,Kansas City Chiefs,KC,4880124,Mansoor Delane,CB,Questionable,QUESTIONABLE,Shoulder,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,24,Los Angeles Chargers,LAC,4690171,Deane Leonard,CB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,24,Los Angeles Chargers,LAC,3843769,Donte Jackson,CB,Questionable,QUESTIONABLE,Hamstring,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,24,Los Angeles Chargers,LAC,4040842,Kayode Awosika,G,Questionable,QUESTIONABLE,Lower Leg,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,24,Los Angeles Chargers,LAC,4838693,Rodney Shelley,CB,Questionable,QUESTIONABLE,Hamstring,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,14,Los Angeles Rams,LAR,4242557,Colby Parkinson,TE,Questionable,QUESTIONABLE,Ribs,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,14,Los Angeles Rams,LAR,2575907,Joe Cardona,LS,Questionable,QUESTIONABLE,Ankle,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,15,Miami Dolphins,MIA,4870976,Kadyn Proctor,OT,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,17,New England Patriots,NE,4432710,TreVeyon Henderson,RB,Questionable,QUESTIONABLE,Illness,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,20,New York Jets,NYJ,4685248,David Bailey,LB,Questionable,QUESTIONABLE,Groin,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,20,New York Jets,NYJ,4362094,Joseph Ossai,DE,Questionable,QUESTIONABLE,Ankle,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,20,New York Jets,NYJ,4373656,Max Mitchell,OT,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,21,Philadelphia Eagles,PHI,3926231,Britain Covey,WR,Questionable,QUESTIONABLE,Knee,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,21,Philadelphia Eagles,PHI,4241478,DeVonta Smith,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,21,Philadelphia Eagles,PHI,4428850,Dontayvion Wicks,WR,Questionable,QUESTIONABLE,Ankle,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,21,Philadelphia Eagles,PHI,4685287,Jihaad Campbell,LB,Questionable,QUESTIONABLE,Hamstring,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,21,Philadelphia Eagles,PHI,2971027,Jonathan Jones,CB,Questionable,QUESTIONABLE,Hamstring,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,26,Seattle Seahawks,SEA,4426376,Charles Cross,OT,Questionable,QUESTIONABLE,Ankle Sprain,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,26,Seattle Seahawks,SEA,4032473,Rashid Shaheed,WR,Questionable,QUESTIONABLE,Knee,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,26,Seattle Seahawks,SEA,4035693,Velus Jones Jr.,RB,Questionable,QUESTIONABLE,Hamstring,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,27,Tampa Bay Buccaneers,TB,4567750,Emeka Egbuka,WR,Questionable,QUESTIONABLE,Foot,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:03Z,28,Washington Commanders,WSH,4259491,Javon Kinlaw,DT,Questionable,QUESTIONABLE,Knee,2026-11-08,questionable
+2026-11-03T13:22:55+00:00,2026-11-03T13:04Z,10,Tennessee Titans,TEN,4871023,Carnell Tate,WR,Out,QUESTIONABLE,Shoulder,2026-11-15,out
+2026-11-03T13:22:55+00:00,2026-11-03T13:04Z,10,Tennessee Titans,TEN,4685145,Jaylon Jones,CB,Out,QUESTIONABLE,Knee,2026-11-15,out
+2026-11-03T13:22:55+00:00,2026-11-03T13:04Z,10,Tennessee Titans,TEN,4428557,Tyjae Spears,RB,Out,QUESTIONABLE,Knee,2026-11-15,out
+2026-11-03T13:22:55+00:00,2026-11-03T13:06Z,23,Pittsburgh Steelers,PIT,4567979,Brandin Echols,CB,Out,QUESTIONABLE,Hamstring,2026-11-08,out
+2026-11-03T13:22:55+00:00,2026-11-03T13:06Z,10,Tennessee Titans,TEN,3915398,Tommy Townsend,P,Out,QUESTIONABLE,Left Knee,2026-11-15,out
+2026-11-03T13:22:55+00:00,2026-11-03T13:07Z,23,Pittsburgh Steelers,PIT,4035656,Ben Skowronek,WR,Out,QUESTIONABLE,Calf,2026-11-08,out
+2026-11-03T13:22:55+00:00,2026-11-03T13:08Z,23,Pittsburgh Steelers,PIT,4692628,Doneiko Slaughter,CB,Out,QUESTIONABLE,Hamstring,2026-11-08,out
