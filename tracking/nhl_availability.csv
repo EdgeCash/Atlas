@@ -376,3 +376,9 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-04T01:22:46+00:00,2026-11-04T01:07Z,5,Detroit Red Wings,DET,2590824,John Gibson,G,Day-To-Day,Day-To-Day,Lower Body,2026-11-05,day-to-day
 2026-11-04T02:08:10+00:00,2026-11-04T01:49Z,22,Vancouver Canucks,VAN,5149180,Tom Willander,D,Out,OUT,Lower Body,2026-11-05,out
 2026-11-04T02:08:10+00:00,2026-11-04T01:52Z,9,Dallas Stars,DAL,4233536,Miro Heiskanen,D,Day-To-Day,Day-To-Day,Upper Body,2026-11-05,day-to-day
+2026-11-04T15:23:19+00:00,2026-11-04T15:21Z,10,Montreal Canadiens,MTL,4565224,Kirby Dach,C,Day-To-Day,Day-To-Day,Illness,2026-11-05,day-to-day
+2026-11-04T15:23:19+00:00,2026-11-04T15:21Z,16,Pittsburgh Penguins,PIT,3124,Evgeni Malkin,C,Day-To-Day,Day-To-Day,Lower Body,2026-11-05,day-to-day
+2026-11-04T15:23:19+00:00,2026-11-04T15:21Z,19,St. Louis Blues,STL,3069341,Colton Parayko,D,Day-To-Day,Day-To-Day,Upper Body,2026-11-05,day-to-day
+2026-11-04T15:23:19+00:00,2026-11-04T15:21Z,20,Tampa Bay Lightning,TB,2968829,Zemgus Girgensons,C,Day-To-Day,Day-To-Day,Lower Body,2026-11-05,day-to-day
+2026-11-04T15:23:19+00:00,2026-11-04T15:21Z,22,Vancouver Canucks,VAN,5149180,Tom Willander,D,Day-To-Day,Day-To-Day,Lower Body,2026-11-05,day-to-day
+2026-11-04T15:23:19+00:00,2026-11-04T15:22Z,3,Calgary Flames,CGY,4874733,Brennan Othmann,LW,Day-To-Day,Day-To-Day,Upper Body,2026-11-04,day-to-day
