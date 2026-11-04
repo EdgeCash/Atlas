@@ -4328,6 +4328,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-03T13:22:55+00:00,2026-11-03T13:06Z,10,Tennessee Titans,TEN,3915398,Tommy Townsend,P,Out,QUESTIONABLE,Left Knee,2026-11-15,out
 2026-11-03T13:22:55+00:00,2026-11-03T13:07Z,23,Pittsburgh Steelers,PIT,4035656,Ben Skowronek,WR,Out,QUESTIONABLE,Calf,2026-11-08,out
 2026-11-03T13:22:55+00:00,2026-11-03T13:08Z,23,Pittsburgh Steelers,PIT,4692628,Doneiko Slaughter,CB,Out,QUESTIONABLE,Hamstring,2026-11-08,out
+2026-11-04T04:08:05+00:00,2026-11-03T15:05Z,33,Baltimore Ravens,BAL,4428512,Kedon Slovis,QB,Active,,,,"The Ravens signed Slovis off the Packers' practice squad Tuesday, Tom Pelissero of Netflix reports."
 2026-11-03T15:38:08+00:00,2026-11-03T15:14Z,17,New England Patriots,NE,3046439,Hunter Henry,TE,Questionable,QUESTIONABLE,Foot,2026-11-08,"Patriots head coach Mike Vrabel said Monday that he had no update on Henry's (foot) status heading into Sunday's game against the Packers, Karen Guregian of Mas"
 2026-11-03T15:38:08+00:00,2026-11-03T15:18Z,26,Seattle Seahawks,SEA,4887558,Emanuel Wilson,RB,Active,,,,Wilson played just seven snaps -- all on special teams -- in Monday's 34-17 loss to the Bears.
 2026-11-03T16:38:10+00:00,2026-11-03T15:32Z,4,Cincinnati Bengals,CIN,4710752,Cashius Howell,DE,Injured Reserve,IR,Right Wrist Surgery,2026-12-06,ir
@@ -4411,3 +4412,6 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-04T03:38:14+00:00,2026-11-04T03:32Z,30,Jacksonville Jaguars,JAX,4880675,Rayuan Lane III,S,Active,,,,"Lane recorded four total tackles (one solo) and three passes defensed, including a pick-six, during Sunday's 42-7 win over the Colts."
 2026-11-04T03:53:07+00:00,2026-11-04T03:37Z,30,Jacksonville Jaguars,JAX,3050073,Foyesade Oluokun,LB,Active,,,,"Oluokun recorded nine total tackles (five solo), including 1.0 sacks, during Sunday's 42-7 win against the Colts."
 2026-11-04T03:53:07+00:00,2026-11-04T03:37Z,30,Jacksonville Jaguars,JAX,4879194,Josh Cameron,WR,Active,,,,Cameron did not catch his lone target in a 42-7 rout of the Colts on Sunday. He returned one punt for six yards and one kickoff for 18 yards.
+2026-11-04T04:08:05+00:00,2026-11-04T03:49Z,29,Carolina Panthers,CAR,4566384,Zakee Wheatley,S,Active,,,,Wheatley recorded seven total tackles (four solo) and an interception during Thursday night's 27-19 loss to the Packers.
+2026-11-04T04:08:05+00:00,2026-11-04T03:55Z,33,Baltimore Ravens,BAL,4685530,Malaki Starks,S,Active,,,,Starks finished Sunday's loss to Buffalo with 10 tackles (five solo).
+2026-11-04T04:08:05+00:00,2026-11-04T03:58Z,9,Green Bay Packers,GB,4428863,Evan Williams,S,Active,,,,Williams recorded 10 total tackles (seven solo) during Thursday night's 27-19 win over the Panthers.
