@@ -4468,5 +4468,28 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-04T20:23:02+00:00,2026-11-04T20:06Z,30,Jacksonville Jaguars,JAX,4048231,Ezra Cleveland,G,Active,,,,
 2026-11-04T20:23:02+00:00,2026-11-04T20:06Z,30,Jacksonville Jaguars,JAX,4426448,Jarrian Jones,CB,Active,,,,
 2026-11-04T20:23:02+00:00,2026-11-04T20:07Z,30,Jacksonville Jaguars,JAX,4429168,Antonio Johnson,S,Active,,,,
+2026-11-04T21:23:10+00:00,2026-11-04T20:07Z,30,Jacksonville Jaguars,JAX,4882093,Bhayshul Tuten,RB,Questionable,QUESTIONABLE,Ankle,2026-11-05,Tuten (ankle/foot) is listed questionable for Thursday's game against the Ravens.
 2026-11-04T20:23:02+00:00,2026-11-04T20:14Z,33,Baltimore Ravens,BAL,3858276,Jaylinn Hawkins,S,Out,OUT,Knee,2026-11-16,out
 2026-11-04T20:23:02+00:00,2026-11-04T20:17Z,33,Baltimore Ravens,BAL,4601278,Nate Wiggins,CB,Questionable,QUESTIONABLE,Neck,2026-11-05,questionable
+2026-11-04T21:23:10+00:00,2026-11-04T20:22Z,33,Baltimore Ravens,BAL,15846,John Jenkins,DT,Active,,,,
+2026-11-04T21:23:10+00:00,2026-11-04T20:22Z,33,Baltimore Ravens,BAL,4035479,John Simpson,G,Active,,,,
+2026-11-04T21:23:10+00:00,2026-11-04T20:22Z,33,Baltimore Ravens,BAL,4430876,Roger Rosengarten,OT,Active,,,,
+2026-11-04T21:23:10+00:00,2026-11-04T20:28Z,21,Philadelphia Eagles,PHI,3929630,Saquon Barkley,RB,Active,,,,"Barkley wasn't present for the media-access portion of Wednesday's practice, Brooks Kubena of The Athletic reports."
+2026-11-04T21:23:10+00:00,2026-11-04T20:30Z,24,Los Angeles Chargers,LAC,3123076,David Njoku,TE,Injured Reserve,IR-R,Lower Leg,2026-11-08,"Chargers head coach Jim Harbaugh said Wednesday that Njoku (fibula) has been designated for return from injured reserve, Alex Insdorf of BoltBeat.com reports."
+2026-11-04T21:23:10+00:00,2026-11-04T20:32Z,30,Jacksonville Jaguars,JAX,3916433,Jakobi Meyers,WR,Active,,,,Meyers (hamstring/ankle) does not carry an injury designation going into Thursday's game at the Ravens.
+2026-11-04T21:23:10+00:00,2026-11-04T20:33Z,30,Jacksonville Jaguars,JAX,4362619,Chris Rodriguez Jr.,RB,Active,,,,Rodriguez (hand) doesn't carry an injury designation for Thursday' night's game against the Ravens.
+2026-11-04T21:23:10+00:00,2026-11-04T20:35Z,21,Philadelphia Eagles,PHI,4241478,DeVonta Smith,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-08,"Smith (hamstring) wasn't spotted at Wednesday's practice, Brooks Kubena of The Athletic reports."
+2026-11-04T21:23:10+00:00,2026-11-04T20:38Z,24,Los Angeles Chargers,LAC,4685553,Brenen Thompson,WR,Doubtful,DOUBTFUL,Quadriceps,2026-11-08,doubtful
+2026-11-04T21:23:10+00:00,2026-11-04T20:39Z,20,New York Jets,NYJ,4685248,David Bailey,LB,Questionable,QUESTIONABLE,Groin,2026-11-08,"Bailey (groin) was a limited participant in practice Wednesday, Zack Rosenblatt of The Athletic reports."
+2026-11-04T21:23:10+00:00,2026-11-04T20:42Z,11,Indianapolis Colts,IND,3917142,Akeem Davis-Gaither,LB,Questionable,QUESTIONABLE,Knee,2026-11-08,questionable
+2026-11-04T21:23:10+00:00,2026-11-04T20:42Z,11,Indianapolis Colts,IND,4722908,Drew Ogletree,TE,Questionable,QUESTIONABLE,Knee,2026-11-08,questionable
+2026-11-04T21:23:10+00:00,2026-11-04T20:43Z,21,Philadelphia Eagles,PHI,4428850,Dontayvion Wicks,WR,Questionable,QUESTIONABLE,Ankle,2026-11-08,"Wicks (ankle) wasn't spotted at Wednesday's practice, Brooks Kubena of The Athletic reports."
+2026-11-04T21:23:10+00:00,2026-11-04T20:46Z,11,Indianapolis Colts,IND,5088571,Bryce Boettcher,LB,Active,,,,
+2026-11-04T21:23:10+00:00,2026-11-04T20:49Z,5,Cleveland Browns,CLE,3110565,Quincy Williams,LB,Questionable,QUESTIONABLE,Hamstring,2026-11-08,"Williams (hamstring) did not participate in practice Wednesday, Chris Easterling of the Akron Beacon Journal reports."
+2026-11-04T21:23:10+00:00,2026-11-04T20:51Z,25,San Francisco 49ers,SF,3117251,Christian McCaffrey,RB,Questionable,QUESTIONABLE,Left Hamstring,2026-11-08,"McCaffrey (hamstring) will not participate in Wednesday's practice, Cam Inman of Bay Area News Group reports."
+2026-11-04T21:23:10+00:00,2026-11-04T20:52Z,34,Houston Texans,HOU,4035538,David Montgomery,RB,Out,OUT,Groin,2026-11-15,"While Montgomery (groin) has made some progress, coach DeMeco Ryans noted Wednesday that the running back will remain out for Sunday's game against the Chargers"
+2026-11-04T21:23:10+00:00,2026-11-04T20:53Z,25,San Francisco 49ers,SF,16737,Mike Evans,WR,Questionable,QUESTIONABLE,Right Achilles Tendinitis,2026-11-08,"Head coach Kyle Shanahan said Evans (Achilles) won't practice Wednesday, NFL reporter Andrew Siciliano reports."
+2026-11-04T21:23:10+00:00,2026-11-04T20:59Z,9,Green Bay Packers,GB,3124005,Zaire Franklin,LB,Questionable,QUESTIONABLE,Shin Fracture,2026-11-08,"Franklin (shin) did not participate in practice Wednesday, Matt Schneidman of The Athletic reports."
+2026-11-04T21:23:10+00:00,2026-11-04T20:59Z,25,San Francisco 49ers,SF,3126486,Deebo Samuel Sr.,WR,Questionable,QUESTIONABLE,Right Hamstring,2026-11-08,"Samuel (hamstring) won't take part in practice Wednesday, Cam Inman of The San Jose Mercury News reports."
+2026-11-04T21:23:10+00:00,2026-11-04T21:02Z,8,Detroit Lions,DET,4038432,Amen Ogbongbemiga,LB,Questionable,QUESTIONABLE,Toe,2026-11-08,questionable
+2026-11-04T21:23:10+00:00,2026-11-04T21:05Z,8,Detroit Lions,DET,4374302,Amon-Ra St. Brown,WR,Questionable,QUESTIONABLE,Ribs,2026-11-08,"St. Brown was a limited participant at Wednesday's walkthrough due to a rib injury, Nolan Bianchi of The Detroit News reports."
