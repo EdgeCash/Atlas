@@ -4763,6 +4763,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-05T21:23:09+00:00,2026-11-05T21:07Z,33,Baltimore Ravens,BAL,4035671,Tyler Huntley,QB,Injured Reserve,IR,Right Toe Sprain,2027-02-15,ir
 2026-11-05T21:23:09+00:00,2026-11-05T21:07Z,20,New York Jets,NYJ,4569618,Garrett Wilson,WR,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-08,Wilson (concussion) did not practice Thursday.
 2026-11-05T21:23:09+00:00,2026-11-05T21:08Z,20,New York Jets,NYJ,4427366,Breece Hall,RB,Questionable,QUESTIONABLE,Right Quadriceps,2026-11-08,Hall (quadriceps) was a full participant in Thursday's practice.
+2026-11-05T22:52:51+00:00,2026-11-05T21:08Z,20,New York Jets,NYJ,4427366,Breece Hall,RB,Active,,,,Hall (quadriceps) was a full participant in Thursday's practice.
 2026-11-05T21:23:09+00:00,2026-11-05T21:08Z,20,New York Jets,NYJ,4808766,Mason Taylor,TE,Active,,,,Taylor (back) was a full participant in Thursday's practice.
 2026-11-05T21:23:09+00:00,2026-11-05T21:10Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-11-08,questionable
 2026-11-05T22:08:06+00:00,2026-11-05T21:11Z,33,Baltimore Ravens,BAL,4372066,Jake Moody,PK,Active,,,,The Ravens elevated Moody from the practice squad for Thursday night's game against the Jaguars.
@@ -4829,3 +4830,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-05T22:38:19+00:00,2026-11-05T22:30Z,16,Minnesota Vikings,MIN,3886598,Jauan Jennings,WR,Questionable,QUESTIONABLE,Calf,2026-11-09,questionable
 2026-11-05T22:38:19+00:00,2026-11-05T22:31Z,16,Minnesota Vikings,MIN,3133487,Andrew Van Ginkel,LB,Questionable,QUESTIONABLE,Chest,2026-11-09,questionable
 2026-11-05T22:38:19+00:00,2026-11-05T22:31Z,16,Minnesota Vikings,MIN,4044540,Isaiah Rodgers,CB,Questionable,QUESTIONABLE,Ankle,2026-11-09,questionable
+2026-11-05T22:52:51+00:00,2026-11-05T22:32Z,16,Minnesota Vikings,MIN,4568007,Jay Ward,S,Questionable,QUESTIONABLE,Knee,2026-11-09,questionable
+2026-11-05T22:52:51+00:00,2026-11-05T22:32Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-11-08,questionable
+2026-11-05T22:52:51+00:00,2026-11-05T22:33Z,5,Cleveland Browns,CLE,3110565,Quincy Williams,LB,Questionable,QUESTIONABLE,Hamstring,2026-11-08,"Williams (hamstring) was a limited participant in Thursday's practice, Zac Jackson of The Athletic reports."
+2026-11-05T22:52:51+00:00,2026-11-05T22:33Z,21,Philadelphia Eagles,PHI,3929630,Saquon Barkley,RB,Questionable,QUESTIONABLE,Hamstring,2026-11-08,Barkley (hamstring/back) practiced in a limited capacity Thursday.
