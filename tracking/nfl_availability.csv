@@ -4704,6 +4704,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-05T12:23:14+00:00,2026-11-05T12:01Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-11-08,questionable
 2026-11-05T13:23:13+00:00,2026-11-05T13:01Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-11-08,questionable
 2026-11-05T14:23:13+00:00,2026-11-05T13:54Z,24,Los Angeles Chargers,LAC,4241597,Daiyan Henley,LB,Questionable,QUESTIONABLE,Shoulder,2026-11-08,Henley (shoulder) was a limited participant in the Chargers' practice Wednesday.
+2026-11-05T23:37:51+00:00,2026-11-05T13:54Z,24,Los Angeles Chargers,LAC,4241597,Daiyan Henley,LB,Active,,,,Henley (shoulder) was a limited participant in the Chargers' practice Wednesday.
 2026-11-05T14:23:13+00:00,2026-11-05T14:01Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-11-08,questionable
 2026-11-05T15:23:19+00:00,2026-11-05T15:01Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-11-08,questionable
 2026-11-05T16:23:11+00:00,2026-11-05T15:41Z,26,Seattle Seahawks,SEA,3912547,Sam Darnold,QB,Out,OUT,Quadriceps,2026-11-15,"Darnold (quadriceps), who has been ruled out for Sunday's game against the Cardinals, is considered week-to-week, Brady Henderson of ESPN.com reports."
@@ -4848,5 +4849,13 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-05T23:08:12+00:00,2026-11-05T22:52Z,25,San Francisco 49ers,SF,16737,Mike Evans,WR,Questionable,QUESTIONABLE,Right Achilles Tendinitis,2026-11-08,"Evans (Achilles) didn't participate in Thursday's practice, Sam Warren of The Athletic reports."
 2026-11-05T23:08:12+00:00,2026-11-05T22:58Z,25,San Francisco 49ers,SF,3126486,Deebo Samuel Sr.,WR,Questionable,QUESTIONABLE,Right Hamstring,2026-11-08,"Samuel (hamstring) was a non-participant at Thursday's practice, Sam Warren of The Athletic reports."
 2026-11-05T23:08:12+00:00,2026-11-05T23:01Z,29,Carolina Panthers,CAR,3117253,Bobby Okereke,LB,Questionable,QUESTIONABLE,Foot,2026-11-08,"Okereke (foot) did not practice Thursday, Steve Reed of the Associated Press reports."
+2026-11-05T23:37:51+00:00,2026-11-05T23:01Z,7,Denver Broncos,DEN,4360853,Talanoa Hufanga,S,Questionable,QUESTIONABLE,Ankle,2026-11-08,"Hufanga (ankle) was limited in Thursday's practice, Zac Stevens of TheDNVR.com reports."
 2026-11-05T23:08:12+00:00,2026-11-05T23:02Z,25,San Francisco 49ers,SF,3895856,Christian Kirk,WR,Questionable,QUESTIONABLE,Knee,2026-11-08,"Kirk (knee) didn't practice Thursday, Sam Warren of The Athletic reports."
+2026-11-05T23:37:51+00:00,2026-11-05T23:04Z,34,Houston Texans,HOU,3121595,Braden Smith,OT,Active,,,,
+2026-11-05T23:37:51+00:00,2026-11-05T23:05Z,34,Houston Texans,HOU,4362504,Brevin Jordan,TE,Active,,,,
 2026-11-05T23:08:12+00:00,2026-11-05T23:08Z,21,Philadelphia Eagles,PHI,4685201,Tanner McKee,QB,Questionable,QUESTIONABLE,Ribs,2026-11-08,questionable
+2026-11-05T23:37:51+00:00,2026-11-05T23:10Z,24,Los Angeles Chargers,LAC,2576702,Bud Dupree,LB,Active,,,,
+2026-11-05T23:37:51+00:00,2026-11-05T23:10Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-11-08,questionable
+2026-11-05T23:37:51+00:00,2026-11-05T23:13Z,29,Carolina Panthers,CAR,5151083,Will Lee III,CB,Questionable,QUESTIONABLE,Hamstring,2026-11-08,"Lee (hamstring) did not practice Thursday, Steve Reed of the Associated Press reports."
+2026-11-05T23:37:51+00:00,2026-11-05T23:23Z,34,Houston Texans,HOU,3919117,Azeez Al-Shaair,LB,Active,,,,Al-Shaair (groin) was a full participant in Thursday's practice.
+2026-11-05T23:37:51+00:00,2026-11-05T23:25Z,30,Jacksonville Jaguars,JAX,4882093,Bhayshul Tuten,RB,Questionable,QUESTIONABLE,Ankle,2026-11-05,"Tuten (ankle) is on track to play in Thursday night's game against the Ravens, after going through a pregame workout, Ian Rapoport of NFL Network reports."
