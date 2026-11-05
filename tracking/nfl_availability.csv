@@ -4645,6 +4645,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-05T02:38:16+00:00,2026-11-05T02:13Z,16,Minnesota Vikings,MIN,4240631,DeeJay Dallas,RB,Active,,,,"Dallas was signed to the Vikings' active roster Wednesday, Craig Peters of the team's official website reports."
 2026-11-05T02:38:16+00:00,2026-11-05T02:15Z,27,Tampa Bay Buccaneers,TB,4371733,Kenny Gainwell,RB,Questionable,QUESTIONABLE,Hip,2026-11-08,Gainwell (hip) was listed as limited on Wednesday's injury report.
 2026-11-05T02:38:16+00:00,2026-11-05T02:17Z,6,Dallas Cowboys,DAL,4428914,Dee Winters,LB,Questionable,QUESTIONABLE,Calf Strain,2026-11-08,"Winters (calf) was limited in Wednesday's practice, Patrik Walker of the Cowboys' official site reports."
+2026-11-05T22:23:15+00:00,2026-11-05T02:17Z,6,Dallas Cowboys,DAL,4428914,Dee Winters,LB,Active,,,,"Winters (calf) was limited in Wednesday's practice, Patrik Walker of the Cowboys' official site reports."
 2026-11-05T02:38:16+00:00,2026-11-05T02:21Z,26,Seattle Seahawks,SEA,3924327,Drew Lock,QB,Questionable,QUESTIONABLE,Right Elbow,2026-11-08,"Lock (right elbow) was limited at Wednesday's walkthrough, John Boyle of the Seahawks' official site reports."
 2026-11-05T02:38:16+00:00,2026-11-05T02:25Z,22,Arizona Cardinals,ARI,4360761,Michael Wilson,WR,Questionable,QUESTIONABLE,Ribs Fracture,2026-11-08,"Wilson (rest/ribs) practiced in a limited capacity Wednesday, Theo Mackie of The Arizona Republic reports."
 2026-11-05T02:38:16+00:00,2026-11-05T02:27Z,3,Chicago Bears,CHI,5125873,Theo Benedet,OT,Questionable,QUESTIONABLE,Shoulder,2026-11-08,questionable
@@ -4790,7 +4791,25 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-05T22:08:06+00:00,2026-11-05T21:47Z,11,Indianapolis Colts,IND,4722908,Drew Ogletree,TE,Questionable,QUESTIONABLE,Knee,2026-11-08,Ogletree (knee) upgraded to a limited practice Thursday.
 2026-11-05T22:08:06+00:00,2026-11-05T21:47Z,17,New England Patriots,NE,4372030,Christian Barmore,DT,Active,,,,
 2026-11-05T22:08:06+00:00,2026-11-05T21:48Z,17,New England Patriots,NE,4432710,TreVeyon Henderson,RB,Questionable,QUESTIONABLE,Illness,2026-11-08,"Henderson (illness) was listed as a non-participant in Thursday's practice, ESPN's Rob Demovsky reports."
+2026-11-05T22:23:15+00:00,2026-11-05T21:50Z,18,New Orleans Saints,NO,5081999,CJ Donaldson,RB,Questionable,QUESTIONABLE,Shoulder,2026-11-08,"Donaldson (shoulder/concussion) did not practice Thursday, Katherine Terrell of ESPN.com reports."
+2026-11-05T22:23:15+00:00,2026-11-05T21:51Z,6,Dallas Cowboys,DAL,4426354,George Pickens,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-08,"Pickens (hamstring) was limited at Thursday's practice, Todd Archer of ESPN.com reports."
 2026-11-05T22:08:06+00:00,2026-11-05T21:51Z,30,Jacksonville Jaguars,JAX,4882093,Bhayshul Tuten,RB,Questionable,QUESTIONABLE,Ankle,2026-11-05,"Tuten (ankle/foot) 'should be' available for Thursday night's game against the Ravens barring any pregame setbacks, Jeremy Fowler of ESPN reports."
 2026-11-05T22:08:06+00:00,2026-11-05T21:54Z,17,New England Patriots,NE,4241720,Marcus Jones,CB,Questionable,QUESTIONABLE,Foot,2026-11-08,questionable
 2026-11-05T22:08:06+00:00,2026-11-05T21:55Z,8,Detroit Lions,DET,4038432,Amen Ogbongbemiga,LB,Active,,,,
+2026-11-05T22:23:15+00:00,2026-11-05T21:55Z,17,New England Patriots,NE,4047941,Brenden Schooler,S,Questionable,QUESTIONABLE,Hamstring,2026-11-08,questionable
 2026-11-05T22:08:06+00:00,2026-11-05T21:55Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-11-08,questionable
+2026-11-05T22:23:15+00:00,2026-11-05T21:57Z,6,Dallas Cowboys,DAL,4242355,Jake Ferguson,TE,Questionable,QUESTIONABLE,Ankle Sprain,2026-11-08,"Ferguson (ankle) did not practice Thursday, Todd Archer of ESPN.com reports."
+2026-11-05T22:23:15+00:00,2026-11-05T21:58Z,20,New York Jets,NYJ,4685248,David Bailey,LB,Active,,,,Bailey (groin) was a full participant in Thursday's practice.
+2026-11-05T22:23:15+00:00,2026-11-05T22:00Z,2,Buffalo Bills,BUF,4401823,Dee Alford,CB,Active,,,,
+2026-11-05T22:23:15+00:00,2026-11-05T22:00Z,19,New York Giants,NYG,4426542,Darius Alexander,DT,Questionable,QUESTIONABLE,Foot,2026-11-08,questionable
+2026-11-05T22:23:15+00:00,2026-11-05T22:01Z,15,Miami Dolphins,MIA,4682745,Jaylen Wright,RB,Questionable,QUESTIONABLE,Quadriceps,2026-11-08,"Wright (quadriceps) was limited in Thursday's practice, Marcel Louis-Jacques of ESPN.com reports."
+2026-11-05T22:23:15+00:00,2026-11-05T22:01Z,19,New York Giants,NYG,4725996,Abdul Carter,LB,Active,,,,
+2026-11-05T22:23:15+00:00,2026-11-05T22:01Z,19,New York Giants,NYG,4921249,Colton Hood,CB,Active,,,,
+2026-11-05T22:23:15+00:00,2026-11-05T22:01Z,19,New York Giants,NYG,4040615,Malik Harrison,LB,Active,,,,
+2026-11-05T22:23:15+00:00,2026-11-05T22:03Z,2,Buffalo Bills,BUF,4385690,Dalton Kincaid,TE,Questionable,QUESTIONABLE,Chest,2026-11-09,questionable
+2026-11-05T22:23:15+00:00,2026-11-05T22:03Z,2,Buffalo Bills,BUF,4635008,Keon Coleman,WR,Questionable,QUESTIONABLE,Shoulder,2026-11-09,questionable
+2026-11-05T22:23:15+00:00,2026-11-05T22:03Z,2,Buffalo Bills,BUF,3915411,Ty Johnson,RB,Questionable,QUESTIONABLE,Illness,2026-11-09,questionable
+2026-11-05T22:23:15+00:00,2026-11-05T22:03Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-11-08,questionable
+2026-11-05T22:23:15+00:00,2026-11-05T22:04Z,2,Buffalo Bills,BUF,3915416,DJ Moore,WR,Questionable,QUESTIONABLE,Knee,2026-11-09,Moore (knee) was a limited participant in Thursday's practice.
+2026-11-05T22:23:15+00:00,2026-11-05T22:14Z,29,Carolina Panthers,CAR,4576075,Corey Bullock,C,Active,,,,
+2026-11-05T22:23:15+00:00,2026-11-05T22:14Z,29,Carolina Panthers,CAR,4696902,Torricelli Simpkins III,G,Active,,,,
