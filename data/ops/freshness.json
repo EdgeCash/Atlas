@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-11-05T12:23:40.085968+00:00",
+      "detail": "market in 14s",
+      "mode": "ordinary",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-11-05T12:23:39.940050+00:00",
+      "detail": "65 cards, 16 NFL cards, 59 NHL cards, 127 teams, 30 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-11-05T11:24:52.051913+00:00",
       "detail": "market in 18s",
       "mode": "ordinary",
@@ -1277,24 +1290,11 @@
       "detail": "12 files",
       "name": "social",
       "ok": true
-    },
-    {
-      "at": "2026-11-03T08:54:27.052957+00:00",
-      "detail": "market in 16s",
-      "mode": "ordinary",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-11-03T08:54:26.911513+00:00",
-      "detail": "65 cards, 15 NFL cards, 50 NHL cards, 127 teams, 30 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-11-05T11:24:51.854356+00:00",
+      "at": "2026-11-05T12:23:39.940050+00:00",
       "detail": "65 cards, 16 NFL cards, 59 NHL cards, 127 teams, 30 NFL teams",
       "name": "build",
       "ok": true
@@ -1306,8 +1306,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-05T11:24:52.051913+00:00",
-      "detail": "market in 18s",
+      "at": "2026-11-05T12:23:40.085968+00:00",
+      "detail": "market in 14s",
       "mode": "ordinary",
       "name": "poll",
       "ok": true
@@ -1321,7 +1321,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-11-05T11:24:51.854356+00:00",
+      "at": "2026-11-05T12:23:39.940050+00:00",
       "detail": "65 cards, 16 NFL cards, 59 NHL cards, 127 teams, 30 NFL teams",
       "name": "build",
       "ok": true
@@ -1333,8 +1333,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-05T11:24:52.051913+00:00",
-      "detail": "market in 18s",
+      "at": "2026-11-05T12:23:40.085968+00:00",
+      "detail": "market in 14s",
       "mode": "ordinary",
       "name": "poll",
       "ok": true
