@@ -4866,6 +4866,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-05T23:37:51+00:00,2026-11-05T23:10Z,24,Los Angeles Chargers,LAC,2576702,Bud Dupree,LB,Active,,,,
 2026-11-05T23:37:51+00:00,2026-11-05T23:10Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-11-08,questionable
 2026-11-05T23:37:51+00:00,2026-11-05T23:13Z,29,Carolina Panthers,CAR,5151083,Will Lee III,CB,Questionable,QUESTIONABLE,Hamstring,2026-11-08,"Lee (hamstring) did not practice Thursday, Steve Reed of the Associated Press reports."
+2026-11-06T23:23:10+00:00,2026-11-05T23:13Z,29,Carolina Panthers,CAR,5151083,Will Lee III,CB,Out,OUT,Hamstring,2026-11-15,"Lee (hamstring) did not practice Thursday, Steve Reed of the Associated Press reports."
 2026-11-05T23:37:51+00:00,2026-11-05T23:23Z,34,Houston Texans,HOU,3919117,Azeez Al-Shaair,LB,Active,,,,Al-Shaair (groin) was a full participant in Thursday's practice.
 2026-11-05T23:52:54+00:00,2026-11-05T23:25Z,6,Dallas Cowboys,DAL,4870706,Caleb Downs,S,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-08,"Downs (concussion) was limited during Thursday's practice, Todd Archer of ESPN.com reports."
 2026-11-06T21:22:58+00:00,2026-11-05T23:25Z,6,Dallas Cowboys,DAL,4870706,Caleb Downs,S,Active,,,,"Downs (concussion) was limited during Thursday's practice, Todd Archer of ESPN.com reports."
@@ -4919,9 +4920,11 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-06T00:53:08+00:00,2026-11-06T00:38Z,22,Arizona Cardinals,ARI,4698113,Max Melton,CB,Questionable,QUESTIONABLE,Knee,2026-11-08,questionable
 2026-11-06T00:53:08+00:00,2026-11-06T00:38Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-11-08,questionable
 2026-11-06T01:08:12+00:00,2026-11-06T00:42Z,26,Seattle Seahawks,SEA,4362851,Ernest Jones IV,LB,Questionable,QUESTIONABLE,Ankle,2026-11-08,"Jones (ankle) was a limited participant at the Seahawks' practice Thursday, John Boyle of the team's official site reports."
+2026-11-06T23:23:10+00:00,2026-11-06T00:42Z,26,Seattle Seahawks,SEA,4362851,Ernest Jones IV,LB,Active,,,,"Jones (ankle) was a limited participant at the Seahawks' practice Thursday, John Boyle of the team's official site reports."
 2026-11-06T01:08:12+00:00,2026-11-06T00:43Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-11-08,questionable
 2026-11-06T01:08:12+00:00,2026-11-06T00:43Z,28,Washington Commanders,WSH,4361577,Dyami Brown,WR,Questionable,QUESTIONABLE,Calf,2026-11-08,Brown (calf) was a limited participant in Thursday's practice.
 2026-11-06T01:08:12+00:00,2026-11-06T00:46Z,26,Seattle Seahawks,SEA,2971622,Leonard Williams,DT,Questionable,QUESTIONABLE,Shoulder Stinger,2026-11-08,"Williams (shoulder) did not participate at the Seahawks' practice Thursday, John Boyle of the team's official site reports."
+2026-11-06T23:23:10+00:00,2026-11-06T00:46Z,26,Seattle Seahawks,SEA,2971622,Leonard Williams,DT,Out,OUT,Shoulder Stinger,2026-11-15,"Williams (shoulder) did not participate at the Seahawks' practice Thursday, John Boyle of the team's official site reports."
 2026-11-06T01:08:12+00:00,2026-11-06T00:58Z,27,Tampa Bay Buccaneers,TB,4240589,Tristan Wirfs,OT,Questionable,QUESTIONABLE,Toe,2026-11-08,Wirfs (toe) did not practice Thursday.
 2026-11-06T21:22:58+00:00,2026-11-06T00:58Z,27,Tampa Bay Buccaneers,TB,4240589,Tristan Wirfs,OT,Active,,,,Wirfs (toe) did not practice Thursday.
 2026-11-06T01:23:11+00:00,2026-11-06T01:01Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-11-08,questionable
@@ -5177,3 +5180,12 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-06T22:53:00+00:00,2026-11-06T22:48Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-11-08,questionable
 2026-11-06T23:08:06+00:00,2026-11-06T22:53Z,19,New York Giants,NYG,4426542,Darius Alexander,DT,Active,,,,
 2026-11-06T23:08:06+00:00,2026-11-06T22:53Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Active,,,,
+2026-11-06T23:23:10+00:00,2026-11-06T23:05Z,29,Carolina Panthers,CAR,3117253,Bobby Okereke,LB,Out,OUT,Foot,2026-11-15,out
+2026-11-06T23:23:10+00:00,2026-11-06T23:05Z,29,Carolina Panthers,CAR,4242975,Jaelan Phillips,LB,Out,OUT,Hamstring,2026-11-15,out
+2026-11-06T23:23:10+00:00,2026-11-06T23:06Z,29,Carolina Panthers,CAR,4696902,Torricelli Simpkins III,G,Questionable,QUESTIONABLE,Ankle,2026-11-08,questionable
+2026-11-06T23:23:10+00:00,2026-11-06T23:13Z,26,Seattle Seahawks,SEA,4259651,Brandon Pili,DT,Out,OUT,Back,2026-11-15,out
+2026-11-06T23:23:10+00:00,2026-11-06T23:13Z,26,Seattle Seahawks,SEA,3120358,Uchenna Nwosu,LB,Out,OUT,Ankle,2026-11-15,out
+2026-11-06T23:23:10+00:00,2026-11-06T23:14Z,26,Seattle Seahawks,SEA,4567226,Derick Hall,LB,Active,,,,
+2026-11-06T23:23:10+00:00,2026-11-06T23:18Z,16,Minnesota Vikings,MIN,4361985,Christian Darrisaw,OT,Active,,,,
+2026-11-06T23:23:10+00:00,2026-11-06T23:19Z,16,Minnesota Vikings,MIN,4044540,Isaiah Rodgers,CB,Active,,,,
+2026-11-06T23:23:10+00:00,2026-11-06T23:19Z,16,Minnesota Vikings,MIN,4877652,Jake Golday,LB,Active,,,,
