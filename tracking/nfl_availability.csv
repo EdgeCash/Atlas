@@ -4874,9 +4874,17 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-05T23:52:54+00:00,2026-11-05T23:48Z,30,Jacksonville Jaguars,JAX,4877475,Cam'Ron Silmon-Craig,S,Out,INACTIVE,Coach's Decision,,inactive
 2026-11-05T23:52:54+00:00,2026-11-05T23:48Z,30,Jacksonville Jaguars,JAX,4832922,Wesley Williams,DE,Out,INACTIVE,Coach's Decision,,inactive
 2026-11-06T00:08:08+00:00,2026-11-05T23:50Z,30,Jacksonville Jaguars,JAX,4882093,Bhayshul Tuten,RB,Active,,,,Tuten (ankle/foot) is officially listed as active for Thursday night's game against the Ravens.
+2026-11-06T00:23:08+00:00,2026-11-05T23:51Z,21,Philadelphia Eagles,PHI,4685201,Tanner McKee,QB,Questionable,QUESTIONABLE,Ribs,2026-11-08,McKee (rib) was limited in Thursday's practice.
 2026-11-06T00:08:08+00:00,2026-11-05T23:53Z,33,Baltimore Ravens,BAL,4565311,Aeneas Peebles,DT,Out,INACTIVE,Coach's Decision,2026-11-16,inactive
 2026-11-06T00:08:08+00:00,2026-11-05T23:53Z,33,Baltimore Ravens,BAL,5088338,Elijah Sarratt,WR,Out,INACTIVE,Coach's Decision,2026-11-16,inactive
 2026-11-06T00:08:08+00:00,2026-11-05T23:53Z,33,Baltimore Ravens,BAL,4685736,Emery Jones Jr.,OT,Out,INACTIVE,Coach's Decision,2026-11-16,inactive
 2026-11-06T00:08:08+00:00,2026-11-05T23:53Z,33,Baltimore Ravens,BAL,4428512,Kedon Slovis,QB,Out,INACTIVE,Coach's Decision,2026-11-16,inactive
 2026-11-06T00:08:08+00:00,2026-11-05T23:54Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-11-08,questionable
 2026-11-06T00:08:08+00:00,2026-11-05T23:56Z,30,Jacksonville Jaguars,JAX,4426349,Travon Walker,DE,Active,,,,Walker (ribs) is available for Thursday's game against Baltimore.
+2026-11-06T00:23:08+00:00,2026-11-06T00:00Z,14,Los Angeles Rams,LAR,4570037,Terrance Ferguson,TE,Injured Reserve,IR-R,Ankle Sprain,2026-11-08,"Ferguson (ankle) was a limited practice participant Thursday, Greg Beacham of the Associated Press reports."
+2026-11-06T00:23:08+00:00,2026-11-06T00:03Z,33,Baltimore Ravens,BAL,4368343,Austin Reed,QB,Active,,,,Reed is slated to serve as the Ravens' No. 2 quarterback for Thursday night's game against Jacksonville.
+2026-11-06T00:23:08+00:00,2026-11-06T00:05Z,14,Los Angeles Rams,LAR,4242557,Colby Parkinson,TE,Questionable,QUESTIONABLE,Ribs,2026-11-08,"Parkinson (ribs) remained sidelined for Thursday's practice, Greg Beacham of the Associated Press reports."
+2026-11-06T00:23:08+00:00,2026-11-06T00:05Z,14,Los Angeles Rams,LAR,4362474,Steve Avila,G,Active,,,,
+2026-11-06T00:23:08+00:00,2026-11-06T00:05Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-11-08,questionable
+2026-11-06T00:23:08+00:00,2026-11-06T00:07Z,14,Los Angeles Rams,LAR,3122132,Myles Garrett,DE,Injured Reserve,IR-R,Left Knee Surgery,2026-11-08,"Garrett (knee) remained limited in Thursday's practice, Greg Beacham of the Associated Press reports."
+2026-11-06T00:23:08+00:00,2026-11-06T00:09Z,33,Baltimore Ravens,BAL,4428512,Kedon Slovis,QB,Out,INACTIVE,Coach's Decision,2026-11-16,Slovis (coach's decision) is inactive for Thursday's game against Jacksonville but will serve as the team's emergency quarterback.
