@@ -1,27 +1,27 @@
 # Atlas Drift Monitoring
 
-*Generated 2026-11-06 04:52 UTC by `python -m atlas.live check`. Every alarm compares
+*Generated 2026-11-06 05:08 UTC by `python -m atlas.live check`. Every alarm compares
 the most recent week of the record against its own history.*
 
 ---
 
 ## Status
 
-**1 alert(s) firing.** Alarms are advisory: nothing in the monitor edits the record and
+**2 alert(s) firing.** Alarms are advisory: nothing in the monitor edits the record and
 nothing in it stops the tracker. A monitor that can silently discard data is a
 worse problem than the drift it was watching for.
 
 | Alarm | Severity | Observed | Threshold | Detail |
 |---|---|---|---|---|
-| signal volume | ok | 0.1071 | 0.5 | week 10: 124 signals against 112 the week before (+11%) |
-| silence | ok | 4.4167 | 7 | last signal 4.4 days ago (2026-11-01) |
+| signal volume | alarm | -0.9839 | 0.5 | week 11: 2 signals against 124 the week before (-98%) |
+| silence | ok | 0.0000 | 7 | last signal 0.0 days ago (2026-11-06) |
 | single book | alarm | 1.0000 | 1 | 100% of signals from book 'DraftKings' (1 distinct) |
 | single market | ok | 0.5000 | 1 | 50% of signals from market 'margin' (2 distinct) |
-| model output (margin) | ok | -2.4137 | 3 | mean Atlas number moved -2.41 points against prior weeks |
-| model output (total) | ok | -0.1315 | 3 | mean Atlas number moved -0.13 points against prior weeks |
-| disagreement shape (margin) | ok | 0.0408 | 0.01 | KS statistic 0.192, p = 0.0408 |
-| disagreement shape (total) | ok | 0.1189 | 0.01 | KS statistic 0.163, p = 0.1189 |
-| primary rate | ok | -0.1032 | 0.5 | 0.8% of signals primary against 0.9% before (-10%) |
+| model output (margin) | ok | n/a | 3 | 1 recent / 340 prior rows; too few to compare |
+| model output (total) | ok | n/a | 3 | 1 recent / 340 prior rows; too few to compare |
+| disagreement shape (margin) | ok | n/a | 0.01 | 1 recent / 340 prior rows; too few to compare |
+| disagreement shape (total) | ok | n/a | 0.01 | 1 recent / 340 prior rows; too few to compare |
+| primary rate | ok | n/a | 0.5 | 2 recent / 680 prior rows; too few to compare |
 | college state | ok | 112.0000 | 1 | 112 more team-games assimilated since Saturday noon ET |
 
 ---
@@ -62,15 +62,15 @@ newest week never finds.
 
 | Period | Scope | Rows | Matched | Mismatched | Missing | Clean | Detail |
 |---|---|---|---|---|---|---|---|
-| 2026-w06 | signals | 116 | 116 | 0 | 0 | yes | exact match |
-| 2026-w06 | grades | 116 | 116 | 0 | 0 | yes | exact match |
-| 2026-w06 | statistics | 16 | 16 | 0 | 0 | yes | recomputed from the replayed grades |
-| 2026-w09 | signals | 112 | 112 | 0 | 0 | yes | exact match |
-| 2026-w09 | grades | 112 | 112 | 0 | 0 | yes | exact match |
-| 2026-w09 | statistics | 12 | 12 | 0 | 0 | yes | recomputed from the replayed grades |
+| 2026-w05 | signals | 112 | 112 | 0 | 0 | yes | exact match |
+| 2026-w05 | grades | 112 | 112 | 0 | 0 | yes | exact match |
+| 2026-w05 | statistics | 12 | 12 | 0 | 0 | yes | recomputed from the replayed grades |
 | 2026-w10 | signals | 124 | 124 | 0 | 0 | yes | exact match |
 | 2026-w10 | grades | 14 | 14 | 0 | 0 | yes | exact match |
 | 2026-w10 | statistics | 8 | 8 | 0 | 0 | yes | recomputed from the replayed grades |
+| 2026-w11 | signals | 2 | 2 | 0 | 0 | yes | exact match |
+| 2026-w11 | grades | 0 | 0 | 0 | 0 | yes | no grades in this period |
+| 2026-w11 | statistics | 0 | 0 | 0 | 0 | yes | no graded signals in period |
 
 A **signals** mismatch means the record is not reproducible. A **grades**
 mismatch means the grading logic changed under a published number. A
