@@ -1,6 +1,6 @@
 # Atlas on Polymarket US
 
-*Rebuilt every run; this one at 2026-11-06 04:38 UTC.*
+*Rebuilt every run; this one at 2026-11-06 04:52 UTC.*
 
 Polymarket US, the CFTC-regulated exchange, is the one venue Atlas is priced
 against. It lists a moneyline, a ladder of spreads and a ladder of totals on
@@ -57,12 +57,12 @@ side at disagreements this large or larger, never below one half.
 
 | Sport | Market | Games | Atlas, median gap | Atlas, largest gap | Anchored, median gap |
 |---|---|---|---|---|---|
-| NBA | margin | 23 | 2.9 | 5.3 | 0.11 |
-| NBA | total | 9 | 4.9 | 15.2 | 0.23 |
-| NCAAF | margin | 51 | 1.8 | 13.4 | 0.00 |
-| NCAAF | total | 51 | 3.1 | 12.6 | 0.73 |
-| NFL | margin | 13 | 1.6 | 4.3 | 0.00 |
-| NFL | total | 13 | 1.9 | 7.3 | 0.30 |
+| NBA | margin | 23 | 2.9 | 7.5 | 0.11 |
+| NBA | total | 9 | 4.9 | 19.2 | 0.23 |
+| NCAAF | margin | 50 | 1.7 | 7.1 | 0.00 |
+| NCAAF | total | 50 | 2.8 | 8.8 | 0.71 |
+| NFL | margin | 13 | 1.6 | 4.2 | 0.00 |
+| NFL | total | 13 | 1.9 | 7.2 | 0.30 |
 
 In points of margin or total, per game: Atlas's own projection against
 the market's centre, and the anchored number the contracts are priced from.
@@ -88,10 +88,10 @@ error.
 
 | Phase | Threshold | Taken | Graded | Win rate | Break-even | Edge (pts) | Profit per $ |
 |---|---|---|---|---|---|---|---|
-| in play | 80% | 439 | 426 | 82.9% | 84.8% | -2.0 ± 1.8 | -2.3% |
-| in play | 85% | 463 | 450 | 86.9% | 88.7% | -1.8 ± 1.6 | -2.1% |
-| in play | 90% | 450 | 438 | 90.9% | 92.5% | -1.6 ± 1.4 | -1.8% |
-| in play | 95% | 415 | 401 | 94.8% | 96.2% | -1.4 ± 1.1 | -1.5% |
+| in play | 80% | 440 | 427 | 82.9% | 84.8% | -1.9 ± 1.8 | -2.3% |
+| in play | 85% | 464 | 451 | 86.9% | 88.7% | -1.8 ± 1.6 | -2.0% |
+| in play | 90% | 450 | 439 | 90.9% | 92.5% | -1.6 ± 1.4 | -1.8% |
+| in play | 95% | 415 | 402 | 94.8% | 96.2% | -1.4 ± 1.1 | -1.5% |
 | pregame | 80% | 310 | 171 | 87.1% | 87.5% | -0.3 ± 2.6 | -0.4% |
 | pregame | 85% | 223 | 107 | 93.5% | 91.5% | +2.0 ± 2.4 | 2.1% |
 | pregame | 90% | 164 | 71 | 97.2% | 94.5% | +2.7 ± 2.0 | 2.8% |
