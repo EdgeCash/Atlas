@@ -1,6 +1,6 @@
 # Atlas Operations Manual
 
-*Generated 2026-11-06 01:08 UTC by `python -m atlas.live check`. Atlas research is
+*Generated 2026-11-06 01:23 UTC by `python -m atlas.live check`. Atlas research is
 complete; this document is about keeping the live tracker alive and honest for
 two seasons.*
 
@@ -18,7 +18,7 @@ two seasons.*
 | Signals recorded | 680 |
 | Grades recorded | 570 |
 | Line snapshots | 11,486 |
-| Tracker runs logged | 1,274 |
+| Tracker runs logged | 1,275 |
 | Blocking data-quality exceptions | 0 |
 | Monitor alerts firing | 1 |
 | Replays clean | 9 of 9 |
@@ -100,19 +100,19 @@ trace(Store.open(), "<signal_id>")   # signal, grade, full line history, run
 
 | Table | Rows | Columns | Primary key |
 |---|---|---|---|
-| runs | 1,274 | 14 | run_id |
+| runs | 1,275 | 14 | run_id |
 | numbers | 3,004 | 8 | game_id, market, model_version, refreshed_at |
 | projections | 8,840 | 49 | sport, game_id, model_version |
 | nhl_projections | 229 | 42 | game_id, model_version |
 | calibration | 49,871 | 10 | sport, game_id, market |
 | card_grades | 424 | 17 | sport, game_id |
 | other_models | 1,118 | 9 | sport, game_id, model |
-| polymarket_quotes | 69,468 | 26 | token_id, captured_at |
-| polymarket_props | 78,906 | 29 | token_id, captured_at |
+| polymarket_quotes | 69,574 | 26 | token_id, captured_at |
+| polymarket_props | 79,850 | 29 | token_id, captured_at |
 | nba_availability | 1,018 | 13 | player_id, reported_at, status |
-| nfl_availability | 4,906 | 13 | player_id, reported_at, status |
+| nfl_availability | 4,911 | 13 | player_id, reported_at, status |
 | nhl_availability | 427 | 13 | player_id, reported_at, status |
-| favorites | 2,431 | 30 | token_id, threshold |
+| favorites | 2,440 | 30 | token_id, threshold |
 | finish | 0 | 28 | token_id |
 | metals | 127 | 28 | market_slug, side, threshold |
 | prop_record | 24,762 | 13 | token_id |
