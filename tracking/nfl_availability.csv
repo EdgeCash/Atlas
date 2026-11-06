@@ -4902,6 +4902,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-06T00:38:16+00:00,2026-11-06T00:12Z,33,Baltimore Ravens,BAL,4601278,Nate Wiggins,CB,Out,INACTIVE,Illness,2026-11-16,Wiggins (illness) is inactive for Thursday's game versus the Jaguars.
 2026-11-06T00:38:16+00:00,2026-11-06T00:13Z,26,Seattle Seahawks,SEA,3924327,Drew Lock,QB,Questionable,QUESTIONABLE,Right Elbow,2026-11-08,"Lock (right elbow) practiced in a limited capacity Thursday, John Boyle of the Seahawks' official site reports."
 2026-11-06T00:38:16+00:00,2026-11-06T00:19Z,22,Arizona Cardinals,ARI,4360761,Michael Wilson,WR,Questionable,QUESTIONABLE,Ribs Fracture,2026-11-08,"Wilson (rest/ribs) was a limited practice participant Thursday, Darren Urban of the Cardinals' official site reports."
+2026-11-06T22:23:07+00:00,2026-11-06T00:19Z,22,Arizona Cardinals,ARI,4360761,Michael Wilson,WR,Active,,,,"Wilson (rest/ribs) was a limited practice participant Thursday, Darren Urban of the Cardinals' official site reports."
 2026-11-06T00:38:16+00:00,2026-11-06T00:22Z,22,Arizona Cardinals,ARI,4427728,Bam Knight,RB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-08,"Knight (concussion) officially didn't practice Thursday, Darren Urban of the Cardinals' official site reports."
 2026-11-06T00:53:08+00:00,2026-11-06T00:22Z,21,Philadelphia Eagles,PHI,3050478,Jake Elliott,PK,Questionable,QUESTIONABLE,Ankle,2026-11-08,Elliott (ankle) was a limited participant in Thursday's practice.
 2026-11-06T00:53:08+00:00,2026-11-06T00:25Z,24,Los Angeles Chargers,LAC,3123076,David Njoku,TE,Injured Reserve,IR-R,Lower Leg,2026-11-08,Njoku (fibula) was limited in Thursday's practice.
@@ -5129,7 +5130,19 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-06T22:08:00+00:00,2026-11-06T21:55Z,2,Buffalo Bills,BUF,3915416,DJ Moore,WR,Questionable,QUESTIONABLE,Shoulder,2026-11-09,Moore (shoulder) was a limited practice participant Friday.
 2026-11-06T22:08:00+00:00,2026-11-06T21:56Z,25,San Francisco 49ers,SF,3117251,Christian McCaffrey,RB,Active,,,,
 2026-11-06T22:08:00+00:00,2026-11-06T21:59Z,2,Buffalo Bills,BUF,4385690,Dalton Kincaid,TE,Active,,,,Kincaid (chest) was a full participant in Friday's practice.
+2026-11-06T22:23:07+00:00,2026-11-06T22:00Z,25,San Francisco 49ers,SF,3126486,Deebo Samuel Sr.,WR,Out,OUT,Right Hamstring,2026-11-15,"Samuel (hamstring) has been ruled out for Sunday's game against the Raiders, Nick Wagoner of ESPN.com reports."
 2026-11-06T22:08:00+00:00,2026-11-06T22:01Z,2,Buffalo Bills,BUF,4044133,Sam Franklin Jr.,S,Questionable,QUESTIONABLE,Illness,2026-11-09,questionable
 2026-11-06T22:08:00+00:00,2026-11-06T22:01Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-11-08,questionable
+2026-11-06T22:23:07+00:00,2026-11-06T22:02Z,14,Los Angeles Rams,LAR,4570037,Terrance Ferguson,TE,Injured Reserve,IR-R,Hamstring,2026-11-15,"Ferguson (ankle) doesn't have an injury designation for Sunday's game against the Commanders, Adam Caplan of SiriusXM NFL Radio reports."
+2026-11-06T22:23:07+00:00,2026-11-06T22:02Z,25,San Francisco 49ers,SF,3895856,Christian Kirk,WR,Out,OUT,Knee - Meniscus,2026-11-15,"Kirk (knee) will miss Sunday's game against Las Vegas and may need surgery for a meniscus injury, David Lombardi of SFStandard.com reports."
 2026-11-06T22:08:00+00:00,2026-11-06T22:03Z,2,Buffalo Bills,BUF,3915411,Ty Johnson,RB,Active,,,,
+2026-11-06T22:23:07+00:00,2026-11-06T22:05Z,2,Buffalo Bills,BUF,4635008,Keon Coleman,WR,Questionable,QUESTIONABLE,Shoulder,2026-11-09,Coleman (shoulder) was a limited practice participant Friday.
+2026-11-06T22:23:07+00:00,2026-11-06T22:05Z,25,San Francisco 49ers,SF,16737,Mike Evans,WR,Out,OUT,Right Achilles Tendinitis,2026-11-15,"Evans (Achilles) has been ruled out for Sunday's game against the Raiders, Nick Wagoner of ESPN reports."
 2026-11-06T22:08:00+00:00,2026-11-06T22:06Z,34,Houston Texans,HOU,4243956,Reed Blankenship,S,Out,OUT,Concussion Concussion,2026-11-15,out
+2026-11-06T22:23:07+00:00,2026-11-06T22:12Z,24,Los Angeles Chargers,LAC,4690171,Deane Leonard,CB,Out,OUT,Concussion Concussion,2026-11-16,out
+2026-11-06T22:23:07+00:00,2026-11-06T22:12Z,24,Los Angeles Chargers,LAC,4360745,Kendall Williamson,S,Out,OUT,Calf,2026-11-16,out
+2026-11-06T22:23:07+00:00,2026-11-06T22:12Z,25,San Francisco 49ers,SF,3117251,Christian McCaffrey,RB,Active,,,,"McCaffrey (hamstring) doesn't have a designation for Sunday's game versus the Raiders, Nick Wagoner of ESPN.com reports."
+2026-11-06T22:23:07+00:00,2026-11-06T22:13Z,24,Los Angeles Chargers,LAC,4040842,Kayode Awosika,G,Doubtful,DOUBTFUL,Lower Leg,2026-11-08,doubtful
+2026-11-06T22:23:07+00:00,2026-11-06T22:15Z,24,Los Angeles Chargers,LAC,4838693,Rodney Shelley,CB,Active,,,,
+2026-11-06T22:23:07+00:00,2026-11-06T22:16Z,24,Los Angeles Chargers,LAC,3843769,Donte Jackson,CB,Active,,,,
+2026-11-06T22:23:07+00:00,2026-11-06T22:16Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-11-08,questionable
