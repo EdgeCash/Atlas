@@ -4939,10 +4939,12 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-06T21:22:58+00:00,2026-11-06T01:21Z,6,Dallas Cowboys,DAL,4568652,Tyler Smith,G,Active,,,,"Smith (ankle) was limited in Thursday's practice, Todd Archer of ESPN.com reports."
 2026-11-06T01:53:17+00:00,2026-11-06T01:25Z,9,Green Bay Packers,GB,4426411,Sean Rhyan,G,Questionable,QUESTIONABLE,Ankle Sprain,2026-11-25,Rhyan (ankle) was absent from practice Thursday.
 2026-11-06T01:53:17+00:00,2026-11-06T01:28Z,29,Carolina Panthers,CAR,4576075,Corey Bullock,C,Active,,,,"Bullock (quadriceps) was a full participant at the Panthers' practice Thursday, Steve Reed of the Associated Press reports."
+2026-11-06T23:38:15+00:00,2026-11-06T01:28Z,29,Carolina Panthers,CAR,4576075,Corey Bullock,C,Questionable,QUESTIONABLE,Quadriceps,2026-11-08,"Bullock (quadriceps) was a full participant at the Panthers' practice Thursday, Steve Reed of the Associated Press reports."
 2026-11-06T01:53:17+00:00,2026-11-06T01:29Z,9,Green Bay Packers,GB,4361904,Travis Glover,OT,Questionable,QUESTIONABLE,Knee,2026-11-08,Glover (knee) did not practice Thursday.
 2026-11-06T22:08:00+00:00,2026-11-06T01:29Z,9,Green Bay Packers,GB,4361904,Travis Glover,OT,Out,OUT,Knee,2026-11-15,Glover (knee) did not practice Thursday.
 2026-11-06T01:53:17+00:00,2026-11-06T01:34Z,29,Carolina Panthers,CAR,4696902,Torricelli Simpkins III,G,Active,,,,"Simpkins (ankle) was a full participant at the Panthers' practice Thursday, Steve Reed of the Associated Press reports."
 2026-11-06T01:53:17+00:00,2026-11-06T01:39Z,26,Seattle Seahawks,SEA,4426376,Charles Cross,OT,Questionable,QUESTIONABLE,Ankle Sprain,2026-11-08,"Cross (ankle) did not participate at the Seahawks' practice Thursday, John Boyle of the team's official site reports."
+2026-11-06T23:38:15+00:00,2026-11-06T01:39Z,26,Seattle Seahawks,SEA,4426376,Charles Cross,OT,Out,OUT,Ankle Sprain,2026-11-15,"Cross (ankle) did not participate at the Seahawks' practice Thursday, John Boyle of the team's official site reports."
 2026-11-06T02:08:16+00:00,2026-11-06T01:51Z,26,Seattle Seahawks,SEA,3129308,Quenton Nelson,G,Questionable,QUESTIONABLE,Knee,2026-11-08,"Nelson (knee) did not participate at the Seahawks' practice Thursday, John Boyle of the team's official site reports."
 2026-11-06T22:08:00+00:00,2026-11-06T01:51Z,26,Seattle Seahawks,SEA,3129308,Quenton Nelson,G,Out,OUT,Knee Surgery,2026-11-15,"Nelson (knee) did not participate at the Seahawks' practice Thursday, John Boyle of the team's official site reports."
 2026-11-06T02:23:09+00:00,2026-11-06T01:55Z,22,Arizona Cardinals,ARI,5084939,Isaiah Adams,G,Injured Reserve,IR-R,Ankle,2026-11-08,"Adams (ankle) was a limited participant at the Cardinals' practice Thursday, Darren Urban of the team's official site reports."
@@ -5189,3 +5191,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-06T23:23:10+00:00,2026-11-06T23:18Z,16,Minnesota Vikings,MIN,4361985,Christian Darrisaw,OT,Active,,,,
 2026-11-06T23:23:10+00:00,2026-11-06T23:19Z,16,Minnesota Vikings,MIN,4044540,Isaiah Rodgers,CB,Active,,,,
 2026-11-06T23:23:10+00:00,2026-11-06T23:19Z,16,Minnesota Vikings,MIN,4877652,Jake Golday,LB,Active,,,,
+2026-11-06T23:38:15+00:00,2026-11-06T23:28Z,25,San Francisco 49ers,SF,4040605,Nick Bosa,DE,Active,,,,
+2026-11-06T23:38:15+00:00,2026-11-06T23:29Z,25,San Francisco 49ers,SF,4241807,Garret Wallow,LB,Active,,,,
+2026-11-06T23:38:15+00:00,2026-11-06T23:29Z,25,San Francisco 49ers,SF,3116097,Luke Gifford,LB,Active,,,,
+2026-11-06T23:38:15+00:00,2026-11-06T23:29Z,25,San Francisco 49ers,SF,4693337,Marques Sigle,S,Active,,,,
