@@ -4927,7 +4927,9 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-06T01:23:11+00:00,2026-11-06T01:01Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-11-08,questionable
 2026-11-06T01:38:11+00:00,2026-11-06T01:09Z,18,New Orleans Saints,NO,4685260,Kelvin Banks Jr.,OT,Injured Reserve,IR-R,Ankle Surgery,2026-11-08,"Banks (ankle) remained limited in Thursday's practice, Katherine Terrell of ESPN.com reports."
 2026-11-06T01:38:11+00:00,2026-11-06T01:12Z,19,New York Giants,NYG,4259566,Andrew Thomas,OT,Questionable,QUESTIONABLE,Groin,2026-11-08,Thomas (groin) was a limited participant at the Giants' practice Thursday.
+2026-11-06T23:08:06+00:00,2026-11-06T01:12Z,19,New York Giants,NYG,4259566,Andrew Thomas,OT,Active,,,,Thomas (groin) was a limited participant at the Giants' practice Thursday.
 2026-11-06T01:38:11+00:00,2026-11-06T01:16Z,29,Carolina Panthers,CAR,4362647,Damien Lewis,G,Questionable,QUESTIONABLE,Knee,2026-11-08,"Lewis (knee) did not participate at the Panthers' practice Thursday, Steve Reed of the Associated Press reports."
+2026-11-06T23:08:06+00:00,2026-11-06T01:16Z,29,Carolina Panthers,CAR,4362647,Damien Lewis,G,Out,OUT,Knee,2026-11-15,"Lewis (knee) did not participate at the Panthers' practice Thursday, Steve Reed of the Associated Press reports."
 2026-11-06T01:38:11+00:00,2026-11-06T01:19Z,29,Carolina Panthers,CAR,4256062,Brady Christensen,G,Injured Reserve,IR-R,Hamstring,2026-11-08,"Christensen (hamstring) was a full participant at the Panthers' practice Thursday, Steve Reed of the Associated Press reports."
 2026-11-06T01:53:17+00:00,2026-11-06T01:20Z,9,Green Bay Packers,GB,4242390,Aaron Banks,G,Questionable,QUESTIONABLE,Knee,2026-11-08,Banks (knee) was limited in practice Thursday.
 2026-11-06T01:38:11+00:00,2026-11-06T01:21Z,6,Dallas Cowboys,DAL,4568652,Tyler Smith,G,Questionable,QUESTIONABLE,Ankle,2026-11-08,"Smith (ankle) was limited in Thursday's practice, Todd Archer of ESPN.com reports."
@@ -5038,6 +5040,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-06T19:23:11+00:00,2026-11-06T18:27Z,5,Cleveland Browns,CLE,3122840,Deshaun Watson,QB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-08,"Watson (concussion) is listed as questionable for Sunday's game against the Saints, but Shedeur Sanders will start even if Watson is active Kelsey Russo of the "
 2026-11-06T19:23:11+00:00,2026-11-06T18:28Z,5,Cleveland Browns,CLE,5083076,Harold Fannin Jr.,TE,Questionable,QUESTIONABLE,Groin,2026-11-08,"Fannin (groin) will play Sunday against the Saints, Daniel Oyefusi of ESPN.com reports."
 2026-11-06T20:23:05+00:00,2026-11-06T18:28Z,5,Cleveland Browns,CLE,5083076,Harold Fannin Jr.,TE,Active,,,,"Fannin (groin) will play Sunday against the Saints, Daniel Oyefusi of ESPN.com reports."
+2026-11-06T23:08:06+00:00,2026-11-06T18:30Z,17,New England Patriots,NE,4432710,TreVeyon Henderson,RB,Out,OUT,Illness,2026-11-15,"Henderson (illness) won't play Sunday against the Packers, Evan Lazar of the Patriots' official site reports."
 2026-11-06T19:23:11+00:00,2026-11-06T18:30Z,19,New York Giants,NYG,4696981,Cam Skattebo,RB,Questionable,QUESTIONABLE,Hamstring,2026-11-08,"Head coach John Harbaugh said Skattebo (hamstring) didn't practice Friday, but the Giants are ""keeping the door open"" for the running back to play Sunday at Phi"
 2026-11-06T21:22:58+00:00,2026-11-06T18:30Z,19,New York Giants,NYG,4696981,Cam Skattebo,RB,Doubtful,DOUBTFUL,Hamstring,2026-11-08,"Head coach John Harbaugh said Skattebo (hamstring) didn't practice Friday, but the Giants are ""keeping the door open"" for the running back to play Sunday at Phi"
 2026-11-06T19:23:11+00:00,2026-11-06T18:44Z,33,Baltimore Ravens,BAL,4696882,Devontez Walker,WR,Active,,,,Walker didn't garner a target in Thursday night's 33-10 loss to the Jaguars.
@@ -5094,6 +5097,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-06T21:22:58+00:00,2026-11-06T20:52Z,9,Green Bay Packers,GB,4429023,MarShawn Lloyd,RB,Questionable,QUESTIONABLE,Knee,2026-11-08,Lloyd (knee) is questionable for Sunday's game against the Patriots.
 2026-11-06T21:22:58+00:00,2026-11-06T20:52Z,20,New York Jets,NYJ,4683815,Trevin Wallace,LB,Out,OUT,Groin,2026-11-15,Jets head coach Aaron Glenn said Friday that Wallace (Groin) will not play in Sunday's matchup against the Chiefs.
 2026-11-06T21:22:58+00:00,2026-11-06T20:54Z,25,San Francisco 49ers,SF,3117251,Christian McCaffrey,RB,Questionable,QUESTIONABLE,Left Hamstring,2026-11-08,"McCaffrey (hamstring) took part in the open portion of Friday's practice, Nick Wagoner of ESPN reports."
+2026-11-06T23:08:06+00:00,2026-11-06T20:54Z,25,San Francisco 49ers,SF,3117251,Christian McCaffrey,RB,Active,,,,"McCaffrey (hamstring) took part in the open portion of Friday's practice, Nick Wagoner of ESPN reports."
 2026-11-06T21:22:58+00:00,2026-11-06T20:57Z,21,Philadelphia Eagles,PHI,3926231,Britain Covey,WR,Out,OUT,Knee,2026-11-22,out
 2026-11-06T21:22:58+00:00,2026-11-06T21:01Z,21,Philadelphia Eagles,PHI,3929630,Saquon Barkley,RB,Active,,,,Barkley (hamstring/back) doesn't have a designation for Sunday's game against the Giants.
 2026-11-06T21:22:58+00:00,2026-11-06T21:02Z,21,Philadelphia Eagles,PHI,4428850,Dontayvion Wicks,WR,Out,OUT,Ankle,2026-11-22,Wicks (ankle) is listed as out for Sunday's game against the Giants.
@@ -5164,4 +5168,12 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-06T22:53:00+00:00,2026-11-06T22:41Z,28,Washington Commanders,WSH,4048228,John Bates,TE,Active,,,,
 2026-11-06T22:53:00+00:00,2026-11-06T22:41Z,28,Washington Commanders,WSH,3886601,Shy Tuttle,DT,Active,,,,
 2026-11-06T22:53:00+00:00,2026-11-06T22:42Z,28,Washington Commanders,WSH,4262199,Sam Cosmi,G,Active,,,,
+2026-11-06T23:08:06+00:00,2026-11-06T22:46Z,24,Los Angeles Chargers,LAC,3123076,David Njoku,TE,Injured Reserve,IR-R,Lower Leg,2026-11-08,Njoku (fibula) is listed as doubtful for Sunday's game against the Texans.
+2026-11-06T23:08:06+00:00,2026-11-06T22:47Z,8,Detroit Lions,DET,4361788,Cade Mays,C,Out,OUT,Ankle Sprain,2026-11-15,out
+2026-11-06T23:08:06+00:00,2026-11-06T22:47Z,8,Detroit Lions,DET,3139387,D.J. Reed,CB,Out,OUT,Hip,2026-11-08,out
+2026-11-06T23:08:06+00:00,2026-11-06T22:47Z,8,Detroit Lions,DET,4569465,Jack Campbell,LB,Out,OUT,Neck,2026-11-15,out
+2026-11-06T23:08:06+00:00,2026-11-06T22:48Z,8,Detroit Lions,DET,4692025,Brian Branch,S,Active,,,,
+2026-11-06T23:08:06+00:00,2026-11-06T22:48Z,8,Detroit Lions,DET,4038849,DJ Wonnum,LB,Out,OUT,Concussion Concussion,2026-11-15,out
 2026-11-06T22:53:00+00:00,2026-11-06T22:48Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-11-08,questionable
+2026-11-06T23:08:06+00:00,2026-11-06T22:53Z,19,New York Giants,NYG,4426542,Darius Alexander,DT,Active,,,,
+2026-11-06T23:08:06+00:00,2026-11-06T22:53Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Active,,,,
