@@ -4899,12 +4899,14 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-06T00:23:08+00:00,2026-11-06T00:07Z,14,Los Angeles Rams,LAR,3122132,Myles Garrett,DE,Injured Reserve,IR-R,Left Knee Surgery,2026-11-08,"Garrett (knee) remained limited in Thursday's practice, Greg Beacham of the Associated Press reports."
 2026-11-06T00:23:08+00:00,2026-11-06T00:09Z,33,Baltimore Ravens,BAL,4428512,Kedon Slovis,QB,Out,INACTIVE,Coach's Decision,2026-11-16,Slovis (coach's decision) is inactive for Thursday's game against Jacksonville but will serve as the team's emergency quarterback.
 2026-11-06T00:38:16+00:00,2026-11-06T00:11Z,13,Las Vegas Raiders,LV,4432775,Dont'e Thornton Jr.,WR,Questionable,QUESTIONABLE,Back,2026-11-08,"Thornton (back) was a limited participant at the Raiders' practice Thursday, Paul Gutierrez of the team's official site reports."
+2026-11-06T22:53:00+00:00,2026-11-06T00:11Z,13,Las Vegas Raiders,LV,4432775,Dont'e Thornton Jr.,WR,Active,,,,"Thornton (back) was a limited participant at the Raiders' practice Thursday, Paul Gutierrez of the team's official site reports."
 2026-11-06T00:38:16+00:00,2026-11-06T00:12Z,33,Baltimore Ravens,BAL,4601278,Nate Wiggins,CB,Out,INACTIVE,Illness,2026-11-16,Wiggins (illness) is inactive for Thursday's game versus the Jaguars.
 2026-11-06T00:38:16+00:00,2026-11-06T00:13Z,26,Seattle Seahawks,SEA,3924327,Drew Lock,QB,Questionable,QUESTIONABLE,Right Elbow,2026-11-08,"Lock (right elbow) practiced in a limited capacity Thursday, John Boyle of the Seahawks' official site reports."
 2026-11-06T00:38:16+00:00,2026-11-06T00:19Z,22,Arizona Cardinals,ARI,4360761,Michael Wilson,WR,Questionable,QUESTIONABLE,Ribs Fracture,2026-11-08,"Wilson (rest/ribs) was a limited practice participant Thursday, Darren Urban of the Cardinals' official site reports."
 2026-11-06T22:23:07+00:00,2026-11-06T00:19Z,22,Arizona Cardinals,ARI,4360761,Michael Wilson,WR,Active,,,,"Wilson (rest/ribs) was a limited practice participant Thursday, Darren Urban of the Cardinals' official site reports."
 2026-11-06T00:38:16+00:00,2026-11-06T00:22Z,22,Arizona Cardinals,ARI,4427728,Bam Knight,RB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-08,"Knight (concussion) officially didn't practice Thursday, Darren Urban of the Cardinals' official site reports."
 2026-11-06T00:53:08+00:00,2026-11-06T00:22Z,21,Philadelphia Eagles,PHI,3050478,Jake Elliott,PK,Questionable,QUESTIONABLE,Ankle,2026-11-08,Elliott (ankle) was a limited participant in Thursday's practice.
+2026-11-06T22:53:00+00:00,2026-11-06T00:22Z,21,Philadelphia Eagles,PHI,3050478,Jake Elliott,PK,Active,,,,Elliott (ankle) was a limited participant in Thursday's practice.
 2026-11-06T00:53:08+00:00,2026-11-06T00:25Z,24,Los Angeles Chargers,LAC,3123076,David Njoku,TE,Injured Reserve,IR-R,Lower Leg,2026-11-08,Njoku (fibula) was limited in Thursday's practice.
 2026-11-06T00:38:16+00:00,2026-11-06T00:25Z,26,Seattle Seahawks,SEA,4032473,Rashid Shaheed,WR,Questionable,QUESTIONABLE,Knee,2026-11-08,"Shaheed (knee) did not participate at the Seahawks' practice Thursday, John Boyle of the team's official site reports."
 2026-11-06T00:53:08+00:00,2026-11-06T00:26Z,28,Washington Commanders,WSH,4567156,Treylon Burks,WR,Questionable,QUESTIONABLE,Foot,2026-11-08,Burks (foot) was a non-participant at Thursday's practice.
@@ -5148,6 +5150,9 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-06T22:23:07+00:00,2026-11-06T22:16Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-11-08,questionable
 2026-11-06T22:38:13+00:00,2026-11-06T22:18Z,22,Arizona Cardinals,ARI,4360761,Michael Wilson,WR,Active,,,,"Wilson (rest/ribs) doesn't have a designation for Sunday's contest in Seattle, Josh Weinfuss of ESPN.com reports."
 2026-11-06T22:38:13+00:00,2026-11-06T22:21Z,26,Seattle Seahawks,SEA,3924327,Drew Lock,QB,Active,,,,
+2026-11-06T22:53:00+00:00,2026-11-06T22:26Z,26,Seattle Seahawks,SEA,3924327,Drew Lock,QB,Active,,,,"Lock (right elbow) doesn't have a designation for Sunday's contest against the Cardinals, John Boyle of the Seahawks' official site reports."
+2026-11-06T22:53:00+00:00,2026-11-06T22:29Z,14,Los Angeles Rams,LAR,4570037,Terrance Ferguson,TE,Injured Reserve,IR-R,Hamstring,2026-11-15,"Ferguson (ankle) was expected to return for Sunday's game against Washington, but he's been ruled out after injuring his hamstring during Friday's practice, Cam"
+2026-11-06T22:53:00+00:00,2026-11-06T22:30Z,8,Detroit Lions,DET,4912274,Sione Vaki,RB,Questionable,QUESTIONABLE,Ankle,2026-11-08,questionable
 2026-11-06T22:38:13+00:00,2026-11-06T22:31Z,21,Philadelphia Eagles,PHI,4685287,Jihaad Campbell,LB,Out,OUT,Hamstring,2026-11-22,out
 2026-11-06T22:38:13+00:00,2026-11-06T22:32Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-11-08,questionable
 2026-11-06T22:38:13+00:00,2026-11-06T22:32Z,21,Philadelphia Eagles,PHI,3050478,Jake Elliott,PK,Active,,,,
@@ -5155,3 +5160,8 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-06T22:38:13+00:00,2026-11-06T22:32Z,21,Philadelphia Eagles,PHI,3916409,Jonathan Greenard,LB,Active,,,,
 2026-11-06T22:38:13+00:00,2026-11-06T22:32Z,21,Philadelphia Eagles,PHI,2971027,Jonathan Jones,CB,Out,OUT,Hamstring,2026-11-22,out
 2026-11-06T22:38:13+00:00,2026-11-06T22:32Z,21,Philadelphia Eagles,PHI,4240456,Michael Carter II,CB,Out,OUT,Abdomen,2026-11-22,out
+2026-11-06T22:53:00+00:00,2026-11-06T22:41Z,13,Las Vegas Raiders,LV,4360749,Thomas Booker IV,DT,Out,OUT,Ankle,2026-11-15,out
+2026-11-06T22:53:00+00:00,2026-11-06T22:41Z,28,Washington Commanders,WSH,4048228,John Bates,TE,Active,,,,
+2026-11-06T22:53:00+00:00,2026-11-06T22:41Z,28,Washington Commanders,WSH,3886601,Shy Tuttle,DT,Active,,,,
+2026-11-06T22:53:00+00:00,2026-11-06T22:42Z,28,Washington Commanders,WSH,4262199,Sam Cosmi,G,Active,,,,
+2026-11-06T22:53:00+00:00,2026-11-06T22:48Z,19,New York Giants,NYG,3115303,Jermaine Eluemunor,OT,Questionable,QUESTIONABLE,Calf,2026-11-08,questionable
