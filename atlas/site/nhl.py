@@ -394,10 +394,14 @@ def _numbers_panel(card: NhlCard) -> str:
 
 
 def _goalies_panel(card: NhlCard) -> str:
+    from atlas.site.render import player_name
+
     rows = []
     for side, key in ((card.away, "away_goalies"), (card.home, "home_goalies")):
         for g in json.loads(card.projection.get(key) or "[]")[:3]:
-            rows.append([esc(side.short), esc(g.get("name") or f"#{g['id']}"), pct(g.get("p"), 0),
+            # A goalie's name is a name, not vocabulary (render.player_name): a quarterback called Lock
+            # failed the launch audit on every poll on 7 November 2026.
+            rows.append([esc(side.short), player_name(g.get("name") or f"#{g['id']}"), pct(g.get("p"), 0),
                          f"{g.get('gsax', 0.0):+.2f}"])
     if not rows:
         return ""
@@ -444,13 +448,13 @@ def _i(v) -> str | None:
 
 
 def card_page(card: NhlCard, *, bands: dict | None = None, overall_band=None, freshness: dict | None = None) -> str:
-    from atlas.site.render import NEW_HERE, _logo, freshness_badge, layout, social_tags
+    from atlas.site.render import NEW_HERE, _logo, freshness_badge, layout, player_name, social_tags
 
     bits = [esc(day_and_clock(card.kickoff))]
     if card.tv:
         bits.append(esc(card.tv))
     if card.venue:
-        bits.append(esc(card.venue + (f", {card.city}" if card.city else "")))
+        bits.append(player_name(card.venue) + (f", {esc(card.city)}" if card.city else ""))
     hero = f"""<section class="hero card">
   <div class="hero-teams">
     <div class="hero-team left">{_logo(card.away)}<div class="hero-names"><div class="hero-name">{esc(card.away.short)}</div>

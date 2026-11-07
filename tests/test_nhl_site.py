@@ -110,13 +110,18 @@ def test_the_cards_are_graded_in_points_of_win_probability_and_pass_the_audit(tm
     assert np.isclose(card.market_home, market) and np.isclose(card.disagreement, 100 * (0.55 - market))
     assert card.grade is not None and "points of win probability" in " ".join(card.grade.lesson)
     assert card.week == 1
+    # A goalie's or a venue's name is a name, not vocabulary: a quarterback called Lock failed the launch
+    # audit on every poll on 7 November 2026, and a goalie or an arena could do the same.
+    card.projection["home_goalies"] = json.dumps([{"id": 1, "name": "Drew Lock", "p": 0.9, "gsax": 0.1}])
+    card.venue, card.city = "Kelly/Shorts Arena", "Mount Pleasant"
     out = tmp_path / "site"
     (out / "assets").mkdir(parents=True)
     paths = nhl_site.write(out, cards, bands=_bands(), overall_band=grading.overall(_bands()),
                            freshness={"projection": "Oct 1, 4:00 AM ET", "market": "Oct 1, 12:00 PM ET"})
     assert paths == ["nhl.html", card.path]
     page = (out / card.path).read_text()
-    assert "not a recommendation" in page and "Flyers −1.5" in page and "Home One" in page
+    assert "not a recommendation" in page and "Flyers −1.5" in page
+    assert '<span class="pn">Drew Lock</span>' in page and '<span class="pn">Kelly/Shorts Arena</span>, Mount Pleasant' in page
     assert "second night of a back-to-back" in page
     sys.path.insert(0, str(ROOT / "scripts"))
     import audit_site
