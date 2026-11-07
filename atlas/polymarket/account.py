@@ -71,9 +71,20 @@ class Signer:
 
     @classmethod
     def from_env(cls) -> Signer | None:
+        """The signer from the environment; None when the key is not set, and None when it is not usable:
+        a secret that is not a base64 Ed25519 key (most often a character that is not ASCII pasted into
+        the repository secret, which failed every scheduled run's owner page from 31 October 2026) is
+        reported once, its value never, and the venue is not called this run."""
         if not configured():
             return None
-        return cls(os.environ[KEY_ID].strip(), os.environ[SECRET_KEY].strip())
+        secret = os.environ[SECRET_KEY].strip()
+        try:
+            return cls(os.environ[KEY_ID].strip(), secret)
+        except Exception as error:  # noqa: BLE001 - the type only; never the value
+            why = "carries a character that is not ASCII" if not secret.isascii() \
+                else f"is not a base64 Ed25519 key ({type(error).__name__})"
+            LOG.error("venue: %s %s; the venue is not called this run. Re-enter the secret.", SECRET_KEY, why)
+            return None
 
     def public_key(self) -> bytes:
         from cryptography.hazmat.primitives import serialization

@@ -80,6 +80,24 @@ def test_the_key_comes_from_the_environment_and_without_it_nothing_is_signed(mon
     assert account.configured() and account.Signer.from_env().key_id == "key-1"
 
 
+def test_a_secret_that_is_not_a_key_is_reported_without_its_value_and_nothing_is_signed(monkeypatch):
+    """The repository secret carried a character that is not ASCII (pasted in), and the Ed25519 decode's
+    ValueError failed every scheduled run's owner page from 31 October 2026. Such a key is reported and
+    treated as unset: the venue is not called, and the rest of the run stands."""
+    said = []
+    monkeypatch.setattr(account.LOG, "error", lambda msg, *a: said.append(msg % a))
+    monkeypatch.setenv(account.KEY_ID, "key-1")
+    monkeypatch.setenv(account.SECRET_KEY, SECRET[:10] + "\u200b" + SECRET[10:])      # a zero-width space
+    assert account.configured() and account.Signer.from_env() is None
+    assert len(said) == 1 and "not ASCII" in said[0] and SECRET[:10] not in said[0]
+    monkeypatch.setenv(account.SECRET_KEY, "not a key")
+    assert account.Signer.from_env() is None and "not a base64" in said[1]
+    # The record is previewed as without a key: unchanged, and no request is made.
+    out = account.preview(pd.DataFrame({"position_id": ["p"], "ask": [0.5], "stake": [0.01], "long": [True],
+                                        "market_slug": ["m"]}), ["p"], datetime(2026, 10, 24, tzinfo=UTC))
+    assert out["previewed_at"].isna().all()
+
+
 def test_the_order_is_a_limit_at_the_ask_on_the_long_side_immediate_or_cancel():
     long_ = _record([{"position_id": "p1", "market_slug": "nfl-kc-buf-ml", "long": True, "ask": 0.42}]).iloc[0]
     short = _record([{"position_id": "p2", "market_slug": "nfl-kc-buf-ml", "long": False, "ask": 0.42}]).iloc[0]
