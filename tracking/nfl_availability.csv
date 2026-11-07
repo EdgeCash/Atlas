@@ -5207,6 +5207,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-07T00:38:02+00:00,2026-11-07T00:19Z,6,Dallas Cowboys,DAL,3676833,KaVontae Turpin,WR,Out,OUT,Ribs,2026-11-15,"Turpin (ribs) has been ruled out ahead of Sunday's game against the Colts, Tommy Yarrish of the Cowboys' official site reports."
 2026-11-07T00:38:02+00:00,2026-11-07T00:22Z,27,Tampa Bay Buccaneers,TB,4428522,Tykee Smith,S,Active,,,,Smith (ankle) does not carry an official injury designation ahead of Sunday's game against the Bears.
 2026-11-07T00:38:02+00:00,2026-11-07T00:24Z,6,Dallas Cowboys,DAL,4710067,Malachi Lawrence,LB,Out,OUT,Ankle,2026-11-08,"Lawrence (ankle) has been ruled out ahead of Sunday's game against the Colts, Tommy Yarrish of the Cowboys' official site reports."
+2026-11-07T20:08:09+00:00,2026-11-07T00:24Z,6,Dallas Cowboys,DAL,4710067,Malachi Lawrence,LB,Injured Reserve,IR,Ankle,2026-12-07,"Lawrence (ankle) has been ruled out ahead of Sunday's game against the Colts, Tommy Yarrish of the Cowboys' official site reports."
 2026-11-07T00:38:02+00:00,2026-11-07T00:27Z,18,New Orleans Saints,NO,3931399,Justin Reid,S,Active,,,,
 2026-11-07T00:38:02+00:00,2026-11-07T00:29Z,11,Indianapolis Colts,IND,4722908,Drew Ogletree,TE,Active,,,,Ogletree (knee) does not carry an official injury designation ahead of Sunday's game versus the Cowboys.
 2026-11-07T00:38:02+00:00,2026-11-07T00:29Z,21,Philadelphia Eagles,PHI,4360238,Dameon Pierce,RB,Questionable,QUESTIONABLE,Undisclosed,2026-11-15,questionable
@@ -5319,5 +5320,8 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-07T19:42:29+00:00,2026-11-07T19:17Z,2,Buffalo Bills,BUF,3915416,DJ Moore,WR,Active,,,,Moore (shoulder) doesn't have a designation for Monday's contest at Minnesota.
 2026-11-07T19:42:29+00:00,2026-11-07T19:24Z,16,Minnesota Vikings,MIN,3917315,Kyler Murray,QB,Out,OUT,Hamstring Strain,2026-11-15,Head coach Kevin O'Connell said Saturday that Murray (hamstring) has been ruled out for Monday's game versus the Bills.
 2026-11-07T19:42:29+00:00,2026-11-07T19:30Z,2,Buffalo Bills,BUF,4635008,Keon Coleman,WR,Active,,,,Coleman (shoulder) doesn't have a designation for Monday's contest in Minnesota.
+2026-11-07T20:08:09+00:00,2026-11-07T19:34Z,16,Minnesota Vikings,MIN,3886598,Jauan Jennings,WR,Out,OUT,Calf,2026-11-15,Jennings (calf) has been ruled out for Monday's contest versus the Bills.
 2026-11-07T19:42:29+00:00,2026-11-07T19:39Z,2,Buffalo Bills,BUF,4044133,Sam Franklin Jr.,S,Active,,,,
 2026-11-07T19:42:29+00:00,2026-11-07T19:39Z,2,Buffalo Bills,BUF,4030899,Spencer Brown,OT,Active,,,,
+2026-11-07T20:08:09+00:00,2026-11-07T19:46Z,6,Dallas Cowboys,DAL,4427816,Marist Liufau,LB,Questionable,QUESTIONABLE,Left Forearm Fracture,2026-11-08,questionable
+2026-11-07T20:08:09+00:00,2026-11-07T19:58Z,16,Minnesota Vikings,MIN,3133487,Andrew Van Ginkel,LB,Active,,,,
