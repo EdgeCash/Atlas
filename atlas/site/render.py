@@ -2108,25 +2108,27 @@ def nfl_team_page(team, *, cards: list[Card], pool: dict, results: list | None =
     who = possessive(team.short)
 
     def rating(label: str, value: float | None, note: str) -> str:
+        """``note`` is HTML: escaped by the caller, with a name in it marked by player_name so the launch
+        audit reads it as a name (a quarterback called Lock failed every poll on 7 November 2026)."""
         return f"""<div class="stat"><div class="stat-label">{esc(label)}</div>
   <div class="stat-value">{signed(value)}</div>
-  <div class="stat-note">{esc(note)}</div></div>"""
+  <div class="stat-note">{note}</div></div>"""
 
     if qb and qb_pts is not None:
-        offense_note = f"team {signed(view.get('off'))} · {qb} {signed(qb_pts)}"
+        offense_note = f"team {esc(signed(view.get('off')))} · {player_name(qb)} {esc(signed(qb_pts))}"
         qb_line = (f"<b>Expected starter: {player_name(qb)}.</b> {signed(qb_pts)} of that offense is his (± {num(qb_sd)}), "
                    "and it travels with him: the model rates the quarterback and the team separately and adds "
                    "them for the game. He is the depth chart's first quarterback unless the injury report lists "
                    "him out.")
     elif qb:
-        offense_note = "points scored above average"
+        offense_note = esc("points scored above average")
         qb_line = (f"<b>Expected starter: {player_name(qb)}.</b> The model has not rated him yet; until he plays, the "
                    "offense carries a new quarterback's prior.")
     else:
-        offense_note = "points scored above average"
+        offense_note = esc("points scored above average")
         qb_line = "No expected starter is listed yet."
     sd_def = view.get("sd_def")
-    defense_note = (f"± {num(sd_def)} · " if sd_def is not None else "") + "points held below average"
+    defense_note = esc((f"± {num(sd_def)} · " if sd_def is not None else "") + "points held below average")
 
     def stat(metric: str, label: str, note: str, fmt) -> str:
         value = team.metrics.get(metric)
@@ -2190,7 +2192,7 @@ def nfl_team_page(team, *, cards: list[Card], pool: dict, results: list | None =
     <div class="grid-3">
       {rating("Offense", offense, offense_note)}
       {rating("Defense", defense, defense_note)}
-      {rating("Net", net, "offense plus defense")}
+      {rating("Net", net, esc("offense plus defense"))}
     </div>
     <p class="note card-pad qb-line">{qb_line}</p>
   </div>
