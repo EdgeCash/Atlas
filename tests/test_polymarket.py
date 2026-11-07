@@ -519,6 +519,47 @@ def test_refresh_offline_keeps_the_record_and_seals_the_page_when_the_key_is_set
     assert sealed.load(tmp_path / "positions", KEY) == []
 
 
+def test_a_ledger_sealed_under_another_key_leaves_the_rest_of_the_owner_page_standing(tmp_path, monkeypatch):
+    """The worker seals the live ledger and the audit trail under its own copy of the owner key. When that
+    copy and the repository secret differ, the scheduled run's owner page lost every section from 31 October
+    2026 (`Unreadable` out of the ledger's loader). Now the ledger section says so and the rest stands, and
+    the run rewrites neither record."""
+    from atlas.live.store import Store
+    from atlas.owner import page as owner_page
+    from atlas.polymarket import __main__ as cli
+    from atlas.polymarket import audit, orders
+
+    monkeypatch.setenv("ATLAS_OFFLINE", "1")
+    monkeypatch.setenv("ATLAS_TRACKING_DIR", str(tmp_path / "tracking"))
+    monkeypatch.setenv("ATLAS_DATA_DIR", str(tmp_path / "data"))
+    monkeypatch.delenv("ATLAS_COUNTER_URL", raising=False)
+    monkeypatch.setattr("atlas.research.dataset.load_research_frame", lambda: pd.DataFrame(
+        {"game_id": [401], "actual_margin": [3.0], "actual_total": [41.0]}))
+    store = Store.open(tmp_path / "tracking")
+    store.write("games", _games())
+    store.write("projections", _projections())
+    store.write("calibration", _calibration())
+    store.write("polymarket_quotes", source.quotes([_event()], NFL, NOW).assign(game_id="401"))
+    where = tmp_path / "page.enc.json"
+    monkeypatch.setattr(owner_page, "page_path", lambda: where)
+    monkeypatch.setattr(report, "path", lambda: tmp_path / "polymarket_model.md")
+    monkeypatch.setattr(positions, "path", lambda: tmp_path / "positions")
+    monkeypatch.setattr(orders, "path", lambda: tmp_path / "live")
+    monkeypatch.setattr(audit, "path", lambda: tmp_path / "audit")
+    ledger = sealed.seal([{"position_id": "p1", "placed_at": "2026-10-24T14:00:00Z", "rule": "favorites"}],
+                         "the worker's key", tmp_path / "live" / "2026-43.enc.json")
+    before = ledger.read_text()
+    monkeypatch.setenv(crypto.SECRET, KEY)
+    secs = cli.refresh(now=NOW, store=store)
+    assert [s["tab"] for s in secs] == ["Polymarket", "Polymarket", "Props", "Poly Snipe", "Finish line", "Metals 15m", "Live"]
+    live = secs[-1]
+    assert live["notes"][0].startswith("The live ledger or the audit trail could not be opened") \
+        and "InvalidTag" in live["notes"][0] and live["tables"] == []
+    assert ledger.read_text() == before and not (tmp_path / "audit").exists()     # neither record rewritten
+    data = json.loads(crypto.decrypt(owner_page.read(where)["box"], KEY))
+    assert [s["title"] for s in data["sections"]][:2] == ["Positions for Sat Oct 24 (0)", "Polymarket US board"]
+
+
 def test_default_shapes_price_a_football_line_when_the_fitted_ones_are_missing():
     shape = probability.default_shape("nfl", "margin")
     assert pricing.line_prob(shape, -3.0, "moneyline", "away", 0.0) > 0.5

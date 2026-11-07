@@ -19,7 +19,7 @@ import pandas as pd
 
 from atlas.live import probability
 from atlas.live.store import Store
-from atlas.owner import crypto
+from atlas.owner import crypto, sealed
 from atlas.polymarket import (
     audit,
     favorites,
@@ -104,15 +104,29 @@ def refresh(*, now: datetime | None = None, heavy: bool = False, store: Store | 
             research = _research()
             finals = paper.results(research, store.read("games"))
             chosen, graded = positions.run(priced, finals, record, passphrase, now)
-            ledger = orders.grade(orders.load(passphrase), passphrase, now) if orders.mode() != "off" else orders.load(passphrase)
-            # The audit trail against the venue's account activity, once a day (the worker's too, whichever
-            # comes first); the latest result goes on the owner page.
-            if orders.mode() != "off":
-                reconcile.daily(passphrase, now)
-            checked = reconcile.latest(audit.load(passphrase))
+            try:
+                ledger = orders.grade(orders.load(passphrase), passphrase, now) if orders.mode() != "off" \
+                    else orders.load(passphrase)
+                # The audit trail against the venue's account activity, once a day (the worker's too, whichever
+                # comes first); the latest result goes on the owner page.
+                if orders.mode() != "off":
+                    reconcile.daily(passphrase, now)
+                checked, unopened = reconcile.latest(audit.load(passphrase)), None
+            except sealed.Unreadable as error:
+                # The worker sealed the ledger or the trail under another key than this run's. The rest of the
+                # page stands, the ledger section says so, and nothing here rewrites either record.
+                LOG.error("polymarket: the live ledger or the audit trail does not open with this run's %s (%s): "
+                          "the worker's key and the repository secret differ", crypto.SECRET, error)
+                ledger, checked = pd.DataFrame(columns=orders.COLUMNS), None
+                unopened = (f"The live ledger or the audit trail could not be opened with this run's owner key "
+                            f"({error}): the worker's key and the repository secret differ. Until they are the "
+                            "same, the ledger shown here is empty and this run rewrites neither record.")
+            live = orders.section(ledger, now, checked)
+            if unopened:
+                live["notes"].insert(0, unopened)
             sections = [*page.sections(priced, chosen, graded, now), *prop_sections, fav_section,
                         finish.section(store.read(finish.TABLE), now), metals.section(store.read(metals.TABLE), now),
-                        orders.section(ledger, now, checked)]
+                        live]
         else:
             reason = "The owner key is not configured."
     except Exception as error:  # noqa: BLE001 - the type and the place only: a message could quote a price
