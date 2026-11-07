@@ -115,8 +115,10 @@ def refresh(*, now: datetime | None = None, heavy: bool = False, store: Store | 
                         orders.section(ledger, now, checked)]
         else:
             reason = "The owner key is not configured."
-    except Exception as error:  # noqa: BLE001 - the type only: a message could quote a price
-        LOG.error("polymarket not refreshed: %s", type(error).__name__)
+    except Exception as error:  # noqa: BLE001 - the type and the place only: a message could quote a price
+        from atlas.util import where
+
+        LOG.error("polymarket not refreshed: %s at %s", type(error).__name__, where(error))
         reason = f"This run could not price Polymarket ({type(error).__name__})."
         sections = []
     owner_page.refresh(now=now, heavy=heavy, polymarket=sections, reason=reason)
