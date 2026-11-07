@@ -647,7 +647,7 @@ def test_an_nfl_team_page_shows_the_rating_the_quarterback_and_the_record():
                                 freshness={"projection": "x", "market": "y"})
     text = _visible_text(page)
     # The offense is the forecast's: the team's own plus its expected starter's.
-    assert "+7.6" in page and "team +3.2 · J.Allen +4.4" in page and "+8.7" in page
+    assert "+7.6" in page and 'team +3.2 · <span class="pn">J.Allen</span> +4.4' in page and "+8.7" in page
     assert "1st of 2 with a card this week" in text and "buffalo&#x27;s margin" in text
     assert possessive("Bills") == "Bills'" and possessive("Buffalo") == "Buffalo's"
     assert page.count("<tr>") >= 3 and "Closer" in page and "Atlas missed the final margin by 3.8" in page
@@ -810,6 +810,24 @@ def test_a_game_says_it_has_started_once_it_kicks_off():
     # Every row and tile, and the featured tile, which the filters leave alone.
     assert board.count('class="started-chip"') == board.count('data-game="900"') + 1
     assert "lock" not in chip.search(page).group(0).lower()
+
+
+def test_a_quarterbacks_name_in_the_offense_note_is_not_vocabulary(tmp_path):
+    """Drew Lock was Seattle's expected starter on 7 November 2026 and the team page's offense note
+    ("team +1.1 · D.Lock −0.5") failed the launch audit on every poll for ten hours: the note went
+    through esc(), not player_name. Run the real audit over the page."""
+    from scripts.audit_site import audit
+
+    card = _nfl_team_card()
+    card.projection.home.update({"qb": "D.Lock", "qb_pts": -0.5})
+    page = render.nfl_team_page(card.home, cards=[card], pool=_POOL, results=[])
+    assert '<span class="pn">D.Lock</span> −0.5' in page and "Expected starter" in page
+    (tmp_path / "nfl" / "team").mkdir(parents=True)
+    (tmp_path / "nfl" / "team" / "seattle-seahawks.html").write_text(page)
+    blocking, _ = audit(tmp_path)
+    assert blocking["forbidden vocabulary"] == []
+    # The other notes are still escaped text.
+    assert "points held below average" in page and "offense plus defense" in page
 
 
 def test_a_stadium_name_is_not_vocabulary(tmp_path):
