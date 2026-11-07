@@ -5335,4 +5335,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-07T21:23:00+00:00,2026-11-07T21:05Z,9,Green Bay Packers,GB,4429466,Drake Dabney,TE,Active,,,,The Packers elevated Dabney from the practice squad to the active roster Saturday.
 2026-11-07T21:23:00+00:00,2026-11-07T21:06Z,1,Atlanta Falcons,ATL,4241474,Brian Robinson Jr.,RB,Injured Reserve,IR,Hamstring,2026-12-13,ir
 2026-11-07T21:23:00+00:00,2026-11-07T21:09Z,18,New Orleans Saints,NO,4880281,Jordyn Tyson,WR,Questionable,QUESTIONABLE,Right Hamstring Strain,2026-11-08,"Tyson (hamstring) was activated from injured reserve Saturday, but he remains questionable for Sunday's game against the Browns."
+2026-11-07T21:37:58+00:00,2026-11-07T21:13Z,1,Atlanta Falcons,ATL,4241474,Brian Robinson Jr.,RB,Injured Reserve,IR,Hamstring,2026-12-13,"Robinson (hamstring) was placed on injured reserve Saturday, Marc Raimondi of ESPN.com reports."
 2026-11-07T21:23:00+00:00,2026-11-07T21:19Z,17,New England Patriots,NE,2991662,Mack Hollins,WR,Questionable,QUESTIONABLE,Calf,2026-11-08,questionable
+2026-11-07T21:37:58+00:00,2026-11-07T21:23Z,17,New England Patriots,NE,2991662,Mack Hollins,WR,Questionable,QUESTIONABLE,Calf,2026-11-08,"The Patriots activated Hollins (calf) from injured reserve Saturday, but he remains questionable for Sunday's game against the Packers."
+2026-11-07T21:37:58+00:00,2026-11-07T21:28Z,7,Denver Broncos,DEN,4600981,Pat Bryant,WR,Questionable,QUESTIONABLE,Right Ankle Sprain,2026-11-08,questionable
