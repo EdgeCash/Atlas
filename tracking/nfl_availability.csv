@@ -5621,6 +5621,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-08T20:23:07+00:00,2026-11-08T19:24Z,17,New England Patriots,NE,4368113,Charles Woods,CB,Out,INACTIVE,Hamstring,2026-11-08,Woods (hamstring) is listed as questionable ahead of Sunday's game against the Packers.
 2026-11-08T19:37:55+00:00,2026-11-08T19:25Z,6,Dallas Cowboys,DAL,4429676,Tyler Goodson,RB,Questionable,QUESTIONABLE,Knee,2026-11-08,questionable
 2026-11-08T19:52:54+00:00,2026-11-08T19:28Z,6,Dallas Cowboys,DAL,4429676,Tyler Goodson,RB,Questionable,QUESTIONABLE,Knee,2026-11-08,"Goodson (knee) is questionable to return to Sunday's game against the Colts, Tommy Yarrish of the Cowboys' official site reports."
+2026-11-08T20:53:11+00:00,2026-11-08T19:28Z,6,Dallas Cowboys,DAL,4429676,Tyler Goodson,RB,Active,,,,"Goodson (knee) is questionable to return to Sunday's game against the Colts, Tommy Yarrish of the Cowboys' official site reports."
 2026-11-08T19:52:54+00:00,2026-11-08T19:30Z,1,Atlanta Falcons,ATL,4430807,Bijan Robinson,RB,Active,,,,Robinson carried the ball 19 times for 100 yards and a touchdown and caught six of seven targets for 47 yards in Sunday's 34-17 loss to the Bengals.
 2026-11-08T19:52:54+00:00,2026-11-08T19:35Z,1,Atlanta Falcons,ATL,4426502,Drake London,WR,Active,,,,London caught all five of his targets for 68 yards in Sunday's 34-17 loss to the Bengals.
 2026-11-08T19:52:54+00:00,2026-11-08T19:37Z,34,Houston Texans,HOU,3121595,Braden Smith,OT,Out,INACTIVE,Coach's Decision,,inactive
@@ -5703,6 +5704,15 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-08T20:37:55+00:00,2026-11-08T20:19Z,17,New England Patriots,NE,4431465,Behren Morton,QB,Out,INACTIVE,Coach's Decision,2026-11-15,Morton (coach's decision) is inactive but will serve as the Patriots' emergency third quarterback against the Packers on Sunday.
 2026-11-08T20:37:55+00:00,2026-11-08T20:21Z,21,Philadelphia Eagles,PHI,3917657,Zack Baun,LB,Questionable,QUESTIONABLE,Back,2026-11-08,Baun (back) is questionable to return to Sunday's contest against the Giants.
 2026-11-08T20:37:55+00:00,2026-11-08T20:23Z,13,Las Vegas Raiders,LV,5150247,Malik Benson,WR,Out,INACTIVE,Coach's Decision,2026-11-15,Benson (coach's decision) is a healthy scratch for Sunday's battle against San Francisco.
+2026-11-08T20:53:11+00:00,2026-11-08T20:25Z,22,Arizona Cardinals,ARI,4698113,Max Melton,CB,Active,,,,Melton (knee) is active for Sunday's game against the Seahawks.
 2026-11-08T20:37:55+00:00,2026-11-08T20:26Z,6,Dallas Cowboys,DAL,4428914,Dee Winters,LB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-08,questionable
+2026-11-08T20:53:11+00:00,2026-11-08T20:26Z,13,Las Vegas Raiders,LV,4430330,Darien Porter,CB,Active,,,,Porter (groin) is active for Sunday's Week 9 battle against the 49ers.
 2026-11-08T20:37:55+00:00,2026-11-08T20:28Z,19,New York Giants,NYG,4433970,J.J. McCarthy,QB,Active,,,,
+2026-11-08T20:53:11+00:00,2026-11-08T20:30Z,19,New York Giants,NYG,4433970,J.J. McCarthy,QB,Active,,,,"McCarthy (hip) returned to Sunday's contest at Philadelphia, Connor Hughes of SNY.tv reports."
+2026-11-08T20:53:11+00:00,2026-11-08T20:31Z,13,Las Vegas Raiders,LV,4432775,Dont'e Thornton Jr.,WR,Out,INACTIVE,Coach's Decision,2026-11-15,Thornton (coach's decision) is inactive for Sunday's game against the 49ers.
 2026-11-08T20:37:55+00:00,2026-11-08T20:32Z,12,Kansas City Chiefs,KC,4043041,Jaylon Moore,OT,Questionable,QUESTIONABLE,Ankle,2026-11-08,questionable
+2026-11-08T20:53:11+00:00,2026-11-08T20:33Z,6,Dallas Cowboys,DAL,4428914,Dee Winters,LB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-08,"Winters is being evaluated for a concussion and is questionable to return to Sunday's Week 9 tilt against Indianapolis, Calvin Watkins of The Dallas Morning New"
+2026-11-08T20:53:11+00:00,2026-11-08T20:35Z,28,Washington Commanders,WSH,2576736,Lucas Patrick,G,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-12,Patrick (concussion) has been ruled out for the remainder of Sunday's game against the Rams.
+2026-11-08T20:53:11+00:00,2026-11-08T20:36Z,12,Kansas City Chiefs,KC,4043041,Jaylon Moore,OT,Questionable,QUESTIONABLE,Ankle,2026-11-08,Moore (ankle) is questionable to return to Sunday's game against the Jets.
+2026-11-08T20:53:11+00:00,2026-11-08T20:37Z,5,Cleveland Browns,CLE,4870653,KC Concepcion,WR,Active,,,,"Concepcion returned to Sunday's game against the Saints after previously appearing to injure his right leg, Mary Kay Cabot of The Cleveland Plain Dealer reports"
+2026-11-08T20:53:11+00:00,2026-11-08T20:42Z,6,Dallas Cowboys,DAL,4242355,Jake Ferguson,TE,Questionable,QUESTIONABLE,Knee,2026-11-08,questionable
