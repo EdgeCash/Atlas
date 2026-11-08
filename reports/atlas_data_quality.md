@@ -1,6 +1,6 @@
 # Atlas Data Quality
 
-*Generated 2026-11-08 04:38 UTC by `python -m atlas.live check`. Regenerated on every
+*Generated 2026-11-08 04:53 UTC by `python -m atlas.live check`. Regenerated on every
 tracker run against the live record in `tracking/`.*
 
 ---
@@ -11,7 +11,7 @@ tracker run against the live record in `tracking/`.*
 
 | | |
 |---|---|
-| Signals checked | 713 |
+| Signals checked | 723 |
 | Grades checked | 680 |
 | Checks run | 19 |
 | Blocking exceptions | 0 |
@@ -26,19 +26,19 @@ complaints. Every check is listed here on every run.
 
 | Check | Severity | Scope | Rows checked | Exceptions | Clean |
 |---|---|---|---|---|---|
-| game exists | blocking | signals | 713 | 0 | yes |
-| market exists | blocking | signals | 713 | 0 | yes |
-| opening line exists | warning | signals | 713 | 0 | yes |
-| entry line exists | blocking | signals | 713 | 0 | yes |
-| line history exists | blocking | signals | 713 | 0 | yes |
-| closing line exists | warning | signals | 713 | 0 | yes |
-| entry line in range | blocking | signals | 713 | 0 | yes |
-| opening line in range | warning | signals | 713 | 0 | yes |
-| entry price in range | warning | signals | 713 | 0 | yes |
-| disagreement is consistent | blocking | signals | 713 | 0 | yes |
-| signal is an opinion | blocking | signals | 713 | 0 | yes |
-| signal id is unique | blocking | signals | 713 | 0 | yes |
-| model version recorded | warning | signals | 713 | 0 | yes |
+| game exists | blocking | signals | 723 | 0 | yes |
+| market exists | blocking | signals | 723 | 0 | yes |
+| opening line exists | warning | signals | 723 | 0 | yes |
+| entry line exists | blocking | signals | 723 | 0 | yes |
+| line history exists | blocking | signals | 723 | 0 | yes |
+| closing line exists | warning | signals | 723 | 0 | yes |
+| entry line in range | blocking | signals | 723 | 0 | yes |
+| opening line in range | warning | signals | 723 | 0 | yes |
+| entry price in range | warning | signals | 723 | 0 | yes |
+| disagreement is consistent | blocking | signals | 723 | 0 | yes |
+| signal is an opinion | blocking | signals | 723 | 0 | yes |
+| signal id is unique | blocking | signals | 723 | 0 | yes |
+| model version recorded | warning | signals | 723 | 0 | yes |
 | grade references a signal | blocking | grades | 680 | 0 | yes |
 | clv is consistent | blocking | grades | 680 | 0 | yes |
 | result matches clv | blocking | grades | 680 | 0 | yes |
