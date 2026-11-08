@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-11-08T01:09:25.807057+00:00",
+      "detail": "market in 17s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-11-08T01:09:25.647569+00:00",
+      "detail": "67 cards, 27 NFL cards, 52 NHL cards, 134 teams, 31 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-11-08T00:54:37.098694+00:00",
       "detail": "market in 16s",
       "mode": "NCAAF Saturday",
@@ -1280,25 +1293,12 @@
       "detail": "66 cards, 15 NFL cards, 50 NHL cards, 124 teams, 28 NFL teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-11-06T00:10:01.447063+00:00",
-      "detail": "market in 19s",
-      "mode": "Thursday night",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-11-06T00:10:01.289753+00:00",
-      "detail": "66 cards, 15 NFL cards, 50 NHL cards, 124 teams, 28 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-11-08T00:54:36.900873+00:00",
-      "detail": "67 cards, 27 NFL cards, 55 NHL cards, 134 teams, 31 NFL teams",
+      "at": "2026-11-08T01:09:25.647569+00:00",
+      "detail": "67 cards, 27 NFL cards, 52 NHL cards, 134 teams, 31 NFL teams",
       "name": "build",
       "ok": true
     },
@@ -1309,8 +1309,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-08T00:54:37.098694+00:00",
-      "detail": "market in 16s",
+      "at": "2026-11-08T01:09:25.807057+00:00",
+      "detail": "market in 17s",
       "mode": "NCAAF Saturday",
       "name": "poll",
       "ok": true
@@ -1324,8 +1324,8 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-11-08T00:54:36.900873+00:00",
-      "detail": "67 cards, 27 NFL cards, 55 NHL cards, 134 teams, 31 NFL teams",
+      "at": "2026-11-08T01:09:25.647569+00:00",
+      "detail": "67 cards, 27 NFL cards, 52 NHL cards, 134 teams, 31 NFL teams",
       "name": "build",
       "ok": true
     },
@@ -1336,8 +1336,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-08T00:54:37.098694+00:00",
-      "detail": "market in 16s",
+      "at": "2026-11-08T01:09:25.807057+00:00",
+      "detail": "market in 17s",
       "mode": "NCAAF Saturday",
       "name": "poll",
       "ok": true
