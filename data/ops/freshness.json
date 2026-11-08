@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-11-08T20:09:17.825712+00:00",
+      "detail": "market in 16s",
+      "mode": "NFL Sunday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-11-08T20:09:17.670905+00:00",
+      "detail": "67 cards, 19 NFL cards, 53 NHL cards, 134 teams, 29 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-11-08T19:53:38.373865+00:00",
       "detail": "market in 11s",
       "mode": "NFL Sunday",
@@ -1280,24 +1293,11 @@
       "detail": "117 cards, 15 NFL cards, 47 NHL cards, 137 teams, 28 NFL teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-11-07T02:39:37.035771+00:00",
-      "detail": "market in 15s",
-      "mode": "Friday night",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-11-07T02:39:36.889678+00:00",
-      "detail": "117 cards, 15 NFL cards, 47 NHL cards, 137 teams, 28 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-11-08T19:53:38.157235+00:00",
+      "at": "2026-11-08T20:09:17.670905+00:00",
       "detail": "67 cards, 19 NFL cards, 53 NHL cards, 134 teams, 29 NFL teams",
       "name": "build",
       "ok": true
@@ -1309,8 +1309,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-08T19:53:38.373865+00:00",
-      "detail": "market in 11s",
+      "at": "2026-11-08T20:09:17.825712+00:00",
+      "detail": "market in 16s",
       "mode": "NFL Sunday",
       "name": "poll",
       "ok": true
@@ -1324,7 +1324,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-11-08T19:53:38.157235+00:00",
+      "at": "2026-11-08T20:09:17.670905+00:00",
       "detail": "67 cards, 19 NFL cards, 53 NHL cards, 134 teams, 29 NFL teams",
       "name": "build",
       "ok": true
@@ -1336,8 +1336,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-08T19:53:38.373865+00:00",
-      "detail": "market in 11s",
+      "at": "2026-11-08T20:09:17.825712+00:00",
+      "detail": "market in 16s",
       "mode": "NFL Sunday",
       "name": "poll",
       "ok": true
