@@ -5388,6 +5388,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-08T03:22:40+00:00,2026-11-08T03:02Z,18,New Orleans Saints,NO,4685260,Kelvin Banks Jr.,OT,Questionable,QUESTIONABLE,Ankle Surgery,2026-11-08,"The Saints activated Banks (ankle) from injured reserve Saturday, and he remains questionable to play Sunday versus Cleveland."
 2026-11-08T03:38:16+00:00,2026-11-08T03:11Z,22,Arizona Cardinals,ARI,5084939,Isaiah Adams,G,Questionable,QUESTIONABLE,Ankle,2026-11-08,"The Cardinals activated Adams (ankle) off injured reserve Saturday, and he remains questionable for Sunday's matchup against the Seahawks."
 2026-11-08T03:38:16+00:00,2026-11-08T03:22Z,1,Atlanta Falcons,ATL,4360807,Yasir Abdullah,LB,Questionable,QUESTIONABLE,Hamstring,2026-11-08,"The Falcons activated Abdullah (hamstring) from injured reserve Saturday, and he remains questionable for Sunday's battle against the Bengals, Will McFadden of "
+2026-11-08T13:22:59+00:00,2026-11-08T03:22Z,1,Atlanta Falcons,ATL,4360807,Yasir Abdullah,LB,Active,,,,"The Falcons activated Abdullah (hamstring) from injured reserve Saturday, and he remains questionable for Sunday's battle against the Bengals, Will McFadden of "
 2026-11-08T03:38:16+00:00,2026-11-08T03:27Z,1,Atlanta Falcons,ATL,4685590,Cameron Williams,OL,Injured Reserve,IR-R,Ankle,2026-11-15,"Williams (ankle), who remains on IR, has been ruled out for Sunday's clash against Cincinnati, Will McFadden of Atlanta's official site reports."
 2026-11-08T03:53:00+00:00,2026-11-08T03:32Z,29,Carolina Panthers,CAR,4256062,Brady Christensen,G,Injured Reserve,IR-R,Hamstring,2026-11-15,"Christensen (hamstring), who is on IR, has been ruled out for Sunday's battle against the Broncos, Darin Gantt of the Panthers' official site reports."
 2026-11-08T04:07:53+00:00,2026-11-08T03:38Z,7,Denver Broncos,DEN,4066109,Eyioma Uwazurike,DE,Injured Reserve,IR,Shoulder,2026-12-13,"The Broncos placed Uwazurike (shoulder) on injured reserve Saturday, Aric DiLalla of the team's official site reports."
@@ -5406,3 +5407,17 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-08T12:53:11+00:00,2026-11-08T12:31Z,3,Chicago Bears,CHI,4426374,Tyrique Stevenson Sr.,CB,Questionable,QUESTIONABLE,Thumb,2026-11-08,"Stevenson (thumb) ""should be good to go"" for Sunday's game against the Buccaneers, Ian Rapoport of NFL Network reports."
 2026-11-08T12:53:11+00:00,2026-11-08T12:33Z,5,Cleveland Browns,CLE,3122840,Deshaun Watson,QB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-08,"Watson (concussion) is expected to be inactive for Sunday's game at New Orleans, Ian Rapoport of NFL Network reports."
 2026-11-08T13:07:55+00:00,2026-11-08T12:39Z,15,Miami Dolphins,MIA,4682745,Jaylen Wright,RB,Questionable,QUESTIONABLE,Quadriceps,2026-11-08,"Wright (quadriceps) isn't in line to play in Sunday's game against the Lions, Ian Rapoport of NFL Network reports."
+2026-11-08T13:22:59+00:00,2026-11-08T13:04Z,4,Cincinnati Bengals,CIN,4430065,Cedric Johnson,DE,Active,,,,
+2026-11-08T13:22:59+00:00,2026-11-08T13:04Z,4,Cincinnati Bengals,CIN,4870866,Connor Lew,C,Out,INACTIVE,Coach's Decision,2026-11-15,inactive
+2026-11-08T13:22:59+00:00,2026-11-08T13:04Z,4,Cincinnati Bengals,CIN,4401811,Kyle Dugger,S,Out,INACTIVE,Left Quadriceps,2026-11-15,inactive
+2026-11-08T13:22:59+00:00,2026-11-08T13:04Z,4,Cincinnati Bengals,CIN,5081542,Landon Robinson,DT,Out,INACTIVE,Coach's Decision,2026-11-15,inactive
+2026-11-08T13:22:59+00:00,2026-11-08T13:04Z,4,Cincinnati Bengals,CIN,4429000,Myles Hinton,OT,Out,INACTIVE,Coach's Decision,2026-11-15,inactive
+2026-11-08T13:22:59+00:00,2026-11-08T13:05Z,1,Atlanta Falcons,ATL,14012,Andy Dalton,QB,Out,INACTIVE,Coach's Decision,2026-11-15,inactive
+2026-11-08T13:22:59+00:00,2026-11-08T13:05Z,1,Atlanta Falcons,ATL,4431194,Billy Bowman Jr.,CB,Out,INACTIVE,Coach's Decision,2026-11-15,inactive
+2026-11-08T13:22:59+00:00,2026-11-08T13:05Z,1,Atlanta Falcons,ATL,4037626,Divine Deablo,LB,Active,,,,
+2026-11-08T13:22:59+00:00,2026-11-08T13:05Z,1,Atlanta Falcons,ATL,4569511,Drake Jackson,DE,Out,INACTIVE,Coach's Decision,2026-11-15,inactive
+2026-11-08T13:22:59+00:00,2026-11-08T13:05Z,1,Atlanta Falcons,ATL,5344782,Jack Strand,QB,Out,INACTIVE,Coach's Decision,2026-11-15,inactive
+2026-11-08T13:22:59+00:00,2026-11-08T13:05Z,1,Atlanta Falcons,ATL,5081394,James Pearce Jr.,LB,Active,,,,
+2026-11-08T13:22:59+00:00,2026-11-08T13:05Z,1,Atlanta Falcons,ATL,4575860,Robert Longerbeam,CB,Out,INACTIVE,Coach's Decision,2026-11-15,inactive
+2026-11-08T13:22:59+00:00,2026-11-08T13:05Z,1,Atlanta Falcons,ATL,4870612,Zachariah Branch,WR,Out,INACTIVE,Hamstring,2026-11-15,inactive
+2026-11-08T13:22:59+00:00,2026-11-08T13:09Z,1,Atlanta Falcons,ATL,4431210,Beaux Collins,WR,Active,,,,"Collins (hip) is listed as active Sunday against the Bengals in Madrid, Will McFadden of the Falcons' official site reports."
