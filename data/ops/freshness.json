@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-11-08T14:39:19.961690+00:00",
+      "detail": "market in 17s",
+      "mode": "NFL Sunday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-11-08T14:39:19.811055+00:00",
+      "detail": "67 cards, 26 NFL cards, 54 NHL cards, 134 teams, 31 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-11-08T14:24:03.286647+00:00",
       "detail": "market in 15s",
       "mode": "NFL Sunday",
@@ -1280,25 +1293,12 @@
       "detail": "66 cards, 15 NFL cards, 50 NHL cards, 124 teams, 28 NFL teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-11-06T18:24:35.875740+00:00",
-      "detail": "market in 14s",
-      "mode": "ordinary",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-11-06T18:24:35.735029+00:00",
-      "detail": "66 cards, 15 NFL cards, 50 NHL cards, 124 teams, 28 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-11-08T14:24:03.148177+00:00",
-      "detail": "67 cards, 27 NFL cards, 54 NHL cards, 134 teams, 31 NFL teams",
+      "at": "2026-11-08T14:39:19.811055+00:00",
+      "detail": "67 cards, 26 NFL cards, 54 NHL cards, 134 teams, 31 NFL teams",
       "name": "build",
       "ok": true
     },
@@ -1309,8 +1309,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-08T14:24:03.286647+00:00",
-      "detail": "market in 15s",
+      "at": "2026-11-08T14:39:19.961690+00:00",
+      "detail": "market in 17s",
       "mode": "NFL Sunday",
       "name": "poll",
       "ok": true
@@ -1324,8 +1324,8 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-11-08T14:24:03.148177+00:00",
-      "detail": "67 cards, 27 NFL cards, 54 NHL cards, 134 teams, 31 NFL teams",
+      "at": "2026-11-08T14:39:19.811055+00:00",
+      "detail": "67 cards, 26 NFL cards, 54 NHL cards, 134 teams, 31 NFL teams",
       "name": "build",
       "ok": true
     },
@@ -1336,8 +1336,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-08T14:24:03.286647+00:00",
-      "detail": "market in 15s",
+      "at": "2026-11-08T14:39:19.961690+00:00",
+      "detail": "market in 17s",
       "mode": "NFL Sunday",
       "name": "poll",
       "ok": true
