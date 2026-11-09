@@ -1,6 +1,6 @@
 # Atlas on Polymarket US
 
-*Rebuilt every run; this one at 2026-11-09 06:53 UTC.*
+*Rebuilt every run; this one at 2026-11-09 07:53 UTC.*
 
 Polymarket US, the CFTC-regulated exchange, is the one venue Atlas is priced
 against. It lists a moneyline, a ladder of spreads and a ladder of totals on
@@ -14,10 +14,10 @@ the point-in-time archive of the market Atlas is measured against.
 
 | Sport | Games ahead | On Polymarket US | Contracts | Median spread (main lines) | Median depth (where read) | Fee coefficient |
 |---|---|---|---|---|---|---|
-| NCAAF | 67 | 6 | 804 | 4.5¢ | – | 0.0950 |
-| NFL | 16 | 1 | 142 | 0.5¢ | – | 0.0950 |
-| NBA | 62 | 23 | 1182 | 2.0¢ | – | 0.0950 |
-| NHL | 51 | 16 | 480 | 1.0¢ | – | 0.0950 |
+| NCAAF | 67 | 6 | 804 | 5.0¢ | – | 0.0950 |
+| NFL | 15 | 1 | 142 | 0.5¢ | – | 0.0950 |
+| NBA | 61 | 23 | 1182 | 1.0¢ | – | 0.0950 |
+| NHL | 50 | 16 | 480 | 1.0¢ | – | 0.0950 |
 
 Spread is the gap between the best bid and the best ask on the contracts
 priced near even; depth is the dollars resting at the best ask, read from
@@ -57,12 +57,12 @@ side at disagreements this large or larger, never below one half.
 
 | Sport | Market | Games | Atlas, median gap | Atlas, largest gap | Anchored, median gap |
 |---|---|---|---|---|---|
-| NBA | margin | 22 | 2.5 | 6.2 | 0.09 |
-| NBA | total | 9 | 5.8 | 11.8 | 0.13 |
-| NCAAF | margin | 6 | 2.7 | 4.0 | 0.00 |
-| NCAAF | total | 6 | 1.1 | 3.0 | 0.47 |
-| NFL | margin | 1 | 2.2 | 2.2 | 0.03 |
-| NFL | total | 1 | 2.9 | 2.9 | 0.17 |
+| NBA | margin | 22 | 2.4 | 6.2 | 0.09 |
+| NBA | total | 9 | 5.8 | 11.7 | 0.12 |
+| NCAAF | margin | 6 | 2.7 | 4.1 | 0.00 |
+| NCAAF | total | 6 | 1.1 | 3.0 | 0.49 |
+| NFL | margin | 1 | 2.3 | 2.3 | 0.03 |
+| NFL | total | 1 | 2.9 | 2.9 | 0.23 |
 
 In points of margin or total, per game: Atlas's own projection against
 the market's centre, and the anchored number the contracts are priced from.
@@ -71,7 +71,7 @@ construction.
 
 ## Player props
 
-Player props this run: NBA (points, rebounds, assists, threes, steals, blocks, the three combined): 1596 contracts on 8 games, 1596 with an Atlas projection beside them, 18335 graded so far; NHL (points, goals, assists): 293 contracts on 3 games, 287 with an Atlas projection beside them, 8875 graded so far; NFL (yards, receptions, touchdowns, attempts, completions, carries): 224 contracts on 1 games, 206 with an Atlas projection beside them, 4030 graded so far. Atlas's numbers are `atlas/models/nba_props.py` (`reports/nba_props.md`) and `atlas/models/nhl_props.py` (`reports/nhl_props.md`). Each player-stat's main line is kept in `tracking/polymarket_props.csv` with Atlas's probability as it stood, and graded against the box score and the close into `tracking/prop_record.csv`, the record that decides, a sport at a time, what Atlas's disagreement is worth there.
+Player props this run: NBA (points, rebounds, assists, threes, steals, blocks, the three combined): 1816 contracts on 9 games, 1816 with an Atlas projection beside them, 18335 graded so far; NHL (points, goals, assists): 294 contracts on 3 games, 288 with an Atlas projection beside them, 8875 graded so far; NFL (yards, receptions, touchdowns, attempts, completions, carries): 224 contracts on 1 games, 206 with an Atlas projection beside them, 4030 graded so far. Atlas's numbers are `atlas/models/nba_props.py` (`reports/nba_props.md`) and `atlas/models/nhl_props.py` (`reports/nhl_props.md`). Each player-stat's main line is kept in `tracking/polymarket_props.csv` with Atlas's probability as it stood, and graded against the box score and the close into `tracking/prop_record.csv`, the record that decides, a sport at a time, what Atlas's disagreement is worth there.
 
 ## The favorites rule
 
@@ -90,10 +90,10 @@ error.
 |---|---|---|---|---|---|---|---|
 | in play | 80% | 661 | 660 | 82.3% | 84.8% | -2.5 ± 1.5 | -3.0% |
 | in play | 85% | 685 | 684 | 87.3% | 88.8% | -1.5 ± 1.3 | -1.7% |
-| in play | 90% | 691 | 689 | 90.9% | 92.5% | -1.7 ± 1.1 | -1.8% |
-| in play | 95% | 644 | 642 | 95.8% | 96.2% | -0.4 ± 0.8 | -0.4% |
-| pregame | 80% | 445 | 321 | 88.8% | 88.9% | -0.2 ± 1.8 | -0.2% |
-| pregame | 85% | 337 | 233 | 93.1% | 92.1% | +1.0 ± 1.7 | 1.1% |
+| in play | 90% | 691 | 690 | 90.9% | 92.5% | -1.7 ± 1.1 | -1.8% |
+| in play | 95% | 644 | 643 | 95.8% | 96.2% | -0.4 ± 0.8 | -0.4% |
+| pregame | 80% | 445 | 322 | 88.8% | 88.9% | -0.1 ± 1.8 | -0.1% |
+| pregame | 85% | 337 | 234 | 93.2% | 92.1% | +1.1 ± 1.6 | 1.1% |
 | pregame | 90% | 247 | 165 | 96.4% | 94.8% | +1.6 ± 1.5 | 1.6% |
 | pregame | 95% | 159 | 112 | 98.2% | 97.1% | +1.1 ± 1.3 | 1.2% |
 
