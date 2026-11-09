@@ -5726,6 +5726,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-08T21:07:58+00:00,2026-11-08T20:48Z,6,Dallas Cowboys,DAL,4426485,Jonathan Mingo,WR,Questionable,QUESTIONABLE,Ankle,2026-11-08,"Mingo (ankle) is questionable to return to Sunday's matchup against the Colts, Patrik Walker of the Cowboys' official site reports."
 2026-11-08T21:07:58+00:00,2026-11-08T20:57Z,12,Kansas City Chiefs,KC,4683062,Xavier Worthy,WR,Out,OUT,Hamstring,2026-11-08,"Worthy left Sunday's game against the Jets with an apparent leg injury, Mike Garafolo of NFL Network reports."
 2026-11-08T21:22:54+00:00,2026-11-08T20:59Z,6,Dallas Cowboys,DAL,4428914,Dee Winters,LB,Active,,,,"Winters (head) has returned to Sunday's Week 9 matchup against the Colts, Patrik Walker of the Cowboys' official site reports."
+2026-11-09T04:23:09+00:00,2026-11-08T21:04Z,12,Kansas City Chiefs,KC,4683062,Xavier Worthy,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-15,Worthy (hamstring) won't return to Sunday's game against the Jets.
 2026-11-08T21:22:54+00:00,2026-11-08T21:11Z,11,Indianapolis Colts,IND,2998565,Mo Alie-Cox,TE,Questionable,QUESTIONABLE,Groin,2026-11-08,Alie-Cox is questionable to return to Sunday's game against Dallas due to a groin injury.
 2026-11-08T21:22:54+00:00,2026-11-08T21:11Z,12,Kansas City Chiefs,KC,4683062,Xavier Worthy,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-15,questionable
 2026-11-08T21:22:54+00:00,2026-11-08T21:16Z,18,New Orleans Saints,NO,3917331,Erik McCoy,C,Questionable,QUESTIONABLE,Biceps,2026-11-08,questionable
@@ -5906,3 +5907,6 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-09T04:07:57+00:00,2026-11-09T03:53Z,20,New York Jets,NYJ,4597500,Adonai Mitchell,WR,Active,,,,Mitchell failed to reel in any of his seven targets during Sunday's 35-12 loss to the Chiefs.
 2026-11-09T04:07:57+00:00,2026-11-09T03:54Z,17,New England Patriots,NE,4431431,Corey Kiner,RB,Active,,,,Kiner rushed eight times for 55 yards and a touchdown and returned nine kickoffs for 224 yards in the Patriots' 45-27 loss to the Packers on Sunday.
 2026-11-09T04:07:57+00:00,2026-11-09T03:59Z,34,Houston Texans,HOU,2971573,Ka'imi Fairbairn,PK,Active,,,,Fairbairn went 3-for-3 on field-goal tries and made all five of his PATs during Sunday's 44-22 win over the Chargers.
+2026-11-09T04:23:09+00:00,2026-11-09T04:01Z,19,New York Giants,NYG,5082424,Dominic Zvada,PK,Active,,,,Zvada made all four of his field-goal attempts and his lone PAT in Sunday's 19-11 win over the Eagles.
+2026-11-09T04:23:09+00:00,2026-11-09T04:06Z,9,Green Bay Packers,GB,4869461,Trey Smack,PK,Active,,,,Smack went 3-for-3 on field-goal attempts and made all four of his PATs during Sunday's 45-27 win against the Patriots.
+2026-11-09T04:23:09+00:00,2026-11-09T04:08Z,9,Green Bay Packers,GB,4819231,Kaleb Johnson,RB,Active,,,,Johnson rushed 14 times for 68 yards and a touchdown in the Packers' 45-27 win over the Patriots on Sunday.
