@@ -1,6 +1,6 @@
 # Atlas on Polymarket US
 
-*Rebuilt every run; this one at 2026-11-09 08:53 UTC.*
+*Rebuilt every run; this one at 2026-11-09 09:10 UTC.*
 
 Polymarket US, the CFTC-regulated exchange, is the one venue Atlas is priced
 against. It lists a moneyline, a ladder of spreads and a ladder of totals on
@@ -17,7 +17,7 @@ the point-in-time archive of the market Atlas is measured against.
 | NCAAF | 67 | 6 | 804 | 3.5¢ | – | 0.0950 |
 | NFL | 15 | 1 | 142 | 0.5¢ | – | 0.0950 |
 | NBA | 59 | 23 | 1184 | 1.0¢ | – | 0.0950 |
-| NHL | 50 | 16 | 480 | 1.0¢ | – | 0.0950 |
+| NHL | 50 | 16 | 480 | 1.5¢ | – | 0.0950 |
 
 Spread is the gap between the best bid and the best ask on the contracts
 priced near even; depth is the dollars resting at the best ask, read from
@@ -40,15 +40,15 @@ priced as the market.
 | NCAAF | moneyline | 0% | 3661 |
 | NCAAF | spread | 0% | 3661 |
 | NCAAF | total | the record's hit rate by gap | 3683 |
-| NFL | moneyline | 1% | 1698 |
-| NFL | spread | 1% | 1698 |
-| NFL | total | the record's hit rate by gap | 1721 |
+| NFL | moneyline | 1% | 1711 |
+| NFL | spread | 1% | 1711 |
+| NFL | total | the record's hit rate by gap | 1734 |
 | NBA | moneyline | 4% | 12318 |
 | NBA | spread | 4% | 12318 |
 | NBA | total | the record's hit rate by gap | 12366 |
-| NHL | moneyline | 48% | 11229 |
-| NHL | spread | 48% | 11229 |
-| NHL | total | 48% | 11229 |
+| NHL | moneyline | 48% | 11235 |
+| NHL | spread | 48% | 11235 |
+| NHL | total | 48% | 11235 |
 
 On football totals the record is read as a curve: the hit rate of Atlas's
 side at disagreements this large or larger, never below one half.
@@ -57,12 +57,12 @@ side at disagreements this large or larger, never below one half.
 
 | Sport | Market | Games | Atlas, median gap | Atlas, largest gap | Anchored, median gap |
 |---|---|---|---|---|---|
-| NBA | margin | 22 | 2.4 | 6.4 | 0.09 |
-| NBA | total | 9 | 5.8 | 11.7 | 0.21 |
-| NCAAF | margin | 6 | 2.5 | 4.3 | 0.00 |
-| NCAAF | total | 6 | 1.1 | 3.3 | 0.56 |
-| NFL | margin | 1 | 2.3 | 2.3 | 0.03 |
-| NFL | total | 1 | 2.9 | 2.9 | 0.24 |
+| NBA | margin | 22 | 2.6 | 6.6 | 0.10 |
+| NBA | total | 9 | 5.9 | 11.0 | 0.22 |
+| NCAAF | margin | 6 | 2.6 | 3.9 | 0.00 |
+| NCAAF | total | 6 | 0.8 | 2.7 | 0.67 |
+| NFL | margin | 1 | 0.7 | 0.7 | 0.01 |
+| NFL | total | 1 | 2.2 | 2.2 | 0.24 |
 
 In points of margin or total, per game: Atlas's own projection against
 the market's centre, and the anchored number the contracts are priced from.
@@ -71,7 +71,7 @@ construction.
 
 ## Player props
 
-Player props this run: NBA (points, rebounds, assists, threes, steals, blocks, the three combined): 1888 contracts on 9 games, 1888 with an Atlas projection beside them, 18335 graded so far; NHL (points, goals, assists): 307 contracts on 3 games, 300 with an Atlas projection beside them, 8875 graded so far; NFL (yards, receptions, touchdowns, attempts, completions, carries): 224 contracts on 1 games, 206 with an Atlas projection beside them, 4030 graded so far. Atlas's numbers are `atlas/models/nba_props.py` (`reports/nba_props.md`) and `atlas/models/nhl_props.py` (`reports/nhl_props.md`). Each player-stat's main line is kept in `tracking/polymarket_props.csv` with Atlas's probability as it stood, and graded against the box score and the close into `tracking/prop_record.csv`, the record that decides, a sport at a time, what Atlas's disagreement is worth there.
+Player props this run: NBA (points, rebounds, assists, threes, steals, blocks, the three combined): 1890 contracts on 9 games, 1890 with an Atlas projection beside them, 19529 graded so far; NHL (points, goals, assists): 307 contracts on 3 games, 300 with an Atlas projection beside them, 9360 graded so far; NFL (yards, receptions, touchdowns, attempts, completions, carries): 224 contracts on 1 games, 224 with an Atlas projection beside them, 5302 graded so far. Atlas's numbers are `atlas/models/nba_props.py` (`reports/nba_props.md`) and `atlas/models/nhl_props.py` (`reports/nhl_props.md`). Each player-stat's main line is kept in `tracking/polymarket_props.csv` with Atlas's probability as it stood, and graded against the box score and the close into `tracking/prop_record.csv`, the record that decides, a sport at a time, what Atlas's disagreement is worth there.
 
 ## The favorites rule
 
