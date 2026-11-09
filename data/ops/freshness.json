@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-11-09T23:54:25.318864+00:00",
+      "detail": "market in 16s",
+      "mode": "Monday night",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-11-09T23:54:25.189279+00:00",
+      "detail": "67 cards, 15 NFL cards, 50 NHL cards, 134 teams, 28 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-11-09T23:39:10.020449+00:00",
       "detail": "market in 20s",
       "mode": "Monday night",
@@ -1283,23 +1296,11 @@
       "detail": "67 cards, 27 NFL cards, 54 NHL cards, 134 teams, 31 NFL teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-11-08T09:32:25.616104+00:00",
-      "detail": "67 cards, 27 NFL cards, 54 NHL cards, 134 teams, 31 NFL teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-11-08T09:32:25.614433+00:00",
-      "detail": "12 files",
-      "name": "social",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-11-09T23:39:09.862407+00:00",
+      "at": "2026-11-09T23:54:25.189279+00:00",
       "detail": "67 cards, 15 NFL cards, 50 NHL cards, 134 teams, 28 NFL teams",
       "name": "build",
       "ok": true
@@ -1311,8 +1312,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-09T23:39:10.020449+00:00",
-      "detail": "market in 20s",
+      "at": "2026-11-09T23:54:25.318864+00:00",
+      "detail": "market in 16s",
       "mode": "Monday night",
       "name": "poll",
       "ok": true
@@ -1326,7 +1327,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-11-09T23:39:09.862407+00:00",
+      "at": "2026-11-09T23:54:25.189279+00:00",
       "detail": "67 cards, 15 NFL cards, 50 NHL cards, 134 teams, 28 NFL teams",
       "name": "build",
       "ok": true
@@ -1338,8 +1339,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-09T23:39:10.020449+00:00",
-      "detail": "market in 20s",
+      "at": "2026-11-09T23:54:25.318864+00:00",
+      "detail": "market in 16s",
       "mode": "Monday night",
       "name": "poll",
       "ok": true
