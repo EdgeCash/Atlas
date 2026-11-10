@@ -6231,6 +6231,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-10T01:53:15+00:00,2026-11-10T01:39Z,17,New England Patriots,NE,4362890,Ben Brown,C,Doubtful,DOUBTFUL,Knee,2026-11-15,doubtful
 2026-11-10T01:53:15+00:00,2026-11-10T01:46Z,11,Indianapolis Colts,IND,4892240,Jalen Travis,OT,Doubtful,DOUBTFUL,Knee,2026-11-29,doubtful
 2026-11-10T02:07:53+00:00,2026-11-10T01:48Z,16,Minnesota Vikings,MIN,16772,Kyle Van Noy,LB,Questionable,QUESTIONABLE,Calf,2026-11-09,"Van Noy (calf) has returned to Monday night's matchup with Buffalo, Kevin Seifert of ESPN.com reports."
+2026-11-10T19:23:20+00:00,2026-11-10T01:48Z,16,Minnesota Vikings,MIN,16772,Kyle Van Noy,LB,Active,,,,"Van Noy (calf) has returned to Monday night's matchup with Buffalo, Kevin Seifert of ESPN.com reports."
 2026-11-10T02:07:53+00:00,2026-11-10T01:51Z,18,New Orleans Saints,NO,3917331,Erik McCoy,C,Questionable,DOUBTFUL,Biceps,2026-11-15,"Coach Kellen Moore said Monday that McCoy will be out ""for a little bit"" as he deals with the bicep injury he suffered during Sunday's game versus the Browns, L"
 2026-11-10T02:07:53+00:00,2026-11-10T01:54Z,10,Tennessee Titans,TEN,4573318,Dorian Mausi,LB,Injured Reserve,,,,"The Titans activated Mausi (foot) from injured reserve Monday, Jim Wyatt of the Titans' official site reports."
 2026-11-10T02:07:53+00:00,2026-11-10T01:59Z,10,Tennessee Titans,TEN,4431613,James Williams Sr.,LB,Questionable,IR,Groin,2026-12-13,"The Titans placed Williams (groin) on injured reserve Monday, Jim Wyatt of the Titans' official site reports."
@@ -6271,6 +6272,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-10T04:08:15+00:00,2026-11-10T03:51Z,18,New Orleans Saints,NO,4569559,Devaughn Vele,WR,Active,,,,Vele caught two passes for 17 yards on four targets in Sunday's 23-22 overtime win over the Browns.
 2026-11-10T04:08:15+00:00,2026-11-10T03:56Z,15,Miami Dolphins,MIA,4685246,Kaytron Allen,RB,Active,,,,Allen caught a 46-yard pass in Sunday's 19-9 loss to the Lions. He rushed one time for minus-one yards.
 2026-11-10T04:22:58+00:00,2026-11-10T04:02Z,16,Minnesota Vikings,MIN,4629149,Tyrion Ingram-Dawkins,DE,Active,,,,Ingram-Dawkins exited Monday night's game against the Bills with an ankle injury and is questionable to return.
+2026-11-10T19:23:20+00:00,2026-11-10T04:02Z,16,Minnesota Vikings,MIN,4629149,Tyrion Ingram-Dawkins,DE,Questionable,QUESTIONABLE,Ankle,2026-11-15,Ingram-Dawkins exited Monday night's game against the Bills with an ankle injury and is questionable to return.
 2026-11-10T04:22:58+00:00,2026-11-10T04:13Z,19,New York Giants,NYG,4682648,Malachi Fields,WR,Active,,,,Fields caught three of five targets for 40 yards in Sunday's 19-11 win over the Eagles.
 2026-11-10T04:37:57+00:00,2026-11-10T04:23Z,12,Kansas City Chiefs,KC,4912218,Cyrus Allen,WR,Active,,,,Allen failed to catch his only target in Sunday's 35-12 win over the Jets.
 2026-11-10T04:37:57+00:00,2026-11-10T04:24Z,26,Seattle Seahawks,SEA,4429835,George Holani,RB,Active,,,,Holani didn't log any touches or targets Sunday in a 17-3 win over Arizona.
@@ -6394,3 +6396,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-10T17:23:34+00:00,2026-11-10T16:41Z,4,Cincinnati Bengals,CIN,4257591,Arnold Ebiketie,LB,Active,,,,"The Bengals acquired Ebiketie from the Eagles on Tuesday in exchange for a 2027 sixth-round pick, Ian Rapoport of NFL Network reports."
 2026-11-10T17:23:34+00:00,2026-11-10T16:57Z,33,Baltimore Ravens,BAL,4372066,Jake Moody,PK,Active,,,,"The Falcons signed Moody off the Ravens' practice squad Tuesday, according to NFL reporter Jordan Schultz."
 2026-11-10T18:23:35+00:00,2026-11-10T17:26Z,21,Philadelphia Eagles,PHI,4257591,Arnold Ebiketie,LB,Active,,,,"Ebiketie will remain with the Eagles after his reported trade to the Bengals on Tuesday fell through and won't be completed, according to NFL reporter Jordan Sc"
+2026-11-10T19:23:20+00:00,2026-11-10T18:38Z,19,New York Giants,NYG,4433970,J.J. McCarthy,QB,Questionable,QUESTIONABLE,Hip Bruise,2026-11-12,"McCarthy (hip) was spotted on the field for the media-access portion of Tuesday's practice, Art Stapleton of The Bergen Record reports."
+2026-11-10T19:23:20+00:00,2026-11-10T19:02Z,11,Indianapolis Colts,IND,4892240,Jalen Travis,OT,Doubtful,DOUBTFUL,Knee,2026-11-29,doubtful
+2026-11-10T19:23:20+00:00,2026-11-10T19:02Z,13,Las Vegas Raiders,LV,14880,Kirk Cousins,QB,Active,,,,"The Vikings have identified Cousins as a ""prime trade candidate"" ahead of Tuesday's trade deadline, Adam Schefter of ESPN reports."
+2026-11-10T19:23:20+00:00,2026-11-10T19:02Z,19,New York Giants,NYG,4696981,Cam Skattebo,RB,Questionable,QUESTIONABLE,Hamstring,2026-11-12,questionable
