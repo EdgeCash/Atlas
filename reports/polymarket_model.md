@@ -1,6 +1,6 @@
 # Atlas on Polymarket US
 
-*Rebuilt every run; this one at 2026-11-10 03:52 UTC.*
+*Rebuilt every run; this one at 2026-11-10 04:08 UTC.*
 
 Polymarket US, the CFTC-regulated exchange, is the one venue Atlas is priced
 against. It lists a moneyline, a ladder of spreads and a ladder of totals on
@@ -58,11 +58,11 @@ side at disagreements this large or larger, never below one half.
 | Sport | Market | Games | Atlas, median gap | Atlas, largest gap | Anchored, median gap |
 |---|---|---|---|---|---|
 | NBA | margin | 20 | 2.3 | 24.3 | 0.09 |
-| NBA | total | 7 | 6.7 | 15.9 | 0.30 |
+| NBA | total | 7 | 6.6 | 14.4 | 0.36 |
 | NCAAF | margin | 8 | 2.2 | 4.2 | 0.00 |
 | NCAAF | total | 8 | 1.0 | 2.6 | 0.28 |
-| NFL | margin | 2 | 4.7 | 9.1 | 0.04 |
-| NFL | total | 2 | 10.6 | 19.2 | 0.33 |
+| NFL | margin | 2 | 8.0 | 15.7 | 0.06 |
+| NFL | total | 2 | 9.5 | 17.0 | 0.26 |
 
 In points of margin or total, per game: Atlas's own projection against
 the market's centre, and the anchored number the contracts are priced from.
@@ -88,14 +88,14 @@ error.
 
 | Phase | Threshold | Taken | Graded | Win rate | Break-even | Edge (pts) | Profit per $ |
 |---|---|---|---|---|---|---|---|
-| in play | 80% | 680 | 664 | 82.4% | 84.8% | -2.4 ± 1.5 | -2.9% |
-| in play | 85% | 708 | 688 | 87.4% | 88.8% | -1.5 ± 1.3 | -1.7% |
-| in play | 90% | 712 | 694 | 90.9% | 92.5% | -1.6 ± 1.1 | -1.7% |
-| in play | 95% | 665 | 647 | 95.8% | 96.2% | -0.4 ± 0.8 | -0.4% |
-| pregame | 80% | 474 | 325 | 88.6% | 89.0% | -0.4 ± 1.8 | -0.4% |
-| pregame | 85% | 360 | 237 | 92.8% | 92.1% | +0.7 ± 1.7 | 0.7% |
-| pregame | 90% | 265 | 168 | 95.8% | 94.8% | +1.0 ± 1.5 | 1.1% |
-| pregame | 95% | 167 | 114 | 98.2% | 97.1% | +1.2 ± 1.2 | 1.2% |
+| in play | 80% | 680 | 672 | 82.4% | 84.8% | -2.4 ± 1.5 | -2.8% |
+| in play | 85% | 708 | 699 | 87.3% | 88.8% | -1.6 ± 1.3 | -1.8% |
+| in play | 90% | 713 | 704 | 90.9% | 92.5% | -1.6 ± 1.1 | -1.8% |
+| in play | 95% | 666 | 658 | 95.7% | 96.2% | -0.5 ± 0.8 | -0.5% |
+| pregame | 80% | 474 | 335 | 88.7% | 89.0% | -0.4 ± 1.7 | -0.4% |
+| pregame | 85% | 360 | 244 | 93.0% | 92.2% | +0.8 ± 1.6 | 0.9% |
+| pregame | 90% | 266 | 175 | 96.0% | 94.8% | +1.2 ± 1.5 | 1.3% |
+| pregame | 95% | 167 | 119 | 98.3% | 97.1% | +1.2 ± 1.2 | 1.3% |
 
 ## The record
 
