@@ -6151,6 +6151,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-09T22:23:15+00:00,2026-11-09T22:19Z,6,Dallas Cowboys,DAL,3929850,P.J. Locke,S,Out,OUT,Concussion Concussion,2026-11-22,out
 2026-11-09T22:23:15+00:00,2026-11-09T22:19Z,6,Dallas Cowboys,DAL,4429676,Tyler Goodson,RB,Out,OUT,Knee Sprain,2026-11-22,out
 2026-11-09T22:23:15+00:00,2026-11-09T22:19Z,14,Los Angeles Rams,LAR,4426515,Puka Nacua,WR,Doubtful,DOUBTFUL,Knee,2026-11-15,doubtful
+2026-11-10T01:38:24+00:00,2026-11-09T22:24Z,2,Buffalo Bills,BUF,4242433,Joshua Palmer,WR,Out,IR,Right Hamstring,2026-12-06,"Palmer (hamstring) was placed on injured reserve Monday, Joe Buscaglia of the Athletic reports."
 2026-11-09T22:53:25+00:00,2026-11-09T22:31Z,8,Detroit Lions,DET,4361939,Andre Cisco,S,Active,,,,"The Lions acquired Cisco from the Jets on Monday in exchange for a 2028 sixth-round pick, Adam Schefter of ESPN reports."
 2026-11-09T22:38:02+00:00,2026-11-09T22:31Z,25,San Francisco 49ers,SF,4360438,Brandon Aiyuk,WR,Out,RESERVE-EX,Personal,2026-11-29,"The 49ers reinstated Aiyuk (personal) from the reserve/left squad list Monday and were granted a two-week roster exemption for the wide receiver, Tom Pelissero "
 2026-11-09T22:53:25+00:00,2026-11-09T22:39Z,2,Buffalo Bills,BUF,4242433,Joshua Palmer,WR,Injured Reserve,IR,Right Hamstring,2026-12-06,ir
@@ -6216,3 +6217,5 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-10T01:23:08+00:00,2026-11-10T01:08Z,11,Indianapolis Colts,IND,4874509,DJ Giddens,RB,Active,,,,Giddens did not appear in Sunday's 27-23 loss to the Cowboys.
 2026-11-10T01:23:08+00:00,2026-11-10T01:11Z,6,Dallas Cowboys,DAL,4683848,Donovan Ezeiruaku,LB,Questionable,QUESTIONABLE,Ankle,2026-11-15,"Ezeiruaku (ankle) is considered day-to-day, Nick Harris of the Fort Worth Star-Telegram reports."
 2026-11-10T01:23:08+00:00,2026-11-10T01:17Z,25,San Francisco 49ers,SF,4427325,Renardo Green,CB,Questionable,QUESTIONABLE,Back,2026-11-15,"Coach Kyle Shanahan said Monday that Green (back) is considered day-to-day ahead of Sunday's game at Dallas, Matt Barrows of The Athletic reports."
+2026-11-10T01:38:24+00:00,2026-11-10T01:22Z,25,San Francisco 49ers,SF,4242488,Deommodore Lenoir,CB,Questionable,QUESTIONABLE,Foot,2026-11-15,"Coach Kyle Shanahan said Monday that Lenoir (foot) is considered day-to-day ahead of Sunday's game at Dallas, Matt Barrows of The Athletic reports."
+2026-11-10T01:38:24+00:00,2026-11-10T01:27Z,17,New England Patriots,NE,4362890,Ben Brown,C,Questionable,DOUBTFUL,Knee,2026-11-15,"Coach Mike Vrabel said Monday that Brown (knee) likely won't play in Sunday's game versus the Lions, Evan Lazar of the Patriots' official site reports."
