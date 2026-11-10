@@ -6393,6 +6393,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-10T20:23:04+00:00,2026-11-10T16:14Z,22,Arizona Cardinals,ARI,5151948,Joey Aguilar,QB,Active,,,,"The Cardinals signed Aguilar off the Jaguars' practice squad Tuesday, Jeremy Fowler of ESPN.com reports."
 2026-11-10T17:23:34+00:00,2026-11-10T16:24Z,9,Green Bay Packers,GB,4819231,Kaleb Johnson,RB,Active,,,,Johnson could serve as the Packers' lead option on the ground in Sunday's game against the Vikings with Josh Jacobs (finger) expected to miss multiple weeks and
 2026-11-10T17:23:34+00:00,2026-11-10T16:27Z,15,Miami Dolphins,MIA,3057956,Zach Sieler,DT,Out,OUT,Biceps Surgery,2027-02-15,"Sieler ruptured his biceps during Sunday's 19-9 loss to the Lions and will require season-ending surgery, Adam Schefter of ESPN reports."
+2026-11-10T22:23:19+00:00,2026-11-10T16:27Z,15,Miami Dolphins,MIA,3057956,Zach Sieler,DT,Injured Reserve,IR,Biceps Surgery,2027-02-15,"Sieler ruptured his biceps during Sunday's 19-9 loss to the Lions and will require season-ending surgery, Adam Schefter of ESPN reports."
 2026-11-10T17:23:34+00:00,2026-11-10T16:28Z,25,San Francisco 49ers,SF,16737,Mike Evans,WR,Questionable,QUESTIONABLE,Right Achilles Tendinitis,2026-11-15,questionable
 2026-11-10T17:23:34+00:00,2026-11-10T16:38Z,28,Washington Commanders,WSH,2576736,Lucas Patrick,G,Doubtful,DOUBTFUL,Concussion Concussion,2026-11-12,doubtful
 2026-11-10T17:23:34+00:00,2026-11-10T16:41Z,4,Cincinnati Bengals,CIN,4257591,Arnold Ebiketie,LB,Active,,,,"The Bengals acquired Ebiketie from the Eagles on Tuesday in exchange for a 2027 sixth-round pick, Ian Rapoport of NFL Network reports."
@@ -6412,3 +6413,10 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-10T21:23:10+00:00,2026-11-10T20:38Z,11,Indianapolis Colts,IND,3929785,Nick Westbrook-Ikhine,WR,Active,,,,The Colts signed Westbrook-Ikhine off their practice squad Tuesday.
 2026-11-10T21:23:10+00:00,2026-11-10T20:55Z,16,Minnesota Vikings,MIN,3917315,Kyler Murray,QB,Doubtful,DOUBTFUL,Hamstring Strain,2026-11-15,doubtful
 2026-11-10T21:23:10+00:00,2026-11-10T21:04Z,15,Miami Dolphins,MIA,4242512,Malik Willis,QB,Injured Reserve,IR,Groin,2026-12-13,ir
+2026-11-10T22:23:19+00:00,2026-11-10T21:08Z,10,Tennessee Titans,TEN,3916148,Tony Pollard,RB,Active,,,,"The Titans opted not to move Pollard ahead of Tuesday's trade deadline, despite him drawing interest from teams, Jeremy Fowler of ESPN.com reports."
+2026-11-10T22:23:19+00:00,2026-11-10T21:29Z,14,Los Angeles Rams,LAR,4569382,Jordan Whittington,WR,Injured Reserve,IR,Back,2026-12-20,ir
+2026-11-10T22:23:19+00:00,2026-11-10T21:38Z,19,New York Giants,NYG,4696981,Cam Skattebo,RB,Out,,,,"Skattebo (hamstring) was listed as a full participant in Tuesday's practice, Dan Salomone of the Giants' official site reports."
+2026-11-10T22:23:19+00:00,2026-11-10T21:39Z,15,Miami Dolphins,MIA,4242512,Malik Willis,QB,Injured Reserve,IR,Groin,2026-12-13,ir
+2026-11-10T22:23:19+00:00,2026-11-10T21:39Z,19,New York Giants,NYG,4433970,J.J. McCarthy,QB,Questionable,,,,"McCarthy (hip) was listed as a full participant in Tuesday's practice, Dan Salomone of the Giants' official site reports."
+2026-11-10T22:23:19+00:00,2026-11-10T21:47Z,16,Minnesota Vikings,MIN,16733,Odell Beckham Jr.,WR,Active,,,,"The Vikings released Beckham on Tuesday, Craig Peters of the team's official site reports."
+2026-11-10T22:23:19+00:00,2026-11-10T22:14Z,22,Arizona Cardinals,ARI,4360761,Michael Wilson,WR,Injured Reserve,IR,Neck Fracture,2027-02-15,ir
