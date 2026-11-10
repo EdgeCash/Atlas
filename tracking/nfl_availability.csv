@@ -6160,10 +6160,22 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-09T23:23:12+00:00,2026-11-09T23:07Z,25,San Francisco 49ers,SF,3126486,Deebo Samuel Sr.,WR,Out,QUESTIONABLE,Right Hamstring,2026-11-15,"Samuel (hamstring) is on track to return to practice Wednesday, David Lombardi of SFStandard.com reports."
 2026-11-09T23:23:12+00:00,2026-11-09T23:11Z,29,Carolina Panthers,CAR,3917853,Mike Jackson,CB,Injured Reserve,IR,Groin Surgery,2026-11-22,"Head coach Dave Canales stated the team plans to take ""the next two days to discuss"" Jackson (groin), Mike Kaye of ESPN.com reports."
 2026-11-09T23:38:18+00:00,2026-11-09T23:18Z,29,Carolina Panthers,CAR,4362847,Jaycee Horn,CB,Injured Reserve,IR,Quadriceps Strain,2026-11-15,"Head coach Dave Canales plans to take ""the next two days"" to discuss Horn (quadricep), Mike Kaye of ESPN.com reports."
+2026-11-10T00:08:07+00:00,2026-11-09T23:43Z,2,Buffalo Bills,BUF,3122168,Trent Sherfield,WR,Active,,,,Sherfield was elevated to the 53-man roster off the practice squad ahead of Monday's game against Minnesota.
+2026-11-10T00:08:07+00:00,2026-11-09T23:49Z,24,Los Angeles Chargers,LAC,4038941,Justin Herbert,QB,Questionable,QUESTIONABLE,Left Finger,2026-11-16,"Chargers coach Jim Harbaugh relayed Monday that Herbert (finger) avoided a fracture in his left middle finger,  Alex Insdorf of BoltBeat.com reports."
 2026-11-09T23:53:30+00:00,2026-11-09T23:49Z,16,Minnesota Vikings,MIN,4602019,Caleb Banks,DT,Out,INACTIVE,Coach's Decision,2026-11-15,inactive
 2026-11-09T23:53:30+00:00,2026-11-09T23:49Z,16,Minnesota Vikings,MIN,5091793,Charles Demmings,CB,Out,INACTIVE,Coach's Decision,2026-11-15,inactive
 2026-11-09T23:53:30+00:00,2026-11-09T23:49Z,16,Minnesota Vikings,MIN,4710865,Jakobe Thomas,S,Out,INACTIVE,Coach's Decision,2026-11-15,inactive
 2026-11-09T23:53:30+00:00,2026-11-09T23:49Z,16,Minnesota Vikings,MIN,3886598,Jauan Jennings,WR,Out,INACTIVE,Calf,2026-11-15,inactive
 2026-11-09T23:53:30+00:00,2026-11-09T23:49Z,16,Minnesota Vikings,MIN,4568007,Jay Ward,S,Active,,,,
 2026-11-09T23:53:30+00:00,2026-11-09T23:49Z,16,Minnesota Vikings,MIN,3917315,Kyler Murray,QB,Out,INACTIVE,Hamstring Strain,2026-11-15,inactive
+2026-11-10T00:08:07+00:00,2026-11-09T23:49Z,16,Minnesota Vikings,MIN,16733,Odell Beckham Jr.,WR,Active,,,,"Beckham is active for Monday's game against the Bills, Ben Goessling of The Minnesota Star Tribune reports."
 2026-11-09T23:53:30+00:00,2026-11-09T23:49Z,16,Minnesota Vikings,MIN,4242436,Theo Jackson,S,Active,,,,
+2026-11-10T00:08:07+00:00,2026-11-09T23:51Z,2,Buffalo Bills,BUF,4367203,Alec Anderson,OT,Out,INACTIVE,Ankle,2026-11-15,inactive
+2026-11-10T00:08:07+00:00,2026-11-09T23:51Z,2,Buffalo Bills,BUF,3051324,Dion Dawkins,OT,Out,INACTIVE,Ribs,2026-11-15,inactive
+2026-11-10T00:08:07+00:00,2026-11-09T23:51Z,2,Buffalo Bills,BUF,3127294,Greg Gaines,DT,Out,INACTIVE,Calf,2026-11-15,inactive
+2026-11-10T00:08:07+00:00,2026-11-09T23:51Z,2,Buffalo Bills,BUF,5076951,Jalon Kilgore,S,Out,INACTIVE,Coach's Decision,2026-11-15,inactive
+2026-11-10T00:08:07+00:00,2026-11-09T23:51Z,2,Buffalo Bills,BUF,3915487,Mike Danna,DE,Out,INACTIVE,Coach's Decision,2026-11-15,inactive
+2026-11-10T00:08:07+00:00,2026-11-09T23:51Z,2,Buffalo Bills,BUF,4683153,Skyler Bell,WR,Out,INACTIVE,Coach's Decision,2026-11-15,inactive
+2026-11-10T00:08:07+00:00,2026-11-09T23:59Z,19,New York Giants,NYG,4696981,Cam Skattebo,RB,Out,QUESTIONABLE,Hamstring,2026-11-12,"Skattebo (hamstring) was listed as limited on Monday's estimated injury report, Dan Salomone of the Giants' official site reports."
+2026-11-10T00:08:07+00:00,2026-11-10T00:01Z,25,San Francisco 49ers,SF,3126486,Deebo Samuel Sr.,WR,Out,QUESTIONABLE,Right Hamstring,2026-11-15,out
+2026-11-10T00:08:07+00:00,2026-11-10T00:01Z,25,San Francisco 49ers,SF,16737,Mike Evans,WR,Out,QUESTIONABLE,Right Achilles Tendinitis,2026-11-15,out
