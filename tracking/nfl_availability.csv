@@ -6298,3 +6298,92 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-10T06:53:15+00:00,2026-11-10T05:57Z,12,Kansas City Chiefs,KC,4240472,Noah Gray,TE,Active,,,,Gray caught his only target for 11 yards Sunday in a 35-12 win against the Jets.
 2026-11-10T06:53:15+00:00,2026-11-10T06:10Z,16,Minnesota Vikings,MIN,4429205,Jordan Addison,WR,Active,,,,Addison secured two of three targets for 28 yards in the Vikings' 23-6 loss to the Bills on Monday night.
 2026-11-10T15:23:28+00:00,2026-11-10T15:05Z,6,Dallas Cowboys,DAL,4429676,Tyler Goodson,RB,Out,OUT,Knee Sprain,2026-11-22,"Goodson sustained ACL and MCL sprains in his knee during Sunday's 27-23 win over the Colts, a source tells Todd Archer of ESPN.com."
+2026-11-10T16:23:35+00:00,2026-11-10T15:34Z,14,Los Angeles Rams,LAR,4570037,Terrance Ferguson,TE,Injured Reserve,IR-R,Hamstring Strain,2026-11-25,"Rams head coach Sean McVay acknowledged Monday during his appearance on the ""Coach McVay Show"" that he's hopeful Ferguson (hamstring/ankle) will return from inj"
+2026-11-10T16:23:35+00:00,2026-11-10T15:38Z,30,Jacksonville Jaguars,JAX,4432773,Brian Thomas Jr.,WR,Active,,,,"The Jaguars have relayed to inquiring teams that they intend to keep Thomas through Tuesday's trade deadline, Jeremy Fowler of ESPN.com reports."
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,22,Arizona Cardinals,ARI,4427728,Bam Knight,RB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,22,Arizona Cardinals,ARI,4709718,Jayden Williams,OT,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,22,Arizona Cardinals,ARI,4367199,Jon Gaines II,G,Questionable,QUESTIONABLE,Ankle,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,1,Atlanta Falcons,ATL,4870612,Zachariah Branch,WR,Doubtful,DOUBTFUL,Hamstring,2026-11-15,doubtful
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,33,Baltimore Ravens,BAL,3858276,Jaylinn Hawkins,S,Questionable,QUESTIONABLE,Knee,2026-11-16,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,33,Baltimore Ravens,BAL,4601278,Nate Wiggins,CB,Questionable,QUESTIONABLE,Illness,2026-11-16,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,2,Buffalo Bills,BUF,5076951,Jalon Kilgore,S,Active,,,,
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,2,Buffalo Bills,BUF,3915487,Mike Danna,DE,Active,,,,
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,2,Buffalo Bills,BUF,4683153,Skyler Bell,WR,Active,,,,
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,29,Carolina Panthers,CAR,3117253,Bobby Okereke,LB,Questionable,QUESTIONABLE,Foot,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,29,Carolina Panthers,CAR,4362647,Damien Lewis,G,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,29,Carolina Panthers,CAR,4242975,Jaelan Phillips,LB,Questionable,QUESTIONABLE,Hamstring,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,29,Carolina Panthers,CAR,5151083,Will Lee III,CB,Questionable,QUESTIONABLE,Hamstring,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,4,Cincinnati Bengals,CIN,4401811,Kyle Dugger,S,Questionable,QUESTIONABLE,Left Quadriceps,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,5,Cleveland Browns,CLE,3122840,Deshaun Watson,QB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,5,Cleveland Browns,CLE,3040471,Maliek Collins,DT,Questionable,QUESTIONABLE,Elbow,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,6,Dallas Cowboys,DAL,4362088,DeMarvion Overshown,LB,Questionable,QUESTIONABLE,Hamstring,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,6,Dallas Cowboys,DAL,4426354,George Pickens,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,6,Dallas Cowboys,DAL,4426506,Joey Porter Jr.,CB,Questionable,QUESTIONABLE,Ankle,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,6,Dallas Cowboys,DAL,3676833,KaVontae Turpin,WR,Questionable,QUESTIONABLE,Ribs,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,6,Dallas Cowboys,DAL,4372096,Luke Schoonmaker,TE,Questionable,QUESTIONABLE,Groin,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,8,Detroit Lions,DET,4361788,Cade Mays,C,Questionable,QUESTIONABLE,Ankle Sprain,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,8,Detroit Lions,DET,3139387,D.J. Reed,CB,Questionable,QUESTIONABLE,Hip,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,8,Detroit Lions,DET,4038849,DJ Wonnum,LB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,8,Detroit Lions,DET,4383429,Jacob Saylors,RB,Questionable,QUESTIONABLE,Neck,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,9,Green Bay Packers,GB,4360086,Josh Whyle,TE,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,9,Green Bay Packers,GB,4429023,MarShawn Lloyd,RB,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,9,Green Bay Packers,GB,4426411,Sean Rhyan,G,Questionable,QUESTIONABLE,Ankle Sprain,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,9,Green Bay Packers,GB,4361904,Travis Glover,OT,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,9,Green Bay Packers,GB,3124005,Zaire Franklin,LB,Doubtful,DOUBTFUL,Shin Fracture,2026-11-15,doubtful
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,34,Houston Texans,HOU,4035538,David Montgomery,RB,Questionable,QUESTIONABLE,Groin,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,34,Houston Texans,HOU,4243956,Reed Blankenship,S,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,11,Indianapolis Colts,IND,4905664,A.J. Haulcy,S,Questionable,QUESTIONABLE,Ankle,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,11,Indianapolis Colts,IND,3917142,Akeem Davis-Gaither,LB,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,11,Indianapolis Colts,IND,4892240,Jalen Travis,OT,Doubtful,DOUBTFUL,Knee,2026-11-29,doubtful
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,11,Indianapolis Colts,IND,4682909,Justin Walley,CB,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,12,Kansas City Chiefs,KC,4880124,Mansoor Delane,CB,Questionable,QUESTIONABLE,Shoulder,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,12,Kansas City Chiefs,KC,4871063,Peter Woods,DT,Questionable,QUESTIONABLE,Neck Stinger,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,13,Las Vegas Raiders,LV,4360749,Thomas Booker IV,DT,Questionable,QUESTIONABLE,Ankle,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,24,Los Angeles Chargers,LAC,4685553,Brenen Thompson,WR,Questionable,QUESTIONABLE,Quadriceps,2026-11-16,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,24,Los Angeles Chargers,LAC,4690171,Deane Leonard,CB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-16,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,24,Los Angeles Chargers,LAC,4040842,Kayode Awosika,G,Questionable,QUESTIONABLE,Lower Leg,2026-11-16,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,24,Los Angeles Chargers,LAC,4360745,Kendall Williamson,S,Questionable,QUESTIONABLE,Calf,2026-11-16,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,14,Los Angeles Rams,LAR,2575907,Joe Cardona,LS,Questionable,QUESTIONABLE,Ankle,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,14,Los Angeles Rams,LAR,4569382,Jordan Whittington,WR,Questionable,QUESTIONABLE,Back,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,14,Los Angeles Rams,LAR,4426515,Puka Nacua,WR,Doubtful,DOUBTFUL,Right Knee - MCL Sprain,2026-11-15,doubtful
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,14,Los Angeles Rams,LAR,4426405,Trent McDuffie,CB,Questionable,QUESTIONABLE,Back,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,15,Miami Dolphins,MIA,4682745,Jaylen Wright,RB,Questionable,QUESTIONABLE,Quadriceps,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,16,Minnesota Vikings,MIN,4602019,Caleb Banks,DT,Active,,,,
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,16,Minnesota Vikings,MIN,5091793,Charles Demmings,CB,Active,,,,
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,16,Minnesota Vikings,MIN,4710865,Jakobe Thomas,S,Active,,,,
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,16,Minnesota Vikings,MIN,3886598,Jauan Jennings,WR,Questionable,QUESTIONABLE,Calf,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,16,Minnesota Vikings,MIN,16772,Kyle Van Noy,LB,Active,,,,
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,16,Minnesota Vikings,MIN,3917315,Kyler Murray,QB,Questionable,QUESTIONABLE,Hamstring Strain,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,16,Minnesota Vikings,MIN,4629149,Tyrion Ingram-Dawkins,DE,Questionable,QUESTIONABLE,Ankle,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,17,New England Patriots,NE,4047646,A.J. Brown,WR,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,17,New England Patriots,NE,4368113,Charles Woods,CB,Questionable,QUESTIONABLE,Hamstring,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,17,New England Patriots,NE,4432710,TreVeyon Henderson,RB,Questionable,QUESTIONABLE,Illness,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,18,New Orleans Saints,NO,5081999,CJ Donaldson,RB,Questionable,QUESTIONABLE,Shoulder,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,18,New Orleans Saints,NO,3917331,Erik McCoy,C,Doubtful,DOUBTFUL,Biceps,2026-11-15,doubtful
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,19,New York Giants,NYG,4696981,Cam Skattebo,RB,Questionable,QUESTIONABLE,Hamstring,2026-11-12,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,20,New York Jets,NYJ,4569618,Garrett Wilson,WR,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,20,New York Jets,NYJ,4362094,Joseph Ossai,DE,Questionable,QUESTIONABLE,Ankle,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,20,New York Jets,NYJ,4570470,Nahshon Wright,CB,Questionable,QUESTIONABLE,Back,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,20,New York Jets,NYJ,4683815,Trevin Wallace,LB,Questionable,QUESTIONABLE,Groin,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,23,Pittsburgh Steelers,PIT,4035656,Ben Skowronek,WR,Questionable,QUESTIONABLE,Calf,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,23,Pittsburgh Steelers,PIT,4567979,Brandin Echols,CB,Questionable,QUESTIONABLE,Hamstring,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,23,Pittsburgh Steelers,PIT,4692628,Doneiko Slaughter,CB,Questionable,QUESTIONABLE,Hamstring,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,25,San Francisco 49ers,SF,3126486,Deebo Samuel Sr.,WR,Questionable,QUESTIONABLE,Right Hamstring,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,26,Seattle Seahawks,SEA,4259651,Brandon Pili,DT,Questionable,QUESTIONABLE,Back,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,26,Seattle Seahawks,SEA,4426376,Charles Cross,OT,Doubtful,DOUBTFUL,Ankle Sprain,2026-11-15,doubtful
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,26,Seattle Seahawks,SEA,2971622,Leonard Williams,DT,Questionable,QUESTIONABLE,Shoulder Stinger,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,26,Seattle Seahawks,SEA,3129308,Quenton Nelson,G,Doubtful,DOUBTFUL,Knee Surgery,2026-11-15,doubtful
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,26,Seattle Seahawks,SEA,4032473,Rashid Shaheed,WR,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,26,Seattle Seahawks,SEA,3912547,Sam Darnold,QB,Out,OUT,Quadriceps,2026-11-29,out
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,26,Seattle Seahawks,SEA,3120358,Uchenna Nwosu,LB,Questionable,QUESTIONABLE,Ankle,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,10,Tennessee Titans,TEN,4871023,Carnell Tate,WR,Questionable,QUESTIONABLE,Shoulder,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,10,Tennessee Titans,TEN,4431613,James Williams Sr.,LB,Injured Reserve,IR,Groin,2026-12-13,ir
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,10,Tennessee Titans,TEN,4685145,Jaylon Jones,CB,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,10,Tennessee Titans,TEN,3915398,Tommy Townsend,P,Questionable,QUESTIONABLE,Left Knee,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,10,Tennessee Titans,TEN,4428557,Tyjae Spears,RB,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T15:44Z,28,Washington Commanders,WSH,4567156,Treylon Burks,WR,Questionable,QUESTIONABLE,Foot,2026-11-12,questionable
+2026-11-10T16:23:35+00:00,2026-11-10T16:00Z,24,Los Angeles Chargers,LAC,4038941,Justin Herbert,QB,Questionable,QUESTIONABLE,Left Finger,2026-11-16,"Chargers head coach Jim Harbaugh said that Herbert ""should be good to go"" for Monday's game at Baltimore after imaging on the quarterback's injured left middle "
+2026-11-10T16:23:35+00:00,2026-11-10T16:01Z,17,New England Patriots,NE,4569173,Rhamondre Stevenson,RB,Doubtful,DOUBTFUL,Knee,2026-11-15,doubtful
+2026-11-10T16:23:35+00:00,2026-11-10T16:05Z,8,Detroit Lions,DET,4430027,Sam LaPorta,TE,Active,,,,"The Lions have received trade calls on LaPorta leading up to Tuesday's deadline, but the team prefers to keep him with the hope of signing the tight end to a lo"
+2026-11-10T16:23:35+00:00,2026-11-10T16:09Z,15,Miami Dolphins,MIA,3057956,Zach Sieler,DT,Out,OUT,Biceps,2027-02-15,out
+2026-11-10T16:23:35+00:00,2026-11-10T16:10Z,25,San Francisco 49ers,SF,16737,Mike Evans,WR,Out,QUESTIONABLE,Right Achilles Tendinitis,2026-11-15,"Evans (Achilles) isn't expected to be ready to play Sunday at Dallas, though the 49ers will continue to evaluate his status throughout the week, Brooke Evans of"
