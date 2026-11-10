@@ -6202,6 +6202,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-10T00:53:16+00:00,2026-11-10T00:25Z,22,Arizona Cardinals,ARI,4430841,Carson Beck,QB,Active,,,,"Beck is expected to start Sunday's contest against the Rams, Josh Weinfuss of ESPN.com reports."
 2026-11-10T00:53:16+00:00,2026-11-10T00:27Z,2,Buffalo Bills,BUF,4367203,Alec Anderson,OT,Questionable,INACTIVE,Ankle,2026-11-15,Anderson (ankle) is inactive for Monday's matchup against Minnesota.
 2026-11-10T00:38:15+00:00,2026-11-10T00:30Z,19,New York Giants,NYG,4040655,Darnell Mooney,WR,Questionable,QUESTIONABLE,Chest,2026-11-12,"Mooney (chest) was estimated to be a limited participant at the Giants' walkthrough practice Monday, Dan Salomone of the team's official site reports."
+2026-11-10T23:08:21+00:00,2026-11-10T00:30Z,19,New York Giants,NYG,4040655,Darnell Mooney,WR,Active,,,,"Mooney (chest) was estimated to be a limited participant at the Giants' walkthrough practice Monday, Dan Salomone of the team's official site reports."
 2026-11-10T00:53:16+00:00,2026-11-10T00:31Z,2,Buffalo Bills,BUF,3127294,Greg Gaines,DT,Questionable,INACTIVE,Calf,2026-11-15,Gaines (calf) is inactive for Monday's game versus Minnesota.
 2026-11-10T20:23:04+00:00,2026-11-10T00:34Z,22,Arizona Cardinals,ARI,11394,Josh Johnson,QB,Active,,,,"Johnson was signed by the Cardinals off Cincinnati's practice squad Monday, Adam Schefter of ESPN reports."
 2026-11-10T00:53:16+00:00,2026-11-10T00:36Z,28,Washington Commanders,WSH,4360635,Chig Okonkwo,TE,Questionable,QUESTIONABLE,Hip,2026-11-12,"Okonkwo was deemed a limited participant on Washington's estimated practice report Monday due to a hip injury, John Keim of ESPN.com reports."
@@ -6419,4 +6420,11 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-10T22:23:19+00:00,2026-11-10T21:39Z,15,Miami Dolphins,MIA,4242512,Malik Willis,QB,Injured Reserve,IR,Groin,2026-12-13,ir
 2026-11-10T22:23:19+00:00,2026-11-10T21:39Z,19,New York Giants,NYG,4433970,J.J. McCarthy,QB,Questionable,,,,"McCarthy (hip) was listed as a full participant in Tuesday's practice, Dan Salomone of the Giants' official site reports."
 2026-11-10T22:23:19+00:00,2026-11-10T21:47Z,16,Minnesota Vikings,MIN,16733,Odell Beckham Jr.,WR,Active,,,,"The Vikings released Beckham on Tuesday, Craig Peters of the team's official site reports."
+2026-11-10T23:08:21+00:00,2026-11-10T22:08Z,15,Miami Dolphins,MIA,4433971,Kyle McCord,QB,Active,,,,McCord will step in as the Dolphins' starting quarterback beginning with Sunday's game at Indianapolis after Miami placed Malik Willis (core) on injured reserve
+2026-11-10T23:08:21+00:00,2026-11-10T22:13Z,22,Arizona Cardinals,ARI,4038524,Gardner Minshew II,QB,Injured Reserve,IR,Right Elbow,2026-12-20,"The Cardinals placed Minshew (elbow) on injured reserve Tuesday, Darren Urban of the team's official site reports."
 2026-11-10T22:23:19+00:00,2026-11-10T22:14Z,22,Arizona Cardinals,ARI,4360761,Michael Wilson,WR,Injured Reserve,IR,Neck Fracture,2027-02-15,ir
+2026-11-10T23:08:21+00:00,2026-11-10T22:21Z,13,Las Vegas Raiders,LV,4565908,Tyler Scott,WR,Active,,,,
+2026-11-10T23:08:21+00:00,2026-11-10T22:36Z,16,Minnesota Vikings,MIN,4573398,Max Brosmer,QB,Active,,,,Brosmer completed six of seven attempts for 58 yards in Monday night's 23-6 loss to the Bills.
+2026-11-10T23:08:21+00:00,2026-11-10T22:41Z,25,San Francisco 49ers,SF,4685369,Gracen Halton,DT,Injured Reserve,IR,Left Ankle Surgery,2027-02-15,ir
+2026-11-10T23:08:21+00:00,2026-11-10T22:50Z,8,Detroit Lions,DET,4360383,Kerby Joseph,S,Out,PUP-R,Knee,2026-11-22,"Lions head coach Dan Campbell ruled Joseph (knee) out for Sunday's game against the Patriots, Nolan Bianchi of The Detroit News reports."
+2026-11-10T23:08:21+00:00,2026-11-10T22:53Z,22,Arizona Cardinals,ARI,4360761,Michael Wilson,WR,Injured Reserve,IR,Neck Fracture,2027-02-15,The Cardinals placed Wilson (neck) on injured reserve Tuesday.
