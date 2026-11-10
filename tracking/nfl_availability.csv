@@ -5964,6 +5964,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-09T20:23:05+00:00,2026-11-09T19:49Z,27,Tampa Bay Buccaneers,TB,4596448,Bucky Irving,RB,Active,,,,"Head coach Todd Bowles said Monday that the Buccaneers ""will try and lessen the load"" on Irving following their Week 10 bye, Rick Stroud of the Tampa Bay Times "
 2026-11-09T20:23:05+00:00,2026-11-09T20:01Z,18,New Orleans Saints,NO,3917331,Erik McCoy,C,Doubtful,DOUBTFUL,Biceps,2026-11-15,doubtful
 2026-11-09T20:23:05+00:00,2026-11-09T20:01Z,28,Washington Commanders,WSH,4567156,Treylon Burks,WR,Out,QUESTIONABLE,Foot,2026-11-12,out
+2026-11-10T01:08:27+00:00,2026-11-09T20:15Z,9,Green Bay Packers,GB,4047365,Josh Jacobs,RB,Questionable,OUT,Right Finger Surgery,2026-11-25,"Jacobs is in line to undergo surgery on his injured finger this week and is expected to miss a maximum of three weeks, according to Matt Zenitz of CBS Sports."
 2026-11-09T20:23:05+00:00,2026-11-09T20:16Z,9,Green Bay Packers,GB,4047365,Josh Jacobs,RB,Doubtful,DOUBTFUL,Right Finger Surgery,2026-11-15,doubtful
 2026-11-09T21:23:24+00:00,2026-11-09T20:30Z,33,Baltimore Ravens,BAL,2578570,Jacoby Brissett,QB,Active,,,,"Ahead of Week 10, Ravens head coach Jesse Minter noted ""I expect (Brissett) to be our starter"" next Monday, Jeff Zrebiec of The Athletic reports."
 2026-11-09T21:23:24+00:00,2026-11-09T20:45Z,22,Arizona Cardinals,ARI,4683506,Albert Reese IV,OT,Active,,,,
@@ -6140,6 +6141,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-09T22:08:25+00:00,2026-11-09T21:39Z,22,Arizona Cardinals,ARI,4360761,Michael Wilson,WR,Out,OUT,Neck Fracture,2027-02-15,"Coach Mike LaFleur revealed Monday that Wilson is out for the season due to a fracture in his neck, Josh Weinfuss of ESPN.com reports."
 2026-11-09T22:23:15+00:00,2026-11-09T21:53Z,22,Arizona Cardinals,ARI,4038524,Gardner Minshew II,QB,Questionable,QUESTIONABLE,Right Elbow,2026-11-15,"Minshew is slated undergo testing on his right elbow/arm in the wake of Sunday's loss to the Seahawks, according to Darren Urban of the Cardinals' official site"
 2026-11-09T22:08:25+00:00,2026-11-09T22:01Z,6,Dallas Cowboys,DAL,4242355,Jake Ferguson,TE,Out,OUT,Knee,2026-11-22,out
+2026-11-10T01:08:27+00:00,2026-11-09T22:03Z,6,Dallas Cowboys,DAL,4242355,Jake Ferguson,TE,Questionable,OUT,Knee,2026-11-22,"According to coach Brian Schottenheimer, Ferguson (knee) is in line to miss multiple weeks, Patrik Walker of the Cowboys' official site reports."
 2026-11-09T22:23:15+00:00,2026-11-09T22:03Z,16,Minnesota Vikings,MIN,4832846,Demond Claiborne,RB,Injured Reserve,IR,Knee,2026-12-06,ir
 2026-11-09T22:23:15+00:00,2026-11-09T22:07Z,22,Arizona Cardinals,ARI,3886633,Hjalte Froholdt,C,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-15,questionable
 2026-11-09T22:38:02+00:00,2026-11-09T22:12Z,2,Buffalo Bills,BUF,4242433,Joshua Palmer,WR,Injured Reserve,IR,Right Hamstring,2026-12-06,ir
@@ -6199,3 +6201,12 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-10T00:38:15+00:00,2026-11-10T00:30Z,19,New York Giants,NYG,4040655,Darnell Mooney,WR,Questionable,QUESTIONABLE,Chest,2026-11-12,"Mooney (chest) was estimated to be a limited participant at the Giants' walkthrough practice Monday, Dan Salomone of the team's official site reports."
 2026-11-10T00:53:16+00:00,2026-11-10T00:31Z,2,Buffalo Bills,BUF,3127294,Greg Gaines,DT,Questionable,INACTIVE,Calf,2026-11-15,Gaines (calf) is inactive for Monday's game versus Minnesota.
 2026-11-10T00:53:16+00:00,2026-11-10T00:36Z,28,Washington Commanders,WSH,4360635,Chig Okonkwo,TE,Questionable,QUESTIONABLE,Hip,2026-11-12,"Okonkwo was deemed a limited participant on Washington's estimated practice report Monday due to a hip injury, John Keim of ESPN.com reports."
+2026-11-10T01:08:27+00:00,2026-11-10T01:01Z,6,Dallas Cowboys,DAL,4360967,Brevyn Spann-Ford,TE,Active,,,,Spann-Ford caught two of three targets for 20 yards during Sunday's 27-23 win versus the Colts.
+2026-11-10T01:08:27+00:00,2026-11-10T01:01Z,6,Dallas Cowboys,DAL,4426506,Joey Porter Jr.,CB,Out,QUESTIONABLE,Ankle,2026-11-15,"Porter ""will go through the same process as last week"" before a decision is made regarding his availability for Week 10 against San Francisco, Jon Machota of Th"
+2026-11-10T01:08:27+00:00,2026-11-10T01:02Z,2,Buffalo Bills,BUF,4367203,Alec Anderson,OT,Out,INACTIVE,Ankle,2026-11-15,inactive
+2026-11-10T01:08:27+00:00,2026-11-10T01:02Z,2,Buffalo Bills,BUF,3051324,Dion Dawkins,OT,Out,INACTIVE,Ribs,2026-11-15,inactive
+2026-11-10T01:08:27+00:00,2026-11-10T01:02Z,2,Buffalo Bills,BUF,3127294,Greg Gaines,DT,Out,INACTIVE,Calf,2026-11-15,inactive
+2026-11-10T01:08:27+00:00,2026-11-10T01:02Z,6,Dallas Cowboys,DAL,4426354,George Pickens,WR,Out,QUESTIONABLE,Hamstring,2026-11-15,out
+2026-11-10T01:08:27+00:00,2026-11-10T01:02Z,6,Dallas Cowboys,DAL,3929850,P.J. Locke,S,Out,OUT,Concussion Concussion,2026-11-22,out
+2026-11-10T01:08:27+00:00,2026-11-10T01:02Z,16,Minnesota Vikings,MIN,4832846,Demond Claiborne,RB,Injured Reserve,IR,Knee,2026-12-06,ir
+2026-11-10T01:08:27+00:00,2026-11-10T01:02Z,26,Seattle Seahawks,SEA,3912547,Sam Darnold,QB,Out,OUT,Quadriceps,2026-11-29,out
