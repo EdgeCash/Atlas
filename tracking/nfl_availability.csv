@@ -6064,6 +6064,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-09T22:08:25+00:00,2026-11-09T21:19Z,13,Las Vegas Raiders,LV,4432775,Dont'e Thornton Jr.,WR,Active,,,,
 2026-11-09T22:08:25+00:00,2026-11-09T21:19Z,13,Las Vegas Raiders,LV,5150247,Malik Benson,WR,Active,,,,
 2026-11-09T22:08:25+00:00,2026-11-09T21:19Z,13,Las Vegas Raiders,LV,4360749,Thomas Booker IV,DT,Out,QUESTIONABLE,Ankle,2026-11-15,out
+2026-11-10T01:23:08+00:00,2026-11-09T21:21Z,9,Green Bay Packers,GB,4047365,Josh Jacobs,RB,Questionable,OUT,Right Finger Surgery,2026-11-25,"When asked if IR is a possibility for Jacobs (finger), coach Matt LaFleur said Monday, ""I think everything is a possibility,"" Matt Schneidman of The Athletic re"
 2026-11-09T22:08:25+00:00,2026-11-09T21:23Z,24,Los Angeles Chargers,LAC,4685553,Brenen Thompson,WR,Out,QUESTIONABLE,Quadriceps,2026-11-16,out
 2026-11-09T22:08:25+00:00,2026-11-09T21:23Z,24,Los Angeles Chargers,LAC,4690171,Deane Leonard,CB,Out,QUESTIONABLE,Concussion Concussion,2026-11-16,out
 2026-11-09T22:08:25+00:00,2026-11-09T21:23Z,24,Los Angeles Chargers,LAC,4040842,Kayode Awosika,G,Out,QUESTIONABLE,Lower Leg,2026-11-16,out
@@ -6203,6 +6204,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-10T00:53:16+00:00,2026-11-10T00:36Z,28,Washington Commanders,WSH,4360635,Chig Okonkwo,TE,Questionable,QUESTIONABLE,Hip,2026-11-12,"Okonkwo was deemed a limited participant on Washington's estimated practice report Monday due to a hip injury, John Keim of ESPN.com reports."
 2026-11-10T01:08:27+00:00,2026-11-10T01:01Z,6,Dallas Cowboys,DAL,4360967,Brevyn Spann-Ford,TE,Active,,,,Spann-Ford caught two of three targets for 20 yards during Sunday's 27-23 win versus the Colts.
 2026-11-10T01:08:27+00:00,2026-11-10T01:01Z,6,Dallas Cowboys,DAL,4426506,Joey Porter Jr.,CB,Out,QUESTIONABLE,Ankle,2026-11-15,"Porter ""will go through the same process as last week"" before a decision is made regarding his availability for Week 10 against San Francisco, Jon Machota of Th"
+2026-11-10T01:23:08+00:00,2026-11-10T01:02Z,33,Baltimore Ravens,BAL,3858276,Jaylinn Hawkins,S,Out,QUESTIONABLE,Knee,2026-11-16,out
 2026-11-10T01:08:27+00:00,2026-11-10T01:02Z,2,Buffalo Bills,BUF,4367203,Alec Anderson,OT,Out,INACTIVE,Ankle,2026-11-15,inactive
 2026-11-10T01:08:27+00:00,2026-11-10T01:02Z,2,Buffalo Bills,BUF,3051324,Dion Dawkins,OT,Out,INACTIVE,Ribs,2026-11-15,inactive
 2026-11-10T01:08:27+00:00,2026-11-10T01:02Z,2,Buffalo Bills,BUF,3127294,Greg Gaines,DT,Out,INACTIVE,Calf,2026-11-15,inactive
@@ -6210,3 +6212,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-10T01:08:27+00:00,2026-11-10T01:02Z,6,Dallas Cowboys,DAL,3929850,P.J. Locke,S,Out,OUT,Concussion Concussion,2026-11-22,out
 2026-11-10T01:08:27+00:00,2026-11-10T01:02Z,16,Minnesota Vikings,MIN,4832846,Demond Claiborne,RB,Injured Reserve,IR,Knee,2026-12-06,ir
 2026-11-10T01:08:27+00:00,2026-11-10T01:02Z,26,Seattle Seahawks,SEA,3912547,Sam Darnold,QB,Out,OUT,Quadriceps,2026-11-29,out
+2026-11-10T01:23:08+00:00,2026-11-10T01:02Z,28,Washington Commanders,WSH,4567156,Treylon Burks,WR,Out,QUESTIONABLE,Foot,2026-11-12,out
+2026-11-10T01:23:08+00:00,2026-11-10T01:08Z,11,Indianapolis Colts,IND,4874509,DJ Giddens,RB,Active,,,,Giddens did not appear in Sunday's 27-23 loss to the Cowboys.
+2026-11-10T01:23:08+00:00,2026-11-10T01:11Z,6,Dallas Cowboys,DAL,4683848,Donovan Ezeiruaku,LB,Questionable,QUESTIONABLE,Ankle,2026-11-15,"Ezeiruaku (ankle) is considered day-to-day, Nick Harris of the Fort Worth Star-Telegram reports."
+2026-11-10T01:23:08+00:00,2026-11-10T01:17Z,25,San Francisco 49ers,SF,4427325,Renardo Green,CB,Questionable,QUESTIONABLE,Back,2026-11-15,"Coach Kyle Shanahan said Monday that Green (back) is considered day-to-day ahead of Sunday's game at Dallas, Matt Barrows of The Athletic reports."
