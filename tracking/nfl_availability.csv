@@ -6488,6 +6488,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-11T02:23:31+00:00,2026-11-11T02:01Z,19,New York Giants,NYG,4921249,Colton Hood,CB,Questionable,QUESTIONABLE,Left Finger Dislocated,2026-11-12,questionable
 2026-11-11T02:23:31+00:00,2026-11-11T02:01Z,25,San Francisco 49ers,SF,4685369,Gracen Halton,DT,Injured Reserve,IR,Left Ankle Surgery,2027-02-15,ir
 2026-11-11T02:23:31+00:00,2026-11-11T02:03Z,8,Detroit Lions,DET,4912274,Sione Vaki,RB,Active,,,,Vaki turned three carries into 14 yards and hauled in both of his targets for seven yards during the Lions'
+2026-11-11T23:08:10+00:00,2026-11-11T02:03Z,8,Detroit Lions,DET,4912274,Sione Vaki,RB,Questionable,QUESTIONABLE,Ankle,2026-11-15,Vaki turned three carries into 14 yards and hauled in both of his targets for seven yards during the Lions' Week 9 game at Miami.
 2026-11-11T02:23:31+00:00,2026-11-11T02:03Z,24,Los Angeles Chargers,LAC,4430870,KeAndre Lambert-Smith,WR,Active,,,,Lambert-Smith registered one catch (on four targets) for 50 yards in Sunday's loss to Houston.
 2026-11-11T02:23:31+00:00,2026-11-11T02:09Z,22,Arizona Cardinals,ARI,4569609,Evan Hull,RB,Active,,,,Hull failed to haul in his lone target during the Cardinals' 17-3 loss to the Seahawks on Sunday.
 2026-11-11T02:23:31+00:00,2026-11-11T02:09Z,18,New Orleans Saints,NO,4698597,Barion Brown,WR,Active,,,,Brown caught his only target for 52 yards during Sunday's 23-22 overtime win versus the Browns. He also lost a fumble on a punt return.
@@ -6618,3 +6619,38 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-11T22:08:27+00:00,2026-11-11T22:01Z,2,Buffalo Bills,BUF,4379778,Christian Benford,CB,Questionable,QUESTIONABLE,Wrist,2026-11-15,questionable
 2026-11-11T22:08:27+00:00,2026-11-11T22:01Z,2,Buffalo Bills,BUF,4030899,Spencer Brown,OT,Questionable,QUESTIONABLE,Ankle,2026-11-15,questionable
 2026-11-11T22:08:27+00:00,2026-11-11T22:01Z,15,Miami Dolphins,MIA,4869961,Chris Bell,WR,Questionable,QUESTIONABLE,Knee,2026-11-15,"Bell (knee) is listed as a limited participant on Wednesday's injury report, C. Isaiah Smalls II of the Miami Herald reports."
+2026-11-11T23:08:10+00:00,2026-11-11T22:04Z,18,New Orleans Saints,NO,4239996,Travis Etienne Jr.,RB,Injured Reserve,IR-R,Left Hamstring Strain,2026-11-15,Head coach Kellen Moore said Wednesday that the Saints will wait until the end of the week to make a decision whether or not to activate Etienne from injured re
+2026-11-11T23:08:10+00:00,2026-11-11T22:06Z,28,Washington Commanders,WSH,4567156,Treylon Burks,WR,Out,,,,Burks (foot) doesn't have an injury designation for Thursday night's game against the Giants.
+2026-11-11T23:08:10+00:00,2026-11-11T22:08Z,10,Tennessee Titans,TEN,4428557,Tyjae Spears,RB,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
+2026-11-11T23:08:10+00:00,2026-11-11T22:11Z,6,Dallas Cowboys,DAL,4702577,Devin Moore,CB,Injured Reserve,IR-R,Hip,2026-11-15,"The Cowboys designated Moore (hip) for return from injured reserve Wednesday, Patrik Walker of the Cowboys' official site reports."
+2026-11-11T23:08:10+00:00,2026-11-11T22:11Z,20,New York Jets,NYJ,3117255,Harrison Phillips,DT,Questionable,QUESTIONABLE,Ankle,2026-11-15,questionable
+2026-11-11T23:08:10+00:00,2026-11-11T22:13Z,9,Green Bay Packers,GB,4429023,MarShawn Lloyd,RB,Out,,,,Lloyd (knee) is not listed on the Packers' injury report Wednesday.
+2026-11-11T23:08:10+00:00,2026-11-11T22:16Z,9,Green Bay Packers,GB,4361423,Micah Parsons,DE,Out,PUP-R,Left Knee - ACL Surgery,2026-11-25,Parsons (knee/illness) officially was limited at Wednesday's jog-through.
+2026-11-11T23:08:10+00:00,2026-11-11T22:16Z,9,Green Bay Packers,GB,4431487,Savion Williams,WR,Questionable,QUESTIONABLE,Groin,2026-11-15,Williams (groin) was limited in Wednesday's practice.
+2026-11-11T23:08:10+00:00,2026-11-11T22:18Z,9,Green Bay Packers,GB,4869461,Trey Smack,PK,Questionable,QUESTIONABLE,Right Calf,2026-11-15,Smack (calf) was limited in Wednesday's practice.
+2026-11-11T23:08:10+00:00,2026-11-11T22:25Z,22,Arizona Cardinals,ARI,4239944,Hunter Long,TE,Injured Reserve,IR-R,Knee,2026-11-15,The Cardinals designated Long (knee) for return from injured reserve Wednesday.
+2026-11-11T23:08:10+00:00,2026-11-11T22:27Z,16,Minnesota Vikings,MIN,3728281,Blake Cashman,LB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-15,"Vikings coach Kevin O'Connell said Wednesday that Cashman is in concussion protocol, Kevin Seifert of ESPN.com reports."
+2026-11-11T23:08:10+00:00,2026-11-11T22:28Z,18,New Orleans Saints,NO,3054850,Alvin Kamara,RB,Questionable,QUESTIONABLE,Back,2026-11-15,Kamara (rest/back) was a non-participant at Wednesday's practice.
+2026-11-11T23:08:10+00:00,2026-11-11T22:32Z,16,Minnesota Vikings,MIN,3886598,Jauan Jennings,WR,Questionable,QUESTIONABLE,Calf,2026-11-15,questionable
+2026-11-11T23:08:10+00:00,2026-11-11T22:32Z,18,New Orleans Saints,NO,5081999,CJ Donaldson,RB,Questionable,QUESTIONABLE,Shoulder,2026-11-15,questionable
+2026-11-11T23:08:10+00:00,2026-11-11T22:34Z,23,Pittsburgh Steelers,PIT,4682980,Derrick Harmon,DT,Injured Reserve,IR-R,Foot,2026-11-15,"The Steelers designated Harmon (foot) for return from injured reserve Wednesday, Ray Fittipaldo of the Pittsburgh Post-Gazette reports."
+2026-11-11T23:08:10+00:00,2026-11-11T22:36Z,17,New England Patriots,NE,4039505,Reggie Gilliam,FB,Injured Reserve,IR-R,Ankle,2026-11-15,"Gilliam (ankle) was designated for return from injured reserve Wednesday, Mike Reiss of ESPN.com reports."
+2026-11-11T23:08:10+00:00,2026-11-11T22:38Z,6,Dallas Cowboys,DAL,4372096,Luke Schoonmaker,TE,Active,,,,
+2026-11-11T23:08:10+00:00,2026-11-11T22:39Z,5,Cleveland Browns,CLE,5083076,Harold Fannin Jr.,TE,Questionable,QUESTIONABLE,Groin,2026-11-15,"Fannin (groin) was limited in Wednesday's practice, Mary Kay Cabot of The Cleveland Plain Dealer reports."
+2026-11-11T23:08:10+00:00,2026-11-11T22:39Z,34,Houston Texans,HOU,4429059,Woody Marks,RB,Questionable,QUESTIONABLE,Knee,2026-11-15,"Marks (knee) was a limited participant in Wednesday's practice, Chris Easterling of the Akron Beacon Journal reports."
+2026-11-11T23:08:10+00:00,2026-11-11T22:42Z,34,Houston Texans,HOU,4366031,Tank Dell,WR,Questionable,QUESTIONABLE,Hand,2026-11-15,"Dell (hand) was limited in Wednesday's practice, Mary Kay Cabot of The Cleveland Plain Dealer reports."
+2026-11-11T23:08:10+00:00,2026-11-11T22:43Z,34,Houston Texans,HOU,4362504,Brevin Jordan,TE,Questionable,QUESTIONABLE,Foot,2026-11-15,questionable
+2026-11-11T23:08:10+00:00,2026-11-11T22:43Z,34,Houston Texans,HOU,4839498,Keylan Rutledge,G,Questionable,QUESTIONABLE,Neck,2026-11-15,questionable
+2026-11-11T23:08:10+00:00,2026-11-11T22:43Z,34,Houston Texans,HOU,3045474,Wyatt Teller,G,Questionable,QUESTIONABLE,Illness,2026-11-15,questionable
+2026-11-11T23:08:10+00:00,2026-11-11T22:44Z,34,Houston Texans,HOU,3919117,Azeez Al-Shaair,LB,Questionable,QUESTIONABLE,Groin,2026-11-15,questionable
+2026-11-11T23:08:10+00:00,2026-11-11T22:45Z,34,Houston Texans,HOU,4432708,Marvin Harrison Jr.,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-15,"Harrison (hamstring) was limited in Wednesday's practice, Jonathan M. Alexander of the Houston Chronicle reports."
+2026-11-11T23:08:10+00:00,2026-11-11T22:47Z,8,Detroit Lions,DET,4692025,Brian Branch,S,Questionable,QUESTIONABLE,Hip,2026-11-15,questionable
+2026-11-11T23:08:10+00:00,2026-11-11T22:47Z,8,Detroit Lions,DET,4383429,Jacob Saylors,RB,Active,,,,
+2026-11-11T23:08:10+00:00,2026-11-11T22:50Z,17,New England Patriots,NE,4047646,A.J. Brown,WR,Out,QUESTIONABLE,Knee,2026-11-15,Brown (knee/ankle) was a limited participant in Wednesday's practice.
+2026-11-11T23:08:10+00:00,2026-11-11T22:52Z,29,Carolina Panthers,CAR,4242975,Jaelan Phillips,LB,Out,,,,Phillips (hamstring) was estimated as a full participant on Wednesday's practice report.
+2026-11-11T23:08:10+00:00,2026-11-11T22:52Z,17,New England Patriots,NE,4432710,TreVeyon Henderson,RB,Out,OUT,Illness,2026-11-29,out
+2026-11-11T23:08:10+00:00,2026-11-11T22:54Z,29,Carolina Panthers,CAR,5151083,Will Lee III,CB,Out,,,,Lee (hamstring) was estimated as a full participant on Wednesday's practice report.
+2026-11-11T23:08:10+00:00,2026-11-11T22:56Z,17,New England Patriots,NE,3046439,Hunter Henry,TE,Questionable,QUESTIONABLE,Foot,2026-11-15,Henry (foot) was limited in Wednesday's practice.
+2026-11-11T23:08:10+00:00,2026-11-11T23:01Z,29,Carolina Panthers,CAR,3117253,Bobby Okereke,LB,Questionable,QUESTIONABLE,Foot,2026-11-15,questionable
+2026-11-11T23:08:10+00:00,2026-11-11T23:02Z,16,Minnesota Vikings,MIN,4568007,Jay Ward,S,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
+2026-11-11T23:08:10+00:00,2026-11-11T23:03Z,16,Minnesota Vikings,MIN,16772,Kyle Van Noy,LB,Questionable,QUESTIONABLE,Calf,2026-11-15,questionable
