@@ -1,6 +1,6 @@
 # Atlas on Polymarket US
 
-*Rebuilt every run; this one at 2026-11-11 02:23 UTC.*
+*Rebuilt every run; this one at 2026-11-11 02:38 UTC.*
 
 Polymarket US, the CFTC-regulated exchange, is the one venue Atlas is priced
 against. It lists a moneyline, a ladder of spreads and a ladder of totals on
@@ -16,7 +16,7 @@ the point-in-time archive of the market Atlas is measured against.
 |---|---|---|---|---|---|---|
 | NCAAF | 70 | 9 | 1206 | 1.0¢ | – | 0.0950 |
 | NFL | 14 | 1 | 142 | 0.5¢ | – | 0.0950 |
-| NBA | 56 | 25 | 1584 | 1.0¢ | – | 0.0950 |
+| NBA | 56 | 26 | 1586 | 2.0¢ | – | 0.0950 |
 | NHL | 58 | 25 | 750 | 1.0¢ | – | 0.0950 |
 
 Spread is the gap between the best bid and the best ask on the contracts
@@ -57,10 +57,10 @@ side at disagreements this large or larger, never below one half.
 
 | Sport | Market | Games | Atlas, median gap | Atlas, largest gap | Anchored, median gap |
 |---|---|---|---|---|---|
-| NBA | margin | 23 | 2.6 | 11.7 | 0.09 |
-| NBA | total | 12 | 4.5 | 15.2 | 0.39 |
-| NCAAF | margin | 9 | 3.7 | 13.3 | 0.00 |
-| NCAAF | total | 9 | 1.5 | 11.3 | 0.65 |
+| NBA | margin | 24 | 2.5 | 11.7 | 0.09 |
+| NBA | total | 12 | 4.1 | 16.1 | 0.22 |
+| NCAAF | margin | 9 | 3.7 | 12.7 | 0.00 |
+| NCAAF | total | 9 | 2.7 | 15.8 | 0.76 |
 | NFL | margin | 1 | 0.8 | 0.8 | 0.01 |
 | NFL | total | 1 | 3.1 | 3.1 | 0.39 |
 
@@ -71,7 +71,7 @@ construction.
 
 ## Player props
 
-Player props this run: NBA (points, rebounds, assists, threes, steals, blocks, the three combined): 2444 contracts on 10 games, 2444 with an Atlas projection beside them, 20469 graded so far; NHL (points, goals, assists): 976 contracts on 10 games, 974 with an Atlas projection beside them, 9591 graded so far; NFL (yards, receptions, touchdowns, attempts, completions, carries): 244 contracts on 1 games, 244 with an Atlas projection beside them, 5578 graded so far. Atlas's numbers are `atlas/models/nba_props.py` (`reports/nba_props.md`) and `atlas/models/nhl_props.py` (`reports/nhl_props.md`). Each player-stat's main line is kept in `tracking/polymarket_props.csv` with Atlas's probability as it stood, and graded against the box score and the close into `tracking/prop_record.csv`, the record that decides, a sport at a time, what Atlas's disagreement is worth there.
+Player props this run: NBA (points, rebounds, assists, threes, steals, blocks, the three combined): 2446 contracts on 10 games, 2446 with an Atlas projection beside them, 20469 graded so far; NHL (points, goals, assists): 1031 contracts on 11 games, 1029 with an Atlas projection beside them, 9591 graded so far; NFL (yards, receptions, touchdowns, attempts, completions, carries): 244 contracts on 1 games, 244 with an Atlas projection beside them, 5578 graded so far. Atlas's numbers are `atlas/models/nba_props.py` (`reports/nba_props.md`) and `atlas/models/nhl_props.py` (`reports/nhl_props.md`). Each player-stat's main line is kept in `tracking/polymarket_props.csv` with Atlas's probability as it stood, and graded against the box score and the close into `tracking/prop_record.csv`, the record that decides, a sport at a time, what Atlas's disagreement is worth there.
 
 ## The favorites rule
 
@@ -88,10 +88,10 @@ error.
 
 | Phase | Threshold | Taken | Graded | Win rate | Break-even | Edge (pts) | Profit per $ |
 |---|---|---|---|---|---|---|---|
-| in play | 80% | 711 | 683 | 82.6% | 84.8% | -2.3 ± 1.5 | -2.7% |
-| in play | 85% | 736 | 710 | 87.5% | 88.8% | -1.4 ± 1.2 | -1.5% |
-| in play | 90% | 741 | 715 | 91.0% | 92.5% | -1.5 ± 1.1 | -1.6% |
-| in play | 95% | 695 | 670 | 95.8% | 96.2% | -0.4 ± 0.8 | -0.4% |
+| in play | 80% | 716 | 683 | 82.6% | 84.8% | -2.3 ± 1.5 | -2.7% |
+| in play | 85% | 741 | 710 | 87.5% | 88.8% | -1.4 ± 1.2 | -1.5% |
+| in play | 90% | 746 | 715 | 91.0% | 92.5% | -1.5 ± 1.1 | -1.6% |
+| in play | 95% | 698 | 670 | 95.8% | 96.2% | -0.4 ± 0.8 | -0.4% |
 | pregame | 80% | 508 | 347 | 89.0% | 89.2% | -0.2 ± 1.7 | -0.2% |
 | pregame | 85% | 387 | 255 | 93.3% | 92.4% | +1.0 ± 1.6 | 1.0% |
 | pregame | 90% | 290 | 186 | 96.2% | 94.9% | +1.3 ± 1.4 | 1.4% |
