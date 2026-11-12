@@ -6545,6 +6545,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-11T18:08:39+00:00,2026-11-11T17:38Z,11,Indianapolis Colts,IND,4360078,Alec Pierce,WR,Injured Reserve,IR,Left Heel,2026-11-29,"When asked Wednesday whether Pierce (heel) has a chance to return from IR this season, Colts head coach Shane Steichen was noncommittal, James Boyd of The Athle"
 2026-11-11T18:08:39+00:00,2026-11-11T17:50Z,10,Tennessee Titans,TEN,4871023,Carnell Tate,WR,Questionable,QUESTIONABLE,Shoulder,2026-11-15,questionable
 2026-11-11T18:08:39+00:00,2026-11-11T17:50Z,28,Washington Commanders,WSH,2576736,Lucas Patrick,G,Out,OUT,Concussion Concussion,2026-11-23,out
+2026-11-12T23:38:26+00:00,2026-11-11T17:51Z,28,Washington Commanders,WSH,4361088,Colson Yankoff,TE,Out,OUT,Knee,2026-11-23,out
 2026-11-11T18:08:39+00:00,2026-11-11T18:01Z,15,Miami Dolphins,MIA,4242512,Malik Willis,QB,Injured Reserve,IR,Abdomen,2026-12-13,ir
 2026-11-11T19:08:01+00:00,2026-11-11T18:02Z,12,Kansas City Chiefs,KC,4683062,Xavier Worthy,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-15,"Worthy (hamstring) is slated to practice Wednesday, "" Pete Sweeney of The Kansas City Star reports."
 2026-11-11T19:08:01+00:00,2026-11-11T18:17Z,12,Kansas City Chiefs,KC,3055899,Harrison Butker,PK,Active,,,,"Butker will remain Kansas City's kicker ahead of Sunday's game against the Falcons, Sam McDowell of The Kansas City Star reports."
@@ -6608,6 +6609,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-11T22:08:27+00:00,2026-11-11T21:38Z,15,Miami Dolphins,MIA,4034729,Tucker Addington,LS,Questionable,QUESTIONABLE,Shoulder,2026-11-15,questionable
 2026-11-11T22:08:27+00:00,2026-11-11T21:38Z,18,New Orleans Saints,NO,4239996,Travis Etienne Jr.,RB,Injured Reserve,IR-R,Left Hamstring Strain,2026-11-15,"Etienne (hamstring) was back at practice Wednesday, Ross Jackson of WWL Louisiana reports."
 2026-11-11T22:08:27+00:00,2026-11-11T21:39Z,15,Miami Dolphins,MIA,4682745,Jaylen Wright,RB,Active,,,,
+2026-11-12T23:38:26+00:00,2026-11-11T21:40Z,28,Washington Commanders,WSH,4567156,Treylon Burks,WR,Active,,,,
 2026-11-11T22:08:27+00:00,2026-11-11T21:42Z,12,Kansas City Chiefs,KC,4683062,Xavier Worthy,WR,Questionable,,,,Worthy (hamstring) was a full participant in Wednesday's practice for Kansas City.
 2026-11-11T22:08:27+00:00,2026-11-11T21:46Z,12,Kansas City Chiefs,KC,3139477,Patrick Mahomes,QB,Questionable,,,,Mahomes (right elbow/knee) was a full participant in Wednesday's practice.
 2026-11-11T22:08:27+00:00,2026-11-11T21:47Z,22,Arizona Cardinals,ARI,4427728,Bam Knight,RB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-15,questionable
@@ -7056,3 +7058,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-12T23:23:14+00:00,2026-11-12T22:59Z,16,Minnesota Vikings,MIN,4036133,T.J. Hockenson,TE,Questionable,QUESTIONABLE,Wrist,2026-11-15,Hockenson (wrist/chest) didn't take part in Thursday's practice.
 2026-11-12T23:08:20+00:00,2026-11-12T23:03Z,9,Green Bay Packers,GB,4430191,Skyy Moore,WR,Injured Reserve,IR-R,Left Ankle,2026-11-15,Moore (ankle) was a limited participant in Thursday's practice.
 2026-11-12T23:23:14+00:00,2026-11-12T23:09Z,9,Green Bay Packers,GB,3124005,Zaire Franklin,LB,Doubtful,DOUBTFUL,Shin Fracture,2026-11-15,Franklin (shin) did not practice Thursday.
+2026-11-12T23:38:26+00:00,2026-11-12T23:23Z,34,Houston Texans,HOU,4685724,Will Anderson Jr.,DE,Questionable,QUESTIONABLE,Ankle,2026-11-15,"Anderson (ankle) was a limited participant in Thursday's practice, Mary Kay Cabot of The Cleveland Plain Dealer reports."
+2026-11-12T23:38:26+00:00,2026-11-12T23:27Z,24,Los Angeles Chargers,LAC,4612826,Ladd McConkey,WR,Questionable,QUESTIONABLE,Back Spasms,2026-11-16,McConkey (back) didn't practice Thursday.
+2026-11-12T23:38:26+00:00,2026-11-12T23:29Z,24,Los Angeles Chargers,LAC,4038941,Justin Herbert,QB,Active,,,,
+2026-11-12T23:38:26+00:00,2026-11-12T23:37Z,24,Los Angeles Chargers,LAC,4596334,Keaton Mitchell,RB,Questionable,QUESTIONABLE,Hip,2026-11-16,questionable
