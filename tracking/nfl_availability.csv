@@ -6705,6 +6705,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-11T23:37:57+00:00,2026-11-11T23:36Z,5,Cleveland Browns,CLE,3110565,Quincy Williams,LB,Questionable,QUESTIONABLE,Hamstring,2026-11-15,questionable
 2026-11-11T23:37:57+00:00,2026-11-11T23:36Z,5,Cleveland Browns,CLE,3131498,Tytus Howard,OT,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
 2026-11-11T23:53:01+00:00,2026-11-11T23:37Z,15,Miami Dolphins,MIA,4880236,Will Kacmarek,TE,Questionable,QUESTIONABLE,Quadriceps,2026-11-15,"Kacmarek (quadriceps) did not practice Wednesday, C. Isaiah Smalls II of the Miami Herald reports."
+2026-11-12T01:38:18+00:00,2026-11-11T23:41Z,20,New York Jets,NYJ,4683815,Trevin Wallace,LB,Out,QUESTIONABLE,Groin,2026-11-15,Wallace (groin) was estimated to be a nonparticipant on Wednesday.
 2026-11-11T23:53:01+00:00,2026-11-11T23:45Z,5,Cleveland Browns,CLE,4876017,Carson Schwesinger,LB,Questionable,QUESTIONABLE,Wrist,2026-11-15,questionable
 2026-11-12T00:08:18+00:00,2026-11-11T23:45Z,20,New York Jets,NYJ,4683815,Trevin Wallace,LB,Questionable,QUESTIONABLE,Groin,2026-11-15,questionable
 2026-11-12T00:08:18+00:00,2026-11-11T23:49Z,6,Dallas Cowboys,DAL,4372096,Luke Schoonmaker,TE,Out,,,,"Schoonmaker (groin) was a full participant in Wednesday's practice, Tommy Yarrish of the Cowboys' official site reports."
@@ -6771,3 +6772,9 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-12T01:23:12+00:00,2026-11-12T01:09Z,34,Houston Texans,HOU,4241250,Jake Hummel,LB,Injured Reserve,IR-R,Groin Surgery,2026-11-15,The Texans opened Hummel's (groin) 21-day practice window Wednesday.
 2026-11-12T01:23:12+00:00,2026-11-12T01:09Z,28,Washington Commanders,WSH,2576736,Lucas Patrick,G,Questionable,OUT,Concussion Concussion,2026-11-23,"Patrick (concussion) is out for Thursday's game against the Giants, Zach Selby of the Commanders' official site reports."
 2026-11-12T01:23:12+00:00,2026-11-12T01:15Z,34,Houston Texans,HOU,4594277,Jaylin Smith,CB,Injured Reserve,IR-R,Hamstring Strain,2026-11-15,The Texans designated Smith (hamstring) to return from injured reserve Wednesday.
+2026-11-12T01:38:18+00:00,2026-11-12T01:19Z,22,Arizona Cardinals,ARI,4240619,Zachary Carter,DT,Injured Reserve,IR-R,Knee,2026-11-15,The Cardinals designated Carter (knee) to return from injured reserve Wednesday.
+2026-11-12T01:38:18+00:00,2026-11-12T01:23Z,29,Carolina Panthers,CAR,4362647,Damien Lewis,G,Out,,,,Lewis (knee) was a full participant in Wednesday's walkthrough practice.
+2026-11-12T01:38:18+00:00,2026-11-12T01:26Z,10,Tennessee Titans,TEN,4685145,Jaylon Jones,CB,Out,,,,"Jones (knee) was a full participant in Wednesday's practice, Jim Wyatt of the Titans' official site reports."
+2026-11-12T01:38:18+00:00,2026-11-12T01:26Z,10,Tennessee Titans,TEN,3915398,Tommy Townsend,P,Out,,,,"Townsend (knee) was a full participant at practice Wednesday, Jim Wyatt of the Titans' official site reports."
+2026-11-12T01:38:18+00:00,2026-11-12T01:30Z,10,Tennessee Titans,TEN,4431437,JC Latham,OT,Questionable,,,,"Latham (finger) practiced in full Wednesday, Jim Wyatt of the Titans' official site reports."
+2026-11-12T01:38:18+00:00,2026-11-12T01:32Z,2,Buffalo Bills,BUF,3127294,Greg Gaines,DT,Questionable,,,,Gaines (calf) was a full participant in Wednesday's walkthrough practice.
