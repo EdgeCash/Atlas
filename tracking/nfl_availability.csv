@@ -6534,6 +6534,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-11T18:08:39+00:00,2026-11-11T17:12Z,5,Cleveland Browns,CLE,4832800,Denzel Boston,WR,Questionable,QUESTIONABLE,Toe,2026-11-15,"Boston isn't expected to practice Wednesday due to a toe injury, Daniel Oyefusi reports."
 2026-11-11T18:08:39+00:00,2026-11-11T17:13Z,16,Minnesota Vikings,MIN,4262921,Justin Jefferson,WR,Active,,,,"Jefferson stands to benefit from Tuesday's acquisition of Kirk Cousins, who is expected to take over as the Vikings' starting quarterback beginning with Sunday'"
 2026-11-11T18:08:39+00:00,2026-11-11T17:17Z,5,Cleveland Browns,CLE,4569620,Ronnie Hickman,S,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-15,questionable
+2026-11-12T00:23:15+00:00,2026-11-11T17:21Z,20,New York Jets,NYJ,4569618,Garrett Wilson,WR,Out,QUESTIONABLE,Concussion Concussion,2026-11-15,"Wilson (concussion) will be a a limited participant in Wednesday's practice,  Zack Rosenblatt of The Athleticreports."
 2026-11-11T18:08:39+00:00,2026-11-11T17:24Z,11,Indianapolis Colts,IND,4061956,Ashton Dulin,WR,Active,,,,"Head coach Shane Steichen said that Dulin will be one of the Colts receivers who absorb the snaps vacated by Keenan Allen, who was traded to the 49ers on Tuesda"
 2026-11-11T18:08:39+00:00,2026-11-11T17:29Z,20,New York Jets,NYJ,4569618,Garrett Wilson,WR,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-15,questionable
 2026-11-11T18:08:39+00:00,2026-11-11T17:30Z,20,New York Jets,NYJ,4723820,Omar Cooper Jr.,WR,Questionable,QUESTIONABLE,Ankle,2026-11-15,"Cooper (ankle) will be limited in Wednesday's practice, Brian Costello of the New York Post reports."
@@ -6715,3 +6716,10 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-12T00:08:18+00:00,2026-11-12T00:02Z,34,Houston Texans,HOU,3919117,Azeez Al-Shaair,LB,Questionable,QUESTIONABLE,Groin,2026-11-15,"Al-Shaair (groin/personal) was listed as a DNP on Wednesday's injury report, Jonathan M. Alexander of the Houston Chronicle reports."
 2026-11-12T00:08:18+00:00,2026-11-12T00:02Z,26,Seattle Seahawks,SEA,4032473,Rashid Shaheed,WR,Out,,,,"Shaheed (knee) was a full participant in Wednesday's practice, John Boyle of the Seahawks' official site reports."
 2026-11-12T00:08:18+00:00,2026-11-12T00:04Z,14,Los Angeles Rams,LAR,4242557,Colby Parkinson,TE,Questionable,QUESTIONABLE,Ribs,2026-11-15,questionable
+2026-11-12T00:23:15+00:00,2026-11-12T00:06Z,8,Detroit Lions,DET,4912274,Sione Vaki,RB,Questionable,QUESTIONABLE,Ankle,2026-11-15,Vaki (ankle) did not participate at practice Wednesday.
+2026-11-12T00:23:15+00:00,2026-11-12T00:07Z,17,New England Patriots,NE,2574056,Kevin Byard,S,Questionable,QUESTIONABLE,Chest,2026-11-15,Byard (chest) was a limited participant in Wednesday's practice.
+2026-11-12T00:23:15+00:00,2026-11-12T00:08Z,14,Los Angeles Rams,LAR,4242557,Colby Parkinson,TE,Questionable,QUESTIONABLE,Ribs,2026-11-15,"Parkinson (ribs) was limited in Wednesday's practice, Sarah Barshop of ESPN.com reports."
+2026-11-12T00:23:15+00:00,2026-11-12T00:10Z,9,Green Bay Packers,GB,3149687,Chris Brooks,RB,Injured Reserve,IR-R,Ankle,2026-11-15,Brooks (ankle) was listed as a limited practice participant for Wednesday's jog-through session.
+2026-11-12T00:23:15+00:00,2026-11-12T00:14Z,34,Houston Texans,HOU,4035538,David Montgomery,RB,Questionable,QUESTIONABLE,Groin,2026-11-15,questionable
+2026-11-12T00:23:15+00:00,2026-11-12T00:14Z,15,Miami Dolphins,MIA,4242512,Malik Willis,QB,Injured Reserve,IR,Abdomen,2026-12-13,ir
+2026-11-12T00:23:15+00:00,2026-11-12T00:14Z,17,New England Patriots,NE,3916923,Carlton Davis III,CB,Out,OUT,Knee,2026-11-29,out
