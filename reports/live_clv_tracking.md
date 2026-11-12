@@ -1,6 +1,6 @@
 # Atlas Live CLV Tracking
 
-*Generated 2026-11-12 00:23 UTC by `python -m atlas.live report`. Updated on every run
+*Generated 2026-11-12 00:37 UTC by `python -m atlas.live report`. Updated on every run
 of the tracker. Source tables are the CSVs in `tracking/`, which are committed
 alongside this file so the record can be audited row by row.*
 
@@ -18,7 +18,7 @@ alongside this file so the record can be audited row by row.*
 | Signals recorded | 814 |
 | Primary signals | 7 |
 | Graded (decided) | 5 |
-| Awaiting kickoff | 128 |
+| Awaiting kickoff | 122 |
 | Seasons of tracking | 1 of 2 required |
 | Verdict possible at | 124 graded primary signals |
 
@@ -73,10 +73,10 @@ signal existed. They are checked, never tuned.
 
 | Population | Signals | Graded | Pushes | Beat rate | 95% low | 95% high | p vs 50% | Mean CLV | Median CLV | Mean CLV (prob) | Flagged |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| observed | 662 | 511 | 151 | 0.5734 | 0.5301 | 0.6156 | 0.0005 | 0.3573 | 0 | 0.0091 | 100 |
+| observed | 667 | 515 | 152 | 0.5728 | 0.5297 | 0.6148 | 0.0005 | 0.3546 | 0 | 0.0090 | 100 |
 | primary | 6 | 5 | 1 | 1.0000 | 0.5655 | 1.0000 | 0.0312 | 1.0000 | 1 | 0.0345 | 1 |
-| secondary | 18 | 14 | 4 | 0.6429 | 0.3876 | 0.8366 | 0.2120 | 0.6944 | 0.25 | 0.0163 | 4 |
-| all | 686 | 530 | 156 | 0.5792 | 0.5368 | 0.6206 | 0.0002 | 0.3717 | 0 | 0.0095 | 105 |
+| secondary | 19 | 15 | 4 | 0.6667 | 0.4171 | 0.8482 | 0.1509 | 0.7368 | 0.5 | 0.0187 | 4 |
+| all | 692 | 535 | 157 | 0.5794 | 0.5372 | 0.6206 | 0.0001 | 0.3707 | 0 | 0.0095 | 105 |
 
 `primary` is the population the criteria are evaluated on: totals at or above
 the historical 90th percentile of disagreement. `secondary` is the same cut on
@@ -108,9 +108,9 @@ beat rate and reported separately.
 | Table | Rows | What it holds |
 |---|---|---|
 | `tracking/games.csv` | 1,001 | every game seen, with kickoff and status |
-| `tracking/snapshots.csv` | 14,691 | append-on-change line observations, timestamped |
+| `tracking/snapshots.csv` | 14,694 | append-on-change line observations, timestamped |
 | `tracking/signals.csv` | 814 | immutable opinions |
-| `tracking/grades.csv` | 686 | one row per graded signal |
+| `tracking/grades.csv` | 692 | one row per graded signal |
 
 ---
 

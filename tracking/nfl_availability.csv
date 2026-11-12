@@ -6629,6 +6629,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-11T23:08:10+00:00,2026-11-11T22:16Z,9,Green Bay Packers,GB,4361423,Micah Parsons,DE,Out,PUP-R,Left Knee - ACL Surgery,2026-11-25,Parsons (knee/illness) officially was limited at Wednesday's jog-through.
 2026-11-11T23:08:10+00:00,2026-11-11T22:16Z,9,Green Bay Packers,GB,4431487,Savion Williams,WR,Questionable,QUESTIONABLE,Groin,2026-11-15,Williams (groin) was limited in Wednesday's practice.
 2026-11-11T23:08:10+00:00,2026-11-11T22:18Z,9,Green Bay Packers,GB,4869461,Trey Smack,PK,Questionable,QUESTIONABLE,Right Calf,2026-11-15,Smack (calf) was limited in Wednesday's practice.
+2026-11-12T00:37:59+00:00,2026-11-11T22:22Z,18,New Orleans Saints,NO,5081999,CJ Donaldson,RB,Out,QUESTIONABLE,Shoulder,2026-11-15,Donaldson (shoulder) did not practice on Wednesday.
 2026-11-11T23:08:10+00:00,2026-11-11T22:25Z,22,Arizona Cardinals,ARI,4239944,Hunter Long,TE,Injured Reserve,IR-R,Knee,2026-11-15,The Cardinals designated Long (knee) for return from injured reserve Wednesday.
 2026-11-11T23:08:10+00:00,2026-11-11T22:27Z,16,Minnesota Vikings,MIN,3728281,Blake Cashman,LB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-15,"Vikings coach Kevin O'Connell said Wednesday that Cashman is in concussion protocol, Kevin Seifert of ESPN.com reports."
 2026-11-11T23:08:10+00:00,2026-11-11T22:28Z,18,New Orleans Saints,NO,3054850,Alvin Kamara,RB,Questionable,QUESTIONABLE,Back,2026-11-15,Kamara (rest/back) was a non-participant at Wednesday's practice.
@@ -6719,7 +6720,32 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-12T00:23:15+00:00,2026-11-12T00:06Z,8,Detroit Lions,DET,4912274,Sione Vaki,RB,Questionable,QUESTIONABLE,Ankle,2026-11-15,Vaki (ankle) did not participate at practice Wednesday.
 2026-11-12T00:23:15+00:00,2026-11-12T00:07Z,17,New England Patriots,NE,2574056,Kevin Byard,S,Questionable,QUESTIONABLE,Chest,2026-11-15,Byard (chest) was a limited participant in Wednesday's practice.
 2026-11-12T00:23:15+00:00,2026-11-12T00:08Z,14,Los Angeles Rams,LAR,4242557,Colby Parkinson,TE,Questionable,QUESTIONABLE,Ribs,2026-11-15,"Parkinson (ribs) was limited in Wednesday's practice, Sarah Barshop of ESPN.com reports."
+2026-11-12T00:37:59+00:00,2026-11-12T00:10Z,8,Detroit Lions,DET,4383429,Jacob Saylors,RB,Out,,,,Saylors (neck) was a full participant at practice Wednesday.
 2026-11-12T00:23:15+00:00,2026-11-12T00:10Z,9,Green Bay Packers,GB,3149687,Chris Brooks,RB,Injured Reserve,IR-R,Ankle,2026-11-15,Brooks (ankle) was listed as a limited practice participant for Wednesday's jog-through session.
+2026-11-12T00:37:59+00:00,2026-11-12T00:10Z,26,Seattle Seahawks,SEA,3924327,Drew Lock,QB,Questionable,QUESTIONABLE,Oblique Strain,2026-11-15,"Lock (right elbow/oblique) was limited at Wednesday's practice, John Boyle of the Seahawks' official site reports."
+2026-11-12T00:37:59+00:00,2026-11-12T00:13Z,8,Detroit Lions,DET,4692025,Brian Branch,S,Questionable,QUESTIONABLE,Hip,2026-11-15,Branch (hip) was a limited participant at practice Wednesday.
+2026-11-12T00:37:59+00:00,2026-11-12T00:13Z,9,Green Bay Packers,GB,4430191,Skyy Moore,WR,Injured Reserve,IR-R,Left Ankle,2026-11-15,The Packers designated Moore (ankle) to return from injured reserve Wednesday.
+2026-11-12T00:37:59+00:00,2026-11-12T00:14Z,22,Arizona Cardinals,ARI,4362225,Dante Stills,DT,Questionable,QUESTIONABLE,Shoulder,2026-11-15,questionable
+2026-11-12T00:37:59+00:00,2026-11-12T00:14Z,22,Arizona Cardinals,ARI,4698113,Max Melton,CB,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
 2026-11-12T00:23:15+00:00,2026-11-12T00:14Z,34,Houston Texans,HOU,4035538,David Montgomery,RB,Questionable,QUESTIONABLE,Groin,2026-11-15,questionable
 2026-11-12T00:23:15+00:00,2026-11-12T00:14Z,15,Miami Dolphins,MIA,4242512,Malik Willis,QB,Injured Reserve,IR,Abdomen,2026-12-13,ir
 2026-11-12T00:23:15+00:00,2026-11-12T00:14Z,17,New England Patriots,NE,3916923,Carlton Davis III,CB,Out,OUT,Knee,2026-11-29,out
+2026-11-12T00:37:59+00:00,2026-11-12T00:14Z,20,New York Jets,NYJ,4569618,Garrett Wilson,WR,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-15,questionable
+2026-11-12T00:37:59+00:00,2026-11-12T00:16Z,22,Arizona Cardinals,ARI,3918331,Andrew Wingard,S,Questionable,QUESTIONABLE,Groin,2026-11-15,questionable
+2026-11-12T00:37:59+00:00,2026-11-12T00:17Z,9,Green Bay Packers,GB,4259305,Bo Melton,WR,Questionable,QUESTIONABLE,Head,2026-11-15,Melton (head) was a full participant in Wednesday's jog-through practice.
+2026-11-12T00:37:59+00:00,2026-11-12T00:18Z,8,Detroit Lions,DET,4360383,Kerby Joseph,S,Out,PUP-R,Knee,2026-11-22,Joseph (knee) was a limited participant at practice Wednesday.
+2026-11-12T00:37:59+00:00,2026-11-12T00:19Z,25,San Francisco 49ers,SF,3057524,Siran Neal,S,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
+2026-11-12T00:37:59+00:00,2026-11-12T00:19Z,25,San Francisco 49ers,SF,4565200,Upton Stout,CB,Questionable,QUESTIONABLE,Shoulder,2026-11-15,questionable
+2026-11-12T00:37:59+00:00,2026-11-12T00:21Z,9,Green Bay Packers,GB,4686906,Lukas Van Ness,DE,Questionable,QUESTIONABLE,Back,2026-11-15,Van Ness (back) was listed as a DNP on Wednesday's practice report.
+2026-11-12T00:37:59+00:00,2026-11-12T00:24Z,9,Green Bay Packers,GB,4688930,Javon Bullard,S,Questionable,QUESTIONABLE,Ankle,2026-11-15,Bullard (ankle) was held out of Wednesday's jog-through practice.
+2026-11-12T00:37:59+00:00,2026-11-12T00:24Z,9,Green Bay Packers,GB,3124005,Zaire Franklin,LB,Doubtful,DOUBTFUL,Shin Fracture,2026-11-15,doubtful
+2026-11-12T00:37:59+00:00,2026-11-12T00:24Z,25,San Francisco 49ers,SF,3126486,Deebo Samuel Sr.,WR,Questionable,QUESTIONABLE,Right Hamstring,2026-11-15,questionable
+2026-11-12T00:37:59+00:00,2026-11-12T00:24Z,25,San Francisco 49ers,SF,16737,Mike Evans,WR,Questionable,QUESTIONABLE,Right Achilles Tendinitis,2026-11-15,questionable
+2026-11-12T00:37:59+00:00,2026-11-12T00:24Z,26,Seattle Seahawks,SEA,4429211,Anthony Bradford,G,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
+2026-11-12T00:37:59+00:00,2026-11-12T00:25Z,26,Seattle Seahawks,SEA,4567226,Derick Hall,LB,Questionable,QUESTIONABLE,Back,2026-11-15,questionable
+2026-11-12T00:37:59+00:00,2026-11-12T00:25Z,26,Seattle Seahawks,SEA,4364623,Patrick O'Connell,LB,Questionable,QUESTIONABLE,Toe,2026-11-15,questionable
+2026-11-12T00:37:59+00:00,2026-11-12T00:27Z,9,Green Bay Packers,GB,4567406,Ty'Ron Hopper,LB,Questionable,QUESTIONABLE,Chest,2026-11-15,Hopper (chest) was a limited participant in Wednesday's jog-through practice.
+2026-11-12T00:37:59+00:00,2026-11-12T00:29Z,14,Los Angeles Rams,LAR,4242154,Kam Curl,S,Questionable,QUESTIONABLE,Toe,2026-11-15,questionable
+2026-11-12T00:37:59+00:00,2026-11-12T00:30Z,14,Los Angeles Rams,LAR,4426553,Davis Allen,TE,Questionable,QUESTIONABLE,Oblique,2026-11-15,questionable
+2026-11-12T00:37:59+00:00,2026-11-12T00:30Z,14,Los Angeles Rams,LAR,3122132,Myles Garrett,DE,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
+2026-11-12T00:37:59+00:00,2026-11-12T00:32Z,18,New Orleans Saints,NO,4036131,Noah Fant,TE,Questionable,QUESTIONABLE,Back,2026-11-15,Fant (back) was a limited participant in Wednesday's practice.
