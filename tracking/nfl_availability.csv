@@ -6420,6 +6420,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-11T00:53:15+00:00,2026-11-10T21:32Z,15,Miami Dolphins,MIA,4242512,Malik Willis,QB,Questionable,IR,Groin,2026-12-13,The Dolphins placed Willis (groin) on injured reserve Tuesday.
 2026-11-10T22:23:19+00:00,2026-11-10T21:38Z,19,New York Giants,NYG,4696981,Cam Skattebo,RB,Out,,,,"Skattebo (hamstring) was listed as a full participant in Tuesday's practice, Dan Salomone of the Giants' official site reports."
 2026-11-10T22:23:19+00:00,2026-11-10T21:39Z,15,Miami Dolphins,MIA,4242512,Malik Willis,QB,Injured Reserve,IR,Groin,2026-12-13,ir
+2026-11-12T22:53:21+00:00,2026-11-10T21:39Z,19,New York Giants,NYG,4696981,Cam Skattebo,RB,Active,,,,
 2026-11-10T22:23:19+00:00,2026-11-10T21:39Z,19,New York Giants,NYG,4433970,J.J. McCarthy,QB,Questionable,,,,"McCarthy (hip) was listed as a full participant in Tuesday's practice, Dan Salomone of the Giants' official site reports."
 2026-11-10T22:23:19+00:00,2026-11-10T21:47Z,16,Minnesota Vikings,MIN,16733,Odell Beckham Jr.,WR,Active,,,,"The Vikings released Beckham on Tuesday, Craig Peters of the team's official site reports."
 2026-11-10T23:08:21+00:00,2026-11-10T22:08Z,15,Miami Dolphins,MIA,4433971,Kyle McCord,QB,Active,,,,McCord will step in as the Dolphins' starting quarterback beginning with Sunday's game at Indianapolis after Miami placed Malik Willis (core) on injured reserve
@@ -6957,19 +6958,43 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-12T22:38:30+00:00,2026-11-12T22:13Z,8,Detroit Lions,DET,4360383,Kerby Joseph,S,Out,PUP-R,Knee,2026-11-22,Joseph (knee) did not travel to Munich with the Lions and is ruled out for Sunday's matchup against the Patriots.
 2026-11-12T22:38:30+00:00,2026-11-12T22:18Z,34,Houston Texans,HOU,3045474,Wyatt Teller,G,Active,,,,
 2026-11-12T22:38:30+00:00,2026-11-12T22:20Z,9,Green Bay Packers,GB,4361423,Micah Parsons,DE,Out,PUP-R,Left Knee - ACL Surgery,2026-11-25,Parsons (knee/illness) practiced on a limited basis Thursday.
+2026-11-12T22:53:21+00:00,2026-11-12T22:28Z,14,Los Angeles Rams,LAR,4242154,Kam Curl,S,Questionable,QUESTIONABLE,Toe,2026-11-15,"Curl (toe) was a non-participant in Thursday's practice, Nate Atkins of The Athletic reports."
 2026-11-12T22:38:30+00:00,2026-11-12T22:29Z,9,Green Bay Packers,GB,4431487,Savion Williams,WR,Questionable,QUESTIONABLE,Groin,2026-11-15,Williams (groin) was a limited practice participant Thursday.
+2026-11-12T22:53:21+00:00,2026-11-12T22:32Z,34,Houston Texans,HOU,4429059,Woody Marks,RB,Questionable,QUESTIONABLE,Knee,2026-11-15,"Marks (knee) didn't practice Thursday, Chris Easterling of the Akron Beacon Journal reports."
 2026-11-12T22:38:30+00:00,2026-11-12T22:33Z,22,Arizona Cardinals,ARI,4427728,Bam Knight,RB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-15,questionable
+2026-11-12T22:53:21+00:00,2026-11-12T22:33Z,1,Atlanta Falcons,ATL,4870612,Zachariah Branch,WR,Doubtful,DOUBTFUL,Hamstring,2026-11-15,doubtful
 2026-11-12T22:38:30+00:00,2026-11-12T22:33Z,29,Carolina Panthers,CAR,3117253,Bobby Okereke,LB,Questionable,QUESTIONABLE,Foot,2026-11-15,questionable
+2026-11-12T22:53:21+00:00,2026-11-12T22:33Z,4,Cincinnati Bengals,CIN,4401811,Kyle Dugger,S,Questionable,QUESTIONABLE,Left Quadriceps,2026-11-15,questionable
+2026-11-12T22:53:21+00:00,2026-11-12T22:33Z,6,Dallas Cowboys,DAL,4362088,DeMarvion Overshown,LB,Questionable,,,,questionable
+2026-11-12T22:53:21+00:00,2026-11-12T22:33Z,6,Dallas Cowboys,DAL,4426354,George Pickens,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-15,questionable
+2026-11-12T22:53:21+00:00,2026-11-12T22:33Z,6,Dallas Cowboys,DAL,4426506,Joey Porter Jr.,CB,Questionable,QUESTIONABLE,Ankle,2026-11-15,questionable
+2026-11-12T22:53:21+00:00,2026-11-12T22:33Z,6,Dallas Cowboys,DAL,3676833,KaVontae Turpin,WR,Questionable,QUESTIONABLE,Ribs,2026-11-15,questionable
 2026-11-12T22:38:30+00:00,2026-11-12T22:33Z,9,Green Bay Packers,GB,4047365,Josh Jacobs,RB,Out,OUT,Right Finger Surgery,2026-11-25,out
 2026-11-12T22:38:30+00:00,2026-11-12T22:33Z,9,Green Bay Packers,GB,4360086,Josh Whyle,TE,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-15,questionable
 2026-11-12T22:38:30+00:00,2026-11-12T22:33Z,9,Green Bay Packers,GB,3124005,Zaire Franklin,LB,Doubtful,DOUBTFUL,Shin Fracture,2026-11-15,doubtful
+2026-11-12T22:53:21+00:00,2026-11-12T22:33Z,34,Houston Texans,HOU,2976560,Danielle Hunter,DE,Questionable,QUESTIONABLE,Hamstring,2026-11-15,questionable
+2026-11-12T22:53:21+00:00,2026-11-12T22:33Z,34,Houston Texans,HOU,4035538,David Montgomery,RB,Questionable,QUESTIONABLE,Groin,2026-11-15,questionable
 2026-11-12T22:38:30+00:00,2026-11-12T22:33Z,11,Indianapolis Colts,IND,3917142,Akeem Davis-Gaither,LB,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
+2026-11-12T22:53:21+00:00,2026-11-12T22:33Z,14,Los Angeles Rams,LAR,4426405,Trent McDuffie,CB,Questionable,QUESTIONABLE,Back,2026-11-15,questionable
 2026-11-12T22:38:30+00:00,2026-11-12T22:33Z,17,New England Patriots,NE,4047646,A.J. Brown,WR,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
 2026-11-12T22:38:30+00:00,2026-11-12T22:33Z,17,New England Patriots,NE,4362890,Ben Brown,C,Out,OUT,Knee,2026-11-29,out
 2026-11-12T22:38:30+00:00,2026-11-12T22:33Z,17,New England Patriots,NE,3916923,Carlton Davis III,CB,Out,OUT,Knee,2026-11-29,out
 2026-11-12T22:38:30+00:00,2026-11-12T22:33Z,17,New England Patriots,NE,4368113,Charles Woods,CB,Questionable,QUESTIONABLE,Hamstring,2026-11-15,questionable
 2026-11-12T22:38:30+00:00,2026-11-12T22:33Z,17,New England Patriots,NE,4432710,TreVeyon Henderson,RB,Out,OUT,Illness,2026-11-29,out
 2026-11-12T22:38:30+00:00,2026-11-12T22:33Z,18,New Orleans Saints,NO,5081999,CJ Donaldson,RB,Questionable,QUESTIONABLE,Shoulder,2026-11-15,questionable
+2026-11-12T22:53:21+00:00,2026-11-12T22:33Z,20,New York Jets,NYJ,4569618,Garrett Wilson,WR,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-15,questionable
+2026-11-12T22:53:21+00:00,2026-11-12T22:33Z,20,New York Jets,NYJ,4362094,Joseph Ossai,DE,Questionable,QUESTIONABLE,Ankle,2026-11-15,questionable
+2026-11-12T22:53:21+00:00,2026-11-12T22:33Z,20,New York Jets,NYJ,4570470,Nahshon Wright,CB,Questionable,QUESTIONABLE,Back,2026-11-15,questionable
+2026-11-12T22:53:21+00:00,2026-11-12T22:33Z,20,New York Jets,NYJ,4683815,Trevin Wallace,LB,Questionable,QUESTIONABLE,Groin,2026-11-15,questionable
 2026-11-12T22:38:30+00:00,2026-11-12T22:33Z,25,San Francisco 49ers,SF,3126486,Deebo Samuel Sr.,WR,Questionable,QUESTIONABLE,Right Hamstring,2026-11-15,questionable
 2026-11-12T22:38:30+00:00,2026-11-12T22:33Z,25,San Francisco 49ers,SF,16737,Mike Evans,WR,Questionable,QUESTIONABLE,Right Achilles Tendinitis,2026-11-15,questionable
+2026-11-12T22:53:21+00:00,2026-11-12T22:33Z,26,Seattle Seahawks,SEA,2971622,Leonard Williams,DT,Questionable,QUESTIONABLE,Shoulder Stinger,2026-11-15,questionable
+2026-11-12T22:53:21+00:00,2026-11-12T22:33Z,10,Tennessee Titans,TEN,4871023,Carnell Tate,WR,Questionable,QUESTIONABLE,Shoulder,2026-11-15,questionable
+2026-11-12T22:53:21+00:00,2026-11-12T22:33Z,10,Tennessee Titans,TEN,4428557,Tyjae Spears,RB,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
 2026-11-12T22:38:30+00:00,2026-11-12T22:33Z,28,Washington Commanders,WSH,2576736,Lucas Patrick,G,Out,OUT,Concussion Concussion,2026-11-23,out
+2026-11-12T22:53:21+00:00,2026-11-12T22:37Z,8,Detroit Lions,DET,4692025,Brian Branch,S,Active,,,,Branch was a full participant in practice Thursday.
+2026-11-12T22:53:21+00:00,2026-11-12T22:39Z,9,Green Bay Packers,GB,4869461,Trey Smack,PK,Active,,,,"Smack (calf) was a full participant in Thursday's practice, Weston Hodkiewicz of the Packers' official site reports."
+2026-11-12T22:53:21+00:00,2026-11-12T22:41Z,5,Cleveland Browns,CLE,5083076,Harold Fannin Jr.,TE,Questionable,QUESTIONABLE,Groin,2026-11-15,"Fannin (groin) was a limited participant in Thursday's practice, Chris Easterling of the Akron Beacon Journal reports."
+2026-11-12T22:53:21+00:00,2026-11-12T22:41Z,6,Dallas Cowboys,DAL,4595352,Alijah Clark,S,Questionable,QUESTIONABLE,Illness,2026-11-15,questionable
+2026-11-12T22:53:21+00:00,2026-11-12T22:41Z,8,Detroit Lions,DET,3139387,D.J. Reed,CB,Out,OUT,Hip,2026-11-22,out
+2026-11-12T22:53:21+00:00,2026-11-12T22:48Z,9,Green Bay Packers,GB,4259305,Bo Melton,WR,Questionable,,,,"Melton (head) was removed from the injury report ahead of Sunday's game against Minnesota, Weston Hodkiewicz of the Packers' official site reports."
