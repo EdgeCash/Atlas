@@ -6590,6 +6590,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-11T22:08:27+00:00,2026-11-11T21:25Z,30,Jacksonville Jaguars,JAX,4572704,Branson Combs,LB,Questionable,QUESTIONABLE,Shoulder,2026-11-15,questionable
 2026-11-11T22:08:27+00:00,2026-11-11T21:25Z,30,Jacksonville Jaguars,JAX,4242391,Robert Hainsey,C,Questionable,QUESTIONABLE,Concussion,2026-11-15,questionable
 2026-11-11T22:08:27+00:00,2026-11-11T21:27Z,8,Detroit Lions,DET,3046779,Jared Goff,QB,Questionable,QUESTIONABLE,Chest,2026-11-15,Goff was limited at Wednesday's practice due to a chest injury.
+2026-11-12T21:23:30+00:00,2026-11-11T21:27Z,8,Detroit Lions,DET,3046779,Jared Goff,QB,Active,,,,Goff was limited at Wednesday's practice due to a chest injury.
 2026-11-11T22:08:27+00:00,2026-11-11T21:28Z,10,Tennessee Titans,TEN,4431437,JC Latham,OT,Active,,,,
 2026-11-11T22:08:27+00:00,2026-11-11T21:28Z,10,Tennessee Titans,TEN,4570469,Marcus Harris,CB,Active,,,,
 2026-11-11T22:08:27+00:00,2026-11-11T21:28Z,10,Tennessee Titans,TEN,3915398,Tommy Townsend,P,Active,,,,
@@ -6887,3 +6888,18 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-12T20:23:19+00:00,2026-11-12T20:02Z,17,New England Patriots,NE,4569173,Rhamondre Stevenson,RB,Doubtful,DOUBTFUL,Knee,2026-11-15,doubtful
 2026-11-12T20:23:19+00:00,2026-11-12T20:08Z,10,Tennessee Titans,TEN,4871023,Carnell Tate,WR,Out,QUESTIONABLE,Shoulder,2026-11-15,"Tate (shoulder) was spotted doing work on the side with the Titans' training staff during Thursday's practice, Turron Davenport of ESPN.com reports."
 2026-11-12T20:23:19+00:00,2026-11-12T20:12Z,22,Arizona Cardinals,ARI,4427728,Bam Knight,RB,Out,QUESTIONABLE,Concussion Concussion,2026-11-15,"Knight (concussion) practiced Thursday without a yellow non-contact jersey, Dani Sureck of the Cardinals' official site reports."
+2026-11-12T21:23:30+00:00,2026-11-12T20:36Z,22,Arizona Cardinals,ARI,4427728,Bam Knight,RB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-15,questionable
+2026-11-12T21:23:30+00:00,2026-11-12T20:36Z,1,Atlanta Falcons,ATL,4361510,Cameron Thomas,DE,Questionable,QUESTIONABLE,Groin,2026-11-15,questionable
+2026-11-12T21:23:30+00:00,2026-11-12T20:36Z,10,Tennessee Titans,TEN,4871023,Carnell Tate,WR,Questionable,QUESTIONABLE,Shoulder,2026-11-15,questionable
+2026-11-12T21:23:30+00:00,2026-11-12T20:44Z,29,Carolina Panthers,CAR,3117253,Bobby Okereke,LB,Questionable,QUESTIONABLE,Foot,2026-11-15,questionable
+2026-11-12T21:23:30+00:00,2026-11-12T20:44Z,11,Indianapolis Colts,IND,3863182,Jerry Tillery,DT,Questionable,QUESTIONABLE,Calf,2026-11-15,questionable
+2026-11-12T21:23:30+00:00,2026-11-12T20:54Z,29,Carolina Panthers,CAR,4678008,Jonathon Brooks,RB,Injured Reserve,IR-R,Groin Surgery,2026-11-15,Brooks (groin) was a full practice participant Thursday.
+2026-11-12T21:23:30+00:00,2026-11-12T20:55Z,1,Atlanta Falcons,ATL,4595343,Kendal Daniels,LB,Questionable,QUESTIONABLE,Achilles,2026-11-15,"Daniels (Achilles) was a limited participant at Thursday's practice, Tori McElhaney of the Falcons' official site reports."
+2026-11-12T21:23:30+00:00,2026-11-12T20:57Z,11,Indianapolis Colts,IND,4905664,A.J. Haulcy,S,Out,,,,Haulcy (ankle) was a full participant at Thursday's practice.
+2026-11-12T21:23:30+00:00,2026-11-12T20:59Z,29,Carolina Panthers,CAR,4430034,Xavier Legette,WR,Injured Reserve,IR-R,Knee,2026-11-15,Legette (knee) was a full practice participant Thursday.
+2026-11-12T21:23:30+00:00,2026-11-12T21:02Z,18,New Orleans Saints,NO,3054850,Alvin Kamara,RB,Questionable,QUESTIONABLE,Back,2026-11-15,"Kamara (back) returned to practice Thursday, Mike Triplett of NewOrleans.Football reports."
+2026-11-12T21:23:30+00:00,2026-11-12T21:03Z,10,Tennessee Titans,TEN,4685617,Kevin Winston Jr.,S,Questionable,QUESTIONABLE,Shoulder,2026-11-15,questionable
+2026-11-12T21:23:30+00:00,2026-11-12T21:14Z,23,Pittsburgh Steelers,PIT,3929846,DeShon Elliott,S,Active,,,,"Elliot was a full participant in practice Thursday, Mike DeFabo of The Athletic reports."
+2026-11-12T21:23:30+00:00,2026-11-12T21:17Z,17,New England Patriots,NE,4047646,A.J. Brown,WR,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
+2026-11-12T21:23:30+00:00,2026-11-12T21:17Z,17,New England Patriots,NE,4569173,Rhamondre Stevenson,RB,Questionable,QUESTIONABLE,Knee,2026-11-15,Stevenson (knee) returned to practice Thursday as a limited participant.
+2026-11-12T21:23:30+00:00,2026-11-12T21:17Z,25,San Francisco 49ers,SF,16737,Mike Evans,WR,Questionable,QUESTIONABLE,Right Achilles Tendinitis,2026-11-15,questionable
