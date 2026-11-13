@@ -7119,6 +7119,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-13T00:08:40+00:00,2026-11-12T23:43Z,33,Baltimore Ravens,BAL,4601278,Nate Wiggins,CB,Active,,,,
 2026-11-13T00:08:40+00:00,2026-11-12T23:43Z,33,Baltimore Ravens,BAL,4832793,Olaivavega Ioane,G,Questionable,QUESTIONABLE,Knee,2026-11-16,questionable
 2026-11-13T00:08:40+00:00,2026-11-12T23:46Z,6,Dallas Cowboys,DAL,3676833,KaVontae Turpin,WR,Questionable,QUESTIONABLE,Ribs,2026-11-15,"Turpin (ribs) was limited in Thursday's practice, Jon Machota of The Athletic reports."
+2026-11-13T23:23:02+00:00,2026-11-12T23:46Z,6,Dallas Cowboys,DAL,3676833,KaVontae Turpin,WR,Active,,,,"Turpin (ribs) was limited in Thursday's practice, Jon Machota of The Athletic reports."
 2026-11-13T00:08:40+00:00,2026-11-12T23:47Z,28,Washington Commanders,WSH,3122797,Isaac Yiadom,CB,Out,INACTIVE,Coach's Decision,2026-11-23,inactive
 2026-11-13T00:08:40+00:00,2026-11-12T23:47Z,28,Washington Commanders,WSH,4428343,Ricky Barber,DT,Out,INACTIVE,Coach's Decision,2026-11-23,inactive
 2026-11-13T00:08:40+00:00,2026-11-12T23:47Z,28,Washington Commanders,WSH,4605488,Tanoa Togiai,G,Out,INACTIVE,Coach's Decision,2026-11-23,inactive
@@ -7134,6 +7135,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-13T00:23:17+00:00,2026-11-13T00:03Z,26,Seattle Seahawks,SEA,3924327,Drew Lock,QB,Questionable,QUESTIONABLE,Oblique Strain,2026-11-15,"Lock (right elbow/oblique) practiced in a limited capacity Thursday, John Boyle of the Seahawks' official site reports."
 2026-11-13T00:08:40+00:00,2026-11-13T00:04Z,19,New York Giants,NYG,4040615,Malik Harrison,LB,Out,INACTIVE,Groin,2026-11-22,"Harrison (groin) is inactive for Thursday's game against Washington, Dan Salomone of the Giants' official site reports."
 2026-11-13T00:38:22+00:00,2026-11-13T00:08Z,33,Baltimore Ravens,BAL,4360939,Rashod Bateman,WR,Questionable,QUESTIONABLE,Calf,2026-11-16,Bateman (calf) was limited  in practice Thursday.
+2026-11-13T23:23:02+00:00,2026-11-13T00:08Z,33,Baltimore Ravens,BAL,4360939,Rashod Bateman,WR,Active,,,,Bateman (calf) was limited in practice Thursday.
 2026-11-13T00:38:22+00:00,2026-11-13T00:09Z,24,Los Angeles Chargers,LAC,4686612,Tre' Harris,WR,Questionable,QUESTIONABLE,Shoulder,2026-11-16,Harris (shoulder) was a limited participant at practice Thursday.
 2026-11-13T00:38:22+00:00,2026-11-13T00:13Z,6,Dallas Cowboys,DAL,4426485,Jonathan Mingo,WR,Questionable,QUESTIONABLE,Ankle,2026-11-15,"Mingo (ankle, foot) did not practice Thursday, Jon Machota of The Athletic reports."
 2026-11-13T23:08:16+00:00,2026-11-13T00:13Z,6,Dallas Cowboys,DAL,4426485,Jonathan Mingo,WR,Out,OUT,Ankle,2026-11-22,"Mingo (ankle, foot) did not practice Thursday, Jon Machota of The Athletic reports."
@@ -7365,3 +7367,14 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-13T23:08:16+00:00,2026-11-13T22:52Z,11,Indianapolis Colts,IND,3917142,Akeem Davis-Gaither,LB,Out,OUT,Knee,2026-11-19,"Davis-Gaither (knee) has been ruled out for Sunday's game against the Dolphins, Abby Halpin of the Colts' official site reports."
 2026-11-13T23:08:16+00:00,2026-11-13T22:53Z,34,Houston Texans,HOU,4366031,Tank Dell,WR,Active,,,,"Dell (hand) doesn't have an injury designation for Sunday's game against the Browns, while teammate Marvin Harrison (hamstring) has been ruled out."
 2026-11-13T23:08:16+00:00,2026-11-13T22:54Z,6,Dallas Cowboys,DAL,3676833,KaVontae Turpin,WR,Active,,,,
+2026-11-13T23:23:02+00:00,2026-11-13T22:56Z,9,Green Bay Packers,GB,4241470,Xavier McKinney,S,Questionable,QUESTIONABLE,Foot,2026-11-15,"McKinney (foot) is listed as questionable for Sunday's game against the Vikings, Wes Hodkiewicz of the Packers' official site reports."
+2026-11-13T23:23:02+00:00,2026-11-13T22:59Z,1,Atlanta Falcons,ATL,4037626,Divine Deablo,LB,Doubtful,DOUBTFUL,Forearm,2026-11-15,"Deablo (forearm) is listed as doubtful for Sunday's game against the Chiefs, Marc Raimondi of ESPN.com reports."
+2026-11-13T23:23:02+00:00,2026-11-13T23:04Z,5,Cleveland Browns,CLE,4569620,Ronnie Hickman,S,Out,OUT,Concussion Concussion,2026-11-29,"Hickman (concussion) has been ruled out for Sunday's game against the Texans, Daniel Oyefusi of ESPN.com reports."
+2026-11-13T23:23:02+00:00,2026-11-13T23:04Z,25,San Francisco 49ers,SF,3057524,Siran Neal,S,Active,,,,
+2026-11-13T23:23:02+00:00,2026-11-13T23:05Z,24,Los Angeles Chargers,LAC,4612826,Ladd McConkey,WR,Questionable,QUESTIONABLE,Back Spasms,2026-11-16,McConkey (back) didn't practice Friday.
+2026-11-13T23:23:02+00:00,2026-11-13T23:07Z,24,Los Angeles Chargers,LAC,4596334,Keaton Mitchell,RB,Questionable,QUESTIONABLE,Hip,2026-11-16,Mitchell (hip) remained limited at practice Friday.
+2026-11-13T23:23:02+00:00,2026-11-13T23:08Z,24,Los Angeles Chargers,LAC,5082660,Alex Harkey,G,Active,,,,
+2026-11-13T23:23:02+00:00,2026-11-13T23:09Z,5,Cleveland Browns,CLE,2515270,Michael Burton,FB,Out,OUT,Calf,2026-11-29,"Burton (calf) has been ruled out for Sunday's game against Houston, Daniel Oyefusi of ESPN.com reports."
+2026-11-13T23:23:02+00:00,2026-11-13T23:11Z,2,Buffalo Bills,BUF,4036134,Amani Hooker,S,Active,,,,"Head coach Joe Brady confirmed Friday that Hooker will play Sunday against the Jets, Sal Capaccio of WGR Sports Radio 550 Buffalo reports."
+2026-11-13T23:23:02+00:00,2026-11-13T23:13Z,33,Baltimore Ravens,BAL,4832793,Olaivavega Ioane,G,Active,,,,
+2026-11-13T23:23:02+00:00,2026-11-13T23:16Z,24,Los Angeles Chargers,LAC,4686612,Tre' Harris,WR,Active,,,,Harris (calf) was a full participant in Friday's practice.
