@@ -7168,6 +7168,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-13T01:53:18+00:00,2026-11-13T01:36Z,18,New Orleans Saints,NO,4685260,Kelvin Banks Jr.,OT,Questionable,QUESTIONABLE,Ankle,2026-11-15,Banks (ankle) was a limited participant at practice Thursday.
 2026-11-13T20:08:15+00:00,2026-11-13T01:36Z,18,New Orleans Saints,NO,4685260,Kelvin Banks Jr.,OT,Active,,,,Banks (ankle) was a limited participant at practice Thursday.
 2026-11-13T01:53:18+00:00,2026-11-13T01:39Z,9,Green Bay Packers,GB,4426411,Sean Rhyan,G,Questionable,QUESTIONABLE,Ankle Sprain,2026-11-15,Rhyan (ankle) did not practice Thursday.
+2026-11-13T22:53:28+00:00,2026-11-13T01:39Z,9,Green Bay Packers,GB,4426411,Sean Rhyan,G,Out,OUT,Ankle Sprain,2026-11-25,Rhyan (ankle) did not practice Thursday.
 2026-11-13T02:08:20+00:00,2026-11-13T01:39Z,18,New Orleans Saints,NO,3917660,David Edwards,G,Questionable,QUESTIONABLE,Knee,2026-11-15,Edwards (knee) was a limited participant at practice Thursday.
 2026-11-13T20:08:15+00:00,2026-11-13T01:39Z,18,New Orleans Saints,NO,3917660,David Edwards,G,Active,,,,Edwards (knee) was a limited participant at practice Thursday.
 2026-11-13T02:08:20+00:00,2026-11-13T01:42Z,18,New Orleans Saints,NO,4606711,Taliese Fuaga,OT,Questionable,QUESTIONABLE,Knee,2026-11-15,Fuaga (knee) was a limited participant at practice Thursday.
@@ -7183,6 +7184,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-13T02:23:11+00:00,2026-11-13T02:10Z,28,Washington Commanders,WSH,4360635,Chig Okonkwo,TE,Questionable,QUESTIONABLE,Back,2026-11-12,"Okonkwo (back) is questionable to return to Thursday's game against the Giants, Ralph Vacchiano of FoxSports.com reports."
 2026-11-13T04:53:18+00:00,2026-11-13T02:10Z,28,Washington Commanders,WSH,4360635,Chig Okonkwo,TE,Active,,,,"Okonkwo (back) is questionable to return to Thursday's game against the Giants, Ralph Vacchiano of FoxSports.com reports."
 2026-11-13T02:38:14+00:00,2026-11-13T02:24Z,26,Seattle Seahawks,SEA,4426376,Charles Cross,OT,Doubtful,DOUBTFUL,Ankle Sprain,2026-11-15,"Cross (ankle) was a limited participant at practice Thursday, John Boyle of the Seahawks' official site reports."
+2026-11-13T22:53:28+00:00,2026-11-13T02:24Z,26,Seattle Seahawks,SEA,4426376,Charles Cross,OT,Out,OUT,Ankle Sprain,2026-11-29,"Cross (ankle) was a limited participant at practice Thursday, John Boyle of the Seahawks' official site reports."
 2026-11-13T03:23:24+00:00,2026-11-13T03:00Z,19,New York Giants,NYG,4240706,Jason Pinnock,S,Questionable,QUESTIONABLE,Back,2026-11-12,questionable
 2026-11-13T03:38:20+00:00,2026-11-13T03:10Z,19,New York Giants,NYG,4240706,Jason Pinnock,S,Questionable,QUESTIONABLE,Back,2026-11-12,"Pinnock (back) is questionable to return to Thursday night's contest against the Commanders, Dan Duggan of The Athletic reports."
 2026-11-13T03:38:20+00:00,2026-11-13T03:22Z,19,New York Giants,NYG,4426489,Bryan Hudson,C,Active,,,,
@@ -7333,3 +7335,23 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-13T22:38:20+00:00,2026-11-13T22:24Z,9,Green Bay Packers,GB,4567406,Ty'Ron Hopper,LB,Active,,,,
 2026-11-13T22:38:20+00:00,2026-11-13T22:26Z,10,Tennessee Titans,TEN,4870805,Anthony Hill Jr.,LB,Out,OUT,Neck,2026-11-22,"Hill (neck) has been ruled out for Sunday's game against the Jaguars, Jim Wyatt of the Titans' official site reports."
 2026-11-13T22:38:20+00:00,2026-11-13T22:28Z,10,Tennessee Titans,TEN,3926229,Cody Barton,LB,Out,OUT,Concussion,2026-11-22,"Barton (concussion) has been ruled out for Sunday's game against the Jaguars, Jim Wyatt of the Titans' official site reports."
+2026-11-13T22:53:28+00:00,2026-11-13T22:31Z,17,New England Patriots,NE,2574056,Kevin Byard,S,Questionable,QUESTIONABLE,Chest,2026-11-15,"Following a full practice Friday, Byard (chest) is listed as questionable for Sunday's game against the Lions in Munich."
+2026-11-13T22:53:28+00:00,2026-11-13T22:33Z,22,Arizona Cardinals,ARI,4362225,Dante Stills,DT,Active,,,,
+2026-11-13T22:53:28+00:00,2026-11-13T22:34Z,17,New England Patriots,NE,4368113,Charles Woods,CB,Questionable,QUESTIONABLE,Hamstring,2026-11-15,Woods (hamstring) is listed as questionable for Sunday's game against the Lions in Munich.
+2026-11-13T22:53:28+00:00,2026-11-13T22:37Z,2,Buffalo Bills,BUF,4030899,Spencer Brown,OT,Doubtful,DOUBTFUL,Ankle,2026-11-15,doubtful
+2026-11-13T22:53:28+00:00,2026-11-13T22:37Z,16,Minnesota Vikings,MIN,4629149,Tyrion Ingram-Dawkins,DE,Out,OUT,Ankle,2026-11-22,out
+2026-11-13T22:53:28+00:00,2026-11-13T22:38Z,2,Buffalo Bills,BUF,4367203,Alec Anderson,OT,Active,,,,
+2026-11-13T22:53:28+00:00,2026-11-13T22:38Z,16,Minnesota Vikings,MIN,4568007,Jay Ward,S,Active,,,,
+2026-11-13T22:53:28+00:00,2026-11-13T22:38Z,16,Minnesota Vikings,MIN,4046537,Joshua Metellus,S,Questionable,QUESTIONABLE,Shoulder,2026-11-15,questionable
+2026-11-13T22:53:28+00:00,2026-11-13T22:38Z,17,New England Patriots,NE,4047941,Brenden Schooler,S,Questionable,QUESTIONABLE,Hamstring,2026-11-15,Schooler (hamstring) is questionable to play against the Lions on Sunday in Munich.
+2026-11-13T22:53:28+00:00,2026-11-13T22:39Z,2,Buffalo Bills,BUF,4033748,Connor McGovern,C,Active,,,,
+2026-11-13T22:53:28+00:00,2026-11-13T22:39Z,2,Buffalo Bills,BUF,3051324,Dion Dawkins,OT,Active,,,,
+2026-11-13T22:53:28+00:00,2026-11-13T22:41Z,29,Carolina Panthers,CAR,5151083,Will Lee III,CB,Questionable,QUESTIONABLE,Hamstring,2026-11-15,Lee (hamstring) is listed as questionable for Sunday's game against the Saints.
+2026-11-13T22:53:28+00:00,2026-11-13T22:43Z,26,Seattle Seahawks,SEA,4429211,Anthony Bradford,G,Active,,,,
+2026-11-13T22:53:28+00:00,2026-11-13T22:43Z,26,Seattle Seahawks,SEA,4605491,Connor O'Toole,LB,Active,,,,
+2026-11-13T22:53:28+00:00,2026-11-13T22:43Z,26,Seattle Seahawks,SEA,4567226,Derick Hall,LB,Active,,,,
+2026-11-13T22:53:28+00:00,2026-11-13T22:43Z,26,Seattle Seahawks,SEA,2971622,Leonard Williams,DT,Out,OUT,Shoulder Stinger,2026-11-29,out
+2026-11-13T22:53:28+00:00,2026-11-13T22:43Z,26,Seattle Seahawks,SEA,4364623,Patrick O'Connell,LB,Active,,,,
+2026-11-13T22:53:28+00:00,2026-11-13T22:43Z,26,Seattle Seahawks,SEA,3120358,Uchenna Nwosu,LB,Active,,,,
+2026-11-13T22:53:28+00:00,2026-11-13T22:44Z,26,Seattle Seahawks,SEA,4259651,Brandon Pili,DT,Active,,,,
+2026-11-13T22:53:28+00:00,2026-11-13T22:44Z,26,Seattle Seahawks,SEA,3129308,Quenton Nelson,G,Out,OUT,Knee Surgery,2026-11-29,out
