@@ -6479,6 +6479,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-11T01:23:13+00:00,2026-11-11T00:54Z,14,Los Angeles Rams,LAR,4360797,Tutu Atwell,WR,Active,,,,Atwell recorded two catches on five targets for 16 yards during the Rams' 20-13 win over the Commanders on Sunday.
 2026-11-11T01:23:13+00:00,2026-11-11T00:55Z,17,New England Patriots,NE,4831959,Eli Raridon,TE,Active,,,,Raridon caught three passes for 52 yards on six targets in Sunday's 45-27 loss to the Packers.
 2026-11-11T01:23:13+00:00,2026-11-11T00:58Z,14,Los Angeles Rams,LAR,2573401,Tyler Higbee,TE,Active,,,,Higbee caught one of five targets for 13 yards during Sunday's 20-13 win over the Commanders.
+2026-11-13T00:23:17+00:00,2026-11-11T00:58Z,14,Los Angeles Rams,LAR,2573401,Tyler Higbee,TE,Questionable,QUESTIONABLE,Illness,2026-11-15,Higbee caught one of five targets for 13 yards during Sunday's 20-13 win over the Commanders.
 2026-11-11T01:23:13+00:00,2026-11-11T01:01Z,15,Miami Dolphins,MIA,4242512,Malik Willis,QB,Injured Reserve,IR,Groin,2026-12-13,ir
 2026-11-11T01:08:23+00:00,2026-11-11T01:01Z,28,Washington Commanders,WSH,4567156,Treylon Burks,WR,Questionable,QUESTIONABLE,Foot,2026-11-12,questionable
 2026-11-11T01:23:13+00:00,2026-11-11T01:03Z,17,New England Patriots,NE,4613202,Kyle Williams,WR,Active,,,,Williams failed to catch either of his two targets in Sunday's 45-27 loss to the Packers.
@@ -7121,4 +7122,5 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-13T00:08:40+00:00,2026-11-12T23:54Z,24,Los Angeles Chargers,LAC,4596334,Keaton Mitchell,RB,Questionable,QUESTIONABLE,Hip,2026-11-16,Mitchell (hip) was limited at practice Thursday.
 2026-11-13T00:08:40+00:00,2026-11-12T23:55Z,13,Las Vegas Raiders,LV,3045172,Folorunso Fatukasi,DT,Active,,,,
 2026-11-13T00:08:40+00:00,2026-11-12T23:59Z,28,Washington Commanders,WSH,4432722,Athan Kaliakmanis,QB,Out,INACTIVE,Coach's Decision,2026-11-23,Kaliakmanis (coach's decision) is inactive for Thursday's game against the Giants but will serve as the team's emergency quarterback.
+2026-11-13T00:23:17+00:00,2026-11-13T00:03Z,26,Seattle Seahawks,SEA,3924327,Drew Lock,QB,Questionable,QUESTIONABLE,Oblique Strain,2026-11-15,"Lock (right elbow/oblique) practiced in a limited capacity Thursday, John Boyle of the Seahawks' official site reports."
 2026-11-13T00:08:40+00:00,2026-11-13T00:04Z,19,New York Giants,NYG,4040615,Malik Harrison,LB,Out,INACTIVE,Groin,2026-11-22,"Harrison (groin) is inactive for Thursday's game against Washington, Dan Salomone of the Giants' official site reports."
