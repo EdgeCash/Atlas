@@ -7156,9 +7156,12 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-13T01:38:14+00:00,2026-11-13T01:22Z,14,Los Angeles Rams,LAR,4431342,Brennan Presley,WR,Active,,,,"The Rams signed Presley to the 53-man roster Thursday, Aaron Wilson of KPRC 2 Houston reports."
 2026-11-13T01:38:14+00:00,2026-11-13T01:26Z,8,Detroit Lions,DET,4361788,Cade Mays,C,Out,OUT,Ankle Sprain,2026-11-22,Mays (ankle) is not traveling with the Lions to Munich ahead of their Week 10 matchup against the Patriots.
 2026-11-13T01:53:18+00:00,2026-11-13T01:36Z,18,New Orleans Saints,NO,4685260,Kelvin Banks Jr.,OT,Questionable,QUESTIONABLE,Ankle,2026-11-15,Banks (ankle) was a limited participant at practice Thursday.
+2026-11-13T20:08:15+00:00,2026-11-13T01:36Z,18,New Orleans Saints,NO,4685260,Kelvin Banks Jr.,OT,Active,,,,Banks (ankle) was a limited participant at practice Thursday.
 2026-11-13T01:53:18+00:00,2026-11-13T01:39Z,9,Green Bay Packers,GB,4426411,Sean Rhyan,G,Questionable,QUESTIONABLE,Ankle Sprain,2026-11-15,Rhyan (ankle) did not practice Thursday.
 2026-11-13T02:08:20+00:00,2026-11-13T01:39Z,18,New Orleans Saints,NO,3917660,David Edwards,G,Questionable,QUESTIONABLE,Knee,2026-11-15,Edwards (knee) was a limited participant at practice Thursday.
+2026-11-13T20:08:15+00:00,2026-11-13T01:39Z,18,New Orleans Saints,NO,3917660,David Edwards,G,Active,,,,Edwards (knee) was a limited participant at practice Thursday.
 2026-11-13T02:08:20+00:00,2026-11-13T01:42Z,18,New Orleans Saints,NO,4606711,Taliese Fuaga,OT,Questionable,QUESTIONABLE,Knee,2026-11-15,Fuaga (knee) was a limited participant at practice Thursday.
+2026-11-13T20:08:15+00:00,2026-11-13T01:42Z,18,New Orleans Saints,NO,4606711,Taliese Fuaga,OT,Out,OUT,Knee Sprain,2026-11-22,Fuaga (knee) was a limited participant at practice Thursday.
 2026-11-13T01:53:18+00:00,2026-11-13T01:44Z,9,Green Bay Packers,GB,4242390,Aaron Banks,G,Questionable,QUESTIONABLE,Knee,2026-11-15,Banks (knee/hip) was a limited participant in Thursday's practice.
 2026-11-13T02:08:20+00:00,2026-11-13T01:49Z,9,Green Bay Packers,GB,4361904,Travis Glover,OT,Questionable,QUESTIONABLE,Knee,2026-11-15,Glover (knee) was limited in Thursday's practice.
 2026-11-13T02:08:20+00:00,2026-11-13T01:49Z,25,San Francisco 49ers,SF,13241,Trent Williams,OT,Questionable,QUESTIONABLE,Shoulder,2026-11-15,"Williams (shoulder) was a limited participant at practice Thursday, Matt Maiocco of NBC Sports Bay Area reports."
@@ -7234,3 +7237,14 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-13T19:08:21+00:00,2026-11-13T18:20Z,5,Cleveland Browns,CLE,2515270,Michael Burton,FB,Out,OUT,Calf,2026-11-29,out
 2026-11-13T19:08:21+00:00,2026-11-13T18:20Z,5,Cleveland Browns,CLE,4569620,Ronnie Hickman,S,Out,OUT,Concussion Concussion,2026-11-29,out
 2026-11-13T19:08:21+00:00,2026-11-13T18:34Z,5,Cleveland Browns,CLE,4832800,Denzel Boston,WR,Questionable,QUESTIONABLE,Toe,2026-11-15,"Boston (toe), who is listed as questionable for Sunday's game against the Texans, per Daniel Oyefusi of ESPN,  is trending in the right direction ahead of the c"
+2026-11-13T20:08:15+00:00,2026-11-13T19:09Z,18,New Orleans Saints,NO,3917331,Erik McCoy,C,Out,OUT,Biceps,2026-11-22,out
+2026-11-13T20:08:15+00:00,2026-11-13T19:10Z,18,New Orleans Saints,NO,4685479,Christen Miller,DT,Out,OUT,Knee,2026-11-22,out
+2026-11-13T20:08:15+00:00,2026-11-13T19:18Z,12,Kansas City Chiefs,KC,4567048,Kenneth Walker III,RB,Questionable,QUESTIONABLE,Groin,2026-11-15,"Walker (groin) sat out Friday's practice due to groin tightness, Sam McDowell of The Kansas City Star reports."
+2026-11-13T20:08:15+00:00,2026-11-13T19:22Z,14,Los Angeles Rams,LAR,3122132,Myles Garrett,DE,Questionable,QUESTIONABLE,Knee,2026-11-15,"Head coach Sean McVay said Friday that Garrett (knee) will be listed as questionable for Sunday's game at Arizona but is expected to play, Sarah Barshop of ESPN"
+2026-11-13T20:08:15+00:00,2026-11-13T19:30Z,12,Kansas City Chiefs,KC,4832955,Emmett Johnson,RB,Active,,,,Coach Andy Reid noted that Johnson would take the bulk of the Chiefs' carries in the event that Kenneth Walker -- who didn't practice Friday due to groin tightn
+2026-11-13T20:08:15+00:00,2026-11-13T19:31Z,12,Kansas City Chiefs,KC,4688813,Josh Downs,WR,Active,,,,"Chiefs coach Andy Reid said Friday that Downs looks ready to play in Sunday's game at Atlanta, Charles Goldman of AtoZ Sports reports."
+2026-11-13T20:08:15+00:00,2026-11-13T19:38Z,18,New Orleans Saints,NO,4239996,Travis Etienne Jr.,RB,Injured Reserve,IR-R,Left Hamstring Strain,2026-11-15,"Etienne (hamstring) said Friday that ""the week of practice went well,"" and that he hopes to be active for Sunday's game against the Panthers, Jeff Nowak of WWL "
+2026-11-13T20:08:15+00:00,2026-11-13T19:42Z,1,Atlanta Falcons,ATL,4870612,Zachariah Branch,WR,Out,OUT,Hamstring,2026-11-29,Branch (hamstring) has been ruled out for Sunday's game against the Chiefs.
+2026-11-13T20:08:15+00:00,2026-11-13T19:44Z,18,New Orleans Saints,NO,4428350,Quincy Riley,CB,Active,,,,
+2026-11-13T20:08:15+00:00,2026-11-13T19:46Z,18,New Orleans Saints,NO,5081999,CJ Donaldson,RB,Out,OUT,Shoulder,2026-11-22,"Donaldson (shoulder) has been ruled out for Sunday's game against the Panthers, Nick Underhill of NewOrleans.Football reports."
+2026-11-13T20:08:15+00:00,2026-11-13T19:53Z,16,Minnesota Vikings,MIN,4036133,T.J. Hockenson,TE,Questionable,QUESTIONABLE,Wrist,2026-11-15,"Hockenson (wrist/chest) wasn't seen during the portion of Friday's practice open to the media, Kevin Seifert of ESPN.com reports."
