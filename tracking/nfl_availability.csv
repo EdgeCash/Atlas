@@ -7136,6 +7136,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-13T00:38:22+00:00,2026-11-13T00:08Z,33,Baltimore Ravens,BAL,4360939,Rashod Bateman,WR,Questionable,QUESTIONABLE,Calf,2026-11-16,Bateman (calf) was limited  in practice Thursday.
 2026-11-13T00:38:22+00:00,2026-11-13T00:09Z,24,Los Angeles Chargers,LAC,4686612,Tre' Harris,WR,Questionable,QUESTIONABLE,Shoulder,2026-11-16,Harris (shoulder) was a limited participant at practice Thursday.
 2026-11-13T00:38:22+00:00,2026-11-13T00:13Z,6,Dallas Cowboys,DAL,4426485,Jonathan Mingo,WR,Questionable,QUESTIONABLE,Ankle,2026-11-15,"Mingo (ankle, foot) did not practice Thursday, Jon Machota of The Athletic reports."
+2026-11-13T23:08:16+00:00,2026-11-13T00:13Z,6,Dallas Cowboys,DAL,4426485,Jonathan Mingo,WR,Out,OUT,Ankle,2026-11-22,"Mingo (ankle, foot) did not practice Thursday, Jon Machota of The Athletic reports."
 2026-11-13T00:38:22+00:00,2026-11-13T00:14Z,24,Los Angeles Chargers,LAC,3123076,David Njoku,TE,Injured Reserve,IR-R,Lower Leg,2026-11-16,Njoku (fibula) was a limited participant at the Chargers' practice Thursday.
 2026-11-13T00:38:22+00:00,2026-11-13T00:15Z,14,Los Angeles Rams,LAR,3122132,Myles Garrett,DE,Questionable,QUESTIONABLE,Knee,2026-11-15,"Garrett (knee) practiced in a limited fashion Thursday, Adam Caplan of SiriusXM NFL Radio reports."
 2026-11-13T00:38:22+00:00,2026-11-13T00:15Z,16,Minnesota Vikings,MIN,3886598,Jauan Jennings,WR,Questionable,QUESTIONABLE,Calf,2026-11-15,Jennings (calf) did not participate at practice Thursday.
@@ -7347,6 +7348,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-13T22:53:28+00:00,2026-11-13T22:39Z,2,Buffalo Bills,BUF,4033748,Connor McGovern,C,Active,,,,
 2026-11-13T22:53:28+00:00,2026-11-13T22:39Z,2,Buffalo Bills,BUF,3051324,Dion Dawkins,OT,Active,,,,
 2026-11-13T22:53:28+00:00,2026-11-13T22:41Z,29,Carolina Panthers,CAR,5151083,Will Lee III,CB,Questionable,QUESTIONABLE,Hamstring,2026-11-15,Lee (hamstring) is listed as questionable for Sunday's game against the Saints.
+2026-11-13T23:08:16+00:00,2026-11-13T22:43Z,29,Carolina Panthers,CAR,3917853,Mike Jackson,CB,Injured Reserve,IR-R,Groin Surgery,2026-11-15,Jackson (groin) is listed as doubtful for Sunday's game against New Orleans.
 2026-11-13T22:53:28+00:00,2026-11-13T22:43Z,26,Seattle Seahawks,SEA,4429211,Anthony Bradford,G,Active,,,,
 2026-11-13T22:53:28+00:00,2026-11-13T22:43Z,26,Seattle Seahawks,SEA,4605491,Connor O'Toole,LB,Active,,,,
 2026-11-13T22:53:28+00:00,2026-11-13T22:43Z,26,Seattle Seahawks,SEA,4567226,Derick Hall,LB,Active,,,,
@@ -7355,3 +7357,11 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-13T22:53:28+00:00,2026-11-13T22:43Z,26,Seattle Seahawks,SEA,3120358,Uchenna Nwosu,LB,Active,,,,
 2026-11-13T22:53:28+00:00,2026-11-13T22:44Z,26,Seattle Seahawks,SEA,4259651,Brandon Pili,DT,Active,,,,
 2026-11-13T22:53:28+00:00,2026-11-13T22:44Z,26,Seattle Seahawks,SEA,3129308,Quenton Nelson,G,Out,OUT,Knee Surgery,2026-11-29,out
+2026-11-13T23:08:16+00:00,2026-11-13T22:48Z,11,Indianapolis Colts,IND,2998565,Mo Alie-Cox,TE,Out,OUT,Groin,2026-11-19,"Alie-Cox (groin) has been ruled out for Sunday's game against the Dolphins, Abby Halpin of the Colts' official site reports."
+2026-11-13T23:08:16+00:00,2026-11-13T22:48Z,12,Kansas City Chiefs,KC,3139477,Patrick Mahomes,QB,Active,,,,Mahomes (elbow) was a full practice participant throughout the week and doesn't have an injury designation for Sunday's game at Atlanta.
+2026-11-13T23:08:16+00:00,2026-11-13T22:51Z,6,Dallas Cowboys,DAL,4683848,Donovan Ezeiruaku,LB,Out,OUT,Ankle,2026-11-22,out
+2026-11-13T23:08:16+00:00,2026-11-13T22:51Z,6,Dallas Cowboys,DAL,4360590,Juanyeh Thomas,S,Doubtful,DOUBTFUL,Ribs,2026-11-15,doubtful
+2026-11-13T23:08:16+00:00,2026-11-13T22:52Z,6,Dallas Cowboys,DAL,4248911,DaRon Bland,CB,Questionable,QUESTIONABLE,Ankle,2026-11-15,questionable
+2026-11-13T23:08:16+00:00,2026-11-13T22:52Z,11,Indianapolis Colts,IND,3917142,Akeem Davis-Gaither,LB,Out,OUT,Knee,2026-11-19,"Davis-Gaither (knee) has been ruled out for Sunday's game against the Dolphins, Abby Halpin of the Colts' official site reports."
+2026-11-13T23:08:16+00:00,2026-11-13T22:53Z,34,Houston Texans,HOU,4366031,Tank Dell,WR,Active,,,,"Dell (hand) doesn't have an injury designation for Sunday's game against the Browns, while teammate Marvin Harrison (hamstring) has been ruled out."
+2026-11-13T23:08:16+00:00,2026-11-13T22:54Z,6,Dallas Cowboys,DAL,3676833,KaVontae Turpin,WR,Active,,,,
