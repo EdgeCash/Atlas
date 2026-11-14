@@ -7458,6 +7458,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-14T02:08:18+00:00,2026-11-14T01:47Z,18,New Orleans Saints,NO,4606711,Taliese Fuaga,OT,Out,OUT,Knee Sprain,2026-11-22,"Fuaga (knee) has been ruled out for Sunday's game against the Panthers, Nick Underhill of NewOrleans.Football reports."
 2026-11-14T02:08:18+00:00,2026-11-14T01:50Z,11,Indianapolis Colts,IND,4892240,Jalen Travis,OT,Out,OUT,Knee,2026-11-19,"Travis (knee) has been ruled out ahead of Sunday's game against the Dolphins, Abby Halpin of the Colts' official site reports."
 2026-11-14T02:08:18+00:00,2026-11-14T01:53Z,18,New Orleans Saints,NO,4685479,Christen Miller,DT,Out,OUT,Knee,2026-11-22,"Miller (knee) has been ruled out for Sunday's game against Carolina, Ross Jackson of WWL-TV reports."
+2026-11-14T21:38:05+00:00,2026-11-14T01:53Z,18,New Orleans Saints,NO,4685479,Christen Miller,DT,Injured Reserve,IR,Knee,2026-12-13,"Miller (knee) has been ruled out for Sunday's game against Carolina, Ross Jackson of WWL-TV reports."
 2026-11-14T02:08:18+00:00,2026-11-14T01:55Z,18,New Orleans Saints,NO,3917331,Erik McCoy,C,Out,OUT,Biceps,2026-11-22,"McCoy (biceps) has been ruled out for Sunday's game against the Panthers, Ross Jackson of WWL-TV reports."
 2026-11-14T02:08:18+00:00,2026-11-14T01:56Z,4,Cincinnati Bengals,CIN,4401811,Kyle Dugger,S,Out,OUT,Left Quadriceps,2026-11-22,Dugger (quadriceps) has been ruled out ahead of Sunday's game against the Steelers.
 2026-11-14T02:08:18+00:00,2026-11-14T01:57Z,18,New Orleans Saints,NO,4685260,Kelvin Banks Jr.,OT,Active,,,,"Banks (ankle) does not have an injury designation for Sunday's game against the Panthers, Ross Jackson of WWL-TV reports."
@@ -7549,3 +7550,6 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-14T21:23:11+00:00,2026-11-14T21:10Z,17,New England Patriots,NE,4039505,Reggie Gilliam,FB,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
 2026-11-14T21:23:11+00:00,2026-11-14T21:11Z,17,New England Patriots,NE,4432710,TreVeyon Henderson,RB,Injured Reserve,IR,Illness,2026-12-21,ir
 2026-11-14T21:23:11+00:00,2026-11-14T21:11Z,18,New Orleans Saints,NO,4239996,Travis Etienne Jr.,RB,Questionable,QUESTIONABLE,Left Hamstring Strain,2026-11-15,"The Saints activated Etienne (hamstring) from injured reserve Saturday, but he remains questionable for Sunday's game against the Panthers, Nick Underhill of Ne"
+2026-11-14T21:38:05+00:00,2026-11-14T21:14Z,17,New England Patriots,NE,4432710,TreVeyon Henderson,RB,Injured Reserve,IR,Illness,2026-12-21,"Henderson (illness) was placed on injured reserve Saturday, Mike Reiss of ESPN.com reports."
+2026-11-14T21:38:05+00:00,2026-11-14T21:18Z,20,New York Jets,NYJ,4837388,VJ Payne,S,Questionable,QUESTIONABLE,Knee Bruise,2026-11-15,questionable
+2026-11-14T21:38:05+00:00,2026-11-14T21:19Z,22,Arizona Cardinals,ARI,4239944,Hunter Long,TE,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
