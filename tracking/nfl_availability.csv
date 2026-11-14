@@ -7377,6 +7377,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-13T23:23:02+00:00,2026-11-13T23:04Z,25,San Francisco 49ers,SF,3057524,Siran Neal,S,Active,,,,
 2026-11-13T23:23:02+00:00,2026-11-13T23:05Z,24,Los Angeles Chargers,LAC,4612826,Ladd McConkey,WR,Questionable,QUESTIONABLE,Back Spasms,2026-11-16,McConkey (back) didn't practice Friday.
 2026-11-13T23:23:02+00:00,2026-11-13T23:07Z,24,Los Angeles Chargers,LAC,4596334,Keaton Mitchell,RB,Questionable,QUESTIONABLE,Hip,2026-11-16,Mitchell (hip) remained limited at practice Friday.
+2026-11-14T21:53:00+00:00,2026-11-13T23:07Z,24,Los Angeles Chargers,LAC,4596334,Keaton Mitchell,RB,Active,,,,Mitchell (hip) remained limited at practice Friday.
 2026-11-13T23:23:02+00:00,2026-11-13T23:08Z,24,Los Angeles Chargers,LAC,5082660,Alex Harkey,G,Active,,,,
 2026-11-13T23:23:02+00:00,2026-11-13T23:09Z,5,Cleveland Browns,CLE,2515270,Michael Burton,FB,Out,OUT,Calf,2026-11-29,"Burton (calf) has been ruled out for Sunday's game against Houston, Daniel Oyefusi of ESPN.com reports."
 2026-11-13T23:23:02+00:00,2026-11-13T23:11Z,2,Buffalo Bills,BUF,4036134,Amani Hooker,S,Active,,,,"Head coach Joe Brady confirmed Friday that Hooker will play Sunday against the Jets, Sal Capaccio of WGR Sports Radio 550 Buffalo reports."
@@ -7437,6 +7438,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-14T01:23:26+00:00,2026-11-14T01:04Z,2,Buffalo Bills,BUF,4379778,Christian Benford,CB,Questionable,QUESTIONABLE,Wrist,2026-11-15,Benford (wrist) is listed as questionable for Sunday's game against the Jets.
 2026-11-14T01:23:26+00:00,2026-11-14T01:04Z,25,San Francisco 49ers,SF,3916903,Dre Greenlaw,LB,Questionable,QUESTIONABLE,Knee,2026-11-15,Greenlaw (knee) is questionable for Sunday's game against the Cowboys.
 2026-11-14T01:23:26+00:00,2026-11-14T01:08Z,24,Los Angeles Chargers,LAC,4690171,Deane Leonard,CB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-16,Leonard (concussion) was a full participant in Friday's practice.
+2026-11-14T21:53:00+00:00,2026-11-14T01:08Z,24,Los Angeles Chargers,LAC,4690171,Deane Leonard,CB,Active,,,,Leonard (concussion) was a full participant in Friday's practice.
 2026-11-14T01:23:26+00:00,2026-11-14T01:09Z,25,San Francisco 49ers,SF,4242488,Deommodore Lenoir,CB,Questionable,QUESTIONABLE,Foot,2026-11-15,Lenoir (foot) is questionable for Sunday's game against the Cowboys.
 2026-11-14T01:23:26+00:00,2026-11-14T01:12Z,24,Los Angeles Chargers,LAC,4427404,Cam Hart,CB,Active,,,,Hart (ankle) does not have any injury designation ahead of Monday night's game against the Ravens.
 2026-11-14T01:23:26+00:00,2026-11-14T01:12Z,19,New York Giants,NYG,4040655,Darnell Mooney,WR,Active,,,,Mooney caught two of five targets for eight yards Thursday in a loss to Washington.
@@ -7553,3 +7555,10 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-14T21:38:05+00:00,2026-11-14T21:14Z,17,New England Patriots,NE,4432710,TreVeyon Henderson,RB,Injured Reserve,IR,Illness,2026-12-21,"Henderson (illness) was placed on injured reserve Saturday, Mike Reiss of ESPN.com reports."
 2026-11-14T21:38:05+00:00,2026-11-14T21:18Z,20,New York Jets,NYJ,4837388,VJ Payne,S,Questionable,QUESTIONABLE,Knee Bruise,2026-11-15,questionable
 2026-11-14T21:38:05+00:00,2026-11-14T21:19Z,22,Arizona Cardinals,ARI,4239944,Hunter Long,TE,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
+2026-11-14T21:53:00+00:00,2026-11-14T21:28Z,24,Los Angeles Chargers,LAC,4433914,Branson Taylor,G,Out,OUT,Ankle,2026-11-22,out
+2026-11-14T21:53:00+00:00,2026-11-14T21:28Z,24,Los Angeles Chargers,LAC,4685553,Brenen Thompson,WR,Doubtful,DOUBTFUL,Hamstring,2026-11-16,doubtful
+2026-11-14T21:53:00+00:00,2026-11-14T21:28Z,24,Los Angeles Chargers,LAC,4574105,Isas Waxter,CB,Out,OUT,Ankle,2026-11-22,out
+2026-11-14T21:53:00+00:00,2026-11-14T21:28Z,24,Los Angeles Chargers,LAC,4360745,Kendall Williamson,S,Out,OUT,Calf,2026-11-22,out
+2026-11-14T21:53:00+00:00,2026-11-14T21:30Z,24,Los Angeles Chargers,LAC,4612826,Ladd McConkey,WR,Questionable,QUESTIONABLE,Back Spasms,2026-11-16,"McConkey (back) is listed as questionable for Monday night's game against the Ravens, Noah Furtado of The Athletic reports."
+2026-11-14T21:53:00+00:00,2026-11-14T21:30Z,24,Los Angeles Chargers,LAC,4838693,Rodney Shelley,CB,Active,,,,
+2026-11-14T21:53:00+00:00,2026-11-14T21:37Z,24,Los Angeles Chargers,LAC,3123076,David Njoku,TE,Injured Reserve,IR-R,Lower Leg,2026-11-16,Njoku (fibula) is listed as questionable for Monday's game against the Ravens.
