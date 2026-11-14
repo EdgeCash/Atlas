@@ -1,27 +1,27 @@
 # Atlas Drift Monitoring
 
-*Generated 2026-11-14 04:53 UTC by `python -m atlas.live check`. Every alarm compares
+*Generated 2026-11-14 05:08 UTC by `python -m atlas.live check`. Every alarm compares
 the most recent week of the record against its own history.*
 
 ---
 
 ## Status
 
-**1 alert(s) firing.** Alarms are advisory: nothing in the monitor edits the record and
+**2 alert(s) firing.** Alarms are advisory: nothing in the monitor edits the record and
 nothing in it stops the tracker. A monitor that can silently discard data is a
 worse problem than the drift it was watching for.
 
 | Alarm | Severity | Observed | Threshold | Detail |
 |---|---|---|---|---|
-| signal volume | ok | 0.0806 | 0.5 | week 11: 134 signals against 124 the week before (+8%) |
-| silence | ok | 5.4793 | 7 | last signal 5.5 days ago (2026-11-08) |
+| signal volume | alarm | -0.8806 | 0.5 | week 12: 16 signals against 134 the week before (-88%) |
+| silence | ok | 0.0000 | 7 | last signal 0.0 days ago (2026-11-14) |
 | single book | alarm | 1.0000 | 1 | 100% of signals from book 'DraftKings' (1 distinct) |
 | single market | ok | 0.5000 | 1 | 50% of signals from market 'margin' (2 distinct) |
-| model output (margin) | ok | -0.4694 | 3 | mean Atlas number moved -0.47 points against prior weeks |
-| model output (total) | ok | -0.0113 | 3 | mean Atlas number moved -0.01 points against prior weeks |
-| disagreement shape (margin) | ok | 0.5254 | 0.01 | KS statistic 0.105, p = 0.5254 |
-| disagreement shape (total) | ok | 0.8104 | 0.01 | KS statistic 0.082, p = 0.8104 |
-| primary rate | ok | -0.1542 | 0.5 | 0.7% of signals primary against 0.9% before (-15%) |
+| model output (margin) | ok | n/a | 3 | 8 recent / 407 prior rows; too few to compare |
+| model output (total) | ok | n/a | 3 | 8 recent / 407 prior rows; too few to compare |
+| disagreement shape (margin) | ok | n/a | 0.01 | 8 recent / 407 prior rows; too few to compare |
+| disagreement shape (total) | ok | n/a | 0.01 | 8 recent / 407 prior rows; too few to compare |
+| primary rate | ok | n/a | 0.5 | 16 recent / 814 prior rows; too few to compare |
 | college state | ok | 853.0000 | 1 | 853 more team-games assimilated since Saturday noon ET |
 
 ---
