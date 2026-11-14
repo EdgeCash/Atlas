@@ -1,6 +1,6 @@
 # Atlas on Polymarket US
 
-*Rebuilt every run; this one at 2026-11-14 22:38 UTC.*
+*Rebuilt every run; this one at 2026-11-14 22:53 UTC.*
 
 Polymarket US, the CFTC-regulated exchange, is the one venue Atlas is priced
 against. It lists a moneyline, a ladder of spreads and a ladder of totals on
@@ -16,7 +16,7 @@ the point-in-time archive of the market Atlas is measured against.
 |---|---|---|---|---|---|---|
 | NCAAF | 126 | 35 | 4682 | 1.0¢ | – | 0.0950 |
 | NFL | 14 | 12 | 1704 | 0.5¢ | – | 0.0950 |
-| NBA | 58 | 21 | 1576 | 1.0¢ | – | 0.0950 |
+| NBA | 58 | 21 | 1578 | 1.0¢ | – | 0.0950 |
 | NHL | 61 | 20 | 600 | 1.0¢ | – | 0.0950 |
 
 Spread is the gap between the best bid and the best ask on the contracts
@@ -57,12 +57,12 @@ side at disagreements this large or larger, never below one half.
 
 | Sport | Market | Games | Atlas, median gap | Atlas, largest gap | Anchored, median gap |
 |---|---|---|---|---|---|
-| NBA | margin | 20 | 2.3 | 11.8 | 0.08 |
+| NBA | margin | 20 | 2.4 | 14.8 | 0.09 |
 | NBA | total | 12 | 9.3 | 18.7 | 0.42 |
-| NCAAF | margin | 35 | 3.1 | 21.8 | 0.00 |
-| NCAAF | total | 35 | 4.3 | 30.1 | 0.99 |
+| NCAAF | margin | 35 | 3.4 | 25.2 | 0.00 |
+| NCAAF | total | 35 | 5.5 | 27.9 | 1.34 |
 | NFL | margin | 12 | 1.4 | 3.6 | 0.01 |
-| NFL | total | 12 | 1.8 | 5.8 | 0.30 |
+| NFL | total | 12 | 1.7 | 5.8 | 0.29 |
 
 In points of margin or total, per game: Atlas's own projection against
 the market's centre, and the anchored number the contracts are priced from.
