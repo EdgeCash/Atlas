@@ -7974,6 +7974,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-15T20:53:13+00:00,2026-11-15T20:24Z,25,San Francisco 49ers,SF,4242488,Deommodore Lenoir,CB,Active,,,,Lenoir (foot) is active for Sunday's game against Dallas.
 2026-11-15T20:37:19+00:00,2026-11-15T20:25Z,34,Houston Texans,HOU,4429059,Woody Marks,RB,Out,OUT,Concussion Concussion,2026-11-19,Marks (concussion) has been downgraded to out for the remainder of Sunday's game against the Browns.
 2026-11-15T21:38:29+00:00,2026-11-15T20:25Z,34,Houston Texans,HOU,4429059,Woody Marks,RB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-19,Marks (concussion) has been downgraded to out for the remainder of Sunday's game against the Browns.
+2026-11-15T23:23:02+00:00,2026-11-15T20:25Z,34,Houston Texans,HOU,4429059,Woody Marks,RB,Doubtful,DOUBTFUL,Concussion Concussion,2026-11-19,Marks (concussion) has been downgraded to out for the remainder of Sunday's game against the Browns.
 2026-11-15T20:37:19+00:00,2026-11-15T20:26Z,22,Arizona Cardinals,ARI,4709718,Jayden Williams,OT,Out,INACTIVE,Knee,2026-11-22,"Williams (knee) has been ruled out for Sunday's game against the Rams, Darren Urban of the Cardinals' official site reports."
 2026-11-15T20:37:19+00:00,2026-11-15T20:26Z,6,Dallas Cowboys,DAL,4426506,Joey Porter Jr.,CB,Active,,,,"Porter (ankle) is active for Sunday's game against the 49ers, Todd Archer of ESPN.com reports."
 2026-11-15T20:37:19+00:00,2026-11-15T20:29Z,14,Los Angeles Rams,LAR,2575907,Joe Cardona,LS,Out,INACTIVE,Ankle,2026-11-25,Cardona (ankle) is inactive for Sunday's game against Arizona.
@@ -8039,3 +8040,4 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-15T23:08:25+00:00,2026-11-15T22:58Z,26,Seattle Seahawks,SEA,4429835,George Holani,RB,Out,OUT,Knee,2026-11-15,Holani (knee) has been ruled out for the remainder of Sunday's game against the Seahawks.
 2026-11-15T23:08:25+00:00,2026-11-15T23:02Z,1,Atlanta Falcons,ATL,4360248,Kyle Pitts Sr.,TE,Active,,,,Pitts brought in four of five targets for 50 yards in the Falcons' 35-13 loss to the Chiefs on Sunday. He also lost a fumble.
 2026-11-15T23:08:25+00:00,2026-11-15T23:07Z,34,Houston Texans,HOU,4429059,Woody Marks,RB,Doubtful,DOUBTFUL,Concussion Concussion,2026-11-19,doubtful
+2026-11-15T23:23:02+00:00,2026-11-15T23:15Z,6,Dallas Cowboys,DAL,4367210,Otito Ogbonnia,DT,Active,,,,"Ogbonnia (finger) has re-entered Sunday's matchup against San Francisco, Joe Hoyt of The Dallas Morning News reports."
