@@ -7592,6 +7592,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-15T01:08:14+00:00,2026-11-15T00:50Z,10,Tennessee Titans,TEN,4710661,Chandler Zavala,G,Active,,,,"Tennessee signed Zavala from the practice squad to the active roster Saturday, Jim Wyatt of the Titans' official site reports."
 2026-11-15T01:08:14+00:00,2026-11-15T00:53Z,10,Tennessee Titans,TEN,3915437,Isaiah Oliver,S,Active,,,,"The Titans signed Oliver from their practice squad to their active roster Saturday, Jim Wyatt of the Titans' official site reports."
 2026-11-15T01:08:14+00:00,2026-11-15T00:57Z,17,New England Patriots,NE,15718,Greg Van Roten,G,Questionable,QUESTIONABLE,Hamstring,2026-11-15,"The Patriots activated Van Roten (hamstring) from IR on Saturday, and he's questionable to play Sunday versus Detroit, Doug Kyed of the Boston Herald reports."
+2026-11-15T13:23:19+00:00,2026-11-15T00:57Z,17,New England Patriots,NE,15718,Greg Van Roten,G,Active,,,,"The Patriots activated Van Roten (hamstring) from IR on Saturday, and he's questionable to play Sunday versus Detroit, Doug Kyed of the Boston Herald reports."
 2026-11-15T01:23:00+00:00,2026-11-15T01:01Z,20,New York Jets,NYJ,4837388,VJ Payne,S,Questionable,QUESTIONABLE,Knee Bruise,2026-11-15,The Jets activated Payne (knee) from injured reserve Saturday.
 2026-11-15T01:23:00+00:00,2026-11-15T01:04Z,18,New Orleans Saints,NO,4685479,Christen Miller,DT,Injured Reserve,IR,Knee,2026-12-13,The Saints placed Miller (knee) on injured reserve Saturday.
 2026-11-15T01:38:12+00:00,2026-11-15T01:08Z,24,Los Angeles Chargers,LAC,4690171,Deane Leonard,CB,Active,,,,Leonard (concussion) does not have a designation for Monday's matchup against Baltimore.
@@ -7610,6 +7611,13 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-15T12:38:03+00:00,2026-11-15T12:21Z,10,Tennessee Titans,TEN,4428557,Tyjae Spears,RB,Questionable,QUESTIONABLE,Knee,2026-11-15,"Spears (knee) is expected to play Sunday against the Jaguars, Jeremy Fowler of ESPN.com reports."
 2026-11-15T12:53:22+00:00,2026-11-15T12:29Z,34,Houston Texans,HOU,4685724,Will Anderson Jr.,DE,Questionable,QUESTIONABLE,Ankle,2026-11-15,"Anderson (ankle) ""should be OK"" to play Sunday against the Browns, according to Jeremy Fowler of ESPN.com."
 2026-11-15T13:08:01+00:00,2026-11-15T12:49Z,22,Arizona Cardinals,ARI,4038524,Gardner Minshew II,QB,Injured Reserve,IR,Right Elbow,2027-02-15,"Minshew suffered a torn UCL in his right throwing elbow last Sunday at Seattle and is slated to undergo season-ending surgery, Adam Schefter of ESPN reports."
+2026-11-15T13:23:19+00:00,2026-11-15T13:02Z,8,Detroit Lions,DET,4710422,Ahmed Hassanein,DE,Out,INACTIVE,Coach's Decision,2026-11-22,inactive
+2026-11-15T13:23:19+00:00,2026-11-15T13:02Z,8,Detroit Lions,DET,4038432,Amen Ogbongbemiga,LB,Out,INACTIVE,Coach's Decision,2026-11-22,inactive
+2026-11-15T13:23:19+00:00,2026-11-15T13:02Z,8,Detroit Lions,DET,4361788,Cade Mays,C,Out,INACTIVE,Ankle Sprain,2026-11-22,inactive
+2026-11-15T13:23:19+00:00,2026-11-15T13:02Z,8,Detroit Lions,DET,3139387,D.J. Reed,CB,Out,INACTIVE,Hip,2026-11-22,inactive
+2026-11-15T13:23:19+00:00,2026-11-15T13:02Z,8,Detroit Lions,DET,5093004,Keith Abney II,CB,Out,INACTIVE,Coach's Decision,2026-11-22,inactive
+2026-11-15T13:23:19+00:00,2026-11-15T13:02Z,8,Detroit Lions,DET,4586333,Mekhi Wingo,DT,Out,INACTIVE,Coach's Decision,2026-11-22,inactive
+2026-11-15T13:23:19+00:00,2026-11-15T13:03Z,8,Detroit Lions,DET,4374302,Amon-Ra St. Brown,WR,Active,,,,St. Brown (ribs) is listed as active Sunday against the Patriots in Munich.
 2026-11-15T13:08:01+00:00,2026-11-15T13:03Z,17,New England Patriots,NE,4431465,Behren Morton,QB,Out,INACTIVE,Coach's Decision,,inactive
 2026-11-15T13:08:01+00:00,2026-11-15T13:03Z,17,New England Patriots,NE,4362890,Ben Brown,C,Out,INACTIVE,Knee,2026-11-29,inactive
 2026-11-15T13:08:01+00:00,2026-11-15T13:03Z,17,New England Patriots,NE,4047941,Brenden Schooler,S,Out,INACTIVE,Hamstring,2026-11-15,inactive
@@ -7618,4 +7626,12 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-15T13:08:01+00:00,2026-11-15T13:03Z,17,New England Patriots,NE,4368113,Charles Woods,CB,Active,,,,
 2026-11-15T13:08:01+00:00,2026-11-15T13:03Z,17,New England Patriots,NE,4431526,Dametrious Crownover,OT,Out,INACTIVE,Coach's Decision,,inactive
 2026-11-15T13:08:01+00:00,2026-11-15T13:03Z,17,New England Patriots,NE,2574056,Kevin Byard,S,Active,,,,
+2026-11-15T13:23:19+00:00,2026-11-15T13:03Z,17,New England Patriots,NE,4569173,Rhamondre Stevenson,RB,Active,,,,Stevenson (knee) is active for Sunday's game against the Lions in Munich.
 2026-11-15T13:08:01+00:00,2026-11-15T13:03Z,17,New England Patriots,NE,4428394,Walter Rouse,OL,Out,INACTIVE,Concussion Concussion,2026-11-15,inactive
+2026-11-15T13:23:19+00:00,2026-11-15T13:06Z,17,New England Patriots,NE,4047646,A.J. Brown,WR,Active,,,,Brown (knee/ankle) is listed as active for Sunday's game against the Lions in Munich.
+2026-11-15T13:23:19+00:00,2026-11-15T13:08Z,29,Carolina Panthers,CAR,4242975,Jaelan Phillips,LB,Questionable,QUESTIONABLE,Hamstring,2026-11-15,"Phillips (hamstring), who is listed as questionable for Sunday's game against the Saints, is in line to play, Ian Rapoport of NFL Network reports."
+2026-11-15T13:23:19+00:00,2026-11-15T13:08Z,8,Detroit Lions,DET,4912274,Sione Vaki,RB,Active,,,,Vaki (ankle) is active for Sunday's game against the Patriots in Munich.
+2026-11-15T13:23:19+00:00,2026-11-15T13:12Z,17,New England Patriots,NE,4240391,Tommy DeVito,QB,Active,,,,DeVito is active for Sunday's game against the Lions in Munich as the Patriots' No. 2 quarterback behind starter Drake Maye.
+2026-11-15T13:23:19+00:00,2026-11-15T13:14Z,17,New England Patriots,NE,4431465,Behren Morton,QB,Out,INACTIVE,Coach's Decision,2026-11-29,Morton (coach's decision) is inactive but available as the emergency third quarterback for Sunday's game against the Lions in Munich.
+2026-11-15T13:23:19+00:00,2026-11-15T13:14Z,17,New England Patriots,NE,4039505,Reggie Gilliam,FB,Active,,,,Gilliam (knee) is active for Sunday's game against the Lions in Munich.
+2026-11-15T13:23:19+00:00,2026-11-15T13:17Z,17,New England Patriots,NE,2574056,Kevin Byard,S,Active,,,,Byard (chest) is active for Sunday's game against the Lions in Munich.
