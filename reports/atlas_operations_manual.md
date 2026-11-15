@@ -1,6 +1,6 @@
 # Atlas Operations Manual
 
-*Generated 2026-11-15 03:38 UTC by `python -m atlas.live check`. Atlas research is
+*Generated 2026-11-15 03:53 UTC by `python -m atlas.live check`. Atlas research is
 complete; this document is about keeping the live tracker alive and honest for
 two seasons.*
 
@@ -16,9 +16,9 @@ two seasons.*
 | | |
 |---|---|
 | Signals recorded | 830 |
-| Grades recorded | 808 |
+| Grades recorded | 810 |
 | Line snapshots | 16,218 |
-| Tracker runs logged | 1,763 |
+| Tracker runs logged | 1,764 |
 | Blocking data-quality exceptions | 0 |
 | Monitor alerts firing | 2 |
 | Replays clean | 9 of 9 |
@@ -100,15 +100,15 @@ trace(Store.open(), "<signal_id>")   # signal, grade, full line history, run
 
 | Table | Rows | Columns | Primary key |
 |---|---|---|---|
-| runs | 1,763 | 14 | run_id |
+| runs | 1,764 | 14 | run_id |
 | numbers | 3,154 | 8 | game_id, market, model_version, refreshed_at |
 | projections | 10,423 | 49 | sport, game_id, model_version |
 | nhl_projections | 292 | 42 | game_id, model_version |
 | calibration | 49,964 | 10 | sport, game_id, market |
 | card_grades | 513 | 17 | sport, game_id |
 | other_models | 1,511 | 9 | sport, game_id, model |
-| polymarket_quotes | 116,768 | 26 | token_id, captured_at |
-| polymarket_props | 102,274 | 29 | token_id, captured_at |
+| polymarket_quotes | 116,916 | 26 | token_id, captured_at |
+| polymarket_props | 102,910 | 29 | token_id, captured_at |
 | nba_availability | 1,554 | 13 | player_id, reported_at, status |
 | nfl_availability | 7,601 | 13 | player_id, reported_at, status |
 | nhl_availability | 634 | 13 | player_id, reported_at, status |
@@ -120,7 +120,7 @@ trace(Store.open(), "<signal_id>")   # signal, grade, full line history, run
 | games | 1,112 | 17 | game_id |
 | snapshots | 16,218 | 11 | game_id, book, market, captured_at |
 | signals | 830 | 17 | signal_id |
-| grades | 808 | 14 | signal_id |
+| grades | 810 | 14 | signal_id |
 | market_shape | 486 | 5 | sport, market, point |
 
 Storage is CSV, not a database file: it survives the container, a scheduled
