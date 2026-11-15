@@ -7797,6 +7797,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-15T17:23:20+00:00,2026-11-15T16:56Z,9,Green Bay Packers,GB,4249836,Pierre Strong Jr.,RB,Out,INACTIVE,Coach's Decision,2026-11-25,Strong (coach's decision) is inactive for Sunday's game against the Vikings.
 2026-11-15T17:08:34+00:00,2026-11-15T16:56Z,18,New Orleans Saints,NO,4429568,Martin Emerson Jr.,CB,Active,,,,Emerson (shin) is active for Sunday's game against the Panthers.
 2026-11-15T17:08:34+00:00,2026-11-15T16:58Z,2,Buffalo Bills,BUF,4379778,Christian Benford,CB,Active,,,,Benford (wrist) is active for Sunday's game against the Jets.
+2026-11-15T20:53:13+00:00,2026-11-15T16:58Z,2,Buffalo Bills,BUF,4379778,Christian Benford,CB,Questionable,QUESTIONABLE,Groin,2026-11-22,Benford (wrist) is active for Sunday's game against the Jets.
 2026-11-15T17:23:20+00:00,2026-11-15T16:59Z,9,Green Bay Packers,GB,3124005,Zaire Franklin,LB,Out,INACTIVE,Shin Fracture,2026-11-25,Franklin (shin) is inactive for Sunday's game against the Vikings.
 2026-11-15T17:08:34+00:00,2026-11-15T17:00Z,2,Buffalo Bills,BUF,4596480,Jordan Hancock,CB,Active,,,,Hancock (hamstring) is active for Sunday's game against the Jets.
 2026-11-15T17:23:20+00:00,2026-11-15T17:03Z,16,Minnesota Vikings,MIN,4046537,Joshua Metellus,S,Active,,,,Metellus (shoulder) is active for Sunday's game against the Packers.
@@ -7968,8 +7969,16 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-15T20:23:23+00:00,2026-11-15T20:17Z,25,San Francisco 49ers,SF,3916903,Dre Greenlaw,LB,Active,,,,Greenlaw (knee) is active for Sunday's game against Dallas.
 2026-11-15T20:37:19+00:00,2026-11-15T20:19Z,30,Jacksonville Jaguars,JAX,4242391,Robert Hainsey,C,Questionable,QUESTIONABLE,Knee,2026-11-15,Hainsey (knee) is questionable to return to Sunday's game against the Titans.
 2026-11-15T20:37:19+00:00,2026-11-15T20:21Z,14,Los Angeles Rams,LAR,4426405,Trent McDuffie,CB,Active,,,,McDuffie (back) is active for Sunday's game against the Cardinals.
+2026-11-15T20:53:13+00:00,2026-11-15T20:21Z,25,San Francisco 49ers,SF,4427325,Renardo Green,CB,Active,,,,Green (back) is active for Sunday's game against the Cowboys.
+2026-11-15T20:53:13+00:00,2026-11-15T20:24Z,25,San Francisco 49ers,SF,4242488,Deommodore Lenoir,CB,Active,,,,Lenoir (foot) is active for Sunday's game against Dallas.
 2026-11-15T20:37:19+00:00,2026-11-15T20:25Z,34,Houston Texans,HOU,4429059,Woody Marks,RB,Out,OUT,Concussion Concussion,2026-11-19,Marks (concussion) has been downgraded to out for the remainder of Sunday's game against the Browns.
 2026-11-15T20:37:19+00:00,2026-11-15T20:26Z,22,Arizona Cardinals,ARI,4709718,Jayden Williams,OT,Out,INACTIVE,Knee,2026-11-22,"Williams (knee) has been ruled out for Sunday's game against the Rams, Darren Urban of the Cardinals' official site reports."
 2026-11-15T20:37:19+00:00,2026-11-15T20:26Z,6,Dallas Cowboys,DAL,4426506,Joey Porter Jr.,CB,Active,,,,"Porter (ankle) is active for Sunday's game against the 49ers, Todd Archer of ESPN.com reports."
 2026-11-15T20:37:19+00:00,2026-11-15T20:29Z,14,Los Angeles Rams,LAR,2575907,Joe Cardona,LS,Out,INACTIVE,Ankle,2026-11-25,Cardona (ankle) is inactive for Sunday's game against Arizona.
 2026-11-15T20:37:19+00:00,2026-11-15T20:30Z,11,Indianapolis Colts,IND,4427250,Sauce Gardner,CB,Questionable,QUESTIONABLE,Calf,2026-11-15,questionable
+2026-11-15T20:53:13+00:00,2026-11-15T20:30Z,20,New York Jets,NYJ,15864,Geno Smith,QB,Questionable,OUT,Ankle,2026-11-22,"Smith headed to the medical tent during Sunday's game against the Bills after injuring his ankle,  Rich Cimini of ESPN.com reports."
+2026-11-15T20:53:13+00:00,2026-11-15T20:32Z,25,San Francisco 49ers,SF,13241,Trent Williams,OT,Active,,,,Williams (shoulder) is active for Sunday's game against the Cowboys.
+2026-11-15T20:53:13+00:00,2026-11-15T20:34Z,6,Dallas Cowboys,DAL,4248911,DaRon Bland,CB,Active,,,,"Bland (ankle) is active for Sunday's game against the 49ers, Todd Archer of ESPN.com reports."
+2026-11-15T20:53:13+00:00,2026-11-15T20:35Z,11,Indianapolis Colts,IND,4427250,Sauce Gardner,CB,Questionable,QUESTIONABLE,Calf,2026-11-15,"Gardner (calf) is questionable to return to Sunday's game against the Dolphins, Jake Arthur of Roundtable.io reports."
+2026-11-15T20:53:13+00:00,2026-11-15T20:36Z,6,Dallas Cowboys,DAL,2980097,Jonathan Bullard,DT,Active,,,,"Bullard (calf) is active for Sunday's game against the 49ers, Todd Archer of ESPN.com reports."
+2026-11-15T20:53:13+00:00,2026-11-15T20:40Z,34,Houston Texans,HOU,4686422,Xavier Hutchinson,WR,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-15,questionable
