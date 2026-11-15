@@ -7584,6 +7584,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-14T23:08:24+00:00,2026-11-14T22:57Z,1,Atlanta Falcons,ATL,4037626,Divine Deablo,LB,Out,OUT,Forearm,2026-11-29,"Deablo (forearm) was downgraded from doubtful to out Saturday ahead of Sunday's clash against Kansas City, Tori McElhaney of the Falcons' official site reports."
 2026-11-14T23:23:21+00:00,2026-11-14T23:02Z,13,Las Vegas Raiders,LV,5155825,Carter Runyon,TE,Active,,,,The Raiders elevated Runyon from their practice squad to their active roster Saturday.
 2026-11-14T23:38:21+00:00,2026-11-14T23:13Z,22,Arizona Cardinals,ARI,4239944,Hunter Long,TE,Questionable,QUESTIONABLE,Knee,2026-11-15,"Arizona activated Long (knee) from injured reserve Saturday, and he remains questionable for Sunday's battle against the Rams."
+2026-11-15T19:53:15+00:00,2026-11-14T23:13Z,22,Arizona Cardinals,ARI,4239944,Hunter Long,TE,Active,,,,"Arizona activated Long (knee) from injured reserve Saturday, and he remains questionable for Sunday's battle against the Rams."
 2026-11-14T23:38:21+00:00,2026-11-14T23:17Z,22,Arizona Cardinals,ARI,3059722,Zay Jones,WR,Active,,,,Jones was elevated from Arizona's practice squad to the active roster Saturday.
 2026-11-14T23:53:15+00:00,2026-11-14T23:33Z,18,New Orleans Saints,NO,5208518,Charlie Smyth,PK,Active,,,,The Saints elevated Smyth from their practice squad to their active roster Saturday.
 2026-11-15T00:08:18+00:00,2026-11-14T23:40Z,33,Baltimore Ravens,BAL,4685526,Adam Randall,RB,Injured Reserve,IR-R,Neck,2026-11-16,"Randall (neck), who remains on IR, has been tagged as questionable to face the Chargers on Monday."
@@ -7869,3 +7870,46 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-15T19:38:13+00:00,2026-11-15T19:21Z,17,New England Patriots,NE,3046439,Hunter Henry,TE,Active,,,,Henry caught two of three passes for 22 yards during the Patriots' 35-10 loss to the Lions on Sunday in Munich.
 2026-11-15T19:38:13+00:00,2026-11-15T19:22Z,8,Detroit Lions,DET,4429795,Jahmyr Gibbs,RB,Active,,,,Gibbs carried the ball 22 times for 153 yards and two touchdowns while catching seven of eight targets for 99 yards in Sunday's 35-10 win over the Patriots.
 2026-11-15T19:38:13+00:00,2026-11-15T19:22Z,9,Green Bay Packers,GB,4259305,Bo Melton,WR,Questionable,QUESTIONABLE,Thigh,2026-11-15,Melton (thigh) is questionable to return to Sunday's game against the Vikings.
+2026-11-15T19:53:15+00:00,2026-11-15T19:23Z,16,Minnesota Vikings,MIN,4875564,Bo Richter,LB,Questionable,QUESTIONABLE,Foot,2026-11-22,Richter (foot) has been ruled out for the rest of Sunday's game against the Packers.
+2026-11-15T19:53:15+00:00,2026-11-15T19:28Z,8,Detroit Lions,DET,4912274,Sione Vaki,RB,Active,,,,Vaki turned six carries into 28 yards and added a 17-yard catch on his only target during the Lions' 35-10 win over the Patriots on Sunday in Munich.
+2026-11-15T19:53:15+00:00,2026-11-15T19:32Z,8,Detroit Lions,DET,5123663,Isaac TeSlaa,WR,Active,,,,TeSlaa caught two of five targets for 19 yards and a touchdown during the Lions' 35-10 win over the Patriots on Sunday in Munich. He also recorded a tackle.
+2026-11-15T19:53:15+00:00,2026-11-15T19:35Z,8,Detroit Lions,DET,4689936,Jake Bates,PK,Active,,,,Bates made all five of his PATs in the Lions' 35-10 win over the Patriots on Sunday in Munich.
+2026-11-15T19:53:15+00:00,2026-11-15T19:36Z,17,New England Patriots,NE,4427095,DeMario Douglas,WR,Active,,,,Douglas caught one of three passes for four yards during the Patriots' 35-10 loss to the Lions on Sunday in Munich.
+2026-11-15T19:53:15+00:00,2026-11-15T19:36Z,20,New York Jets,NYJ,15864,Geno Smith,QB,Questionable,QUESTIONABLE,Undisclosed,2026-11-15,"Smith exited Sunday's game against the Bills and headed to the blue medical tent after absorbing a hard hit, Connor Hughes of SNY reports."
+2026-11-15T19:53:15+00:00,2026-11-15T19:37Z,22,Arizona Cardinals,ARI,4361272,Eku Leota,LB,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:37Z,22,Arizona Cardinals,ARI,3886633,Hjalte Froholdt,C,Out,INACTIVE,Concussion Concussion,2026-11-22,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:37Z,22,Arizona Cardinals,ARI,4709718,Jayden Williams,OT,Out,INACTIVE,Knee,2026-11-22,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:37Z,22,Arizona Cardinals,ARI,5151948,Joey Aguilar,QB,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:37Z,22,Arizona Cardinals,ARI,4367199,Jon Gaines II,G,Out,INACTIVE,Ankle,2026-11-22,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:37Z,22,Arizona Cardinals,ARI,4040805,Roy Lopez,DT,Active,,,,
+2026-11-15T19:53:15+00:00,2026-11-15T19:37Z,22,Arizona Cardinals,ARI,4363408,Starling Thomas V,CB,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:38Z,22,Arizona Cardinals,ARI,3918331,Andrew Wingard,S,Active,,,,
+2026-11-15T19:53:15+00:00,2026-11-15T19:38Z,22,Arizona Cardinals,ARI,4569480,Darius Robinson,DE,Active,,,,
+2026-11-15T19:53:15+00:00,2026-11-15T19:38Z,22,Arizona Cardinals,ARI,4698113,Max Melton,CB,Active,,,,
+2026-11-15T19:53:15+00:00,2026-11-15T19:38Z,17,New England Patriots,NE,4569923,Andy Borregales,PK,Active,,,,Borregales made his sole field-goal attempt and one PAT in the Patriots' 35-10 loss to the Lions in Munich on Sunday.
+2026-11-15T19:53:15+00:00,2026-11-15T19:39Z,26,Seattle Seahawks,SEA,5082331,Avery Smith,CB,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:39Z,26,Seattle Seahawks,SEA,4426376,Charles Cross,OT,Out,INACTIVE,Ankle Sprain,2026-11-29,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:39Z,26,Seattle Seahawks,SEA,4609203,Deven Eastern,DT,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:39Z,26,Seattle Seahawks,SEA,4887558,Emanuel Wilson,RB,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:39Z,26,Seattle Seahawks,SEA,2971622,Leonard Williams,DT,Out,INACTIVE,Shoulder Stinger,2026-11-29,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:39Z,26,Seattle Seahawks,SEA,3129308,Quenton Nelson,G,Out,INACTIVE,Knee Surgery,2026-11-29,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:39Z,26,Seattle Seahawks,SEA,3912547,Sam Darnold,QB,Out,INACTIVE,Quadriceps,2026-11-29,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:42Z,8,Detroit Lions,DET,4374302,Amon-Ra St. Brown,WR,Active,,,,St. Brown caught four of five targets for 98 yards and two touchdowns in Sunday's 35-10 win over the Patriots in Munich.
+2026-11-15T19:53:15+00:00,2026-11-15T19:42Z,14,Los Angeles Rams,LAR,3122132,Myles Garrett,DE,Active,,,,"Garrett (knee) is listed as active Sunday at Arizona, Adam Grosbard of The Orange County Register reports."
+2026-11-15T19:53:15+00:00,2026-11-15T19:44Z,14,Los Angeles Rams,LAR,4598574,Darryl Peterson III,LB,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:44Z,14,Los Angeles Rams,LAR,4426553,Davis Allen,TE,Active,,,,
+2026-11-15T19:53:15+00:00,2026-11-15T19:44Z,14,Los Angeles Rams,LAR,4362294,Desjuan Johnson,DE,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:44Z,14,Los Angeles Rams,LAR,2575907,Joe Cardona,LS,Out,INACTIVE,Ankle,2026-11-15,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:44Z,14,Los Angeles Rams,LAR,4242154,Kam Curl,S,Active,,,,
+2026-11-15T19:53:15+00:00,2026-11-15T19:44Z,14,Los Angeles Rams,LAR,4575003,Keagen Trost,OT,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:44Z,14,Los Angeles Rams,LAR,5082391,Maximus Pulley,S,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:44Z,14,Los Angeles Rams,LAR,4362474,Steve Avila,G,Out,INACTIVE,Hamstring,2026-11-25,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:44Z,14,Los Angeles Rams,LAR,4426405,Trent McDuffie,CB,Active,,,,
+2026-11-15T19:53:15+00:00,2026-11-15T19:44Z,14,Los Angeles Rams,LAR,4685522,Ty Simpson,QB,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:45Z,13,Las Vegas Raiders,LV,4612077,Bryce Cabeldue,G,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:45Z,13,Las Vegas Raiders,LV,4682488,Dalton Johnson,S,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:45Z,13,Las Vegas Raiders,LV,4432775,Dont'e Thornton Jr.,WR,Out,INACTIVE,Back,2026-11-15,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:45Z,13,Las Vegas Raiders,LV,5150247,Malik Benson,WR,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:45Z,13,Las Vegas Raiders,LV,4360749,Thomas Booker IV,DT,Out,INACTIVE,Ankle,2026-11-15,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:45Z,13,Las Vegas Raiders,LV,4250393,Tristin McCollum,S,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-15T19:53:15+00:00,2026-11-15T19:51Z,20,New York Jets,NYJ,4723820,Omar Cooper Jr.,WR,Out,OUT,Right Ankle,2026-11-22,out
