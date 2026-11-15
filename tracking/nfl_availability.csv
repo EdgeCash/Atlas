@@ -7762,11 +7762,17 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-15T16:53:10+00:00,2026-11-15T16:38Z,29,Carolina Panthers,CAR,4874515,Sam Hecht,C,Out,INACTIVE,Coach's Decision,,inactive
 2026-11-15T16:53:10+00:00,2026-11-15T16:38Z,29,Carolina Panthers,CAR,4431077,TeRah Edwards,DT,Out,INACTIVE,Coach's Decision,,inactive
 2026-11-15T16:53:10+00:00,2026-11-15T16:38Z,29,Carolina Panthers,CAR,5151083,Will Lee III,CB,Out,INACTIVE,Hamstring,2026-11-15,inactive
+2026-11-15T17:08:34+00:00,2026-11-15T16:38Z,5,Cleveland Browns,CLE,4427238,Dillon Gabriel,QB,Out,INACTIVE,Coach's Decision,2026-11-29,Gabriel (coach's decision) is inactive for Sunday's game against the Texans but will serve as the Browns' emergency third quarterback.
+2026-11-15T17:08:34+00:00,2026-11-15T16:38Z,16,Minnesota Vikings,MIN,4429205,Jordan Addison,WR,Out,INACTIVE,Thumb,2026-11-22,"Addison (thumb) is inactive for Sunday's game at Green Bay, Tom Pelissero of Netflix reports."
+2026-11-15T17:08:34+00:00,2026-11-15T16:38Z,18,New Orleans Saints,NO,4239996,Travis Etienne Jr.,RB,Active,,,,Etienne (hamstring) is active for Sunday's game against the Panthers.
 2026-11-15T16:53:10+00:00,2026-11-15T16:39Z,20,New York Jets,NYJ,4597500,Adonai Mitchell,WR,Active,,,,Mitchell (knee) is listed as active Sunday versus the Bills.
 2026-11-15T16:53:10+00:00,2026-11-15T16:40Z,10,Tennessee Titans,TEN,4685555,Nicholas Singleton,RB,Out,INACTIVE,Coach's Decision,2026-11-22,Singleton (coach's decision) is inactive for Sunday's game against the Jaguars.
 2026-11-15T16:53:10+00:00,2026-11-15T16:41Z,15,Miami Dolphins,MIA,4869961,Chris Bell,WR,Out,INACTIVE,Knee,2026-11-15,Bell (knee) is inactive for Sunday's Week 10 matchup against the Colts.
 2026-11-15T16:53:10+00:00,2026-11-15T16:41Z,20,New York Jets,NYJ,4723820,Omar Cooper Jr.,WR,Active,,,,Cooper (ankle) is active for Sunday's contest against the Bills.
 2026-11-15T16:53:10+00:00,2026-11-15T16:42Z,30,Jacksonville Jaguars,JAX,5085024,CJ Williams,WR,Out,INACTIVE,Coach's Decision,2026-11-22,Williams (coach's decision) is inactive for Sunday's game against the Titans.
+2026-11-15T17:08:34+00:00,2026-11-15T16:45Z,1,Atlanta Falcons,ATL,14012,Andy Dalton,QB,Out,INACTIVE,Coach's Decision,2026-11-29,Dalton is inactive for Sunday's game against the Chiefs but was designated as his team's emergency third quarterback.
+2026-11-15T17:08:34+00:00,2026-11-15T16:45Z,9,Green Bay Packers,GB,4430191,Skyy Moore,WR,Active,,,,"Moore (ankle) is listed as active Sunday versus the Vikings, Mike Spofford of the Packers' official site reports."
+2026-11-15T17:08:34+00:00,2026-11-15T16:46Z,11,Indianapolis Colts,IND,4683423,Riley Leonard,QB,Out,INACTIVE,Coach's Decision,2026-11-19,Leonard (coach's decision) is inactive but will serve as the Colts' emergency third quarterback against the Dolphins on Sunday.
 2026-11-15T16:53:10+00:00,2026-11-15T16:46Z,12,Kansas City Chiefs,KC,4372070,Ben VanSumeren,FB,Out,INACTIVE,Coach's Decision,,inactive
 2026-11-15T16:53:10+00:00,2026-11-15T16:46Z,12,Kansas City Chiefs,KC,4567747,Garrett Nussmeier,QB,Out,INACTIVE,Coach's Decision,,inactive
 2026-11-15T16:53:10+00:00,2026-11-15T16:46Z,12,Kansas City Chiefs,KC,4685489,Jaydn Ott,RB,Out,INACTIVE,Hamstring,2026-11-15,inactive
@@ -7775,3 +7781,12 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-15T16:53:10+00:00,2026-11-15T16:46Z,12,Kansas City Chiefs,KC,4880124,Mansoor Delane,CB,Active,,,,
 2026-11-15T16:53:10+00:00,2026-11-15T16:46Z,12,Kansas City Chiefs,KC,5278708,Melvin Smith Jr.,CB,Out,INACTIVE,Coach's Decision,,inactive
 2026-11-15T16:53:10+00:00,2026-11-15T16:46Z,12,Kansas City Chiefs,KC,4871063,Peter Woods,DT,Out,INACTIVE,Neck Stinger,2026-11-22,inactive
+2026-11-15T17:08:34+00:00,2026-11-15T16:47Z,9,Green Bay Packers,GB,3149687,Chris Brooks,RB,Active,,,,"Brooks (ankle) is active for Sunday's game versus the Vikings, Mike Spofford of the Packers' official site reports."
+2026-11-15T17:08:34+00:00,2026-11-15T16:48Z,12,Kansas City Chiefs,KC,4685489,Jaydn Ott,RB,Out,INACTIVE,Hamstring,2026-11-15,"Ott (hamstring) has been ruled out for Sunday's game against the Falcons, Matt McMullen of the Chiefs' official site reports."
+2026-11-15T17:08:34+00:00,2026-11-15T16:49Z,34,Houston Texans,HOU,4685724,Will Anderson Jr.,DE,Active,,,,Anderson (ankle) is active for Sunday's game against the Browns.
+2026-11-15T17:08:34+00:00,2026-11-15T16:49Z,12,Kansas City Chiefs,KC,4688813,Josh Downs,WR,Active,,,,"Downs is active and slated to make his debut with the Chiefs on Sunday versus the Falcons, Matt McMullen of the team's official site reports."
+2026-11-15T17:08:34+00:00,2026-11-15T16:52Z,12,Kansas City Chiefs,KC,4880124,Mansoor Delane,CB,Active,,,,"Delane (shoulder) is active for Sunday's game against the Falcons, Matt McMullen of the Chiefs' official site reports."
+2026-11-15T17:08:34+00:00,2026-11-15T16:54Z,12,Kansas City Chiefs,KC,4567747,Garrett Nussmeier,QB,Out,INACTIVE,Coach's Decision,2026-11-22,Nussmeier (coach's decision) is inactive but will serve as the Chiefs' emergency third quarterback against the Falcons on Sunday.
+2026-11-15T17:08:34+00:00,2026-11-15T16:56Z,18,New Orleans Saints,NO,4429568,Martin Emerson Jr.,CB,Active,,,,Emerson (shin) is active for Sunday's game against the Panthers.
+2026-11-15T17:08:34+00:00,2026-11-15T16:58Z,2,Buffalo Bills,BUF,4379778,Christian Benford,CB,Active,,,,Benford (wrist) is active for Sunday's game against the Jets.
+2026-11-15T17:08:34+00:00,2026-11-15T17:00Z,2,Buffalo Bills,BUF,4596480,Jordan Hancock,CB,Active,,,,Hancock (hamstring) is active for Sunday's game against the Jets.
