@@ -7593,6 +7593,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-15T00:23:18+00:00,2026-11-15T00:02Z,25,San Francisco 49ers,SF,4240542,Nate Hobbs,CB,Injured Reserve,IR-R,Groin,2026-11-22,"The 49ers aren't activating Hobbs (adductor) ahead of Sunday's tilt against Dallas, David Lombardi of SFStandard.com reports."
 2026-11-15T00:23:18+00:00,2026-11-15T00:05Z,25,San Francisco 49ers,SF,4686308,C.J. West,DT,Injured Reserve,IR-R,Knee,2026-11-22,"West (knee) won't be activated from IR ahead of Sunday's Week 10 clash against the Cowboys, David Lombardi of SFStandard.com reports."
 2026-11-15T00:23:18+00:00,2026-11-15T00:12Z,16,Minnesota Vikings,MIN,4360637,Jeshaun Jones,WR,Active,,,,The Vikings elevated Jones from their practice squad to their active roster Saturday.
+2026-11-15T20:23:23+00:00,2026-11-15T00:12Z,16,Minnesota Vikings,MIN,4360637,Jeshaun Jones,WR,Questionable,QUESTIONABLE,Shoulder,2026-11-15,The Vikings elevated Jones from their practice squad to their active roster Saturday.
 2026-11-15T00:53:02+00:00,2026-11-15T00:20Z,16,Minnesota Vikings,MIN,4361112,Devin Culp,TE,Active,,,,Culp was elevated from the Vikings' practice squad to their active roster Saturday.
 2026-11-15T00:38:08+00:00,2026-11-15T00:25Z,15,Miami Dolphins,MIA,4036660,Darrell Baker Jr.,CB,Out,PUP-R,Knee,2026-11-22,Baker (knee) was not activated from the reserve/PUP list ahead of Sunday's clash against Indianapolis.
 2026-11-15T00:53:02+00:00,2026-11-15T00:29Z,2,Buffalo Bills,BUF,4596480,Jordan Hancock,CB,Questionable,QUESTIONABLE,Hamstring,2026-11-15,"The Bills activated Hancock (hamstring) from injured reserve Saturday, and he is questionable to face the Jets on Sunday."
@@ -7655,7 +7656,9 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-15T13:38:22+00:00,2026-11-15T13:25Z,12,Kansas City Chiefs,KC,3139477,Patrick Mahomes,QB,Active,,,,"In addition to the Chiefs team doctors reviewing Mahomes' (throwing) elbow scans, the team sought further feedback from renowned doctors from the Kansas City Ro"
 2026-11-15T13:53:22+00:00,2026-11-15T13:38Z,16,Minnesota Vikings,MIN,14880,Kirk Cousins,QB,Active,,,,"The Vikings have already gauged Cousins' interest in returning to the team in 2027 since acquiring him Tuesday in a trade with the Raiders, Ian Rapoport of NFL "
 2026-11-15T14:08:20+00:00,2026-11-15T13:55Z,6,Dallas Cowboys,DAL,4248911,DaRon Bland,CB,Questionable,QUESTIONABLE,Ankle,2026-11-15,"Bland (ankle), who is listed as questionable for Sunday's game against the 49ers, is expected to play, Ian Rapoport of NFL Network reports."
+2026-11-15T20:23:23+00:00,2026-11-15T13:55Z,6,Dallas Cowboys,DAL,4248911,DaRon Bland,CB,Active,,,,"Bland (ankle), who is listed as questionable for Sunday's game against the 49ers, is expected to play, Ian Rapoport of NFL Network reports."
 2026-11-15T14:23:22+00:00,2026-11-15T14:13Z,6,Dallas Cowboys,DAL,4426506,Joey Porter Jr.,CB,Questionable,QUESTIONABLE,Ankle,2026-11-15,"Porter (ankle) is listed as questionable but is expected to play Sunday against the 49ers, Ian Rapoport of NFL Network reports."
+2026-11-15T20:23:23+00:00,2026-11-15T14:13Z,6,Dallas Cowboys,DAL,4426506,Joey Porter Jr.,CB,Active,,,,"Porter (ankle) is listed as questionable but is expected to play Sunday against the 49ers, Ian Rapoport of NFL Network reports."
 2026-11-15T14:38:19+00:00,2026-11-15T14:19Z,25,San Francisco 49ers,SF,13241,Trent Williams,OT,Questionable,QUESTIONABLE,Shoulder,2026-11-15,"Williams (shoulder), who is listed as questionable for Sunday's game against the Cowboys, is expected to play, Adam Schefter of ESPN reports."
 2026-11-15T15:08:22+00:00,2026-11-15T14:57Z,8,Detroit Lions,DET,4372099,Aidan Hutchinson,DE,Questionable,QUESTIONABLE,Right Leg,2026-11-15,"Hutchinson headed to the locker room in the first quarter of Sunday's game against the Patriots in Munich to be evaluated for an apparent right leg injury, Rich"
 2026-11-15T15:23:13+00:00,2026-11-15T15:02Z,17,New England Patriots,NE,4431452,Drake Maye,QB,Questionable,QUESTIONABLE,Ankle,2026-11-15,Maye is questionable to return to Sunday's game against the Lions in Munich after sustaining an ankle injury in the first quarter.
@@ -7876,6 +7879,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-15T19:53:15+00:00,2026-11-15T19:35Z,8,Detroit Lions,DET,4689936,Jake Bates,PK,Active,,,,Bates made all five of his PATs in the Lions' 35-10 win over the Patriots on Sunday in Munich.
 2026-11-15T19:53:15+00:00,2026-11-15T19:36Z,17,New England Patriots,NE,4427095,DeMario Douglas,WR,Active,,,,Douglas caught one of three passes for four yards during the Patriots' 35-10 loss to the Lions on Sunday in Munich.
 2026-11-15T19:53:15+00:00,2026-11-15T19:36Z,20,New York Jets,NYJ,15864,Geno Smith,QB,Questionable,QUESTIONABLE,Undisclosed,2026-11-15,"Smith exited Sunday's game against the Bills and headed to the blue medical tent after absorbing a hard hit, Connor Hughes of SNY reports."
+2026-11-15T20:23:23+00:00,2026-11-15T19:36Z,20,New York Jets,NYJ,15864,Geno Smith,QB,Active,,,,"Smith exited Sunday's game against the Bills and headed to the blue medical tent after absorbing a hard hit, Connor Hughes of SNY reports."
 2026-11-15T19:53:15+00:00,2026-11-15T19:37Z,22,Arizona Cardinals,ARI,4361272,Eku Leota,LB,Out,INACTIVE,Coach's Decision,,inactive
 2026-11-15T19:53:15+00:00,2026-11-15T19:37Z,22,Arizona Cardinals,ARI,3886633,Hjalte Froholdt,C,Out,INACTIVE,Concussion Concussion,2026-11-22,inactive
 2026-11-15T19:53:15+00:00,2026-11-15T19:37Z,22,Arizona Cardinals,ARI,4709718,Jayden Williams,OT,Out,INACTIVE,Knee,2026-11-22,inactive
@@ -7925,6 +7929,9 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-15T20:08:12+00:00,2026-11-15T19:57Z,2,Buffalo Bills,BUF,4401823,Dee Alford,CB,Questionable,QUESTIONABLE,Head Concussion,2026-11-15,questionable
 2026-11-15T20:08:12+00:00,2026-11-15T19:57Z,34,Houston Texans,HOU,4429059,Woody Marks,RB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-15,questionable
 2026-11-15T20:08:12+00:00,2026-11-15T19:57Z,20,New York Jets,NYJ,4723820,Omar Cooper Jr.,WR,Out,OUT,Right Ankle,2026-11-22,"Cooper (ankle) won't return to Sunday's game against the Bills, Zack Rosenblatt of The Athletic reports."
+2026-11-15T20:23:23+00:00,2026-11-15T19:58Z,2,Buffalo Bills,BUF,4401823,Dee Alford,CB,Questionable,QUESTIONABLE,Head Concussion,2026-11-15,Alford is being evaluated for a head injury and is questionable to return to Sunday's game against the Jets.
+2026-11-15T20:23:23+00:00,2026-11-15T19:59Z,13,Las Vegas Raiders,LV,5150247,Malik Benson,WR,Out,INACTIVE,Coach's Decision,2026-11-22,Benson (coach's decision) is inactive for Sunday's game against the Seahawks.
+2026-11-15T20:23:23+00:00,2026-11-15T20:00Z,22,Arizona Cardinals,ARI,4239944,Hunter Long,TE,Active,,,,"Long (knee) is active for Sunday's game against the Rams, Darren Urban of the Cardinals' official site reports."
 2026-11-15T20:08:12+00:00,2026-11-15T20:00Z,25,San Francisco 49ers,SF,16731,Brandin Cooks,WR,Out,INACTIVE,Coach's Decision,,inactive
 2026-11-15T20:08:12+00:00,2026-11-15T20:00Z,25,San Francisco 49ers,SF,4242488,Deommodore Lenoir,CB,Active,,,,
 2026-11-15T20:08:12+00:00,2026-11-15T20:00Z,25,San Francisco 49ers,SF,3916903,Dre Greenlaw,LB,Active,,,,
@@ -7933,7 +7940,9 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-15T20:08:12+00:00,2026-11-15T20:00Z,25,San Francisco 49ers,SF,4427325,Renardo Green,CB,Active,,,,
 2026-11-15T20:08:12+00:00,2026-11-15T20:00Z,25,San Francisco 49ers,SF,4426698,Tatum Bethune,LB,Out,INACTIVE,Coach's Decision,,inactive
 2026-11-15T20:08:12+00:00,2026-11-15T20:00Z,25,San Francisco 49ers,SF,4565200,Upton Stout,CB,Active,,,,
+2026-11-15T20:23:23+00:00,2026-11-15T20:02Z,22,Arizona Cardinals,ARI,3918331,Andrew Wingard,S,Active,,,,"Wingard (groin) is active for Sunday's game against the Rams, Darren Urban of the Cardinals' official site reports."
 2026-11-15T20:08:12+00:00,2026-11-15T20:03Z,11,Indianapolis Colts,IND,4037361,Charvarius Ward,CB,Questionable,QUESTIONABLE,Leg,2026-11-15,questionable
+2026-11-15T20:23:23+00:00,2026-11-15T20:04Z,22,Arizona Cardinals,ARI,4040805,Roy Lopez,DT,Active,,,,"Lopez (toe/ankle) is active for Sunday's game against the Rams, Darren Urban of the Cardinals' official site reports."
 2026-11-15T20:08:12+00:00,2026-11-15T20:04Z,6,Dallas Cowboys,DAL,4696203,Ajani Cornelius,OT,Out,INACTIVE,Coach's Decision,,inactive
 2026-11-15T20:08:12+00:00,2026-11-15T20:04Z,6,Dallas Cowboys,DAL,4595352,Alijah Clark,S,Active,,,,
 2026-11-15T20:08:12+00:00,2026-11-15T20:04Z,6,Dallas Cowboys,DAL,4248911,DaRon Bland,CB,Active,,,,
@@ -7945,3 +7954,13 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-15T20:08:12+00:00,2026-11-15T20:04Z,6,Dallas Cowboys,DAL,4426485,Jonathan Mingo,WR,Out,INACTIVE,Ankle,2026-11-22,inactive
 2026-11-15T20:08:12+00:00,2026-11-15T20:04Z,6,Dallas Cowboys,DAL,4360590,Juanyeh Thomas,S,Out,INACTIVE,Ribs,2026-11-15,inactive
 2026-11-15T20:08:12+00:00,2026-11-15T20:04Z,6,Dallas Cowboys,DAL,3929850,P.J. Locke,S,Out,INACTIVE,Concussion Concussion,2026-11-22,inactive
+2026-11-15T20:23:23+00:00,2026-11-15T20:04Z,34,Houston Texans,HOU,4429059,Woody Marks,RB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-15,Marks is being evaluated for a possible concussion during Sunday's game at Cleveland.
+2026-11-15T20:23:23+00:00,2026-11-15T20:04Z,14,Los Angeles Rams,LAR,4685522,Ty Simpson,QB,Out,INACTIVE,Coach's Decision,2026-11-25,Simpson (coach's decision) is inactive but will serve as the Rams' emergency third quarterback in Sunday's game against the Cardinals.
+2026-11-15T20:23:23+00:00,2026-11-15T20:07Z,8,Detroit Lions,DET,4430027,Sam LaPorta,TE,Active,,,,LaPorta caught one of four targets for 16 yards in Sunday's 35-10 win over the Patriots in Munch.
+2026-11-15T20:23:23+00:00,2026-11-15T20:07Z,11,Indianapolis Colts,IND,4037361,Charvarius Ward,CB,Questionable,QUESTIONABLE,Shin,2026-11-15,Ward (shin) is questionable to return against the Dolphins on Sunday.
+2026-11-15T20:23:23+00:00,2026-11-15T20:08Z,14,Los Angeles Rams,LAR,4426553,Davis Allen,TE,Active,,,,Allen (oblique) is active for Sunday's game against the Cardinals.
+2026-11-15T20:23:23+00:00,2026-11-15T20:11Z,14,Los Angeles Rams,LAR,4242154,Kam Curl,S,Active,,,,Curl (toe) is active for Sunday's game against the Cardinals.
+2026-11-15T20:23:23+00:00,2026-11-15T20:12Z,15,Miami Dolphins,MIA,4683276,Zeek Biggers,DT,Questionable,QUESTIONABLE,Right Knee,2026-11-22,"Biggers (knee) has been ruled out for the rest of Sunday's game against the Colts, Barry Jackson of the Miami Herald reports."
+2026-11-15T20:23:23+00:00,2026-11-15T20:14Z,25,San Francisco 49ers,SF,16731,Brandin Cooks,WR,Out,INACTIVE,Coach's Decision,2026-11-22,Cooks (coach's decision) is inactive for Sunday's game against the Cowboys.
+2026-11-15T20:23:23+00:00,2026-11-15T20:17Z,30,Jacksonville Jaguars,JAX,4242391,Robert Hainsey,C,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
+2026-11-15T20:23:23+00:00,2026-11-15T20:17Z,25,San Francisco 49ers,SF,3916903,Dre Greenlaw,LB,Active,,,,Greenlaw (knee) is active for Sunday's game against Dallas.
