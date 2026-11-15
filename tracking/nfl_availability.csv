@@ -7334,6 +7334,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-13T22:23:11+00:00,2026-11-13T22:14Z,13,Las Vegas Raiders,LV,4432775,Dont'e Thornton Jr.,WR,Questionable,QUESTIONABLE,Back,2026-11-15,questionable
 2026-11-13T22:23:11+00:00,2026-11-13T22:14Z,13,Las Vegas Raiders,LV,4431623,Trey Zuhn III,C,Active,,,,
 2026-11-13T22:38:20+00:00,2026-11-13T22:17Z,6,Dallas Cowboys,DAL,4426354,George Pickens,WR,Active,,,,"Pickens (hamstring) doesn't have a designation for Sunday's contest against the 49ers, Tommy Yarrish of the Cowboys' official site reports."
+2026-11-15T18:08:23+00:00,2026-11-13T22:17Z,34,Houston Texans,HOU,4372716,Nikko Remigio,WR,Active,,,,The Texans claimed Remigio off waivers from the Chiefs on Thursday.
 2026-11-13T22:38:20+00:00,2026-11-13T22:18Z,22,Arizona Cardinals,ARI,4869132,Reggie Virgil,WR,Active,,,,"Virgil will take over a larger role after teammate Michael Wilson suffered a season-ending neck injury last week, Zach Gershman of azcardinals.com reports."
 2026-11-13T22:38:20+00:00,2026-11-13T22:20Z,22,Arizona Cardinals,ARI,4360739,Simi Fehoko,WR,Active,,,,"Fehoko will take over a larger role after teammate Michael Wilson suffered a season-ending neck injury last week, Zach Gershman of azcardinals.com reports."
 2026-11-13T22:38:20+00:00,2026-11-13T22:22Z,8,Detroit Lions,DET,4038849,DJ Wonnum,LB,Active,,,,"Wonnum (concussion) does not carry an injury designation into Sunday's game against the Patriots in Munich, Nolan Bianchi of The Detroit News reports."
@@ -7822,7 +7823,10 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-15T17:53:17+00:00,2026-11-15T17:31Z,9,Green Bay Packers,GB,14931,Kevin Zeitler,G,Out,INACTIVE,Ankle,2026-11-25,"Zeitler (ankle/triceps) is inactive for Sunday's game against the Vikings, Mike Spofford of the Packers' official site reports."
 2026-11-15T17:53:17+00:00,2026-11-15T17:32Z,17,New England Patriots,NE,3915525,Dre'Mont Jones,DE,Questionable,QUESTIONABLE,Undisclosed Cramps,2026-11-15,Jones (cramps) is questionable to return to Sunday's game against the Lions in Munich.
 2026-11-15T17:53:17+00:00,2026-11-15T17:33Z,34,Houston Texans,HOU,4241250,Jake Hummel,LB,Active,,,,Hummel (groin) is active  for Sunday's game against the Vikings.
+2026-11-15T18:08:23+00:00,2026-11-15T17:34Z,18,New Orleans Saints,NO,4880281,Jordyn Tyson,WR,Active,,,,"Tyson was working with the Saints' first-team offense pregame ahead of Sunday's matchup with the Panthers, Nick Underhill of NewOrleans.Football reports."
 2026-11-15T17:53:17+00:00,2026-11-15T17:36Z,16,Minnesota Vikings,MIN,16772,Kyle Van Noy,LB,Active,,,,Van Noy (calf) is active for Sunday's game against the Packers.
 2026-11-15T17:53:17+00:00,2026-11-15T17:37Z,20,New York Jets,NYJ,4570470,Nahshon Wright,CB,Active,,,,Wright (back) is active for Sunday's game against the Bills.
 2026-11-15T17:53:17+00:00,2026-11-15T17:39Z,20,New York Jets,NYJ,4837388,VJ Payne,S,Active,,,,Payne (knee) is active for Sunday's game against Buffalo.
 2026-11-15T17:53:17+00:00,2026-11-15T17:40Z,2,Buffalo Bills,BUF,4030899,Spencer Brown,OT,Active,,,,Brown (ankle) is active for Sunday's game against the Jets.
+2026-11-15T18:08:23+00:00,2026-11-15T17:54Z,17,New England Patriots,NE,4431452,Drake Maye,QB,Questionable,QUESTIONABLE,Ankle,2026-11-29,"Following Sunday's 35-10 loss to the Lions, coach Mike Vrabel said that Maye will need additional testing to determine the severity of the ankle injury he suffe"
+2026-11-15T18:08:23+00:00,2026-11-15T18:01Z,25,San Francisco 49ers,SF,16737,Mike Evans,WR,Out,OUT,Right Achilles Tendinitis,2026-11-22,"Evans (Achilles) has a chance to return to action next Sunday against the Vikings, Mike Garafolo of NFL Network reports."
