@@ -7922,6 +7922,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-15T20:08:12+00:00,2026-11-15T19:49Z,8,Detroit Lions,DET,4426388,Jameson Williams,WR,Active,,,,Williams caught four of seven targets for 50 yards in Sunday's 35-10 win over the Patriots in Munich.
 2026-11-15T20:08:12+00:00,2026-11-15T19:50Z,13,Las Vegas Raiders,LV,4360749,Thomas Booker IV,DT,Out,INACTIVE,Ankle,2026-11-15,Booker (ankle) is inactive for Sunday's game against the Seahawks.
 2026-11-15T20:08:12+00:00,2026-11-15T19:51Z,22,Arizona Cardinals,ARI,5151948,Joey Aguilar,QB,Out,INACTIVE,Coach's Decision,2026-11-22,"Aguilar (coach's decision) is inactive but will serve as the emergency third quarterback against the Rams on Sunday, Darren Urban of the Cardinals' official sit"
+2026-11-16T18:38:31+00:00,2026-11-15T19:51Z,22,Arizona Cardinals,ARI,5151948,Joey Aguilar,QB,Active,,,,"Aguilar (coach's decision) is inactive but will serve as the emergency third quarterback against the Rams on Sunday, Darren Urban of the Cardinals' official sit"
 2026-11-15T19:53:15+00:00,2026-11-15T19:51Z,20,New York Jets,NYJ,4723820,Omar Cooper Jr.,WR,Out,OUT,Right Ankle,2026-11-22,out
 2026-11-15T20:08:12+00:00,2026-11-15T19:52Z,24,Los Angeles Chargers,LAC,4612826,Ladd McConkey,WR,Out,OUT,Back Spasms,2026-11-22,McConkey (back) won't travel to Baltimore with the Chargers for Monday's game against the Ravens and has been downgraded from questionable to out for Week 10 ac
 2026-11-15T20:08:12+00:00,2026-11-15T19:54Z,9,Green Bay Packers,GB,4430191,Skyy Moore,WR,Questionable,QUESTIONABLE,Ankle,2026-11-25,"Moore (ankle) has been ruled out for the rest of Sunday's game against the Vikings, Rob Demovsky of ESPN.com reports."
@@ -8205,4 +8206,25 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-16T17:38:38+00:00,2026-11-16T16:44Z,13,Las Vegas Raiders,LV,4382466,Jalen Nailor,WR,Active,,,,Nailor recorded one reception for minus-1 yard on four targets in Sunday's 21-13 loss to the Seahawks.
 2026-11-16T17:38:38+00:00,2026-11-16T16:51Z,30,Jacksonville Jaguars,JAX,4877475,Cam'Ron Silmon-Craig,S,Active,,,,
 2026-11-16T17:38:38+00:00,2026-11-16T17:16Z,17,New England Patriots,NE,4431452,Drake Maye,QB,Doubtful,DOUBTFUL,Ankle,2026-11-29,"Coach Mike Vrabel noted of Maye (ankle) on Monday, ""I wouldn't imagine him being available coming out of the bye,"" Phil Perry of NBC Sports Boston reports."
+2026-11-16T18:38:31+00:00,2026-11-16T17:27Z,15,Miami Dolphins,MIA,4242512,Malik Willis,QB,Injured Reserve,IR,Abdomen,2026-12-13,Coach Jeff Hafley said Monday that it has yet to be determined whether Willis (abdomen) will need surgery to address his groin/core injury.David Furones of the 
 2026-11-16T17:38:38+00:00,2026-11-16T17:34Z,22,Arizona Cardinals,ARI,3886633,Hjalte Froholdt,C,Out,QUESTIONABLE,Concussion Concussion,2026-11-22,out
+2026-11-16T18:38:31+00:00,2026-11-16T17:35Z,22,Arizona Cardinals,ARI,4367199,Jon Gaines II,G,Out,QUESTIONABLE,Ankle,2026-11-22,out
+2026-11-16T18:38:31+00:00,2026-11-16T17:37Z,22,Arizona Cardinals,ARI,4361272,Eku Leota,LB,Active,,,,
+2026-11-16T18:38:31+00:00,2026-11-16T17:37Z,22,Arizona Cardinals,ARI,4363408,Starling Thomas V,CB,Active,,,,
+2026-11-16T18:38:31+00:00,2026-11-16T17:37Z,1,Atlanta Falcons,ATL,14012,Andy Dalton,QB,Active,,,,
+2026-11-16T18:38:31+00:00,2026-11-16T17:37Z,1,Atlanta Falcons,ATL,4870988,Avieon Terrell,CB,Active,,,,
+2026-11-16T18:38:31+00:00,2026-11-16T17:37Z,1,Atlanta Falcons,ATL,4685590,Cameron Williams,OL,Active,,,,
+2026-11-16T18:38:31+00:00,2026-11-16T17:37Z,1,Atlanta Falcons,ATL,5344782,Jack Strand,QB,Active,,,,
+2026-11-16T18:38:31+00:00,2026-11-16T17:37Z,1,Atlanta Falcons,ATL,4575860,Robert Longerbeam,CB,Active,,,,
+2026-11-16T18:38:31+00:00,2026-11-16T17:38Z,1,Atlanta Falcons,ATL,4870612,Zachariah Branch,WR,Out,QUESTIONABLE,Hamstring,2026-11-29,out
+2026-11-16T18:38:31+00:00,2026-11-16T17:39Z,1,Atlanta Falcons,ATL,4037626,Divine Deablo,LB,Out,QUESTIONABLE,Forearm,2026-11-29,out
+2026-11-16T18:38:31+00:00,2026-11-16T17:52Z,17,New England Patriots,NE,4240391,Tommy DeVito,QB,Active,,,,"Mike Reiss of ESPN notes via ESPN's Adam Schefter that there are fears  DeVito's teammate, Drake Maye, may have sustained a fractured ankle during Week 10 actio"
+2026-11-16T18:38:31+00:00,2026-11-16T18:02Z,24,Los Angeles Chargers,LAC,4685553,Brenen Thompson,WR,Doubtful,DOUBTFUL,Hamstring,2026-11-16,The Chargers list Thompson (hamstring) as doubtful for Monday's game against the Ravens.
+2026-11-16T18:38:31+00:00,2026-11-16T18:03Z,26,Seattle Seahawks,SEA,3912547,Sam Darnold,QB,Out,INACTIVE,Quadriceps,2026-11-29,"Coach Mike Macdonald noted ahead of Seattle's Week 11 bye that the team is ""really optimistic"" Darnold (quadriceps/ribs) is ""going to be able to get a full week"
+2026-11-16T18:38:31+00:00,2026-11-16T18:06Z,2,Buffalo Bills,BUF,4606712,Ar'maj Reed-Adams,G,Active,,,,
+2026-11-16T18:38:31+00:00,2026-11-16T18:06Z,2,Buffalo Bills,BUF,3127294,Greg Gaines,DT,Active,,,,
+2026-11-16T18:38:31+00:00,2026-11-16T18:06Z,2,Buffalo Bills,BUF,5076951,Jalon Kilgore,S,Active,,,,
+2026-11-16T18:38:31+00:00,2026-11-16T18:06Z,2,Buffalo Bills,BUF,4869533,Jude Bowry,OT,Active,,,,
+2026-11-16T18:38:31+00:00,2026-11-16T18:06Z,2,Buffalo Bills,BUF,3915487,Mike Danna,DE,Active,,,,
+2026-11-16T18:38:31+00:00,2026-11-16T18:06Z,2,Buffalo Bills,BUF,4039034,Shane Buechele,QB,Active,,,,
+2026-11-16T18:38:31+00:00,2026-11-16T18:18Z,1,Atlanta Falcons,ATL,4426502,Drake London,WR,Active,,,,"Head coach Kevin Stefanski said Monday that London was cleared of a concussion near the end of Sunday's 35-13 loss to the Chiefs, Will McFadden of the Falcons' "
