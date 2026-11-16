@@ -7927,6 +7927,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-15T20:08:12+00:00,2026-11-15T19:52Z,24,Los Angeles Chargers,LAC,4612826,Ladd McConkey,WR,Out,OUT,Back Spasms,2026-11-22,McConkey (back) won't travel to Baltimore with the Chargers for Monday's game against the Ravens and has been downgraded from questionable to out for Week 10 ac
 2026-11-15T20:08:12+00:00,2026-11-15T19:54Z,9,Green Bay Packers,GB,4430191,Skyy Moore,WR,Questionable,QUESTIONABLE,Ankle,2026-11-25,"Moore (ankle) has been ruled out for the rest of Sunday's game against the Vikings, Rob Demovsky of ESPN.com reports."
 2026-11-15T20:08:12+00:00,2026-11-15T19:55Z,26,Seattle Seahawks,SEA,4887558,Emanuel Wilson,RB,Out,INACTIVE,Coach's Decision,2026-11-29,Wilson (coach's decision) is inactive for Sunday's game at Arizona.
+2026-11-16T20:38:20+00:00,2026-11-15T19:55Z,26,Seattle Seahawks,SEA,4887558,Emanuel Wilson,RB,Active,,,,Wilson (coach's decision) is inactive for Sunday's game at Arizona.
 2026-11-15T20:08:12+00:00,2026-11-15T19:56Z,9,Green Bay Packers,GB,4259305,Bo Melton,WR,Questionable,QUESTIONABLE,Thigh,2026-11-25,"Melton (thigh) has been ruled out for the rest of Sunday's game against the Vikings, Rob Demovsky of ESPN.com reports."
 2026-11-15T20:08:12+00:00,2026-11-15T19:57Z,2,Buffalo Bills,BUF,4401823,Dee Alford,CB,Questionable,QUESTIONABLE,Head Concussion,2026-11-15,questionable
 2026-11-15T20:08:12+00:00,2026-11-15T19:57Z,34,Houston Texans,HOU,4429059,Woody Marks,RB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-15,questionable
@@ -7961,6 +7962,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-15T20:23:23+00:00,2026-11-15T20:04Z,34,Houston Texans,HOU,4429059,Woody Marks,RB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-15,Marks is being evaluated for a possible concussion during Sunday's game at Cleveland.
 2026-11-16T04:38:20+00:00,2026-11-15T20:04Z,34,Houston Texans,HOU,4429059,Woody Marks,RB,Doubtful,DOUBTFUL,Concussion Concussion,2026-11-19,Marks is being evaluated for a possible concussion during Sunday's game at Cleveland.
 2026-11-15T20:23:23+00:00,2026-11-15T20:04Z,14,Los Angeles Rams,LAR,4685522,Ty Simpson,QB,Out,INACTIVE,Coach's Decision,2026-11-25,Simpson (coach's decision) is inactive but will serve as the Rams' emergency third quarterback in Sunday's game against the Cardinals.
+2026-11-16T20:38:20+00:00,2026-11-15T20:04Z,14,Los Angeles Rams,LAR,4685522,Ty Simpson,QB,Active,,,,Simpson (coach's decision) is inactive but will serve as the Rams' emergency third quarterback in Sunday's game against the Cardinals.
 2026-11-15T20:23:23+00:00,2026-11-15T20:07Z,8,Detroit Lions,DET,4430027,Sam LaPorta,TE,Active,,,,LaPorta caught one of four targets for 16 yards in Sunday's 35-10 win over the Patriots in Munch.
 2026-11-15T20:23:23+00:00,2026-11-15T20:07Z,11,Indianapolis Colts,IND,4037361,Charvarius Ward,CB,Questionable,QUESTIONABLE,Shin,2026-11-15,Ward (shin) is questionable to return against the Dolphins on Sunday.
 2026-11-15T20:23:23+00:00,2026-11-15T20:08Z,14,Los Angeles Rams,LAR,4426553,Davis Allen,TE,Active,,,,Allen (oblique) is active for Sunday's game against the Cardinals.
@@ -7969,6 +7971,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-15T20:23:23+00:00,2026-11-15T20:12Z,15,Miami Dolphins,MIA,4683276,Zeek Biggers,DT,Questionable,QUESTIONABLE,Right Knee,2026-11-22,"Biggers (knee) has been ruled out for the rest of Sunday's game against the Colts, Barry Jackson of the Miami Herald reports."
 2026-11-15T20:37:19+00:00,2026-11-15T20:13Z,20,New York Jets,NYJ,15864,Geno Smith,QB,Questionable,QUESTIONABLE,Ankle,2026-11-15,"Smith has cleared the NFL's concussion protocol and has returned to Sunday's game against the Bills, Ian Rapoport of NFL Network and ESPN reports."
 2026-11-15T20:23:23+00:00,2026-11-15T20:14Z,25,San Francisco 49ers,SF,16731,Brandin Cooks,WR,Out,INACTIVE,Coach's Decision,2026-11-22,Cooks (coach's decision) is inactive for Sunday's game against the Cowboys.
+2026-11-16T20:38:20+00:00,2026-11-15T20:14Z,25,San Francisco 49ers,SF,16731,Brandin Cooks,WR,Active,,,,Cooks (coach's decision) is inactive for Sunday's game against the Cowboys.
 2026-11-15T20:23:23+00:00,2026-11-15T20:17Z,30,Jacksonville Jaguars,JAX,4242391,Robert Hainsey,C,Questionable,QUESTIONABLE,Knee,2026-11-15,questionable
 2026-11-15T20:23:23+00:00,2026-11-15T20:17Z,25,San Francisco 49ers,SF,3916903,Dre Greenlaw,LB,Active,,,,Greenlaw (knee) is active for Sunday's game against Dallas.
 2026-11-15T20:37:19+00:00,2026-11-15T20:19Z,30,Jacksonville Jaguars,JAX,4242391,Robert Hainsey,C,Questionable,QUESTIONABLE,Knee,2026-11-15,Hainsey (knee) is questionable to return to Sunday's game against the Titans.
@@ -7992,6 +7995,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-15T21:08:10+00:00,2026-11-15T20:45Z,2,Buffalo Bills,BUF,4635008,Keon Coleman,WR,Active,,,,"Coleman, who was evaluated for a head injury, was later cleared to return to Sunday's game against the Jets."
 2026-11-15T21:08:10+00:00,2026-11-15T20:48Z,2,Buffalo Bills,BUF,4379778,Christian Benford,CB,Questionable,QUESTIONABLE,Groin,2026-11-22,Benford (groin) has been ruled out for the rest of Sunday's game against the Jets.
 2026-11-15T21:08:10+00:00,2026-11-15T20:50Z,18,New Orleans Saints,NO,4430379,Asim Richards,OT,Questionable,QUESTIONABLE,Knee,2026-11-15,"Richards (knee) is questionable to return to Sunday's game against Carolina, Jeff Nowak of WWL Radio reports."
+2026-11-16T20:38:20+00:00,2026-11-15T20:50Z,18,New Orleans Saints,NO,4430379,Asim Richards,OT,Out,OUT,Knee,2026-11-29,"Richards (knee) is questionable to return to Sunday's game against Carolina, Jeff Nowak of WWL Radio reports."
 2026-11-15T21:08:10+00:00,2026-11-15T20:51Z,16,Minnesota Vikings,MIN,3133487,Andrew Van Ginkel,LB,Questionable,QUESTIONABLE,Quadriceps,2026-11-15,questionable
 2026-11-15T21:08:10+00:00,2026-11-15T20:52Z,2,Buffalo Bills,BUF,4401823,Dee Alford,CB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-22,Alford (concussion) has been ruled out for the remainder of Sunday's game against the Jets.
 2026-11-15T21:23:12+00:00,2026-11-15T20:53Z,16,Minnesota Vikings,MIN,3133487,Andrew Van Ginkel,LB,Questionable,QUESTIONABLE,Quadriceps,2026-11-15,Van Ginkel (quadriceps) is questionable to return to Sunday's game against the Packers.
@@ -8075,6 +8079,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-16T00:23:12+00:00,2026-11-16T00:12Z,34,Houston Texans,HOU,4035538,David Montgomery,RB,Out,INACTIVE,Groin,2026-11-19,"Texans head coach DeMeco Ryans said Sunday that he's ""not certain"" if Montgomery (groin) will be able to play Thursday against Indianapolis, DJ Bien-Aime of ESP"
 2026-11-16T00:38:11+00:00,2026-11-16T00:15Z,23,Pittsburgh Steelers,PIT,4682980,Derrick Harmon,DT,Active,,,,Harmon (foot) is active for Sunday's Week 10 clash against Cincinnati.
 2026-11-16T00:38:11+00:00,2026-11-16T00:20Z,23,Pittsburgh Steelers,PIT,4429955,Will Howard,QB,Out,INACTIVE,Coach's Decision,2026-11-22,Howard (coach's decision) is inactive and serving as Pittsburgh's emergency third quarterback Sunday night versus Cincinnati.
+2026-11-16T20:38:20+00:00,2026-11-16T00:20Z,23,Pittsburgh Steelers,PIT,4429955,Will Howard,QB,Active,,,,Howard (coach's decision) is inactive and serving as Pittsburgh's emergency third quarterback Sunday night versus Cincinnati.
 2026-11-16T00:53:17+00:00,2026-11-16T00:23Z,16,Minnesota Vikings,MIN,14880,Kirk Cousins,QB,Active,,,,Cousins completed 21 of 31 passes for 207 yards and two touchdowns with one interception in Sunday's 30-10 win over the Packers. He added 11 rushing yards on th
 2026-11-16T00:53:17+00:00,2026-11-16T00:27Z,16,Minnesota Vikings,MIN,4360569,Jordan Mason,RB,Active,,,,Mason carried the ball 16 times for 59 yards and failed to catch his only target in Sunday's 30-10 win over the Packers.
 2026-11-16T00:53:17+00:00,2026-11-16T00:29Z,13,Las Vegas Raiders,LV,4432665,Brock Bowers,TE,Questionable,QUESTIONABLE,Ankle,2026-11-22,"Bowers (ankle) will be evaluated further Monday, Ryan McFadden of ESPN reports."
@@ -8149,6 +8154,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-16T03:08:24+00:00,2026-11-16T02:53Z,23,Pittsburgh Steelers,PIT,4368304,Mason McCormick,G,Questionable,QUESTIONABLE,Ankle,2026-11-22,questionable
 2026-11-16T03:08:24+00:00,2026-11-16T03:00Z,29,Carolina Panthers,CAR,4685720,Bryce Young,QB,Active,,,,Young completed 17 of 30 passes for 200 yards without a touchdown or interception in Sunday's 20-17 win over the Saints. He added one rushing yard on his only c
 2026-11-16T03:23:07+00:00,2026-11-16T03:00Z,23,Pittsburgh Steelers,PIT,4368304,Mason McCormick,G,Questionable,QUESTIONABLE,Ankle,2026-11-22,"McCormick suffered an ankle injury in Sunday night's game against the Bengals and will not return, Nick Farabaugh of PennLive.com reports."
+2026-11-16T20:38:20+00:00,2026-11-16T03:00Z,23,Pittsburgh Steelers,PIT,4368304,Mason McCormick,G,Doubtful,DOUBTFUL,Ankle,2026-11-22,"McCormick suffered an ankle injury in Sunday night's game against the Bengals and will not return, Nick Farabaugh of PennLive.com reports."
 2026-11-16T03:23:07+00:00,2026-11-16T03:03Z,25,San Francisco 49ers,SF,3117251,Christian McCaffrey,RB,Active,,,,McCaffrey rushed 13 times for 62 yards and a touchdown and brought in all four targets for 161 yards and two more scores in the 49ers' 46-40 win over the Cowboy
 2026-11-16T03:23:07+00:00,2026-11-16T03:04Z,18,New Orleans Saints,NO,4361370,Chris Olave,WR,Active,,,,Olave caught three of four targets for 30 yards in Sunday's 20-17 loss to the Panthers.
 2026-11-16T03:23:07+00:00,2026-11-16T03:05Z,16,Minnesota Vikings,MIN,4708049,Gavin Bartholomew,TE,Active,,,,Bartholomew caught three of four targets for 36 yards and a touchdown in Sunday's 30-10 win over the Packers.
@@ -8309,8 +8315,64 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-16T19:38:36+00:00,2026-11-16T19:25Z,14,Los Angeles Rams,LAR,5082391,Maximus Pulley,S,Active,,,,
 2026-11-16T19:38:36+00:00,2026-11-16T19:25Z,14,Los Angeles Rams,LAR,4362474,Steve Avila,G,Out,QUESTIONABLE,Hamstring,2026-11-25,out
 2026-11-16T19:38:36+00:00,2026-11-16T19:25Z,14,Los Angeles Rams,LAR,4685522,Ty Simpson,QB,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T19:26Z,15,Miami Dolphins,MIA,4426446,Caedan Wallace,OT,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T19:26Z,15,Miami Dolphins,MIA,4912052,Justin Joly,TE,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T19:26Z,15,Miami Dolphins,MIA,4875079,Marcellas Dial Jr.,CB,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T19:27Z,15,Miami Dolphins,MIA,4869961,Chris Bell,WR,Out,QUESTIONABLE,Knee,2026-11-22,out
+2026-11-16T20:38:20+00:00,2026-11-16T19:28Z,15,Miami Dolphins,MIA,4040537,Aaron Brewer,C,Out,QUESTIONABLE,Concussion Concussion,2026-11-22,out
+2026-11-16T20:38:20+00:00,2026-11-16T19:28Z,15,Miami Dolphins,MIA,4430681,Jared Wayne,WR,Out,QUESTIONABLE,Quadriceps,2026-11-22,out
+2026-11-16T20:38:20+00:00,2026-11-16T19:30Z,17,New England Patriots,NE,4431465,Behren Morton,QB,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T19:30Z,17,New England Patriots,NE,4431526,Dametrious Crownover,OT,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T19:31Z,9,Green Bay Packers,GB,4361423,Micah Parsons,DE,Out,PUP-R,Left Knee - ACL Surgery,2026-11-25,"Head coach Matt LaFleur acknowledged that Parsons (knee/illness) could be ready to make his season debut following the Packers' Week 11 bye, but he still has ""a"
+2026-11-16T20:38:20+00:00,2026-11-16T19:31Z,17,New England Patriots,NE,4362890,Ben Brown,C,Out,QUESTIONABLE,Knee,2026-11-29,out
+2026-11-16T20:38:20+00:00,2026-11-16T19:31Z,17,New England Patriots,NE,4047941,Brenden Schooler,S,Out,QUESTIONABLE,Hamstring,2026-11-29,out
+2026-11-16T20:38:20+00:00,2026-11-16T19:31Z,17,New England Patriots,NE,3916923,Carlton Davis III,CB,Out,QUESTIONABLE,Knee,2026-11-29,out
+2026-11-16T20:38:20+00:00,2026-11-16T19:31Z,17,New England Patriots,NE,4428394,Walter Rouse,OL,Out,QUESTIONABLE,Concussion Concussion,2026-11-29,out
+2026-11-16T20:38:20+00:00,2026-11-16T19:32Z,6,Dallas Cowboys,DAL,4248911,DaRon Bland,CB,Doubtful,DOUBTFUL,Ankle Sprain,2026-11-22,"Bland sustained a high-ankle sprain in Sunday's 46-40 loss to the 49ers, Todd Archer of ESPN.com reports."
+2026-11-16T20:38:20+00:00,2026-11-16T19:32Z,18,New Orleans Saints,NO,5081999,CJ Donaldson,RB,Out,QUESTIONABLE,Shoulder,2026-11-22,out
+2026-11-16T20:38:20+00:00,2026-11-16T19:32Z,18,New Orleans Saints,NO,4566088,Jaylan Ford,LB,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T19:32Z,18,New Orleans Saints,NO,4775268,Mike Reid,CB,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T19:32Z,18,New Orleans Saints,NO,4361259,Zach Wilson,QB,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T19:33Z,18,New Orleans Saints,NO,3917331,Erik McCoy,C,Out,DOUBTFUL,Biceps,2026-11-22,out
+2026-11-16T20:38:20+00:00,2026-11-16T19:33Z,18,New Orleans Saints,NO,4606711,Taliese Fuaga,OT,Out,DOUBTFUL,Left Knee Sprain,2026-11-22,out
+2026-11-16T20:38:20+00:00,2026-11-16T19:34Z,19,New York Giants,NYG,5144942,CJ Okoye,DT,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T19:34Z,19,New York Giants,NYG,5082353,J.C. Davis,OT,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T19:34Z,19,New York Giants,NYG,4039243,Josh Sills,G,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T19:34Z,19,New York Giants,NYG,4040615,Malik Harrison,LB,Out,QUESTIONABLE,Groin,2026-11-22,out
+2026-11-16T20:38:20+00:00,2026-11-16T19:34Z,19,New York Giants,NYG,4691043,Nikko Reed,CB,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T19:34Z,19,New York Giants,NYG,4242547,Paulson Adebo,CB,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T19:34Z,19,New York Giants,NYG,4590292,Thomas Fidone II,TE,Active,,,,
 2026-11-16T19:38:36+00:00,2026-11-16T19:35Z,20,New York Jets,NYJ,4426817,Jarvis Brownlee Jr.,CB,Out,QUESTIONABLE,Illness,2026-11-22,out
 2026-11-16T19:38:36+00:00,2026-11-16T19:35Z,20,New York Jets,NYJ,4241410,Jelani Woods,TE,Active,,,,
 2026-11-16T19:38:36+00:00,2026-11-16T19:35Z,20,New York Jets,NYJ,4574142,Nate Lynn,DE,Active,,,,
 2026-11-16T19:38:36+00:00,2026-11-16T19:35Z,20,New York Jets,NYJ,3134353,Tim Patrick,WR,Active,,,,
 2026-11-16T19:38:36+00:00,2026-11-16T19:35Z,20,New York Jets,NYJ,4683815,Trevin Wallace,LB,Out,QUESTIONABLE,Groin,2026-11-22,out
+2026-11-16T20:38:20+00:00,2026-11-16T19:36Z,23,Pittsburgh Steelers,PIT,4714771,Drew Allar,QB,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T19:36Z,23,Pittsburgh Steelers,PIT,5081508,Eli Heidenreich,RB,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T19:36Z,23,Pittsburgh Steelers,PIT,3932886,Sean Murphy-Bunting,CB,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T19:37Z,25,San Francisco 49ers,SF,4691556,Enrique Cruz Jr.,OT,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T19:37Z,25,San Francisco 49ers,SF,4430431,Kurtis Rourke,QB,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T19:37Z,25,San Francisco 49ers,SF,4426698,Tatum Bethune,LB,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T19:38Z,25,San Francisco 49ers,SF,16737,Mike Evans,WR,Out,QUESTIONABLE,Right Achilles Tendinitis,2026-11-22,out
+2026-11-16T20:38:20+00:00,2026-11-16T19:39Z,26,Seattle Seahawks,SEA,5082331,Avery Smith,CB,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T19:39Z,26,Seattle Seahawks,SEA,4426376,Charles Cross,OT,Out,QUESTIONABLE,Ankle Sprain,2026-11-29,out
+2026-11-16T20:38:20+00:00,2026-11-16T19:39Z,26,Seattle Seahawks,SEA,4609203,Deven Eastern,DT,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T19:43Z,26,Seattle Seahawks,SEA,2971622,Leonard Williams,DT,Out,QUESTIONABLE,Shoulder Stinger,2026-11-29,out
+2026-11-16T20:38:20+00:00,2026-11-16T19:43Z,26,Seattle Seahawks,SEA,3129308,Quenton Nelson,G,Out,DOUBTFUL,Knee Surgery,2026-11-29,out
+2026-11-16T20:38:20+00:00,2026-11-16T19:56Z,15,Miami Dolphins,MIA,4837188,Jordan Phillips,DT,Questionable,QUESTIONABLE,Arm,2026-11-22,"Phillips underwent further tests Monday on his arm injured in Sunday's 24-22 loss to the Colts, Barry Jackson of the Miami Herald reports."
+2026-11-16T20:38:20+00:00,2026-11-16T19:57Z,3,Chicago Bears,CHI,4608686,Kyle Monangai,RB,Out,QUESTIONABLE,Toe Sprain,2026-11-22,"Monangai (toe/thumb) was spotted working out during Monday's unofficial practice and is eyeing a return to action Sunday against the Saints, Chris Emma of 104-3"
+2026-11-16T20:38:20+00:00,2026-11-16T20:09Z,10,Tennessee Titans,TEN,4426987,Brandon Crenshaw-Dickson,OT,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T20:09Z,10,Tennessee Titans,TEN,3926229,Cody Barton,LB,Out,QUESTIONABLE,Concussion Concussion,2026-11-22,out
+2026-11-16T20:38:20+00:00,2026-11-16T20:09Z,10,Tennessee Titans,TEN,5081785,Jackie Marshall,DT,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T20:09Z,10,Tennessee Titans,TEN,4685145,Jaylon Jones,CB,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T20:09Z,10,Tennessee Titans,TEN,4685555,Nicholas Singleton,RB,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T20:10Z,10,Tennessee Titans,TEN,4870805,Anthony Hill Jr.,LB,Out,QUESTIONABLE,Neck,2026-11-22,out
+2026-11-16T20:38:20+00:00,2026-11-16T20:11Z,28,Washington Commanders,WSH,4432722,Athan Kaliakmanis,QB,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T20:11Z,28,Washington Commanders,WSH,4361088,Colson Yankoff,TE,Out,QUESTIONABLE,Knee,2026-11-23,out
+2026-11-16T20:38:20+00:00,2026-11-16T20:11Z,28,Washington Commanders,WSH,3122797,Isaac Yiadom,CB,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T20:11Z,28,Washington Commanders,WSH,2576736,Lucas Patrick,G,Out,QUESTIONABLE,Concussion Concussion,2026-11-23,out
+2026-11-16T20:38:20+00:00,2026-11-16T20:11Z,28,Washington Commanders,WSH,4428343,Ricky Barber,DT,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T20:11Z,28,Washington Commanders,WSH,4605488,Tanoa Togiai,G,Active,,,,
+2026-11-16T20:38:20+00:00,2026-11-16T20:17Z,9,Green Bay Packers,GB,4430191,Skyy Moore,WR,Questionable,QUESTIONABLE,Ankle,2026-11-25,"Moore's ankle injury is not considered serious, Jeremy Fowler of ESPN.com reports."
+2026-11-16T20:38:20+00:00,2026-11-16T20:18Z,28,Washington Commanders,WSH,4575131,Jacory Croskey-Merritt,RB,Injured Reserve,IR,Groin,2026-11-23,"Coach Dan Quinn said Monday that while the 21-day practice window for Croskey-Merritt (groin) hasn't been opened yet, he notes that the running back is ""trendin"
+2026-11-16T20:38:20+00:00,2026-11-16T20:23Z,20,New York Jets,NYJ,5083315,Kenyon Sadiq,TE,Active,,,,Sadiq was limited to a three-yard reception on two targets in Sunday's 31-12 loss to the Bills.
