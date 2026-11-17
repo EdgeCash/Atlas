@@ -8228,6 +8228,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-16T18:38:31+00:00,2026-11-16T17:39Z,1,Atlanta Falcons,ATL,4037626,Divine Deablo,LB,Out,QUESTIONABLE,Forearm,2026-11-29,out
 2026-11-16T18:38:31+00:00,2026-11-16T17:52Z,17,New England Patriots,NE,4240391,Tommy DeVito,QB,Active,,,,"Mike Reiss of ESPN notes via ESPN's Adam Schefter that there are fears  DeVito's teammate, Drake Maye, may have sustained a fractured ankle during Week 10 actio"
 2026-11-16T18:38:31+00:00,2026-11-16T18:02Z,24,Los Angeles Chargers,LAC,4685553,Brenen Thompson,WR,Doubtful,DOUBTFUL,Hamstring,2026-11-16,The Chargers list Thompson (hamstring) as doubtful for Monday's game against the Ravens.
+2026-11-17T00:08:14+00:00,2026-11-16T18:02Z,24,Los Angeles Chargers,LAC,4685553,Brenen Thompson,WR,Out,INACTIVE,Hamstring,2026-11-22,The Chargers list Thompson (hamstring) as doubtful for Monday's game against the Ravens.
 2026-11-16T18:38:31+00:00,2026-11-16T18:03Z,26,Seattle Seahawks,SEA,3912547,Sam Darnold,QB,Out,INACTIVE,Quadriceps,2026-11-29,"Coach Mike Macdonald noted ahead of Seattle's Week 11 bye that the team is ""really optimistic"" Darnold (quadriceps/ribs) is ""going to be able to get a full week"
 2026-11-16T18:38:31+00:00,2026-11-16T18:06Z,2,Buffalo Bills,BUF,4606712,Ar'maj Reed-Adams,G,Active,,,,
 2026-11-16T18:38:31+00:00,2026-11-16T18:06Z,2,Buffalo Bills,BUF,3127294,Greg Gaines,DT,Active,,,,
@@ -8398,9 +8399,24 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-16T22:53:12+00:00,2026-11-16T22:31Z,11,Indianapolis Colts,IND,4427250,Sauce Gardner,CB,Questionable,QUESTIONABLE,Left Calf,2026-11-19,Colts head coach Shane Steichen reported Gardner suffered a left calf injury during Sunday's 24-22 win over the Dolphins and may not play Thursday versus Housto
 2026-11-16T23:08:35+00:00,2026-11-16T22:38Z,11,Indianapolis Colts,IND,4037361,Charvarius Ward,CB,Questionable,QUESTIONABLE,Shin,2026-11-19,"Colts head coach Shane Steichen reported Ward (shin) didn't return to Sunday's 24-22 win over the Dolphins and could miss Thursday's game versus Houston, James "
 2026-11-16T23:08:35+00:00,2026-11-16T22:48Z,24,Los Angeles Chargers,LAC,2579621,Denzel Perryman,LB,Questionable,QUESTIONABLE,Pectoral,2026-11-16,The Chargers activated Perryman (pectoral) from the reserve/injured list ahead of Monday's game versus Baltimore.
+2026-11-17T00:08:14+00:00,2026-11-16T22:48Z,24,Los Angeles Chargers,LAC,2579621,Denzel Perryman,LB,Active,,,,The Chargers activated Perryman (pectoral) from the reserve/injured list ahead of Monday's game versus Baltimore.
 2026-11-16T23:08:35+00:00,2026-11-16T22:57Z,33,Baltimore Ravens,BAL,2576581,Chris Moore,WR,Active,,,,The Ravens elevated Moore from the practice squad ahead of Monday's game against the Chargers.
 2026-11-16T23:23:11+00:00,2026-11-16T22:57Z,14,Los Angeles Rams,LAR,4430155,Dylan McMahon,C,Injured Reserve,IR,Knee,2026-12-25,ir
 2026-11-16T23:23:11+00:00,2026-11-16T23:01Z,33,Baltimore Ravens,BAL,2576399,Nick Vannett,TE,Active,,,,The Ravens elevated Vannett from the practice squad ahead of Monday's game against the Chargers.
 2026-11-16T23:38:15+00:00,2026-11-16T23:15Z,8,Detroit Lions,DET,4372099,Aidan Hutchinson,DE,Out,OUT,Right Knee - ACL Surgery,2027-02-15,"Hutchinson officially suffered a torn ACL in his right knee during Sunday's win against the Patriots in Munich, but there's no other significant damage in the k"
 2026-11-16T23:38:15+00:00,2026-11-16T23:22Z,33,Baltimore Ravens,BAL,4685526,Adam Randall,RB,Injured Reserve,IR-R,Neck,2026-11-22,"Randall (neck) was not activated from injured reserve ahead of Monday's game against the Chargers, Brian Wacker of The Baltimore Sun reports."
 2026-11-16T23:53:37+00:00,2026-11-16T23:30Z,21,Philadelphia Eagles,PHI,4372051,Chance Campbell,LB,Active,,,,
+2026-11-17T00:08:14+00:00,2026-11-16T23:41Z,24,Los Angeles Chargers,LAC,4433914,Branson Taylor,G,Injured Reserve,IR,Ankle,2026-12-13,Taylor (ankle) was placed on injured reserve Monday.
+2026-11-17T00:08:14+00:00,2026-11-16T23:47Z,33,Baltimore Ravens,BAL,4565311,Aeneas Peebles,DT,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-17T00:08:14+00:00,2026-11-16T23:47Z,33,Baltimore Ravens,BAL,4702918,Chandler Rivers,CB,Out,INACTIVE,Coach's Decision,2026-11-22,inactive
+2026-11-17T00:08:14+00:00,2026-11-16T23:47Z,33,Baltimore Ravens,BAL,5088338,Elijah Sarratt,WR,Out,INACTIVE,Coach's Decision,2026-11-22,inactive
+2026-11-17T00:08:14+00:00,2026-11-16T23:47Z,33,Baltimore Ravens,BAL,4685736,Emery Jones Jr.,OT,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-17T00:08:14+00:00,2026-11-16T23:47Z,33,Baltimore Ravens,BAL,3858276,Jaylinn Hawkins,S,Out,INACTIVE,Left Knee,2026-11-22,inactive
+2026-11-17T00:08:14+00:00,2026-11-16T23:47Z,33,Baltimore Ravens,BAL,4428512,Kedon Slovis,QB,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-17T00:08:14+00:00,2026-11-16T23:47Z,24,Los Angeles Chargers,LAC,4411189,Trey Pipkins III,OT,Injured Reserve,IR-R,Knee,2026-11-22,"Pipkins (knee), who is currently on injured reserve, will not play in Monday's game against the Ravens."
+2026-11-17T00:08:14+00:00,2026-11-16T23:52Z,24,Los Angeles Chargers,LAC,2576702,Bud Dupree,LB,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-17T00:08:14+00:00,2026-11-16T23:52Z,24,Los Angeles Chargers,LAC,4574105,Isas Waxter,CB,Out,INACTIVE,Ankle,2026-11-22,inactive
+2026-11-17T00:08:14+00:00,2026-11-16T23:52Z,24,Los Angeles Chargers,LAC,4567138,Justin Eboigbe,DT,Out,INACTIVE,Ankle,2026-11-22,inactive
+2026-11-17T00:08:14+00:00,2026-11-16T23:52Z,24,Los Angeles Chargers,LAC,4040842,Kayode Awosika,G,Active,,,,
+2026-11-17T00:08:14+00:00,2026-11-16T23:52Z,24,Los Angeles Chargers,LAC,4360745,Kendall Williamson,S,Out,INACTIVE,Calf,2026-11-22,inactive
+2026-11-17T00:08:14+00:00,2026-11-16T23:52Z,24,Los Angeles Chargers,LAC,4612826,Ladd McConkey,WR,Out,INACTIVE,Back Spasms,2026-11-22,inactive
