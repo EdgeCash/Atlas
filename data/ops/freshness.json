@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-11-17T23:24:25.312332+00:00",
+      "detail": "market in 17s",
+      "mode": "NHL Tuesday night",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-11-17T23:24:25.183549+00:00",
+      "detail": "67 cards, 13 NFL cards, 53 NHL cards, 132 teams, 26 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-11-17T23:09:38.688587+00:00",
       "detail": "market in 21s",
       "mode": "NHL Tuesday night",
@@ -1280,24 +1293,11 @@
       "detail": "66 cards, 14 NFL cards, 52 NHL cards, 132 teams, 25 NFL teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-11-15T22:38:55.787532+00:00",
-      "detail": "market in 12s",
-      "mode": "NFL Sunday",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-11-15T22:38:55.599412+00:00",
-      "detail": "66 cards, 14 NFL cards, 52 NHL cards, 132 teams, 25 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-11-17T23:09:38.541419+00:00",
+      "at": "2026-11-17T23:24:25.183549+00:00",
       "detail": "67 cards, 13 NFL cards, 53 NHL cards, 132 teams, 26 NFL teams",
       "name": "build",
       "ok": true
@@ -1309,8 +1309,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-17T23:09:38.688587+00:00",
-      "detail": "market in 21s",
+      "at": "2026-11-17T23:24:25.312332+00:00",
+      "detail": "market in 17s",
       "mode": "NHL Tuesday night",
       "name": "poll",
       "ok": true
@@ -1324,7 +1324,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-11-17T23:09:38.541419+00:00",
+      "at": "2026-11-17T23:24:25.183549+00:00",
       "detail": "67 cards, 13 NFL cards, 53 NHL cards, 132 teams, 26 NFL teams",
       "name": "build",
       "ok": true
@@ -1336,8 +1336,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-17T23:09:38.688587+00:00",
-      "detail": "market in 21s",
+      "at": "2026-11-17T23:24:25.312332+00:00",
+      "detail": "market in 17s",
       "mode": "NHL Tuesday night",
       "name": "poll",
       "ok": true
