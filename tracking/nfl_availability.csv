@@ -8820,6 +8820,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-18T21:23:39+00:00,2026-11-18T20:25Z,21,Philadelphia Eagles,PHI,4428850,Dontayvion Wicks,WR,Questionable,QUESTIONABLE,Ankle,2026-11-22,"Wicks (ankle) participated in Wednesday's practice, Olivia Reiner of The Philadelphia Inquirer reports."
 2026-11-18T21:23:39+00:00,2026-11-18T20:26Z,25,San Francisco 49ers,SF,4710714,De'Zhaun Stribling,WR,Injured Reserve,IR,Left Ankle Surgery,2026-12-06,"Stribling (ankle) was doing some work on the side at Wednesday's practice, Nick Wagoner of ESPN.com reports."
 2026-11-18T21:23:39+00:00,2026-11-18T20:26Z,25,San Francisco 49ers,SF,3916903,Dre Greenlaw,LB,Active,,,,"Greenlaw (neck) did not participate in practice Wednesday, Nick Wagoner of ESPN.com reports."
+2026-11-18T23:53:46+00:00,2026-11-18T20:26Z,25,San Francisco 49ers,SF,3916903,Dre Greenlaw,LB,Questionable,QUESTIONABLE,Neck,2026-11-22,"Greenlaw (neck) did not participate in practice Wednesday, Nick Wagoner of ESPN.com reports."
 2026-11-18T21:23:39+00:00,2026-11-18T20:27Z,15,Miami Dolphins,MIA,4869645,Caleb Douglas,WR,Active,,,,"Douglas (undisclosed) practiced Wednesday in a non-contact jersey, but he said he will play Sunday against  the Bills, C. Isaiah Smalls II of the Miami Herald r"
 2026-11-18T22:23:24+00:00,2026-11-18T20:27Z,15,Miami Dolphins,MIA,4869645,Caleb Douglas,WR,Questionable,QUESTIONABLE,Shoulder,2026-11-22,"Douglas practiced Wednesday in a non-contact jersey, but he said that he will play Sunday against the Bills, C. Isaiah Smalls II of the Miami Herald reports."
 2026-11-18T21:23:39+00:00,2026-11-18T20:37Z,25,San Francisco 49ers,SF,4427325,Renardo Green,CB,Questionable,QUESTIONABLE,Back,2026-11-22,"Green (back) was a limited participant in Wednesday's practice, Nick Wagoner of ESPN.com reports."
@@ -8918,3 +8919,10 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-18T23:38:02+00:00,2026-11-18T23:25Z,25,San Francisco 49ers,SF,3916903,Dre Greenlaw,LB,Questionable,QUESTIONABLE,Neck,2026-11-22,questionable
 2026-11-18T23:38:02+00:00,2026-11-18T23:25Z,25,San Francisco 49ers,SF,4693644,Ji'Ayir Brown,S,Questionable,QUESTIONABLE,Ankle,2026-11-22,questionable
 2026-11-18T23:38:02+00:00,2026-11-18T23:25Z,25,San Francisco 49ers,SF,3116097,Luke Gifford,LB,Questionable,QUESTIONABLE,Chest,2026-11-22,questionable
+2026-11-18T23:53:46+00:00,2026-11-18T23:26Z,25,San Francisco 49ers,SF,4039029,Khalid Kareem,DE,Questionable,QUESTIONABLE,Ankle,2026-11-22,questionable
+2026-11-18T23:53:46+00:00,2026-11-18T23:26Z,25,San Francisco 49ers,SF,4241464,Mac Jones,QB,Questionable,QUESTIONABLE,Illness,2026-11-22,questionable
+2026-11-18T23:53:46+00:00,2026-11-18T23:27Z,25,San Francisco 49ers,SF,3057524,Siran Neal,S,Questionable,QUESTIONABLE,Knee,2026-11-22,questionable
+2026-11-18T23:53:46+00:00,2026-11-18T23:27Z,25,San Francisco 49ers,SF,4565200,Upton Stout,CB,Questionable,QUESTIONABLE,Shoulder,2026-11-22,questionable
+2026-11-18T23:53:46+00:00,2026-11-18T23:44Z,22,Arizona Cardinals,ARI,4040805,Roy Lopez,DT,Questionable,QUESTIONABLE,Toe,2026-11-22,questionable
+2026-11-18T23:53:46+00:00,2026-11-18T23:44Z,22,Arizona Cardinals,ARI,4685503,Walter Nolen III,DT,Questionable,QUESTIONABLE,Illness,2026-11-22,questionable
+2026-11-18T23:53:46+00:00,2026-11-18T23:45Z,22,Arizona Cardinals,ARI,4698113,Max Melton,CB,Questionable,QUESTIONABLE,Knee,2026-11-22,questionable
