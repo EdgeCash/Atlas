@@ -8756,6 +8756,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-18T05:53:10+00:00,2026-11-18T05:29Z,4,Cincinnati Bengals,CIN,4567098,Jordan Battle,S,Active,,,,"Battle finished Sunday's 38-18 win over Pittsburgh with six tackles (four solo), one defensed pass and one forced fumble."
 2026-11-18T05:53:10+00:00,2026-11-18T05:39Z,23,Pittsburgh Steelers,PIT,4361652,Payton Wilson,LB,Active,,,,Wilson recorded 19 tackles (nine solo) Sunday in a loss to the Bengals.
 2026-11-18T06:53:17+00:00,2026-11-18T05:46Z,23,Pittsburgh Steelers,PIT,4242207,Patrick Queen,LB,Active,,,,"Queen posted 14 tackles (five solo), including 1.0 sacks, in Sunday's loss to the Bengals."
+2026-11-18T23:08:34+00:00,2026-11-18T05:46Z,23,Pittsburgh Steelers,PIT,4242207,Patrick Queen,LB,Questionable,QUESTIONABLE,Hand,2026-11-22,"Queen posted 14 tackles (five solo), including 1.0 sacks, in Sunday's loss to the Bengals."
 2026-11-18T06:53:17+00:00,2026-11-18T05:57Z,23,Pittsburgh Steelers,PIT,4570044,Jaquan Brisker,S,Active,,,,Brisker notched 10 tackles (two solo) Sunday in a Week 10 loss to the Bengals.
 2026-11-18T15:23:45+00:00,2026-11-18T14:52Z,22,Arizona Cardinals,ARI,4699354,Harrison Wallace III,WR,Active,,,,Wallace recorded a nine-yard reception on his lone target in Sunday's 34-6 loss to the Rams.
 2026-11-18T15:23:45+00:00,2026-11-18T14:54Z,30,Jacksonville Jaguars,JAX,4242391,Robert Hainsey,C,Doubtful,DOUBTFUL,Knee Sprain,2026-11-22,doubtful
@@ -8881,5 +8882,23 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-18T22:23:24+00:00,2026-11-18T22:02Z,8,Detroit Lions,DET,4372099,Aidan Hutchinson,DE,Injured Reserve,IR,Right Knee - ACL Surgery,2027-02-15,The Lions placed Hutchinson (knee) on injured reserve Wednesday.
 2026-11-18T22:23:24+00:00,2026-11-18T22:04Z,20,New York Jets,NYJ,4362094,Joseph Ossai,DE,Questionable,QUESTIONABLE,Foot,2026-11-22,questionable
 2026-11-18T22:23:24+00:00,2026-11-18T22:05Z,20,New York Jets,NYJ,4426817,Jarvis Brownlee Jr.,CB,Active,,,,
+2026-11-18T23:08:34+00:00,2026-11-18T22:08Z,15,Miami Dolphins,MIA,4869645,Caleb Douglas,WR,Questionable,QUESTIONABLE,Shoulder,2026-11-22,"Douglas was a limited participant in Wednesday's practice due to a shoulder injury, David Furones of the South Florida Sun Sentinel reports."
 2026-11-18T22:23:24+00:00,2026-11-18T22:10Z,16,Minnesota Vikings,MIN,4036133,T.J. Hockenson,TE,Questionable,QUESTIONABLE,Wrist,2026-11-22,Hockenson (wrist) practiced in a limited capacity Wednesday.
+2026-11-18T23:08:34+00:00,2026-11-18T22:13Z,15,Miami Dolphins,MIA,4869961,Chris Bell,WR,Questionable,QUESTIONABLE,Knee,2026-11-22,"Bell (knee) was a limited participant in Wednesday's practice, David Furones of the South Florida Sun Sentinel reports."
+2026-11-18T23:08:34+00:00,2026-11-18T22:17Z,12,Kansas City Chiefs,KC,4591008,Omarr Norman-Lott,DT,Questionable,QUESTIONABLE,Right Knee - ACL Surgery,2026-11-22,questionable
+2026-11-18T23:08:34+00:00,2026-11-18T22:18Z,21,Philadelphia Eagles,PHI,4241478,DeVonta Smith,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-22,"Smith (hamstring) said Wednesday that he's ""100 percent healthy,"" Eliot Shorr-Parks of Sports Radio 94 WIP Philadelphia reports."
+2026-11-18T23:08:34+00:00,2026-11-18T22:19Z,12,Kansas City Chiefs,KC,4430723,Jared Wiley,TE,Injured Reserve,IR,Right Ankle Fracture,2026-12-21,ir
 2026-11-18T22:23:24+00:00,2026-11-18T22:19Z,16,Minnesota Vikings,MIN,4360637,Jeshaun Jones,WR,Active,,,,
+2026-11-18T23:08:34+00:00,2026-11-18T22:21Z,16,Minnesota Vikings,MIN,16772,Kyle Van Noy,LB,Questionable,QUESTIONABLE,Calf,2026-11-22,questionable
+2026-11-18T23:08:34+00:00,2026-11-18T22:23Z,8,Detroit Lions,DET,4912274,Sione Vaki,RB,Questionable,QUESTIONABLE,Ankle,2026-11-22,Vaki (ankle) was a limited participant in Wednesday's walkthrough practice.
+2026-11-18T23:08:34+00:00,2026-11-18T22:23Z,16,Minnesota Vikings,MIN,4568007,Jay Ward,S,Questionable,QUESTIONABLE,Knee,2026-11-22,questionable
+2026-11-18T23:08:34+00:00,2026-11-18T22:23Z,16,Minnesota Vikings,MIN,4360637,Jeshaun Jones,WR,Questionable,QUESTIONABLE,Shoulder,2026-11-22,questionable
+2026-11-18T23:08:34+00:00,2026-11-18T22:23Z,16,Minnesota Vikings,MIN,4629149,Tyrion Ingram-Dawkins,DE,Active,,,,
+2026-11-18T23:08:34+00:00,2026-11-18T22:27Z,2,Buffalo Bills,BUF,4573699,Jackson Hawes,TE,Questionable,QUESTIONABLE,Shoulder,2026-11-22,questionable
+2026-11-18T23:08:34+00:00,2026-11-18T22:30Z,16,Minnesota Vikings,MIN,3886598,Jauan Jennings,WR,Active,,,,Jennings (calf) practiced in full Wednesday.
+2026-11-18T23:08:34+00:00,2026-11-18T22:34Z,23,Pittsburgh Steelers,PIT,4429164,Nick Herbig,LB,Doubtful,DOUBTFUL,Hip,2026-11-22,doubtful
+2026-11-18T23:08:34+00:00,2026-11-18T22:42Z,2,Buffalo Bills,BUF,4429501,Ray Davis,RB,Questionable,QUESTIONABLE,Hamstring,2026-11-22,Davis was a limited participant in Wednesday's practice due to a hamstring injury.
+2026-11-18T23:08:34+00:00,2026-11-18T22:44Z,23,Pittsburgh Steelers,PIT,4035687,Michael Pittman Jr.,WR,Injured Reserve,IR-R,Left Foot Plantar Fasciitis,2026-11-22,"Pittman (foot) was limited in his return to practice Wednesday, Teresa Varley of the Steelers' official site reports."
+2026-11-18T23:08:34+00:00,2026-11-18T22:46Z,12,Kansas City Chiefs,KC,15847,Travis Kelce,TE,Active,,,,"Kelce was a full participant in Wednesday's practice, despite being listed with ankle and calf injuries."
+2026-11-18T23:08:34+00:00,2026-11-18T22:52Z,20,New York Jets,NYJ,15864,Geno Smith,QB,Questionable,QUESTIONABLE,Left Ankle,2026-11-22,"Smith (ankle), who was a limited participant in Wednesday's walkthrough practice, said afterward that he intends to play in Sunday's game against the Chargers, "
+2026-11-18T23:08:34+00:00,2026-11-18T22:57Z,23,Pittsburgh Steelers,PIT,4431492,Roman Wilson,WR,Injured Reserve,IR-R,Left Finger,2026-11-22,"Wilson, who was designated for return from injured reserve earlier Wednesday, was a full participant in his return to practice."
