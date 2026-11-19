@@ -50021,3 +50021,6 @@ game_id,sport,season,week,season_type,market,abs_edge,claimed,won,kickoff
 401892736,nhl,2026,7,regular,moneyline,3.343,0.482,0.000,2026-11-18T00:00:00Z
 401892737,nhl,2026,7,regular,moneyline,2.057,0.563,0.000,2026-11-18T03:00:00Z
 401892738,nhl,2026,7,regular,moneyline,3.387,0.491,1.000,2026-11-18T03:00:00Z
+401892739,nhl,2026,8,regular,moneyline,0.363,0.504,0.000,2026-11-19T00:30:00Z
+401892740,nhl,2026,8,regular,moneyline,2.764,0.424,1.000,2026-11-19T00:30:00Z
+401892741,nhl,2026,8,regular,moneyline,2.344,0.523,0.000,2026-11-19T03:00:00Z
