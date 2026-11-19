@@ -8988,6 +8988,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-19T01:53:22+00:00,2026-11-19T01:39Z,13,Las Vegas Raiders,LV,3045172,Folorunso Fatukasi,DT,Questionable,QUESTIONABLE,Toe,2026-11-22,"Fatukasi (toe) was a limited participant at practice Wednesday, Sam Warren of The Athletic reports."
 2026-11-19T02:08:28+00:00,2026-11-19T01:40Z,21,Philadelphia Eagles,PHI,4426331,Nolan Smith Jr.,LB,Questionable,QUESTIONABLE,Illness,2026-11-22,Smith (illness) was limited in Wednesday's practice.
 2026-11-19T01:53:22+00:00,2026-11-19T01:42Z,22,Arizona Cardinals,ARI,4685503,Walter Nolen III,DT,Questionable,QUESTIONABLE,Illness,2026-11-22,"Nolen (illness) didn't participate in Wednesday's practice, Zach Gershman of the Cardinals' official site reports."
+2026-11-19T23:38:29+00:00,2026-11-19T01:42Z,22,Arizona Cardinals,ARI,4685503,Walter Nolen III,DT,Active,,,,"Nolen (illness) didn't participate in Wednesday's practice, Zach Gershman of the Cardinals' official site reports."
 2026-11-19T01:53:22+00:00,2026-11-19T01:42Z,13,Las Vegas Raiders,LV,4429109,Tonka Hemingway,DT,Questionable,QUESTIONABLE,Upper Body Stinger,2026-11-22,"Hemingway (upper body) didn't participate in Las Vegas' practice Wednesday, Sam Warren of The Athletic reports."
 2026-11-19T01:53:22+00:00,2026-11-19T01:44Z,23,Pittsburgh Steelers,PIT,4368304,Mason McCormick,G,Injured Reserve,IR,Ankle Dislocated,2027-01-03,"The Steelers placed McCormick (ankle) on injured reserve Wednesday, Teresa Varley of the team's official site reports."
 2026-11-19T02:08:28+00:00,2026-11-19T01:45Z,25,San Francisco 49ers,SF,4241464,Mac Jones,QB,Questionable,QUESTIONABLE,Illness,2026-11-22,"Jones (illness) was a limited participant in Wednesday's practice, Cam Inman of The San Jose Mercury News reports."
@@ -9111,3 +9112,12 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-19T23:08:40+00:00,2026-11-19T22:46Z,21,Philadelphia Eagles,PHI,4428850,Dontayvion Wicks,WR,Questionable,QUESTIONABLE,Ankle,2026-11-22,Wicks (ankle) practiced in a limited capacity Thursday.
 2026-11-19T23:08:40+00:00,2026-11-19T22:48Z,20,New York Jets,NYJ,15864,Geno Smith,QB,Questionable,QUESTIONABLE,Left Ankle,2026-11-22,Smith (ankle) was a limited participant in Thursday's practice.
 2026-11-19T23:08:40+00:00,2026-11-19T22:51Z,21,Philadelphia Eagles,PHI,4431545,Will Shipley,RB,Injured Reserve,IR-R,Foot Plantar Fasciitis,2026-11-22,Shipley (foot) remained limited in practice Thursday.
+2026-11-19T23:38:29+00:00,2026-11-19T23:15Z,24,Los Angeles Chargers,LAC,4612826,Ladd McConkey,WR,Questionable,QUESTIONABLE,Back Spasms,2026-11-22,McConkey (back) was a limited participant in Thursday's practice.
+2026-11-19T23:38:29+00:00,2026-11-19T23:18Z,25,San Francisco 49ers,SF,16737,Mike Evans,WR,Questionable,QUESTIONABLE,Right Achilles Tendinitis,2026-11-22,"Evans (Achilles) officially was limited at Thursday's practice, Nick Wagoner of ESPN reports."
+2026-11-19T23:38:29+00:00,2026-11-19T23:20Z,24,Los Angeles Chargers,LAC,4241263,Charlie Kolar,TE,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-22,Kolar (concussion) remained sidelined for Thursday's practice.
+2026-11-19T23:38:29+00:00,2026-11-19T23:23Z,22,Arizona Cardinals,ARI,4709718,Jayden Williams,OT,Active,,,,
+2026-11-19T23:38:29+00:00,2026-11-19T23:23Z,22,Arizona Cardinals,ARI,4698113,Max Melton,CB,Active,,,,
+2026-11-19T23:38:29+00:00,2026-11-19T23:31Z,21,Philadelphia Eagles,PHI,4431573,Smael Mondon Jr.,LB,Questionable,QUESTIONABLE,Ankle,2026-11-22,questionable
+2026-11-19T23:38:29+00:00,2026-11-19T23:35Z,25,San Francisco 49ers,SF,4685397,Jordan James,RB,Questionable,QUESTIONABLE,Calf,2026-11-22,questionable
+2026-11-19T23:38:29+00:00,2026-11-19T23:35Z,25,San Francisco 49ers,SF,4427325,Renardo Green,CB,Active,,,,
+2026-11-19T23:38:29+00:00,2026-11-19T23:37Z,25,San Francisco 49ers,SF,3057524,Siran Neal,S,Active,,,,
