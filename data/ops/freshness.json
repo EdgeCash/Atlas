@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-11-19T03:55:17.164109+00:00",
+      "detail": "market in 22s",
+      "mode": "NHL Wednesday night",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-11-19T03:55:16.994484+00:00",
+      "detail": "64 cards, 17 NFL cards, 53 NHL cards, 126 teams, 28 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-11-19T03:40:49.725763+00:00",
       "detail": "market in 22s",
       "mode": "NHL Wednesday night",
@@ -1280,24 +1293,11 @@
       "detail": "68 cards, 13 NFL cards, 53 NHL cards, 132 teams, 26 NFL teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-11-17T02:09:16.632236+00:00",
-      "detail": "market in 14s",
-      "mode": "Monday night",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-11-17T02:09:16.413033+00:00",
-      "detail": "68 cards, 13 NFL cards, 53 NHL cards, 132 teams, 26 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-11-19T03:40:49.578593+00:00",
+      "at": "2026-11-19T03:55:16.994484+00:00",
       "detail": "64 cards, 17 NFL cards, 53 NHL cards, 126 teams, 28 NFL teams",
       "name": "build",
       "ok": true
@@ -1309,7 +1309,7 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-19T03:40:49.725763+00:00",
+      "at": "2026-11-19T03:55:17.164109+00:00",
       "detail": "market in 22s",
       "mode": "NHL Wednesday night",
       "name": "poll",
@@ -1324,7 +1324,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-11-19T03:40:49.578593+00:00",
+      "at": "2026-11-19T03:55:16.994484+00:00",
       "detail": "64 cards, 17 NFL cards, 53 NHL cards, 126 teams, 28 NFL teams",
       "name": "build",
       "ok": true
@@ -1336,7 +1336,7 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-19T03:40:49.725763+00:00",
+      "at": "2026-11-19T03:55:17.164109+00:00",
       "detail": "market in 22s",
       "mode": "NHL Wednesday night",
       "name": "poll",
