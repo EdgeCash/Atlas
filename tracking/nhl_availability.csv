@@ -782,3 +782,5 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-20T15:23:30+00:00,2026-11-20T14:41Z,16,Pittsburgh Penguins,PIT,4565275,Nick Robertson,LW,Day-To-Day,Day-To-Day,Lower Body,2026-11-21,day-to-day
 2026-11-20T15:23:30+00:00,2026-11-20T14:41Z,19,St. Louis Blues,STL,3067822,Ross Johnston,LW,Day-To-Day,Day-To-Day,Upper Body,2026-11-21,day-to-day
 2026-11-20T15:23:30+00:00,2026-11-20T14:41Z,20,Tampa Bay Lightning,TB,2968829,Zemgus Girgensons,C,Day-To-Day,Day-To-Day,Upper Body,2026-11-22,day-to-day
+2026-11-20T16:23:20+00:00,2026-11-20T16:03Z,23,Washington Capitals,WSH,4392260,Vincent Desharnais,D,Injured Reserve,IR,Abdomen Surgery,2026-11-25,"Desharnais (abdomen) has been cleared for contact, Sammi Silber of The District Standard reports Friday."
+2026-11-20T16:23:20+00:00,2026-11-20T16:08Z,16,Pittsburgh Penguins,PIT,4565275,Nick Robertson,LW,Injured Reserve,IR,Lower Body,2026-12-05,ir
