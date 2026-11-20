@@ -9009,6 +9009,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-19T02:38:22+00:00,2026-11-19T02:09Z,15,Miami Dolphins,MIA,4036660,Darrell Baker Jr.,CB,Out,PUP-R,Knee,2026-11-22,"Baker (knee) was a full participant at practice Wednesday, David Furones of the South Florida Sun Sentinel reports."
 2026-11-19T02:23:12+00:00,2026-11-19T02:10Z,34,Houston Texans,HOU,4594277,Jaylin Smith,CB,Injured Reserve,IR-R,Hamstring Strain,2026-11-19,Smith (hamstring) is questionable for Houston's matchup Thursday versus the Colts.
 2026-11-19T21:23:35+00:00,2026-11-19T02:10Z,34,Houston Texans,HOU,4594277,Jaylin Smith,CB,Questionable,QUESTIONABLE,Hamstring Strain,2026-11-19,Smith (hamstring) is questionable for Houston's matchup Thursday versus the Colts.
+2026-11-20T00:08:15+00:00,2026-11-19T02:10Z,34,Houston Texans,HOU,4594277,Jaylin Smith,CB,Active,,,,Smith (hamstring) is listed questionable for Thursday's game versus the Colts.
 2026-11-19T02:23:12+00:00,2026-11-19T02:13Z,23,Pittsburgh Steelers,PIT,4429164,Nick Herbig,LB,Doubtful,DOUBTFUL,Hip,2026-11-22,"Herbig (hip) did not participate in Wednesday's practice, Teresa Varley of the Steelers' official site reports."
 2026-11-19T19:23:23+00:00,2026-11-19T02:13Z,23,Pittsburgh Steelers,PIT,4429164,Nick Herbig,LB,Questionable,QUESTIONABLE,Hip,2026-11-22,"Herbig (hip) did not participate in Wednesday's practice, Teresa Varley of the Steelers' official site reports."
 2026-11-19T02:23:12+00:00,2026-11-19T02:14Z,7,Denver Broncos,DEN,4429193,Kris Abrams-Draine,CB,Questionable,QUESTIONABLE,Ankle,2026-11-22,Abrams-Draine (ankle) was a limited participant in Wednesday's practice.
@@ -9017,6 +9018,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-19T02:38:22+00:00,2026-11-19T02:19Z,33,Baltimore Ravens,BAL,4832793,Olaivavega Ioane,G,Questionable,QUESTIONABLE,Shoulder,2026-11-22,Ioane (shoulder) was a limited participant in Wednesday's practice.
 2026-11-19T22:06:30+00:00,2026-11-19T02:19Z,33,Baltimore Ravens,BAL,4832793,Olaivavega Ioane,G,Active,,,,Ioane (shoulder/knee) was a limited participant in Wednesday's practice.
 2026-11-19T02:38:22+00:00,2026-11-19T02:19Z,34,Houston Texans,HOU,4241250,Jake Hummel,LB,Questionable,QUESTIONABLE,Groin,2026-11-19,Hummel (groin) is questionable for Houston's matchup against Indianapolis on Thursday.
+2026-11-20T00:08:15+00:00,2026-11-19T02:19Z,34,Houston Texans,HOU,4241250,Jake Hummel,LB,Active,,,,Hummel (groin) is questionable for Houston's matchup against Indianapolis on Thursday.
 2026-11-19T02:53:46+00:00,2026-11-19T02:26Z,10,Tennessee Titans,TEN,4429834,Cedric Gray,LB,Active,,,,Gray posted nine tackles (eight solo) and two pass defenses (including an interception) during the Titans' 40-23 loss to the Jaguars in Week 10.
 2026-11-19T02:53:46+00:00,2026-11-19T02:30Z,16,Minnesota Vikings,MIN,3056916,Eric Wilson,LB,Active,,,,"Wilson recorded seven tackles (six solo), including 1.0 sacks, during the Vikings' 30-10 win over the Packers in Week 10."
 2026-11-19T02:53:46+00:00,2026-11-19T02:33Z,9,Green Bay Packers,GB,4241470,Xavier McKinney,S,Active,,,,McKinney registered six tackles (three solo) and an interception during the Packers' 30-10 loss to the Vikings in Week 10.
@@ -9042,6 +9044,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-19T17:23:32+00:00,2026-11-19T16:26Z,25,San Francisco 49ers,SF,16737,Mike Evans,WR,Questionable,QUESTIONABLE,Right Achilles Tendinitis,2026-11-22,"San Francisco general manager John Lynch said that ""there's a chance"" Evans (Achilles) will take part in a padded practice Thursday, Matt Maiocco of NBC Sports "
 2026-11-19T17:23:32+00:00,2026-11-19T16:53Z,27,Tampa Bay Buccaneers,TB,3052587,Baker Mayfield,QB,Questionable,QUESTIONABLE,Foot Strain,2026-11-22,"Mayfield (foot/thumb) was seen participating in Thursday's practice, Greg Auman of Fox Sports reports."
 2026-11-19T17:23:32+00:00,2026-11-19T17:03Z,11,Indianapolis Colts,IND,4427250,Sauce Gardner,CB,Questionable,QUESTIONABLE,Left Calf,2026-11-19,"According to Jane Slater of NFL Network, Gardner (calf) is not in line to play Thursday night against the Texans."
+2026-11-20T00:08:15+00:00,2026-11-19T17:03Z,11,Indianapolis Colts,IND,4427250,Sauce Gardner,CB,Out,INACTIVE,Left Calf,2026-11-29,"According to Jane Slater of NFL Network, Gardner (calf) is not in line to play Thursday night against the Texans."
 2026-11-19T17:23:32+00:00,2026-11-19T17:07Z,33,Baltimore Ravens,BAL,3126356,Marlon Humphrey,CB,Out,OUT,Coach's Decision,2026-11-29,Ravens head coach Jesse Minter said that Humphrey won't play Sunday against the Panthers after the defensive back made a derogatory comment about the city of Ba
 2026-11-19T18:23:34+00:00,2026-11-19T17:31Z,30,Jacksonville Jaguars,JAX,4882093,Bhayshul Tuten,RB,Questionable,QUESTIONABLE,Ankle,2026-11-22,"Tuten (ankle/foot) was working off to the side during the stretching portion of Thursday's practice, according to Ryan O'Halloran of The Florida Times-Union."
 2026-11-19T18:23:34+00:00,2026-11-19T17:38Z,28,Washington Commanders,WSH,4575131,Jacory Croskey-Merritt,RB,Injured Reserve,IR-R,Groin,2026-11-23,"Commanders head coach Dan Quinn confirmed that Croskey-Merritt (groin) will practice Thursday, Tashan Reed of The Washington Post reports."
@@ -9123,3 +9126,16 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-19T23:38:29+00:00,2026-11-19T23:35Z,25,San Francisco 49ers,SF,4427325,Renardo Green,CB,Active,,,,
 2026-11-19T23:38:29+00:00,2026-11-19T23:37Z,25,San Francisco 49ers,SF,3057524,Siran Neal,S,Active,,,,
 2026-11-19T23:53:15+00:00,2026-11-19T23:40Z,10,Tennessee Titans,TEN,4428557,Tyjae Spears,RB,Questionable,QUESTIONABLE,Knee,2026-11-22,Spears (knee) was limited in practice Thursday.
+2026-11-20T00:08:15+00:00,2026-11-19T23:48Z,11,Indianapolis Colts,IND,4362580,Bernhard Raimann,OT,Out,INACTIVE,Concussion Concussion,2026-11-29,inactive
+2026-11-20T00:08:15+00:00,2026-11-19T23:48Z,11,Indianapolis Colts,IND,4037361,Charvarius Ward,CB,Out,INACTIVE,Knee,2026-11-29,inactive
+2026-11-20T00:08:15+00:00,2026-11-19T23:48Z,11,Indianapolis Colts,IND,4892240,Jalen Travis,OT,Out,INACTIVE,Knee,2026-11-29,inactive
+2026-11-20T00:08:15+00:00,2026-11-19T23:48Z,11,Indianapolis Colts,IND,3863182,Jerry Tillery,DT,Out,INACTIVE,Calf,2026-11-29,inactive
+2026-11-20T00:08:15+00:00,2026-11-19T23:48Z,11,Indianapolis Colts,IND,2566045,Luke Rhodes,LS,Active,,,,
+2026-11-20T00:08:15+00:00,2026-11-19T23:48Z,11,Indianapolis Colts,IND,4683423,Riley Leonard,QB,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-20T00:08:15+00:00,2026-11-19T23:48Z,11,Indianapolis Colts,IND,4362523,Will Mallory,TE,Out,INACTIVE,Hamstring,2026-11-29,inactive
+2026-11-20T00:08:15+00:00,2026-11-19T23:50Z,34,Houston Texans,HOU,4362732,Jake Andrews,C,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-20T00:08:15+00:00,2026-11-19T23:50Z,34,Houston Texans,HOU,4432708,Marvin Harrison Jr.,WR,Out,INACTIVE,Hamstring,2026-11-29,inactive
+2026-11-20T00:08:15+00:00,2026-11-19T23:50Z,34,Houston Texans,HOU,4428656,Nate Thomas,OT,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-20T00:08:15+00:00,2026-11-19T23:50Z,34,Houston Texans,HOU,4429059,Woody Marks,RB,Out,INACTIVE,Concussion Concussion,2026-11-29,inactive
+2026-11-20T00:08:15+00:00,2026-11-19T23:50Z,34,Houston Texans,HOU,3045474,Wyatt Teller,G,Out,INACTIVE,Back,2026-11-29,inactive
+2026-11-20T00:08:15+00:00,2026-11-19T23:51Z,11,Indianapolis Colts,IND,4429684,Anthony Gould,WR,Active,,,,Gould (toe) is active for Thursday night's game against the Texans.
