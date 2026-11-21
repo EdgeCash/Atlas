@@ -1,6 +1,6 @@
 # Atlas Data Quality
 
-*Generated 2026-11-21 22:53 UTC by `python -m atlas.live check`. Regenerated on every
+*Generated 2026-11-21 23:08 UTC by `python -m atlas.live check`. Regenerated on every
 tracker run against the live record in `tracking/`.*
 
 ---
@@ -11,8 +11,8 @@ tracker run against the live record in `tracking/`.*
 
 | | |
 |---|---|
-| Signals checked | 965 |
-| Grades checked | 910 |
+| Signals checked | 971 |
+| Grades checked | 912 |
 | Checks run | 19 |
 | Blocking exceptions | 0 |
 | Warnings | 0 |
@@ -26,25 +26,25 @@ complaints. Every check is listed here on every run.
 
 | Check | Severity | Scope | Rows checked | Exceptions | Clean |
 |---|---|---|---|---|---|
-| game exists | blocking | signals | 965 | 0 | yes |
-| market exists | blocking | signals | 965 | 0 | yes |
-| opening line exists | warning | signals | 965 | 0 | yes |
-| entry line exists | blocking | signals | 965 | 0 | yes |
-| line history exists | blocking | signals | 965 | 0 | yes |
-| closing line exists | warning | signals | 965 | 0 | yes |
-| entry line in range | blocking | signals | 965 | 0 | yes |
-| opening line in range | warning | signals | 965 | 0 | yes |
-| entry price in range | warning | signals | 965 | 0 | yes |
-| disagreement is consistent | blocking | signals | 965 | 0 | yes |
-| signal is an opinion | blocking | signals | 965 | 0 | yes |
-| signal id is unique | blocking | signals | 965 | 0 | yes |
-| model version recorded | warning | signals | 965 | 0 | yes |
-| grade references a signal | blocking | grades | 910 | 0 | yes |
-| clv is consistent | blocking | grades | 910 | 0 | yes |
-| result matches clv | blocking | grades | 910 | 0 | yes |
-| one grade per signal | blocking | grades | 910 | 0 | yes |
-| probabilities in range | blocking | grades | 910 | 0 | yes |
-| clv_prob is consistent | blocking | grades | 910 | 0 | yes |
+| game exists | blocking | signals | 971 | 0 | yes |
+| market exists | blocking | signals | 971 | 0 | yes |
+| opening line exists | warning | signals | 971 | 0 | yes |
+| entry line exists | blocking | signals | 971 | 0 | yes |
+| line history exists | blocking | signals | 971 | 0 | yes |
+| closing line exists | warning | signals | 971 | 0 | yes |
+| entry line in range | blocking | signals | 971 | 0 | yes |
+| opening line in range | warning | signals | 971 | 0 | yes |
+| entry price in range | warning | signals | 971 | 0 | yes |
+| disagreement is consistent | blocking | signals | 971 | 0 | yes |
+| signal is an opinion | blocking | signals | 971 | 0 | yes |
+| signal id is unique | blocking | signals | 971 | 0 | yes |
+| model version recorded | warning | signals | 971 | 0 | yes |
+| grade references a signal | blocking | grades | 912 | 0 | yes |
+| clv is consistent | blocking | grades | 912 | 0 | yes |
+| result matches clv | blocking | grades | 912 | 0 | yes |
+| one grade per signal | blocking | grades | 912 | 0 | yes |
+| probabilities in range | blocking | grades | 912 | 0 | yes |
+| clv_prob is consistent | blocking | grades | 912 | 0 | yes |
 
 ### What each severity means
 
