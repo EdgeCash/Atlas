@@ -845,3 +845,5 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-22T15:23:23+00:00,2026-11-22T15:05Z,4,Chicago Blackhawks,CHI,5149125,Connor Bedard,C,Injured Reserve,IR,Right Shoulder,2027-03-01,ir
 2026-11-22T15:38:30+00:00,2026-11-22T15:10Z,4,Chicago Blackhawks,CHI,5149125,Connor Bedard,C,Injured Reserve,IR,Right Shoulder,2027-03-01,Bedard (shoulder) was placed on injured reserve Sunday.
 2026-11-22T17:23:21+00:00,2026-11-22T17:12Z,21,Toronto Maple Leafs,TOR,3904098,Jack Roslovic,C,Day-To-Day,Day-To-Day,Upper Body,2026-11-23,day-to-day
+2026-11-22T17:38:28+00:00,2026-11-22T17:15Z,21,Toronto Maple Leafs,TOR,3904098,Jack Roslovic,C,Day-To-Day,Day-To-Day,Upper Body,2026-11-23,"Roslovic (upper body) is day-to-day, per David Alter of The Hockey News on Sunday."
+2026-11-22T17:38:28+00:00,2026-11-22T17:19Z,21,Toronto Maple Leafs,TOR,2993474,Colton Sissons,C,Injured Reserve,IR,Lower Body,2026-11-27,"Sissons (lower body) is day-to-day, per David Alter of The Hockey News on Sunday."
