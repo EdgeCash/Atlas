@@ -1,27 +1,27 @@
 # Atlas Drift Monitoring
 
-*Generated 2026-11-22 00:38 UTC by `python -m atlas.live check`. Every alarm compares
+*Generated 2026-11-22 00:53 UTC by `python -m atlas.live check`. Every alarm compares
 the most recent week of the record against its own history.*
 
 ---
 
 ## Status
 
-**2 alert(s) firing.** Alarms are advisory: nothing in the monitor edits the record and
+**3 alert(s) firing.** Alarms are advisory: nothing in the monitor edits the record and
 nothing in it stops the tracker. A monitor that can silently discard data is a
 worse problem than the drift it was watching for.
 
 | Alarm | Severity | Observed | Threshold | Detail |
 |---|---|---|---|---|
-| signal volume | alarm | -0.7803 | 0.5 | week 13: 29 signals against 132 the week before (-78%) |
-| silence | ok | 0.0314 | 7 | last signal 0.0 days ago (2026-11-21) |
+| signal volume | alarm | -0.7652 | 0.5 | week 13: 31 signals against 132 the week before (-77%) |
+| silence | ok | 0.0000 | 7 | last signal 0.0 days ago (2026-11-22) |
 | single book | alarm | 1.0000 | 1 | 100% of signals from book 'DraftKings' (1 distinct) |
 | single market | ok | 0.5005 | 1 | 50% of signals from market 'total' (2 distinct) |
-| model output (margin) | ok | n/a | 3 | 14 recent / 473 prior rows; too few to compare |
-| model output (total) | ok | n/a | 3 | 15 recent / 473 prior rows; too few to compare |
-| disagreement shape (margin) | ok | n/a | 0.01 | 14 recent / 473 prior rows; too few to compare |
-| disagreement shape (total) | ok | n/a | 0.01 | 15 recent / 473 prior rows; too few to compare |
-| primary rate | ok | n/a | 0.5 | 29 recent / 946 prior rows; too few to compare |
+| model output (margin) | ok | n/a | 3 | 15 recent / 473 prior rows; too few to compare |
+| model output (total) | ok | n/a | 3 | 16 recent / 473 prior rows; too few to compare |
+| disagreement shape (margin) | ok | n/a | 0.01 | 15 recent / 473 prior rows; too few to compare |
+| disagreement shape (total) | ok | n/a | 0.01 | 16 recent / 473 prior rows; too few to compare |
+| primary rate | watch | -1.0000 | 0.5 | 0.0% of signals primary against 0.7% before (-100%) |
 | college state | ok | 134.0000 | 1 | 134 more team-games assimilated since Saturday noon ET |
 
 ---
@@ -65,12 +65,12 @@ newest week never finds.
 | 2026-w05 | signals | 112 | 112 | 0 | 0 | yes | exact match |
 | 2026-w05 | grades | 112 | 112 | 0 | 0 | yes | exact match |
 | 2026-w05 | statistics | 12 | 12 | 0 | 0 | yes | recomputed from the replayed grades |
-| 2026-w06 | signals | 116 | 116 | 0 | 0 | yes | exact match |
-| 2026-w06 | grades | 116 | 116 | 0 | 0 | yes | exact match |
-| 2026-w06 | statistics | 16 | 16 | 0 | 0 | yes | recomputed from the replayed grades |
-| 2026-w12 | signals | 132 | 132 | 0 | 0 | yes | exact match |
-| 2026-w12 | grades | 120 | 120 | 0 | 0 | yes | exact match |
-| 2026-w12 | statistics | 8 | 8 | 0 | 0 | yes | recomputed from the replayed grades |
+| 2026-w08 | signals | 100 | 100 | 0 | 0 | yes | exact match |
+| 2026-w08 | grades | 100 | 100 | 0 | 0 | yes | exact match |
+| 2026-w08 | statistics | 12 | 12 | 0 | 0 | yes | recomputed from the replayed grades |
+| 2026-w10 | signals | 124 | 124 | 0 | 0 | yes | exact match |
+| 2026-w10 | grades | 124 | 124 | 0 | 0 | yes | exact match |
+| 2026-w10 | statistics | 16 | 16 | 0 | 0 | yes | recomputed from the replayed grades |
 
 A **signals** mismatch means the record is not reproducible. A **grades**
 mismatch means the grading logic changed under a published number. A
