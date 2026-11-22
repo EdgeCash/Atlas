@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-11-22T05:39:39.114703+00:00",
+      "detail": "market in 17s",
+      "mode": "NCAAF Saturday",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-11-22T05:39:38.965759+00:00",
+      "detail": "65 cards, 27 NFL cards, 55 NHL cards, 130 teams, 32 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-11-22T05:24:28.687118+00:00",
       "detail": "market in 17s",
       "mode": "NCAAF Saturday",
@@ -1283,24 +1296,11 @@
       "detail": "119 cards, 17 NFL cards, 56 NHL cards, 138 teams, 26 NFL teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-11-20T23:55:21.905890+00:00",
-      "detail": "market in 19s",
-      "mode": "Friday night",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-11-20T23:55:21.752988+00:00",
-      "detail": "75 cards, 17 NFL cards, 56 NHL cards, 128 teams, 26 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-11-22T05:24:28.553470+00:00",
+      "at": "2026-11-22T05:39:38.965759+00:00",
       "detail": "65 cards, 27 NFL cards, 55 NHL cards, 130 teams, 32 NFL teams",
       "name": "build",
       "ok": true
@@ -1312,7 +1312,7 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-22T05:24:28.687118+00:00",
+      "at": "2026-11-22T05:39:39.114703+00:00",
       "detail": "market in 17s",
       "mode": "NCAAF Saturday",
       "name": "poll",
@@ -1327,7 +1327,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-11-22T05:24:28.553470+00:00",
+      "at": "2026-11-22T05:39:38.965759+00:00",
       "detail": "65 cards, 27 NFL cards, 55 NHL cards, 130 teams, 32 NFL teams",
       "name": "build",
       "ok": true
@@ -1339,7 +1339,7 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-22T05:24:28.687118+00:00",
+      "at": "2026-11-22T05:39:39.114703+00:00",
       "detail": "market in 17s",
       "mode": "NCAAF Saturday",
       "name": "poll",
