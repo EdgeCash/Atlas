@@ -9768,3 +9768,38 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-22T20:08:25+00:00,2026-11-22T19:53Z,15,Miami Dolphins,MIA,4869961,Chris Bell,WR,Active,,,,
 2026-11-22T20:08:25+00:00,2026-11-22T19:54Z,15,Miami Dolphins,MIA,4819257,Jonah Savaiinaea,G,Active,,,,"Savaiinaea (ankle) has been cleared to return to Sunday's game against the Bills, David Furones of the South Florida Sun Sentinel reports."
 2026-11-22T20:08:25+00:00,2026-11-22T19:55Z,10,Tennessee Titans,TEN,4035663,Terrell Burgess,S,Questionable,QUESTIONABLE,Knee,2026-11-22,Burgess (ankle) is questionable to return to Sunday's Week 11 matchup against Dallas.
+2026-11-22T20:23:34+00:00,2026-11-22T19:58Z,3,Chicago Bears,CHI,4426386,Roschon Johnson,RB,Out,OUT,Ankle,2026-11-26,"Johnson (ankle) has been ruled out for the rest of Sunday's game against the Saints, Courtney Cronin of ESPN.com reports."
+2026-11-22T20:23:34+00:00,2026-11-22T19:58Z,30,Jacksonville Jaguars,JAX,4612298,Albert Regis,DT,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T19:58Z,30,Jacksonville Jaguars,JAX,5085024,CJ Williams,WR,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T19:58Z,30,Jacksonville Jaguars,JAX,4573319,Danny Striggow,DE,Out,INACTIVE,Concussion Concussion,2026-11-29,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T19:58Z,30,Jacksonville Jaguars,JAX,4912185,Jalen Huskey,S,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T19:58Z,30,Jacksonville Jaguars,JAX,4242391,Robert Hainsey,C,Out,INACTIVE,Knee Sprain,2026-11-29,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T19:58Z,13,Las Vegas Raiders,LV,4432665,Brock Bowers,TE,Out,INACTIVE,Ankle,2026-11-29,Bowers (ankle/quad) is inactive for Sunday's game against the Broncos.
+2026-11-22T20:23:34+00:00,2026-11-22T20:01Z,7,Denver Broncos,DEN,4039059,Brandon Jones,S,Out,INACTIVE,Hamstring,2026-11-27,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T20:01Z,7,Denver Broncos,DEN,5159802,Dallen Bentley,TE,Out,INACTIVE,Coach's Decision,2026-11-27,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T20:01Z,7,Denver Broncos,DEN,5085625,Gavin Ortega,OT,Out,INACTIVE,Coach's Decision,2026-11-27,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T20:01Z,7,Denver Broncos,DEN,4261090,Jordan Jackson,DT,Out,INACTIVE,Coach's Decision,2026-11-27,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T20:01Z,7,Denver Broncos,DEN,4868598,Kage Casey,OT,Out,INACTIVE,Coach's Decision,2026-11-27,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T20:01Z,7,Denver Broncos,DEN,4039057,Lil'Jordan Humphrey,WR,Out,INACTIVE,Coach's Decision,2026-11-27,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T20:01Z,7,Denver Broncos,DEN,4241820,Sam Ehlinger,QB,Out,INACTIVE,Coach's Decision,2026-11-27,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T20:01Z,13,Las Vegas Raiders,LV,4612077,Bryce Cabeldue,G,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T20:01Z,13,Las Vegas Raiders,LV,4682488,Dalton Johnson,S,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T20:01Z,13,Las Vegas Raiders,LV,4432775,Dont'e Thornton Jr.,WR,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T20:01Z,13,Las Vegas Raiders,LV,3045172,Folorunso Fatukasi,DT,Active,,,,
+2026-11-22T20:23:34+00:00,2026-11-22T20:01Z,13,Las Vegas Raiders,LV,5150247,Malik Benson,WR,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T20:01Z,13,Las Vegas Raiders,LV,4249087,Matt Gay,PK,Active,,,,Gay (hip) is active for Sunday's game at Denver.
+2026-11-22T20:23:34+00:00,2026-11-22T20:01Z,13,Las Vegas Raiders,LV,4429109,Tonka Hemingway,DT,Out,INACTIVE,Upper Body Stinger,2026-11-29,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T20:01Z,13,Las Vegas Raiders,LV,4250393,Tristin McCollum,S,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T20:01Z,15,Miami Dolphins,MIA,4869961,Chris Bell,WR,Active,,,,"Bell (chest) has returned to Sunday's Week 11 matchup against the Bills, David Furones of the South Florida Sun Sentinel reports."
+2026-11-22T20:23:34+00:00,2026-11-22T20:03Z,30,Jacksonville Jaguars,JAX,3134316,Matt Dickerson,DE,Out,INACTIVE,Neck,2026-11-29,Dickerson (neck) is inactive for Sunday's game against the Giants.
+2026-11-22T20:23:34+00:00,2026-11-22T20:05Z,19,New York Giants,NYG,4426542,Darius Alexander,DT,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T20:05Z,19,New York Giants,NYG,4691889,Greg Desrosiers Jr.,RB,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T20:05Z,19,New York Giants,NYG,5082353,J.C. Davis,OT,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T20:05Z,19,New York Giants,NYG,4240706,Jason Pinnock,S,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T20:05Z,19,New York Giants,NYG,4039243,Josh Sills,G,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T20:05Z,19,New York Giants,NYG,4427636,Nic Jones,CB,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T20:05Z,19,New York Giants,NYG,4590292,Thomas Fidone II,TE,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-22T20:23:34+00:00,2026-11-22T20:06Z,22,Arizona Cardinals,ARI,4429071,Cody Simon,LB,Questionable,QUESTIONABLE,Calf,2026-11-22,Simon (calf) is questionable to return to Sunday's game against the Chiefs.
+2026-11-22T20:23:34+00:00,2026-11-22T20:07Z,24,Los Angeles Chargers,LAC,4411189,Trey Pipkins III,OT,Active,,,,Pipkins (knee) is active for Sunday's matchup against the Jets.
+2026-11-22T20:23:34+00:00,2026-11-22T20:15Z,33,Baltimore Ravens,BAL,3052743,Trey Hendrickson,LB,Active,,,,
+2026-11-22T20:23:34+00:00,2026-11-22T20:15Z,18,New Orleans Saints,NO,3929645,Juwan Johnson,TE,Questionable,QUESTIONABLE,Hamstring,2026-11-22,questionable
