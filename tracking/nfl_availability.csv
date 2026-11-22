@@ -9497,8 +9497,10 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-21T19:53:18+00:00,2026-11-21T19:34Z,15,Miami Dolphins,MIA,3051909,Daniel Carlson,KR,Active,,,,The Dolphins elevated Carlson from the practice squad to the active roster Saturday.
 2026-11-21T19:38:21+00:00,2026-11-21T19:36Z,20,New York Jets,NYJ,2976592,Sterling Shepard,WR,Active,,,,"The Jets elevated Shepard from the practice squad to the active roster Saturday, Zack Rosenblatt of The Athletic reports."
 2026-11-21T19:53:18+00:00,2026-11-21T19:38Z,23,Pittsburgh Steelers,PIT,4431492,Roman Wilson,WR,Questionable,QUESTIONABLE,Left Hand,2026-11-22,"The Steelers activated Wilson (hand) from injured reserve Saturday, Ian Rapoport of NFL Network reports."
+2026-11-22T16:53:17+00:00,2026-11-21T19:38Z,23,Pittsburgh Steelers,PIT,4431492,Roman Wilson,WR,Active,,,,"The Steelers activated Wilson (hand) from injured reserve Saturday, Ian Rapoport of NFL Network reports."
 2026-11-21T20:23:28+00:00,2026-11-21T19:53Z,4,Cincinnati Bengals,CIN,3051746,Oren Burks,LB,Injured Reserve,IR,Groin,2026-12-20,The Bengals placed Burks (groin) on injured reserve Saturday.
 2026-11-21T20:08:34+00:00,2026-11-21T19:56Z,15,Miami Dolphins,MIA,4036660,Darrell Baker Jr.,CB,Questionable,QUESTIONABLE,Knee,2026-11-22,The Dolphins activated Baker (knee) from the reserve/PUP list Saturday.
+2026-11-22T16:53:17+00:00,2026-11-21T19:56Z,15,Miami Dolphins,MIA,4036660,Darrell Baker Jr.,CB,Active,,,,The Dolphins activated Baker (knee) from the reserve/PUP list Saturday.
 2026-11-21T20:23:28+00:00,2026-11-21T20:06Z,23,Pittsburgh Steelers,PIT,4035687,Michael Pittman Jr.,WR,Injured Reserve,IR-R,Left Foot Plantar Fasciitis,2026-11-27,"Pittman (foot) is not expected to be activated from injured reserve for Sunday's game against the Eagles, Brooke Pryor of ESPN reports."
 2026-11-21T20:38:28+00:00,2026-11-21T20:17Z,10,Tennessee Titans,TEN,4240657,Michael Carter,RB,Active,,,,"The Titans elevated Carter from the practice squad to the active roster Saturday, Jim Wyatt of the Titans' official site reports."
 2026-11-21T20:38:28+00:00,2026-11-21T20:20Z,10,Tennessee Titans,TEN,4240532,Tony Adams,S,Active,,,,"Adams has cleared the league's concussion protocol and no longer carries an injury designation into Sunday's game against the Cowboys, Jim Wyatt of the Titans' "
@@ -9534,6 +9536,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-22T00:38:26+00:00,2026-11-22T00:17Z,4,Cincinnati Bengals,CIN,4426422,Dax Hill,CB,Questionable,QUESTIONABLE,Illness,2026-11-23,Hill (illness) is listed as questionable for Monday's game against the Commanders.
 2026-11-22T00:38:26+00:00,2026-11-22T00:19Z,22,Arizona Cardinals,ARI,3059722,Zay Jones,WR,Active,,,,The Cardinals elevated Jones from the practice squad Saturday.
 2026-11-22T00:38:26+00:00,2026-11-22T00:19Z,29,Carolina Panthers,CAR,3917853,Mike Jackson,CB,Questionable,QUESTIONABLE,Groin Surgery,2026-11-22,"The Panthers activated Jackson (groin) from injured reserve Saturday, Darin Gantt of the team's official site reports."
+2026-11-22T16:53:17+00:00,2026-11-22T00:19Z,29,Carolina Panthers,CAR,3917853,Mike Jackson,CB,Active,,,,"The Panthers activated Jackson (groin) from injured reserve Saturday, Darin Gantt of the team's official site reports."
 2026-11-22T00:53:27+00:00,2026-11-22T00:22Z,14,Los Angeles Rams,LAR,4250621,Kobie Turner,DE,Injured Reserve,IR-R,Groin Strain,2026-11-25,The Rams designated Turner (groin) to return from injured reserve Saturday.
 2026-11-22T00:53:27+00:00,2026-11-22T00:22Z,25,San Francisco 49ers,SF,4686308,C.J. West,DT,Active,,,,The 49ers activated West (knee) from injured reserve Saturday.
 2026-11-22T00:53:27+00:00,2026-11-22T00:23Z,14,Los Angeles Rams,LAR,4360859,Justin Dedich,G,Injured Reserve,IR-R,Undisclosed,2026-11-25,The Rams opened the 21-day practice window for Dedich (undisclosed) on Saturday.
@@ -9575,6 +9578,13 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-22T16:23:14+00:00,2026-11-22T15:54Z,13,Las Vegas Raiders,LV,4432665,Brock Bowers,TE,Questionable,QUESTIONABLE,Ankle,2026-11-22,"Adam Schefter of ESPN reported on Sunday NFL Countdown that ""there is not a lot of optimism"" that Bowers (ankle/quadriceps) will suit up Sunday at Denver, but t"
 2026-11-22T16:23:14+00:00,2026-11-22T16:06Z,21,Philadelphia Eagles,PHI,4685759,Jalen Carter,DT,Questionable,QUESTIONABLE,Quadriceps,2026-11-22,Carter (quadriceps) is now listed as questionable ahead of Sunday's game against the Steelers.
 2026-11-22T16:38:22+00:00,2026-11-22T16:06Z,21,Philadelphia Eagles,PHI,4685759,Jalen Carter,DT,Active,,,,Carter (quadriceps) is now listed as questionable ahead of Sunday's game against the Steelers.
+2026-11-22T16:53:17+00:00,2026-11-22T16:31Z,6,Dallas Cowboys,DAL,4685266,Jaishawn Barham,LB,Out,INACTIVE,Hip,2026-11-22,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:31Z,6,Dallas Cowboys,DAL,4242355,Jake Ferguson,TE,Out,INACTIVE,Knee,2026-11-26,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:31Z,6,Dallas Cowboys,DAL,2980097,Jonathan Bullard,DT,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:31Z,6,Dallas Cowboys,DAL,4426485,Jonathan Mingo,WR,Out,INACTIVE,Ankle,2026-11-26,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:31Z,6,Dallas Cowboys,DAL,4372096,Luke Schoonmaker,TE,Active,,,,
+2026-11-22T16:53:17+00:00,2026-11-22T16:31Z,6,Dallas Cowboys,DAL,3929850,P.J. Locke,S,Out,INACTIVE,Concussion Concussion,2026-11-26,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:31Z,6,Dallas Cowboys,DAL,4685263,Tyler Booker,G,Out,INACTIVE,Left Ankle Sprain,2026-12-07,inactive
 2026-11-22T16:38:22+00:00,2026-11-22T16:32Z,33,Baltimore Ravens,BAL,4685526,Adam Randall,RB,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
 2026-11-22T16:38:22+00:00,2026-11-22T16:32Z,33,Baltimore Ravens,BAL,5088338,Elijah Sarratt,WR,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
 2026-11-22T16:38:22+00:00,2026-11-22T16:32Z,33,Baltimore Ravens,BAL,4685736,Emery Jones Jr.,OT,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
@@ -9582,3 +9592,67 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-22T16:38:22+00:00,2026-11-22T16:32Z,33,Baltimore Ravens,BAL,4428512,Kedon Slovis,QB,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
 2026-11-22T16:38:22+00:00,2026-11-22T16:32Z,33,Baltimore Ravens,BAL,3126356,Marlon Humphrey,CB,Out,INACTIVE,Personal,2026-11-29,inactive
 2026-11-22T16:38:22+00:00,2026-11-22T16:32Z,33,Baltimore Ravens,BAL,4035245,Nnamdi Madubuike,DT,Out,INACTIVE,Hamstring,2026-11-29,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:33Z,21,Philadelphia Eagles,PHI,4696203,Ajani Cornelius,OT,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:33Z,21,Philadelphia Eagles,PHI,4430814,Jake Majors,C,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:33Z,21,Philadelphia Eagles,PHI,4689651,Mac McWilliams,CB,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:33Z,10,Tennessee Titans,TEN,4871023,Carnell Tate,WR,Active,,,,Tate (shoulder) is listed as active for Sunday's game against the Cowboys.
+2026-11-22T16:53:17+00:00,2026-11-22T16:34Z,22,Arizona Cardinals,ARI,3051775,Andrew Billings,DT,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:34Z,22,Arizona Cardinals,ARI,4367199,Jon Gaines II,G,Out,INACTIVE,Ankle,2026-11-29,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:34Z,22,Arizona Cardinals,ARI,4567410,Kingsley Eguakun,C,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:34Z,22,Arizona Cardinals,ARI,4363408,Starling Thomas V,CB,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:34Z,2,Buffalo Bills,BUF,4385690,Dalton Kincaid,TE,Out,INACTIVE,Thumb,2026-11-26,"Kincaid (thumb/ankle) is inactive for Sunday's game against the Dolphins, Cameron Wolfe of NFL Network reports."
+2026-11-22T16:53:17+00:00,2026-11-22T16:35Z,33,Baltimore Ravens,BAL,4428512,Kedon Slovis,QB,Out,INACTIVE,Coach's Decision,2026-11-29,Slovis (coach's decision) is inactive for Sunday's game against the Panthers but will serve as the Ravens' emergency quarterback.
+2026-11-22T16:53:17+00:00,2026-11-22T16:36Z,27,Tampa Bay Buccaneers,TB,3052587,Baker Mayfield,QB,Active,,,,"Mayfield (foot/thumb) is listed as active Sunday at Detroit, Scott Smith of the Buccaneers' official site reports."
+2026-11-22T16:53:17+00:00,2026-11-22T16:36Z,10,Tennessee Titans,TEN,4870805,Anthony Hill Jr.,LB,Active,,,,
+2026-11-22T16:53:17+00:00,2026-11-22T16:36Z,10,Tennessee Titans,TEN,4426987,Brandon Crenshaw-Dickson,OT,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:36Z,10,Tennessee Titans,TEN,5081785,Jackie Marshall,DT,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:36Z,10,Tennessee Titans,TEN,4685145,Jaylon Jones,CB,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:36Z,10,Tennessee Titans,TEN,4695280,Micah Robinson,CB,Active,,,,
+2026-11-22T16:53:17+00:00,2026-11-22T16:36Z,10,Tennessee Titans,TEN,4567403,Mohamoud Diabate,LB,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:36Z,10,Tennessee Titans,TEN,4685555,Nicholas Singleton,RB,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:37Z,2,Buffalo Bills,BUF,4379778,Christian Benford,CB,Out,INACTIVE,Groin,2026-11-26,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:37Z,2,Buffalo Bills,BUF,4568624,Dorian Williams,LB,Out,INACTIVE,Calf,2026-11-26,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:37Z,2,Buffalo Bills,BUF,4869533,Jude Bowry,OT,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:37Z,2,Buffalo Bills,BUF,3915487,Mike Danna,DE,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:37Z,2,Buffalo Bills,BUF,4683153,Skyler Bell,WR,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:37Z,2,Buffalo Bills,BUF,4684527,T.J. Sanders,DT,Out,INACTIVE,Shoulder,2026-11-22,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:37Z,12,Kansas City Chiefs,KC,4567747,Garrett Nussmeier,QB,Out,INACTIVE,Coach's Decision,2026-11-26,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:37Z,12,Kansas City Chiefs,KC,4043041,Jaylon Moore,OT,Out,INACTIVE,Right Ankle,2026-11-26,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:37Z,12,Kansas City Chiefs,KC,4567048,Kenneth Walker III,RB,Out,INACTIVE,Groin Soreness,2026-11-26,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:37Z,12,Kansas City Chiefs,KC,5278708,Melvin Smith Jr.,CB,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:37Z,12,Kansas City Chiefs,KC,4591008,Omarr Norman-Lott,DT,Out,INACTIVE,Right Knee - ACL Surgery,2026-11-22,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:37Z,12,Kansas City Chiefs,KC,4871063,Peter Woods,DT,Out,INACTIVE,Neck,2026-11-22,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:37Z,12,Kansas City Chiefs,KC,4242459,Trey Smith,G,Out,INACTIVE,Concussion Concussion,2026-11-26,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:37Z,21,Philadelphia Eagles,PHI,4685759,Jalen Carter,DT,Active,,,,Carter (quadriceps) is active for Sunday's game against the Steelers.
+2026-11-22T16:53:17+00:00,2026-11-22T16:38Z,2,Buffalo Bills,BUF,4036060,Damar Hamlin,S,Active,,,,
+2026-11-22T16:53:17+00:00,2026-11-22T16:38Z,2,Buffalo Bills,BUF,4039303,Ed Oliver,DT,Active,,,,
+2026-11-22T16:53:17+00:00,2026-11-22T16:38Z,2,Buffalo Bills,BUF,4573699,Jackson Hawes,TE,Active,,,,
+2026-11-22T16:53:17+00:00,2026-11-22T16:38Z,21,Philadelphia Eagles,PHI,4879250,Cole Payton,QB,Out,INACTIVE,Coach's Decision,2026-11-26,Payton (coach's decision) is inactive but will serve as the Eagles' emergency third quarterback against the Steelers on Sunday.
+2026-11-22T16:53:17+00:00,2026-11-22T16:39Z,33,Baltimore Ravens,BAL,4685526,Adam Randall,RB,Out,INACTIVE,Coach's Decision,2026-11-29,Randall (coach's decision) is inactive for Sunday's game against Carolina.
+2026-11-22T16:53:17+00:00,2026-11-22T16:39Z,18,New Orleans Saints,NO,4430379,Asim Richards,OT,Out,INACTIVE,Knee,2026-11-29,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:39Z,18,New Orleans Saints,NO,4605498,Decamerion Richardson,CB,Active,,,,
+2026-11-22T16:53:17+00:00,2026-11-22T16:39Z,18,New Orleans Saints,NO,3917331,Erik McCoy,C,Out,INACTIVE,Biceps,2026-11-29,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:39Z,18,New Orleans Saints,NO,4429568,Martin Emerson Jr.,CB,Out,INACTIVE,Concussion Concussion,2026-11-29,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:39Z,18,New Orleans Saints,NO,4606711,Taliese Fuaga,OT,Out,INACTIVE,Left Knee Sprain,2026-11-29,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:39Z,18,New Orleans Saints,NO,4361259,Zach Wilson,QB,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:40Z,29,Carolina Panthers,CAR,2576925,Darren Waller,TE,Active,,,,"Waller (knee) is listed as active Sunday against the Ravens, Darin Gantt of the Panthers' official site reports."
+2026-11-22T16:53:17+00:00,2026-11-22T16:40Z,3,Chicago Bears,CHI,15168,Case Keenum,QB,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:40Z,3,Chicago Bears,CHI,4877376,Jayden Loving,DT,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:40Z,3,Chicago Bears,CHI,4360319,Jordan McFadden,G,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:40Z,3,Chicago Bears,CHI,4911952,Keyshaun Elliott,LB,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:40Z,3,Chicago Bears,CHI,4361093,Kyler Gordon,CB,Out,INACTIVE,Left Shoulder,2026-11-26,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:40Z,15,Miami Dolphins,MIA,4040537,Aaron Brewer,C,Active,,,,
+2026-11-22T16:53:17+00:00,2026-11-22T16:40Z,15,Miami Dolphins,MIA,2977680,Bradley Pinion,P,Out,INACTIVE,Right Groin,2026-11-29,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:40Z,15,Miami Dolphins,MIA,4426446,Caedan Wallace,OT,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:40Z,15,Miami Dolphins,MIA,4362135,Christian Haynes,G,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:40Z,15,Miami Dolphins,MIA,4431664,Dante Trader Jr.,S,Out,INACTIVE,Shoulder,2026-11-22,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:40Z,15,Miami Dolphins,MIA,4430681,Jared Wayne,WR,Out,INACTIVE,Quadriceps,2026-11-29,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:40Z,15,Miami Dolphins,MIA,4567225,Jaylin Simpson,S,Out,INACTIVE,Knee,2026-11-22,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:40Z,15,Miami Dolphins,MIA,4912052,Justin Joly,TE,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T16:53:17+00:00,2026-11-22T16:40Z,15,Miami Dolphins,MIA,4875079,Marcellas Dial Jr.,CB,Active,,,,
+2026-11-22T16:53:17+00:00,2026-11-22T16:40Z,21,Philadelphia Eagles,PHI,4431573,Smael Mondon Jr.,LB,Out,INACTIVE,Ankle,2026-11-22,Mondon (ankle) is inactive for Sunday's matchup against Pittsburgh.
+2026-11-22T16:53:17+00:00,2026-11-22T16:41Z,3,Chicago Bears,CHI,4869748,Zavion Thomas,WR,Active,,,,
+2026-11-22T16:53:17+00:00,2026-11-22T16:41Z,21,Philadelphia Eagles,PHI,4431545,Will Shipley,RB,Active,,,,Shipley (foot) is active for Sunday's game against Pittsburgh.
+2026-11-22T16:53:17+00:00,2026-11-22T16:43Z,33,Baltimore Ravens,BAL,5088338,Elijah Sarratt,WR,Out,INACTIVE,Coach's Decision,2026-11-29,Sarratt (coach's decision) is inactive for Sunday's game against Carolina.
+2026-11-22T16:53:17+00:00,2026-11-22T16:43Z,18,New Orleans Saints,NO,4569682,Audric Estime,RB,Out,INACTIVE,Coach's Decision,2026-11-29,Estime (coach's decision) is inactive for Sunday's game against the Bears.
+2026-11-22T16:53:17+00:00,2026-11-22T16:45Z,18,New Orleans Saints,NO,4241993,Pete Werner,LB,Out,INACTIVE,Left Hamstring,2026-11-29,Werner (hamstring) is inactive for Sunday's game against Chicago.
