@@ -1,6 +1,42 @@
 {
   "history": [
     {
+      "at": "2026-11-22T09:14:58.696321+00:00",
+      "detail": "65 cards, 27 NFL cards, 57 NHL cards, 130 teams, 32 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-11-22T09:14:58.694210+00:00",
+      "detail": "12 files",
+      "name": "social",
+      "ok": true
+    },
+    {
+      "at": "2026-11-22T09:14:51.023330+00:00",
+      "detail": "captured during the heavy refresh",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-11-22T09:14:51.021063+00:00",
+      "detail": "warehouse in 28s; nfl-ingest in 3s; nfl-warehouse in 20s; nhl-ingest in 16s; nhl-warehouse in 15s; nba-ingest in 1s; nba-warehouse in 2s; model in 161s; market in 16s; availability in 3s; polymarket in 125s; other-models in 2s; site in 9s",
+      "name": "heavy",
+      "ok": true
+    },
+    {
+      "at": "2026-11-22T09:14:50.873642+00:00",
+      "detail": "65 cards, 27 NFL cards, 57 NHL cards, 130 teams, 32 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
+      "at": "2026-11-22T09:14:50.871524+00:00",
+      "detail": "12 files",
+      "name": "social",
+      "ok": true
+    },
+    {
       "at": "2026-11-22T08:54:11.232600+00:00",
       "detail": "market in 13s",
       "mode": "ordinary",
@@ -1257,69 +1293,29 @@
       "detail": "119 cards, 17 NFL cards, 56 NHL cards, 138 teams, 26 NFL teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-11-21T01:40:31.948455+00:00",
-      "detail": "market in 13s",
-      "mode": "Friday night",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-11-21T01:40:31.815547+00:00",
-      "detail": "119 cards, 17 NFL cards, 56 NHL cards, 138 teams, 26 NFL teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-11-21T01:24:35.098820+00:00",
-      "detail": "market in 14s",
-      "mode": "Friday night",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-11-21T01:24:34.967695+00:00",
-      "detail": "119 cards, 17 NFL cards, 56 NHL cards, 138 teams, 26 NFL teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-11-21T01:10:27.792385+00:00",
-      "detail": "market in 20s",
-      "mode": "Friday night",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-11-21T01:10:27.635936+00:00",
-      "detail": "119 cards, 17 NFL cards, 56 NHL cards, 138 teams, 26 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-11-22T08:54:11.098130+00:00",
-      "detail": "65 cards, 27 NFL cards, 55 NHL cards, 130 teams, 32 NFL teams",
+      "at": "2026-11-22T09:14:58.696321+00:00",
+      "detail": "65 cards, 27 NFL cards, 57 NHL cards, 130 teams, 32 NFL teams",
       "name": "build",
       "ok": true
     },
     "heavy": {
-      "at": "2026-11-21T09:14:40.593032+00:00",
-      "detail": "warehouse in 26s; nfl-ingest in 2s; nfl-warehouse in 20s; nhl-ingest in 10s; nhl-warehouse in 14s; nba-ingest in 1s; nba-warehouse in 2s; model in 175s; market in 21s; availability in 2s; polymarket in 111s; other-models in 2s; site in 11s",
+      "at": "2026-11-22T09:14:51.021063+00:00",
+      "detail": "warehouse in 28s; nfl-ingest in 3s; nfl-warehouse in 20s; nhl-ingest in 16s; nhl-warehouse in 15s; nba-ingest in 1s; nba-warehouse in 2s; model in 161s; market in 16s; availability in 3s; polymarket in 125s; other-models in 2s; site in 9s",
       "name": "heavy",
       "ok": true
     },
     "poll": {
-      "at": "2026-11-22T08:54:11.232600+00:00",
-      "detail": "market in 13s",
-      "mode": "ordinary",
+      "at": "2026-11-22T09:14:51.023330+00:00",
+      "detail": "captured during the heavy refresh",
       "name": "poll",
       "ok": true
     },
     "social": {
-      "at": "2026-11-21T09:14:49.518464+00:00",
+      "at": "2026-11-22T09:14:58.694210+00:00",
       "detail": "12 files",
       "name": "social",
       "ok": true
@@ -1327,26 +1323,25 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-11-22T08:54:11.098130+00:00",
-      "detail": "65 cards, 27 NFL cards, 55 NHL cards, 130 teams, 32 NFL teams",
+      "at": "2026-11-22T09:14:58.696321+00:00",
+      "detail": "65 cards, 27 NFL cards, 57 NHL cards, 130 teams, 32 NFL teams",
       "name": "build",
       "ok": true
     },
     "heavy": {
-      "at": "2026-11-21T09:14:40.593032+00:00",
-      "detail": "warehouse in 26s; nfl-ingest in 2s; nfl-warehouse in 20s; nhl-ingest in 10s; nhl-warehouse in 14s; nba-ingest in 1s; nba-warehouse in 2s; model in 175s; market in 21s; availability in 2s; polymarket in 111s; other-models in 2s; site in 11s",
+      "at": "2026-11-22T09:14:51.021063+00:00",
+      "detail": "warehouse in 28s; nfl-ingest in 3s; nfl-warehouse in 20s; nhl-ingest in 16s; nhl-warehouse in 15s; nba-ingest in 1s; nba-warehouse in 2s; model in 161s; market in 16s; availability in 3s; polymarket in 125s; other-models in 2s; site in 9s",
       "name": "heavy",
       "ok": true
     },
     "poll": {
-      "at": "2026-11-22T08:54:11.232600+00:00",
-      "detail": "market in 13s",
-      "mode": "ordinary",
+      "at": "2026-11-22T09:14:51.023330+00:00",
+      "detail": "captured during the heavy refresh",
       "name": "poll",
       "ok": true
     },
     "social": {
-      "at": "2026-11-21T09:14:49.518464+00:00",
+      "at": "2026-11-22T09:14:58.694210+00:00",
       "detail": "12 files",
       "name": "social",
       "ok": true
