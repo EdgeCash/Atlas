@@ -9635,6 +9635,13 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-22T16:53:17+00:00,2026-11-22T16:39Z,18,New Orleans Saints,NO,4429568,Martin Emerson Jr.,CB,Out,INACTIVE,Concussion Concussion,2026-11-29,inactive
 2026-11-22T16:53:17+00:00,2026-11-22T16:39Z,18,New Orleans Saints,NO,4606711,Taliese Fuaga,OT,Out,INACTIVE,Left Knee Sprain,2026-11-29,inactive
 2026-11-22T16:53:17+00:00,2026-11-22T16:39Z,18,New Orleans Saints,NO,4361259,Zach Wilson,QB,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T17:08:25+00:00,2026-11-22T16:39Z,23,Pittsburgh Steelers,PIT,3929846,DeShon Elliott,S,Active,,,,
+2026-11-22T17:08:25+00:00,2026-11-22T16:39Z,23,Pittsburgh Steelers,PIT,4714771,Drew Allar,QB,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T17:08:25+00:00,2026-11-22T16:39Z,23,Pittsburgh Steelers,PIT,5081508,Eli Heidenreich,RB,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T17:08:25+00:00,2026-11-22T16:39Z,23,Pittsburgh Steelers,PIT,4431533,Gabriel Rubio,DE,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T17:08:25+00:00,2026-11-22T16:39Z,23,Pittsburgh Steelers,PIT,5081338,Kaden Wetjen,WR,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-22T17:08:25+00:00,2026-11-22T16:39Z,23,Pittsburgh Steelers,PIT,4242207,Patrick Queen,LB,Active,,,,
+2026-11-22T17:08:25+00:00,2026-11-22T16:39Z,23,Pittsburgh Steelers,PIT,3932886,Sean Murphy-Bunting,CB,Out,INACTIVE,Coach's Decision,,inactive
 2026-11-22T16:53:17+00:00,2026-11-22T16:40Z,29,Carolina Panthers,CAR,2576925,Darren Waller,TE,Active,,,,"Waller (knee) is listed as active Sunday against the Ravens, Darin Gantt of the Panthers' official site reports."
 2026-11-22T16:53:17+00:00,2026-11-22T16:40Z,3,Chicago Bears,CHI,15168,Case Keenum,QB,Out,INACTIVE,Coach's Decision,,inactive
 2026-11-22T16:53:17+00:00,2026-11-22T16:40Z,3,Chicago Bears,CHI,4877376,Jayden Loving,DT,Out,INACTIVE,Coach's Decision,,inactive
@@ -9653,6 +9660,41 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-22T16:53:17+00:00,2026-11-22T16:40Z,21,Philadelphia Eagles,PHI,4431573,Smael Mondon Jr.,LB,Out,INACTIVE,Ankle,2026-11-22,Mondon (ankle) is inactive for Sunday's matchup against Pittsburgh.
 2026-11-22T16:53:17+00:00,2026-11-22T16:41Z,3,Chicago Bears,CHI,4869748,Zavion Thomas,WR,Active,,,,
 2026-11-22T16:53:17+00:00,2026-11-22T16:41Z,21,Philadelphia Eagles,PHI,4431545,Will Shipley,RB,Active,,,,Shipley (foot) is active for Sunday's game against Pittsburgh.
+2026-11-22T17:08:25+00:00,2026-11-22T16:42Z,8,Detroit Lions,DET,4038432,Amen Ogbongbemiga,LB,Out,INACTIVE,Coach's Decision,2026-11-26,inactive
+2026-11-22T17:08:25+00:00,2026-11-22T16:42Z,8,Detroit Lions,DET,3139387,D.J. Reed,CB,Out,INACTIVE,Hip,2026-11-26,inactive
+2026-11-22T17:08:25+00:00,2026-11-22T16:42Z,8,Detroit Lions,DET,4566092,Ennis Rakestraw Jr.,CB,Out,INACTIVE,Shoulder,2026-11-26,inactive
+2026-11-22T17:08:25+00:00,2026-11-22T16:42Z,8,Detroit Lions,DET,4036507,Joe Bachie,LB,Active,,,,
+2026-11-22T17:08:25+00:00,2026-11-22T16:42Z,8,Detroit Lions,DET,5093004,Keith Abney II,CB,Out,INACTIVE,Coach's Decision,2026-11-26,inactive
+2026-11-22T17:08:25+00:00,2026-11-22T16:42Z,8,Detroit Lions,DET,4027919,Khalil Dorsey,CB,Active,,,,
+2026-11-22T17:08:25+00:00,2026-11-22T16:42Z,8,Detroit Lions,DET,4586333,Mekhi Wingo,DT,Out,INACTIVE,Coach's Decision,2026-11-26,inactive
+2026-11-22T17:08:25+00:00,2026-11-22T16:42Z,8,Detroit Lions,DET,4361861,Tyler Lacy,DT,Active,,,,
+2026-11-22T17:08:25+00:00,2026-11-22T16:42Z,8,Detroit Lions,DET,4689333,Tyrus Wheat,LB,Out,INACTIVE,Coach's Decision,2026-11-26,inactive
 2026-11-22T16:53:17+00:00,2026-11-22T16:43Z,33,Baltimore Ravens,BAL,5088338,Elijah Sarratt,WR,Out,INACTIVE,Coach's Decision,2026-11-29,Sarratt (coach's decision) is inactive for Sunday's game against Carolina.
 2026-11-22T16:53:17+00:00,2026-11-22T16:43Z,18,New Orleans Saints,NO,4569682,Audric Estime,RB,Out,INACTIVE,Coach's Decision,2026-11-29,Estime (coach's decision) is inactive for Sunday's game against the Bears.
+2026-11-22T17:08:25+00:00,2026-11-22T16:44Z,27,Tampa Bay Buccaneers,TB,4034790,Antoine Winfield Jr.,S,Out,INACTIVE,Ankle,2026-11-30,inactive
+2026-11-22T17:08:25+00:00,2026-11-22T16:44Z,27,Tampa Bay Buccaneers,TB,4890885,Ayden Garnes,CB,Out,INACTIVE,Coach's Decision,2026-11-30,inactive
+2026-11-22T17:08:25+00:00,2026-11-22T16:44Z,27,Tampa Bay Buccaneers,TB,4685549,Billy Schrauth,G,Out,INACTIVE,Coach's Decision,2026-11-30,inactive
+2026-11-22T17:08:25+00:00,2026-11-22T16:44Z,27,Tampa Bay Buccaneers,TB,4429007,DeMonte Capehart,DT,Out,INACTIVE,Coach's Decision,2026-11-30,inactive
+2026-11-22T17:08:25+00:00,2026-11-22T16:44Z,27,Tampa Bay Buccaneers,TB,3120590,Easton Stick,QB,Out,INACTIVE,Coach's Decision,2026-11-30,inactive
+2026-11-22T17:08:25+00:00,2026-11-22T16:44Z,27,Tampa Bay Buccaneers,TB,4427140,Trevor Keegan,G,Out,INACTIVE,Coach's Decision,2026-11-30,inactive
+2026-11-22T17:08:25+00:00,2026-11-22T16:44Z,27,Tampa Bay Buccaneers,TB,4686334,Yaya Diaby,LB,Active,,,,
+2026-11-22T17:08:25+00:00,2026-11-22T16:45Z,6,Dallas Cowboys,DAL,4372096,Luke Schoonmaker,TE,Active,,,,Schoonmaker (illness) is active for Sunday's Week 11 matchup against Tennessee.
 2026-11-22T16:53:17+00:00,2026-11-22T16:45Z,18,New Orleans Saints,NO,4241993,Pete Werner,LB,Out,INACTIVE,Left Hamstring,2026-11-29,Werner (hamstring) is inactive for Sunday's game against Chicago.
+2026-11-22T17:08:25+00:00,2026-11-22T16:46Z,29,Carolina Panthers,CAR,4239934,AJ Dillon,RB,Out,INACTIVE,Coach's Decision,2026-11-30,inactive
+2026-11-22T17:08:25+00:00,2026-11-22T16:46Z,29,Carolina Panthers,CAR,3117253,Bobby Okereke,LB,Out,INACTIVE,Foot,2026-11-30,inactive
+2026-11-22T17:08:25+00:00,2026-11-22T16:46Z,29,Carolina Panthers,CAR,4428993,Haynes King,QB,Out,INACTIVE,Coach's Decision,2026-11-30,inactive
+2026-11-22T17:08:25+00:00,2026-11-22T16:46Z,29,Carolina Panthers,CAR,4431588,Ja'Tavion Sanders,TE,Out,INACTIVE,Coach's Decision,2026-11-30,inactive
+2026-11-22T17:08:25+00:00,2026-11-22T16:46Z,29,Carolina Panthers,CAR,4240595,Marco Wilson,CB,Out,INACTIVE,Coach's Decision,2026-11-30,inactive
+2026-11-22T17:08:25+00:00,2026-11-22T16:46Z,29,Carolina Panthers,CAR,4874515,Sam Hecht,C,Out,INACTIVE,Coach's Decision,2026-11-30,inactive
+2026-11-22T17:08:25+00:00,2026-11-22T16:46Z,29,Carolina Panthers,CAR,4431077,TeRah Edwards,DT,Out,INACTIVE,Coach's Decision,2026-11-30,inactive
+2026-11-22T17:08:25+00:00,2026-11-22T16:47Z,29,Carolina Panthers,CAR,4372780,Tommy Tremble,TE,Active,,,,"Tremble (knee) is active for Sunday's game against the Ravens, Darin Gantt of the Panthers' official site reports."
+2026-11-22T17:08:25+00:00,2026-11-22T16:48Z,18,New Orleans Saints,NO,4361259,Zach Wilson,QB,Out,INACTIVE,Coach's Decision,2026-11-29,Wilson (coach's decision) is inactive but will serve as the Saints' emergency third quarterback against the Bears on Sunday.
+2026-11-22T17:08:25+00:00,2026-11-22T16:48Z,10,Tennessee Titans,TEN,4870805,Anthony Hill Jr.,LB,Active,,,,Hill (neck) is active for Sunday's game against Dallas.
+2026-11-22T17:08:25+00:00,2026-11-22T16:49Z,3,Chicago Bears,CHI,4869748,Zavion Thomas,WR,Active,,,,Thomas (ankle) is active for Sunday's matchup against New Orleans.
+2026-11-22T17:08:25+00:00,2026-11-22T16:49Z,8,Detroit Lions,DET,4912274,Sione Vaki,RB,Active,,,,Vaki (ankle) is listed as active Sunday versus the Buccaneers.
+2026-11-22T17:08:25+00:00,2026-11-22T16:49Z,23,Pittsburgh Steelers,PIT,4431492,Roman Wilson,WR,Active,,,,Wilson (hand/finger) is active for Sunday's game against the Eagles.
+2026-11-22T17:08:25+00:00,2026-11-22T16:50Z,12,Kansas City Chiefs,KC,4567747,Garrett Nussmeier,QB,Out,INACTIVE,Coach's Decision,2026-11-26,Nussmeier (coach's decision) is inactive but will serve as the Chiefs' emergency third quarterback against the Cardinals on Sunday.
+2026-11-22T17:08:25+00:00,2026-11-22T16:51Z,23,Pittsburgh Steelers,PIT,4429955,Will Howard,QB,Out,INACTIVE,Coach's Decision,2026-11-27,Howard (coach's decision) is inactive but will serve as the Steelers' emergency quarterback against the Eagles on Sunday.
+2026-11-22T17:08:25+00:00,2026-11-22T16:55Z,10,Tennessee Titans,TEN,4685555,Nicholas Singleton,RB,Out,INACTIVE,Coach's Decision,2026-11-29,Singleton (coach's decision) is inactive for Sunday's game against the Cowboys.
+2026-11-22T17:08:25+00:00,2026-11-22T16:56Z,3,Chicago Bears,CHI,15168,Case Keenum,QB,Out,INACTIVE,Coach's Decision,2026-11-26,Keenum (coach's decision) is inactive but will serve as Chicago's emergency third quarterback Sunday versus the Saints.
+2026-11-22T17:08:25+00:00,2026-11-22T16:58Z,10,Tennessee Titans,TEN,4240532,Tony Adams,S,Questionable,QUESTIONABLE,Illness,2026-11-22,questionable
