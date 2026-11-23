@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-11-23T05:55:08.228096+00:00",
+      "detail": "market in 22s",
+      "mode": "NBA Sunday night",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-11-23T05:55:08.083506+00:00",
+      "detail": "65 cards, 17 NFL cards, 52 NHL cards, 130 teams, 32 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-11-23T05:39:16.537264+00:00",
       "detail": "market in 16s",
       "mode": "NBA Sunday night",
@@ -1283,24 +1296,11 @@
       "detail": "65 cards, 27 NFL cards, 58 NHL cards, 130 teams, 32 NFL teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-11-22T00:55:09.068558+00:00",
-      "detail": "market in 20s",
-      "mode": "NCAAF Saturday",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-11-22T00:55:08.883723+00:00",
-      "detail": "65 cards, 27 NFL cards, 58 NHL cards, 130 teams, 32 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-11-23T05:39:16.405087+00:00",
+      "at": "2026-11-23T05:55:08.083506+00:00",
       "detail": "65 cards, 17 NFL cards, 52 NHL cards, 130 teams, 32 NFL teams",
       "name": "build",
       "ok": true
@@ -1312,8 +1312,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-23T05:39:16.537264+00:00",
-      "detail": "market in 16s",
+      "at": "2026-11-23T05:55:08.228096+00:00",
+      "detail": "market in 22s",
       "mode": "NBA Sunday night",
       "name": "poll",
       "ok": true
@@ -1327,7 +1327,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-11-23T05:39:16.405087+00:00",
+      "at": "2026-11-23T05:55:08.083506+00:00",
       "detail": "65 cards, 17 NFL cards, 52 NHL cards, 130 teams, 32 NFL teams",
       "name": "build",
       "ok": true
@@ -1339,8 +1339,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-23T05:39:16.537264+00:00",
-      "detail": "market in 16s",
+      "at": "2026-11-23T05:55:08.228096+00:00",
+      "detail": "market in 22s",
       "mode": "NBA Sunday night",
       "name": "poll",
       "ok": true
