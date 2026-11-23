@@ -855,3 +855,13 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-22T22:53:24+00:00,2026-11-22T22:49Z,19,St. Louis Blues,STL,4565246,Connor McMichael,LW,Out,OUT,Lower Body,2026-11-25,out
 2026-11-23T00:08:38+00:00,2026-11-22T23:45Z,4,Chicago Blackhawks,CHI,5291935,Anton Frondell,C,Out,OUT,Undisclosed,2026-11-25,out
 2026-11-23T02:08:50+00:00,2026-11-23T02:02Z,5,Detroit Red Wings,DET,3942714,Sam Montembeault,G,Injured Reserve,IR,Lower Body,2026-12-01,"Montembeault (lower body), Kirby Dach, Michael Hage, a 2027 first-round pick, a 2029 first-round pick, a 2027 second-round pick and a 2028 fourth-round pick wer"
+2026-11-23T14:23:28+00:00,2026-11-23T14:10Z,7,Carolina Hurricanes,CAR,3114741,Nikolaj Ehlers,LW,Day-To-Day,Day-To-Day,Lower Body,2026-11-25,day-to-day
+2026-11-23T14:23:28+00:00,2026-11-23T14:10Z,4,Chicago Blackhawks,CHI,5291935,Anton Frondell,C,Day-To-Day,Day-To-Day,Undisclosed,2026-11-25,day-to-day
+2026-11-23T14:23:28+00:00,2026-11-23T14:10Z,9,Dallas Stars,DAL,5052,Tyler Myers,D,Day-To-Day,Day-To-Day,Upper Body,2026-11-25,day-to-day
+2026-11-23T14:23:28+00:00,2026-11-23T14:10Z,6,Edmonton Oilers,EDM,2562624,Ryan Nugent-Hopkins,C,Day-To-Day,Day-To-Day,Undisclosed,2026-11-24,day-to-day
+2026-11-23T14:23:28+00:00,2026-11-23T14:10Z,6,Edmonton Oilers,EDM,5509,Zach Hyman,LW,Day-To-Day,Day-To-Day,Illness,2026-11-24,day-to-day
+2026-11-23T14:23:28+00:00,2026-11-23T14:10Z,16,Pittsburgh Penguins,PIT,5103825,Declan Carlile,D,Day-To-Day,Day-To-Day,Lower Body,2026-11-25,day-to-day
+2026-11-23T14:23:28+00:00,2026-11-23T14:10Z,16,Pittsburgh Penguins,PIT,3124,Evgeni Malkin,C,Day-To-Day,Day-To-Day,Upper Body,2026-11-25,day-to-day
+2026-11-23T14:23:28+00:00,2026-11-23T14:10Z,19,St. Louis Blues,STL,4565246,Connor McMichael,LW,Day-To-Day,Day-To-Day,Lower Body,2026-11-25,day-to-day
+2026-11-23T14:23:28+00:00,2026-11-23T14:10Z,20,Tampa Bay Lightning,TB,2968829,Zemgus Girgensons,C,Day-To-Day,Day-To-Day,Upper Body,2026-11-25,day-to-day
+2026-11-23T14:23:28+00:00,2026-11-23T14:10Z,22,Vancouver Canucks,VAN,4233566,Elias Pettersson,C,Day-To-Day,Day-To-Day,Upper Body,2026-11-25,day-to-day
