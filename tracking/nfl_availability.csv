@@ -9901,10 +9901,30 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-23T00:08:38+00:00,2026-11-22T23:51Z,22,Arizona Cardinals,ARI,4427728,Bam Knight,RB,Active,,,,Knight carried the ball seven times for 35 yards and caught his only target for 10 yards in Sunday's 34-7 loss to Kansas City.
 2026-11-23T00:08:38+00:00,2026-11-22T23:53Z,8,Detroit Lions,DET,4426388,Jameson Williams,WR,Active,,,,Williams brought in all four targets for 93 yards and a touchdown in the Lions' 31-21 win over the Buccaneers on Sunday.
 2026-11-23T00:08:38+00:00,2026-11-22T23:54Z,15,Miami Dolphins,MIA,4711533,Ollie Gordon II,RB,Active,,,,Gordon rushed 11 times for 69 yards while catching two of three targets for minus-2 yards in Sunday's 26-9 loss to the Bills.
+2026-11-23T00:23:37+00:00,2026-11-22T23:56Z,2,Buffalo Bills,BUF,4373678,Khalil Shakir,WR,Active,,,,Shakir caught five of nine targets for 101 yards while rushing twice for two yards in Sunday's 26-9 win over the Dolphins.
 2026-11-23T00:08:38+00:00,2026-11-22T23:56Z,25,San Francisco 49ers,SF,16737,Mike Evans,WR,Active,,,,"Evans (Achilles) is listed as active Sunday against the Vikings in Mexico City, Matt Barrows of The Athletic reports."
+2026-11-23T00:23:37+00:00,2026-11-22T23:57Z,15,Miami Dolphins,MIA,4433971,Kyle McCord,QB,Active,,,,"McCord completed 12 of 33 passes for 102 yards, no touchdowns and one interception in Sunday's 26-9 loss to the Bills. He also rushed twice for nine yards."
+2026-11-23T00:23:37+00:00,2026-11-22T23:59Z,19,New York Giants,NYG,4361266,Greg Newsome II,CB,Questionable,QUESTIONABLE,Right Ankle,2026-11-29,"Newsome (ankle) has been ruled out for the remainder of Sunday evening's matchup with the Jaguars, Patricia Traina of SI.com reports."
 2026-11-23T00:08:38+00:00,2026-11-23T00:00Z,33,Baltimore Ravens,BAL,4429615,Zay Flowers,WR,Active,,,,Flowers caught eight of 11 targets for 97 yards in Sunday's 35-33 loss to the Panthers.
 2026-11-23T00:08:38+00:00,2026-11-23T00:00Z,16,Minnesota Vikings,MIN,4044540,Isaiah Rodgers,CB,Out,INACTIVE,Quadriceps,2026-11-29,inactive
 2026-11-23T00:08:38+00:00,2026-11-23T00:00Z,16,Minnesota Vikings,MIN,4568007,Jay Ward,S,Out,INACTIVE,Knee,2026-11-29,inactive
 2026-11-23T00:08:38+00:00,2026-11-23T00:00Z,16,Minnesota Vikings,MIN,4429205,Jordan Addison,WR,Out,INACTIVE,Thumb Surgery,2026-11-29,inactive
 2026-11-23T00:08:38+00:00,2026-11-23T00:00Z,16,Minnesota Vikings,MIN,3917315,Kyler Murray,QB,Out,INACTIVE,Hamstring Strain,2026-11-29,inactive
 2026-11-23T00:08:38+00:00,2026-11-23T00:00Z,16,Minnesota Vikings,MIN,4573398,Max Brosmer,QB,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-23T00:23:37+00:00,2026-11-23T00:01Z,27,Tampa Bay Buccaneers,TB,3052587,Baker Mayfield,QB,Active,,,,Mayfield completed 20 of 33 passes for 187 yards with two touchdowns and no interceptions and rushed six times for 36 yards in the Buccaneers' 31-21 loss to the
+2026-11-23T00:23:37+00:00,2026-11-23T00:02Z,25,San Francisco 49ers,SF,3043116,Demarcus Robinson,WR,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-23T00:23:37+00:00,2026-11-23T00:02Z,25,San Francisco 49ers,SF,3916903,Dre Greenlaw,LB,Out,INACTIVE,Neck,2026-11-29,inactive
+2026-11-23T00:23:37+00:00,2026-11-23T00:02Z,25,San Francisco 49ers,SF,4691556,Enrique Cruz Jr.,OT,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-23T00:23:37+00:00,2026-11-23T00:02Z,25,San Francisco 49ers,SF,4685397,Jordan James,RB,Active,,,,
+2026-11-23T00:23:37+00:00,2026-11-23T00:02Z,25,San Francisco 49ers,SF,4039029,Khalid Kareem,DE,Out,INACTIVE,Ankle,2026-11-29,inactive
+2026-11-23T00:23:37+00:00,2026-11-23T00:02Z,25,San Francisco 49ers,SF,4430431,Kurtis Rourke,QB,Out,INACTIVE,Coach's Decision,2026-11-29,inactive
+2026-11-23T00:23:37+00:00,2026-11-23T00:02Z,25,San Francisco 49ers,SF,3116097,Luke Gifford,LB,Active,,,,
+2026-11-23T00:23:37+00:00,2026-11-23T00:02Z,25,San Francisco 49ers,SF,4241464,Mac Jones,QB,Active,,,,
+2026-11-23T00:23:37+00:00,2026-11-23T00:02Z,25,San Francisco 49ers,SF,4565200,Upton Stout,CB,Active,,,,
+2026-11-23T00:23:37+00:00,2026-11-23T00:06Z,16,Minnesota Vikings,MIN,4573398,Max Brosmer,QB,Out,INACTIVE,Coach's Decision,2026-11-29,Brosmer (coach's decision) is inactive but operating as the Vikings' emergency third QB on Sunday night versus the 49ers.
+2026-11-23T00:23:37+00:00,2026-11-23T00:08Z,14,Los Angeles Rams,LAR,4242154,Kam Curl,S,Questionable,QUESTIONABLE,Toe,2026-11-25,questionable
+2026-11-23T00:23:37+00:00,2026-11-23T00:09Z,14,Los Angeles Rams,LAR,2575907,Joe Cardona,LS,Active,,,,
+2026-11-23T00:23:37+00:00,2026-11-23T00:09Z,14,Los Angeles Rams,LAR,3122132,Myles Garrett,DE,Questionable,QUESTIONABLE,Knee,2026-11-25,questionable
+2026-11-23T00:23:37+00:00,2026-11-23T00:09Z,16,Minnesota Vikings,MIN,4044540,Isaiah Rodgers,CB,Out,INACTIVE,Quadriceps,2026-11-29,Rodgers (quadriceps) is inactive for Sunday night's matchup against the 49ers.
+2026-11-23T00:23:37+00:00,2026-11-23T00:13Z,33,Baltimore Ravens,BAL,2578570,Jacoby Brissett,QB,Active,,,,Brissett completed 24 of 37 passes for 276 yards and a touchdown with an interception in Sunday's 35-33 loss to the Panthers. He added seven rushing yards on tw
+2026-11-23T00:23:37+00:00,2026-11-23T00:16Z,16,Minnesota Vikings,MIN,4568007,Jay Ward,S,Out,INACTIVE,Knee,2026-11-29,Ward (knee) is inactive for Sunday night's game against the 49ers.
