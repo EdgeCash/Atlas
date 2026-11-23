@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-11-23T04:39:47.909111+00:00",
+      "detail": "market in 20s",
+      "mode": "NBA Sunday night",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-11-23T04:39:47.746615+00:00",
+      "detail": "65 cards, 17 NFL cards, 52 NHL cards, 130 teams, 32 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-11-23T04:24:46.979253+00:00",
       "detail": "market in 20s",
       "mode": "NBA Sunday night",
@@ -1283,24 +1296,11 @@
       "detail": "81 cards, 17 NFL cards, 65 NHL cards, 136 teams, 26 NFL teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-11-21T23:39:43.896979+00:00",
-      "detail": "market in 17s",
-      "mode": "NCAAF Saturday",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-11-21T23:39:43.730886+00:00",
-      "detail": "81 cards, 17 NFL cards, 65 NHL cards, 136 teams, 26 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-11-23T04:24:46.741122+00:00",
+      "at": "2026-11-23T04:39:47.746615+00:00",
       "detail": "65 cards, 17 NFL cards, 52 NHL cards, 130 teams, 32 NFL teams",
       "name": "build",
       "ok": true
@@ -1312,7 +1312,7 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-23T04:24:46.979253+00:00",
+      "at": "2026-11-23T04:39:47.909111+00:00",
       "detail": "market in 20s",
       "mode": "NBA Sunday night",
       "name": "poll",
@@ -1327,7 +1327,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-11-23T04:24:46.741122+00:00",
+      "at": "2026-11-23T04:39:47.746615+00:00",
       "detail": "65 cards, 17 NFL cards, 52 NHL cards, 130 teams, 32 NFL teams",
       "name": "build",
       "ok": true
@@ -1339,7 +1339,7 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-23T04:24:46.979253+00:00",
+      "at": "2026-11-23T04:39:47.909111+00:00",
       "detail": "market in 20s",
       "mode": "NBA Sunday night",
       "name": "poll",
