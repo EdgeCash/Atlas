@@ -10308,6 +10308,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-24T00:38:29+00:00,2026-11-24T00:21Z,21,Philadelphia Eagles,PHI,4431545,Will Shipley,RB,Questionable,QUESTIONABLE,Illness,2026-11-26,Shipley (foot/illness) was estimated as a limited participant on Monday's injury report.
 2026-11-24T00:38:29+00:00,2026-11-24T00:22Z,24,Los Angeles Chargers,LAC,4362081,Cameron Dicker,PK,Active,,,,Dicker made his lone field-goal attempt and all three PATs in Sunday's 27-24 loss to the Jets.
 2026-11-24T00:38:29+00:00,2026-11-24T00:25Z,14,Los Angeles Rams,LAR,3122132,Myles Garrett,DE,Questionable,QUESTIONABLE,Knee,2026-11-25,"Garrett (knee/rest) did not participate in Monday's practice, Adam Grosbard of The Orange County Register reports."
+2026-11-24T20:23:22+00:00,2026-11-24T00:25Z,14,Los Angeles Rams,LAR,3122132,Myles Garrett,DE,Active,,,,"Garrett (knee/rest) did not participate in Monday's practice, Adam Grosbard of The Orange County Register reports."
 2026-11-24T00:38:29+00:00,2026-11-24T00:26Z,8,Detroit Lions,DET,4689936,Jake Bates,PK,Active,,,,Bates made one of two field-goal attempts and all four PATs in Sunday's 31-21 win over the Bucs.
 2026-11-24T00:38:29+00:00,2026-11-24T00:28Z,29,Carolina Panthers,CAR,4568263,Ryan Fitzgerald,PK,Active,,,,Fitzgerald went 2-for-2 on field-goal attempts and made all three of his PATs during Sunday's 35-33 win over the Ravens.
 2026-11-24T00:38:29+00:00,2026-11-24T00:28Z,14,Los Angeles Rams,LAR,4250621,Kobie Turner,DE,Injured Reserve,IR-R,Groin Strain,2026-11-25,"Turner (groin) was a full participant in Monday's practice, Adam Grosbard of The Orange County Register reports."
@@ -10547,3 +10548,9 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-24T19:23:43+00:00,2026-11-24T18:50Z,6,Dallas Cowboys,DAL,4372519,Jashaun Corbin,RB,Active,,,,"Cowboys head coach Brian Schottenheimer confirmed Tuesday that Corbin will be elevated from the practice squad for Thursday's game against the Eagles, Nick Harr"
 2026-11-24T19:23:43+00:00,2026-11-24T19:10Z,14,Los Angeles Rams,LAR,4242154,Kam Curl,S,Active,,,,
 2026-11-24T19:23:43+00:00,2026-11-24T19:10Z,14,Los Angeles Rams,LAR,3122132,Myles Garrett,DE,Active,,,,
+2026-11-24T20:23:22+00:00,2026-11-24T19:25Z,8,Detroit Lions,DET,5103940,Skyler Gill-Howard,DT,Out,OUT,Knee Surgery,2027-02-15,out
+2026-11-24T20:23:22+00:00,2026-11-24T19:33Z,12,Kansas City Chiefs,KC,4372070,Ben VanSumeren,FB,Injured Reserve,IR,Knee Sprain,2026-12-27,ir
+2026-11-24T20:23:22+00:00,2026-11-24T19:34Z,9,Green Bay Packers,GB,4361423,Micah Parsons,DE,Questionable,QUESTIONABLE,Left Knee - ACL Surgery,2026-11-25,The Packers reinstated Parsons (knee) from the PUP list on Tuesday.
+2026-11-24T20:23:22+00:00,2026-11-24T19:46Z,17,New England Patriots,NE,4047646,A.J. Brown,WR,Doubtful,DOUBTFUL,Hamstring,2026-11-29,"Brown (hamstring) wasn't spotted on the field for Tuesday's unofficial practice, Evan Lazar of the Patriots' official site reports."
+2026-11-24T20:23:22+00:00,2026-11-24T20:09Z,11,Indianapolis Colts,IND,4036275,Sean McKeon,TE,Active,,,,
+2026-11-24T20:23:22+00:00,2026-11-24T20:11Z,11,Indianapolis Colts,IND,4685324,Caden Curry,LB,Injured Reserve,IR,Undisclosed,2027-01-03,ir
