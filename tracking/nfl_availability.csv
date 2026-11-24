@@ -10347,6 +10347,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-24T01:38:31+00:00,2026-11-24T01:15Z,23,Pittsburgh Steelers,PIT,4694237,Max Hurleman,WR,Active,,,,"Hurleman reverted to the Steelers' practice squad Monday, per the NFL's transaction log."
 2026-11-24T01:23:17+00:00,2026-11-24T01:16Z,20,New York Jets,NYJ,2976592,Sterling Shepard,WR,Active,,,,"Shepard reverted to the Jets' practice squad Monday, per the NFL's transaction log."
 2026-11-24T01:38:31+00:00,2026-11-24T01:18Z,12,Kansas City Chiefs,KC,4591008,Omarr Norman-Lott,DT,Active,,,,Norman-Lott (knee) was listed as a full participant for Monday's estimated practice.
+2026-11-24T19:23:43+00:00,2026-11-24T01:18Z,12,Kansas City Chiefs,KC,4591008,Omarr Norman-Lott,DT,Questionable,QUESTIONABLE,Knee,2026-11-26,Norman-Lott (knee) was listed as a full participant for Monday's estimated practice.
 2026-11-24T01:38:31+00:00,2026-11-24T01:19Z,10,Tennessee Titans,TEN,4240657,Michael Carter,RB,Active,,,,"Carter reverted to the Titans' practice squad Monday, per the NFL's transaction log."
 2026-11-24T01:38:31+00:00,2026-11-24T01:21Z,8,Detroit Lions,DET,3045463,Chuck Clark,S,Questionable,QUESTIONABLE,Hamstring,2026-11-26,Clark (hamstring) was considered to be a non-participant at the Lions' walkthrough practice Monday.
 2026-11-24T01:38:31+00:00,2026-11-24T01:24Z,3,Chicago Bears,CHI,2973405,Kalif Raymond,WR,Active,,,,Raymond caught one of four passes for 14 yards during Sunday's 21-13 win over the Saints.
@@ -10539,3 +10540,10 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-24T17:23:31+00:00,2026-11-24T17:02Z,18,New Orleans Saints,NO,4702559,Oscar Delp,TE,Active,,,,Delp hauled in his lone target for a six-yard reception in Sunday's 21-13 loss to the Bears.
 2026-11-24T18:23:41+00:00,2026-11-24T18:03Z,12,Kansas City Chiefs,KC,4567048,Kenneth Walker III,RB,Questionable,QUESTIONABLE,Groin Soreness,2026-11-26,"Chiefs head coach Andy Reid said that Walker (groin) will practice Tuesday, Nate Taylor of ESPN.com reports. ""I'm not anticipating a ton of work,"" Reid said. ""L"
 2026-11-24T18:23:41+00:00,2026-11-24T18:15Z,5,Cleveland Browns,CLE,4832800,Denzel Boston,WR,Questionable,QUESTIONABLE,Toe,2026-11-29,questionable
+2026-11-24T19:23:43+00:00,2026-11-24T18:17Z,5,Cleveland Browns,CLE,4832800,Denzel Boston,WR,Questionable,QUESTIONABLE,Toe,2026-11-29,"Boston didn't take part in the Browns' unofficial practice Tuesday, Daniel Oyefusi of ESPN.com reports."
+2026-11-24T19:23:43+00:00,2026-11-24T18:19Z,9,Green Bay Packers,GB,4047365,Josh Jacobs,RB,Questionable,QUESTIONABLE,Right Finger Surgery,2026-11-25,"The Packers list Jacobs (finger) as questionable for Wednesday's game against the Rams, Wes Hodkiewicz of the team's official site reports."
+2026-11-24T19:23:43+00:00,2026-11-24T18:27Z,9,Green Bay Packers,GB,4361423,Micah Parsons,DE,Out,PUP-R,Left Knee - ACL Surgery,2026-11-25,"Parsons (knee) is officially listed as questionable for Wednesday's game against the Rams, Wes Hodkiewicz of the Packers' official site reports."
+2026-11-24T19:23:43+00:00,2026-11-24T18:37Z,9,Green Bay Packers,GB,4239947,Isaiah McDuffie,LB,Active,,,,
+2026-11-24T19:23:43+00:00,2026-11-24T18:50Z,6,Dallas Cowboys,DAL,4372519,Jashaun Corbin,RB,Active,,,,"Cowboys head coach Brian Schottenheimer confirmed Tuesday that Corbin will be elevated from the practice squad for Thursday's game against the Eagles, Nick Harr"
+2026-11-24T19:23:43+00:00,2026-11-24T19:10Z,14,Los Angeles Rams,LAR,4242154,Kam Curl,S,Active,,,,
+2026-11-24T19:23:43+00:00,2026-11-24T19:10Z,14,Los Angeles Rams,LAR,3122132,Myles Garrett,DE,Active,,,,
