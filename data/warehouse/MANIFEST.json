@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-23T09:08:46+00:00",
+  "generated_at": "2026-11-24T09:08:39+00:00",
   "atlas_version": "0.1.0",
   "seasons_requested": [
     2018,
@@ -30,78 +30,78 @@
       "sp_plus": {
         "present": true,
         "measured_on": "ratings.home_sp_plus",
-        "non_null": 7527,
-        "rows": 21968,
-        "coverage": 0.3426
+        "non_null": 7534,
+        "rows": 21975,
+        "coverage": 0.3428
       },
       "talent": {
         "present": true,
         "measured_on": "talent.home_talent",
-        "non_null": 10360,
-        "rows": 21968,
-        "coverage": 0.4716
+        "non_null": 10367,
+        "rows": 21975,
+        "coverage": 0.4718
       },
       "recruiting": {
         "present": true,
         "measured_on": "talent.home_recruiting_rank",
-        "non_null": 10421,
-        "rows": 21968,
-        "coverage": 0.4744
+        "non_null": 10428,
+        "rows": 21975,
+        "coverage": 0.4745
       },
       "returning": {
         "present": true,
         "measured_on": "talent.home_returning_production",
-        "non_null": 7526,
-        "rows": 21968,
-        "coverage": 0.3426
+        "non_null": 7533,
+        "rows": 21975,
+        "coverage": 0.3428
       },
       "coaches": {
         "present": true,
         "measured_on": "talent.home_new_coach",
-        "non_null": 7588,
-        "rows": 21968,
-        "coverage": 0.3454
+        "non_null": 7595,
+        "rows": 21975,
+        "coverage": 0.3456
       },
       "portal": {
         "present": true,
         "measured_on": "talent.home_portal_in",
-        "non_null": 13204,
-        "rows": 21968,
-        "coverage": 0.6011
+        "non_null": 13211,
+        "rows": 21975,
+        "coverage": 0.6012
       }
     }
   },
   "tables": {
     "market_lines": {
-      "rows": 21968,
+      "rows": 21975,
       "columns": 13
     },
     "outcomes": {
-      "rows": 21968,
+      "rows": 21975,
       "columns": 7
     },
     "games": {
-      "rows": 21968,
+      "rows": 21975,
       "columns": 29
     },
     "ratings": {
-      "rows": 21968,
+      "rows": 21975,
       "columns": 20
     },
     "efficiency_metrics": {
-      "rows": 21968,
+      "rows": 21975,
       "columns": 36
     },
     "adjusted_efficiency_metrics": {
-      "rows": 21968,
+      "rows": 21975,
       "columns": 111
     },
     "talent": {
-      "rows": 21968,
+      "rows": 21975,
       "columns": 25
     },
     "context": {
-      "rows": 21968,
+      "rows": 21975,
       "columns": 22
     }
   }
