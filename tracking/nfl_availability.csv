@@ -10600,6 +10600,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-25T00:38:47+00:00,2026-11-25T00:13Z,28,Washington Commanders,WSH,4697815,Rachaad White,RB,Active,,,,White turned two kickoff returns into 48 yards during Monday's 22-20 win over the Bengals.
 2026-11-25T00:38:47+00:00,2026-11-25T00:18Z,28,Washington Commanders,WSH,3068267,Austin Ekeler,RB,Active,,,,Ekeler turned seven carries into 41 yards and caught two of three targets for three yards during the Commanders' 22-20 win over the Bengals on Monday.
 2026-11-25T00:53:33+00:00,2026-11-25T00:24Z,28,Washington Commanders,WSH,4567156,Treylon Burks,WR,Active,,,,Burks caught two of three passes for 30 yards during the Commanders' 22-20 win over the Bengals on Monday.
+2026-11-25T23:08:39+00:00,2026-11-25T00:24Z,28,Washington Commanders,WSH,4567156,Treylon Burks,WR,Questionable,QUESTIONABLE,Foot,2026-11-29,Burks caught two of three passes for 30 yards during the Commanders' 22-20 win over the Bengals on Monday.
 2026-11-25T00:38:47+00:00,2026-11-25T00:29Z,4,Cincinnati Bengals,CIN,4384852,Dohnte Meyers,WR,Active,,,,"Meyers caught one of two passes for two yards, returned six kickoffs for 150 yards and returned one punt for five yards during the Bengals' 22-20 loss to the Co"
 2026-11-25T01:08:28+00:00,2026-11-25T00:37Z,7,Denver Broncos,DEN,4687592,Jonah Elliss,LB,Injured Reserve,IR,Ankle,2026-12-06,Elliss (ankle) did not participate in Tuesday's practice and is unlikely to be designated to return from injured reserve ahead of Friday's game against the Stee
 2026-11-25T01:08:28+00:00,2026-11-25T00:42Z,19,New York Giants,NYG,4361266,Greg Newsome II,CB,Injured Reserve,IR,Right Ankle Surgery,2026-12-28,"The Giants placed Newsome (ankle) on injured reserve Tuesday, Dan Salomone of the team's official site reports."
@@ -10639,6 +10640,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-25T02:23:15+00:00,2026-11-25T02:10Z,12,Kansas City Chiefs,KC,4242459,Trey Smith,G,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-26,Smith (concussion) was a full participant in Tuesday's practice.
 2026-11-25T17:23:34+00:00,2026-11-25T02:10Z,12,Kansas City Chiefs,KC,4242459,Trey Smith,G,Active,,,,Smith (concussion) was a full participant in Tuesday's practice.
 2026-11-25T02:38:36+00:00,2026-11-25T02:11Z,3,Chicago Bears,CHI,3122797,Isaac Yiadom,CB,Active,,,,The Bears claimed Yiadom off waivers Tuesday.
+2026-11-25T23:08:39+00:00,2026-11-25T02:11Z,10,Tennessee Titans,TEN,4431426,Corey Thornton,CB,Active,,,,"Tennessee signed Thornton (fibula) off the Panthers' practice squad Tuesday, Joe Person of The Athletic reports."
 2026-11-25T02:23:15+00:00,2026-11-25T02:15Z,19,New York Giants,NYG,4428328,Deonte Banks,CB,Active,,,,"Banks recorded six total tackles (five solo) and three passes defensed, including an interception, during Sunday's 23-18 win over the Jaguars."
 2026-11-25T02:38:36+00:00,2026-11-25T02:17Z,25,San Francisco 49ers,SF,4693644,Ji'Ayir Brown,S,Active,,,,Brown recorded four tackles (three solo) and a pick-six during the 49ers' 35-10 win over the Vikings on Sunday in Mexico City.
 2026-11-25T02:38:36+00:00,2026-11-25T02:19Z,21,Philadelphia Eagles,PHI,4257591,Arnold Ebiketie,LB,Questionable,QUESTIONABLE,Oblique,2026-11-26,Ebiketie (oblique) was estimated as a non-participant on the Eagles' injury report Tuesday.
@@ -10772,3 +10774,30 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-25T22:23:29+00:00,2026-11-25T22:01Z,7,Denver Broncos,DEN,4241985,J.K. Dobbins,RB,Suspension,RESERVE-SUS,Suspension,2026-12-06,reserve-sus
 2026-11-25T22:23:29+00:00,2026-11-25T22:04Z,18,New Orleans Saints,NO,4430379,Asim Richards,OT,Questionable,QUESTIONABLE,Knee,2026-11-29,questionable
 2026-11-25T22:23:29+00:00,2026-11-25T22:04Z,18,New Orleans Saints,NO,3917660,David Edwards,G,Questionable,QUESTIONABLE,Hamstring,2026-11-29,questionable
+2026-11-25T23:08:39+00:00,2026-11-25T22:13Z,7,Denver Broncos,DEN,4241985,J.K. Dobbins,RB,Suspension,RESERVE-SUS,Suspension,2026-12-06,"The Broncos placed Dobbins on the reserve/suspended list Wednesday, Zac Stevens of TheDNVR.com reports."
+2026-11-25T23:08:39+00:00,2026-11-25T22:18Z,20,New York Jets,NYJ,4428617,T'Vondre Sweat,DT,Injured Reserve,IR-R,Knee,2026-11-29,"The Jets designated Sweat (knee) for return from injured reserve Wednesday, Eric Allen of the Jets' official site reports."
+2026-11-25T23:08:39+00:00,2026-11-25T22:19Z,1,Atlanta Falcons,ATL,4361409,Jahan Dotson,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-29,"Dotson was a non-participant in Wednesday's practice due to a hamstring injury, Will McFadden of the Falcons' official site reports."
+2026-11-25T23:08:39+00:00,2026-11-25T22:21Z,21,Philadelphia Eagles,PHI,4686273,Quinyon Mitchell,CB,Active,,,,Mitchell (hamstring) doesn't have an injury designation for Thursday's game against the Cowboys.
+2026-11-25T23:08:39+00:00,2026-11-25T22:23Z,21,Philadelphia Eagles,PHI,2971027,Jonathan Jones,CB,Out,OUT,Right Ankle,2026-12-06,Jones (ankle) has been ruled out for Thursday's game against the Cowboys.
+2026-11-25T23:08:39+00:00,2026-11-25T22:24Z,5,Cleveland Browns,CLE,4832800,Denzel Boston,WR,Questionable,QUESTIONABLE,Quadriceps,2026-11-29,"Boston didn't practice Wednesday due to a quadriceps injury, Ryan McFadden of ESPN.com reports."
+2026-11-25T23:08:39+00:00,2026-11-25T22:25Z,21,Philadelphia Eagles,PHI,4257591,Arnold Ebiketie,LB,Out,OUT,Oblique,2026-12-06,Ebiketie (oblique) has been ruled out for Thursday's game against the Cowboys.
+2026-11-25T23:08:39+00:00,2026-11-25T22:30Z,1,Atlanta Falcons,ATL,4870612,Zachariah Branch,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-29,"Branch (hamstring) didn't participate in Wednesday's practice, Will McFadden of the Falcons' official site reports."
+2026-11-25T23:08:39+00:00,2026-11-25T22:30Z,5,Cleveland Browns,CLE,5083076,Harold Fannin Jr.,TE,Questionable,QUESTIONABLE,Groin,2026-11-29,"Fannin (groin) was listed as a limited participant in Wednesday's practice, Ryan McFadden of ESPN reports."
+2026-11-25T23:08:39+00:00,2026-11-25T22:33Z,13,Las Vegas Raiders,LV,4401805,Dareke Young,WR,Active,,,,
+2026-11-25T23:08:39+00:00,2026-11-25T22:34Z,13,Las Vegas Raiders,LV,4430896,JJ Pegues,DT,Active,,,,
+2026-11-25T23:08:39+00:00,2026-11-25T22:38Z,5,Cleveland Browns,CLE,4597310,Austin Barber,OT,Questionable,QUESTIONABLE,Knee,2026-11-29,questionable
+2026-11-25T23:08:39+00:00,2026-11-25T22:38Z,5,Cleveland Browns,CLE,3115336,Derek Barnett,DE,Questionable,QUESTIONABLE,Hamstring,2026-11-29,questionable
+2026-11-25T23:08:39+00:00,2026-11-25T22:38Z,5,Cleveland Browns,CLE,4427963,Isaiah McGuire,DE,Questionable,QUESTIONABLE,Calf,2026-11-29,questionable
+2026-11-25T23:08:39+00:00,2026-11-25T22:39Z,2,Buffalo Bills,BUF,4379778,Christian Benford,CB,Questionable,QUESTIONABLE,Groin,2026-11-26,Benford (groin) is questionable for Thursday night's game against the Chiefs.
+2026-11-25T23:08:39+00:00,2026-11-25T22:39Z,5,Cleveland Browns,CLE,4362018,Blake Whiteheart,TE,Questionable,QUESTIONABLE,Hip,2026-11-29,questionable
+2026-11-25T23:08:39+00:00,2026-11-25T22:39Z,5,Cleveland Browns,CLE,3115485,Elgton Jenkins,C,Questionable,QUESTIONABLE,Knee,2026-11-29,questionable
+2026-11-25T23:08:39+00:00,2026-11-25T22:40Z,5,Cleveland Browns,CLE,3110565,Quincy Williams,LB,Questionable,QUESTIONABLE,Knee,2026-11-29,questionable
+2026-11-25T23:08:39+00:00,2026-11-25T22:43Z,7,Denver Broncos,DEN,4603189,Sai'vion Jones,DE,Out,OUT,Hamstring,2026-12-06,out
+2026-11-25T23:08:39+00:00,2026-11-25T22:43Z,7,Denver Broncos,DEN,4039007,Taylor Rapp,S,Out,OUT,Quadriceps,2026-12-06,out
+2026-11-25T23:08:39+00:00,2026-11-25T22:46Z,2,Buffalo Bills,BUF,4568624,Dorian Williams,LB,Questionable,QUESTIONABLE,Calf,2026-11-26,Williams (calf) is questionable for Thursday night's game against the Chiefs.
+2026-11-25T23:08:39+00:00,2026-11-25T22:47Z,25,San Francisco 49ers,SF,4240542,Nate Hobbs,CB,Active,,,,The 49ers activated Hobbs (groin) from injured reserve Wednesday.
+2026-11-25T23:08:39+00:00,2026-11-25T22:49Z,6,Dallas Cowboys,DAL,4043089,Jalen Thompson,S,Questionable,QUESTIONABLE,Hamstring,2026-11-26,The Cowboys activated Thompson (hamstring) from injured reserve Wednesday.
+2026-11-25T23:08:39+00:00,2026-11-25T22:53Z,16,Minnesota Vikings,MIN,4430656,Myles Price,WR,Questionable,QUESTIONABLE,Knee,2026-11-29,questionable
+2026-11-25T23:08:39+00:00,2026-11-25T22:54Z,29,Carolina Panthers,CAR,4678008,Jonathon Brooks,RB,Injured Reserve,IR-R,Groin Surgery,2026-11-30,Head coach Dave Canales suggested Wednesday that a decision on Brooks (core) being activated from injured reserve before his 21-day window expires next week wil
+2026-11-25T23:08:39+00:00,2026-11-25T22:57Z,16,Minnesota Vikings,MIN,4565185,Tai Felton,WR,Questionable,QUESTIONABLE,Hip,2026-11-29,Felton (hip) was limited at Wednesday's walkthrough.
+2026-11-25T23:08:39+00:00,2026-11-25T23:01Z,16,Minnesota Vikings,MIN,3917315,Kyler Murray,QB,Questionable,QUESTIONABLE,Hamstring Strain,2026-11-29,Murray (hamstring) was a limited participant in Wednesday's walkthrough practice.
