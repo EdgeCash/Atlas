@@ -10729,6 +10729,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-25T21:23:38+00:00,2026-11-25T20:35Z,6,Dallas Cowboys,DAL,4685266,Jaishawn Barham,LB,Active,,,,
 2026-11-25T21:23:38+00:00,2026-11-25T20:38Z,6,Dallas Cowboys,DAL,3929850,P.J. Locke,S,Out,OUT,Concussion Concussion,2026-12-07,out
 2026-11-25T21:23:38+00:00,2026-11-25T20:40Z,26,Seattle Seahawks,SEA,3912547,Sam Darnold,QB,Questionable,QUESTIONABLE,Quadriceps,2026-11-29,Head coach Mike Macdonald reiterated that Darnold (quadriceps/rib) will start Sunday against the 49ers if the quarterback fares well during Wednesday's practice
+2026-11-25T23:53:41+00:00,2026-11-25T20:40Z,26,Seattle Seahawks,SEA,3912547,Sam Darnold,QB,Active,,,,Head coach Mike Macdonald reiterated that Darnold (quadriceps/rib) will start Sunday against the 49ers if the quarterback fares well during Wednesday's practice
 2026-11-25T21:23:38+00:00,2026-11-25T20:43Z,25,San Francisco 49ers,SF,4710714,De'Zhaun Stribling,WR,Injured Reserve,IR,Left Ankle Surgery,2026-12-13,"San Francisco head coach Kyle Shanahan said Wednesday that Stribling (ankle) is likely at least ""a couple weeks away"" from returning to practice, Harrison Rich "
 2026-11-25T21:23:38+00:00,2026-11-25T20:44Z,11,Indianapolis Colts,IND,4722908,Drew Ogletree,TE,Questionable,QUESTIONABLE,Knee,2026-11-29,questionable
 2026-11-25T21:23:38+00:00,2026-11-25T20:52Z,23,Pittsburgh Steelers,PIT,3116689,Cole Holcomb,LB,Questionable,QUESTIONABLE,Heel,2026-11-27,questionable
@@ -10815,3 +10816,6 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-25T23:38:32+00:00,2026-11-25T23:20Z,33,Baltimore Ravens,BAL,4035479,John Simpson,G,Questionable,QUESTIONABLE,Groin,2026-11-29,questionable
 2026-11-25T23:38:32+00:00,2026-11-25T23:25Z,33,Baltimore Ravens,BAL,4429615,Zay Flowers,WR,Questionable,QUESTIONABLE,Ankle,2026-11-29,Flowers (ankle) was listed as a limited participant in Wednesday's practice.
 2026-11-25T23:38:32+00:00,2026-11-25T23:29Z,24,Los Angeles Chargers,LAC,3123076,David Njoku,TE,Questionable,QUESTIONABLE,Shoulder,2026-11-29,questionable
+2026-11-25T23:53:41+00:00,2026-11-25T23:34Z,34,Houston Texans,HOU,4432708,Marvin Harrison Jr.,WR,Questionable,QUESTIONABLE,Hamstring Strain,2026-11-29,Harrison (hamstring) was listed as a limited participant in Wednesday's practice.
+2026-11-25T23:53:41+00:00,2026-11-25T23:36Z,26,Seattle Seahawks,SEA,4430878,Jaxon Smith-Njigba,WR,Questionable,QUESTIONABLE,Ankle,2026-11-29,"Smith-Njigba was limited at Wednesday's practice due to an ankle injury, John Boyle of the Seahawks' official site reports."
+2026-11-25T23:53:41+00:00,2026-11-25T23:42Z,33,Baltimore Ravens,BAL,4360939,Rashod Bateman,WR,Questionable,QUESTIONABLE,Groin,2026-11-29,Bateman (groin) was limited in Wednesday's practice.
