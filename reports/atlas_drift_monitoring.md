@@ -1,6 +1,6 @@
 # Atlas Drift Monitoring
 
-*Generated 2026-11-25 08:53 UTC by `python -m atlas.live check`. Every alarm compares
+*Generated 2026-11-25 09:12 UTC by `python -m atlas.live check`. Every alarm compares
 the most recent week of the record against its own history.*
 
 ---
@@ -14,7 +14,7 @@ worse problem than the drift it was watching for.
 | Alarm | Severity | Observed | Threshold | Detail |
 |---|---|---|---|---|
 | signal volume | ok | 0.0455 | 0.5 | week 13: 138 signals against 132 the week before (+5%) |
-| silence | ok | 0.9866 | 7 | last signal 1.0 days ago (2026-11-24) |
+| silence | ok | 1.0002 | 7 | last signal 1.0 days ago (2026-11-24) |
 | single book | alarm | 1.0000 | 1 | 100% of signals from book 'DraftKings' (1 distinct) |
 | single market | ok | 0.5000 | 1 | 50% of signals from market 'margin' (2 distinct) |
 | model output (margin) | ok | -0.0298 | 3 | mean Atlas number moved -0.03 points against prior weeks |
@@ -22,7 +22,7 @@ worse problem than the drift it was watching for.
 | disagreement shape (margin) | ok | 0.4643 | 0.01 | KS statistic 0.107, p = 0.4643 |
 | disagreement shape (total) | ok | 0.5091 | 0.01 | KS statistic 0.103, p = 0.5091 |
 | primary rate | ok | -0.0207 | 0.5 | 0.7% of signals primary against 0.7% before (-2%) |
-| college state | ok | 132.0000 | 1 | 132 more team-games assimilated since Saturday noon ET |
+| college state | ok | 92.0000 | 1 | 92 more team-games assimilated since Saturday noon ET |
 
 ---
 

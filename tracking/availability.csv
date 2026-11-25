@@ -3632,3 +3632,25 @@ captured_at,conference,report_id,publish_date,posted_time,time_zone,report_type,
 2026-11-22T09:12:32+00:00,SEC,10003333,2026-11-21,17:00:00,CT,Game Day,Missouri,Kentucky,7,Gavin Sidwar,Available,NonExempt
 2026-11-22T09:12:32+00:00,SEC,10003333,2026-11-21,17:00:00,CT,Game Day,Missouri,Kentucky,5,Matt Zollers,Available,NonExempt
 2026-11-22T09:12:32+00:00,SEC,10003333,2026-11-21,17:00:00,CT,Game Day,Missouri,Kentucky,10,Nick Evers,Available,NonExempt
+2026-11-25T09:12:59+00:00,SEC,10003530,2026-11-24,19:10:00,CT,Initial,Mississippi State,Ole Miss,17,AJ Swann,Doubtful,NonExempt
+2026-11-25T09:12:59+00:00,SEC,10003530,2026-11-24,19:10:00,CT,Initial,Mississippi State,Ole Miss,14,Brodie McWhorter,Exempt,Exempt
+2026-11-25T09:12:59+00:00,SEC,10003530,2026-11-24,19:10:00,CT,Initial,Mississippi State,Ole Miss,8,Jaden Rashada,Exempt,Exempt
+2026-11-25T09:12:59+00:00,SEC,10003530,2026-11-24,19:10:00,CT,Initial,Mississippi State,Ole Miss,1,Kamario Taylor,Out,Out
+2026-11-25T09:12:59+00:00,SEC,10003530,2026-11-24,19:10:00,CT,Initial,Mississippi State,Ole Miss,15,"Parker ""Billy"" Puckett",Available,NonExempt
+2026-11-25T09:12:59+00:00,SEC,10003530,2026-11-24,19:10:00,CT,Initial,Ole Miss,Mississippi State,8,AJ Maddox,Available,NonExempt
+2026-11-25T09:12:59+00:00,SEC,10003530,2026-11-24,19:10:00,CT,Initial,Ole Miss,Mississippi State,2,Deuce Knight,Questionable,NonExempt
+2026-11-25T09:12:59+00:00,SEC,10003530,2026-11-24,19:10:00,CT,Initial,Ole Miss,Mississippi State,16,George Hamsley,Exempt,Exempt
+2026-11-25T09:12:59+00:00,SEC,10003530,2026-11-24,19:10:00,CT,Initial,Ole Miss,Mississippi State,13,Jack Patterson,Exempt,Exempt
+2026-11-25T09:12:59+00:00,SEC,10003530,2026-11-24,19:10:00,CT,Initial,Ole Miss,Mississippi State,19,Rees Wise,Available,NonExempt
+2026-11-25T09:12:59+00:00,SEC,10003530,2026-11-24,19:10:00,CT,Initial,Ole Miss,Mississippi State,6,Trinidad Chambliss,Available,NonExempt
+2026-11-25T09:12:59+00:00,SEC,10003530,2026-11-24,19:10:00,CT,Initial,Ole Miss,Mississippi State,14,Walker Howard,Available,NonExempt
+2026-11-25T09:12:59+00:00,SEC,10003538,2026-11-24,19:10:00,CT,Initial,Texas,Texas A&M,16,Arch Manning,Available,NonExempt
+2026-11-25T09:12:59+00:00,SEC,10003538,2026-11-24,19:10:00,CT,Initial,Texas,Texas A&M,6,Dia Bell,Available,NonExempt
+2026-11-25T09:12:59+00:00,SEC,10003538,2026-11-24,19:10:00,CT,Initial,Texas,Texas A&M,9,"Karle ""KJ"" Lacey Jr.",Available,NonExempt
+2026-11-25T09:12:59+00:00,SEC,10003538,2026-11-24,19:10:00,CT,Initial,Texas,Texas A&M,25,Luke Dunham,Exempt,Exempt
+2026-11-25T09:12:59+00:00,SEC,10003538,2026-11-24,19:10:00,CT,Initial,Texas,Texas A&M,19,MJ Morris,Available,NonExempt
+2026-11-25T09:12:59+00:00,SEC,10003538,2026-11-24,19:10:00,CT,Initial,Texas A&M,Texas,13,Brady Hart,Available,NonExempt
+2026-11-25T09:12:59+00:00,SEC,10003538,2026-11-24,19:10:00,CT,Initial,Texas A&M,Texas,14,Eli Morcos,Available,NonExempt
+2026-11-25T09:12:59+00:00,SEC,10003538,2026-11-24,19:10:00,CT,Initial,Texas A&M,Texas,16,Helaman Casuga,Available,NonExempt
+2026-11-25T09:12:59+00:00,SEC,10003538,2026-11-24,19:10:00,CT,Initial,Texas A&M,Texas,10,Marcel Reed,Available,NonExempt
+2026-11-25T09:12:59+00:00,SEC,10003538,2026-11-24,19:10:00,CT,Initial,Texas A&M,Texas,19,Paxton Land,Available,NonExempt

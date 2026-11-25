@@ -1,6 +1,6 @@
 # Atlas Operations Manual
 
-*Generated 2026-11-25 08:53 UTC by `python -m atlas.live check`. Atlas research is
+*Generated 2026-11-25 09:12 UTC by `python -m atlas.live check`. Atlas research is
 complete; this document is about keeping the live tracker alive and honest for
 two seasons.*
 
@@ -18,7 +18,7 @@ two seasons.*
 | Signals recorded | 1,084 |
 | Grades recorded | 950 |
 | Line snapshots | 22,100 |
-| Tracker runs logged | 2,332 |
+| Tracker runs logged | 2,333 |
 | Blocking data-quality exceptions | 0 |
 | Monitor alerts firing | 1 |
 | Replays clean | 8 of 9 |
@@ -100,18 +100,18 @@ trace(Store.open(), "<signal_id>")   # signal, grade, full line history, run
 
 | Table | Rows | Columns | Primary key |
 |---|---|---|---|
-| runs | 2,332 | 14 | run_id |
-| numbers | 3,414 | 8 | game_id, market, model_version, refreshed_at |
-| projections | 12,098 | 49 | sport, game_id, model_version |
-| nhl_projections | 364 | 42 | game_id, model_version |
-| calibration | 50,089 | 10 | sport, game_id, market |
+| runs | 2,333 | 14 | run_id |
+| numbers | 3,422 | 8 | game_id, market, model_version, refreshed_at |
+| projections | 12,157 | 49 | sport, game_id, model_version |
+| nhl_projections | 367 | 42 | game_id, model_version |
+| calibration | 50,090 | 10 | sport, game_id, market |
 | card_grades | 668 | 17 | sport, game_id |
 | other_models | 1,746 | 9 | sport, game_id, model |
-| polymarket_quotes | 172,210 | 26 | token_id, captured_at |
-| polymarket_props | 64,986 | 29 | token_id, captured_at |
+| polymarket_quotes | 172,306 | 26 | token_id, captured_at |
+| polymarket_props | 66,080 | 29 | token_id, captured_at |
 | nba_availability | 2,157 | 13 | player_id, reported_at, status |
 | nfl_availability | 10,662 | 13 | player_id, reported_at, status |
-| nhl_availability | 920 | 13 | player_id, reported_at, status |
+| nhl_availability | 921 | 13 | player_id, reported_at, status |
 | favorites | 4,339 | 30 | token_id, threshold |
 | finish | 0 | 28 | token_id |
 | metals | 267 | 28 | market_slug, side, threshold |
