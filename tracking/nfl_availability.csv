@@ -10644,6 +10644,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-25T02:38:36+00:00,2026-11-25T02:19Z,21,Philadelphia Eagles,PHI,4257591,Arnold Ebiketie,LB,Questionable,QUESTIONABLE,Oblique,2026-11-26,Ebiketie (oblique) was estimated as a non-participant on the Eagles' injury report Tuesday.
 2026-11-25T18:23:43+00:00,2026-11-25T02:19Z,21,Philadelphia Eagles,PHI,4257591,Arnold Ebiketie,LB,Out,OUT,Oblique,2026-12-06,Ebiketie (oblique) was estimated as a nonparticipant on the Eagles' injury report Tuesday.
 2026-11-25T02:38:36+00:00,2026-11-25T02:21Z,19,New York Giants,NYG,4725996,Abdul Carter,LB,Active,,,,"Carter recorded four total tackles (three solo), including 2.0 sacks, during Sunday's 23-18 win over the Jaguars."
+2026-11-25T22:23:29+00:00,2026-11-25T02:21Z,19,New York Giants,NYG,4725996,Abdul Carter,LB,Questionable,QUESTIONABLE,Ankle,2026-11-29,"Carter recorded four total tackles (three solo), including 2.0 sacks, during Sunday's 23-18 win over the Jaguars."
 2026-11-25T02:38:36+00:00,2026-11-25T02:24Z,33,Baltimore Ravens,BAL,4683188,Mike Green,LB,Active,,,,Green recorded five tackles (four solo) including 2.0 sacks during Sunday's 35-33 loss at Carolina.
 2026-11-25T02:53:24+00:00,2026-11-25T02:25Z,7,Denver Broncos,DEN,4603189,Sai'vion Jones,DE,Questionable,QUESTIONABLE,Hamstring,2026-11-27,"Jones (hamstring) didn't participate in Denver's walkthrough Tuesday, Aric DiLalla of the team's official site reports."
 2026-11-25T02:53:24+00:00,2026-11-25T02:28Z,20,New York Jets,NYJ,4685248,David Bailey,LB,Active,,,,"Bailey recorded five tackles (two solo), including 2.0 sacks, one pass defense and one forced fumble during the Jets' 27-24 win over the Chargers on Sunday."
@@ -10741,4 +10742,33 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-25T21:23:38+00:00,2026-11-25T21:07Z,20,New York Jets,NYJ,4683815,Trevin Wallace,LB,Active,,,,
 2026-11-25T21:23:38+00:00,2026-11-25T21:09Z,20,New York Jets,NYJ,4569371,Isaiah Williams,WR,Questionable,QUESTIONABLE,Ribs,2026-11-29,Williams (ribs) was listed as a limited participant on Wednesday's estimated practice report.
 2026-11-25T21:23:38+00:00,2026-11-25T21:14Z,19,New York Giants,NYG,4725996,Abdul Carter,LB,Questionable,QUESTIONABLE,Ankle,2026-11-29,questionable
+2026-11-25T22:23:29+00:00,2026-11-25T21:14Z,19,New York Giants,NYG,4361050,Isaiah Likely,TE,Questionable,QUESTIONABLE,Groin,2026-11-29,"Likely (groin) was limited in practice Wednesday, Dan Salomone of the Giants' official site reports."
 2026-11-25T21:23:38+00:00,2026-11-25T21:14Z,19,New York Giants,NYG,16837,Shelby Harris,DT,Questionable,QUESTIONABLE,Illness,2026-11-29,questionable
+2026-11-25T22:23:29+00:00,2026-11-25T21:15Z,19,New York Giants,NYG,4950400,Arvell Reese,LB,Questionable,QUESTIONABLE,Back,2026-11-29,questionable
+2026-11-25T22:23:29+00:00,2026-11-25T21:15Z,19,New York Giants,NYG,4431321,Dru Phillips,CB,Questionable,QUESTIONABLE,Illness,2026-11-29,questionable
+2026-11-25T22:23:29+00:00,2026-11-25T21:19Z,30,Jacksonville Jaguars,JAX,4035791,Cole Van Lanen,OT,Questionable,QUESTIONABLE,Ankle,2026-11-29,questionable
+2026-11-25T22:23:29+00:00,2026-11-25T21:19Z,30,Jacksonville Jaguars,JAX,4334300,Dennis Gardeck,LB,Questionable,QUESTIONABLE,Neck,2026-11-29,questionable
+2026-11-25T22:23:29+00:00,2026-11-25T21:19Z,30,Jacksonville Jaguars,JAX,3916433,Jakobi Meyers,WR,Questionable,QUESTIONABLE,Ankle,2026-11-29,Meyers was a limited participant in Wednesday's practice due to an ankle injury.
+2026-11-25T22:23:29+00:00,2026-11-25T21:19Z,30,Jacksonville Jaguars,JAX,4426448,Jarrian Jones,CB,Active,,,,
+2026-11-25T22:23:29+00:00,2026-11-25T21:19Z,30,Jacksonville Jaguars,JAX,4430481,Jonah Monheim,C,Questionable,QUESTIONABLE,,2026-11-29,questionable
+2026-11-25T22:23:29+00:00,2026-11-25T21:25Z,8,Detroit Lions,DET,5103940,Skyler Gill-Howard,DT,Injured Reserve,IR,Knee Surgery,2027-02-15,ir
+2026-11-25T22:23:29+00:00,2026-11-25T21:25Z,30,Jacksonville Jaguars,JAX,4882093,Bhayshul Tuten,RB,Questionable,QUESTIONABLE,Right Ankle,2026-11-29,"Tuten (ankle/foot) didn't practice Wednesday, Adam Schefter of ESPN reports."
+2026-11-25T22:23:29+00:00,2026-11-25T21:28Z,15,Miami Dolphins,MIA,4567225,Jaylin Simpson,S,Active,,,,
+2026-11-25T22:23:29+00:00,2026-11-25T21:29Z,13,Las Vegas Raiders,LV,4432665,Brock Bowers,TE,Questionable,QUESTIONABLE,Ankle,2026-11-29,"Head coach Klint Kubiak said that Bowers (ankle/quadriceps) remained a limited participant in Wednesday's practice, but the Raiders are optimistic that the tigh"
+2026-11-25T22:23:29+00:00,2026-11-25T21:29Z,15,Miami Dolphins,MIA,4271632,Austin Jackson,OT,Questionable,QUESTIONABLE,Elbow,2026-11-29,questionable
+2026-11-25T22:23:29+00:00,2026-11-25T21:30Z,15,Miami Dolphins,MIA,4685637,Jackson Woodard,LB,Questionable,QUESTIONABLE,Hand,2026-11-29,questionable
+2026-11-25T22:23:29+00:00,2026-11-25T21:30Z,15,Miami Dolphins,MIA,4433974,Rodney McGraw,DE,Questionable,QUESTIONABLE,Shoulder,2026-11-29,questionable
+2026-11-25T22:23:29+00:00,2026-11-25T21:32Z,18,New Orleans Saints,NO,3929645,Juwan Johnson,TE,Questionable,QUESTIONABLE,Hamstring,2026-11-29,"Johnson (hamstring) did not practice Wednesday due to a hamstring/wrist issue, Katherine Terrell of ESPN reports."
+2026-11-25T22:23:29+00:00,2026-11-25T21:35Z,1,Atlanta Falcons,ATL,4037626,Divine Deablo,LB,Active,,,,
+2026-11-25T22:23:29+00:00,2026-11-25T21:36Z,1,Atlanta Falcons,ATL,4431194,Billy Bowman Jr.,CB,Questionable,QUESTIONABLE,Hamstring,2026-11-29,questionable
+2026-11-25T22:23:29+00:00,2026-11-25T21:36Z,1,Atlanta Falcons,ATL,4568510,Matthew Bergeron,G,Questionable,QUESTIONABLE,Back,2026-11-29,questionable
+2026-11-25T22:23:29+00:00,2026-11-25T21:37Z,1,Atlanta Falcons,ATL,4567111,DeMarcco Hellams,S,Questionable,QUESTIONABLE,Foot,2026-11-29,questionable
+2026-11-25T22:23:29+00:00,2026-11-25T21:37Z,1,Atlanta Falcons,ATL,4361409,Jahan Dotson,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-29,questionable
+2026-11-25T22:23:29+00:00,2026-11-25T21:41Z,1,Atlanta Falcons,ATL,5081394,James Pearce Jr.,LB,Questionable,QUESTIONABLE,Back,2026-11-29,questionable
+2026-11-25T22:23:29+00:00,2026-11-25T21:42Z,22,Arizona Cardinals,ARI,4428512,Kedon Slovis,QB,Active,,,,"Slovis was claimed off waivers by the Cardinals on Wednesday, Josh Weinfuss of ESPN reports."
+2026-11-25T22:23:29+00:00,2026-11-25T21:48Z,23,Pittsburgh Steelers,PIT,3116407,Mason Rudolph,QB,Active,,,,Rudolph will start Friday's game against the Broncos and could remain atop the depth chart for the rest of the season with the Steelers waiving Aaron Rodgers on
+2026-11-25T22:23:29+00:00,2026-11-25T21:55Z,10,Tennessee Titans,TEN,3120464,John Franklin-Myers,DE,Questionable,QUESTIONABLE,Back,2026-11-29,questionable
+2026-11-25T22:23:29+00:00,2026-11-25T21:55Z,10,Tennessee Titans,TEN,4240532,Tony Adams,S,Active,,,,
+2026-11-25T22:23:29+00:00,2026-11-25T22:01Z,7,Denver Broncos,DEN,4241985,J.K. Dobbins,RB,Suspension,RESERVE-SUS,Suspension,2026-12-06,reserve-sus
+2026-11-25T22:23:29+00:00,2026-11-25T22:04Z,18,New Orleans Saints,NO,4430379,Asim Richards,OT,Questionable,QUESTIONABLE,Knee,2026-11-29,questionable
+2026-11-25T22:23:29+00:00,2026-11-25T22:04Z,18,New Orleans Saints,NO,3917660,David Edwards,G,Questionable,QUESTIONABLE,Hamstring,2026-11-29,questionable
