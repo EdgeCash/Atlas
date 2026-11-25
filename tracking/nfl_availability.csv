@@ -10648,6 +10648,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-25T02:38:36+00:00,2026-11-25T02:21Z,19,New York Giants,NYG,4725996,Abdul Carter,LB,Active,,,,"Carter recorded four total tackles (three solo), including 2.0 sacks, during Sunday's 23-18 win over the Jaguars."
 2026-11-25T22:23:29+00:00,2026-11-25T02:21Z,19,New York Giants,NYG,4725996,Abdul Carter,LB,Questionable,QUESTIONABLE,Ankle,2026-11-29,"Carter recorded four total tackles (three solo), including 2.0 sacks, during Sunday's 23-18 win over the Jaguars."
 2026-11-25T02:38:36+00:00,2026-11-25T02:24Z,33,Baltimore Ravens,BAL,4683188,Mike Green,LB,Active,,,,Green recorded five tackles (four solo) including 2.0 sacks during Sunday's 35-33 loss at Carolina.
+2026-11-25T23:38:32+00:00,2026-11-25T02:24Z,33,Baltimore Ravens,BAL,4683188,Mike Green,LB,Questionable,QUESTIONABLE,Knee,2026-11-29,Green recorded five tackles (four solo) including 2.0 sacks during Sunday's 35-33 loss at Carolina.
 2026-11-25T02:53:24+00:00,2026-11-25T02:25Z,7,Denver Broncos,DEN,4603189,Sai'vion Jones,DE,Questionable,QUESTIONABLE,Hamstring,2026-11-27,"Jones (hamstring) didn't participate in Denver's walkthrough Tuesday, Aric DiLalla of the team's official site reports."
 2026-11-25T02:53:24+00:00,2026-11-25T02:28Z,20,New York Jets,NYJ,4685248,David Bailey,LB,Active,,,,"Bailey recorded five tackles (two solo), including 2.0 sacks, one pass defense and one forced fumble during the Jets' 27-24 win over the Chargers on Sunday."
 2026-11-25T02:38:36+00:00,2026-11-25T02:31Z,33,Baltimore Ravens,BAL,4575517,Kyle Hamilton,S,Active,,,,Hamilton recorded eight total tackles (five solo) during Sunday's 35-33 loss to the Panthers.
@@ -10807,5 +10808,10 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-25T23:23:29+00:00,2026-11-25T23:05Z,16,Minnesota Vikings,MIN,4430656,Myles Price,WR,Questionable,QUESTIONABLE,Knee,2026-11-29,Price was a limited participant in Wednesday's practice due to a knee injury.
 2026-11-25T23:23:29+00:00,2026-11-25T23:08Z,34,Houston Texans,HOU,4241250,Jake Hummel,LB,Questionable,QUESTIONABLE,Abdomen,2026-11-29,questionable
 2026-11-25T23:23:29+00:00,2026-11-25T23:08Z,34,Houston Texans,HOU,4360189,Logan Hall,DE,Doubtful,DOUBTFUL,Hip,2026-11-29,doubtful
+2026-11-25T23:38:32+00:00,2026-11-25T23:16Z,34,Houston Texans,HOU,4429059,Woody Marks,RB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-29,Marks (concussion) was listed as a full participant in Wednesday's practice.
 2026-11-25T23:23:29+00:00,2026-11-25T23:18Z,33,Baltimore Ravens,BAL,4360939,Rashod Bateman,WR,Questionable,QUESTIONABLE,Groin,2026-11-29,questionable
 2026-11-25T23:23:29+00:00,2026-11-25T23:19Z,33,Baltimore Ravens,BAL,4429615,Zay Flowers,WR,Questionable,QUESTIONABLE,Ankle,2026-11-29,questionable
+2026-11-25T23:38:32+00:00,2026-11-25T23:20Z,33,Baltimore Ravens,BAL,4565311,Aeneas Peebles,DT,Questionable,QUESTIONABLE,Elbow,2026-11-29,questionable
+2026-11-25T23:38:32+00:00,2026-11-25T23:20Z,33,Baltimore Ravens,BAL,4035479,John Simpson,G,Questionable,QUESTIONABLE,Groin,2026-11-29,questionable
+2026-11-25T23:38:32+00:00,2026-11-25T23:25Z,33,Baltimore Ravens,BAL,4429615,Zay Flowers,WR,Questionable,QUESTIONABLE,Ankle,2026-11-29,Flowers (ankle) was listed as a limited participant in Wednesday's practice.
+2026-11-25T23:38:32+00:00,2026-11-25T23:29Z,24,Los Angeles Chargers,LAC,3123076,David Njoku,TE,Questionable,QUESTIONABLE,Shoulder,2026-11-29,questionable
