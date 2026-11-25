@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-11-25T10:24:48.763403+00:00",
+      "detail": "market in 20s",
+      "mode": "ordinary",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-11-25T10:24:48.614695+00:00",
+      "detail": "67 cards, 16 NFL cards, 62 NHL cards, 134 teams, 32 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-11-25T09:15:06.785236+00:00",
       "detail": "67 cards, 16 NFL cards, 62 NHL cards, 134 teams, 32 NFL teams",
       "name": "build",
@@ -1278,23 +1291,11 @@
       "detail": "warehouse in 20s; nfl-ingest in 3s; nfl-warehouse in 16s; nhl-ingest in 26s; nhl-warehouse in 11s; nba-ingest in 1s; nba-warehouse in 2s; model in 121s; market in 18s; availability in 2s; polymarket in 98s; other-models in 4s; site in 13s",
       "name": "heavy",
       "ok": true
-    },
-    {
-      "at": "2026-11-23T09:14:01.460129+00:00",
-      "detail": "65 cards, 17 NFL cards, 58 NHL cards, 130 teams, 32 NFL teams",
-      "name": "build",
-      "ok": true
-    },
-    {
-      "at": "2026-11-23T09:14:01.458366+00:00",
-      "detail": "12 files",
-      "name": "social",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-11-25T09:15:06.785236+00:00",
+      "at": "2026-11-25T10:24:48.614695+00:00",
       "detail": "67 cards, 16 NFL cards, 62 NHL cards, 134 teams, 32 NFL teams",
       "name": "build",
       "ok": true
@@ -1306,8 +1307,9 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-25T09:14:57.987242+00:00",
-      "detail": "captured during the heavy refresh",
+      "at": "2026-11-25T10:24:48.763403+00:00",
+      "detail": "market in 20s",
+      "mode": "ordinary",
       "name": "poll",
       "ok": true
     },
@@ -1320,7 +1322,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-11-25T09:15:06.785236+00:00",
+      "at": "2026-11-25T10:24:48.614695+00:00",
       "detail": "67 cards, 16 NFL cards, 62 NHL cards, 134 teams, 32 NFL teams",
       "name": "build",
       "ok": true
@@ -1332,8 +1334,9 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-25T09:14:57.987242+00:00",
-      "detail": "captured during the heavy refresh",
+      "at": "2026-11-25T10:24:48.763403+00:00",
+      "detail": "market in 20s",
+      "mode": "ordinary",
       "name": "poll",
       "ok": true
     },
