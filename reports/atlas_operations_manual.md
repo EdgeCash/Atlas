@@ -1,6 +1,6 @@
 # Atlas Operations Manual
 
-*Generated 2026-11-25 00:08 UTC by `python -m atlas.live check`. Atlas research is
+*Generated 2026-11-25 00:23 UTC by `python -m atlas.live check`. Atlas research is
 complete; this document is about keeping the live tracker alive and honest for
 two seasons.*
 
@@ -17,11 +17,11 @@ two seasons.*
 |---|---|
 | Signals recorded | 1,084 |
 | Grades recorded | 950 |
-| Line snapshots | 21,999 |
-| Tracker runs logged | 2,306 |
+| Line snapshots | 22,002 |
+| Tracker runs logged | 2,307 |
 | Blocking data-quality exceptions | 0 |
 | Monitor alerts firing | 1 |
-| Replays clean | 8 of 9 |
+| Replays clean | 7 of 9 |
 
 ---
 
@@ -100,15 +100,15 @@ trace(Store.open(), "<signal_id>")   # signal, grade, full line history, run
 
 | Table | Rows | Columns | Primary key |
 |---|---|---|---|
-| runs | 2,306 | 14 | run_id |
+| runs | 2,307 | 14 | run_id |
 | numbers | 3,414 | 8 | game_id, market, model_version, refreshed_at |
 | projections | 12,098 | 49 | sport, game_id, model_version |
 | nhl_projections | 364 | 42 | game_id, model_version |
 | calibration | 50,089 | 10 | sport, game_id, market |
 | card_grades | 668 | 17 | sport, game_id |
 | other_models | 1,746 | 9 | sport, game_id, model |
-| polymarket_quotes | 169,934 | 26 | token_id, captured_at |
-| polymarket_props | 43,994 | 29 | token_id, captured_at |
+| polymarket_quotes | 170,022 | 26 | token_id, captured_at |
+| polymarket_props | 44,806 | 29 | token_id, captured_at |
 | nba_availability | 2,154 | 13 | player_id, reported_at, status |
 | nfl_availability | 10,594 | 13 | player_id, reported_at, status |
 | nhl_availability | 918 | 13 | player_id, reported_at, status |
@@ -118,7 +118,7 @@ trace(Store.open(), "<signal_id>")   # signal, grade, full line history, run
 | prop_record | 64,438 | 13 | token_id |
 | availability | 3,633 | 13 | conference, report_id, team, player |
 | games | 1,351 | 17 | game_id |
-| snapshots | 21,999 | 11 | game_id, book, market, captured_at |
+| snapshots | 22,002 | 11 | game_id, book, market, captured_at |
 | signals | 1,084 | 17 | signal_id |
 | grades | 950 | 14 | signal_id |
 | market_shape | 486 | 5 | sport, market, point |
