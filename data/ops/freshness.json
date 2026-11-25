@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-11-25T20:24:35.017444+00:00",
+      "detail": "market in 14s",
+      "mode": "ordinary",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-11-25T20:24:34.844893+00:00",
+      "detail": "67 cards, 16 NFL cards, 62 NHL cards, 134 teams, 32 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-11-25T19:24:59.277948+00:00",
       "detail": "market in 20s",
       "mode": "ordinary",
@@ -1280,24 +1293,11 @@
       "detail": "65 cards, 17 NFL cards, 58 NHL cards, 130 teams, 32 NFL teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-11-23T17:24:22.253091+00:00",
-      "detail": "market in 15s",
-      "mode": "ordinary",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-11-23T17:24:22.088402+00:00",
-      "detail": "65 cards, 17 NFL cards, 58 NHL cards, 130 teams, 32 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-11-25T19:24:59.120504+00:00",
+      "at": "2026-11-25T20:24:34.844893+00:00",
       "detail": "67 cards, 16 NFL cards, 62 NHL cards, 134 teams, 32 NFL teams",
       "name": "build",
       "ok": true
@@ -1309,8 +1309,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-25T19:24:59.277948+00:00",
-      "detail": "market in 20s",
+      "at": "2026-11-25T20:24:35.017444+00:00",
+      "detail": "market in 14s",
       "mode": "ordinary",
       "name": "poll",
       "ok": true
@@ -1324,7 +1324,7 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-11-25T19:24:59.120504+00:00",
+      "at": "2026-11-25T20:24:34.844893+00:00",
       "detail": "67 cards, 16 NFL cards, 62 NHL cards, 134 teams, 32 NFL teams",
       "name": "build",
       "ok": true
@@ -1336,8 +1336,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-25T19:24:59.277948+00:00",
-      "detail": "market in 20s",
+      "at": "2026-11-25T20:24:35.017444+00:00",
+      "detail": "market in 14s",
       "mode": "ordinary",
       "name": "poll",
       "ok": true
