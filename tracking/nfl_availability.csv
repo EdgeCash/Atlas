@@ -10828,10 +10828,12 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-26T00:08:37+00:00,2026-11-25T23:47Z,17,New England Patriots,NE,4361432,Romeo Doubs,WR,Injured Reserve,IR-R,Shoulder,2026-11-29,Doubs (shoulder) was limited in Wednesday's practice.
 2026-11-26T00:08:37+00:00,2026-11-25T23:49Z,9,Green Bay Packers,GB,4361423,Micah Parsons,DE,Active,,,,"Parsons (knee) is active for Wednesday's game at the Rams, Mike Spofford of the Packers' official site reports."
 2026-11-26T00:08:37+00:00,2026-11-25T23:50Z,34,Houston Texans,HOU,4429022,Kayshon Boutte,WR,Questionable,QUESTIONABLE,Hip,2026-11-29,Boutte (hip) didn't participate in Wednesday's practice.
+2026-11-26T00:23:38+00:00,2026-11-25T23:53Z,3,Chicago Bears,CHI,4361093,Kyler Gordon,CB,Out,OUT,Left Shoulder,2026-12-06,Gordon (shoulder) has been ruled out for Thursday's game against the Lions.
 2026-11-26T00:08:37+00:00,2026-11-25T23:53Z,9,Green Bay Packers,GB,4047365,Josh Jacobs,RB,Out,INACTIVE,Right Finger Surgery,2026-12-06,"Jacobs (finger) is listed as inactive Wednesday at the Rams, Tom Pelissero of Netflix reports."
 2026-11-26T00:08:37+00:00,2026-11-25T23:54Z,24,Los Angeles Chargers,LAC,2979860,Dalvin Tomlinson,DT,Questionable,QUESTIONABLE,Knee,2026-11-29,questionable
 2026-11-26T00:08:37+00:00,2026-11-25T23:54Z,24,Los Angeles Chargers,LAC,4690171,Deane Leonard,CB,Questionable,QUESTIONABLE,Groin,2026-11-29,questionable
 2026-11-26T00:08:37+00:00,2026-11-25T23:54Z,24,Los Angeles Chargers,LAC,4431442,Tuli Tuipulotu,LB,Questionable,QUESTIONABLE,,2026-11-29,questionable
+2026-11-26T00:23:38+00:00,2026-11-25T23:56Z,3,Chicago Bears,CHI,4426374,Tyrique Stevenson Sr.,CB,Questionable,QUESTIONABLE,Groin,2026-11-26,Stevenson (groin) is questionable for Thursday's game against the Lions.
 2026-11-26T00:08:37+00:00,2026-11-25T23:56Z,9,Green Bay Packers,GB,4259305,Bo Melton,WR,Active,,,,
 2026-11-26T00:08:37+00:00,2026-11-25T23:56Z,9,Green Bay Packers,GB,4360887,Donovan Jennings,G,Out,INACTIVE,Coach's Decision,2026-12-06,inactive
 2026-11-26T00:08:37+00:00,2026-11-25T23:56Z,9,Green Bay Packers,GB,4569661,Jager Burton,C,Out,INACTIVE,Coach's Decision,2026-12-06,inactive
@@ -10843,4 +10845,16 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-26T00:08:37+00:00,2026-11-26T00:01Z,14,Los Angeles Rams,LAR,4362294,Desjuan Johnson,DE,Out,INACTIVE,Coach's Decision,2026-12-03,inactive
 2026-11-26T00:08:37+00:00,2026-11-26T00:01Z,14,Los Angeles Rams,LAR,4240123,Larrell Murchison,DE,Out,INACTIVE,Coach's Decision,2026-12-03,inactive
 2026-11-26T00:08:37+00:00,2026-11-26T00:01Z,14,Los Angeles Rams,LAR,4362474,Steve Avila,G,Out,INACTIVE,Hamstring,2026-12-03,inactive
+2026-11-26T00:23:38+00:00,2026-11-26T00:02Z,33,Baltimore Ravens,BAL,3126356,Marlon Humphrey,CB,Active,,,,
+2026-11-26T00:23:38+00:00,2026-11-26T00:04Z,4,Cincinnati Bengals,CIN,4401811,Kyle Dugger,S,Active,,,,
 2026-11-26T00:08:37+00:00,2026-11-26T00:04Z,14,Los Angeles Rams,LAR,4685522,Ty Simpson,QB,Out,INACTIVE,Coach's Decision,2026-12-03,"Simpson (coach's decision) is inactive but will serve as the Rams' emergency third quarterback against the Packers on Wednesday, Adam Grosbard of The Orange Cou"
+2026-11-26T00:23:38+00:00,2026-11-26T00:06Z,9,Green Bay Packers,GB,4430191,Skyy Moore,WR,Active,,,,"Moore (ankle) is active for Wednesday's game against the Rams, Mike Spofford of the Packers' official site reports."
+2026-11-26T00:23:38+00:00,2026-11-26T00:08Z,9,Green Bay Packers,GB,4259305,Bo Melton,WR,Active,,,,"Melton (thigh) is active for Wednesday's game against the Rams, Mike Spofford of the Packers' official site reports."
+2026-11-26T00:23:38+00:00,2026-11-26T00:10Z,9,Green Bay Packers,GB,3124005,Zaire Franklin,LB,Out,INACTIVE,Shin Fracture,2026-12-06,"Franklin (shin) is inactive for Wednesday's game against the Rams, Mike Spofford of the Packers' official site reports."
+2026-11-26T00:23:38+00:00,2026-11-26T00:10Z,17,New England Patriots,NE,4362890,Ben Brown,C,Active,,,,
+2026-11-26T00:23:38+00:00,2026-11-26T00:11Z,17,New England Patriots,NE,4047941,Brenden Schooler,S,Active,,,,
+2026-11-26T00:23:38+00:00,2026-11-26T00:12Z,17,New England Patriots,NE,4039505,Reggie Gilliam,FB,Questionable,QUESTIONABLE,Knee,2026-11-29,questionable
+2026-11-26T00:23:38+00:00,2026-11-26T00:15Z,16,Minnesota Vikings,MIN,4361985,Christian Darrisaw,OT,Questionable,QUESTIONABLE,Shoulder,2026-11-29,questionable
+2026-11-26T00:23:38+00:00,2026-11-26T00:15Z,16,Minnesota Vikings,MIN,4360277,Jalen Redmond,DT,Questionable,QUESTIONABLE,Ankle,2026-11-29,questionable
+2026-11-26T00:23:38+00:00,2026-11-26T00:15Z,16,Minnesota Vikings,MIN,4568007,Jay Ward,S,Active,,,,
+2026-11-26T00:23:38+00:00,2026-11-26T00:16Z,16,Minnesota Vikings,MIN,14945,Harrison Smith,S,Questionable,QUESTIONABLE,Thigh,2026-11-29,questionable
