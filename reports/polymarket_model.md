@@ -1,6 +1,6 @@
 # Atlas on Polymarket US
 
-*Rebuilt every run; this one at 2026-11-26 05:38 UTC.*
+*Rebuilt every run; this one at 2026-11-26 05:53 UTC.*
 
 Polymarket US, the CFTC-regulated exchange, is the one venue Atlas is priced
 against. It lists a moneyline, a ladder of spreads and a ladder of totals on
@@ -14,10 +14,10 @@ the point-in-time archive of the market Atlas is measured against.
 
 | Sport | Games ahead | On Polymarket US | Contracts | Median spread (main lines) | Median depth (where read) | Fee coefficient |
 |---|---|---|---|---|---|---|
-| NCAAF | 67 | 59 | 7900 | 1.5¢ | – | 0.1100 |
+| NCAAF | 67 | 59 | 7900 | 2.0¢ | – | 0.1100 |
 | NFL | 17 | 4 | 568 | 0.5¢ | – | 0.1100 |
-| NBA | 63 | 16 | 662 | 15.0¢ | – | 0.1100 |
-| NHL | 74 | 29 | 870 | 7.0¢ | – | 0.1100 |
+| NBA | 63 | 15 | 530 | 5.0¢ | – | 0.1100 |
+| NHL | 74 | 28 | 840 | 7.0¢ | – | 0.1100 |
 
 Spread is the gap between the best bid and the best ask on the contracts
 priced near even; depth is the dollars resting at the best ask, read from
@@ -57,12 +57,12 @@ side at disagreements this large or larger, never below one half.
 
 | Sport | Market | Games | Atlas, median gap | Atlas, largest gap | Anchored, median gap |
 |---|---|---|---|---|---|
-| NBA | margin | 16 | 1.9 | 10.2 | 0.07 |
-| NBA | total | 5 | 0.9 | 5.7 | 0.31 |
-| NCAAF | margin | 59 | 1.6 | 12.5 | 0.00 |
-| NCAAF | total | 59 | 2.8 | 9.7 | 0.73 |
-| NFL | margin | 4 | 2.3 | 3.5 | 0.01 |
-| NFL | total | 4 | 3.2 | 7.4 | 0.48 |
+| NBA | margin | 15 | 2.1 | 4.3 | 0.08 |
+| NBA | total | 4 | 3.1 | 11.2 | 0.27 |
+| NCAAF | margin | 59 | 1.6 | 12.4 | 0.00 |
+| NCAAF | total | 59 | 2.7 | 9.7 | 0.73 |
+| NFL | margin | 4 | 2.3 | 3.4 | 0.01 |
+| NFL | total | 4 | 3.1 | 7.4 | 0.46 |
 
 In points of margin or total, per game: Atlas's own projection against
 the market's centre, and the anchored number the contracts are priced from.
@@ -71,7 +71,7 @@ construction.
 
 ## Player props
 
-Player props this run: NBA (points, rebounds, assists, threes, steals, blocks, the three combined): 731 contracts on 3 games, 731 with an Atlas projection beside them, 39294 graded so far; NHL (points, goals, assists): 112 contracts on 1 games, 112 with an Atlas projection beside them, 17538 graded so far; NFL (yards, receptions, touchdowns, attempts, completions, carries): 1044 contracts on 4 games, 1044 with an Atlas projection beside them, 9313 graded so far. Atlas's numbers are `atlas/models/nba_props.py` (`reports/nba_props.md`) and `atlas/models/nhl_props.py` (`reports/nhl_props.md`). Each player-stat's main line is kept in `tracking/polymarket_props.csv` with Atlas's probability as it stood, and graded against the box score and the close into `tracking/prop_record.csv`, the record that decides, a sport at a time, what Atlas's disagreement is worth there.
+Player props this run: NBA (points, rebounds, assists, threes, steals, blocks, the three combined): 389 contracts on 2 games, 389 with an Atlas projection beside them, 39294 graded so far; NFL (yards, receptions, touchdowns, attempts, completions, carries): 1044 contracts on 4 games, 1044 with an Atlas projection beside them, 9313 graded so far. Atlas's numbers are `atlas/models/nba_props.py` (`reports/nba_props.md`) and `atlas/models/nhl_props.py` (`reports/nhl_props.md`). Each player-stat's main line is kept in `tracking/polymarket_props.csv` with Atlas's probability as it stood, and graded against the box score and the close into `tracking/prop_record.csv`, the record that decides, a sport at a time, what Atlas's disagreement is worth there.
 
 ## The favorites rule
 
