@@ -10819,11 +10819,14 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-25T23:38:32+00:00,2026-11-25T23:20Z,33,Baltimore Ravens,BAL,4565311,Aeneas Peebles,DT,Questionable,QUESTIONABLE,Elbow,2026-11-29,questionable
 2026-11-25T23:38:32+00:00,2026-11-25T23:20Z,33,Baltimore Ravens,BAL,4035479,John Simpson,G,Questionable,QUESTIONABLE,Groin,2026-11-29,questionable
 2026-11-25T23:38:32+00:00,2026-11-25T23:25Z,33,Baltimore Ravens,BAL,4429615,Zay Flowers,WR,Questionable,QUESTIONABLE,Ankle,2026-11-29,Flowers (ankle) was listed as a limited participant in Wednesday's practice.
+2026-11-26T22:08:20+00:00,2026-11-25T23:25Z,33,Baltimore Ravens,BAL,4429615,Zay Flowers,WR,Active,,,,Flowers (ankle) was listed as a limited participant in Wednesday's practice.
 2026-11-25T23:38:32+00:00,2026-11-25T23:29Z,24,Los Angeles Chargers,LAC,3123076,David Njoku,TE,Questionable,QUESTIONABLE,Shoulder,2026-11-29,questionable
 2026-11-25T23:53:41+00:00,2026-11-25T23:34Z,34,Houston Texans,HOU,4432708,Marvin Harrison Jr.,WR,Questionable,QUESTIONABLE,Hamstring Strain,2026-11-29,Harrison (hamstring) was listed as a limited participant in Wednesday's practice.
+2026-11-26T22:08:20+00:00,2026-11-25T23:34Z,34,Houston Texans,HOU,4432708,Marvin Harrison Jr.,WR,Active,,,,Harrison (hamstring) was listed as a limited participant in Wednesday's practice.
 2026-11-25T23:53:41+00:00,2026-11-25T23:36Z,26,Seattle Seahawks,SEA,4430878,Jaxon Smith-Njigba,WR,Questionable,QUESTIONABLE,Ankle,2026-11-29,"Smith-Njigba was limited at Wednesday's practice due to an ankle injury, John Boyle of the Seahawks' official site reports."
 2026-11-26T00:08:37+00:00,2026-11-25T23:41Z,26,Seattle Seahawks,SEA,3912547,Sam Darnold,QB,Active,,,,"Darnold (quadriceps) practiced fully Wednesday, John Boyle of the Seahawks' official site reports."
 2026-11-25T23:53:41+00:00,2026-11-25T23:42Z,33,Baltimore Ravens,BAL,4360939,Rashod Bateman,WR,Questionable,QUESTIONABLE,Groin,2026-11-29,Bateman (groin) was limited in Wednesday's practice.
+2026-11-26T22:08:20+00:00,2026-11-25T23:42Z,33,Baltimore Ravens,BAL,4360939,Rashod Bateman,WR,Active,,,,Bateman (groin) was limited in Wednesday's practice.
 2026-11-26T00:08:37+00:00,2026-11-25T23:44Z,24,Los Angeles Chargers,LAC,4596334,Keaton Mitchell,RB,Questionable,QUESTIONABLE,Knee,2026-11-29,Mitchell (knee) did not practice Wednesday.
 2026-11-26T00:08:37+00:00,2026-11-25T23:45Z,24,Los Angeles Chargers,LAC,3123076,David Njoku,TE,Questionable,QUESTIONABLE,Shoulder,2026-11-29,Njoku (shoulder) did not practice Wednesday.
 2026-11-26T00:08:37+00:00,2026-11-25T23:47Z,17,New England Patriots,NE,4361432,Romeo Doubs,WR,Injured Reserve,IR-R,Shoulder,2026-11-29,Doubs (shoulder) was limited in Wednesday's practice.
@@ -10920,6 +10923,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-26T02:38:27+00:00,2026-11-26T02:12Z,33,Baltimore Ravens,BAL,3858276,Jaylinn Hawkins,S,Questionable,QUESTIONABLE,Left Knee,2026-11-29,"Hawkins (knee) didn't participate in Wednesday's practice, Jamison Hensley of ESPN.com reports."
 2026-11-26T02:23:28+00:00,2026-11-26T02:12Z,24,Los Angeles Chargers,LAC,4432571,Tarheeb Still,CB,Questionable,QUESTIONABLE,Ankle,2026-11-29,Still (ankle) did not participate in Wednesday's practice.
 2026-11-26T02:38:27+00:00,2026-11-26T02:15Z,33,Baltimore Ravens,BAL,4683188,Mike Green,LB,Questionable,QUESTIONABLE,Knee,2026-11-29,Green (knee) was a limited participant during Wednesday's practice.
+2026-11-26T22:08:20+00:00,2026-11-26T02:15Z,33,Baltimore Ravens,BAL,4683188,Mike Green,LB,Active,,,,Green (knee) was a limited participant during Wednesday's practice.
 2026-11-26T02:23:28+00:00,2026-11-26T02:19Z,24,Los Angeles Chargers,LAC,2979860,Dalvin Tomlinson,DT,Questionable,QUESTIONABLE,Knee,2026-11-29,Tomlinson (knee) did not participate in Wednesday's practice.
 2026-11-26T02:38:27+00:00,2026-11-26T02:21Z,33,Baltimore Ravens,BAL,3126356,Marlon Humphrey,CB,Active,,,,"Humphrey (personal) was back at practice Wednesday and was a full participant, Quentin Corpuel of the Ravens' official site reports."
 2026-11-26T02:38:27+00:00,2026-11-26T02:24Z,24,Los Angeles Chargers,LAC,4685553,Brenen Thompson,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-29,Thompson (hamstring) did not participate in Wednesday's practice.
@@ -11018,6 +11022,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-26T19:23:20+00:00,2026-11-26T18:31Z,17,New England Patriots,NE,4569173,Rhamondre Stevenson,RB,Active,,,,Stevenson was not listed on the Patriots' practice report Wednesday.
 2026-11-26T19:23:20+00:00,2026-11-26T18:35Z,1,Atlanta Falcons,ATL,4361409,Jahan Dotson,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-29,"Dotson (hamstring) did not participate in Thursday's practice, Tori McElhaney of the Falcons' official site reports."
 2026-11-26T19:23:20+00:00,2026-11-26T18:45Z,3,Chicago Bears,CHI,4723086,Colston Loveland,TE,Out,OUT,Left Knee,2026-12-06,Loveland (knee) has been ruled out from returning to Thursday's game in Detroit.
+2026-11-26T22:08:20+00:00,2026-11-26T18:45Z,3,Chicago Bears,CHI,4723086,Colston Loveland,TE,Questionable,QUESTIONABLE,Left Knee,2026-12-06,Loveland (knee) has been ruled out from returning to Thursday's game in Detroit.
 2026-11-26T19:23:20+00:00,2026-11-26T18:46Z,1,Atlanta Falcons,ATL,4595343,Kendal Daniels,LB,Questionable,QUESTIONABLE,Achilles,2026-11-29,"Daniels (Achilles) was limited during Thursday's practice, Tori McElhaney of the Falcons' official site reports."
 2026-11-26T19:23:20+00:00,2026-11-26T18:51Z,24,Los Angeles Chargers,LAC,3886812,Jake Browning,QB,Active,,,,The Chargers signed Browning to their active roster Thursday.
 2026-11-26T19:23:20+00:00,2026-11-26T18:54Z,1,Atlanta Falcons,ATL,5081394,James Pearce Jr.,LB,Active,,,,"Pearce (back) practiced in full Thursday, Tori McElhaney of the Falcons' official site reports."
@@ -11065,3 +11070,25 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-26T21:23:43+00:00,2026-11-26T21:00Z,24,Los Angeles Chargers,LAC,4038941,Justin Herbert,QB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-29,Herbert (concussion) was officially deemed a non-participant  in Thursday's practice.
 2026-11-26T21:23:43+00:00,2026-11-26T21:08Z,10,Tennessee Titans,TEN,4573318,Dorian Mausi,LB,Questionable,QUESTIONABLE,Knee,2026-11-29,questionable
 2026-11-26T21:23:43+00:00,2026-11-26T21:09Z,19,New York Giants,NYG,4361050,Isaiah Likely,TE,Questionable,QUESTIONABLE,Groin,2026-11-29,"Likely (groin) was listed as limited on Thursday's practice report, Dan Salomone of the Giants' official site reports."
+2026-11-26T22:08:20+00:00,2026-11-26T21:20Z,20,New York Jets,NYJ,4569371,Isaiah Williams,WR,Active,,,,"Williams (ribs) practiced fully Thursday, Rich Cimini of ESPN.com reports."
+2026-11-26T22:08:20+00:00,2026-11-26T21:26Z,29,Carolina Panthers,CAR,4685472,Tetairoa McMillan,WR,Questionable,QUESTIONABLE,Foot Soreness,2026-11-30,"McMillan (foot) was listed as a DNP on Thursday's practice estimate, Mike Kaye of ESPN.com reports."
+2026-11-26T22:08:20+00:00,2026-11-26T21:28Z,7,Denver Broncos,DEN,4362748,Tyler Badie,RB,Injured Reserve,IR-R,Thumb Fracture,2026-11-27,Badie (thumb) is listed as questionable for Friday's game against the Steelers.
+2026-11-26T22:08:20+00:00,2026-11-26T21:33Z,24,Los Angeles Chargers,LAC,3123076,David Njoku,TE,Questionable,QUESTIONABLE,Shoulder,2026-11-29,Njoku (shoulder) was listed as a non-participant in Thursday's practice.
+2026-11-26T22:08:20+00:00,2026-11-26T21:35Z,29,Carolina Panthers,CAR,4875592,Jackson Kuwatch,LB,Questionable,QUESTIONABLE,Illness,2026-11-30,questionable
+2026-11-26T22:08:20+00:00,2026-11-26T21:35Z,29,Carolina Panthers,CAR,4683243,Mitchell Evans,TE,Questionable,QUESTIONABLE,Achilles,2026-11-30,questionable
+2026-11-26T22:08:20+00:00,2026-11-26T21:35Z,29,Carolina Panthers,CAR,4036063,Patrick Jones II,LB,Questionable,QUESTIONABLE,Ankle,2026-11-30,questionable
+2026-11-26T22:08:20+00:00,2026-11-26T21:36Z,29,Carolina Panthers,CAR,4034948,Feleipe Franks,TE,Questionable,QUESTIONABLE,Wrist,2026-11-30,questionable
+2026-11-26T22:08:20+00:00,2026-11-26T21:36Z,29,Carolina Panthers,CAR,4242975,Jaelan Phillips,LB,Questionable,QUESTIONABLE,Ankle,2026-11-30,questionable
+2026-11-26T22:08:20+00:00,2026-11-26T21:36Z,29,Carolina Panthers,CAR,4372780,Tommy Tremble,TE,Questionable,QUESTIONABLE,Knee,2026-11-30,questionable
+2026-11-26T22:08:20+00:00,2026-11-26T21:37Z,33,Baltimore Ravens,BAL,3052101,Chidobe Awuzie,CB,Questionable,QUESTIONABLE,Back,2026-11-29,questionable
+2026-11-26T22:08:20+00:00,2026-11-26T21:38Z,33,Baltimore Ravens,BAL,4565311,Aeneas Peebles,DT,Active,,,,
+2026-11-26T22:08:20+00:00,2026-11-26T21:38Z,33,Baltimore Ravens,BAL,4035479,John Simpson,G,Active,,,,
+2026-11-26T22:08:20+00:00,2026-11-26T21:39Z,33,Baltimore Ravens,BAL,4832793,Olaivavega Ioane,G,Questionable,QUESTIONABLE,Hand,2026-11-29,questionable
+2026-11-26T22:08:20+00:00,2026-11-26T21:43Z,29,Carolina Panthers,CAR,2576925,Darren Waller,TE,Questionable,QUESTIONABLE,Knee,2026-11-30,"Waller (knee) was listed as limited on Thursday's estimated injury report, Mike Kaye of ESPN.com reports."
+2026-11-26T22:08:20+00:00,2026-11-26T21:43Z,34,Houston Texans,HOU,4241250,Jake Hummel,LB,Active,,,,
+2026-11-26T22:08:20+00:00,2026-11-26T21:43Z,34,Houston Texans,HOU,4360189,Logan Hall,DE,Active,,,,
+2026-11-26T22:08:20+00:00,2026-11-26T21:44Z,34,Houston Texans,HOU,3117256,Dalton Schultz,TE,Questionable,QUESTIONABLE,Illness,2026-11-29,questionable
+2026-11-26T22:08:20+00:00,2026-11-26T21:50Z,33,Baltimore Ravens,BAL,3043078,Derrick Henry,RB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-29,Henry (concussion) was listed as a full participant in Thursday's practice.
+2026-11-26T22:08:20+00:00,2026-11-26T21:54Z,3,Chicago Bears,CHI,4431611,Caleb Williams,QB,Questionable,QUESTIONABLE,Undisclosed,2026-12-06,"Williams is having an X-ray performed after Thursday's 39-35 win at Detroit, asdf reports."
+2026-11-26T22:08:20+00:00,2026-11-26T22:01Z,25,San Francisco 49ers,SF,4361741,Brock Purdy,QB,Questionable,QUESTIONABLE,Ankle,2026-11-29,"Purdy (ankle) was listed as a non-participant on Thursday's injury report, Eric Branch of the San Francisco Chronicle reports."
+2026-11-26T22:08:20+00:00,2026-11-26T22:05Z,21,Philadelphia Eagles,PHI,4682618,Cooper DeJean,CB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-26,questionable
