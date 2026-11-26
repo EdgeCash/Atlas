@@ -10875,6 +10875,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-26T00:53:26+00:00,2026-11-26T00:36Z,6,Dallas Cowboys,DAL,4426485,Jonathan Mingo,WR,Out,OUT,Ankle,2026-12-07,Mingo (ankle) has been ruled out for Thursday's game against the Eagles.
 2026-11-26T00:38:46+00:00,2026-11-26T00:36Z,11,Indianapolis Colts,IND,4427250,Sauce Gardner,CB,Active,,,,
 2026-11-26T00:53:26+00:00,2026-11-26T00:37Z,11,Indianapolis Colts,IND,4722908,Drew Ogletree,TE,Questionable,QUESTIONABLE,Knee,2026-11-29,Ogletree (knee) did not practice Wednesday.
+2026-11-26T20:23:44+00:00,2026-11-26T00:37Z,11,Indianapolis Colts,IND,4722908,Drew Ogletree,TE,Active,,,,Ogletree (knee) did not practice Wednesday.
 2026-11-26T00:53:26+00:00,2026-11-26T00:40Z,6,Dallas Cowboys,DAL,3929850,P.J. Locke,S,Out,OUT,Concussion Concussion,2026-12-07,Locke (concussion) has been ruled out for Thursday's game against Philadelphia.
 2026-11-26T00:53:26+00:00,2026-11-26T00:41Z,14,Los Angeles Rams,LAR,4430737,Kyren Williams,RB,Active,,,,"Williams is listed as active Wednesday against the Packers, but the running back has been dealing with a turf toe injury for the last month, according to Tom Pe"
 2026-11-26T01:08:44+00:00,2026-11-26T00:44Z,11,Indianapolis Colts,IND,4037361,Charvarius Ward,CB,Questionable,QUESTIONABLE,Knee,2026-11-29,Ward (knee) was a limited participant in Wednesday's practice.
@@ -10882,6 +10883,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-26T01:08:44+00:00,2026-11-26T00:47Z,26,Seattle Seahawks,SEA,3129308,Quenton Nelson,G,Out,OUT,Knee Surgery,2026-12-07,"Head coach Mike Macdonald told reporters Wednesday that Nelson (knee) will not play against the 49ers on Sunday, Brady Henderson of ESPN.com reports."
 2026-11-26T01:08:44+00:00,2026-11-26T00:48Z,11,Indianapolis Colts,IND,4427250,Sauce Gardner,CB,Active,,,,Gardner (calf) was a full participant in Wednesday's practice.
 2026-11-26T01:08:44+00:00,2026-11-26T00:51Z,23,Pittsburgh Steelers,PIT,3929846,DeShon Elliott,S,Questionable,QUESTIONABLE,Knee,2026-11-27,"Elliiott (knee) was a limited participant in Wednesday's practice, Alan Saunders of SteelersNow.com reports."
+2026-11-26T20:23:44+00:00,2026-11-26T00:51Z,23,Pittsburgh Steelers,PIT,3929846,DeShon Elliott,S,Active,,,,"Elliott (knee) was a limited participant in Wednesday's practice, Alan Saunders of SteelersNow.com reports."
 2026-11-26T01:08:44+00:00,2026-11-26T00:55Z,20,New York Jets,NYJ,3117255,Harrison Phillips,DT,Questionable,QUESTIONABLE,Ankle,2026-11-29,Phillips (ankle) did not participate in Wednesday's practice.
 2026-11-26T01:08:44+00:00,2026-11-26T00:56Z,8,Detroit Lions,DET,4038849,DJ Wonnum,LB,Questionable,QUESTIONABLE,Back,2026-11-26,Wonnum (back) is listed as questionable for Thursday's game against the Bears.
 2026-11-26T01:08:44+00:00,2026-11-26T01:01Z,20,New York Jets,NYJ,4683815,Trevin Wallace,LB,Active,,,,Wallace (groin) was not listed on Wednesday's estimated practice report.
@@ -11018,4 +11020,28 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-26T19:23:20+00:00,2026-11-26T18:54Z,1,Atlanta Falcons,ATL,5081394,James Pearce Jr.,LB,Active,,,,"Pearce (back) practiced in full Thursday, Tori McElhaney of the Falcons' official site reports."
 2026-11-26T19:23:20+00:00,2026-11-26T18:59Z,24,Los Angeles Chargers,LAC,4038941,Justin Herbert,QB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-29,"Herbert (concussion) didn't participate during the portion of Thursday's practice open to the media, Noah Furtado of The Athletic reports."
 2026-11-26T19:23:20+00:00,2026-11-26T19:00Z,24,Los Angeles Chargers,LAC,4690171,Deane Leonard,CB,Injured Reserve,IR,Groin,2026-12-27,The Chargers placed Leonard (groin) on injured reserve Thursday.
+2026-11-26T20:23:44+00:00,2026-11-26T19:03Z,8,Detroit Lions,DET,4429035,Tate Ratledge,G,Active,,,,Ratledge is questionable to return to Thursday's Thanksgiving Day matchup against Chicago due to ankle and knee injuries.
 2026-11-26T19:23:20+00:00,2026-11-26T19:14Z,8,Detroit Lions,DET,4429035,Tate Ratledge,G,Active,,,,
+2026-11-26T20:23:44+00:00,2026-11-26T19:20Z,23,Pittsburgh Steelers,PIT,4035656,Ben Skowronek,WR,Injured Reserve,IR,Calf,2026-12-27,ir
+2026-11-26T20:23:44+00:00,2026-11-26T19:32Z,13,Las Vegas Raiders,LV,4432665,Brock Bowers,TE,Questionable,QUESTIONABLE,Ankle,2026-11-29,"Bowers (ankle) was on the field for Thursday's practice, Ryan McFadden of ESPN.com reports."
+2026-11-26T20:23:44+00:00,2026-11-26T19:36Z,16,Minnesota Vikings,MIN,4429205,Jordan Addison,WR,Doubtful,DOUBTFUL,Thumb Surgery,2026-11-29,Addison (thumb) was listed as a non-participant on Thursday's injury report.
+2026-11-26T20:23:44+00:00,2026-11-26T19:38Z,23,Pittsburgh Steelers,PIT,4037333,Alex Highsmith,LB,Out,OUT,Ankle,2026-12-06,out
+2026-11-26T20:23:44+00:00,2026-11-26T19:39Z,23,Pittsburgh Steelers,PIT,4429164,Nick Herbig,LB,Active,,,,
+2026-11-26T20:23:44+00:00,2026-11-26T19:42Z,16,Minnesota Vikings,MIN,4565185,Tai Felton,WR,Active,,,,Felton (hip) was listed as a full participant on Thursday's injury report.
+2026-11-26T20:23:44+00:00,2026-11-26T19:47Z,16,Minnesota Vikings,MIN,3917315,Kyler Murray,QB,Questionable,QUESTIONABLE,Hamstring Strain,2026-11-29,Murray (hamstring) was listed as limited on Thursday's injury report.
+2026-11-26T20:23:44+00:00,2026-11-26T19:53Z,23,Pittsburgh Steelers,PIT,4035687,Michael Pittman Jr.,WR,Active,,,,"Pittman (foot), who was activated from IR on Thursday, doesn't carry an injury designation for Friday's game against the Broncos, Mike DeFabo of The Athletic re"
+2026-11-26T20:23:44+00:00,2026-11-26T20:05Z,18,New Orleans Saints,NO,3929645,Juwan Johnson,TE,Questionable,QUESTIONABLE,Hamstring,2026-11-29,"Coach Kellen Moore said Thursday that Johnson (hamstring/wrist) is considered day-to-day ahead of Sunday's game against the Bengals, Katherine Terrell of ESPN r"
+2026-11-26T20:23:44+00:00,2026-11-26T20:11Z,22,Arizona Cardinals,ARI,4430841,Carson Beck,QB,Questionable,QUESTIONABLE,Back Spasms,2026-11-29,"Beck (back) was listed as a non-participant on Thursday's injury report, Darren Urban of the Cardinals' official site reports."
+2026-11-26T20:23:44+00:00,2026-11-26T20:13Z,6,Dallas Cowboys,DAL,4685266,Jaishawn Barham,LB,Out,INACTIVE,Coach's Decision,2026-12-07,inactive
+2026-11-26T20:23:44+00:00,2026-11-26T20:13Z,6,Dallas Cowboys,DAL,4242355,Jake Ferguson,TE,Out,INACTIVE,Knee,2026-12-07,inactive
+2026-11-26T20:23:44+00:00,2026-11-26T20:13Z,6,Dallas Cowboys,DAL,4043089,Jalen Thompson,S,Active,,,,
+2026-11-26T20:23:44+00:00,2026-11-26T20:13Z,6,Dallas Cowboys,DAL,2980097,Jonathan Bullard,DT,Out,INACTIVE,Coach's Decision,2026-12-07,inactive
+2026-11-26T20:23:44+00:00,2026-11-26T20:13Z,6,Dallas Cowboys,DAL,4426485,Jonathan Mingo,WR,Out,INACTIVE,Ankle,2026-12-07,inactive
+2026-11-26T20:23:44+00:00,2026-11-26T20:13Z,6,Dallas Cowboys,DAL,3929850,P.J. Locke,S,Out,INACTIVE,Concussion Concussion,2026-12-07,inactive
+2026-11-26T20:23:44+00:00,2026-11-26T20:13Z,6,Dallas Cowboys,DAL,4685263,Tyler Booker,G,Out,INACTIVE,Left Ankle Sprain,2026-12-07,inactive
+2026-11-26T20:23:44+00:00,2026-11-26T20:14Z,21,Philadelphia Eagles,PHI,4240585,AJ Epenesa,DE,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-26T20:23:44+00:00,2026-11-26T20:14Z,21,Philadelphia Eagles,PHI,4696203,Ajani Cornelius,OT,Out,INACTIVE,Coach's Decision,2026-12-06,inactive
+2026-11-26T20:23:44+00:00,2026-11-26T20:14Z,21,Philadelphia Eagles,PHI,4257591,Arnold Ebiketie,LB,Out,INACTIVE,Oblique,2026-12-06,inactive
+2026-11-26T20:23:44+00:00,2026-11-26T20:14Z,21,Philadelphia Eagles,PHI,4879250,Cole Payton,QB,Out,INACTIVE,Coach's Decision,,inactive
+2026-11-26T20:23:44+00:00,2026-11-26T20:14Z,21,Philadelphia Eagles,PHI,4241374,Grant Calcaterra,TE,Out,INACTIVE,Coach's Decision,2026-12-06,inactive
+2026-11-26T20:23:44+00:00,2026-11-26T20:14Z,21,Philadelphia Eagles,PHI,2971027,Jonathan Jones,CB,Out,INACTIVE,Right Ankle,2026-12-06,inactive
