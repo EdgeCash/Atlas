@@ -11103,6 +11103,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-26T22:23:20+00:00,2026-11-26T22:08Z,21,Philadelphia Eagles,PHI,4682618,Cooper DeJean,CB,Questionable,QUESTIONABLE,Concussion Concussion,2026-12-06,DeJean has entered the league's concussion protocol and has been ruled out for the rest of Thursday's game against the Cowboys.
 2026-11-26T22:23:20+00:00,2026-11-26T22:08Z,25,San Francisco 49ers,SF,16737,Mike Evans,WR,Questionable,QUESTIONABLE,Right Achilles Tendinitis,2026-11-29,"Evans (Achilles) was listed as limited on Thursday's practice report, Matt Maiocco of NBC Sports Bay Area reports."
 2026-11-26T22:23:20+00:00,2026-11-26T22:10Z,34,Houston Texans,HOU,3117256,Dalton Schultz,TE,Questionable,QUESTIONABLE,Illness,2026-11-29,Schultz (illness) was a limited participant in Thursday's practice.
+2026-11-27T21:08:44+00:00,2026-11-26T22:10Z,34,Houston Texans,HOU,3117256,Dalton Schultz,TE,Active,,,,Schultz (illness) was a limited participant in Thursday's practice.
 2026-11-26T22:23:20+00:00,2026-11-26T22:10Z,34,Houston Texans,HOU,4432708,Marvin Harrison Jr.,WR,Active,,,,Harrison (hamstring) was a full participant in Thursday's practice.
 2026-11-26T22:23:20+00:00,2026-11-26T22:14Z,5,Cleveland Browns,CLE,4362018,Blake Whiteheart,TE,Active,,,,
 2026-11-26T22:38:26+00:00,2026-11-26T22:14Z,26,Seattle Seahawks,SEA,4430878,Jaxon Smith-Njigba,WR,Questionable,QUESTIONABLE,Ankle,2026-11-29,"Smith-Njigba (ankle) was listed as limited on Thursday's injury report, Bob Condotta of The Seattle Times reports."
@@ -11132,8 +11133,10 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-26T23:08:31+00:00,2026-11-26T22:48Z,23,Pittsburgh Steelers,PIT,3929846,DeShon Elliott,S,Active,,,,"Elliott (knee) does not carry an injury designation into Friday's game against the Broncos, Teresa Varley of the Steelers' official site reports."
 2026-11-26T23:08:31+00:00,2026-11-26T22:49Z,21,Philadelphia Eagles,PHI,3929630,Saquon Barkley,RB,Questionable,QUESTIONABLE,Neck Stinger,2026-11-26,Barkley suffered a stinger during Thursday's game in Dallas.
 2026-11-26T23:08:31+00:00,2026-11-26T22:51Z,11,Indianapolis Colts,IND,4722908,Drew Ogletree,TE,Active,,,,Ogletree (knee) was a full participant in Thursday's practice.
+2026-11-27T21:08:44+00:00,2026-11-26T22:51Z,11,Indianapolis Colts,IND,4722908,Drew Ogletree,TE,Questionable,QUESTIONABLE,Knee,2026-11-29,Ogletree (knee) was a full participant in Thursday's practice.
 2026-11-26T23:08:31+00:00,2026-11-26T22:54Z,8,Detroit Lions,DET,4429795,Jahmyr Gibbs,RB,Active,,,,Gibbs carried the ball 21 times for 205 yards and three touchdowns while catching all five of his targets for 47 yards in Thursday's 39-35 loss to the Bears.
 2026-11-26T23:23:30+00:00,2026-11-26T22:56Z,16,Minnesota Vikings,MIN,4430656,Myles Price,WR,Questionable,QUESTIONABLE,Knee,2026-11-29,Price (knee/groin) was a limited participant in Thursday's practice.
+2026-11-27T21:08:44+00:00,2026-11-26T22:56Z,16,Minnesota Vikings,MIN,4430656,Myles Price,WR,Active,,,,Price (knee/groin) was a limited participant in Thursday's practice.
 2026-11-26T23:23:30+00:00,2026-11-26T22:58Z,16,Minnesota Vikings,MIN,14945,Harrison Smith,S,Questionable,QUESTIONABLE,Thigh,2026-11-29,Smith (thigh) was a limited participant in Thursday's practice.
 2026-11-26T23:08:31+00:00,2026-11-26T23:01Z,8,Detroit Lions,DET,4374302,Amon-Ra St. Brown,WR,Active,,,,St. Brown caught seven of 10 targets for 146 yards in Thursday's 39-35 loss to the Bears.
 2026-11-26T23:23:30+00:00,2026-11-26T23:03Z,7,Denver Broncos,DEN,4432208,Caleb Lohner,TE,Injured Reserve,IR-R,Foot Surgery,2026-12-06,Lohner (foot) has been ruled out for Friday's game against the Steelers.
@@ -11188,6 +11191,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-27T00:53:26+00:00,2026-11-27T00:46Z,21,Philadelphia Eagles,PHI,4429731,Gabe Hall,DT,Questionable,QUESTIONABLE,Wrist,2026-11-26,Hall (shoulder) is questionable to return to the Eagles' matchup against the Cowboys on Sunday.
 2026-11-27T01:08:42+00:00,2026-11-27T00:53Z,27,Tampa Bay Buccaneers,TB,4034790,Antoine Winfield Jr.,S,Questionable,QUESTIONABLE,Ankle,2026-11-30,Winfield (ankle) was listed a non-participant in Tampa Bay's practice estimate Thursday.
 2026-11-27T01:23:24+00:00,2026-11-27T00:59Z,27,Tampa Bay Buccaneers,TB,4912847,Jacob Parrish,CB,Questionable,QUESTIONABLE,Back,2026-11-30,Parrish (back) was listed a limited participant in Tampa Bay's practice estimate Thursday.
+2026-11-27T21:08:44+00:00,2026-11-27T00:59Z,27,Tampa Bay Buccaneers,TB,4912847,Jacob Parrish,CB,Active,,,,Parrish (back) was listed a limited participant in Tampa Bay's practice estimate Thursday.
 2026-11-27T01:23:24+00:00,2026-11-27T01:10Z,6,Dallas Cowboys,DAL,4040982,Quinnen Williams,DT,Questionable,QUESTIONABLE,Back,2026-11-26,questionable
 2026-11-27T01:23:24+00:00,2026-11-27T01:12Z,8,Detroit Lions,DET,4689936,Jake Bates,PK,Active,,,,Bates made both of his field-goal attempts and three of his four extra-point tries during Detroit's loss to the Bears on Thursday.
 2026-11-27T01:38:22+00:00,2026-11-27T01:22Z,6,Dallas Cowboys,DAL,4040982,Quinnen Williams,DT,Questionable,QUESTIONABLE,Back,2026-11-26,"Williams (back) is questionable to return to Dallas' matchup versus the Eagles on Thursday, Tommy Yarrish of the team's official site reports."
@@ -11259,6 +11263,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-27T18:08:26+00:00,2026-11-27T17:36Z,22,Arizona Cardinals,ARI,4430841,Carson Beck,QB,Out,OUT,Back Spasms,2026-12-06,"Beck (back) will not play Sunday against the Commanders, coach Mike LaFleur said Friday, Josh Weinfuss of ESPN.com reports."
 2026-11-27T18:08:26+00:00,2026-11-27T17:40Z,22,Arizona Cardinals,ARI,11394,Josh Johnson,QB,Active,,,,"Coach Mike LaFleur has ruled out Carson Beck (back) for Sunday's game against the Commanders, which sets the stage for Johnson to start the contest, Darren Urba"
 2026-11-27T18:08:26+00:00,2026-11-27T17:47Z,34,Houston Texans,HOU,4429022,Kayshon Boutte,WR,Questionable,QUESTIONABLE,Hip,2026-11-29,"Boutte (hip) isn't practicing Friday, Aaron Wilson of KPRC 2 Houston reports."
+2026-11-27T21:08:44+00:00,2026-11-27T17:47Z,34,Houston Texans,HOU,4429022,Kayshon Boutte,WR,Out,OUT,Hip,2026-12-06,"Boutte (hip) isn't practicing Friday, Aaron Wilson of KPRC 2 Houston reports."
 2026-11-27T18:08:26+00:00,2026-11-27T17:51Z,1,Atlanta Falcons,ATL,4361409,Jahan Dotson,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-29,"Dotson (hamstring) wasn't spotted at practice Friday, Daniel Flick of the Atlanta Journal-Constitution reports."
 2026-11-27T19:08:33+00:00,2026-11-27T17:51Z,1,Atlanta Falcons,ATL,4361409,Jahan Dotson,WR,Out,OUT,Hamstring,2026-12-06,"Dotson (hamstring) wasn't spotted at practice Friday, Daniel Flick of the Atlanta Journal-Constitution reports."
 2026-11-27T18:08:26+00:00,2026-11-27T18:01Z,22,Arizona Cardinals,ARI,4367199,Jon Gaines II,G,Out,OUT,Ankle,2026-12-06,out
@@ -11309,5 +11314,39 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-27T20:08:18+00:00,2026-11-27T19:45Z,33,Baltimore Ravens,BAL,4832793,Olaivavega Ioane,G,Out,OUT,Hand,2026-12-13,out
 2026-11-27T20:08:18+00:00,2026-11-27T19:46Z,33,Baltimore Ravens,BAL,4035245,Nnamdi Madubuike,DT,Out,OUT,Hamstring,2026-12-13,out
 2026-11-27T20:08:18+00:00,2026-11-27T19:51Z,18,New Orleans Saints,NO,4036131,Noah Fant,TE,Questionable,QUESTIONABLE,Calf,2026-11-29,questionable
+2026-11-27T21:08:44+00:00,2026-11-27T19:53Z,14,Los Angeles Rams,LAR,2573401,Tyler Higbee,TE,Questionable,QUESTIONABLE,Chest Bruise,2026-12-03,"Higbee (chest) is considered week-to-week, though it is too early to tell if he may be available Thursday, Dec. 3 against the Chiefs, Adam Schefter of ESPN repo"
 2026-11-27T20:08:18+00:00,2026-11-27T19:55Z,18,New Orleans Saints,NO,3929645,Juwan Johnson,TE,Out,OUT,Hamstring,2026-12-06,"Johnson (hamstring) has been ruled out for Sunday's game at Cincinnati, Katherine Terrell of ESPN.com reports."
 2026-11-27T20:08:18+00:00,2026-11-27T19:59Z,16,Minnesota Vikings,MIN,4429205,Jordan Addison,WR,Out,OUT,Thumb Surgery,2026-12-06,out
+2026-11-27T21:08:44+00:00,2026-11-27T20:01Z,14,Los Angeles Rams,LAR,4426553,Davis Allen,TE,Doubtful,DOUBTFUL,Ankle Sprain,2026-12-03,"Allen is dealing with a high-ankle sprain, according to sources, Ian Rapoport of NFL Network reports Friday."
+2026-11-27T21:08:44+00:00,2026-11-27T20:02Z,16,Minnesota Vikings,MIN,4429205,Jordan Addison,WR,Out,OUT,Thumb Surgery,2026-12-06,"Addison (thumb) has been ruled out for Sunday's game against the Falcons, Dane Mizutani of the St. Paul Pioneer Press reports."
+2026-11-27T21:08:44+00:00,2026-11-27T20:11Z,16,Minnesota Vikings,MIN,4361985,Christian Darrisaw,OT,Out,OUT,Shoulder,2026-12-06,out
+2026-11-27T21:08:44+00:00,2026-11-27T20:12Z,16,Minnesota Vikings,MIN,4044540,Isaiah Rodgers,CB,Out,OUT,Quadriceps,2026-12-06,out
+2026-11-27T21:08:44+00:00,2026-11-27T20:16Z,17,New England Patriots,NE,2991662,Mack Hollins,WR,Active,,,,"Hollins is set to work in a starting role Sunday against the Chargers, as A.J. Brown (hamstring) and Romeo Doubs (shoulder) won't play."
+2026-11-27T21:08:44+00:00,2026-11-27T20:18Z,17,New England Patriots,NE,4427095,DeMario Douglas,WR,Active,,,,"Douglas is set to maintain a prominent role Sunday against the Chargers, as A.J. Brown (hamstring) and Romeo Doubs (shoulder) won't play."
+2026-11-27T21:08:44+00:00,2026-11-27T20:21Z,4,Cincinnati Bengals,CIN,4239993,Tee Higgins,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-29,"After not practicing Friday, Higgins (hamstring) is listed as questionable for Sunday's game against the Saints, Katherine Terrell of ESPN reports."
+2026-11-27T21:08:44+00:00,2026-11-27T20:25Z,20,New York Jets,NYJ,4243375,Dylan Parham,G,Active,,,,
+2026-11-27T21:08:44+00:00,2026-11-27T20:25Z,20,New York Jets,NYJ,4362094,Joseph Ossai,DE,Active,,,,
+2026-11-27T21:08:44+00:00,2026-11-27T20:26Z,29,Carolina Panthers,CAR,2576925,Darren Waller,TE,Questionable,QUESTIONABLE,Knee,2026-11-30,Waller (knee) practiced in a limited fashion Friday.
+2026-11-27T21:08:44+00:00,2026-11-27T20:27Z,16,Minnesota Vikings,MIN,4565185,Tai Felton,WR,Active,,,,"Felton is poised to maintain an expanded role Sunday against the Falcons, as Craig Peters of the Vikings' official site reports that Jordan Addison (thumb) will"
+2026-11-27T21:08:44+00:00,2026-11-27T20:30Z,18,New Orleans Saints,NO,3917660,David Edwards,G,Active,,,,
+2026-11-27T21:08:44+00:00,2026-11-27T20:31Z,18,New Orleans Saints,NO,4429568,Martin Emerson Jr.,CB,Active,,,,
+2026-11-27T21:08:44+00:00,2026-11-27T20:31Z,18,New Orleans Saints,NO,4241993,Pete Werner,LB,Active,,,,
+2026-11-27T21:08:44+00:00,2026-11-27T20:35Z,16,Minnesota Vikings,MIN,3917315,Kyler Murray,QB,Active,,,,
+2026-11-27T21:08:44+00:00,2026-11-27T20:36Z,16,Minnesota Vikings,MIN,4360277,Jalen Redmond,DT,Active,,,,
+2026-11-27T21:08:44+00:00,2026-11-27T20:36Z,10,Tennessee Titans,TEN,4573318,Dorian Mausi,LB,Active,,,,
+2026-11-27T21:08:44+00:00,2026-11-27T20:42Z,27,Tampa Bay Buccaneers,TB,4429511,SirVocea Dennis,LB,Questionable,QUESTIONABLE,Back,2026-11-30,questionable
+2026-11-27T21:08:44+00:00,2026-11-27T20:42Z,27,Tampa Bay Buccaneers,TB,4608810,Tez Johnson,WR,Questionable,QUESTIONABLE,Illness,2026-11-30,questionable
+2026-11-27T21:08:44+00:00,2026-11-27T20:45Z,18,New Orleans Saints,NO,4036131,Noah Fant,TE,Questionable,QUESTIONABLE,Calf,2026-11-29,"Fant (calf) is questionable for Sunday's game against the Bengals, while Juwan Johnson (hamstring) has been ruled out, Matthew Paras of the New Orleans Times-Pi"
+2026-11-27T21:08:44+00:00,2026-11-27T20:47Z,13,Las Vegas Raiders,LV,4432665,Brock Bowers,TE,Questionable,QUESTIONABLE,Ankle,2026-11-29,"Bowers (ankle) will be listed as questionable for Sunday night's game against the Browns, Adam Hill of the Las Vegas Review-Journal reports."
+2026-11-27T21:08:44+00:00,2026-11-27T20:49Z,29,Carolina Panthers,CAR,4678008,Jonathon Brooks,RB,Injured Reserve,IR-R,Groin Surgery,2026-11-30,Brooks (groin) practiced without limitations Friday.
+2026-11-27T21:08:44+00:00,2026-11-27T20:51Z,29,Carolina Panthers,CAR,4372780,Tommy Tremble,TE,Questionable,QUESTIONABLE,Knee,2026-11-30,Tremble (knee) remained a limited participant at practice Friday.
+2026-11-27T21:08:44+00:00,2026-11-27T20:51Z,27,Tampa Bay Buccaneers,TB,4430834,Jalen McMillan,WR,Injured Reserve,IR-R,Left Knee - PCL Sprain,2026-11-30,McMillan (knee/calf) was limited at Friday's practice.
+2026-11-27T21:08:44+00:00,2026-11-27T20:52Z,34,Houston Texans,HOU,4429059,Woody Marks,RB,Active,,,,
+2026-11-27T21:08:44+00:00,2026-11-27T20:55Z,34,Houston Texans,HOU,2976560,Danielle Hunter,DE,Out,OUT,Hamstring Strain,2026-12-06,out
+2026-11-27T21:08:44+00:00,2026-11-27T20:55Z,34,Houston Texans,HOU,2970204,Sheldon Rankins,DT,Active,,,,
+2026-11-27T21:08:44+00:00,2026-11-27T20:56Z,34,Houston Texans,HOU,4362504,Brevin Jordan,TE,Out,OUT,Foot,2026-12-06,out
+2026-11-27T21:08:44+00:00,2026-11-27T20:56Z,34,Houston Texans,HOU,4241250,Jake Hummel,LB,Questionable,QUESTIONABLE,Abdomen,2026-11-29,questionable
+2026-11-27T21:08:44+00:00,2026-11-27T20:56Z,34,Houston Texans,HOU,4839498,Keylan Rutledge,G,Out,OUT,Undisclosed Stinger,2026-12-06,out
+2026-11-27T21:08:44+00:00,2026-11-27T20:58Z,33,Baltimore Ravens,BAL,3043078,Derrick Henry,RB,Active,,,,
+2026-11-27T21:08:44+00:00,2026-11-27T21:02Z,30,Jacksonville Jaguars,JAX,4882093,Bhayshul Tuten,RB,Out,OUT,Right Ankle,2026-12-06,"Tuten (ankle) has been ruled out for Sunday's game against the Titans, Ryan O'Halloran of The Florida Times-Union reports."
+2026-11-27T21:08:44+00:00,2026-11-27T21:06Z,30,Jacksonville Jaguars,JAX,3916433,Jakobi Meyers,WR,Active,,,,"Meyers (ankle) doesn't have an injury designation for Sunday's game against the Titans, Ryan O'Halloran of the Florida Times-Union reports."

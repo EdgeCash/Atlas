@@ -1,6 +1,19 @@
 {
   "history": [
     {
+      "at": "2026-11-27T21:10:52.435587+00:00",
+      "detail": "market in 25s",
+      "mode": "ordinary",
+      "name": "poll",
+      "ok": true
+    },
+    {
+      "at": "2026-11-27T21:10:52.264100+00:00",
+      "detail": "59 cards, 12 NFL cards, 53 NHL cards, 114 teams, 24 NFL teams",
+      "name": "build",
+      "ok": true
+    },
+    {
       "at": "2026-11-27T20:09:43.611838+00:00",
       "detail": "market in 13s",
       "mode": "ordinary",
@@ -1280,25 +1293,12 @@
       "detail": "67 cards, 16 NFL cards, 62 NHL cards, 134 teams, 32 NFL teams",
       "name": "build",
       "ok": true
-    },
-    {
-      "at": "2026-11-25T18:25:12.757567+00:00",
-      "detail": "market in 26s",
-      "mode": "ordinary",
-      "name": "poll",
-      "ok": true
-    },
-    {
-      "at": "2026-11-25T18:25:12.602295+00:00",
-      "detail": "67 cards, 16 NFL cards, 62 NHL cards, 134 teams, 32 NFL teams",
-      "name": "build",
-      "ok": true
     }
   ],
   "last": {
     "build": {
-      "at": "2026-11-27T20:09:43.473888+00:00",
-      "detail": "62 cards, 12 NFL cards, 56 NHL cards, 120 teams, 24 NFL teams",
+      "at": "2026-11-27T21:10:52.264100+00:00",
+      "detail": "59 cards, 12 NFL cards, 53 NHL cards, 114 teams, 24 NFL teams",
       "name": "build",
       "ok": true
     },
@@ -1309,8 +1309,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-27T20:09:43.611838+00:00",
-      "detail": "market in 13s",
+      "at": "2026-11-27T21:10:52.435587+00:00",
+      "detail": "market in 25s",
       "mode": "ordinary",
       "name": "poll",
       "ok": true
@@ -1324,8 +1324,8 @@
   },
   "last_ok": {
     "build": {
-      "at": "2026-11-27T20:09:43.473888+00:00",
-      "detail": "62 cards, 12 NFL cards, 56 NHL cards, 120 teams, 24 NFL teams",
+      "at": "2026-11-27T21:10:52.264100+00:00",
+      "detail": "59 cards, 12 NFL cards, 53 NHL cards, 114 teams, 24 NFL teams",
       "name": "build",
       "ok": true
     },
@@ -1336,8 +1336,8 @@
       "ok": true
     },
     "poll": {
-      "at": "2026-11-27T20:09:43.611838+00:00",
-      "detail": "market in 13s",
+      "at": "2026-11-27T21:10:52.435587+00:00",
+      "detail": "market in 25s",
       "mode": "ordinary",
       "name": "poll",
       "ok": true
