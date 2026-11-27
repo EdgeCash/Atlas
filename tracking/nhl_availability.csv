@@ -973,3 +973,8 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-27T18:08:26+00:00,2026-11-27T17:05Z,25,Anaheim Ducks,ANA,5149153,Leo Carlsson,C,Injured Reserve,IR,Upper Body,2026-12-01,ir
 2026-11-27T18:08:26+00:00,2026-11-27T17:39Z,21,Toronto Maple Leafs,TOR,4588638,Dakota Joshua,C,Out,OUT,Illness,2026-11-28,out
 2026-11-27T18:08:26+00:00,2026-11-27T17:51Z,19,St. Louis Blues,STL,5080171,Jimmy Snuggerud,RW,Injured Reserve,IR,Upper Body,2026-12-02,ir
+2026-11-27T19:08:33+00:00,2026-11-27T18:32Z,15,Philadelphia Flyers,PHI,5149170,Matvei Michkov,RW,Out,OUT,Coach's Decision,2026-11-28,out
+2026-11-27T19:08:33+00:00,2026-11-27T18:38Z,6,Edmonton Oilers,EDM,5509,Zach Hyman,LW,Out,OUT,Impaired Vision,2026-12-03,out
+2026-11-27T19:08:33+00:00,2026-11-27T18:45Z,6,Edmonton Oilers,EDM,4588331,Filip Hallander,C,Out,OUT,Knee Sprain,2026-12-12,out
+2026-11-27T19:08:33+00:00,2026-11-27T18:52Z,4,Chicago Blackhawks,CHI,3735,Patrick Kane,RW,Injured Reserve,IR,Foot,2026-12-03,ir
+2026-11-27T19:08:33+00:00,2026-11-27T18:58Z,1,Boston Bruins,BOS,3114778,David Pastrnak,RW,Day-To-Day,Day-To-Day,Lower Body,2026-11-29,day-to-day

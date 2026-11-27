@@ -11027,6 +11027,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-26T19:23:20+00:00,2026-11-26T18:45Z,3,Chicago Bears,CHI,4723086,Colston Loveland,TE,Out,OUT,Left Knee,2026-12-06,Loveland (knee) has been ruled out from returning to Thursday's game in Detroit.
 2026-11-26T22:08:20+00:00,2026-11-26T18:45Z,3,Chicago Bears,CHI,4723086,Colston Loveland,TE,Questionable,QUESTIONABLE,Left Knee,2026-12-06,Loveland (knee) has been ruled out from returning to Thursday's game in Detroit.
 2026-11-26T19:23:20+00:00,2026-11-26T18:46Z,1,Atlanta Falcons,ATL,4595343,Kendal Daniels,LB,Questionable,QUESTIONABLE,Achilles,2026-11-29,"Daniels (Achilles) was limited during Thursday's practice, Tori McElhaney of the Falcons' official site reports."
+2026-11-27T19:08:33+00:00,2026-11-26T18:46Z,1,Atlanta Falcons,ATL,4595343,Kendal Daniels,LB,Active,,,,"Daniels (Achilles) was limited during Thursday's practice, Tori McElhaney of the Falcons' official site reports."
 2026-11-26T19:23:20+00:00,2026-11-26T18:51Z,24,Los Angeles Chargers,LAC,3886812,Jake Browning,QB,Active,,,,The Chargers signed Browning to their active roster Thursday.
 2026-11-26T19:23:20+00:00,2026-11-26T18:54Z,1,Atlanta Falcons,ATL,5081394,James Pearce Jr.,LB,Active,,,,"Pearce (back) practiced in full Thursday, Tori McElhaney of the Falcons' official site reports."
 2026-11-26T19:23:20+00:00,2026-11-26T18:59Z,24,Los Angeles Chargers,LAC,4038941,Justin Herbert,QB,Questionable,QUESTIONABLE,Concussion Concussion,2026-11-29,"Herbert (concussion) didn't participate during the portion of Thursday's practice open to the media, Noah Furtado of The Athletic reports."
@@ -11198,6 +11199,7 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-27T02:08:39+00:00,2026-11-27T01:50Z,23,Pittsburgh Steelers,PIT,4431258,Gennings Dunker,G,Injured Reserve,IR-R,Knee,2026-12-06,"Dunker (knee) has been ruled out for Pittsburgh's matchup versus the Broncos on Friday,"
 2026-11-27T02:08:39+00:00,2026-11-27T01:52Z,21,Philadelphia Eagles,PHI,4431545,Will Shipley,RB,Active,,,,Shipley carried the ball 10 times for 46 yards and failed to catch his only target in Thursday's 39-38 win over the Cowboys.
 2026-11-27T02:08:39+00:00,2026-11-27T01:54Z,23,Pittsburgh Steelers,PIT,3116689,Cole Holcomb,LB,Questionable,QUESTIONABLE,Heel,2026-11-27,Holcomb (heel) is questionable for Pittsburgh's matchup versus the Broncos on Friday.
+2026-11-27T19:08:33+00:00,2026-11-27T01:54Z,23,Pittsburgh Steelers,PIT,3116689,Cole Holcomb,LB,Out,INACTIVE,Heel,2026-12-06,Holcomb (heel) is questionable for Pittsburgh's matchup versus the Broncos on Friday.
 2026-11-27T02:08:39+00:00,2026-11-27T01:57Z,21,Philadelphia Eagles,PHI,4870795,Makai Lemon,WR,Active,,,,Lemon caught five of six targets for 51 yards and a touchdown in Thursday's 39-38 win over the Cowboys.
 2026-11-27T02:23:20+00:00,2026-11-27T01:57Z,23,Pittsburgh Steelers,PIT,4429164,Nick Herbig,LB,Active,,,,"Herbig (hip) will play in Pittsburgh's matchup versus Denver on Friday,"
 2026-11-27T02:23:20+00:00,2026-11-27T02:02Z,30,Jacksonville Jaguars,JAX,4573319,Danny Striggow,DE,Active,,,,"Striggow (concussion) was listed as a full participant during Jacksonville's practice estimate Thursday, Ryan O'Halloran of The Florida Times-Union reports."
@@ -11257,4 +11259,38 @@ captured_at,reported_at,team_id,team,team_abbr,player_id,player,position,status,
 2026-11-27T18:08:26+00:00,2026-11-27T17:40Z,22,Arizona Cardinals,ARI,11394,Josh Johnson,QB,Active,,,,"Coach Mike LaFleur has ruled out Carson Beck (back) for Sunday's game against the Commanders, which sets the stage for Johnson to start the contest, Darren Urba"
 2026-11-27T18:08:26+00:00,2026-11-27T17:47Z,34,Houston Texans,HOU,4429022,Kayshon Boutte,WR,Questionable,QUESTIONABLE,Hip,2026-11-29,"Boutte (hip) isn't practicing Friday, Aaron Wilson of KPRC 2 Houston reports."
 2026-11-27T18:08:26+00:00,2026-11-27T17:51Z,1,Atlanta Falcons,ATL,4361409,Jahan Dotson,WR,Questionable,QUESTIONABLE,Hamstring,2026-11-29,"Dotson (hamstring) wasn't spotted at practice Friday, Daniel Flick of the Atlanta Journal-Constitution reports."
+2026-11-27T19:08:33+00:00,2026-11-27T17:51Z,1,Atlanta Falcons,ATL,4361409,Jahan Dotson,WR,Out,OUT,Hamstring,2026-12-06,"Dotson (hamstring) wasn't spotted at practice Friday, Daniel Flick of the Atlanta Journal-Constitution reports."
 2026-11-27T18:08:26+00:00,2026-11-27T18:01Z,22,Arizona Cardinals,ARI,4367199,Jon Gaines II,G,Out,OUT,Ankle,2026-12-06,out
+2026-11-27T19:08:33+00:00,2026-11-27T18:04Z,3,Chicago Bears,CHI,4723086,Colston Loveland,TE,Doubtful,DOUBTFUL,Left Knee,2026-12-06,"Loveland (knee) is slated to get a second opinion on his knee injury and won't be placed on injured reserve for now, though he is considered week-to-week, Adam "
+2026-11-27T19:08:33+00:00,2026-11-27T18:12Z,22,Arizona Cardinals,ARI,4870808,Jeremiyah Love,RB,Injured Reserve,IR,Right Ankle Sprain,2026-12-06,"Head coach Mike LaFleur said Friday that he has no update on Love (ankle), who is eligible to come off injured reserve following Sunday's game against the Comma"
+2026-11-27T19:08:33+00:00,2026-11-27T18:18Z,17,New England Patriots,NE,4047646,A.J. Brown,WR,Out,OUT,Hamstring,2026-12-06,"Brown (hamstring) has been ruled out for Sunday's game against the Chargers, Doug Kyed of the Boston Herald reports."
+2026-11-27T19:08:33+00:00,2026-11-27T18:21Z,17,New England Patriots,NE,3916923,Carlton Davis III,CB,Out,OUT,Knee,2026-12-06,out
+2026-11-27T19:08:33+00:00,2026-11-27T18:21Z,17,New England Patriots,NE,4361432,Romeo Doubs,WR,Injured Reserve,IR-R,Shoulder,2026-11-29,"Head coach Mike Vrabel said Friday that Doubs (shoulder) likely won't play in Sunday's game against the Chargers, Evan Lazar of the Patriots' official site repo"
+2026-11-27T19:08:33+00:00,2026-11-27T18:22Z,11,Indianapolis Colts,IND,4362580,Bernhard Raimann,OT,Active,,,,
+2026-11-27T19:08:33+00:00,2026-11-27T18:26Z,5,Cleveland Browns,CLE,3115336,Derek Barnett,DE,Out,OUT,Hamstring,2026-12-06,out
+2026-11-27T19:08:33+00:00,2026-11-27T18:27Z,1,Atlanta Falcons,ATL,4431194,Billy Bowman Jr.,CB,Out,OUT,Hamstring,2026-12-06,out
+2026-11-27T19:08:33+00:00,2026-11-27T18:27Z,1,Atlanta Falcons,ATL,4567111,DeMarcco Hellams,S,Out,OUT,Foot,2026-12-06,out
+2026-11-27T19:08:33+00:00,2026-11-27T18:27Z,1,Atlanta Falcons,ATL,4568510,Matthew Bergeron,G,Out,OUT,Back,2026-12-06,out
+2026-11-27T19:08:33+00:00,2026-11-27T18:27Z,1,Atlanta Falcons,ATL,4870612,Zachariah Branch,WR,Out,OUT,Hamstring,2026-12-06,out
+2026-11-27T19:08:33+00:00,2026-11-27T18:29Z,11,Indianapolis Colts,IND,4037361,Charvarius Ward,CB,Out,OUT,Knee,2026-12-13,out
+2026-11-27T19:08:33+00:00,2026-11-27T18:29Z,11,Indianapolis Colts,IND,4892240,Jalen Travis,OT,Out,OUT,Knee,2026-12-13,out
+2026-11-27T19:08:33+00:00,2026-11-27T18:29Z,11,Indianapolis Colts,IND,3863182,Jerry Tillery,DT,Out,OUT,Calf,2026-12-13,out
+2026-11-27T19:08:33+00:00,2026-11-27T18:29Z,11,Indianapolis Colts,IND,4362523,Will Mallory,TE,Out,OUT,Hamstring,2026-12-13,out
+2026-11-27T19:08:33+00:00,2026-11-27T18:31Z,5,Cleveland Browns,CLE,4601080,Raheim Sanders,RB,Injured Reserve,IR-R,Hip,2026-11-29,"Sanders (hip) is questionable for Sunday's game against the Raiders, Mary Kay Cabot of the Cleveland Plain Dealer reports."
+2026-11-27T19:08:33+00:00,2026-11-27T18:33Z,29,Carolina Panthers,CAR,4685472,Tetairoa McMillan,WR,Questionable,QUESTIONABLE,Foot Soreness,2026-11-30,"Updating a previous report, McMillan (foot) took part in Friday's team stretch but wasn't in uniform, Joe Person of The Athletic reports."
+2026-11-27T19:08:33+00:00,2026-11-27T18:33Z,11,Indianapolis Colts,IND,4686468,Seth McGowan,RB,Out,OUT,Hamstring,2026-12-13,McGowan (hamstring) has been ruled out for Sunday's game against the Giants.
+2026-11-27T19:08:33+00:00,2026-11-27T18:36Z,5,Cleveland Browns,CLE,4832800,Denzel Boston,WR,Questionable,QUESTIONABLE,Quadriceps,2026-11-29,"Boston (quadriceps) will be listed as questionable for Sunday's game against the Raiders, Scott Petrak of the Elyria Chronicle-Telegram reports."
+2026-11-27T19:08:33+00:00,2026-11-27T18:39Z,7,Denver Broncos,DEN,5159802,Dallen Bentley,TE,Out,INACTIVE,Coach's Decision,2026-12-06,inactive
+2026-11-27T19:08:33+00:00,2026-11-27T18:39Z,7,Denver Broncos,DEN,5085625,Gavin Ortega,OT,Out,INACTIVE,Coach's Decision,2026-12-06,inactive
+2026-11-27T19:08:33+00:00,2026-11-27T18:39Z,7,Denver Broncos,DEN,4868598,Kage Casey,OT,Out,INACTIVE,Coach's Decision,2026-12-06,inactive
+2026-11-27T19:08:33+00:00,2026-11-27T18:39Z,7,Denver Broncos,DEN,4039057,Lil'Jordan Humphrey,WR,Out,INACTIVE,Coach's Decision,2026-12-06,inactive
+2026-11-27T19:08:33+00:00,2026-11-27T18:39Z,7,Denver Broncos,DEN,4039007,Taylor Rapp,S,Out,INACTIVE,Quadriceps,2026-12-06,inactive
+2026-11-27T19:08:33+00:00,2026-11-27T18:40Z,1,Atlanta Falcons,ATL,4361510,Cameron Thomas,DE,Active,,,,
+2026-11-27T19:08:33+00:00,2026-11-27T18:40Z,1,Atlanta Falcons,ATL,3043168,Za'Darius Smith,DE,Active,,,,
+2026-11-27T19:08:33+00:00,2026-11-27T18:42Z,23,Pittsburgh Steelers,PIT,4714771,Drew Allar,QB,Out,INACTIVE,Coach's Decision,2026-12-06,inactive
+2026-11-27T19:08:33+00:00,2026-11-27T18:42Z,23,Pittsburgh Steelers,PIT,5081508,Eli Heidenreich,RB,Out,INACTIVE,Coach's Decision,2026-12-06,inactive
+2026-11-27T19:08:33+00:00,2026-11-27T18:42Z,23,Pittsburgh Steelers,PIT,4431533,Gabriel Rubio,DE,Out,INACTIVE,Coach's Decision,2026-12-06,inactive
+2026-11-27T19:08:33+00:00,2026-11-27T18:42Z,23,Pittsburgh Steelers,PIT,5081338,Kaden Wetjen,WR,Out,INACTIVE,Coach's Decision,2026-12-06,inactive
+2026-11-27T19:08:33+00:00,2026-11-27T18:42Z,23,Pittsburgh Steelers,PIT,3932886,Sean Murphy-Bunting,CB,Out,INACTIVE,Coach's Decision,2026-12-06,inactive
+2026-11-27T19:08:33+00:00,2026-11-27T18:44Z,7,Denver Broncos,DEN,4362748,Tyler Badie,RB,Active,,,,Badie (thumb) is active Friday against the Steelers.
+2026-11-27T19:08:33+00:00,2026-11-27T18:59Z,7,Denver Broncos,DEN,4241820,Sam Ehlinger,QB,Out,INACTIVE,Coach's Decision,2026-12-06,Ehlinger (coach's decision) is inactive for Friday's game against the Steelers but will work as Denver's emergency third QB.
