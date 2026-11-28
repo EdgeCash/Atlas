@@ -1,20 +1,20 @@
 # Atlas Drift Monitoring
 
-*Generated 2026-11-28 08:53 UTC by `python -m atlas.live check`. Every alarm compares
+*Generated 2026-11-28 09:12 UTC by `python -m atlas.live check`. Every alarm compares
 the most recent week of the record against its own history.*
 
 ---
 
 ## Status
 
-**2 alert(s) firing.** Alarms are advisory: nothing in the monitor edits the record and
+**3 alert(s) firing.** Alarms are advisory: nothing in the monitor edits the record and
 nothing in it stops the tracker. A monitor that can silently discard data is a
 worse problem than the drift it was watching for.
 
 | Alarm | Severity | Observed | Threshold | Detail |
 |---|---|---|---|---|
 | signal volume | alarm | -0.9710 | 0.5 | week 14: 4 signals against 138 the week before (-97%) |
-| silence | ok | 0.1562 | 7 | last signal 0.2 days ago (2026-11-28) |
+| silence | ok | 0.1692 | 7 | last signal 0.2 days ago (2026-11-28) |
 | single book | alarm | 1.0000 | 1 | 100% of signals from book 'DraftKings' (1 distinct) |
 | single market | ok | 0.5000 | 1 | 50% of signals from market 'margin' (2 distinct) |
 | model output (margin) | ok | n/a | 3 | 2 recent / 542 prior rows; too few to compare |
@@ -22,7 +22,7 @@ worse problem than the drift it was watching for.
 | disagreement shape (margin) | ok | n/a | 0.01 | 2 recent / 542 prior rows; too few to compare |
 | disagreement shape (total) | ok | n/a | 0.01 | 2 recent / 542 prior rows; too few to compare |
 | primary rate | ok | n/a | 0.5 | 4 recent / 1084 prior rows; too few to compare |
-| college state | ok | 72.0000 | 1 | 72 more team-games assimilated since Saturday noon ET |
+| college state | alarm | -189.0000 | 1 | the latest refresh (Sat 09:09 UTC) has assimilated no game since the refresh before Saturday (Sat 09:09 UTC): the season file is not refreshing |
 
 ---
 
@@ -62,15 +62,15 @@ newest week never finds.
 
 | Period | Scope | Rows | Matched | Mismatched | Missing | Clean | Detail |
 |---|---|---|---|---|---|---|---|
-| 2026-w05 | signals | 112 | 112 | 0 | 0 | yes | exact match |
-| 2026-w05 | grades | 112 | 112 | 0 | 0 | yes | exact match |
-| 2026-w05 | statistics | 12 | 12 | 0 | 0 | yes | recomputed from the replayed grades |
-| 2026-w09 | signals | 112 | 112 | 0 | 0 | yes | exact match |
-| 2026-w09 | grades | 112 | 112 | 0 | 0 | yes | exact match |
-| 2026-w09 | statistics | 12 | 12 | 0 | 0 | yes | recomputed from the replayed grades |
-| 2026-w10 | signals | 124 | 124 | 0 | 0 | yes | exact match |
-| 2026-w10 | grades | 124 | 124 | 0 | 0 | yes | exact match |
-| 2026-w10 | statistics | 16 | 16 | 0 | 0 | yes | recomputed from the replayed grades |
+| 2026-w06 | signals | 116 | 116 | 0 | 0 | yes | exact match |
+| 2026-w06 | grades | 116 | 116 | 0 | 0 | yes | exact match |
+| 2026-w06 | statistics | 16 | 16 | 0 | 0 | yes | recomputed from the replayed grades |
+| 2026-w11 | signals | 134 | 133 | 0 | 1 | no | exact match |
+| 2026-w11 | grades | 134 | 134 | 0 | 0 | yes | exact match |
+| 2026-w11 | statistics | 16 | 16 | 0 | 0 | yes | recomputed from the replayed grades |
+| 2026-w14 | signals | 4 | 4 | 0 | 0 | yes | exact match |
+| 2026-w14 | grades | 0 | 0 | 0 | 0 | yes | no grades in this period |
+| 2026-w14 | statistics | 0 | 0 | 0 | 0 | yes | no graded signals in period |
 
 A **signals** mismatch means the record is not reproducible. A **grades**
 mismatch means the grading logic changed under a published number. A
